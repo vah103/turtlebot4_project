@@ -1,0 +1,9 @@
+/**:
+  ros__parameters:
+    battery_topic: battery_state
+    scan_topic: scan
+    odom_topic: odom
+    status_interval_sec: 5.0
+    battery_reliability: reliable
+    battery_durability: transient_local
+    use_sim_time: false
