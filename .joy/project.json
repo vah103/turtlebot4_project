@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "turtlebot4",
+  "name": "TurtleBot 4",
+  "subtitle": "Semantic-risk-aware autonomous exploration",
+  "repository": "vah103/turtlebot4_project",
+  "repositoryUrl": "https://github.com/vah103/turtlebot4_project",
+  "defaultBranch": "main",
+  "roadmapFile": ".joy/roadmap.json",
+  "commandsFile": ".joy/commands.json",
+  "reportsDirectory": "report",
+  "statusFile": "PROJECT_STATUS.md",
+  "currentStageId": "stage-2",
+  "currentStatus": "verification",
+  "currentFocus": "Reproduce Localization and Nav2 from a fresh startup",
+  "nextAction": "Run three fixed Nav2 goals consecutively and save evidence",
+  "lastReviewed": "2026-07-24",
+  "summary": "Build a reproducible TurtleBot4 navigation baseline, then extend it with frontier exploration, RGB-D perception, semantic mapping and semantic-risk-aware goal selection."
+}
