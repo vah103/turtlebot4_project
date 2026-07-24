@@ -1,6 +1,6 @@
 # Trạng thái project TurtleBot4
 
-*Cập nhật lần cuối: 2026-07-24, ghi nhận kết quả phiên lab ngày 2026-07-23.*
+*Cập nhật lần cuối: 2026-07-24, sau commit `975d338` bổ sung map và ảnh RViz của phiên lab ngày 2026-07-23.*
 
 ## 1. Mục tiêu project
 
@@ -33,7 +33,8 @@ Các công cụ giám sát mặc định trong repository phải hoạt động 
 - Xác nhận LiDAR phát dữ liệu ổn định khoảng `7.58 Hz`.
 - Chạy SLAM và điều khiển robot đi quét khu vực lab.
 - Lưu map lab ban đầu thành `maps/map_lab.pgm` và `maps/map_lab.yaml`.
-- Tạo thêm map mới ngày 2026-07-23 trên laptop dưới tên `lab_2026_07_23.pgm` và `lab_2026_07_23.yaml`; hai file này chưa được đưa vào repository.
+- Tạo map mới ngày 2026-07-23 và đưa vào repository dưới tên `maps/lab_2026_07_23.pgm` và `maps/lab_2026_07_23.yaml`.
+- Lưu hai ảnh RViz minh họa SLAM và Nav2 trong `docs/images/2026-07-23/`.
 - Chạy Localization bằng AMCL với map đã lưu.
 - Đặt initial pose bằng **2D Pose Estimate** và xác nhận dữ liệu LiDAR khớp với map.
 - Chạy Nav2, kích hoạt đầy đủ lifecycle và điều hướng robot tới nhiều goal thành công.
@@ -42,7 +43,7 @@ Các công cụ giám sát mặc định trong repository phải hoạt động 
 
 Repository hiện chưa chứa package triển khai SLAM, Localization hoặc Navigation riêng. Các phiên thử nghiệm đã sử dụng phần mềm ROS 2/TurtleBot4/Nav2 có sẵn ngoài source riêng của project này.
 
-## 5. Package và script hiện có
+## 5. Package, script và dữ liệu hiện có
 
 ### Package ROS 2
 
@@ -68,17 +69,19 @@ Package gồm:
 - `scripts/build_workspace.sh`: build workspace bằng `colcon build --symlink-install`.
 - `scripts/local_preflight.sh`: kiểm tra môi trường, build, compile-check và chạy test cục bộ mà không cần robot.
 
-### Map hiện có trong repository
+### Map trong repository
 
-- `maps/map_lab.pgm`: occupancy image 159 x 395 pixel.
-- `maps/map_lab.yaml`: metadata dùng ảnh `map_lab.pgm`, độ phân giải `0.050` m/pixel, origin `[-5.538, -10.321, 0]`, mode `trinary`.
+- `maps/map_lab.pgm`.
+- `maps/map_lab.yaml`: độ phân giải `0.050` m/pixel, origin `[-5.538, -10.321, 0]`, mode `trinary`.
+- `maps/lab_2026_07_23.pgm`.
+- `maps/lab_2026_07_23.yaml`: độ phân giải `0.050` m/pixel, origin `[-9.128, -4.808, 0]`, mode `trinary`.
 
-### Map mới chưa được push
+### Ảnh minh họa trong repository
 
-- `/home/dell/maps/lab_2026_07_23.pgm`.
-- `/home/dell/maps/lab_2026_07_23.yaml`.
+- `docs/images/2026-07-23/slam-map-rviz.png`.
+- `docs/images/2026-07-23/nav2-success-rviz.png`.
 
-Hai file trên mới chỉ được xác nhận trên laptop Dell và cần được review trước khi thêm vào `maps/`.
+Map mới và hai ảnh RViz được thêm trong commit `975d338` ngày 2026-07-24.
 
 ## 6. Các sự cố đã gặp
 
@@ -139,22 +142,20 @@ Các sự cố liên quan service hoặc robot chỉ được xử lý bởi ng�
 - Localization bằng AMCL đã được kiểm tra thành công trên robot thật.
 - Transform cần thiết `map -> odom -> base_link` đã hoạt động trong phiên Navigation.
 - Nav2 đã được kiểm tra thành công với nhiều goal.
+- Map mới và ảnh RViz ngày 2026-07-23 đã có trong repository.
 - Git baseline và workflow báo cáo hằng ngày đang hoạt động.
 - Package `tb4_project_tools` và các script build/preflight vẫn chỉ phục vụ giám sát thụ động.
 - Repository chưa có launch/config riêng để tái lập toàn bộ Localization và Nav2 chỉ bằng source trong project.
-- Map mới và ảnh RViz ngày 2026-07-23 vẫn chỉ có trên laptop, chưa được push.
 - Camera, Mouse, Joystick và docking tự động còn cần kiểm tra.
 
 ## 8. Việc tiếp theo
 
-1. Review và đưa `lab_2026_07_23.pgm` cùng `lab_2026_07_23.yaml` vào `maps/` theo tên có phiên bản.
-2. Thêm metadata quản lý cho map: ngày tạo, khu vực, robot, cảm biến, độ phân giải, giới hạn và quy trình tạo.
-3. Thêm ảnh RViz của SLAM, Localization và Nav2 vào `docs/images/2026-07-23/`.
-4. Lặp lại quy trình từ trạng thái khởi động mới để kiểm tra tính tái lập của Localization và Nav2.
-5. Điều tra diagnostics của Camera và Mouse.
-6. Kiểm tra docking tự động và chuẩn hóa cách gọi action từ laptop.
-7. Tạo launch/config riêng cho Localization và Nav2 sau khi quy trình thủ công đã ổn định.
-8. Bắt đầu các bước đồ án nâng cao sau khi baseline Navigation ổn định, gồm frontier exploration, semantic layer và logic nhiệm vụ theo phạm vi đã chốt.
+1. Bổ sung metadata quản lý cho `lab_2026_07_23`: khu vực, robot, cảm biến, giới hạn và quy trình tạo.
+2. Lặp lại quy trình từ trạng thái khởi động mới để kiểm tra tính tái lập của Localization và Nav2.
+3. Điều tra diagnostics của Camera và Mouse.
+4. Kiểm tra docking tự động và chuẩn hóa cách gọi action từ laptop.
+5. Tạo launch/config riêng cho Localization và Nav2 sau khi quy trình thủ công đã ổn định.
+6. Bắt đầu các bước đồ án nâng cao sau khi baseline Navigation ổn định, gồm frontier exploration, semantic layer và logic nhiệm vụ theo phạm vi đã chốt.
 
 ## 9. Các quy tắc an toàn quan trọng
 
