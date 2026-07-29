@@ -10,10 +10,10 @@
   "commandsFile": ".joy/commands.json",
   "reportsDirectory": "report",
   "statusFile": "PROJECT_STATUS.md",
-  "currentStageId": "stage-2",
-  "currentStatus": "verification",
-  "currentFocus": "Reproduce Localization and Nav2 from a fresh startup",
-  "nextAction": "Run three fixed Nav2 goals consecutively and save evidence",
-  "lastReviewed": "2026-07-24",
+  "currentStageId": "stage-3",
+  "currentStatus": "in-progress",
+  "currentFocus": "Run the fixed-goal Navigation Benchmark on the real robot",
+  "nextAction": "Charge the robot, run one pilot, then complete 3 rounds × 4 goals with rosbag and CSV logging",
+  "lastReviewed": "2026-07-29",
   "summary": "Build a reproducible TurtleBot4 navigation baseline, then extend it with frontier exploration, RGB-D perception, semantic mapping and semantic-risk-aware goal selection."
 }
