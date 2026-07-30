@@ -1,93 +1,76 @@
 # Trạng thái project TurtleBot4
 
-*Cập nhật lần cuối: 2026-07-29, sau phiên lab hoàn tất Stage 1 và Stage 2 và chuẩn bị baseline cho Stage 3.*
+*Cập nhật lần cuối: 2026-07-30, sau khi hoàn thành Stage 3 Navigation Benchmark trên robot thật.*
 
 ## 1. Trạng thái tổng quan
 
 - **Stage 1 — Foundation & Inputs: hoàn thành.**
 - **Stage 2 — Localization & Nav2: hoàn thành.**
-- **Stage 3 — Navigation Benchmark: đang thực hiện.**
-- Tiến độ kỹ thuật theo checklist có trọng số: **24%**.
-- Robot kết thúc phiên ở trạng thái đã dock và đang sạc.
-
-Phần đóng gói launch/config Localization–Nav2 thành package riêng được giữ dưới dạng maintenance follow-up; nó không còn chặn trạng thái hoàn thành của Stage 2 vì workflow đã được xác minh trên robot thật và được ghi lại trong report.
+- **Stage 3 — Navigation Benchmark: hoàn thành.**
+- **Stage 4 — Simulation & Scenarios: chưa bắt đầu.**
+- Tiến độ kỹ thuật theo checklist có trọng số: **32%**.
+- Robot kết thúc phiên ở trạng thái đã dock.
 
 ## 2. Môi trường đã xác nhận
 
 - Laptop Dell: Ubuntu 24.04, ROS 2 Jazzy, `ROS_DOMAIN_ID=0`.
-- Robot: TurtleBot4 Standard, Raspberry Pi Ubuntu 24.04.
-- Robot IP trong phiên lab: `10.11.103.148`.
+- Robot: TurtleBot4 Standard.
 - Namespace: `/bot1`.
-- LiDAR: `/bot1/scan`, khoảng `7.57 Hz`.
-- Odometry: `/bot1/odom`, khoảng `19.87 Hz`.
+- Localization: AMCL trên map đã lưu.
+- Navigation: Nav2 với action `/bot1/navigate_to_pose`.
 
-## 3. Stage 1 — Kết quả hoàn thành
+## 3. Stage 1 và Stage 2
 
-- Khôi phục OAK-D sau khi topic RGB từng có `Publisher count: 0`.
-- Xác nhận OAK-D Pro kết nối ở USB SUPER và pipeline RGB hoạt động.
-- Tạo cấu hình `oakd_pro_rgbd.yaml` và chạy pipeline `RGBD`.
-- Xác nhận RGB:
-  - khoảng `30 Hz`;
-  - frame `oakd_rgb_camera_optical_frame`;
-  - delay nền khoảng `30–32 ms`.
-- Xác nhận depth:
-  - topic `/bot1/oakd/stereo/image_raw`;
-  - encoding `16UC1`;
-  - độ phân giải `1280 × 720`;
-  - khoảng `28.7 Hz`;
-  - delay khoảng `95–101 ms`.
-- Hoàn thành stability observation 20 phút:
-  - RGB cuối bài khoảng `30.002 Hz`;
-  - depth cuối bài khoảng `28.666 Hz`;
-  - không ghi nhận node camera crash.
+- OAK-D Pro RGB và RGB-D đã được xác minh, gồm tốc độ, độ trễ và kiểm tra ổn định 20 phút.
+- SLAM, map saving, AMCL, TF và Nav2 đã được kiểm tra trên robot thật.
+- Fresh-start Localization/Nav2 và docking đã thành công.
+- Quy trình chi tiết được ghi trong `report/2026-07-29.md`.
 
-## 4. Stage 2 — Kết quả hoàn thành
+## 4. Stage 3 — Navigation Benchmark
 
-- Chạy SLAM và lưu map mới:
-  - kích thước `206 × 363`;
-  - resolution `0.05 m/pixel`;
-  - file `lab_map.pgm` và `lab_map.yaml`.
-- Chạy Localization bằng AMCL và đặt 2D Pose Estimate.
-- Xác nhận particle cloud hội tụ và LaserScan khớp map.
-- Kích hoạt Navigation và Localization thành công.
-- Thực hiện nhiều Nav2 goal thành công trong cùng phiên.
-- Thực hiện fresh-start và ghi nhận:
-  - `Begin navigating`;
-  - `Reached the goal!`;
-  - `Goal succeeded`.
-- Dock robot thành công với `is_docked: true`.
+Ngày 2026-07-30, phòng lab được quét và lưu lại thành map mới:
 
-Các cảnh báo `Control loop missed its desired rate` xuất hiện ngắn hạn nhưng không làm các goal được ghi nhận thất bại.
+- Kích thước: `168 × 385` pixel.
+- Độ phân giải: `0.05 m/pixel`.
+- Map: `maps/lab_2026_07_30/lab_map.yaml` và `lab_map.pgm` trên workspace lab.
 
-## 5. Stage 3 — Phần đã chuẩn bị
+Benchmark chính thức sử dụng bốn goal cố định, chạy ba vòng:
 
-- Chọn bốn goal cố định trong frame `map`.
-- Thiết lập `3 rounds × 4 goals`.
-- Thiết lập settle time `2 s` và timeout `180 s`.
-- Lưu checksum cho map, goal config và benchmark runner.
-- Dry-run của `navigation_benchmark.py` thành công.
-- Xác nhận `ros2 bag record` hỗ trợ output, regex và hidden topics.
+- Tổng số lượt: `12`.
+- Thành công: `12/12`.
+- Success rate: `100%`.
+- Failed trials: `0`.
+- Recoveries: `0`.
+- Tổng thời gian di chuyển: `101.11 s`.
+- Trung bình: `8.43 s/goal`.
+- Tổng quãng đường: `20.62 m`.
+- Trung bình: `1.72 m/goal`.
 
-Benchmark vật lý, CSV, rosbag và phần tính metrics chưa chạy do pin thấp.
+Rosbag chính thức:
 
-## 6. Việc tiếp theo
+- Dung lượng: `28.0 MiB`.
+- Thời lượng: `383.514 s`.
+- Messages: `43,542`.
+- Có AMCL pose, odometry, LiDAR, TF, Nav2 action, velocity, battery và diagnostics.
 
-1. Sạc robot lên ít nhất 60%.
-2. Chạy một pilot ngắn để kiểm tra goal, orientation và logging.
-3. Chạy đủ ba vòng với bốn goal cố định.
-4. Lưu CSV, rosbag, terminal log và ảnh RViz.
-5. Tính success rate, travel time, path length, recovery count và failure classification.
-6. Freeze cấu hình Nav2 baseline chính thức bằng checksum và commit SHA.
+Bộ bằng chứng gồm CSV, terminal log, rosbag, map, goal configuration, checksum và summary. Báo cáo chi tiết nằm tại `report/2026-07-30.md`.
 
-## 7. Bằng chứng
+## 5. Trạng thái hiện tại
 
-- Report Git: `report/2026-07-29.md`.
-- Bản Google Docs đầy đủ được liên kết trong report Git.
-- Evidence cục bộ gồm stability log RGB/depth, cấu hình RGB-D, ảnh RGB/depth, map mới và log fresh-start Nav2.
+Navigation baseline trên robot thật đã được đóng băng và đủ dữ liệu để đối chiếu với các thuật toán khám phá sau này. Stage 3 không còn checkpoint kỹ thuật đang chờ.
 
-## 8. Quy tắc an toàn
+Stage tiếp theo là **Stage 4 — Simulation & Scenarios**, chủ yếu thực hiện tại nhà:
 
-- Không tự publish `cmd_vel` hoặc gửi action chuyển động khi chưa có người vận hành tại lab.
-- Kiểm tra pin, discovery, TF, LiDAR, odometry và khu vực an toàn trước mỗi phép thử.
-- Dừng benchmark khi localization mất ổn định, costmap bất thường hoặc pin xuống thấp.
+1. Chuẩn bị TurtleBot4 simulation và robot model.
+2. Xác minh LiDAR, RGB-D, odometry và TF mô phỏng.
+3. Tạo các scenario exploration/risk có thể lặp lại.
+4. Ghi rõ khác biệt simulation-to-real.
+
+Sau Stage 4, project chuyển sang **Stage 5 — Frontier Exploration Baseline**.
+
+## 6. Quy tắc an toàn
+
+- Không publish `cmd_vel` hoặc gửi action chuyển động khi chưa có người vận hành tại lab.
+- Kiểm tra pin, discovery, TF, LiDAR, odometry và khu vực an toàn trước mỗi phép thử robot thật.
+- Dừng thử nghiệm khi localization mất ổn định, costmap bất thường hoặc pin xuống thấp.
 - Không commit các thư mục `build/`, `install/` và `log/` do colcon tạo ra.
