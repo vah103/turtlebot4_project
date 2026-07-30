@@ -10,10 +10,10 @@
   "commandsFile": ".joy/commands.json",
   "reportsDirectory": "report",
   "statusFile": "PROJECT_STATUS.md",
-  "currentStageId": "stage-3",
-  "currentStatus": "in-progress",
-  "currentFocus": "Run the fixed-goal Navigation Benchmark on the real robot",
-  "nextAction": "Charge the robot, run one pilot, then complete 3 rounds × 4 goals with rosbag and CSV logging",
-  "lastReviewed": "2026-07-29",
+  "currentStageId": "stage-4",
+  "currentStatus": "not-started",
+  "currentFocus": "Prepare controlled TurtleBot4 simulation scenarios for repeatable exploration development",
+  "nextAction": "Set up TurtleBot4 simulation with Gazebo, verify simulated sensors and TF, then define the first repeatable scenario",
+  "lastReviewed": "2026-07-30",
   "summary": "Build a reproducible TurtleBot4 navigation baseline, then extend it with frontier exploration, RGB-D perception, semantic mapping and semantic-risk-aware goal selection."
 }
