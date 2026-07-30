@@ -1,0 +1,59 @@
+name: Validate repository
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate JSON metadata
+        run: |
+          python -m json.tool .joy/project.json >/dev/null
+          python -m json.tool .joy/roadmap.json >/dev/null
+          python -m json.tool .joy/commands.json >/dev/null
+
+      - name: Check required project files
+        run: |
+          test -f README.md
+          test -f PROJECT_STATUS.md
+          test -f report/2026-07-30.md
+          test -f stage3_navigation_benchmark/README.md
+
+      - name: Validate Stage 3 runner and evidence
+        run: |
+          python -m py_compile stage3_navigation_benchmark/scripts/navigation_benchmark.py
+          cd stage3_navigation_benchmark
+          sha256sum -c runs/stage3_20260730_official_02/baseline.sha256
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+
+          path = Path("runs/stage3_20260730_official_02/benchmark_results_20260730_151159.csv")
+          with path.open(newline="", encoding="utf-8") as stream:
+              rows = list(csv.DictReader(stream))
+
+          assert len(rows) == 12, f"expected 12 benchmark rows, got {len(rows)}"
+          assert all(row["status"] == "SUCCEEDED" for row in rows), "not every trial succeeded"
+          assert all(int(row["recovery_count"]) == 0 for row in rows), "a recovery was recorded"
+          print("Stage 3 evidence validated: 12/12 SUCCEEDED, zero recoveries")
+          PY
+
+      - name: Reject generated ROS build directories
+        run: |
+          ! git ls-files | grep -E '(^|/)(build|install|log)/'
+
+      - name: Reject committed rosbag payloads
+        run: |
+          ! git ls-files | grep -E '\.(mcap|db3)$'
