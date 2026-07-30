@@ -155,7 +155,7 @@
       "verifiedAt": "2026-07-30",
       "stageIds": ["stage-3"],
       "purpose": "Confirm that the frozen map, goals and runner still match the official baseline.",
-      "code": "cd ~/turtlebot4_project/stage3_navigation_benchmark/runs/stage3_20260730_official_02\nsha256sum -c baseline.sha256",
+      "code": "cd ~/turtlebot4_project/stage3_navigation_benchmark\nsha256sum -c runs/stage3_20260730_official_02/baseline.sha256",
       "expectedResult": "Every listed baseline file reports OK."
     },
     {

@@ -1,0 +1,20 @@
+[INFO] [1785398998.649085809] [rosbag2_recorder]: Press SPACE for pausing/resuming
+[INFO] [1785398998.657451740] [rosbag2_recorder]: Event publisher thread: Started
+[INFO] [1785398999.255526466] [rosbag2_recorder]: Starting recording to '/home/dell/turtlebot4_project/stage3_navigation_benchmark/runs/stage3_20260730_official_02/rosbag'
+[INFO] [1785398999.261435404] [rosbag2_recorder]: Listening for topics...
+[INFO] [1785398999.261666070] [rosbag2_recorder]: Recording...
+[INFO] [1785398999.261758539] [rosbag2_recorder]: Topics discovery started.
+[INFO] [1785398999.628976147] [rosbag2_recorder]: Subscribed to topic '/bot1/cmd_vel'
+[INFO] [1785398999.797257727] [rosbag2_recorder]: Subscribed to topic '/bot1/cmd_vel_nav'
+[INFO] [1785399000.595933733] [rosbag2_recorder]: Subscribed to topic '/bot1/cmd_vel_smoothed'
+[INFO] [1785399001.662258946] [rosbag2_recorder]: Subscribed to topic '/bot1/tf'
+[INFO] [1785399001.726400821] [rosbag2_recorder]: Subscribed to topic '/bot1/amcl_pose'
+[INFO] [1785399002.068708365] [rosbag2_recorder]: Subscribed to topic '/bot1/battery_state'
+[INFO] [1785399002.112016373] [rosbag2_recorder]: Subscribed to topic '/bot1/diagnostics'
+[WARN] [1785399003.074830497] [rosbag2_cpp]: Message definition for topic '/bot1/navigate_to_pose/_action/status' with type 'action_msgs/msg/GoalStatusArray' not found. Message definition will be left empty in bag.
+[INFO] [1785399003.088062047] [rosbag2_recorder]: Subscribed to topic '/bot1/navigate_to_pose/_action/status'
+[WARN] [1785399003.088264825] [rosbag2_cpp]: Message definition for topic '/bot1/navigate_to_pose/_action/feedback' with type 'nav2_msgs/action/NavigateToPose_FeedbackMessage' not found. Message definition will be left empty in bag.
+[INFO] [1785399003.122562633] [rosbag2_recorder]: Subscribed to topic '/bot1/navigate_to_pose/_action/feedback'
+[INFO] [1785399003.633487086] [rosbag2_recorder]: Subscribed to topic '/bot1/scan'
+[INFO] [1785399004.248702617] [rosbag2_recorder]: Subscribed to topic '/bot1/odom'
+[INFO] [1785399004.267119298] [rosbag2_recorder]: Subscribed to topic '/bot1/tf_static'

@@ -1,0 +1,23 @@
+
+Files:             rosbag_0.mcap
+Bag size:          28.0 MiB
+Storage id:        mcap
+ROS Distro:        jazzy
+Duration:          383.513934553s
+Start:             Jul 30 2026 15:10:01.739624240 (1785399001.739624240)
+End:               Jul 30 2026 15:16:25.253558793 (1785399385.253558793)
+Messages:          43542
+Topic information: Topic: /bot1/amcl_pose | Type: geometry_msgs/msg/PoseWithCovarianceStamped | Count: 134 | Serialization Format: cdr
+                   Topic: /bot1/battery_state | Type: sensor_msgs/msg/BatteryState | Count: 74 | Serialization Format: cdr
+                   Topic: /bot1/cmd_vel | Type: geometry_msgs/msg/TwistStamped | Count: 2399 | Serialization Format: cdr
+                   Topic: /bot1/cmd_vel_nav | Type: geometry_msgs/msg/TwistStamped | Count: 2392 | Serialization Format: cdr
+                   Topic: /bot1/cmd_vel_smoothed | Type: geometry_msgs/msg/TwistStamped | Count: 2650 | Serialization Format: cdr
+                   Topic: /bot1/diagnostics | Type: diagnostic_msgs/msg/DiagnosticArray | Count: 720 | Serialization Format: cdr
+                   Topic: /bot1/navigate_to_pose/_action/feedback | Type: nav2_msgs/action/NavigateToPose_FeedbackMessage | Count: 11905 | Serialization Format: cdr
+                   Topic: /bot1/navigate_to_pose/_action/status | Type: action_msgs/msg/GoalStatusArray | Count: 29 | Serialization Format: cdr
+                   Topic: /bot1/odom | Type: nav_msgs/msg/Odometry | Count: 6894 | Serialization Format: cdr
+                   Topic: /bot1/scan | Type: sensor_msgs/msg/LaserScan | Count: 2753 | Serialization Format: cdr
+                   Topic: /bot1/tf | Type: tf2_msgs/msg/TFMessage | Count: 13590 | Serialization Format: cdr
+                   Topic: /bot1/tf_static | Type: tf2_msgs/msg/TFMessage | Count: 2 | Serialization Format: cdr
+Service:           0
+Service information: 
