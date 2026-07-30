@@ -1,0 +1,23 @@
+TurtleBot4 Stage 3 Navigation Benchmark
+Date: 2026-07-30
+Protocol: 3 rounds x 4 fixed goals
+Total trials: 12
+Successful trials: 12
+Failed trials: 0
+Success rate: 100%
+Total recoveries: 0
+Total travel time: 101.11 s
+Mean travel time: 8.43 s/goal
+Total path length: 20.62 m
+Mean path length: 1.72 m/goal
+
+Per-goal means:
+A: 8.91 s, 1.62 m
+B: 6.75 s, 1.39 m
+C: 10.34 s, 2.23 m
+D: 7.70 s, 1.63 m
+
+Note:
+Round 1 Goal A began close to the target, producing a shorter
+3.32 s / 0.37 m trial. The trial remained successful and is retained
+in the official raw results as a start-position effect.

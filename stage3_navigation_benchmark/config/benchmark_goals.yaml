@@ -1,0 +1,27 @@
+frame_id: map
+
+benchmark:
+  rounds: 3
+  settle_time_sec: 2.0
+  goal_timeout_sec: 180.0
+
+goals:
+  - name: A_near_start
+    x: -1.5349
+    y: -5.4155
+    yaw: -3.0371
+
+  - name: B_far_corner
+    x: -2.8831
+    y: -5.3234
+    yaw: 1.7162
+
+  - name: C_lower_corner
+    x: -2.7628
+    y: -3.1403
+    yaw: -0.0348
+
+  - name: D_return
+    x: -1.2391
+    y: -3.2861
+    yaw: -1.4611
