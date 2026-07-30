@@ -2,6 +2,15 @@
 ros2_ws/build/
 ros2_ws/install/
 ros2_ws/log/
+build/
+install/
+log/
+
+# ROS bag binary payloads
+*.mcap
+*.db3
+**/rosbag/*.mcap
+**/rosbag/*.db3
 
 # Python generated files
 __pycache__/
@@ -13,3 +22,8 @@ __pycache__/
 .idea/
 *.swp
 
+# Temporary and backup files
+*.tmp
+*.bak
+*~
+.DS_Store

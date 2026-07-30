@@ -1,0 +1,40 @@
+name: Validate repository
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate JSON metadata
+        run: |
+          python -m json.tool .joy/project.json >/dev/null
+          python -m json.tool .joy/roadmap.json >/dev/null
+          python -m json.tool .joy/commands.json >/dev/null
+
+      - name: Check required project files
+        run: |
+          test -f README.md
+          test -f PROJECT_STATUS.md
+          test -f report/2026-07-30.md
+          test -f stage3_navigation_benchmark/README.md
+
+      - name: Reject generated ROS build directories
+        run: |
+          ! git ls-files | grep -E '(^|/)(build|install|log)/'
+
+      - name: Reject committed rosbag payloads
+        run: |
+          ! git ls-files | grep -E '\.(mcap|db3)$'
