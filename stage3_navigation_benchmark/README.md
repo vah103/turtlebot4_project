@@ -66,8 +66,9 @@ Chỉ chạy khi robot thật ở khu vực an toàn, có người vận hành t
 ros2 bag info \
   runs/stage3_20260730_official_02/rosbag
 
-cd runs/stage3_20260730_official_02
-sha256sum -c baseline.sha256
+# Checksum paths are relative to the Stage 3 benchmark directory.
+cd ~/turtlebot4_project/stage3_navigation_benchmark
+sha256sum -c runs/stage3_20260730_official_02/baseline.sha256
 ```
 
 Báo cáo đầy đủ: `../report/2026-07-30.md`.
