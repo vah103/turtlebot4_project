@@ -7,10 +7,27 @@ Repository cho đồ án **semantic-risk-aware autonomous exploration** sử d�
 - Stage 1 — Foundation & Inputs: hoàn thành.
 - Stage 2 — Localization & Nav2: hoàn thành.
 - Stage 3 — Navigation Benchmark: hoàn thành.
-- Stage 4 — Simulation & Scenarios: chưa bắt đầu.
-- Tiến độ kỹ thuật theo checklist có trọng số: 32%.
+- Stage 4 — Simulation & Scenarios: hoàn thành.
+- Stage 5 — Frontier Exploration Baseline: đang thực hiện.
+- Tiến độ kỹ thuật theo checklist có trọng số: **42%**.
 
-Kết quả Stage 3 trên robot thật ngày 30/07/2026:
+Nguồn trạng thái chuẩn trong repository:
+
+- `.joy/project.json`
+- `.joy/roadmap.json`
+- `PROJECT_STATUS.md`
+
+Kiểm tra tính nhất quán bằng:
+
+```bash
+python3 .github/scripts/validate_project_state.py
+```
+
+## Kết quả đã xác minh
+
+### Stage 3 — Navigation Benchmark
+
+Benchmark trên robot thật ngày 30/07/2026:
 
 - 3 vòng × 4 goal cố định, tổng cộng 12 lượt.
 - 12/12 lượt `SUCCEEDED`.
@@ -20,9 +37,31 @@ Kết quả Stage 3 trên robot thật ngày 30/07/2026:
 - Quãng đường trung bình: 1.72 m/goal.
 - Rosbag chính thức: 43,542 messages trong 383.514 s.
 
-Xem chi tiết tại `PROJECT_STATUS.md` và `report/2026-07-30.md`.
+Chi tiết: `report/2026-07-30.md` và `stage3_navigation_benchmark/`.
+
+### Stage 4 — Simulation & Scenarios
+
+Simulation được xác minh ngày 03/08/2026:
+
+- Hai world: Depot và Warehouse.
+- Robot spawn và di chuyển có kiểm soát.
+- LiDAR, RGB-D camera info, odometry và TF có mặt.
+- RViz hoạt động ở trạng thái sử dụng được.
+- Restart simulation lặp lại thành công.
+- Một lần Gazebo freeze đã được phục hồi bằng cách khởi động lại phiên mô phỏng.
+
+Chi tiết:
+
+- `report/2026-08-03.md`
+- `evidence/stage4_2026_08_03/README.md`
+- `evidence/stage4_2026_08_03/scenario_matrix.md`
+- `evidence/stage4_2026_08_03/verification_commands.md`
+
+Bộ evidence này chỉ ghi những kết quả đã được xác minh. Raw terminal logs và ảnh chụp chưa được lưu trong repository nên không được mô tả như thể đã tồn tại.
 
 ## Môi trường đã xác nhận
+
+### Robot thật
 
 - Ubuntu 24.04
 - ROS 2 Jazzy
@@ -32,10 +71,18 @@ Xem chi tiết tại `PROJECT_STATUS.md` và `report/2026-07-30.md`.
 - Localization bằng AMCL
 - Navigation bằng Nav2
 
+### Simulation
+
+- Gazebo/TurtleBot4 simulation
+- Depot và Warehouse
+- LiDAR, RGB-D camera info, odometry và TF
+- RViz để kiểm tra robot, dữ liệu cảm biến và frame
+
 ## Cấu trúc chính
 
 ```text
 .joy/                         Metadata, roadmap và command library cho Joy
+evidence/                     Bộ bằng chứng và tài liệu tái lập theo stage
 maps/                         Bản đồ đã version
 report/                       Báo cáo theo ngày
 ros2_ws/                      ROS 2 workspace và project tools
@@ -56,39 +103,22 @@ colcon test-result --verbose
 
 Các node trong `tb4_project_tools` chỉ giám sát dữ liệu. Những lệnh SLAM, Localization, Nav2, benchmark và docking được lưu riêng trong `.joy/commands.json` và báo cáo tương ứng.
 
-## Stage 3 — Navigation Benchmark
+## Công việc hiện tại — Stage 5
 
-Các file nhỏ cần được lưu trong Git:
+1. Định nghĩa frontier cell từ `nav_msgs/OccupancyGrid`.
+2. Triển khai frontier-cell detection và clustering.
+3. Chọn điểm đại diện an toàn cho từng cụm.
+4. Publish RViz markers để kiểm tra detector.
+5. Bổ sung geometric scoring.
+6. Gửi safe frontier goal qua Nav2.
+7. Đánh giá coverage, thời gian, quãng đường, failed goal và stopping condition.
 
-```text
-stage3_navigation_benchmark/scripts/navigation_benchmark.py
-stage3_navigation_benchmark/config/benchmark_goals.yaml
-stage3_navigation_benchmark/config/lab_map.yaml
-stage3_navigation_benchmark/config/lab_map.pgm
-stage3_navigation_benchmark/runs/stage3_20260730_official_02/
-  baseline.sha256
-  benchmark_goals.yaml
-  benchmark_results_20260730_151159.csv
-  benchmark_terminal.log
-  lab_map.yaml
-  lab_map.pgm
-  rosbag_info.txt
-  rosbag/metadata.yaml
-  rosbag_terminal.log
-  summary.txt
-```
+## Chính sách lưu bằng chứng
 
-Không commit trực tiếp các payload rosbag lớn như `*.mcap` hoặc `*.db3`. Dùng Git LFS hoặc kho lưu trữ ngoài Git khi cần lưu lâu dài.
-
-## Công việc tiếp theo
-
-Stage 4 được thực hiện chủ yếu tại nhà:
-
-1. Chọn và cài simulator tương thích ROS 2 Jazzy.
-2. Chuẩn bị robot model, world và one-command launch.
-3. Xác minh LiDAR, RGB-D, odometry và TF mô phỏng.
-4. Tạo các scenario có thể reset và chạy lặp lại.
-5. Ghi rõ khác biệt simulation-to-real.
+- Commit code, config, CSV, text log, checksum, metadata và ảnh minh chứng có kích thước hợp lý.
+- Không commit trực tiếp payload rosbag lớn như `*.mcap` hoặc `*.db3`.
+- Dùng Git LFS hoặc kho lưu trữ ngoài Git cho dữ liệu lớn.
+- Không đánh dấu checkpoint hoàn thành nếu repository không có report hoặc evidence tương ứng.
 
 ## An toàn
 
