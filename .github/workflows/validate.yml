@@ -24,11 +24,15 @@ jobs:
           python -m json.tool .joy/roadmap.json >/dev/null
           python -m json.tool .joy/commands.json >/dev/null
 
+      - name: Validate project state consistency
+        run: python .github/scripts/validate_project_state.py
+
       - name: Check required project files
         run: |
           test -f README.md
           test -f PROJECT_STATUS.md
           test -f report/2026-07-30.md
+          test -f report/2026-08-03.md
           test -f stage3_navigation_benchmark/README.md
 
       - name: Validate Stage 3 runner and evidence
