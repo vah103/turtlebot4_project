@@ -10,10 +10,10 @@
   "commandsFile": ".joy/commands.json",
   "reportsDirectory": "report",
   "statusFile": "PROJECT_STATUS.md",
-  "currentStageId": "stage-4",
-  "currentStatus": "not-started",
-  "currentFocus": "Prepare controlled TurtleBot4 simulation scenarios for repeatable exploration development",
-  "nextAction": "Set up TurtleBot4 simulation with Gazebo, verify simulated sensors and TF, then define the first repeatable scenario",
-  "lastReviewed": "2026-07-30",
+  "currentStageId": "stage-5",
+  "currentStatus": "in-progress",
+  "currentFocus": "Start frontier detection and safe goal generation in the verified simulation environment",
+  "nextAction": "Define the OccupancyGrid frontier rule, implement frontier-cell detection and clustering, then publish RViz markers",
+  "lastReviewed": "2026-08-03",
   "summary": "Build a reproducible TurtleBot4 navigation baseline, then extend it with frontier exploration, RGB-D perception, semantic mapping and semantic-risk-aware goal selection."
 }
