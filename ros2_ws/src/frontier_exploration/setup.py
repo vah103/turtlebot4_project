@@ -14,6 +14,7 @@ setup(
             [
                 'launch/frontier_detector.launch.py',
                 'launch/frontier_autonomy.launch.py',
+                'launch/nav2_sim_compat.launch.py',
             ],
         ),
         ('share/' + package_name + '/config', ['config/frontier.yaml']),
