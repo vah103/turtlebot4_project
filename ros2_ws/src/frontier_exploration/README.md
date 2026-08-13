@@ -15,7 +15,7 @@ Pipeline hiện tại:
 9. Chọn candidate gần nhất có path hợp lệ.
 10. Tùy chọn gửi candidate đó qua `NavigateToPose` bằng `exploration_manager`.
 
-## Hai node
+## Hai node chính
 
 ### `frontier_detector`
 
@@ -39,6 +39,18 @@ Node thực thi frontier goal qua Nav2 `NavigateToPose`.
 **Mặc định `enable_navigation: false`**, vì vậy package vẫn an toàn khi launch bình thường. Chỉ khi người vận hành chủ động bật `enable_navigation:=true` thì manager mới gửi goal chuyển động.
 
 Manager chỉ dùng path đã được `frontier_detector` xác nhận bằng `ComputePathToPose`; node không publish `cmd_vel` trực tiếp.
+
+## Adapter chỉ dành cho simulation
+
+Nav2 TurtleBot4 Jazzy có thể xuất `/cmd_vel` dưới dạng `geometry_msgs/TwistStamped`, trong khi Gazebo bridge của simulation có thể chỉ nhận `geometry_msgs/Twist`.
+
+Node `sim_twist_adapter` chuyển:
+
+```text
+/cmd_vel TwistStamped -> /cmd_vel Twist
+```
+
+Adapter **mặc định tắt** và chỉ được bật bằng launch argument `enable_sim_twist_adapter:=true`. Không dùng adapter này trên robot thật nếu chưa kiểm tra interface chuyển động của robot.
 
 ## Tham số chính
 
@@ -97,16 +109,26 @@ Autonomous navigation is disabled
 
 ## Bật autonomous navigation trong simulation
 
-Chỉ bật khi simulation, SLAM và Nav2 đều đang ổn định và người vận hành chủ động cho phép robot mô phỏng di chuyển:
+Chỉ bật khi simulation, SLAM và Nav2 đều đang ổn định và người vận hành chủ động cho phép robot mô phỏng di chuyển.
+
+Nếu `/cmd_vel` của Nav2 và Gazebo bridge dùng cùng kiểu message:
 
 ```bash
 ros2 launch frontier_exploration frontier_autonomy.launch.py enable_navigation:=true
 ```
 
+Nếu Nav2 publish `TwistStamped` nhưng Gazebo bridge subscribe `Twist`, bật adapter simulation:
+
+```bash
+ros2 launch frontier_exploration frontier_autonomy.launch.py \
+  enable_navigation:=true \
+  enable_sim_twist_adapter:=true
+```
+
 Khi bật, chu trình là:
 
 ```text
-map -> frontier -> candidate -> path check -> NavigateToPose -> map update -> frontier mới
+map -> frontier -> candidate -> path check -> NavigateToPose -> cmd_vel -> map update -> frontier mới
 ```
 
 Sau một navigation goal thành công, manager chờ detector cập nhật map/frontier và nhận path mới. Goal vừa hoàn thành không được gửi lặp lại trong bán kính `goal_repeat_tolerance_m`.
