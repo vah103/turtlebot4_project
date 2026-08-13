@@ -196,23 +196,20 @@ def nearest_representative(
     msg: OccupancyGrid,
     robot_x: float,
     robot_y: float,
+    min_distance_m: float,
 ) -> tuple[int, float] | None:
-    """Return the representative with the smallest Euclidean robot distance."""
-    if not representatives:
-        return None
-
-    best_index = representatives[0]
-    best_point = _cell_to_world(best_index, msg)
-    best_distance = hypot(best_point.x - robot_x, best_point.y - robot_y)
-
-    for index in representatives[1:]:
+    """Return the nearest representative outside the robot exclusion radius."""
+    eligible: list[tuple[int, float]] = []
+    for index in representatives:
         point = _cell_to_world(index, msg)
         distance = hypot(point.x - robot_x, point.y - robot_y)
-        if distance < best_distance:
-            best_index = index
-            best_distance = distance
+        if distance >= min_distance_m:
+            eligible.append((index, distance))
 
-    return best_index, best_distance
+    if not eligible:
+        return None
+
+    return min(eligible, key=lambda candidate: candidate[1])
 
 
 class FrontierDetector(Node):
@@ -226,6 +223,7 @@ class FrontierDetector(Node):
         self.declare_parameter('min_cluster_size', 5)
         self.declare_parameter('segment_radius_m', 0.75)
         self.declare_parameter('min_segment_size', 5)
+        self.declare_parameter('min_selection_distance_m', 0.60)
 
         map_topic = self.get_parameter('map_topic').value
         marker_topic = self.get_parameter('marker_topic').value
@@ -293,6 +291,9 @@ class FrontierDetector(Node):
         min_segment_size = max(
             1, int(self.get_parameter('min_segment_size').value)
         )
+        min_selection_distance_m = max(
+            0.0, float(self.get_parameter('min_selection_distance_m').value)
+        )
 
         frontier_cells = detect_frontier_cells(list(msg.data), width, height)
         clusters = cluster_frontiers(
@@ -319,6 +320,7 @@ class FrontierDetector(Node):
                 msg,
                 robot_position[0],
                 robot_position[1],
+                min_selection_distance_m,
             )
 
         selected_index = selected[0] if selected is not None else None
@@ -353,7 +355,8 @@ class FrontierDetector(Node):
                 self.get_logger().info(
                     'Nearest frontier: '
                     f'x={point.x:.2f}, y={point.y:.2f}, '
-                    f'distance={selected[1]:.2f} m'
+                    f'distance={selected[1]:.2f} m '
+                    f'(min={min_selection_distance_m:.2f} m)'
                 )
                 self._last_selected = selected_key
 
