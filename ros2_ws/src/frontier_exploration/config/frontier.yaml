@@ -6,3 +6,4 @@ frontier_detector:
     min_cluster_size: 5
     segment_radius_m: 0.75
     min_segment_size: 5
+    min_selection_distance_m: 0.60
