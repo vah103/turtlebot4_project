@@ -66,6 +66,25 @@ def cluster_frontiers(
     return clusters
 
 
+def representative_cell(cluster: list[int], width: int) -> int:
+    """Return the frontier cell nearest the cluster centroid in grid coordinates."""
+    if not cluster:
+        raise ValueError('cluster must not be empty')
+
+    xs = [index % width for index in cluster]
+    ys = [index // width for index in cluster]
+    centroid_x = sum(xs) / len(xs)
+    centroid_y = sum(ys) / len(ys)
+
+    return min(
+        cluster,
+        key=lambda index: (
+            (index % width - centroid_x) ** 2
+            + (index // width - centroid_y) ** 2
+        ),
+    )
+
+
 def _origin_yaw(msg: OccupancyGrid) -> float:
     q = msg.info.origin.orientation
     siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
@@ -121,7 +140,7 @@ class FrontierDetector(Node):
             durability=DurabilityPolicy.TRANSIENT_LOCAL,
         )
 
-        self._last_summary: tuple[int, int] | None = None
+        self._last_summary: tuple[int, int, int] | None = None
         self._marker_pub = self.create_publisher(
             MarkerArray, marker_topic, marker_qos
         )
@@ -142,13 +161,18 @@ class FrontierDetector(Node):
         clusters = cluster_frontiers(
             frontier_cells, width, height, max(1, min_cluster_size)
         )
+        representatives = [
+            representative_cell(cluster, width) for cluster in clusters
+        ]
 
-        self._publish_markers(msg, frontier_cells, clusters)
+        self._publish_markers(msg, frontier_cells, clusters, representatives)
 
-        summary = (len(frontier_cells), len(clusters))
+        summary = (len(frontier_cells), len(clusters), len(representatives))
         if summary != self._last_summary:
             self.get_logger().info(
-                f'Frontier cells: {summary[0]} | valid clusters: {summary[1]}'
+                'Frontier cells: '
+                f'{summary[0]} | valid clusters: {summary[1]} '
+                f'| representatives: {summary[2]}'
             )
             self._last_summary = summary
 
@@ -157,6 +181,7 @@ class FrontierDetector(Node):
         msg: OccupancyGrid,
         frontier_cells: set[int],
         clusters: list[list[int]],
+        representatives: list[int],
     ) -> None:
         frame_id = msg.header.frame_id or 'map'
         resolution = max(float(msg.info.resolution), 0.01)
@@ -182,30 +207,56 @@ class FrontierDetector(Node):
         centers_marker = Marker()
         centers_marker.header.stamp = msg.header.stamp
         centers_marker.header.frame_id = frame_id
-        centers_marker.ns = 'frontier_cluster_centers'
+        centers_marker.ns = 'frontier_cluster_centroids'
         centers_marker.id = 1
         centers_marker.type = Marker.SPHERE_LIST
         centers_marker.action = Marker.ADD
         centers_marker.pose.orientation.w = 1.0
-        center_scale = max(resolution * 3.0, 0.15)
+        center_scale = max(resolution * 2.2, 0.11)
         centers_marker.scale.x = center_scale
         centers_marker.scale.y = center_scale
         centers_marker.scale.z = center_scale
         centers_marker.color.r = 1.0
         centers_marker.color.g = 0.5
         centers_marker.color.b = 0.0
-        centers_marker.color.a = 1.0
+        centers_marker.color.a = 0.8
 
         for cluster in clusters:
             points = [_cell_to_world(index, msg) for index in cluster]
             center = Point()
             center.x = sum(point.x for point in points) / len(points)
             center.y = sum(point.y for point in points) / len(points)
-            center.z = 0.10
+            center.z = 0.08
             centers_marker.points.append(center)
 
+        representative_marker = Marker()
+        representative_marker.header.stamp = msg.header.stamp
+        representative_marker.header.frame_id = frame_id
+        representative_marker.ns = 'frontier_representatives'
+        representative_marker.id = 2
+        representative_marker.type = Marker.SPHERE_LIST
+        representative_marker.action = Marker.ADD
+        representative_marker.pose.orientation.w = 1.0
+        representative_scale = max(resolution * 4.0, 0.20)
+        representative_marker.scale.x = representative_scale
+        representative_marker.scale.y = representative_scale
+        representative_marker.scale.z = representative_scale
+        representative_marker.color.r = 0.2
+        representative_marker.color.g = 1.0
+        representative_marker.color.b = 0.2
+        representative_marker.color.a = 1.0
+        representative_marker.points = [
+            _cell_to_world(index, msg) for index in representatives
+        ]
+        for point in representative_marker.points:
+            point.z = 0.12
+
         marker_array = MarkerArray()
-        marker_array.markers = [cells_marker, centers_marker]
+        marker_array.markers = [
+            cells_marker,
+            centers_marker,
+            representative_marker,
+        ]
         self._marker_pub.publish(marker_array)
 
 
