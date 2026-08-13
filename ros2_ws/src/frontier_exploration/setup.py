@@ -29,6 +29,7 @@ setup(
         'console_scripts': [
             'frontier_detector = frontier_exploration.frontier_detector:main',
             'exploration_manager = frontier_exploration.exploration_manager:main',
+            'sim_twist_adapter = frontier_exploration.sim_twist_adapter:main',
         ],
     },
 )
