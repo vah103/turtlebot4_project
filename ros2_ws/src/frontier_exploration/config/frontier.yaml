@@ -2,6 +2,7 @@ frontier_detector:
   ros__parameters:
     map_topic: /map
     marker_topic: /frontier_markers
+    robot_frame: base_link
     min_cluster_size: 5
     segment_radius_m: 0.75
     min_segment_size: 5
