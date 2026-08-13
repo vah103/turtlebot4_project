@@ -10,3 +10,11 @@ frontier_detector:
     segment_radius_m: 0.75
     min_segment_size: 5
     min_selection_distance_m: 0.60
+
+exploration_manager:
+  ros__parameters:
+    path_topic: /frontier_selected_path
+    navigate_action: /navigate_to_pose
+    enable_navigation: false
+    goal_repeat_tolerance_m: 0.20
+    retry_period_sec: 1.0
