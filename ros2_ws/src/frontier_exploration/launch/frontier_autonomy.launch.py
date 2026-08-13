@@ -17,6 +17,11 @@ def generate_launch_description() -> LaunchDescription:
     )
     enable_navigation = LaunchConfiguration('enable_navigation')
     enable_sim_twist_adapter = LaunchConfiguration('enable_sim_twist_adapter')
+    use_sim_time = LaunchConfiguration('use_sim_time')
+
+    common_time_parameter = {
+        'use_sim_time': ParameterValue(use_sim_time, value_type=bool)
+    }
 
     manager = Node(
         package='frontier_exploration',
@@ -25,6 +30,7 @@ def generate_launch_description() -> LaunchDescription:
         output='screen',
         parameters=[
             config_path,
+            common_time_parameter,
             {
                 'enable_navigation': ParameterValue(
                     enable_navigation, value_type=bool
@@ -40,10 +46,11 @@ def generate_launch_description() -> LaunchDescription:
         output='screen',
         condition=IfCondition(enable_sim_twist_adapter),
         parameters=[
+            common_time_parameter,
             {
                 'input_topic': '/cmd_vel_stamped',
                 'output_topic': '/cmd_vel',
-            }
+            },
         ],
     )
 
@@ -52,7 +59,7 @@ def generate_launch_description() -> LaunchDescription:
         executable='frontier_detector',
         name='frontier_detector',
         output='screen',
-        parameters=[config_path],
+        parameters=[config_path, common_time_parameter],
     )
 
     return LaunchDescription(
@@ -69,6 +76,11 @@ def generate_launch_description() -> LaunchDescription:
                     'Simulation only: convert /cmd_vel_stamped TwistStamped '
                     'to /cmd_vel Twist for the Gazebo bridge.'
                 ),
+            ),
+            DeclareLaunchArgument(
+                'use_sim_time',
+                default_value='false',
+                description='Use the /clock simulation time source.',
             ),
             manager,
             adapter,
