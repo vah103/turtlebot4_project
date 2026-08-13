@@ -8,17 +8,20 @@ Mục tiêu hiện tại:
 2. Phát hiện frontier cell tại biên `free`–`unknown`.
 3. Gom frontier bằng connected components.
 4. Lọc các cụm quá nhỏ.
-5. Publish RViz markers để kiểm tra trực quan frontier cell và tâm frontier cluster.
-6. Sau khi detector ổn định mới bổ sung representative goal, scoring và Nav2.
+5. Publish RViz markers để kiểm tra trực quan frontier cell, centroid và representative point.
+6. Sau khi representative point ổn định mới bổ sung scoring và Nav2.
 
 ## Trạng thái hiện tại
 
 `frontier_detector` vẫn là node **read-only** đối với robot: node chỉ subscribe map, phát hiện frontier và publish marker trực quan. Node chưa publish navigation goal và chưa điều khiển robot.
 
-Các marker hiện có:
+Với mỗi cluster, representative point được chọn bằng cách tính centroid trong grid rồi lấy **frontier cell gần centroid nhất**. Vì representative vẫn là một frontier cell nên nó nằm trên ô `free` của occupancy grid thay vì rơi trực tiếp vào vùng `unknown`. Đây mới là kiểm tra an toàn ở mức occupancy map; costmap/footprint/Nav2 feasibility sẽ được kiểm tra ở bước sau.
 
-- `/frontier_markers` → `frontier_cells`: toàn bộ frontier cells.
-- `/frontier_markers` → `frontier_cluster_centers`: tâm hình học của các cluster hợp lệ.
+Các marker hiện có trên `/frontier_markers`:
+
+- `frontier_cells`: toàn bộ frontier cells.
+- `frontier_cluster_centroids`: centroid hình học của các cluster hợp lệ.
+- `frontier_representatives`: representative point được chọn trên chính frontier cell.
 
 ## Build
 
@@ -42,13 +45,15 @@ Mặc định node đọc `/map` và publish `/frontier_markers`. Có thể đ�
 2. Chọn **Add**.
 3. Chọn display type **MarkerArray**.
 4. Đặt topic thành `/frontier_markers`.
-5. Kiểm tra các điểm frontier nằm trên ranh giới free–unknown và cluster center nằm gần giữa mỗi cụm.
+5. Kiểm tra frontier cell nằm trên ranh giới free–unknown.
+6. Kiểm tra representative point nằm trên một frontier cell hợp lệ.
 
 ## Các bước tiếp theo
 
-- Chọn representative point an toàn cho mỗi frontier cluster.
+- Kiểm tra representative point trong Depot/Warehouse.
+- Tách/điều chỉnh cluster nếu một frontier liên tục quá lớn tạo ra quá ít candidate goal.
 - Thêm nearest-frontier baseline.
-- Kiểm tra costmap / khả năng lập đường.
+- Kiểm tra costmap / footprint / khả năng lập đường.
 - Tích hợp Nav2 trong simulation.
 - Thêm blacklist, stopping condition và benchmark logging.
 
