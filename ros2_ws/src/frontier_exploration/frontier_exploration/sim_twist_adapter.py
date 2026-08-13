@@ -1,7 +1,8 @@
 """Simulation-only TwistStamped -> Twist adapter for TurtleBot4 Gazebo.
 
 This node is disabled unless explicitly launched. It bridges Nav2's stamped
-/cmd_vel output to the unstamped Twist type expected by the Gazebo bridge.
+velocity output on a dedicated topic to the unstamped Twist type expected by
+the Gazebo bridge.
 """
 
 import rclpy
@@ -14,11 +15,18 @@ class SimTwistAdapter(Node):
 
     def __init__(self) -> None:
         super().__init__('sim_twist_adapter')
-        self.declare_parameter('input_topic', '/cmd_vel')
+        self.declare_parameter('input_topic', '/cmd_vel_stamped')
         self.declare_parameter('output_topic', '/cmd_vel')
 
         input_topic = str(self.get_parameter('input_topic').value)
         output_topic = str(self.get_parameter('output_topic').value)
+
+        if input_topic == output_topic:
+            raise RuntimeError(
+                'input_topic and output_topic must be different because ROS 2 '
+                'cannot create different message types on the same topic name '
+                'inside this process'
+            )
 
         self._publisher = self.create_publisher(Twist, output_topic, 10)
         self.create_subscription(TwistStamped, input_topic, self._on_twist, 10)
