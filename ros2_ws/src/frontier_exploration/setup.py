@@ -9,7 +9,13 @@ setup(
     data_files=[
         ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        ('share/' + package_name + '/launch', ['launch/frontier_detector.launch.py']),
+        (
+            'share/' + package_name + '/launch',
+            [
+                'launch/frontier_detector.launch.py',
+                'launch/frontier_autonomy.launch.py',
+            ],
+        ),
         ('share/' + package_name + '/config', ['config/frontier.yaml']),
     ],
     install_requires=['setuptools'],
@@ -22,6 +28,7 @@ setup(
     entry_points={
         'console_scripts': [
             'frontier_detector = frontier_exploration.frontier_detector:main',
+            'exploration_manager = frontier_exploration.exploration_manager:main',
         ],
     },
 )
