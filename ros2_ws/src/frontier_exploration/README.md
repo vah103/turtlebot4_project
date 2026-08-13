@@ -20,7 +20,7 @@ Với mỗi cluster, representative point được chọn bằng cách tính cen
 Các marker hiện có trên `/frontier_markers`:
 
 - `frontier_cells`: toàn bộ frontier cells.
-- `frontier_cluster_centroids`: centroid hình học của các cluster hợp lệ.
+- `frontier_cluster_centers`: centroid hình học của các cluster hợp lệ.
 - `frontier_representatives`: representative point được chọn trên chính frontier cell.
 
 ## Build
