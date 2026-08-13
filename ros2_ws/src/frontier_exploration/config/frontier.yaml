@@ -1,4 +1,5 @@
 frontier_detector:
   ros__parameters:
     map_topic: /map
+    marker_topic: /frontier_markers
     min_cluster_size: 5
