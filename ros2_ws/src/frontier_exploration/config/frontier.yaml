@@ -3,3 +3,5 @@ frontier_detector:
     map_topic: /map
     marker_topic: /frontier_markers
     min_cluster_size: 5
+    segment_radius_m: 0.75
+    min_segment_size: 5
