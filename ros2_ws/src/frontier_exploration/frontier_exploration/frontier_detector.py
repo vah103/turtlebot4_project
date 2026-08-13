@@ -1,7 +1,7 @@
-"""Read-only frontier detector with RViz visualization for TurtleBot4."""
+"""Read-only frontier detector and nearest-frontier selector for TurtleBot4."""
 
 from collections import deque
-from math import atan2, cos, sin
+from math import atan2, cos, hypot, sin
 from typing import Iterable
 
 import rclpy
@@ -9,6 +9,8 @@ from geometry_msgs.msg import Point
 from nav_msgs.msg import OccupancyGrid
 from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
+from rclpy.time import Time
+from tf2_ros import Buffer, TransformException, TransformListener
 from visualization_msgs.msg import Marker, MarkerArray
 
 
@@ -189,13 +191,38 @@ def _cell_to_world(index: int, msg: OccupancyGrid) -> Point:
     return point
 
 
+def nearest_representative(
+    representatives: list[int],
+    msg: OccupancyGrid,
+    robot_x: float,
+    robot_y: float,
+) -> tuple[int, float] | None:
+    """Return the representative with the smallest Euclidean robot distance."""
+    if not representatives:
+        return None
+
+    best_index = representatives[0]
+    best_point = _cell_to_world(best_index, msg)
+    best_distance = hypot(best_point.x - robot_x, best_point.y - robot_y)
+
+    for index in representatives[1:]:
+        point = _cell_to_world(index, msg)
+        distance = hypot(point.x - robot_x, point.y - robot_y)
+        if distance < best_distance:
+            best_index = index
+            best_distance = distance
+
+    return best_index, best_distance
+
+
 class FrontierDetector(Node):
-    """Subscribe to an occupancy grid, detect frontiers, and publish RViz markers."""
+    """Detect frontier candidates and visualize nearest-frontier selection."""
 
     def __init__(self) -> None:
         super().__init__('frontier_detector')
         self.declare_parameter('map_topic', '/map')
         self.declare_parameter('marker_topic', '/frontier_markers')
+        self.declare_parameter('robot_frame', 'base_link')
         self.declare_parameter('min_cluster_size', 5)
         self.declare_parameter('segment_radius_m', 0.75)
         self.declare_parameter('min_segment_size', 5)
@@ -214,7 +241,11 @@ class FrontierDetector(Node):
             durability=DurabilityPolicy.TRANSIENT_LOCAL,
         )
 
-        self._last_summary: tuple[int, int, int, int] | None = None
+        self._last_summary: tuple[int, int, int, int, int] | None = None
+        self._last_selected: tuple[int, int] | None = None
+        self._tf_warning_shown = False
+        self._tf_buffer = Buffer()
+        self._tf_listener = TransformListener(self._tf_buffer, self)
         self._marker_pub = self.create_publisher(
             MarkerArray, marker_topic, marker_qos
         )
@@ -222,6 +253,29 @@ class FrontierDetector(Node):
 
         self.get_logger().info(f'Listening for occupancy grids on {map_topic}')
         self.get_logger().info(f'Publishing RViz markers on {marker_topic}')
+        self.get_logger().info('Nearest-frontier selection is visualization only')
+
+    def _robot_position(self, map_frame: str) -> tuple[float, float] | None:
+        robot_frame = str(self.get_parameter('robot_frame').value)
+        try:
+            transform = self._tf_buffer.lookup_transform(
+                map_frame,
+                robot_frame,
+                Time(),
+            )
+        except TransformException as exc:
+            if not self._tf_warning_shown:
+                self.get_logger().warning(
+                    f'Waiting for TF {map_frame} -> {robot_frame}: {exc}'
+                )
+                self._tf_warning_shown = True
+            return None
+
+        self._tf_warning_shown = False
+        return (
+            transform.transform.translation.x,
+            transform.transform.translation.y,
+        )
 
     def _on_map(self, msg: OccupancyGrid) -> None:
         width = msg.info.width
@@ -256,21 +310,52 @@ class FrontierDetector(Node):
             representative_cell(segment, width) for segment in segments
         ]
 
-        self._publish_markers(msg, frontier_cells, segments, representatives)
+        map_frame = msg.header.frame_id or 'map'
+        robot_position = self._robot_position(map_frame)
+        selected: tuple[int, float] | None = None
+        if robot_position is not None:
+            selected = nearest_representative(
+                representatives,
+                msg,
+                robot_position[0],
+                robot_position[1],
+            )
+
+        selected_index = selected[0] if selected is not None else None
+        self._publish_markers(
+            msg,
+            frontier_cells,
+            segments,
+            representatives,
+            selected_index,
+        )
 
         summary = (
             len(frontier_cells),
             len(clusters),
             len(segments),
             len(representatives),
+            1 if selected is not None else 0,
         )
         if summary != self._last_summary:
             self.get_logger().info(
                 'Frontier cells: '
                 f'{summary[0]} | connected clusters: {summary[1]} '
-                f'| segments: {summary[2]} | representatives: {summary[3]}'
+                f'| segments: {summary[2]} | representatives: {summary[3]} '
+                f'| selected: {summary[4]}'
             )
             self._last_summary = summary
+
+        if selected is not None:
+            selected_key = (selected[0], round(selected[1] * 100))
+            if selected_key != self._last_selected:
+                point = _cell_to_world(selected[0], msg)
+                self.get_logger().info(
+                    'Nearest frontier: '
+                    f'x={point.x:.2f}, y={point.y:.2f}, '
+                    f'distance={selected[1]:.2f} m'
+                )
+                self._last_selected = selected_key
 
     def _publish_markers(
         self,
@@ -278,6 +363,7 @@ class FrontierDetector(Node):
         frontier_cells: set[int],
         segments: list[list[int]],
         representatives: list[int],
+        selected_index: int | None,
     ) -> None:
         frame_id = msg.header.frame_id or 'map'
         resolution = max(float(msg.info.resolution), 0.01)
@@ -350,12 +436,37 @@ class FrontierDetector(Node):
         for point in representative_marker.points:
             point.z = 0.12
 
+        selected_marker = Marker()
+        selected_marker.header.stamp = msg.header.stamp
+        selected_marker.header.frame_id = frame_id
+        selected_marker.ns = 'nearest_frontier_selected'
+        selected_marker.id = 3
+        selected_marker.type = Marker.SPHERE
+        selected_marker.action = Marker.ADD
+        selected_marker.pose.orientation.w = 1.0
+        selected_scale = max(resolution * 5.0, 0.25)
+        selected_marker.scale.x = selected_scale
+        selected_marker.scale.y = selected_scale
+        selected_marker.scale.z = selected_scale
+        selected_marker.color.r = 1.0
+        selected_marker.color.g = 0.1
+        selected_marker.color.b = 0.1
+        selected_marker.color.a = 1.0
+        if selected_index is not None:
+            selected_point = _cell_to_world(selected_index, msg)
+            selected_marker.pose.position.x = selected_point.x
+            selected_marker.pose.position.y = selected_point.y
+            selected_marker.pose.position.z = 0.18
+        else:
+            selected_marker.action = Marker.DELETE
+
         marker_array = MarkerArray()
         marker_array.markers = [
             delete_all,
             cells_marker,
             segment_centers_marker,
             representative_marker,
+            selected_marker,
         ]
         self._marker_pub.publish(marker_array)
 
