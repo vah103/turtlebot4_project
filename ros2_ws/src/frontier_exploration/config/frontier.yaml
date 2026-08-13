@@ -2,7 +2,10 @@ frontier_detector:
   ros__parameters:
     map_topic: /map
     marker_topic: /frontier_markers
+    path_topic: /frontier_selected_path
     robot_frame: base_link
+    planner_action: /compute_path_to_pose
+    planner_id: ""
     min_cluster_size: 5
     segment_radius_m: 0.75
     min_segment_size: 5
