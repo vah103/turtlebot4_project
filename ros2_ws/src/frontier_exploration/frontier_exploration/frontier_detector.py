@@ -207,7 +207,7 @@ class FrontierDetector(Node):
         centers_marker = Marker()
         centers_marker.header.stamp = msg.header.stamp
         centers_marker.header.frame_id = frame_id
-        centers_marker.ns = 'frontier_cluster_centroids'
+        centers_marker.ns = 'frontier_cluster_centers'
         centers_marker.id = 1
         centers_marker.type = Marker.SPHERE_LIST
         centers_marker.action = Marker.ADD
