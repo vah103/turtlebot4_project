@@ -48,7 +48,8 @@ def cluster_frontiers(
     clusters: list[list[int]] = []
 
     while remaining:
-        seed = remaining.pop()
+        seed = min(remaining)
+        remaining.remove(seed)
         queue = deque([seed])
         cluster = [seed]
 
@@ -66,18 +67,89 @@ def cluster_frontiers(
     return clusters
 
 
-def representative_cell(cluster: list[int], width: int) -> int:
-    """Return the frontier cell nearest the cluster centroid in grid coordinates."""
-    if not cluster:
-        raise ValueError('cluster must not be empty')
+def split_frontier_cluster(
+    cluster: list[int],
+    width: int,
+    height: int,
+    segment_radius_cells: int,
+    min_segment_size: int,
+) -> list[list[int]]:
+    """Split one long connected frontier into local connected segments."""
+    remaining = set(cluster)
+    segments: list[list[int]] = []
+    radius_sq = max(1, segment_radius_cells) ** 2
 
-    xs = [index % width for index in cluster]
-    ys = [index // width for index in cluster]
+    while remaining:
+        seed = min(remaining)
+        remaining.remove(seed)
+        seed_x = seed % width
+        seed_y = seed // width
+        queue = deque([seed])
+        segment = [seed]
+
+        while queue:
+            current = queue.popleft()
+            for neighbor in _neighbors(current, width, height):
+                if neighbor not in remaining:
+                    continue
+
+                neighbor_x = neighbor % width
+                neighbor_y = neighbor // width
+                distance_sq = (
+                    (neighbor_x - seed_x) ** 2 + (neighbor_y - seed_y) ** 2
+                )
+                if distance_sq > radius_sq:
+                    continue
+
+                remaining.remove(neighbor)
+                queue.append(neighbor)
+                segment.append(neighbor)
+
+        if len(segment) >= min_segment_size:
+            segments.append(segment)
+
+    return segments
+
+
+def split_frontier_clusters(
+    clusters: list[list[int]],
+    width: int,
+    height: int,
+    resolution: float,
+    segment_radius_m: float,
+    min_segment_size: int,
+) -> list[list[int]]:
+    """Split every connected frontier cluster into local candidate segments."""
+    safe_resolution = max(float(resolution), 1e-6)
+    radius_cells = max(1, round(segment_radius_m / safe_resolution))
+    segments: list[list[int]] = []
+
+    for cluster in clusters:
+        segments.extend(
+            split_frontier_cluster(
+                cluster,
+                width,
+                height,
+                radius_cells,
+                min_segment_size,
+            )
+        )
+
+    return segments
+
+
+def representative_cell(segment: list[int], width: int) -> int:
+    """Return the frontier cell nearest the segment centroid."""
+    if not segment:
+        raise ValueError('segment must not be empty')
+
+    xs = [index % width for index in segment]
+    ys = [index // width for index in segment]
     centroid_x = sum(xs) / len(xs)
     centroid_y = sum(ys) / len(ys)
 
     return min(
-        cluster,
+        segment,
         key=lambda index: (
             (index % width - centroid_x) ** 2
             + (index // width - centroid_y) ** 2
@@ -125,6 +197,8 @@ class FrontierDetector(Node):
         self.declare_parameter('map_topic', '/map')
         self.declare_parameter('marker_topic', '/frontier_markers')
         self.declare_parameter('min_cluster_size', 5)
+        self.declare_parameter('segment_radius_m', 0.75)
+        self.declare_parameter('min_segment_size', 5)
 
         map_topic = self.get_parameter('map_topic').value
         marker_topic = self.get_parameter('marker_topic').value
@@ -140,7 +214,7 @@ class FrontierDetector(Node):
             durability=DurabilityPolicy.TRANSIENT_LOCAL,
         )
 
-        self._last_summary: tuple[int, int, int] | None = None
+        self._last_summary: tuple[int, int, int, int] | None = None
         self._marker_pub = self.create_publisher(
             MarkerArray, marker_topic, marker_qos
         )
@@ -156,23 +230,45 @@ class FrontierDetector(Node):
             self.get_logger().warning('Ignoring invalid OccupancyGrid dimensions')
             return
 
-        min_cluster_size = int(self.get_parameter('min_cluster_size').value)
+        min_cluster_size = max(
+            1, int(self.get_parameter('min_cluster_size').value)
+        )
+        segment_radius_m = max(
+            0.05, float(self.get_parameter('segment_radius_m').value)
+        )
+        min_segment_size = max(
+            1, int(self.get_parameter('min_segment_size').value)
+        )
+
         frontier_cells = detect_frontier_cells(list(msg.data), width, height)
         clusters = cluster_frontiers(
-            frontier_cells, width, height, max(1, min_cluster_size)
+            frontier_cells, width, height, min_cluster_size
+        )
+        segments = split_frontier_clusters(
+            clusters,
+            width,
+            height,
+            msg.info.resolution,
+            segment_radius_m,
+            min_segment_size,
         )
         representatives = [
-            representative_cell(cluster, width) for cluster in clusters
+            representative_cell(segment, width) for segment in segments
         ]
 
-        self._publish_markers(msg, frontier_cells, clusters, representatives)
+        self._publish_markers(msg, frontier_cells, segments, representatives)
 
-        summary = (len(frontier_cells), len(clusters), len(representatives))
+        summary = (
+            len(frontier_cells),
+            len(clusters),
+            len(segments),
+            len(representatives),
+        )
         if summary != self._last_summary:
             self.get_logger().info(
                 'Frontier cells: '
-                f'{summary[0]} | valid clusters: {summary[1]} '
-                f'| representatives: {summary[2]}'
+                f'{summary[0]} | connected clusters: {summary[1]} '
+                f'| segments: {summary[2]} | representatives: {summary[3]}'
             )
             self._last_summary = summary
 
@@ -180,11 +276,14 @@ class FrontierDetector(Node):
         self,
         msg: OccupancyGrid,
         frontier_cells: set[int],
-        clusters: list[list[int]],
+        segments: list[list[int]],
         representatives: list[int],
     ) -> None:
         frame_id = msg.header.frame_id or 'map'
         resolution = max(float(msg.info.resolution), 0.01)
+
+        delete_all = Marker()
+        delete_all.action = Marker.DELETEALL
 
         cells_marker = Marker()
         cells_marker.header.stamp = msg.header.stamp
@@ -204,30 +303,30 @@ class FrontierDetector(Node):
             _cell_to_world(index, msg) for index in sorted(frontier_cells)
         ]
 
-        centers_marker = Marker()
-        centers_marker.header.stamp = msg.header.stamp
-        centers_marker.header.frame_id = frame_id
-        centers_marker.ns = 'frontier_cluster_centers'
-        centers_marker.id = 1
-        centers_marker.type = Marker.SPHERE_LIST
-        centers_marker.action = Marker.ADD
-        centers_marker.pose.orientation.w = 1.0
+        segment_centers_marker = Marker()
+        segment_centers_marker.header.stamp = msg.header.stamp
+        segment_centers_marker.header.frame_id = frame_id
+        segment_centers_marker.ns = 'frontier_segment_centers'
+        segment_centers_marker.id = 1
+        segment_centers_marker.type = Marker.SPHERE_LIST
+        segment_centers_marker.action = Marker.ADD
+        segment_centers_marker.pose.orientation.w = 1.0
         center_scale = max(resolution * 2.2, 0.11)
-        centers_marker.scale.x = center_scale
-        centers_marker.scale.y = center_scale
-        centers_marker.scale.z = center_scale
-        centers_marker.color.r = 1.0
-        centers_marker.color.g = 0.5
-        centers_marker.color.b = 0.0
-        centers_marker.color.a = 0.8
+        segment_centers_marker.scale.x = center_scale
+        segment_centers_marker.scale.y = center_scale
+        segment_centers_marker.scale.z = center_scale
+        segment_centers_marker.color.r = 1.0
+        segment_centers_marker.color.g = 0.5
+        segment_centers_marker.color.b = 0.0
+        segment_centers_marker.color.a = 0.8
 
-        for cluster in clusters:
-            points = [_cell_to_world(index, msg) for index in cluster]
+        for segment in segments:
+            points = [_cell_to_world(index, msg) for index in segment]
             center = Point()
             center.x = sum(point.x for point in points) / len(points)
             center.y = sum(point.y for point in points) / len(points)
             center.z = 0.08
-            centers_marker.points.append(center)
+            segment_centers_marker.points.append(center)
 
         representative_marker = Marker()
         representative_marker.header.stamp = msg.header.stamp
@@ -237,7 +336,7 @@ class FrontierDetector(Node):
         representative_marker.type = Marker.SPHERE_LIST
         representative_marker.action = Marker.ADD
         representative_marker.pose.orientation.w = 1.0
-        representative_scale = max(resolution * 4.0, 0.20)
+        representative_scale = max(resolution * 3.0, 0.15)
         representative_marker.scale.x = representative_scale
         representative_marker.scale.y = representative_scale
         representative_marker.scale.z = representative_scale
@@ -253,8 +352,9 @@ class FrontierDetector(Node):
 
         marker_array = MarkerArray()
         marker_array.markers = [
+            delete_all,
             cells_marker,
-            centers_marker,
+            segment_centers_marker,
             representative_marker,
         ]
         self._marker_pub.publish(marker_array)
