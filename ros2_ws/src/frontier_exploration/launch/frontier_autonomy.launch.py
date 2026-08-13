@@ -41,7 +41,7 @@ def generate_launch_description() -> LaunchDescription:
         condition=IfCondition(enable_sim_twist_adapter),
         parameters=[
             {
-                'input_topic': '/cmd_vel',
+                'input_topic': '/cmd_vel_stamped',
                 'output_topic': '/cmd_vel',
             }
         ],
@@ -66,8 +66,8 @@ def generate_launch_description() -> LaunchDescription:
                 'enable_sim_twist_adapter',
                 default_value='false',
                 description=(
-                    'Simulation only: convert /cmd_vel TwistStamped to Twist '
-                    'for a Gazebo bridge that expects unstamped velocity.'
+                    'Simulation only: convert /cmd_vel_stamped TwistStamped '
+                    'to /cmd_vel Twist for the Gazebo bridge.'
                 ),
             ),
             manager,
