@@ -3,6 +3,7 @@ frontier_map_preprocessor:
     input_map_topic: /map
     output_map_topic: /frontier_map
     robot_frame: base_link
+    odom_frame: odom
     gap_fill_radius_m: 0.10
     seed_search_radius_m: 0.50
 
@@ -12,6 +13,7 @@ frontier_detector:
     marker_topic: /frontier_markers
     path_topic: /frontier_selected_path
     robot_frame: base_link
+    odom_frame: odom
     planner_action: /compute_path_to_pose
     planner_id: ""
     min_cluster_size: 5
