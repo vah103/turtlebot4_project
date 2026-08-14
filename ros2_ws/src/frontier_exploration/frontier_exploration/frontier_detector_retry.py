@@ -1,10 +1,11 @@
 """Retry-capable wrapper for the frontier detector's Nav2 planner checks."""
 
-import time
+from math import hypot
 
 import rclpy
+from geometry_msgs.msg import PointStamped
 
-from frontier_exploration.frontier_detector import FrontierDetector
+from frontier_exploration.frontier_detector import FrontierDetector, _cell_to_world
 
 
 class RetryFrontierDetector(FrontierDetector):
@@ -14,15 +15,23 @@ class RetryFrontierDetector(FrontierDetector):
         super().__init__()
         self.declare_parameter('planner_retry_period_sec', 1.0)
         self.declare_parameter('planner_rejection_retry_limit', 15)
+        self.declare_parameter('failed_goal_topic', '/frontier_failed_goal')
+        self.declare_parameter('failed_goal_radius_m', 0.75)
+        self.declare_parameter('failed_goal_cooldown_sec', 30.0)
 
         retry_period = max(
             0.1, float(self.get_parameter('planner_retry_period_sec').value)
         )
+        failed_goal_topic = str(self.get_parameter('failed_goal_topic').value)
+
         self._planner_retry_counts: dict[tuple[int, int], int] = {}
-        self._planner_retry_key: tuple[int, int] | None = None
-        self._planner_retry_not_before = 0.0
+        self._retry_not_before_sec = 0.0
+        self._failed_goals: list[tuple[float, float, float]] = []
         self._planner_retry_timer = self.create_timer(
             retry_period, self._retry_pending_planner_check
+        )
+        self.create_subscription(
+            PointStamped, failed_goal_topic, self._on_failed_goal, 10
         )
 
         self.get_logger().info(
@@ -30,25 +39,87 @@ class RetryFrontierDetector(FrontierDetector):
             f'period={retry_period:.2f}s, '
             f'limit={int(self.get_parameter("planner_rejection_retry_limit").value)}'
         )
+        self.get_logger().info(
+            f'Failed frontier blacklist listening on {failed_goal_topic}'
+        )
 
-    def _start_next_path_check(self) -> None:
-        """Respect retry cooldown even when new map messages arrive rapidly."""
-        if self._planner_retry_key is not None and self._candidate_queue:
-            queue_key = (self._generation, self._candidate_queue[0][0])
-            if queue_key == self._planner_retry_key:
-                if time.monotonic() < self._planner_retry_not_before:
-                    return
+    def _now_sec(self) -> float:
+        return self.get_clock().now().nanoseconds / 1e9
 
-        super()._start_next_path_check()
+    def _prune_failed_goals(self) -> None:
+        now = self._now_sec()
+        self._failed_goals = [
+            item for item in self._failed_goals if item[2] > now
+        ]
+
+    def _is_blacklisted_xy(self, x: float, y: float) -> bool:
+        self._prune_failed_goals()
+        radius = max(
+            0.0, float(self.get_parameter('failed_goal_radius_m').value)
+        )
+        return any(
+            hypot(x - failed_x, y - failed_y) <= radius
+            for failed_x, failed_y, _ in self._failed_goals
+        )
+
+    def _on_failed_goal(self, msg: PointStamped) -> None:
+        cooldown = max(
+            0.0, float(self.get_parameter('failed_goal_cooldown_sec').value)
+        )
+        if cooldown <= 0.0:
+            return
+
+        x = float(msg.point.x)
+        y = float(msg.point.y)
+        expiry = self._now_sec() + cooldown
+        self._failed_goals.append((x, y, expiry))
+        self._prune_failed_goals()
+
+        self.get_logger().warning(
+            'Blacklisting failed frontier region: '
+            f'x={x:.2f}, y={y:.2f}, cooldown={cooldown:.1f}s'
+        )
+
+        # Invalidate any selection or in-flight planner check based on the old
+        # candidate set. A fresh ordering will skip the blacklisted region.
+        self._generation += 1
+        self._candidate_signature = None
+        self._candidate_queue = []
+        self._planning_candidate = None
+        self._selected_index = None
+        self._selected_distance = None
+        self._selected_path = None
+
+        latest_map = self._latest_map
+        if latest_map is not None:
+            self._publish_empty_path(latest_map.header.frame_id or 'map')
+            super()._on_map(latest_map)
 
     def _retry_pending_planner_check(self) -> None:
         """Periodically retry queued candidates once the planner becomes usable."""
         self._start_next_path_check()
 
-    def _clear_retry_cooldown(self, key: tuple[int, int]) -> None:
-        if self._planner_retry_key == key:
-            self._planner_retry_key = None
-            self._planner_retry_not_before = 0.0
+    def _start_next_path_check(self) -> None:
+        now = self._now_sec()
+        if now < self._retry_not_before_sec:
+            return
+
+        skipped = 0
+        if self._latest_map is not None:
+            while self._candidate_queue:
+                index, _ = self._candidate_queue[0]
+                point = _cell_to_world(index, self._latest_map)
+                if not self._is_blacklisted_xy(point.x, point.y):
+                    break
+                self._candidate_queue.pop(0)
+                skipped += 1
+
+        if skipped:
+            self.get_logger().info(
+                f'Skipped {skipped} candidate(s) inside failed-frontier blacklist'
+            )
+
+        super()._start_next_path_check()
 
     def _requeue_transient_planner_failure(
         self,
@@ -60,7 +131,6 @@ class RetryFrontierDetector(FrontierDetector):
 
         generation, index, distance = candidate
         if generation != self._generation:
-            self._clear_retry_cooldown((generation, index))
             self._start_next_path_check()
             return
 
@@ -71,13 +141,12 @@ class RetryFrontierDetector(FrontierDetector):
         retry_count = self._planner_retry_counts.get(key, 0) + 1
 
         if retry_count <= retry_limit:
+            self._planner_retry_counts[key] = retry_count
+            self._candidate_queue.insert(0, (index, distance))
             retry_period = max(
                 0.1, float(self.get_parameter('planner_retry_period_sec').value)
             )
-            self._planner_retry_counts[key] = retry_count
-            self._candidate_queue.insert(0, (index, distance))
-            self._planner_retry_key = key
-            self._planner_retry_not_before = time.monotonic() + retry_period
+            self._retry_not_before_sec = self._now_sec() + retry_period
             self.get_logger().warning(
                 f'{reason}; keeping candidate for retry '
                 f'{retry_count}/{retry_limit} in about {retry_period:.1f}s'
@@ -86,7 +155,7 @@ class RetryFrontierDetector(FrontierDetector):
             return
 
         self._planner_retry_counts.pop(key, None)
-        self._clear_retry_cooldown(key)
+        self._retry_not_before_sec = 0.0
         self.get_logger().warning(
             f'{reason}; retry limit reached, skipping this candidate'
         )
@@ -117,9 +186,8 @@ class RetryFrontierDetector(FrontierDetector):
             )
             return
 
-        key = (candidate[0], candidate[1])
-        self._planner_retry_counts.pop(key, None)
-        self._clear_retry_cooldown(key)
+        self._retry_not_before_sec = 0.0
+        self._planner_retry_counts.pop((candidate[0], candidate[1]), None)
         result_future = goal_handle.get_result_async()
         result_future.add_done_callback(
             lambda finished_future, expected=candidate:
