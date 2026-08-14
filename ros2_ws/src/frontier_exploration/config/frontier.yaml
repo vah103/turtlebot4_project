@@ -1,6 +1,14 @@
+frontier_map_preprocessor:
+  ros__parameters:
+    input_map_topic: /map
+    output_map_topic: /frontier_map
+    robot_frame: base_link
+    gap_fill_radius_m: 0.10
+    seed_search_radius_m: 0.50
+
 frontier_detector:
   ros__parameters:
-    map_topic: /map
+    map_topic: /frontier_map
     marker_topic: /frontier_markers
     path_topic: /frontier_selected_path
     robot_frame: base_link
