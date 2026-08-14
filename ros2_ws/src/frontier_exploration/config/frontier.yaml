@@ -18,6 +18,8 @@ frontier_detector:
     segment_radius_m: 0.75
     min_segment_size: 5
     min_selection_distance_m: 0.60
+    planner_retry_period_sec: 1.0
+    planner_rejection_retry_limit: 15
 
 exploration_manager:
   ros__parameters:
