@@ -20,6 +20,9 @@ frontier_detector:
     min_selection_distance_m: 0.60
     planner_retry_period_sec: 1.0
     planner_rejection_retry_limit: 15
+    failed_goal_topic: /frontier_failed_goal
+    failed_goal_radius_m: 0.75
+    failed_goal_cooldown_sec: 30.0
 
 exploration_manager:
   ros__parameters:
@@ -28,3 +31,9 @@ exploration_manager:
     enable_navigation: false
     goal_repeat_tolerance_m: 0.20
     retry_period_sec: 1.0
+    failed_goal_topic: /frontier_failed_goal
+    failed_goal_radius_m: 0.75
+    failed_goal_cooldown_sec: 30.0
+    stall_timeout_sec: 15.0
+    stall_progress_epsilon_m: 0.10
+    navigation_timeout_sec: 90.0
