@@ -41,27 +41,52 @@ class ExplorationManager(Node):
         self._pending_goal = None
         self._active_goal = None
         self._last_finished_goal: tuple[float, float] | None = None
+        self._awaiting_fresh_path = False
+        self._active_path_notice_shown = False
         self._navigate_warning_shown = False
         self._disabled_notice_shown = False
 
         enabled = bool(self.get_parameter('enable_navigation').value)
-        self.get_logger().info(f'Listening for validated frontier path on {path_topic}')
+        self.get_logger().info(
+            f'Listening for validated frontier path on {path_topic}'
+        )
         self.get_logger().info(f'NavigateToPose action: {navigate_action}')
         if enabled:
             self.get_logger().warning(
-                'AUTONOMOUS NAVIGATION IS ENABLED: validated frontier goals may move the simulation robot'
+                'AUTONOMOUS NAVIGATION IS ENABLED: validated frontier goals '
+                'may move the simulation robot'
             )
         else:
             self.get_logger().info(
-                'Autonomous navigation is disabled; set enable_navigation:=true explicitly to allow NavigateToPose goals'
+                'Autonomous navigation is disabled; set '
+                'enable_navigation:=true explicitly to allow NavigateToPose goals'
             )
 
     def _on_path(self, path: Path) -> None:
         if not path.poses:
             return
 
+        # A path selected while the robot is moving may already be stale by the
+        # time the active navigation finishes. Never queue it for immediate use.
+        if self._active_goal is not None:
+            if not self._active_path_notice_shown:
+                self.get_logger().info(
+                    'Ignoring frontier path updates while navigation is active; '
+                    'a fresh path will be required after completion'
+                )
+                self._active_path_notice_shown = True
+            return
+
+        self._active_path_notice_shown = False
         pose = path.poses[-1]
         pose.header.stamp = self.get_clock().now().to_msg()
+
+        if self._awaiting_fresh_path:
+            self._awaiting_fresh_path = False
+            self.get_logger().info(
+                'Fresh frontier path received after navigation completion'
+            )
+
         self._pending_goal = pose
         self._process_pending_goal()
 
@@ -99,7 +124,9 @@ class ExplorationManager(Node):
 
         if not self._navigate_client.server_is_ready():
             if not self._navigate_warning_shown:
-                navigate_action = str(self.get_parameter('navigate_action').value)
+                navigate_action = str(
+                    self.get_parameter('navigate_action').value
+                )
                 self.get_logger().warning(
                     f'Waiting for Nav2 NavigateToPose action {navigate_action}'
                 )
@@ -109,6 +136,7 @@ class ExplorationManager(Node):
         self._navigate_warning_shown = False
         self._pending_goal = None
         self._active_goal = goal_xy
+        self._active_path_notice_shown = False
 
         goal_msg = NavigateToPose.Goal()
         goal_msg.pose = pose
@@ -165,16 +193,23 @@ class ExplorationManager(Node):
         if finished_goal is not None:
             self._last_finished_goal = finished_goal
 
+        # Anything received while the robot was moving is deliberately discarded.
+        # The next navigation goal must come from a Path message published after
+        # this completion callback, i.e. from a fresh frontier/planner update.
+        self._pending_goal = None
+        self._awaiting_fresh_path = True
+        self._active_path_notice_shown = False
+
         if succeeded:
             self.get_logger().info(
-                f'Frontier navigation completed: {detail}; waiting for map/frontier update'
+                f'Frontier navigation completed: {detail}; '
+                'waiting for a fresh frontier path'
             )
         else:
             self.get_logger().warning(
-                f'Frontier navigation did not succeed: {detail}; goal will not be resent automatically'
+                f'Frontier navigation did not succeed: {detail}; '
+                'waiting for a fresh frontier path'
             )
-
-        self._process_pending_goal()
 
 
 def main(args=None) -> None:
