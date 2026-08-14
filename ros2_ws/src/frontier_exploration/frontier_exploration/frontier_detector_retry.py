@@ -46,11 +46,13 @@ class RetryFrontierDetector(FrontierDetector):
     def _now_sec(self) -> float:
         return self.get_clock().now().nanoseconds / 1e9
 
-    def _prune_failed_goals(self) -> None:
+    def _prune_failed_goals(self) -> bool:
         now = self._now_sec()
+        before = len(self._failed_goals)
         self._failed_goals = [
             item for item in self._failed_goals if item[2] > now
         ]
+        return len(self._failed_goals) != before
 
     def _is_blacklisted_xy(self, x: float, y: float) -> bool:
         self._prune_failed_goals()
@@ -96,7 +98,20 @@ class RetryFrontierDetector(FrontierDetector):
             super()._on_map(latest_map)
 
     def _retry_pending_planner_check(self) -> None:
-        """Periodically retry queued candidates once the planner becomes usable."""
+        """Retry planner work and wake candidates when blacklist cooldown expires."""
+        expired = self._prune_failed_goals()
+        if (
+            expired
+            and self._selected_index is None
+            and self._planning_candidate is None
+            and self._latest_map is not None
+        ):
+            self.get_logger().info(
+                'Failed-frontier cooldown expired; re-evaluating candidates'
+            )
+            self._candidate_signature = None
+            super()._on_map(self._latest_map)
+            return
         self._start_next_path_check()
 
     def _start_next_path_check(self) -> None:
