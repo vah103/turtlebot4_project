@@ -28,8 +28,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'frontier_map_preprocessor = frontier_exploration.frontier_map_preprocessor:main',
-            'frontier_detector = frontier_exploration.frontier_detector_retry:main',
+            'frontier_map_preprocessor = frontier_exploration.frontier_map_preprocessor_resilient:main',
+            'frontier_detector = frontier_exploration.frontier_detector_resilient:main',
             'exploration_manager = frontier_exploration.exploration_manager:main',
             'sim_twist_adapter = frontier_exploration.sim_twist_adapter:main',
         ],
