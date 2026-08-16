@@ -31,7 +31,7 @@ exploration_manager:
     path_topic: /frontier_selected_path
     navigate_action: /navigate_to_pose
     enable_navigation: false
-    goal_repeat_tolerance_m: 0.20
+    goal_repeat_tolerance_m: 0.05
     retry_period_sec: 1.0
     failed_goal_topic: /frontier_failed_goal
     failed_goal_radius_m: 0.75
