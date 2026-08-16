@@ -1,146 +1,160 @@
 # Frontier Exploration Baseline
 
-ROS 2 package riêng cho Stage 5 của đồ án TurtleBot4.
+ROS 2 frontier-based exploration baseline cho TurtleBot4.
 
-Pipeline hiện tại:
-
-1. Đọc `nav_msgs/OccupancyGrid` từ SLAM.
-2. Phát hiện frontier cell tại biên `free`–`unknown`.
-3. Gom frontier bằng connected components.
-4. Chia connected cluster dài thành nhiều local frontier segment.
-5. Chọn representative point trên mỗi segment.
-6. Lọc candidate quá gần robot.
-7. Sắp xếp candidate theo khoảng cách Euclid.
-8. Dùng Nav2 `ComputePathToPose` để kiểm tra reachability.
-9. Chọn candidate gần nhất có path hợp lệ.
-10. Tùy chọn gửi candidate đó qua `NavigateToPose` bằng `exploration_manager`.
-
-## Hai node chính
-
-### `frontier_detector`
-
-Node detector + selector. Node này không điều khiển robot. Nó publish:
-
-- `/frontier_markers`
-- `/frontier_selected_path`
-
-Các marker gồm:
-
-- `frontier_cells`
-- `frontier_segment_centers`
-- `frontier_representatives`
-- `planner_candidate_checking`
-- `reachable_frontier_selected`
-
-### `exploration_manager`
-
-Node thực thi frontier goal qua Nav2 `NavigateToPose`.
-
-**Mặc định `enable_navigation: false`**, vì vậy package vẫn an toàn khi launch bình thường. Chỉ khi người vận hành chủ động bật `enable_navigation:=true` thì manager mới gửi goal chuyển động.
-
-Manager chỉ dùng path đã được `frontier_detector` xác nhận bằng `ComputePathToPose`; node không publish `cmd_vel` trực tiếp.
-
-## Adapter chỉ dành cho simulation
-
-Nav2 TurtleBot4 Jazzy có thể xuất `/cmd_vel` dưới dạng `geometry_msgs/TwistStamped`, trong khi Gazebo bridge của simulation có thể chỉ nhận `geometry_msgs/Twist`.
-
-Node `sim_twist_adapter` chuyển:
+## Pipeline hiện tại
 
 ```text
-/cmd_vel TwistStamped -> /cmd_vel Twist
+SLAM /map
+  -> detector-only /frontier_map preprocessing
+  -> WFD-style reachable free-space BFS
+  -> free/unknown frontier cells
+  -> 8-connected frontier clusters
+  -> local segmentation for very long connected boundaries
+  -> representative frontier point per segment
+  -> accessible free goal cells beside the frontier
+  -> global/local Nav2 costmap filtering
+  -> nearest safe frontier ordering
+  -> Nav2 ComputePathToPose reachability check
+  -> NavigateToPose
+  -> goal result -> map settle -> frontier refresh
 ```
 
-Adapter **mặc định tắt** và chỉ được bật bằng launch argument `enable_sim_twist_adapter:=true`. Không dùng adapter này trên robot thật nếu chưa kiểm tra interface chuyển động của robot.
+Điểm quan trọng của bản refactor hiện tại là robot **không còn được gửi thẳng tới frontier representative**. Representative vẫn là điểm dùng để mô tả/chọn frontier, còn navigation goal được materialize từ một ô `free` lân cận và phải qua Nav2 costmap filter trước khi planner kiểm tra path.
+
+## Frontier extraction
+
+Core ROS-independent nằm trong `frontier_exploration/frontier_core.py`.
+
+1. Từ pose robot, tìm free seed gần nhất nếu cần.
+2. BFS 4-connected chỉ qua vùng `free` robot tiếp cận được.
+3. Trong reachable free component, một cell là frontier nếu nó nằm ở phía `free` và chạm `unknown` trong lân cận 8 hướng.
+4. Frontier cells được cluster bằng 8-connectivity.
+5. Nếu một connected boundary quá dài, cluster được chia thành các local segment theo `segment_radius_m` để tạo nhiều candidate thay vì chỉ một centroid cho toàn bộ biên.
+6. Mỗi segment lấy actual frontier cell gần centroid nhất làm representative.
+
+Cấu trúc này giữ baseline dễ giải thích nhưng thay phần quét toàn map trước đây bằng reachable-space BFS kiểu WFD.
+
+## Safe navigation goal
+
+Với mỗi frontier segment, detector tìm các ô `free` ngay phía explored-side của frontier và loại:
+
+- frontier cell itself;
+- goal quá gần robot;
+- goal bị global Nav2 costmap đánh giá occupied/inflated quá ngưỡng;
+- goal nằm trong vùng blocked của local costmap, nếu local costmap đang phủ vị trí đó.
+
+Trong các free goal còn lại, detector chọn điểm gần centroid của segment nhất rồi dùng `ComputePathToPose` kiểm tra reachability. Candidate vẫn được xếp theo khoảng cách Euclid từ robot tới frontier representative, nên baseline vẫn là **Nearest Reachable Frontier** chứ không phải MRTSP/MapEx scoring.
+
+## Marker RViz
+
+`/frontier_markers` gồm:
+
+- `frontier_cells`: toàn bộ reachable frontier cells;
+- `frontier_segment_centers`: tâm hình học của local segment;
+- `frontier_representatives`: representative frontier point;
+- `reachable_frontier_selected`: frontier được chọn;
+- `frontier_navigation_goal`: free/costmap-safe goal thực tế gửi qua Nav2;
+- `planner_candidate_checking`: goal đang được `ComputePathToPose` kiểm tra.
+
+`/frontier_selected_path` là path đã được Nav2 planner xác nhận.
+
+## Navigation manager
+
+`exploration_manager` chỉ thực thi path đã được detector xác nhận. Node không publish `cmd_vel` trực tiếp.
+
+Navigation mặc định tắt:
+
+```yaml
+enable_navigation: false
+```
+
+Sau `SUCCEEDED`, manager publish `/frontier_completed_goal`; detector reset selection, chờ `post_goal_settle_sec`, rồi rebuild WFD candidate từ map mới nhất. Sau failure/stall, manager publish `/frontier_failed_goal`; detector tạm suppress frontier region đó và chọn candidate khác.
+
+Progress watchdog hiện dùng timeout dài hơn và epsilon nhỏ để tránh false-stall khi robot đang xoay/chỉnh local path:
+
+```yaml
+stall_timeout_sec: 30.0
+stall_progress_epsilon_m: 0.02
+navigation_timeout_sec: 180.0
+```
 
 ## Tham số chính
 
 ```yaml
 frontier_detector:
-  robot_frame: base_link
-  planner_action: /compute_path_to_pose
+  map_topic: /frontier_map
+  global_costmap_topic: /global_costmap/costmap
+  local_costmap_topic: /local_costmap/costmap
   segment_radius_m: 0.75
   min_selection_distance_m: 0.60
+  costmap_occ_threshold: 65
+  failed_goal_radius_m: 0.40
+  failed_goal_cooldown_sec: 60.0
+  post_goal_settle_sec: 1.0
 
 exploration_manager:
-  navigate_action: /navigate_to_pose
   enable_navigation: false
-  goal_repeat_tolerance_m: 0.20
+  stall_timeout_sec: 30.0
+  stall_progress_epsilon_m: 0.02
 ```
 
-## Build
+## Build và test
 
 ```bash
-cd ros2_ws
-colcon build --packages-select frontier_exploration --symlink-install
+cd ~/turtlebot4_project/ros2_ws
+colcon build --packages-select frontier_exploration
 source install/setup.bash
 ```
 
-## Chỉ test detector + planner
+Pure frontier core có unit tests:
 
 ```bash
-ros2 launch frontier_exploration frontier_detector.launch.py
+colcon test --packages-select frontier_exploration
+colcon test-result --verbose
 ```
 
-Cần có Nav2 planner:
+## Launch dry-run
 
-```bash
-ros2 action list | grep compute_path_to_pose
-```
-
-Khi chạy đúng sẽ thấy dạng:
-
-```text
-Frontier cells: 533 | connected clusters: 1 | segments: 9 | representatives: 9 | eligible: 8
-Checking Nav2 path to candidate: x=..., y=..., euclidean=... m
-Reachable frontier selected: x=..., y=..., euclidean=... m, path=... m
-```
-
-## Launch full baseline nhưng chưa cho robot chạy
-
-```bash
-ros2 launch frontier_exploration frontier_autonomy.launch.py
-```
-
-Manager sẽ báo:
-
-```text
-Autonomous navigation is disabled
-```
-
-## Bật autonomous navigation trong simulation
-
-Chỉ bật khi simulation, SLAM và Nav2 đều đang ổn định và người vận hành chủ động cho phép robot mô phỏng di chuyển.
-
-Nếu `/cmd_vel` của Nav2 và Gazebo bridge dùng cùng kiểu message:
-
-```bash
-ros2 launch frontier_exploration frontier_autonomy.launch.py enable_navigation:=true
-```
-
-Nếu Nav2 publish `TwistStamped` nhưng Gazebo bridge subscribe `Twist`, bật adapter simulation:
+Simulation + SLAM + Nav2 phải chạy trước.
 
 ```bash
 ros2 launch frontier_exploration frontier_autonomy.launch.py \
+  use_sim_time:=true \
+  enable_navigation:=false \
+  enable_sim_twist_adapter:=false
+```
+
+Khi đúng sẽ thấy log dạng:
+
+```text
+Frontier extraction: WFD-style reachable-space BFS + 8-connected frontier clustering
+Frontier cells: ... | connected clusters: ... | segments: ... | representatives: ... | safe eligible: ...
+Checking Nav2 path to frontier-safe free goal: frontier=(...), goal=(...)
+Reachable frontier selected: frontier=(...), goal=(...), euclidean=..., path=...
+```
+
+## Autonomous simulation
+
+Chỉ bật khi simulation, SLAM và Nav2 đang ổn định:
+
+```bash
+ros2 launch frontier_exploration frontier_autonomy.launch.py \
+  use_sim_time:=true \
   enable_navigation:=true \
   enable_sim_twist_adapter:=true
 ```
 
-Khi bật, chu trình là:
+## Nguồn thuật toán tham khảo
 
-```text
-map -> frontier -> candidate -> path check -> NavigateToPose -> cmd_vel -> map update -> frontier mới
-```
+Bản này là Python implementation riêng cho TurtleBot4, **không vendor/copy nguyên package bên ngoài**. Kiến trúc được refactor sau khi đối chiếu các implementation frontier ROS 2 trưởng thành:
 
-Sau một navigation goal thành công, manager chờ detector cập nhật map/frontier và nhận path mới. Goal vừa hoàn thành không được gửi lặp lại trong bán kính `goal_repeat_tolerance_m`.
+- `robo-friends/m-explore-ros2` (`explore_lite` ROS 2 port, BSD): WFD/frontier BFS structure, nearest-frontier loop, progress timeout và blacklist pattern.
+- `mertgulerx/frontier_exploration_ros2` (Apache-2.0): costmap-aware frontier validation, lựa chọn accessible free goal gần frontier, post-goal settle và blocked/failed frontier handling.
 
-Nếu navigation thất bại, goal đó không được tự gửi lại ngay. Blacklist/recovery nâng cao sẽ được bổ sung ở bước tiếp theo.
+Repo tham khảo:
 
-## Bước tiếp theo
+- https://github.com/robo-friends/m-explore-ros2
+- https://github.com/mertgulerx/frontier_exploration_ros2
 
-- Chạy autonomous frontier loop trong Depot trước.
-- Quan sát robot có đi tới nhiều frontier liên tiếp hay không.
-- Bổ sung blacklist cho goal thất bại.
-- Thêm stopping condition khi không còn frontier reachable.
-- Thêm benchmark logging: coverage, thời gian, quãng đường, failed goal.
-
-MapEx chưa nằm trong package này; MapEx sẽ được xây trên frontier baseline sau khi Stage 5 ổn định.
+Các phần MRTSP, bounded-horizon DP, information-gain scoring và visible-reveal preemption của repo tham khảo **không được đưa vào baseline này**, để baseline vẫn giữ đúng vai trò Frontier cơ bản trước khi so sánh với MapEx/hướng đề xuất.
