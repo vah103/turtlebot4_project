@@ -10,37 +10,48 @@ frontier_map_preprocessor:
 frontier_detector:
   ros__parameters:
     map_topic: /frontier_map
+    global_costmap_topic: /global_costmap/costmap
+    local_costmap_topic: /local_costmap/costmap
     marker_topic: /frontier_markers
     path_topic: /frontier_selected_path
     robot_frame: base_link
     odom_frame: odom
     planner_action: /compute_path_to_pose
     planner_id: ""
+
+    # WFD-style reachable frontier extraction.
     min_cluster_size: 5
     segment_radius_m: 0.75
     min_segment_size: 5
     min_selection_distance_m: 0.60
+
+    # Costmap-aware free goal selection near each frontier segment.
+    require_global_costmap: true
+    costmap_occ_threshold: 65
+    costmap_unknown_is_blocked: true
+
+    # Planner startup / transient failure handling.
     planner_retry_period_sec: 1.0
     planner_rejection_retry_limit: 15
+
+    # Navigation outcome feedback from exploration_manager.
     failed_goal_topic: /frontier_failed_goal
     completed_goal_topic: /frontier_completed_goal
-    failed_goal_radius_m: 0.75
-    failed_goal_cooldown_sec: 30.0
-    safe_goal_standoff_m: 0.35
-    safe_goal_search_radius_m: 0.25
-    safe_goal_clearance_m: 0.10
+    failed_goal_radius_m: 0.40
+    failed_goal_cooldown_sec: 60.0
+    post_goal_settle_sec: 1.0
 
 exploration_manager:
   ros__parameters:
     path_topic: /frontier_selected_path
     navigate_action: /navigate_to_pose
     enable_navigation: false
-    goal_repeat_tolerance_m: 0.05
     retry_period_sec: 1.0
     failed_goal_topic: /frontier_failed_goal
     completed_goal_topic: /frontier_completed_goal
-    failed_goal_radius_m: 0.75
-    failed_goal_cooldown_sec: 30.0
-    stall_timeout_sec: 15.0
-    stall_progress_epsilon_m: 0.10
-    navigation_timeout_sec: 90.0
+
+    # Progress handling follows the mature explore_lite-style pattern: allow
+    # longer for rotation/local recovery and reset the timer on small progress.
+    stall_timeout_sec: 30.0
+    stall_progress_epsilon_m: 0.02
+    navigation_timeout_sec: 180.0
