@@ -19,14 +19,6 @@ def generate_launch_description() -> LaunchDescription:
         'use_sim_time': ParameterValue(use_sim_time, value_type=bool)
     }
 
-    preprocessor = Node(
-        package='frontier_exploration',
-        executable='frontier_map_preprocessor',
-        name='frontier_map_preprocessor',
-        output='screen',
-        parameters=[config_path, common_time_parameter],
-    )
-
     detector = Node(
         package='frontier_exploration',
         executable='frontier_detector',
@@ -42,7 +34,6 @@ def generate_launch_description() -> LaunchDescription:
                 default_value='false',
                 description='Use the /clock simulation time source.',
             ),
-            preprocessor,
             TimerAction(period=0.5, actions=[detector]),
         ]
     )
