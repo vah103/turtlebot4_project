@@ -24,9 +24,10 @@ class ExplorationManager(Node):
         self.declare_parameter('path_topic', '/frontier_selected_path')
         self.declare_parameter('navigate_action', '/navigate_to_pose')
         self.declare_parameter('enable_navigation', False)
-        self.declare_parameter('goal_repeat_tolerance_m', 0.20)
+        self.declare_parameter('goal_repeat_tolerance_m', 0.05)
         self.declare_parameter('retry_period_sec', 1.0)
         self.declare_parameter('failed_goal_topic', '/frontier_failed_goal')
+        self.declare_parameter('completed_goal_topic', '/frontier_completed_goal')
         self.declare_parameter('failed_goal_radius_m', 0.75)
         self.declare_parameter('failed_goal_cooldown_sec', 30.0)
         self.declare_parameter('stall_timeout_sec', 15.0)
@@ -36,6 +37,9 @@ class ExplorationManager(Node):
         path_topic = str(self.get_parameter('path_topic').value)
         navigate_action = str(self.get_parameter('navigate_action').value)
         failed_goal_topic = str(self.get_parameter('failed_goal_topic').value)
+        completed_goal_topic = str(
+            self.get_parameter('completed_goal_topic').value
+        )
         retry_period = max(
             0.2, float(self.get_parameter('retry_period_sec').value)
         )
@@ -45,6 +49,9 @@ class ExplorationManager(Node):
         )
         self._failed_goal_pub = self.create_publisher(
             PointStamped, failed_goal_topic, 10
+        )
+        self._completed_goal_pub = self.create_publisher(
+            PointStamped, completed_goal_topic, 10
         )
         self.create_subscription(Path, path_topic, self._on_path, 10)
         self.create_timer(retry_period, self._process_pending_goal)
@@ -75,6 +82,9 @@ class ExplorationManager(Node):
         self.get_logger().info(f'NavigateToPose action: {navigate_action}')
         self.get_logger().info(
             f'Failed frontier feedback: {failed_goal_topic}'
+        )
+        self.get_logger().info(
+            f'Completed frontier feedback: {completed_goal_topic}'
         )
         self.get_logger().info(
             'Navigation watchdog: '
@@ -373,6 +383,23 @@ class ExplorationManager(Node):
             f'cooldown={cooldown:.1f}s ({detail})'
         )
 
+    def _publish_completed_goal(
+        self,
+        goal_xy: tuple[float, float],
+        frame_id: str,
+    ) -> None:
+        msg = PointStamped()
+        msg.header.frame_id = frame_id or 'map'
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.point.x = goal_xy[0]
+        msg.point.y = goal_xy[1]
+        msg.point.z = 0.0
+        self._completed_goal_pub.publish(msg)
+        self.get_logger().info(
+            'Reported completed frontier for detector refresh: '
+            f'x={goal_xy[0]:.2f}, y={goal_xy[1]:.2f}'
+        )
+
     def _finish_navigation(self, succeeded: bool, detail: str) -> None:
         finished_goal = self._active_goal
         finished_frame = self._active_goal_frame
@@ -396,6 +423,11 @@ class ExplorationManager(Node):
         self._pending_goal = None
         self._awaiting_fresh_path = True
         self._active_path_notice_shown = False
+
+        # Publish completion only after clearing the active goal so a detector
+        # refresh can immediately produce a fresh path that the manager accepts.
+        if succeeded and finished_goal is not None:
+            self._publish_completed_goal(finished_goal, finished_frame)
 
         if succeeded:
             self.get_logger().info(
