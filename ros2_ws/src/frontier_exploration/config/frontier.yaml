@@ -26,6 +26,9 @@ frontier_detector:
     completed_goal_topic: /frontier_completed_goal
     failed_goal_radius_m: 0.75
     failed_goal_cooldown_sec: 30.0
+    safe_goal_standoff_m: 0.35
+    safe_goal_search_radius_m: 0.25
+    safe_goal_clearance_m: 0.10
 
 exploration_manager:
   ros__parameters:
