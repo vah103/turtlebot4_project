@@ -4,6 +4,7 @@ from math import hypot
 
 import rclpy
 from geometry_msgs.msg import PointStamped
+from nav_msgs.msg import OccupancyGrid
 
 from frontier_exploration.frontier_detector import (
     Candidate,
@@ -38,6 +39,7 @@ class RetryFrontierDetector(FrontierDetector):
         self._retry_not_before_sec = 0.0
         self._replan_not_before_sec = 0.0
         self._failed_frontiers: list[tuple[float, float, float]] = []
+        self._selected_frontier_world: tuple[float, float] | None = None
         self._planner_retry_timer = self.create_timer(
             retry_period, self._retry_pending_planner_check
         )
@@ -67,6 +69,22 @@ class RetryFrontierDetector(FrontierDetector):
     def _now_sec(self) -> float:
         return self.get_clock().now().nanoseconds / 1e9
 
+    def _on_map(self, msg: OccupancyGrid) -> None:
+        # Once a path has been selected, keep that frontier identity frozen until
+        # the manager reports success/failure. Map updates are retained so the
+        # next WFD pass uses the newest map, but they cannot silently replace the
+        # active exploration target while Nav2 is executing it.
+        if self._selected_index is not None:
+            self._latest_map = msg
+            return
+        super()._on_map(msg)
+
+    def _on_plan_result(self, future, candidate: PlanningCandidate) -> None:
+        super()._on_plan_result(future, candidate)
+        if self._selected_index is not None and self._latest_map is not None:
+            point = _cell_to_world(self._selected_index, self._latest_map)
+            self._selected_frontier_world = (point.x, point.y)
+
     def _prune_failed_frontiers(self) -> bool:
         now = self._now_sec()
         before = len(self._failed_frontiers)
@@ -76,6 +94,8 @@ class RetryFrontierDetector(FrontierDetector):
         return len(self._failed_frontiers) != before
 
     def _selected_frontier_xy(self) -> tuple[float, float] | None:
+        if self._selected_frontier_world is not None:
+            return self._selected_frontier_world
         if self._latest_map is None or self._selected_index is None:
             return None
         point = _cell_to_world(self._selected_index, self._latest_map)
@@ -110,6 +130,7 @@ class RetryFrontierDetector(FrontierDetector):
         self._selected_goal_index = None
         self._selected_distance = None
         self._selected_path = None
+        self._selected_frontier_world = None
         self._planner_retry_counts.clear()
         self._retry_not_before_sec = 0.0
         self._replan_not_before_sec = self._now_sec() + max(0.0, settle_sec)
@@ -201,7 +222,13 @@ class RetryFrontierDetector(FrontierDetector):
         if self._planning_candidate == candidate:
             self._planning_candidate = None
 
-        generation, representative, goal_index, frontier_distance, goal_distance = candidate
+        (
+            generation,
+            representative,
+            goal_index,
+            frontier_distance,
+            goal_distance,
+        ) = candidate
         if generation != self._generation:
             self._start_next_path_check()
             return
