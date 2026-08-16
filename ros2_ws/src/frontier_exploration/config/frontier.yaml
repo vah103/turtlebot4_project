@@ -1,3 +1,5 @@
+# Optional preprocessing node retained for experiments only.
+# The baseline launch does not start it; WFD reads the raw SLAM /map directly.
 frontier_map_preprocessor:
   ros__parameters:
     input_map_topic: /map
@@ -9,7 +11,7 @@ frontier_map_preprocessor:
 
 frontier_detector:
   ros__parameters:
-    map_topic: /frontier_map
+    map_topic: /map
     global_costmap_topic: /global_costmap/costmap
     local_costmap_topic: /local_costmap/costmap
     marker_topic: /frontier_markers
@@ -19,7 +21,7 @@ frontier_detector:
     planner_action: /compute_path_to_pose
     planner_id: ""
 
-    # WFD-style reachable frontier extraction.
+    # WFD-style reachable frontier extraction on the raw SLAM map.
     min_cluster_size: 5
     segment_radius_m: 0.75
     min_segment_size: 5
@@ -34,11 +36,13 @@ frontier_detector:
     planner_retry_period_sec: 1.0
     planner_rejection_retry_limit: 15
 
-    # Navigation outcome feedback from exploration_manager.
+    # Navigation outcome feedback and temporary frontier suppression.
     failed_goal_topic: /frontier_failed_goal
     completed_goal_topic: /frontier_completed_goal
     failed_goal_radius_m: 0.40
     failed_goal_cooldown_sec: 60.0
+    completed_frontier_radius_m: 0.40
+    completed_frontier_cooldown_sec: 15.0
     post_goal_settle_sec: 1.0
 
 exploration_manager:
@@ -50,8 +54,7 @@ exploration_manager:
     failed_goal_topic: /frontier_failed_goal
     completed_goal_topic: /frontier_completed_goal
 
-    # Progress handling follows the mature explore_lite-style pattern: allow
-    # longer for rotation/local recovery and reset the timer on small progress.
+    # Allow rotation/local recovery and reset the watchdog on small progress.
     stall_timeout_sec: 30.0
     stall_progress_epsilon_m: 0.02
     navigation_timeout_sec: 180.0
