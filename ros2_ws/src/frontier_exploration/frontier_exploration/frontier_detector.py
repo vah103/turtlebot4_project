@@ -1,8 +1,6 @@
-"""Frontier detector with planning-only Nav2 reachability checks for TurtleBot4."""
+"""WFD-style frontier detector with costmap-aware Nav2 goal materialization."""
 
-from collections import deque
-from math import atan2, cos, hypot, sin
-from typing import Iterable
+from math import atan2, cos, floor, hypot, sin
 
 import rclpy
 from action_msgs.msg import GoalStatus
@@ -16,150 +14,23 @@ from rclpy.time import Time
 from tf2_ros import Buffer, TransformException, TransformListener
 from visualization_msgs.msg import Marker, MarkerArray
 
+from frontier_exploration.frontier_core import (
+    FREE,
+    UNKNOWN,
+    candidate_goal_cells,
+    cluster_frontiers,
+    detect_frontier_cells,
+    reachable_free_cells,
+    representative_cell,
+    segment_centroid_xy,
+    split_frontier_clusters,
+)
 
-FREE = 0
-UNKNOWN = -1
-
-
-def _neighbors(index: int, width: int, height: int) -> Iterable[int]:
-    x = index % width
-    y = index // width
-    for dy in (-1, 0, 1):
-        for dx in (-1, 0, 1):
-            if dx == 0 and dy == 0:
-                continue
-            nx = x + dx
-            ny = y + dy
-            if 0 <= nx < width and 0 <= ny < height:
-                yield ny * width + nx
-
-
-def detect_frontier_cells(data: list[int], width: int, height: int) -> set[int]:
-    """Return free cells that touch at least one unknown cell."""
-    frontiers: set[int] = set()
-    for index, value in enumerate(data):
-        if value != FREE:
-            continue
-        if any(data[n] == UNKNOWN for n in _neighbors(index, width, height)):
-            frontiers.add(index)
-    return frontiers
-
-
-def cluster_frontiers(
-    frontier_cells: set[int], width: int, height: int, min_cluster_size: int
-) -> list[list[int]]:
-    """Group connected frontier cells using 8-connectivity."""
-    remaining = set(frontier_cells)
-    clusters: list[list[int]] = []
-
-    while remaining:
-        seed = min(remaining)
-        remaining.remove(seed)
-        queue = deque([seed])
-        cluster = [seed]
-
-        while queue:
-            current = queue.popleft()
-            for neighbor in _neighbors(current, width, height):
-                if neighbor in remaining:
-                    remaining.remove(neighbor)
-                    queue.append(neighbor)
-                    cluster.append(neighbor)
-
-        if len(cluster) >= min_cluster_size:
-            clusters.append(cluster)
-
-    return clusters
-
-
-def split_frontier_cluster(
-    cluster: list[int],
-    width: int,
-    height: int,
-    segment_radius_cells: int,
-    min_segment_size: int,
-) -> list[list[int]]:
-    """Split one long connected frontier into local connected segments."""
-    remaining = set(cluster)
-    segments: list[list[int]] = []
-    radius_sq = max(1, segment_radius_cells) ** 2
-
-    while remaining:
-        seed = min(remaining)
-        remaining.remove(seed)
-        seed_x = seed % width
-        seed_y = seed // width
-        queue = deque([seed])
-        segment = [seed]
-
-        while queue:
-            current = queue.popleft()
-            for neighbor in _neighbors(current, width, height):
-                if neighbor not in remaining:
-                    continue
-
-                neighbor_x = neighbor % width
-                neighbor_y = neighbor // width
-                distance_sq = (
-                    (neighbor_x - seed_x) ** 2 + (neighbor_y - seed_y) ** 2
-                )
-                if distance_sq > radius_sq:
-                    continue
-
-                remaining.remove(neighbor)
-                queue.append(neighbor)
-                segment.append(neighbor)
-
-        if len(segment) >= min_segment_size:
-            segments.append(segment)
-
-    return segments
-
-
-def split_frontier_clusters(
-    clusters: list[list[int]],
-    width: int,
-    height: int,
-    resolution: float,
-    segment_radius_m: float,
-    min_segment_size: int,
-) -> list[list[int]]:
-    """Split every connected frontier cluster into local candidate segments."""
-    safe_resolution = max(float(resolution), 1e-6)
-    radius_cells = max(1, round(segment_radius_m / safe_resolution))
-    segments: list[list[int]] = []
-
-    for cluster in clusters:
-        segments.extend(
-            split_frontier_cluster(
-                cluster,
-                width,
-                height,
-                radius_cells,
-                min_segment_size,
-            )
-        )
-
-    return segments
-
-
-def representative_cell(segment: list[int], width: int) -> int:
-    """Return the frontier cell nearest the segment centroid."""
-    if not segment:
-        raise ValueError('segment must not be empty')
-
-    xs = [index % width for index in segment]
-    ys = [index // width for index in segment]
-    centroid_x = sum(xs) / len(xs)
-    centroid_y = sum(ys) / len(ys)
-
-    return min(
-        segment,
-        key=lambda index: (
-            (index % width - centroid_x) ** 2
-            + (index // width - centroid_y) ** 2
-        ),
-    )
+# Candidate tuple:
+# representative_index, navigation_goal_index, frontier_distance_m, goal_distance_m
+Candidate = tuple[int, int, float, float]
+# Planner candidate adds a generation number in front of Candidate.
+PlanningCandidate = tuple[int, int, int, float, float]
 
 
 def _origin_yaw(msg: OccupancyGrid) -> float:
@@ -194,21 +65,18 @@ def _cell_to_world(index: int, msg: OccupancyGrid) -> Point:
     return point
 
 
-def ordered_representatives(
-    representatives: list[int],
-    msg: OccupancyGrid,
-    robot_x: float,
-    robot_y: float,
-    min_distance_m: float,
-) -> list[tuple[int, float]]:
-    """Sort eligible representatives by Euclidean robot distance."""
-    eligible: list[tuple[int, float]] = []
-    for index in representatives:
-        point = _cell_to_world(index, msg)
-        distance = hypot(point.x - robot_x, point.y - robot_y)
-        if distance >= min_distance_m:
-            eligible.append((index, distance))
-    return sorted(eligible, key=lambda candidate: candidate[1])
+def _world_to_cell(msg: OccupancyGrid, x: float, y: float) -> int | None:
+    resolution = max(float(msg.info.resolution), 1e-6)
+    dx = x - msg.info.origin.position.x
+    dy = y - msg.info.origin.position.y
+    yaw = _origin_yaw(msg)
+    local_x = cos(yaw) * dx + sin(yaw) * dy
+    local_y = -sin(yaw) * dx + cos(yaw) * dy
+    cell_x = int(floor(local_x / resolution))
+    cell_y = int(floor(local_y / resolution))
+    if not (0 <= cell_x < msg.info.width and 0 <= cell_y < msg.info.height):
+        return None
+    return cell_y * msg.info.width + cell_x
 
 
 def path_length(path: Path) -> float:
@@ -223,11 +91,13 @@ def path_length(path: Path) -> float:
 
 
 class FrontierDetector(Node):
-    """Detect frontier candidates and select the nearest Nav2-reachable one."""
+    """Detect reachable frontiers and select the nearest safe reachable one."""
 
     def __init__(self) -> None:
         super().__init__('frontier_detector')
         self.declare_parameter('map_topic', '/map')
+        self.declare_parameter('global_costmap_topic', '/global_costmap/costmap')
+        self.declare_parameter('local_costmap_topic', '/local_costmap/costmap')
         self.declare_parameter('marker_topic', '/frontier_markers')
         self.declare_parameter('path_topic', '/frontier_selected_path')
         self.declare_parameter('robot_frame', 'base_link')
@@ -237,8 +107,17 @@ class FrontierDetector(Node):
         self.declare_parameter('segment_radius_m', 0.75)
         self.declare_parameter('min_segment_size', 5)
         self.declare_parameter('min_selection_distance_m', 0.60)
+        self.declare_parameter('costmap_occ_threshold', 65)
+        self.declare_parameter('costmap_unknown_is_blocked', True)
+        self.declare_parameter('require_global_costmap', True)
 
         map_topic = str(self.get_parameter('map_topic').value)
+        global_costmap_topic = str(
+            self.get_parameter('global_costmap_topic').value
+        )
+        local_costmap_topic = str(
+            self.get_parameter('local_costmap_topic').value
+        )
         marker_topic = str(self.get_parameter('marker_topic').value)
         path_topic = str(self.get_parameter('path_topic').value)
         planner_action = str(self.get_parameter('planner_action').value)
@@ -247,6 +126,11 @@ class FrontierDetector(Node):
             depth=1,
             reliability=ReliabilityPolicy.RELIABLE,
             durability=DurabilityPolicy.TRANSIENT_LOCAL,
+        )
+        costmap_qos = QoSProfile(
+            depth=10,
+            reliability=ReliabilityPolicy.RELIABLE,
+            durability=DurabilityPolicy.VOLATILE,
         )
         marker_qos = QoSProfile(
             depth=1,
@@ -265,30 +149,57 @@ class FrontierDetector(Node):
         )
         self._path_pub = self.create_publisher(Path, path_topic, 10)
         self.create_subscription(OccupancyGrid, map_topic, self._on_map, map_qos)
+        self.create_subscription(
+            OccupancyGrid,
+            global_costmap_topic,
+            self._on_global_costmap,
+            costmap_qos,
+        )
+        self.create_subscription(
+            OccupancyGrid,
+            local_costmap_topic,
+            self._on_local_costmap,
+            costmap_qos,
+        )
 
         self._tf_warning_shown = False
+        self._costmap_warning_shown = False
         self._planner_warning_shown = False
         self._last_summary: tuple[int, int, int, int, int] | None = None
 
         self._latest_map: OccupancyGrid | None = None
+        self._global_costmap: OccupancyGrid | None = None
+        self._local_costmap: OccupancyGrid | None = None
+        self._latest_reachable_free: set[int] = set()
         self._latest_frontier_cells: set[int] = set()
         self._latest_segments: list[list[int]] = []
         self._latest_representatives: list[int] = []
 
-        self._candidate_signature: tuple[int, ...] | None = None
-        self._candidate_queue: list[tuple[int, float]] = []
+        self._candidate_signature: tuple[tuple[int, int], ...] | None = None
+        self._candidate_queue: list[Candidate] = []
         self._generation = 0
-        self._planning_candidate: tuple[int, int, float] | None = None
+        self._planning_candidate: PlanningCandidate | None = None
         self._selected_index: int | None = None
+        self._selected_goal_index: int | None = None
         self._selected_distance: float | None = None
         self._selected_path: Path | None = None
 
         self.get_logger().info(f'Listening for occupancy grids on {map_topic}')
+        self.get_logger().info(
+            f'Global costmap safety filter: {global_costmap_topic}'
+        )
+        self.get_logger().info(
+            f'Local costmap safety filter: {local_costmap_topic}'
+        )
         self.get_logger().info(f'Publishing RViz markers on {marker_topic}')
         self.get_logger().info(f'Publishing selected path on {path_topic}')
         self.get_logger().info(
+            'Frontier extraction: WFD-style reachable-space BFS + '
+            '8-connected frontier clustering'
+        )
+        self.get_logger().info(
             f'Planning-only Nav2 reachability check on {planner_action}; '
-            'no navigation goal is sent'
+            'no navigation goal is sent by the detector'
         )
 
     def _robot_position(self, map_frame: str) -> tuple[float, float] | None:
@@ -313,6 +224,195 @@ class FrontierDetector(Node):
             transform.transform.translation.y,
         )
 
+    def _transform_xy(
+        self,
+        x: float,
+        y: float,
+        source_frame: str,
+        target_frame: str,
+    ) -> tuple[float, float] | None:
+        if not target_frame or target_frame == source_frame:
+            return x, y
+        try:
+            transform = self._tf_buffer.lookup_transform(
+                target_frame,
+                source_frame,
+                Time(),
+            )
+        except TransformException:
+            return None
+
+        q = transform.transform.rotation
+        siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
+        cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
+        yaw = atan2(siny_cosp, cosy_cosp)
+        tx = transform.transform.translation.x
+        ty = transform.transform.translation.y
+        return (
+            tx + cos(yaw) * x - sin(yaw) * y,
+            ty + sin(yaw) * x + cos(yaw) * y,
+        )
+
+    def _point_cost(
+        self,
+        costmap: OccupancyGrid,
+        x: float,
+        y: float,
+        source_frame: str,
+    ) -> int | None:
+        target_frame = costmap.header.frame_id or source_frame
+        transformed = self._transform_xy(x, y, source_frame, target_frame)
+        if transformed is None:
+            return None
+        index = _world_to_cell(costmap, transformed[0], transformed[1])
+        if index is None or index >= len(costmap.data):
+            return None
+        return int(costmap.data[index])
+
+    def _point_blocked(
+        self,
+        costmap: OccupancyGrid,
+        x: float,
+        y: float,
+        source_frame: str,
+        *,
+        outside_is_blocked: bool,
+    ) -> bool:
+        cost = self._point_cost(costmap, x, y, source_frame)
+        if cost is None:
+            return outside_is_blocked
+        if cost < 0:
+            return bool(self.get_parameter('costmap_unknown_is_blocked').value)
+        threshold = int(self.get_parameter('costmap_occ_threshold').value)
+        return cost >= threshold
+
+    def _on_global_costmap(self, msg: OccupancyGrid) -> None:
+        self._global_costmap = msg
+        self._costmap_warning_shown = False
+        if (
+            self._latest_map is not None
+            and self._selected_index is None
+            and self._planning_candidate is None
+        ):
+            self._candidate_signature = None
+            self._on_map(self._latest_map)
+
+    def _on_local_costmap(self, msg: OccupancyGrid) -> None:
+        self._local_costmap = msg
+        if (
+            self._latest_map is not None
+            and self._selected_index is None
+            and self._planning_candidate is None
+        ):
+            self._candidate_signature = None
+            self._on_map(self._latest_map)
+
+    def _segment_centroid_world(
+        self,
+        segment: list[int],
+        msg: OccupancyGrid,
+    ) -> tuple[float, float]:
+        cell_x, cell_y = segment_centroid_xy(segment, msg.info.width)
+        resolution = msg.info.resolution
+        local_x = (cell_x + 0.5) * resolution
+        local_y = (cell_y + 0.5) * resolution
+        yaw = _origin_yaw(msg)
+        return (
+            msg.info.origin.position.x
+            + cos(yaw) * local_x
+            - sin(yaw) * local_y,
+            msg.info.origin.position.y
+            + sin(yaw) * local_x
+            + cos(yaw) * local_y,
+        )
+
+    def _goal_index_for_segment(
+        self,
+        segment: list[int],
+        msg: OccupancyGrid,
+        robot_x: float,
+        robot_y: float,
+        min_distance_m: float,
+    ) -> tuple[int, float] | None:
+        source_frame = msg.header.frame_id or 'map'
+        centroid_x, centroid_y = self._segment_centroid_world(segment, msg)
+        best: tuple[float, int, float] | None = None
+
+        for index in candidate_goal_cells(
+            segment,
+            self._latest_frontier_cells,
+            list(msg.data),
+            msg.info.width,
+            msg.info.height,
+        ):
+            point = _cell_to_world(index, msg)
+            goal_distance = hypot(point.x - robot_x, point.y - robot_y)
+            if goal_distance < min_distance_m:
+                continue
+
+            if self._global_costmap is not None and self._point_blocked(
+                self._global_costmap,
+                point.x,
+                point.y,
+                source_frame,
+                outside_is_blocked=True,
+            ):
+                continue
+
+            if self._local_costmap is not None and self._point_blocked(
+                self._local_costmap,
+                point.x,
+                point.y,
+                source_frame,
+                outside_is_blocked=False,
+            ):
+                continue
+
+            centroid_distance_sq = (
+                (point.x - centroid_x) ** 2 + (point.y - centroid_y) ** 2
+            )
+            score = (centroid_distance_sq, index, goal_distance)
+            if best is None or score < best:
+                best = score
+
+        if best is None:
+            return None
+        return best[1], best[2]
+
+    def _build_candidates(
+        self,
+        msg: OccupancyGrid,
+        robot_x: float,
+        robot_y: float,
+        min_distance_m: float,
+    ) -> list[Candidate]:
+        candidates: list[Candidate] = []
+        for segment in self._latest_segments:
+            representative = representative_cell(segment, msg.info.width)
+            representative_point = _cell_to_world(representative, msg)
+            frontier_distance = hypot(
+                representative_point.x - robot_x,
+                representative_point.y - robot_y,
+            )
+            if frontier_distance < min_distance_m:
+                continue
+
+            goal = self._goal_index_for_segment(
+                segment,
+                msg,
+                robot_x,
+                robot_y,
+                min_distance_m,
+            )
+            if goal is None:
+                continue
+            goal_index, goal_distance = goal
+            candidates.append(
+                (representative, goal_index, frontier_distance, goal_distance)
+            )
+
+        return sorted(candidates, key=lambda candidate: candidate[2])
+
     def _on_map(self, msg: OccupancyGrid) -> None:
         width = msg.info.width
         height = msg.info.height
@@ -320,58 +420,79 @@ class FrontierDetector(Node):
             self.get_logger().warning('Ignoring invalid OccupancyGrid dimensions')
             return
 
-        min_cluster_size = max(
-            1, int(self.get_parameter('min_cluster_size').value)
-        )
-        segment_radius_m = max(
-            0.05, float(self.get_parameter('segment_radius_m').value)
-        )
-        min_segment_size = max(
-            1, int(self.get_parameter('min_segment_size').value)
-        )
-        min_selection_distance_m = max(
-            0.0, float(self.get_parameter('min_selection_distance_m').value)
-        )
+        map_frame = msg.header.frame_id or 'map'
+        robot_position = self._robot_position(map_frame)
+        if robot_position is None:
+            return
+        robot_index = _world_to_cell(msg, robot_position[0], robot_position[1])
+        if robot_index is None:
+            self.get_logger().warning('Robot pose is outside the frontier map bounds')
+            return
 
-        frontier_cells = detect_frontier_cells(list(msg.data), width, height)
+        data = list(msg.data)
+        reachable = reachable_free_cells(data, width, height, robot_index)
+        frontier_cells = detect_frontier_cells(
+            data,
+            width,
+            height,
+            reachable,
+        )
         clusters = cluster_frontiers(
-            frontier_cells, width, height, min_cluster_size
+            frontier_cells,
+            width,
+            height,
+            max(1, int(self.get_parameter('min_cluster_size').value)),
         )
         segments = split_frontier_clusters(
             clusters,
             width,
             height,
             msg.info.resolution,
-            segment_radius_m,
-            min_segment_size,
+            max(0.05, float(self.get_parameter('segment_radius_m').value)),
+            max(1, int(self.get_parameter('min_segment_size').value)),
         )
         representatives = [
             representative_cell(segment, width) for segment in segments
         ]
 
         self._latest_map = msg
+        self._latest_reachable_free = reachable
         self._latest_frontier_cells = frontier_cells
         self._latest_segments = segments
         self._latest_representatives = representatives
 
-        map_frame = msg.header.frame_id or 'map'
-        robot_position = self._robot_position(map_frame)
-        candidates: list[tuple[int, float]] = []
-        if robot_position is not None:
-            candidates = ordered_representatives(
-                representatives,
+        require_costmap = bool(
+            self.get_parameter('require_global_costmap').value
+        )
+        candidates: list[Candidate] = []
+        if require_costmap and self._global_costmap is None:
+            if not self._costmap_warning_shown:
+                self.get_logger().warning(
+                    'Waiting for global Nav2 costmap before materializing '
+                    'frontier navigation goals'
+                )
+                self._costmap_warning_shown = True
+        else:
+            candidates = self._build_candidates(
                 msg,
                 robot_position[0],
                 robot_position[1],
-                min_selection_distance_m,
+                max(
+                    0.0,
+                    float(
+                        self.get_parameter('min_selection_distance_m').value
+                    ),
+                ),
             )
 
-        signature = tuple(index for index, _ in candidates)
+        signature = tuple((item[0], item[1]) for item in candidates)
         if signature != self._candidate_signature:
             self._candidate_signature = signature
             self._candidate_queue = list(candidates)
             self._generation += 1
+            self._planning_candidate = None
             self._selected_index = None
+            self._selected_goal_index = None
             self._selected_distance = None
             self._selected_path = None
             self._publish_empty_path(map_frame)
@@ -390,7 +511,7 @@ class FrontierDetector(Node):
                 'Frontier cells: '
                 f'{summary[0]} | connected clusters: {summary[1]} '
                 f'| segments: {summary[2]} | representatives: {summary[3]} '
-                f'| eligible: {summary[4]}'
+                f'| safe eligible: {summary[4]}'
             )
             self._last_summary = summary
 
@@ -401,9 +522,7 @@ class FrontierDetector(Node):
             return
         if self._planning_candidate is not None:
             return
-        if self._latest_map is None:
-            return
-        if not self._candidate_queue:
+        if self._latest_map is None or not self._candidate_queue:
             return
 
         if not self._planner_client.server_is_ready():
@@ -416,23 +535,34 @@ class FrontierDetector(Node):
             return
 
         self._planner_warning_shown = False
-        index, distance = self._candidate_queue.pop(0)
-        candidate = (self._generation, index, distance)
+        representative, goal_index, frontier_distance, goal_distance = (
+            self._candidate_queue.pop(0)
+        )
+        candidate: PlanningCandidate = (
+            self._generation,
+            representative,
+            goal_index,
+            frontier_distance,
+            goal_distance,
+        )
         self._planning_candidate = candidate
 
-        point = _cell_to_world(index, self._latest_map)
+        frontier_point = _cell_to_world(representative, self._latest_map)
+        goal_point = _cell_to_world(goal_index, self._latest_map)
         goal_msg = ComputePathToPose.Goal()
         goal_msg.goal.header.frame_id = self._latest_map.header.frame_id or 'map'
         goal_msg.goal.header.stamp = self.get_clock().now().to_msg()
-        goal_msg.goal.pose.position.x = point.x
-        goal_msg.goal.pose.position.y = point.y
+        goal_msg.goal.pose.position.x = goal_point.x
+        goal_msg.goal.pose.position.y = goal_point.y
         goal_msg.goal.pose.orientation.w = 1.0
         goal_msg.planner_id = str(self.get_parameter('planner_id').value)
         goal_msg.use_start = False
 
         self.get_logger().info(
-            'Checking Nav2 path to candidate: '
-            f'x={point.x:.2f}, y={point.y:.2f}, euclidean={distance:.2f} m'
+            'Checking Nav2 path to frontier-safe free goal: '
+            f'frontier=({frontier_point.x:.2f}, {frontier_point.y:.2f}), '
+            f'goal=({goal_point.x:.2f}, {goal_point.y:.2f}), '
+            f'frontier_distance={frontier_distance:.2f} m'
         )
         self._publish_markers()
 
@@ -442,17 +572,19 @@ class FrontierDetector(Node):
             self._on_plan_goal_response(response_future, expected)
         )
 
-    def _on_plan_goal_response(self, future, candidate: tuple[int, int, float]) -> None:
+    def _on_plan_goal_response(
+        self,
+        future,
+        candidate: PlanningCandidate,
+    ) -> None:
         if self._planning_candidate != candidate:
             return
-
         try:
             goal_handle = future.result()
         except Exception as exc:  # noqa: BLE001
             self.get_logger().warning(f'Planner goal request failed: {exc}')
             self._finish_path_failure(candidate)
             return
-
         if not goal_handle.accepted:
             self.get_logger().warning('Nav2 planner rejected candidate')
             self._finish_path_failure(candidate)
@@ -464,11 +596,11 @@ class FrontierDetector(Node):
             self._on_plan_result(finished_future, expected)
         )
 
-    def _on_plan_result(self, future, candidate: tuple[int, int, float]) -> None:
+    def _on_plan_result(self, future, candidate: PlanningCandidate) -> None:
         if self._planning_candidate != candidate:
             return
 
-        generation, index, distance = candidate
+        generation, representative, goal_index, frontier_distance, _ = candidate
         try:
             wrapped_result = future.result()
         except Exception as exc:  # noqa: BLE001
@@ -482,7 +614,6 @@ class FrontierDetector(Node):
             wrapped_result.status == GoalStatus.STATUS_SUCCEEDED
             and len(path.poses) > 0
         )
-
         self._planning_candidate = None
 
         if generation != self._generation:
@@ -502,21 +633,24 @@ class FrontierDetector(Node):
             self._start_next_path_check()
             return
 
-        self._selected_index = index
-        self._selected_distance = distance
+        self._selected_index = representative
+        self._selected_goal_index = goal_index
+        self._selected_distance = frontier_distance
         self._selected_path = path
         planned_length = path_length(path)
-        point = _cell_to_world(index, self._latest_map)
+        frontier_point = _cell_to_world(representative, self._latest_map)
+        goal_point = _cell_to_world(goal_index, self._latest_map)
 
         self.get_logger().info(
             'Reachable frontier selected: '
-            f'x={point.x:.2f}, y={point.y:.2f}, '
-            f'euclidean={distance:.2f} m, path={planned_length:.2f} m'
+            f'frontier=({frontier_point.x:.2f}, {frontier_point.y:.2f}), '
+            f'goal=({goal_point.x:.2f}, {goal_point.y:.2f}), '
+            f'euclidean={frontier_distance:.2f} m, path={planned_length:.2f} m'
         )
         self._path_pub.publish(path)
         self._publish_markers()
 
-    def _finish_path_failure(self, candidate: tuple[int, int, float]) -> None:
+    def _finish_path_failure(self, candidate: PlanningCandidate) -> None:
         if self._planning_candidate == candidate:
             self._planning_candidate = None
         if candidate[0] == self._generation:
@@ -534,9 +668,6 @@ class FrontierDetector(Node):
         if msg is None:
             return
 
-        frontier_cells = self._latest_frontier_cells
-        segments = self._latest_segments
-        representatives = self._latest_representatives
         frame_id = msg.header.frame_id or 'map'
         resolution = max(float(msg.info.resolution), 0.01)
 
@@ -558,7 +689,8 @@ class FrontierDetector(Node):
         cells_marker.color.b = 1.0
         cells_marker.color.a = 0.9
         cells_marker.points = [
-            _cell_to_world(index, msg) for index in sorted(frontier_cells)
+            _cell_to_world(index, msg)
+            for index in sorted(self._latest_frontier_cells)
         ]
 
         segment_centers_marker = Marker()
@@ -577,12 +709,11 @@ class FrontierDetector(Node):
         segment_centers_marker.color.g = 0.5
         segment_centers_marker.color.b = 0.0
         segment_centers_marker.color.a = 0.8
-
-        for segment in segments:
-            points = [_cell_to_world(index, msg) for index in segment]
+        for segment in self._latest_segments:
+            cx, cy = self._segment_centroid_world(segment, msg)
             center = Point()
-            center.x = sum(point.x for point in points) / len(points)
-            center.y = sum(point.y for point in points) / len(points)
+            center.x = cx
+            center.y = cy
             center.z = 0.08
             segment_centers_marker.points.append(center)
 
@@ -603,7 +734,8 @@ class FrontierDetector(Node):
         representative_marker.color.b = 0.2
         representative_marker.color.a = 1.0
         representative_marker.points = [
-            _cell_to_world(index, msg) for index in representatives
+            _cell_to_world(index, msg)
+            for index in self._latest_representatives
         ]
         for point in representative_marker.points:
             point.z = 0.12
@@ -625,18 +757,42 @@ class FrontierDetector(Node):
         selected_marker.color.b = 0.1
         selected_marker.color.a = 1.0
         if self._selected_index is not None:
-            selected_point = _cell_to_world(self._selected_index, msg)
-            selected_marker.pose.position.x = selected_point.x
-            selected_marker.pose.position.y = selected_point.y
+            point = _cell_to_world(self._selected_index, msg)
+            selected_marker.pose.position.x = point.x
+            selected_marker.pose.position.y = point.y
             selected_marker.pose.position.z = 0.18
         else:
             selected_marker.action = Marker.DELETE
+
+        navigation_goal_marker = Marker()
+        navigation_goal_marker.header.stamp = msg.header.stamp
+        navigation_goal_marker.header.frame_id = frame_id
+        navigation_goal_marker.ns = 'frontier_navigation_goal'
+        navigation_goal_marker.id = 4
+        navigation_goal_marker.type = Marker.SPHERE
+        navigation_goal_marker.action = Marker.ADD
+        navigation_goal_marker.pose.orientation.w = 1.0
+        goal_scale = max(resolution * 4.0, 0.20)
+        navigation_goal_marker.scale.x = goal_scale
+        navigation_goal_marker.scale.y = goal_scale
+        navigation_goal_marker.scale.z = goal_scale
+        navigation_goal_marker.color.r = 0.8
+        navigation_goal_marker.color.g = 0.2
+        navigation_goal_marker.color.b = 1.0
+        navigation_goal_marker.color.a = 1.0
+        if self._selected_goal_index is not None:
+            point = _cell_to_world(self._selected_goal_index, msg)
+            navigation_goal_marker.pose.position.x = point.x
+            navigation_goal_marker.pose.position.y = point.y
+            navigation_goal_marker.pose.position.z = 0.16
+        else:
+            navigation_goal_marker.action = Marker.DELETE
 
         checking_marker = Marker()
         checking_marker.header.stamp = msg.header.stamp
         checking_marker.header.frame_id = frame_id
         checking_marker.ns = 'planner_candidate_checking'
-        checking_marker.id = 4
+        checking_marker.id = 5
         checking_marker.type = Marker.SPHERE
         checking_marker.action = Marker.ADD
         checking_marker.pose.orientation.w = 1.0
@@ -652,11 +808,9 @@ class FrontierDetector(Node):
             self._planning_candidate is not None
             and self._planning_candidate[0] == self._generation
         ):
-            checking_point = _cell_to_world(
-                self._planning_candidate[1], msg
-            )
-            checking_marker.pose.position.x = checking_point.x
-            checking_marker.pose.position.y = checking_point.y
+            point = _cell_to_world(self._planning_candidate[2], msg)
+            checking_marker.pose.position.x = point.x
+            checking_marker.pose.position.y = point.y
             checking_marker.pose.position.z = 0.16
         else:
             checking_marker.action = Marker.DELETE
@@ -668,6 +822,7 @@ class FrontierDetector(Node):
             segment_centers_marker,
             representative_marker,
             selected_marker,
+            navigation_goal_marker,
             checking_marker,
         ]
         self._marker_pub.publish(marker_array)
