@@ -54,14 +54,6 @@ def generate_launch_description() -> LaunchDescription:
         ],
     )
 
-    preprocessor = Node(
-        package='frontier_exploration',
-        executable='frontier_map_preprocessor',
-        name='frontier_map_preprocessor',
-        output='screen',
-        parameters=[config_path, common_time_parameter],
-    )
-
     detector = Node(
         package='frontier_exploration',
         executable='frontier_detector',
@@ -92,7 +84,9 @@ def generate_launch_description() -> LaunchDescription:
             ),
             manager,
             adapter,
-            preprocessor,
+            # Give Nav2/SLAM/TF a short head start. The detector then runs WFD
+            # directly on /map; detector-only map preprocessing is not part of
+            # the basic baseline anymore.
             TimerAction(period=1.0, actions=[detector]),
         ]
     )
