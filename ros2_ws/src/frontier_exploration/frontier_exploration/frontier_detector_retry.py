@@ -16,6 +16,7 @@ class RetryFrontierDetector(FrontierDetector):
         self.declare_parameter('planner_retry_period_sec', 1.0)
         self.declare_parameter('planner_rejection_retry_limit', 15)
         self.declare_parameter('failed_goal_topic', '/frontier_failed_goal')
+        self.declare_parameter('completed_goal_topic', '/frontier_completed_goal')
         self.declare_parameter('failed_goal_radius_m', 0.75)
         self.declare_parameter('failed_goal_cooldown_sec', 30.0)
 
@@ -23,6 +24,9 @@ class RetryFrontierDetector(FrontierDetector):
             0.1, float(self.get_parameter('planner_retry_period_sec').value)
         )
         failed_goal_topic = str(self.get_parameter('failed_goal_topic').value)
+        completed_goal_topic = str(
+            self.get_parameter('completed_goal_topic').value
+        )
 
         self._planner_retry_counts: dict[tuple[int, int], int] = {}
         self._retry_not_before_sec = 0.0
@@ -33,6 +37,9 @@ class RetryFrontierDetector(FrontierDetector):
         self.create_subscription(
             PointStamped, failed_goal_topic, self._on_failed_goal, 10
         )
+        self.create_subscription(
+            PointStamped, completed_goal_topic, self._on_completed_goal, 10
+        )
 
         self.get_logger().info(
             'Planner startup retry enabled: '
@@ -41,6 +48,9 @@ class RetryFrontierDetector(FrontierDetector):
         )
         self.get_logger().info(
             f'Failed frontier blacklist listening on {failed_goal_topic}'
+        )
+        self.get_logger().info(
+            f'Completed frontier refresh listening on {completed_goal_topic}'
         )
 
     def _now_sec(self) -> float:
@@ -64,6 +74,32 @@ class RetryFrontierDetector(FrontierDetector):
             for failed_x, failed_y, _ in self._failed_goals
         )
 
+    def _reset_selection_and_replan(self, reason: str) -> None:
+        """Invalidate cached selection and immediately re-evaluate the latest map."""
+        self._generation += 1
+        self._candidate_signature = None
+        self._candidate_queue = []
+        self._planning_candidate = None
+        self._selected_index = None
+        self._selected_distance = None
+        self._selected_path = None
+        self._planner_retry_counts.clear()
+        self._retry_not_before_sec = 0.0
+
+        latest_map = self._latest_map
+        if latest_map is None:
+            return
+
+        self.get_logger().info(reason)
+        self._publish_empty_path(latest_map.header.frame_id or 'map')
+        super()._on_map(latest_map)
+
+    def _on_completed_goal(self, msg: PointStamped) -> None:
+        self._reset_selection_and_replan(
+            'Completed frontier reached; refreshing candidates from latest map '
+            f'at x={float(msg.point.x):.2f}, y={float(msg.point.y):.2f}'
+        )
+
     def _on_failed_goal(self, msg: PointStamped) -> None:
         cooldown = max(
             0.0, float(self.get_parameter('failed_goal_cooldown_sec').value)
@@ -82,20 +118,9 @@ class RetryFrontierDetector(FrontierDetector):
             f'x={x:.2f}, y={y:.2f}, cooldown={cooldown:.1f}s'
         )
 
-        # Invalidate any selection or in-flight planner check based on the old
-        # candidate set. A fresh ordering will skip the blacklisted region.
-        self._generation += 1
-        self._candidate_signature = None
-        self._candidate_queue = []
-        self._planning_candidate = None
-        self._selected_index = None
-        self._selected_distance = None
-        self._selected_path = None
-
-        latest_map = self._latest_map
-        if latest_map is not None:
-            self._publish_empty_path(latest_map.header.frame_id or 'map')
-            super()._on_map(latest_map)
+        self._reset_selection_and_replan(
+            'Failed frontier feedback received; refreshing candidate ordering'
+        )
 
     def _retry_pending_planner_check(self) -> None:
         """Retry planner work and wake candidates when blacklist cooldown expires."""
