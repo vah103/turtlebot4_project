@@ -6,6 +6,7 @@ import rclpy
 from geometry_msgs.msg import PointStamped
 from nav_msgs.msg import OccupancyGrid
 
+from frontier_exploration.frontier_core import candidate_goal_cells
 from frontier_exploration.frontier_detector import (
     Candidate,
     FrontierDetector,
@@ -15,7 +16,7 @@ from frontier_exploration.frontier_detector import (
 
 
 class RetryFrontierDetector(FrontierDetector):
-    """Keep candidates alive across Nav2 startup and navigation outcomes."""
+    """Keep candidates stable across planning and one active navigation goal."""
 
     def __init__(self) -> None:
         super().__init__()
@@ -25,6 +26,8 @@ class RetryFrontierDetector(FrontierDetector):
         self.declare_parameter('completed_goal_topic', '/frontier_completed_goal')
         self.declare_parameter('failed_goal_radius_m', 0.40)
         self.declare_parameter('failed_goal_cooldown_sec', 60.0)
+        self.declare_parameter('completed_frontier_radius_m', 0.40)
+        self.declare_parameter('completed_frontier_cooldown_sec', 15.0)
         self.declare_parameter('post_goal_settle_sec', 1.0)
 
         retry_period = max(
@@ -39,7 +42,10 @@ class RetryFrontierDetector(FrontierDetector):
         self._retry_not_before_sec = 0.0
         self._replan_not_before_sec = 0.0
         self._failed_frontiers: list[tuple[float, float, float]] = []
-        self._selected_frontier_world: tuple[float, float] | None = None
+        self._completed_frontiers: list[tuple[float, float, float]] = []
+        self._deferred_map: OccupancyGrid | None = None
+        self._completion_notice_shown = False
+
         self._planner_retry_timer = self.create_timer(
             retry_period, self._retry_pending_planner_check
         )
@@ -69,51 +75,149 @@ class RetryFrontierDetector(FrontierDetector):
     def _now_sec(self) -> float:
         return self.get_clock().now().nanoseconds / 1e9
 
-    def _on_map(self, msg: OccupancyGrid) -> None:
-        # Once a path has been selected, keep that frontier identity frozen until
-        # the manager reports success/failure. Map updates are retained so the
-        # next WFD pass uses the newest map, but they cannot silently replace the
-        # active exploration target while Nav2 is executing it.
-        if self._selected_index is not None:
-            self._latest_map = msg
-            return
-        super()._on_map(msg)
-
-    def _on_plan_result(self, future, candidate: PlanningCandidate) -> None:
-        super()._on_plan_result(future, candidate)
-        if self._selected_index is not None and self._latest_map is not None:
-            point = _cell_to_world(self._selected_index, self._latest_map)
-            self._selected_frontier_world = (point.x, point.y)
-
-    def _prune_failed_frontiers(self) -> bool:
+    def _prune_regions(
+        self,
+        regions: list[tuple[float, float, float]],
+    ) -> tuple[list[tuple[float, float, float]], bool]:
         now = self._now_sec()
-        before = len(self._failed_frontiers)
-        self._failed_frontiers = [
-            item for item in self._failed_frontiers if item[2] > now
-        ]
-        return len(self._failed_frontiers) != before
+        filtered = [item for item in regions if item[2] > now]
+        return filtered, len(filtered) != len(regions)
+
+    def _prune_suppression_regions(self) -> bool:
+        self._failed_frontiers, failed_changed = self._prune_regions(
+            self._failed_frontiers
+        )
+        self._completed_frontiers, completed_changed = self._prune_regions(
+            self._completed_frontiers
+        )
+        return failed_changed or completed_changed
 
     def _selected_frontier_xy(self) -> tuple[float, float] | None:
-        if self._selected_frontier_world is not None:
-            return self._selected_frontier_world
         if self._latest_map is None or self._selected_index is None:
             return None
         point = _cell_to_world(self._selected_index, self._latest_map)
         return point.x, point.y
 
-    def _is_blacklisted_candidate(self, candidate: Candidate) -> bool:
-        self._prune_failed_frontiers()
+    def _candidate_in_regions(
+        self,
+        candidate: Candidate,
+        regions: list[tuple[float, float, float]],
+        radius: float,
+    ) -> bool:
         if self._latest_map is None:
             return False
         representative = candidate[0]
         point = _cell_to_world(representative, self._latest_map)
-        radius = max(
+        return any(
+            hypot(point.x - x, point.y - y) <= radius
+            for x, y, _ in regions
+        )
+
+    def _is_temporarily_suppressed_candidate(self, candidate: Candidate) -> bool:
+        self._prune_suppression_regions()
+        failed_radius = max(
             0.0, float(self.get_parameter('failed_goal_radius_m').value)
         )
-        return any(
-            hypot(point.x - failed_x, point.y - failed_y) <= radius
-            for failed_x, failed_y, _ in self._failed_frontiers
+        completed_radius = max(
+            0.0,
+            float(self.get_parameter('completed_frontier_radius_m').value),
         )
+        return (
+            self._candidate_in_regions(
+                candidate,
+                self._failed_frontiers,
+                failed_radius,
+            )
+            or self._candidate_in_regions(
+                candidate,
+                self._completed_frontiers,
+                completed_radius,
+            )
+        )
+
+    def _on_map(self, msg: OccupancyGrid) -> None:
+        """Freeze candidate indices against one map snapshot until goal outcome."""
+        if self._selected_index is not None or self._planning_candidate is not None:
+            self._deferred_map = msg
+            return
+
+        # The occupancy grid may resize or shift origin while SLAM grows. Rebuild
+        # candidates from each accepted idle snapshot instead of trusting raw grid
+        # indices to keep the same world meaning across map geometry changes.
+        self._candidate_signature = None
+        super()._on_map(msg)
+
+        if self._latest_frontier_cells:
+            self._completion_notice_shown = False
+        elif not self._completion_notice_shown:
+            self.get_logger().info(
+                'No reachable frontier cells remain in the current map'
+            )
+            self._completion_notice_shown = True
+
+    def _goal_index_for_segment(
+        self,
+        segment: list[int],
+        msg: OccupancyGrid,
+        robot_x: float,
+        robot_y: float,
+        min_distance_m: float,
+    ) -> tuple[int, float] | None:
+        """Choose a costmap-safe free goal near the frontier centroid.
+
+        Prefer a free goal outside the minimum-distance radius. If the frontier
+        itself is eligible but its inward free-side goal lies just inside that
+        radius, fall back to the best safe free neighbor rather than discarding
+        the whole frontier.
+        """
+        source_frame = msg.header.frame_id or 'map'
+        centroid_x, centroid_y = self._segment_centroid_world(segment, msg)
+        best_any: tuple[float, int, float] | None = None
+        best_far: tuple[float, int, float] | None = None
+
+        for index in candidate_goal_cells(
+            segment,
+            self._latest_frontier_cells,
+            list(msg.data),
+            msg.info.width,
+            msg.info.height,
+        ):
+            point = _cell_to_world(index, msg)
+            goal_distance = hypot(point.x - robot_x, point.y - robot_y)
+
+            if self._global_costmap is not None and self._point_blocked(
+                self._global_costmap,
+                point.x,
+                point.y,
+                source_frame,
+                outside_is_blocked=True,
+            ):
+                continue
+
+            if self._local_costmap is not None and self._point_blocked(
+                self._local_costmap,
+                point.x,
+                point.y,
+                source_frame,
+                outside_is_blocked=False,
+            ):
+                continue
+
+            centroid_distance_sq = (
+                (point.x - centroid_x) ** 2 + (point.y - centroid_y) ** 2
+            )
+            score = (centroid_distance_sq, index, goal_distance)
+            if best_any is None or score < best_any:
+                best_any = score
+            if goal_distance >= min_distance_m and (
+                best_far is None or score < best_far
+            ):
+                best_far = score
+
+        best = best_far if best_far is not None else best_any
+        if best is None:
+            return None
+        return best[1], best[2]
 
     def _reset_selection_and_replan(
         self,
@@ -121,7 +225,7 @@ class RetryFrontierDetector(FrontierDetector):
         *,
         settle_sec: float = 0.0,
     ) -> None:
-        """Invalidate cached selection and rebuild candidates from the latest map."""
+        """Invalidate cached selection and rebuild from the newest map snapshot."""
         self._generation += 1
         self._candidate_signature = None
         self._candidate_queue = []
@@ -130,12 +234,12 @@ class RetryFrontierDetector(FrontierDetector):
         self._selected_goal_index = None
         self._selected_distance = None
         self._selected_path = None
-        self._selected_frontier_world = None
         self._planner_retry_counts.clear()
         self._retry_not_before_sec = 0.0
         self._replan_not_before_sec = self._now_sec() + max(0.0, settle_sec)
 
-        latest_map = self._latest_map
+        latest_map = self._deferred_map or self._latest_map
+        self._deferred_map = None
         if latest_map is None:
             return
 
@@ -144,6 +248,19 @@ class RetryFrontierDetector(FrontierDetector):
         super()._on_map(latest_map)
 
     def _on_completed_goal(self, msg: PointStamped) -> None:
+        frontier_xy = self._selected_frontier_xy()
+        if frontier_xy is not None:
+            cooldown = max(
+                0.0,
+                float(
+                    self.get_parameter('completed_frontier_cooldown_sec').value
+                ),
+            )
+            if cooldown > 0.0:
+                self._completed_frontiers.append(
+                    (frontier_xy[0], frontier_xy[1], self._now_sec() + cooldown)
+                )
+
         settle_sec = max(
             0.0, float(self.get_parameter('post_goal_settle_sec').value)
         )
@@ -164,11 +281,10 @@ class RetryFrontierDetector(FrontierDetector):
         frontier_xy = self._selected_frontier_xy()
         if frontier_xy is None:
             frontier_xy = (float(msg.point.x), float(msg.point.y))
-        expiry = self._now_sec() + cooldown
         self._failed_frontiers.append(
-            (frontier_xy[0], frontier_xy[1], expiry)
+            (frontier_xy[0], frontier_xy[1], self._now_sec() + cooldown)
         )
-        self._prune_failed_frontiers()
+        self._prune_suppression_regions()
 
         self.get_logger().warning(
             'Temporarily suppressing failed frontier region: '
@@ -180,19 +296,35 @@ class RetryFrontierDetector(FrontierDetector):
         )
 
     def _retry_pending_planner_check(self) -> None:
-        expired = self._prune_failed_frontiers()
+        suppression_expired = self._prune_suppression_regions()
+
+        # If every candidate from the frozen snapshot was exhausted, consume the
+        # newest deferred map instead of staying idle on obsolete candidates.
         if (
-            expired
+            self._selected_index is None
+            and self._planning_candidate is None
+            and not self._candidate_queue
+            and self._deferred_map is not None
+        ):
+            latest_map = self._deferred_map
+            self._deferred_map = None
+            self._candidate_signature = None
+            super()._on_map(latest_map)
+            return
+
+        if (
+            suppression_expired
             and self._selected_index is None
             and self._planning_candidate is None
             and self._latest_map is not None
         ):
             self.get_logger().info(
-                'Failed-frontier cooldown expired; rebuilding candidates'
+                'Temporary frontier suppression expired; rebuilding candidates'
             )
             self._candidate_signature = None
             super()._on_map(self._latest_map)
             return
+
         self._start_next_path_check()
 
     def _start_next_path_check(self) -> None:
@@ -201,7 +333,7 @@ class RetryFrontierDetector(FrontierDetector):
             return
 
         skipped = 0
-        while self._candidate_queue and self._is_blacklisted_candidate(
+        while self._candidate_queue and self._is_temporarily_suppressed_candidate(
             self._candidate_queue[0]
         ):
             self._candidate_queue.pop(0)
@@ -209,7 +341,7 @@ class RetryFrontierDetector(FrontierDetector):
 
         if skipped:
             self.get_logger().info(
-                f'Skipped {skipped} candidate(s) in temporary failed-frontier regions'
+                f'Skipped {skipped} temporarily suppressed frontier candidate(s)'
             )
 
         super()._start_next_path_check()
