@@ -14,10 +14,12 @@ class SnapshotPolicy:
         distance_interval_m: float,
         time_interval_sec: float,
         min_interval_sec: float,
+        max_odom_step_m: float = 0.0,
     ) -> None:
         self.distance_interval_m = max(0.0, float(distance_interval_m))
         self.time_interval_sec = max(0.0, float(time_interval_sec))
         self.min_interval_sec = max(0.0, float(min_interval_sec))
+        self.max_odom_step_m = max(0.0, float(max_odom_step_m))
         self.last_time_sec: float | None = None
         self.distance_since_capture_m = 0.0
         self.last_observed_x: float | None = None
@@ -26,10 +28,12 @@ class SnapshotPolicy:
     def observe_motion(self, x: float, y: float) -> None:
         """Accumulate odometry path length, including turns and loops."""
         if self.last_observed_x is not None and self.last_observed_y is not None:
-            self.distance_since_capture_m += hypot(
+            step_m = hypot(
                 x - self.last_observed_x,
                 y - self.last_observed_y,
             )
+            if self.max_odom_step_m <= 0.0 or step_m <= self.max_odom_step_m:
+                self.distance_since_capture_m += step_m
         self.last_observed_x = x
         self.last_observed_y = y
 
@@ -54,6 +58,20 @@ class SnapshotPolicy:
     def record_capture(self, now_sec: float) -> None:
         self.last_time_sec = now_sec
         self.distance_since_capture_m = 0.0
+
+
+def create_unique_run_dir(output_dir: Path, run_name: str) -> Path:
+    """Create a run directory without overwriting an earlier experiment."""
+    suffix = 0
+    while True:
+        name = run_name if suffix == 0 else f'{run_name}_{suffix:03d}'
+        candidate = output_dir / name
+        try:
+            candidate.mkdir(parents=True, exist_ok=False)
+        except FileExistsError:
+            suffix += 1
+            continue
+        return candidate
 
 
 def nearest_timestamp_index(
