@@ -54,7 +54,7 @@ Sau `SUCCEEDED`:
 4. chờ `post_goal_settle_sec`;
 5. chạy WFD và chọn frontier mới.
 
-Sau failure/stall, frontier đúng của goal đang thực thi được suppress tạm thời rồi detector chuyển sang candidate khác. Completed-frontier suppression chỉ ngắn hạn để chống immediate loop; failed-frontier suppression dài hơn.
+Sau failure/stall, frontier đúng của goal đang thực thi được suppress tạm thời rồi detector chuyển sang candidate khác. Khi cooldown hết, frontier được thử lại; sau `failed_goal_max_attempts` lần thất bại, vùng đó được đánh dấu exhausted để exploration vẫn có thể kết thúc. Completed-frontier suppression chỉ ngắn hạn để chống immediate loop.
 
 ## Stopping condition
 
@@ -65,6 +65,9 @@ không còn candidate reachable trong nhiều lần kiểm tra ổn định. B�
 bật sau khi detector từng thấy ít nhất một candidate thật, và bị reset nếu có
 hoạt động mới. Cooldown của frontier vừa hoàn thành cũng phải hết trước khi được
 phép kết luận, tránh báo xong sớm lúc SLAM đang cập nhật.
+
+Nếu ngay từ đầu không có candidate, detector đợi các input map/costmap ổn định
+trong `completion_startup_grace_sec` rồi mới bật bộ đếm hoàn tất.
 
 Khi hoàn tất, node log `Exploration complete`, publish latched `true` trên
 `/exploration_complete`, chờ ngắn để message được gửi rồi tự thoát. Hai launch
@@ -113,12 +116,14 @@ frontier_detector:
   costmap_occ_threshold: 65
   failed_goal_radius_m: 0.40
   failed_goal_cooldown_sec: 60.0
+  failed_goal_max_attempts: 2
   completed_frontier_radius_m: 0.40
   completed_frontier_cooldown_sec: 15.0
   post_goal_settle_sec: 1.0
   completion_stable_cycles: 5
   completion_min_idle_sec: 10.0
   completion_check_period_sec: 2.0
+  completion_startup_grace_sec: 20.0
   shutdown_on_completion: true
   completion_shutdown_delay_sec: 0.5
 

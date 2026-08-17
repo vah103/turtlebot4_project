@@ -41,6 +41,7 @@ frontier_detector:
     completed_goal_topic: /frontier_completed_goal
     failed_goal_radius_m: 0.40
     failed_goal_cooldown_sec: 60.0
+    failed_goal_max_attempts: 2
     completed_frontier_radius_m: 0.40
     completed_frontier_cooldown_sec: 15.0
     post_goal_settle_sec: 1.0
@@ -50,6 +51,7 @@ frontier_detector:
     completion_stable_cycles: 5
     completion_min_idle_sec: 10.0
     completion_check_period_sec: 2.0
+    completion_startup_grace_sec: 20.0
     shutdown_on_completion: true
     completion_shutdown_delay_sec: 0.5
 
