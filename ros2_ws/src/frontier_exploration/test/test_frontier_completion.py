@@ -7,6 +7,7 @@ def test_completion_requires_cycles_and_idle_time():
         min_idle_sec=5.0,
         check_period_sec=1.0,
     )
+    tracker.mark_started()
 
     assert not tracker.observe_exhausted(0.0)
     assert not tracker.observe_exhausted(1.0)
@@ -22,6 +23,7 @@ def test_completion_ignores_busy_loop_checks():
         min_idle_sec=1.0,
         check_period_sec=1.0,
     )
+    tracker.mark_started()
 
     assert not tracker.observe_exhausted(0.0)
     assert not tracker.observe_exhausted(0.2)
@@ -35,10 +37,55 @@ def test_completion_reset_clears_idle_evidence():
         min_idle_sec=0.0,
         check_period_sec=0.0,
     )
+    tracker.mark_started()
 
     assert not tracker.observe_exhausted(0.0)
     tracker.reset()
     assert tracker.streak == 0
+    assert not tracker.started
     assert not tracker.complete
+    tracker.mark_started()
     assert not tracker.observe_exhausted(1.0)
     assert tracker.observe_exhausted(2.0)
+
+
+def test_completion_cannot_happen_before_first_candidate():
+    tracker = CompletionTracker(
+        required_cycles=2,
+        min_idle_sec=1.0,
+        check_period_sec=1.0,
+    )
+
+    assert not tracker.observe_exhausted(0.0)
+    assert not tracker.observe_exhausted(10.0)
+    assert tracker.streak == 0
+
+
+def test_cooldown_block_resets_idle_evidence():
+    tracker = CompletionTracker(
+        required_cycles=2,
+        min_idle_sec=2.0,
+        check_period_sec=1.0,
+    )
+    tracker.mark_started()
+
+    assert not tracker.observe_exhausted(0.0)
+    assert not tracker.observe_exhausted(1.0, blocked=True)
+    assert tracker.streak == 0
+    assert not tracker.observe_exhausted(2.0)
+    assert tracker.observe_exhausted(4.0)
+
+
+def test_busy_activity_resets_idle_evidence():
+    tracker = CompletionTracker(
+        required_cycles=2,
+        min_idle_sec=2.0,
+        check_period_sec=1.0,
+    )
+    tracker.mark_started()
+
+    assert not tracker.observe_exhausted(0.0)
+    tracker.observe_busy()
+    assert tracker.streak == 0
+    assert not tracker.observe_exhausted(2.0)
+    assert tracker.observe_exhausted(4.0)

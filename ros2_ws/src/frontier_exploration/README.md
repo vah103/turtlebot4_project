@@ -61,8 +61,14 @@ Sau failure/stall, frontier đúng của goal đang thực thi được suppress
 Các frontier cell nhỏ hoặc nằm sát vùng unknown có thể còn tồn tại dù Nav2 không
 thể đi tới. Vì vậy baseline không chờ số frontier cell thô bằng 0. Detector chỉ
 báo hoàn thành sau khi toàn bộ candidate an toàn đã được planner kiểm tra mà
-không còn candidate reachable trong nhiều lần kiểm tra ổn định. Khi đó node log
-`Exploration complete` và publish `true` trên `/exploration_complete`.
+không còn candidate reachable trong nhiều lần kiểm tra ổn định. Bộ đếm chỉ được
+bật sau khi detector từng thấy ít nhất một candidate thật, và bị reset nếu có
+hoạt động mới. Cooldown của frontier vừa hoàn thành cũng phải hết trước khi được
+phép kết luận, tránh báo xong sớm lúc SLAM đang cập nhật.
+
+Khi hoàn tất, node log `Exploration complete`, publish latched `true` trên
+`/exploration_complete`, chờ ngắn để message được gửi rồi tự thoát. Hai launch
+mặc định đóng toàn bộ tiến trình khi detector thoát.
 
 ## Marker RViz
 
@@ -113,6 +119,8 @@ frontier_detector:
   completion_stable_cycles: 5
   completion_min_idle_sec: 10.0
   completion_check_period_sec: 2.0
+  shutdown_on_completion: true
+  completion_shutdown_delay_sec: 0.5
 
 exploration_manager:
   enable_navigation: false

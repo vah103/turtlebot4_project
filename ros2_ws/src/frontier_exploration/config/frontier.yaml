@@ -50,6 +50,8 @@ frontier_detector:
     completion_stable_cycles: 5
     completion_min_idle_sec: 10.0
     completion_check_period_sec: 2.0
+    shutdown_on_completion: true
+    completion_shutdown_delay_sec: 0.5
 
 exploration_manager:
   ros__parameters:

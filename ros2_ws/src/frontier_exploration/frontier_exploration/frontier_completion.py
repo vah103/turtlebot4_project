@@ -16,18 +16,35 @@ class CompletionTracker:
         self.reset()
 
     def reset(self) -> None:
-        """Clear all accumulated idle evidence."""
+        """Clear mission-start state and all accumulated idle evidence."""
+        self.started = False
+        self.reset_idle()
+
+    def reset_idle(self) -> None:
+        """Clear idle evidence while preserving mission-start state."""
         self.streak = 0
         self.first_idle_sec: float | None = None
         self.last_check_sec: float | None = None
         self.complete = False
 
-    def observe_exhausted(self, now_sec: float) -> bool:
+    def mark_started(self) -> None:
+        """Allow completion checks after at least one real candidate existed."""
+        self.started = True
+
+    def observe_busy(self) -> None:
+        """Invalidate stale idle evidence when exploration becomes active."""
+        if not self.complete:
+            self.reset_idle()
+
+    def observe_exhausted(self, now_sec: float, *, blocked: bool = False) -> bool:
         """Record one eligible no-reachable-frontier observation.
 
         Return ``True`` only when this observation newly completes the mission.
         """
         if self.complete:
+            return False
+        if not self.started or blocked:
+            self.reset_idle()
             return False
         if (
             self.last_check_sec is not None
