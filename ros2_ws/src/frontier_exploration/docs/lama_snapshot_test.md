@@ -17,7 +17,9 @@ source install/setup.bash
 
 Use the sequenced launch below. It waits for xacro to finish writing the
 temporary world SDF before starting Gazebo, avoiding an intermittent
-`Unable to find or download file` startup failure in the upstream launch.
+`Unable to find or download file` startup failure in the upstream launch. It
+also defaults Gazebo Transport to `127.0.0.1` so the local server, bridge, and
+spawn process discover each other reliably.
 
 ```bash
 ros2 launch frontier_exploration tb4_simulation_safe.launch.py \

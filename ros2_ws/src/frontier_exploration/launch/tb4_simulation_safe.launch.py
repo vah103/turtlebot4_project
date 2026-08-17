@@ -27,6 +27,7 @@ from launch.actions import (
     IncludeLaunchDescription,
     OpaqueFunction,
     RegisterEventHandler,
+    SetEnvironmentVariable,
 )
 from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessExit, OnShutdown
@@ -47,6 +48,7 @@ def generate_launch_description():
     use_simulator = LaunchConfiguration('use_simulator')
     use_robot_state_pub = LaunchConfiguration('use_robot_state_pub')
     headless = LaunchConfiguration('headless')
+    gz_ip = LaunchConfiguration('gz_ip')
     world = LaunchConfiguration('world')
     pose = {
         'x': LaunchConfiguration('x_pose', default='-8.00'),
@@ -91,6 +93,11 @@ def generate_launch_description():
             'headless',
             default_value='False',
             description='Whether to skip the Gazebo client',
+        ),
+        DeclareLaunchArgument(
+            'gz_ip',
+            default_value='127.0.0.1',
+            description='Gazebo Transport interface for local simulation',
         ),
         DeclareLaunchArgument(
             'world',
@@ -204,8 +211,10 @@ def generate_launch_description():
     resource_path = AppendEnvironmentVariable(
         'GZ_SIM_RESOURCE_PATH', os.path.join(sim_dir, 'worlds')
     )
+    local_gazebo_transport = SetEnvironmentVariable('GZ_IP', gz_ip)
 
     launch_description = LaunchDescription(declarations)
+    launch_description.add_action(local_gazebo_transport)
     launch_description.add_action(resource_path)
     launch_description.add_action(start_gazebo_after_world)
     launch_description.add_action(world_sdf_xacro)
