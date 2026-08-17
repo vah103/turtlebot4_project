@@ -15,9 +15,13 @@ setup(
                 'launch/frontier_detector.launch.py',
                 'launch/frontier_autonomy.launch.py',
                 'launch/nav2_sim_compat.launch.py',
+                'launch/map_snapshot_recorder.launch.py',
             ],
         ),
-        ('share/' + package_name + '/config', ['config/frontier.yaml']),
+        (
+            'share/' + package_name + '/config',
+            ['config/frontier.yaml', 'config/map_snapshot.yaml'],
+        ),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -28,10 +32,26 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'frontier_map_preprocessor = frontier_exploration.frontier_map_preprocessor_resilient:main',
-            'frontier_detector = frontier_exploration.frontier_detector_resilient:main',
-            'exploration_manager = frontier_exploration.exploration_manager:main',
-            'sim_twist_adapter = frontier_exploration.sim_twist_adapter:main',
+            (
+                'frontier_map_preprocessor = '
+                'frontier_exploration.frontier_map_preprocessor_resilient:main'
+            ),
+            (
+                'frontier_detector = '
+                'frontier_exploration.frontier_detector_resilient:main'
+            ),
+            (
+                'exploration_manager = '
+                'frontier_exploration.exploration_manager:main'
+            ),
+            (
+                'sim_twist_adapter = '
+                'frontier_exploration.sim_twist_adapter:main'
+            ),
+            (
+                'map_snapshot_recorder = '
+                'frontier_exploration.map_snapshot_recorder:main'
+            ),
         ],
     },
 )
