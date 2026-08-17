@@ -2,6 +2,7 @@ import pytest
 
 from frontier_exploration.map_snapshot_core import (
     SnapshotPolicy,
+    create_unique_run_dir,
     nearest_timestamp_index,
     occupancy_to_pgm,
     occupancy_to_signed_bytes,
@@ -36,6 +37,26 @@ def test_policy_counts_loop_path_not_only_displacement():
     policy.observe_motion(0.3, 0.0)
     policy.observe_motion(0.0, 0.0)
     assert policy.should_capture(1.0)
+
+
+def test_policy_ignores_large_odom_jump():
+    policy = SnapshotPolicy(0.5, 0.0, 0.0, max_odom_step_m=1.0)
+    policy.observe_motion(0.0, 0.0)
+    policy.record_capture(0.0)
+
+    policy.observe_motion(0.2, 0.0)
+    policy.observe_motion(10.0, 0.0)
+    policy.observe_motion(10.2, 0.0)
+
+    assert not policy.should_capture(1.0)
+
+
+def test_run_directory_gets_suffix_instead_of_overwriting(tmp_path):
+    first = create_unique_run_dir(tmp_path, 'frontier_baseline_01')
+    second = create_unique_run_dir(tmp_path, 'frontier_baseline_01')
+
+    assert first.name == 'frontier_baseline_01'
+    assert second.name == 'frontier_baseline_01_001'
 
 
 def test_nearest_timestamp_respects_tolerance():
