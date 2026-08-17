@@ -56,6 +56,14 @@ Sau `SUCCEEDED`:
 
 Sau failure/stall, frontier đúng của goal đang thực thi được suppress tạm thời rồi detector chuyển sang candidate khác. Completed-frontier suppression chỉ ngắn hạn để chống immediate loop; failed-frontier suppression dài hơn.
 
+## Stopping condition
+
+Các frontier cell nhỏ hoặc nằm sát vùng unknown có thể còn tồn tại dù Nav2 không
+thể đi tới. Vì vậy baseline không chờ số frontier cell thô bằng 0. Detector chỉ
+báo hoàn thành sau khi toàn bộ candidate an toàn đã được planner kiểm tra mà
+không còn candidate reachable trong nhiều lần kiểm tra ổn định. Khi đó node log
+`Exploration complete` và publish `true` trên `/exploration_complete`.
+
 ## Marker RViz
 
 `/frontier_markers` gồm:
@@ -102,6 +110,9 @@ frontier_detector:
   completed_frontier_radius_m: 0.40
   completed_frontier_cooldown_sec: 15.0
   post_goal_settle_sec: 1.0
+  completion_stable_cycles: 5
+  completion_min_idle_sec: 10.0
+  completion_check_period_sec: 2.0
 
 exploration_manager:
   enable_navigation: false

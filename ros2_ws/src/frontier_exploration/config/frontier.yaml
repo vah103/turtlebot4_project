@@ -45,6 +45,12 @@ frontier_detector:
     completed_frontier_cooldown_sec: 15.0
     post_goal_settle_sec: 1.0
 
+    # End only after all safe candidates are repeatedly exhausted by Nav2.
+    completion_topic: /exploration_complete
+    completion_stable_cycles: 5
+    completion_min_idle_sec: 10.0
+    completion_check_period_sec: 2.0
+
 exploration_manager:
   ros__parameters:
     path_topic: /frontier_selected_path
