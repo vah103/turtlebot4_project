@@ -47,3 +47,6 @@ The recorder captures immediately when map and odometry are ready, then after
 0.5 m of accumulated odometry travel or 5 s. A final snapshot is forced when
 `/exploration_complete` becomes true. If completion arrives before the first
 synchronized pair, the recorder waits for that pair instead of exiting empty.
+Reusing a `run_name` creates a suffixed folder such as `_001` instead of
+overwriting data. Odometry steps larger than 1 m are treated as reset/jump
+discontinuities and are not counted as robot travel.
