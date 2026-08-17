@@ -144,30 +144,21 @@ def generate_launch_description():
         output='screen',
     )
 
-    gazebo_server = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(
-                get_package_share_directory('ros_gz_sim'),
-                'launch',
-                'gz_sim.launch.py',
-            )
-        ),
-        launch_arguments={'gz_args': ['-r -s ', world_sdf]}.items(),
+    # Call Gazebo directly. The ros_gz_sim wrapper rebuilds the process
+    # environment and can stall before the world services appear on some
+    # Jazzy installations, while the equivalent direct command works.
+    gazebo_server = ExecuteProcess(
+        cmd=['gz', 'sim', '-v', '4', '-r', '-s', world_sdf],
+        output='screen',
         condition=IfCondition(use_simulator),
     )
 
-    gazebo_client = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(
-                get_package_share_directory('ros_gz_sim'),
-                'launch',
-                'gz_sim.launch.py',
-            )
-        ),
+    gazebo_client = ExecuteProcess(
+        cmd=['gz', 'sim', '-v', '4', '-g'],
+        output='screen',
         condition=IfCondition(
             PythonExpression([use_simulator, ' and not ', headless])
         ),
-        launch_arguments={'gz_args': ['-v4 -g ']}.items(),
     )
 
     # Register before starting xacro so a very fast process exit cannot be
