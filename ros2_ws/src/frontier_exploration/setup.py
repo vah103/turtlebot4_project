@@ -16,6 +16,7 @@ setup(
                 'launch/frontier_autonomy.launch.py',
                 'launch/nav2_sim_compat.launch.py',
                 'launch/map_snapshot_recorder.launch.py',
+                'launch/tb4_simulation_safe.launch.py',
             ],
         ),
         (

@@ -13,6 +13,18 @@ colcon build --packages-select frontier_exploration
 source install/setup.bash
 ```
 
+## Start simulation
+
+Use the sequenced launch below. It waits for xacro to finish writing the
+temporary world SDF before starting Gazebo, avoiding an intermittent
+`Unable to find or download file` startup failure in the upstream launch.
+
+```bash
+ros2 launch frontier_exploration tb4_simulation_safe.launch.py \
+  use_rviz:=False \
+  headless:=False
+```
+
 ## Record one simulation run
 
 Start simulation, SLAM, Nav2, and frontier exploration first. In another
