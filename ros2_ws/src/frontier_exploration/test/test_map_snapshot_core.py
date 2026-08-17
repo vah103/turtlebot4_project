@@ -2,25 +2,48 @@ import pytest
 
 from frontier_exploration.map_snapshot_core import (
     SnapshotPolicy,
+    nearest_timestamp_index,
     occupancy_to_pgm,
     occupancy_to_signed_bytes,
+    write_snapshot_files,
 )
 
 
 def test_policy_captures_first_snapshot():
     policy = SnapshotPolicy(0.5, 5.0, 1.0)
 
-    assert policy.should_capture(0.0, 0.0, 0.0)
+    assert policy.should_capture(0.0)
 
 
 def test_policy_uses_distance_and_time_thresholds():
     policy = SnapshotPolicy(0.5, 5.0, 1.0)
-    policy.record_capture(0.0, 0.0, 0.0)
+    policy.observe_motion(0.0, 0.0)
+    policy.record_capture(0.0)
 
-    assert not policy.should_capture(0.5, 1.0, 0.0)
-    assert not policy.should_capture(1.0, 0.49, 0.0)
-    assert policy.should_capture(1.0, 0.5, 0.0)
-    assert policy.should_capture(5.0, 0.0, 0.0)
+    policy.observe_motion(0.3, 0.0)
+    policy.observe_motion(0.3, 0.3)
+    assert not policy.should_capture(0.5)
+    assert policy.should_capture(1.0)
+    policy.record_capture(1.0)
+    assert policy.should_capture(6.0)
+
+
+def test_policy_counts_loop_path_not_only_displacement():
+    policy = SnapshotPolicy(0.5, 0.0, 0.0)
+    policy.observe_motion(0.0, 0.0)
+    policy.record_capture(0.0)
+
+    policy.observe_motion(0.3, 0.0)
+    policy.observe_motion(0.0, 0.0)
+    assert policy.should_capture(1.0)
+
+
+def test_nearest_timestamp_respects_tolerance():
+    assert nearest_timestamp_index(10.0, [9.7, 10.1, 10.4], 0.2) == (
+        1,
+        pytest.approx(0.1),
+    )
+    assert nearest_timestamp_index(10.0, [9.7, 10.4], 0.2) is None
 
 
 def test_pgm_flips_ros_rows_and_preserves_classes():
@@ -42,3 +65,21 @@ def test_pgm_rejects_invalid_dimensions():
 
 def test_raw_occupancy_keeps_signed_int8_bits():
     assert occupancy_to_signed_bytes([-1, 0, 100]) == bytes([255, 0, 100])
+
+
+def test_snapshot_writer_creates_complete_file_set(tmp_path):
+    metadata = {
+        'sequence': 0,
+        'files': {
+            'pgm': '000000_map.pgm',
+            'raw': '000000_occupancy.bin',
+            'metadata': '000000_metadata.json',
+        },
+    }
+
+    write_snapshot_files(tmp_path, 0, b'pgm', b'raw', metadata)
+
+    assert (tmp_path / '000000_map.pgm').read_bytes() == b'pgm'
+    assert (tmp_path / '000000_occupancy.bin').read_bytes() == b'raw'
+    assert (tmp_path / '000000_metadata.json').is_file()
+    assert (tmp_path / 'manifest.jsonl').read_text().count('\n') == 1

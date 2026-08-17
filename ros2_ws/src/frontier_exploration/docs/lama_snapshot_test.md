@@ -40,8 +40,10 @@ Default output:
 
 Each PGM is a convenient preview. The `.bin` file preserves the exact signed
 int8 `/map` values and the JSON records resolution, origin, dimensions, map
-stamp, odometry pose, optional `map -> base_link` pose, trigger, and filenames.
+stamp, synchronized odometry pose, timestamp delta, optional timestamped
+`map -> base_link` pose, trigger, and filenames.
 
 The recorder captures immediately when map and odometry are ready, then after
-0.5 m of displacement or 5 s. A final snapshot is forced when
-`/exploration_complete` becomes true.
+0.5 m of accumulated odometry travel or 5 s. A final snapshot is forced when
+`/exploration_complete` becomes true. If completion arrives before the first
+synchronized pair, the recorder waits for that pair instead of exiting empty.

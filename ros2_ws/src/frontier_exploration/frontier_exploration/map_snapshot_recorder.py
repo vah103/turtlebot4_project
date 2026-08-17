@@ -1,7 +1,7 @@
 """Automatically record raw SLAM map snapshots for LaMa evaluation."""
 
-import json
 import os
+from collections import deque
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -20,8 +20,11 @@ from tf2_ros import Buffer, TransformException, TransformListener
 
 from frontier_exploration.map_snapshot_core import (
     SnapshotPolicy,
+    nearest_timestamp_index,
     occupancy_to_pgm,
     occupancy_to_signed_bytes,
+    write_json_atomic,
+    write_snapshot_files,
 )
 
 
@@ -41,7 +44,8 @@ class MapSnapshotRecorder(Node):
         self.declare_parameter('distance_interval_m', 0.5)
         self.declare_parameter('time_interval_sec', 5.0)
         self.declare_parameter('min_interval_sec', 1.0)
-        self.declare_parameter('check_period_sec', 0.5)
+        self.declare_parameter('sync_tolerance_sec', 0.25)
+        self.declare_parameter('odom_buffer_size', 400)
         self.declare_parameter('shutdown_on_completion', True)
 
         output_dir = Path(
@@ -54,7 +58,6 @@ class MapSnapshotRecorder(Node):
             )
         self._run_dir = output_dir / run_name
         self._run_dir.mkdir(parents=True, exist_ok=False)
-        self._manifest_path = self._run_dir / 'manifest.jsonl'
 
         self._policy = SnapshotPolicy(
             distance_interval_m=float(
@@ -67,10 +70,19 @@ class MapSnapshotRecorder(Node):
                 self.get_parameter('min_interval_sec').value
             ),
         )
-        self._latest_map: OccupancyGrid | None = None
-        self._latest_odom: Odometry | None = None
+        buffer_size = max(
+            10, int(self.get_parameter('odom_buffer_size').value)
+        )
+        self._odom_buffer: deque[Odometry] = deque(maxlen=buffer_size)
+        self._pending_map: OccupancyGrid | None = None
+        self._latest_pair: tuple[
+            OccupancyGrid,
+            Odometry,
+            float | None,
+        ] | None = None
         self._sequence = 0
         self._recording_stopped = False
+        self._completion_pending = False
 
         self._tf_buffer = Buffer()
         self._tf_listener = TransformListener(self._tf_buffer, self)
@@ -103,11 +115,6 @@ class MapSnapshotRecorder(Node):
             self._on_completion,
             completion_qos,
         )
-        check_period = max(
-            0.1, float(self.get_parameter('check_period_sec').value)
-        )
-        self._timer = self.create_timer(check_period, self._check_snapshot)
-
         self._write_run_metadata()
         self.get_logger().info(
             f'Recording LaMa map snapshots in {self._run_dir}'
@@ -117,23 +124,72 @@ class MapSnapshotRecorder(Node):
         return self.get_clock().now().nanoseconds / 1e9
 
     def _on_map(self, msg: OccupancyGrid) -> None:
-        self._latest_map = msg
+        if self._recording_stopped:
+            return
+        self._pending_map = msg
+        self._try_sync_pending_map()
 
     def _on_odom(self, msg: Odometry) -> None:
-        self._latest_odom = msg
+        if self._recording_stopped:
+            return
+        self._odom_buffer.append(msg)
+        position = msg.pose.pose.position
+        self._policy.observe_motion(float(position.x), float(position.y))
+        self._try_sync_pending_map()
 
-    def _write_json(self, path: Path, payload: dict) -> None:
-        temporary = path.with_suffix(path.suffix + '.tmp')
-        with temporary.open('w', encoding='utf-8') as stream:
-            json.dump(payload, stream, ensure_ascii=False, indent=2)
-            stream.write('\n')
-        os.replace(temporary, path)
+    @staticmethod
+    def _stamp_sec(msg) -> float:
+        return float(msg.header.stamp.sec) + (
+            float(msg.header.stamp.nanosec) / 1e9
+        )
 
-    def _write_bytes(self, path: Path, payload: bytes) -> None:
-        temporary = path.with_suffix(path.suffix + '.tmp')
-        with temporary.open('wb') as stream:
-            stream.write(payload)
-        os.replace(temporary, path)
+    def _try_sync_pending_map(self) -> None:
+        if self._pending_map is None or not self._odom_buffer:
+            return
+
+        map_msg = self._pending_map
+        map_stamp = self._stamp_sec(map_msg)
+        odom_messages = list(self._odom_buffer)
+        odom_stamps = [self._stamp_sec(msg) for msg in odom_messages]
+        sync_delta: float | None
+        if map_stamp <= 0.0:
+            odom_msg = odom_messages[-1]
+            sync_delta = None
+        else:
+            tolerance = max(
+                0.0,
+                float(self.get_parameter('sync_tolerance_sec').value),
+            )
+            nearest = nearest_timestamp_index(
+                map_stamp,
+                odom_stamps,
+                tolerance,
+            )
+            if nearest is None:
+                # Once odometry has moved beyond this map's tolerance window,
+                # no future sample can make the pair valid. Keep the last valid
+                # pair as the completion fallback instead of waiting forever.
+                if (
+                    self._completion_pending
+                    and max(odom_stamps) > map_stamp + tolerance
+                ):
+                    self._pending_map = None
+                    self._finalize_completion()
+                return
+            index, sync_delta = nearest
+            odom_msg = odom_messages[index]
+
+        self._pending_map = None
+        self._latest_pair = (map_msg, odom_msg, sync_delta)
+        if self._completion_pending:
+            self._finalize_completion()
+        else:
+            self._capture_pair(
+                map_msg,
+                odom_msg,
+                sync_delta,
+                'distance_or_time',
+            )
 
     def _write_run_metadata(self) -> None:
         payload = {
@@ -149,15 +205,19 @@ class MapSnapshotRecorder(Node):
             'pgm_unknown_value': 127,
             'raw_encoding': 'signed int8, ROS row-major order',
         }
-        self._write_json(self._run_dir / 'run.json', payload)
+        payload['sync_tolerance_sec'] = float(
+            self.get_parameter('sync_tolerance_sec').value
+        )
+        write_json_atomic(self._run_dir / 'run.json', payload)
 
-    def _map_robot_pose(self, map_frame: str) -> dict | None:
+    def _map_robot_pose(self, map_msg: OccupancyGrid) -> dict | None:
+        map_frame = map_msg.header.frame_id or 'map'
         robot_frame = str(self.get_parameter('robot_frame').value)
         try:
             transform = self._tf_buffer.lookup_transform(
                 map_frame,
                 robot_frame,
-                Time(),
+                Time.from_msg(map_msg.header.stamp),
             )
         except TransformException:
             return None
@@ -167,6 +227,10 @@ class MapSnapshotRecorder(Node):
         return {
             'frame_id': map_frame,
             'child_frame_id': robot_frame,
+            'stamp': {
+                'sec': transform.header.stamp.sec,
+                'nanosec': transform.header.stamp.nanosec,
+            },
             'position': {
                 'x': translation.x,
                 'y': translation.y,
@@ -184,6 +248,7 @@ class MapSnapshotRecorder(Node):
         self,
         map_msg: OccupancyGrid,
         odom_msg: Odometry,
+        sync_delta_sec: float | None,
         trigger: str,
     ) -> dict:
         origin = map_msg.info.origin
@@ -202,6 +267,7 @@ class MapSnapshotRecorder(Node):
                 'sec': odom_msg.header.stamp.sec,
                 'nanosec': odom_msg.header.stamp.nanosec,
             },
+            'map_odom_sync_delta_sec': sync_delta_sec,
             'map': {
                 'frame_id': map_frame,
                 'width': map_msg.info.width,
@@ -237,7 +303,7 @@ class MapSnapshotRecorder(Node):
                     'w': odom_pose.orientation.w,
                 },
             },
-            'map_robot_pose': self._map_robot_pose(map_frame),
+            'map_robot_pose': self._map_robot_pose(map_msg),
             'files': {
                 'pgm': f'{self._sequence:06d}_map.pgm',
                 'raw': f'{self._sequence:06d}_occupancy.bin',
@@ -245,12 +311,15 @@ class MapSnapshotRecorder(Node):
             },
         }
 
-    def _capture(self, trigger: str, *, force: bool = False) -> bool:
-        if self._latest_map is None or self._latest_odom is None:
-            return False
-
-        map_msg = self._latest_map
-        odom_msg = self._latest_odom
+    def _capture_pair(
+        self,
+        map_msg: OccupancyGrid,
+        odom_msg: Odometry,
+        sync_delta_sec: float | None,
+        trigger: str,
+        *,
+        force: bool = False,
+    ) -> bool:
         width = int(map_msg.info.width)
         height = int(map_msg.info.height)
         data = list(map_msg.data)
@@ -259,33 +328,29 @@ class MapSnapshotRecorder(Node):
             return False
 
         now = self._now_sec()
-        x = float(odom_msg.pose.pose.position.x)
-        y = float(odom_msg.pose.pose.position.y)
-        if not force and not self._policy.should_capture(now, x, y):
+        if not force and not self._policy.should_capture(now):
             return False
 
         prefix = f'{self._sequence:06d}'
-        metadata = self._snapshot_metadata(map_msg, odom_msg, trigger)
+        metadata = self._snapshot_metadata(
+            map_msg,
+            odom_msg,
+            sync_delta_sec,
+            trigger,
+        )
         try:
-            self._write_bytes(
-                self._run_dir / f'{prefix}_map.pgm',
+            write_snapshot_files(
+                self._run_dir,
+                self._sequence,
                 occupancy_to_pgm(data, width, height),
-            )
-            self._write_bytes(
-                self._run_dir / f'{prefix}_occupancy.bin',
                 occupancy_to_signed_bytes(data),
-            )
-            self._write_json(
-                self._run_dir / f'{prefix}_metadata.json',
                 metadata,
             )
-            with self._manifest_path.open('a', encoding='utf-8') as stream:
-                stream.write(json.dumps(metadata, ensure_ascii=False) + '\n')
         except OSError as exc:
             self.get_logger().error(f'Failed to save map snapshot: {exc}')
             return False
 
-        self._policy.record_capture(now, x, y)
+        self._policy.record_capture(now)
         self._sequence += 1
         self.get_logger().info(
             f'Saved snapshot {prefix}: trigger={trigger}, '
@@ -293,23 +358,44 @@ class MapSnapshotRecorder(Node):
         )
         return True
 
-    def _check_snapshot(self) -> None:
-        if self._recording_stopped:
-            return
-        self._capture('distance_or_time')
-
     def _on_completion(self, msg: Bool) -> None:
         if not msg.data or self._recording_stopped:
             return
-        saved = self._capture('exploration_complete', force=True)
-        self._recording_stopped = True
-        self._timer.cancel()
+        self._completion_pending = True
+        self._try_sync_pending_map()
+        if self._pending_map is not None:
+            self.get_logger().info(
+                'Waiting for odometry synchronized with the newest map'
+            )
+            return
+        if self._latest_pair is None:
+            self.get_logger().warning(
+                'Exploration complete received; waiting for a synchronized '
+                'map/odom pair before shutdown'
+            )
+            return
+        self._finalize_completion()
+
+    def _finalize_completion(self) -> None:
+        if self._latest_pair is None or self._recording_stopped:
+            return
+        map_msg, odom_msg, sync_delta = self._latest_pair
+        saved = self._capture_pair(
+            map_msg,
+            odom_msg,
+            sync_delta,
+            'exploration_complete',
+            force=True,
+        )
         if saved:
+            self._recording_stopped = True
             self.get_logger().info('Final snapshot saved; recording complete')
         else:
-            self.get_logger().warning(
-                'Exploration completed before a final map/odom pair was ready'
+            self.get_logger().error(
+                'Final snapshot write failed; waiting for the next synchronized '
+                'pair to retry'
             )
+            return
         if bool(self.get_parameter('shutdown_on_completion').value):
             rclpy.shutdown()
 
