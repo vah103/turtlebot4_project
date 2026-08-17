@@ -20,6 +20,7 @@ from tf2_ros import Buffer, TransformException, TransformListener
 
 from frontier_exploration.map_snapshot_core import (
     SnapshotPolicy,
+    create_unique_run_dir,
     nearest_timestamp_index,
     occupancy_to_pgm,
     occupancy_to_signed_bytes,
@@ -46,6 +47,7 @@ class MapSnapshotRecorder(Node):
         self.declare_parameter('min_interval_sec', 1.0)
         self.declare_parameter('sync_tolerance_sec', 0.25)
         self.declare_parameter('odom_buffer_size', 400)
+        self.declare_parameter('max_odom_step_m', 1.0)
         self.declare_parameter('shutdown_on_completion', True)
 
         output_dir = Path(
@@ -56,8 +58,11 @@ class MapSnapshotRecorder(Node):
             run_name = datetime.now(timezone.utc).strftime(
                 'run_%Y%m%d_%H%M%S_utc'
             )
-        self._run_dir = output_dir / run_name
-        self._run_dir.mkdir(parents=True, exist_ok=False)
+        self._run_dir = create_unique_run_dir(output_dir, run_name)
+        if self._run_dir.name != run_name:
+            self.get_logger().warning(
+                f'Run {run_name} already exists; using {self._run_dir.name}'
+            )
 
         self._policy = SnapshotPolicy(
             distance_interval_m=float(
@@ -68,6 +73,9 @@ class MapSnapshotRecorder(Node):
             ),
             min_interval_sec=float(
                 self.get_parameter('min_interval_sec').value
+            ),
+            max_odom_step_m=float(
+                self.get_parameter('max_odom_step_m').value
             ),
         )
         buffer_size = max(
@@ -202,6 +210,7 @@ class MapSnapshotRecorder(Node):
             'distance_interval_m': self._policy.distance_interval_m,
             'time_interval_sec': self._policy.time_interval_sec,
             'min_interval_sec': self._policy.min_interval_sec,
+            'max_odom_step_m': self._policy.max_odom_step_m,
             'pgm_unknown_value': 127,
             'raw_encoding': 'signed int8, ROS row-major order',
         }
