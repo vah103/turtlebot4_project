@@ -18,6 +18,14 @@ MODEL_COLLISION_FILES = {
     WALLS_MODEL: 'aws_robomaker_hospital_floor_01_walls_collision.dae',
 }
 
+# These defaults must match hospital_simulation.launch.py. Gazebo places the
+# robot in the world at this pose, while DiffDrive odometry / SLAM begin in the
+# robot's local start frame. The fixed LaMa canvas therefore has to be expressed
+# in that start frame rather than directly in SDF world coordinates.
+DEFAULT_START_X = 0.0
+DEFAULT_START_Y = 12.0
+DEFAULT_START_YAW = -1.57
+
 
 @dataclass(frozen=True)
 class Bounds2D:
@@ -214,6 +222,31 @@ def transform_bounds(bounds: Bounds2D, placement: ModelPlacement) -> Bounds2D:
     return Bounds2D(min(xs), max(xs), min(ys), max(ys))
 
 
+def transform_world_bounds_to_start_frame(
+    bounds: Bounds2D,
+    *,
+    start_x: float,
+    start_y: float,
+    start_yaw: float,
+) -> Bounds2D:
+    """Express SDF-world bounds in the robot/SLAM frame at simulation start."""
+    cosine = math.cos(-start_yaw)
+    sine = math.sin(-start_yaw)
+    transformed: list[tuple[float, float]] = []
+
+    for world_x in (bounds.min_x, bounds.max_x):
+        for world_y in (bounds.min_y, bounds.max_y):
+            dx = world_x - start_x
+            dy = world_y - start_y
+            frame_x = cosine * dx - sine * dy
+            frame_y = sine * dx + cosine * dy
+            transformed.append((frame_x, frame_y))
+
+    xs = [point[0] for point in transformed]
+    ys = [point[1] for point in transformed]
+    return Bounds2D(min(xs), max(xs), min(ys), max(ys))
+
+
 def union_bounds(bounds: list[Bounds2D]) -> Bounds2D:
     if not bounds:
         raise ValueError('At least one bounds object is required')
@@ -261,7 +294,12 @@ def compute_hospital_canvas(
     models_dir: Path,
     resolution: float,
     margin_m: float,
+    *,
+    start_x: float = DEFAULT_START_X,
+    start_y: float = DEFAULT_START_Y,
+    start_yaw: float = DEFAULT_START_YAW,
 ) -> tuple[Bounds2D, dict]:
+    """Compute Hospital bounds/canvas in the SLAM frame fixed at robot start."""
     model_names = set(MODEL_COLLISION_FILES)
     placements = read_model_placements(world_path, model_names)
     world_bounds: list[Bounds2D] = []
@@ -278,9 +316,15 @@ def compute_hospital_canvas(
             transform_bounds(local_bounds, placements[model_name])
         )
 
-    geometry_bounds = union_bounds(world_bounds)
-    return geometry_bounds, canvas_from_bounds(
-        geometry_bounds,
+    geometry_world = union_bounds(world_bounds)
+    geometry_start_frame = transform_world_bounds_to_start_frame(
+        geometry_world,
+        start_x=start_x,
+        start_y=start_y,
+        start_yaw=start_yaw,
+    )
+    return geometry_start_frame, canvas_from_bounds(
+        geometry_start_frame,
         resolution=resolution,
         margin_m=margin_m,
     )
@@ -313,13 +357,16 @@ def main(args: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(
         description=(
             'Compute a fixed occupancy-grid canvas from Hospital World floor '
-            'and wall geometry before SLAM starts.'
+            'and wall geometry in the robot/SLAM start frame before SLAM starts.'
         )
     )
     parser.add_argument('--world', type=Path, default=_default_world_path())
     parser.add_argument('--models-dir', type=Path, default=_default_models_dir())
     parser.add_argument('--resolution', type=float, default=0.05)
     parser.add_argument('--margin', type=float, default=2.0)
+    parser.add_argument('--start-x', type=float, default=DEFAULT_START_X)
+    parser.add_argument('--start-y', type=float, default=DEFAULT_START_Y)
+    parser.add_argument('--start-yaw', type=float, default=DEFAULT_START_YAW)
     parsed = parser.parse_args(args)
 
     bounds, canvas = compute_hospital_canvas(
@@ -327,14 +374,22 @@ def main(args: list[str] | None = None) -> None:
         parsed.models_dir.expanduser(),
         resolution=parsed.resolution,
         margin_m=parsed.margin,
+        start_x=parsed.start_x,
+        start_y=parsed.start_y,
+        start_yaw=parsed.start_yaw,
     )
 
-    print('Hospital geometry bounds (m):')
+    print('Hospital geometry bounds in SLAM-start frame (m):')
     print(f'  xmin: {_format_number(bounds.min_x)}')
     print(f'  xmax: {_format_number(bounds.max_x)}')
     print(f'  ymin: {_format_number(bounds.min_y)}')
     print(f'  ymax: {_format_number(bounds.max_y)}')
     print()
+    print(
+        'Robot start pose in SDF world: '
+        f'x={parsed.start_x:.3f}, y={parsed.start_y:.3f}, '
+        f'yaw={parsed.start_yaw:.3f}'
+    )
     print(
         'Fixed canvas '
         f'(margin={parsed.margin:.2f} m, '
