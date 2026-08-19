@@ -19,6 +19,7 @@ setup(
                 'launch/hospital_map_snapshot_recorder.launch.py',
                 'launch/tb4_simulation_safe.launch.py',
                 'launch/hospital_simulation.launch.py',
+                'launch/hospital_nav2.launch.py',
             ],
         ),
         (
@@ -27,6 +28,7 @@ setup(
                 'config/frontier.yaml',
                 'config/map_snapshot.yaml',
                 'config/map_snapshot_hospital.yaml',
+                'config/nav2_hospital_override.yaml',
             ],
         ),
         (
