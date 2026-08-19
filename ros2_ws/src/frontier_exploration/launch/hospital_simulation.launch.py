@@ -14,6 +14,9 @@ def generate_launch_description() -> LaunchDescription:
     default_rviz_config = os.path.join(
         package_dir, 'rviz', 'hospital_exploration.rviz'
     )
+    default_robot_sdf = os.path.join(
+        package_dir, 'urdf', 'hospital_turtlebot4.urdf.xacro'
+    )
 
     model_path = PathJoinSubstitution([
         EnvironmentVariable('HOME'),
@@ -25,6 +28,7 @@ def generate_launch_description() -> LaunchDescription:
 
     use_rviz = LaunchConfiguration('use_rviz')
     rviz_config_file = LaunchConfiguration('rviz_config_file')
+    robot_sdf = LaunchConfiguration('robot_sdf')
     headless = LaunchConfiguration('headless')
     x_pose = LaunchConfiguration('x_pose')
     y_pose = LaunchConfiguration('y_pose')
@@ -36,6 +40,7 @@ def generate_launch_description() -> LaunchDescription:
             'world': world,
             'use_rviz': use_rviz,
             'rviz_config_file': rviz_config_file,
+            'robot_sdf': robot_sdf,
             'headless': headless,
             'x_pose': x_pose,
             'y_pose': y_pose,
@@ -49,6 +54,14 @@ def generate_launch_description() -> LaunchDescription:
             'rviz_config_file',
             default_value=default_rviz_config,
             description='RViz config used by the Hospital simulation.',
+        ),
+        DeclareLaunchArgument(
+            'robot_sdf',
+            default_value=default_robot_sdf,
+            description=(
+                'TurtleBot4 xacro used by Hospital. The project-local default '
+                'raises the Gazebo diff-drive linear velocity hard limit to 1.5 m/s.'
+            ),
         ),
         DeclareLaunchArgument('headless', default_value='False'),
         DeclareLaunchArgument('x_pose', default_value='0.0'),
