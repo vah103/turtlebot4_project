@@ -27,26 +27,32 @@ frontier_detector:
     min_segment_size: 5
     min_selection_distance_m: 0.60
 
-    # Costmap-aware free goal selection near each frontier segment.
+    # Costmap-aware safe free goals near each frontier segment.
     require_global_costmap: true
     costmap_occ_threshold: 65
     costmap_unknown_is_blocked: true
 
-    # Planner startup / transient failure handling.
+    # Planner startup / transport failures are transient and never prove that a
+    # frontier is unreachable.
     planner_retry_period_sec: 1.0
     planner_rejection_retry_limit: 15
 
-    # Navigation outcome feedback and temporary frontier suppression.
+    # A frontier is confirmed unreachable only after every costmap-safe free
+    # goal around that segment fails ComputePathToPose (or none exists).
+    unreachable_frontier_radius_m: 0.50
+
+    # Navigation execution failure is temporary only. The region cools down and
+    # is retried later; it is never permanently discarded because of fail count.
     failed_goal_topic: /frontier_failed_goal
     completed_goal_topic: /frontier_completed_goal
     failed_goal_radius_m: 0.40
     failed_goal_cooldown_sec: 60.0
-    failed_goal_max_attempts: 2
     completed_frontier_radius_m: 0.40
     completed_frontier_cooldown_sec: 15.0
     post_goal_settle_sec: 1.0
 
-    # End only after all safe candidates are repeatedly exhausted by Nav2.
+    # End only when no reachable frontier remains. Raw frontier geometry may
+    # still exist if every remaining region has been planner-confirmed unreachable.
     completion_topic: /exploration_complete
     completion_stable_cycles: 5
     completion_min_idle_sec: 10.0
