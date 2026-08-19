@@ -1,49 +1,62 @@
 # LaMa snapshot recording
 
-Node `map_snapshot_recorder` records raw ROS 2 occupancy grids while the
-TurtleBot4 frontier baseline runs. It deliberately does not resize, normalize,
-or create a LaMa mask; those transformations belong to the reproducible offline
-preprocessing step.
+`map_snapshot_recorder` now records every SLAM state on one fixed occupancy
+canvas chosen before the experiment. It does not derive geometry from the final
+SLAM map.
 
-## Build
+## Fixed-canvas rule
+
+Before recording, configure:
+
+- `canvas_width_cells`
+- `canvas_height_cells`
+- `canvas_resolution`
+- `canvas_origin_x`
+- `canvas_origin_y`
+- `fixed_canvas_configured:=true`
+
+Snapshot `000000` is created immediately as an all-unknown (`-1`) canvas. Each
+later `/map` is projected into the same canvas using its metric origin. Unknown
+areas remain unknown. If known cells fall outside the configured limit, the
+recorder rejects that snapshot by default so an undersized limit is visible.
+
+The recorder does not resize the fixed canvas or create a LaMa mask. LaMa image
+normalization remains an offline preprocessing step.
+
+## Build and test
 
 ```bash
 cd ~/turtlebot4_project/ros2_ws
 colcon build --packages-select frontier_exploration
 source install/setup.bash
+colcon test --packages-select frontier_exploration
+colcon test-result --verbose
 ```
 
-## Start simulation
+## Record one run
 
-Use the sequenced launch below. It waits for xacro to finish writing the
-temporary world SDF before starting Gazebo, avoiding an intermittent
-`Unable to find or download file` startup failure in the upstream launch. It
-also defaults Gazebo Transport to `127.0.0.1` so the local server, bridge, and
-spawn process discover each other reliably.
+Start simulation, SLAM, Nav2, and frontier exploration first. Then launch the
+recorder with geometry chosen for that environment:
 
 ```bash
-ros2 launch frontier_exploration tb4_simulation_safe.launch.py \
-  use_rviz:=False \
-  headless:=False
-```
-
-## Record one simulation run
-
-Start simulation, SLAM, Nav2, and frontier exploration first. In another
-terminal run:
-
-```bash
-source /opt/ros/jazzy/setup.bash
-source ~/turtlebot4_project/ros2_ws/install/setup.bash
 ros2 launch frontier_exploration map_snapshot_recorder.launch.py \
   use_sim_time:=true \
-  run_name:=frontier_baseline_01
+  run_name:=lama_fixed_canvas_01 \
+  fixed_canvas_configured:=true \
+  canvas_width_cells:=<WIDTH> \
+  canvas_height_cells:=<HEIGHT> \
+  canvas_resolution:=<RESOLUTION> \
+  canvas_origin_x:=<ORIGIN_X> \
+  canvas_origin_y:=<ORIGIN_Y>
 ```
+
+Do not fill these values from the final map after exploration; they must be
+selected before the run.
 
 Default output:
 
 ```text
-~/turtlebot4_lama_snapshots/frontier_baseline_01/
+~/turtlebot4_lama_snapshots/lama_fixed_canvas_01/
   run.json
   manifest.jsonl
   000000_map.pgm
@@ -52,15 +65,10 @@ Default output:
   ...
 ```
 
-Each PGM is a convenient preview. The `.bin` file preserves the exact signed
-int8 `/map` values and the JSON records resolution, origin, dimensions, map
-stamp, synchronized odometry pose, timestamp delta, optional timestamped
-`map -> base_link` pose, trigger, and filenames.
+`run.json` stores the fixed geometry. Per-frame metadata stores both the fixed
+snapshot geometry and the original SLAM `/map` geometry plus its placement
+offset and number of known cells copied.
 
-The recorder captures immediately when map and odometry are ready, then after
-0.5 m of accumulated odometry travel or 5 s. A final snapshot is forced when
-`/exploration_complete` becomes true. If completion arrives before the first
-synchronized pair, the recorder waits for that pair instead of exiting empty.
-Reusing a `run_name` creates a suffixed folder such as `_001` instead of
-overwriting data. Odometry steps larger than 1 m are treated as reset/jump
-discontinuities and are not counted as robot travel.
+After the initial unknown frame, the recorder captures the first synchronized
+map/odom pair, then after 0.5 m of travel or 5 s by default. A final snapshot is
+forced when `/exploration_complete` becomes true.
