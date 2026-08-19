@@ -1,4 +1,4 @@
-"""Launch Nav2 for the Hospital experiment with project-local speed overrides."""
+"""Launch Nav2 for the Hospital experiment with project-local overrides."""
 
 import os
 import tempfile
@@ -8,7 +8,6 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument,
-    GroupAction,
     IncludeLaunchDescription,
     OpaqueFunction,
     RegisterEventHandler,
@@ -16,7 +15,6 @@ from launch.actions import (
 from launch.event_handlers import OnShutdown
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import SetRemap
 
 
 def _deep_merge(base: dict, override: dict) -> dict:
@@ -78,26 +76,20 @@ def _launch_nav2(context):
     finally:
         temporary.close()
 
-    nav2 = GroupAction(
-        [
-            # Nav2 Jazzy produces a stamped velocity command in this setup,
-            # while the Gazebo TB4 bridge expects Twist on /cmd_vel.
-            SetRemap(src='/cmd_vel', dst='/cmd_vel_stamped'),
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    os.path.join(nav2_bringup_dir, 'launch', 'navigation_launch.py')
-                ),
-                launch_arguments={
-                    'use_sim_time': _launch_bool(context, 'use_sim_time'),
-                    'params_file': merged_params_path,
-                    'autostart': _launch_bool(context, 'autostart'),
-                    # navigation_launch.py only loads composable nodes into an
-                    # already-existing container. Hospital launches it directly,
-                    # so non-composed mode is the correct standalone choice.
-                    'use_composition': _launch_bool(context, 'use_composition'),
-                }.items(),
-            ),
-        ]
+    # On ROS 2 Jazzy, keep cmd_vel as geometry_msgs/msg/Twist end-to-end.
+    # The Hospital Gazebo bridge already subscribes to Twist on /cmd_vel, so a
+    # global /cmd_vel -> /cmd_vel_stamped remap would mix Twist and TwistStamped
+    # publishers on the same topic and prevent the robot from receiving commands.
+    nav2 = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(nav2_bringup_dir, 'launch', 'navigation_launch.py')
+        ),
+        launch_arguments={
+            'use_sim_time': _launch_bool(context, 'use_sim_time'),
+            'params_file': merged_params_path,
+            'autostart': _launch_bool(context, 'autostart'),
+            'use_composition': _launch_bool(context, 'use_composition'),
+        }.items(),
     )
 
     cleanup = RegisterEventHandler(
