@@ -1,4 +1,4 @@
-"""Automatically record raw SLAM map snapshots for LaMa evaluation."""
+"""Record fixed-canvas SLAM map snapshots for LaMa evaluation."""
 
 import os
 from collections import deque
@@ -19,18 +19,21 @@ from std_msgs.msg import Bool
 from tf2_ros import Buffer, TransformException, TransformListener
 
 from frontier_exploration.map_snapshot_core import (
+    FixedCanvasSpec,
     SnapshotPolicy,
     create_unique_run_dir,
     nearest_timestamp_index,
     occupancy_to_pgm,
     occupancy_to_signed_bytes,
+    project_occupancy_to_fixed_canvas,
+    unknown_canvas,
     write_json_atomic,
     write_snapshot_files,
 )
 
 
 class MapSnapshotRecorder(Node):
-    """Save one exact map snapshot whenever the robot moves or time elapses."""
+    """Save every selected SLAM state on one preconfigured fixed canvas."""
 
     def __init__(self) -> None:
         super().__init__('map_snapshot_recorder')
@@ -42,6 +45,16 @@ class MapSnapshotRecorder(Node):
             'output_dir', '~/turtlebot4_lama_snapshots'
         )
         self.declare_parameter('run_name', '')
+
+        # Fixed geometry must be decided before an experiment begins.
+        self.declare_parameter('fixed_canvas_configured', False)
+        self.declare_parameter('canvas_width_cells', 0)
+        self.declare_parameter('canvas_height_cells', 0)
+        self.declare_parameter('canvas_resolution', 0.0)
+        self.declare_parameter('canvas_origin_x', 0.0)
+        self.declare_parameter('canvas_origin_y', 0.0)
+        self.declare_parameter('reject_known_outside_canvas', True)
+
         self.declare_parameter('distance_interval_m', 0.5)
         self.declare_parameter('time_interval_sec', 5.0)
         self.declare_parameter('min_interval_sec', 1.0)
@@ -49,6 +62,23 @@ class MapSnapshotRecorder(Node):
         self.declare_parameter('odom_buffer_size', 400)
         self.declare_parameter('max_odom_step_m', 1.0)
         self.declare_parameter('shutdown_on_completion', True)
+
+        if not bool(self.get_parameter('fixed_canvas_configured').value):
+            raise RuntimeError(
+                'Fixed canvas is not configured. Set width, height, resolution, '
+                'origin_x, origin_y, then set fixed_canvas_configured=true.'
+            )
+
+        self._canvas = FixedCanvasSpec(
+            width=int(self.get_parameter('canvas_width_cells').value),
+            height=int(self.get_parameter('canvas_height_cells').value),
+            resolution=float(self.get_parameter('canvas_resolution').value),
+            origin_x=float(self.get_parameter('canvas_origin_x').value),
+            origin_y=float(self.get_parameter('canvas_origin_y').value),
+        )
+        self._reject_known_outside = bool(
+            self.get_parameter('reject_known_outside_canvas').value
+        )
 
         output_dir = Path(
             os.path.expanduser(str(self.get_parameter('output_dir').value))
@@ -123,13 +153,79 @@ class MapSnapshotRecorder(Node):
             self._on_completion,
             completion_qos,
         )
+
         self._write_run_metadata()
+        self._write_initial_unknown_snapshot()
         self.get_logger().info(
-            f'Recording LaMa map snapshots in {self._run_dir}'
+            'Recording fixed-canvas LaMa snapshots in '
+            f'{self._run_dir}: {self._canvas.width}x{self._canvas.height}, '
+            f'{self._canvas.resolution:.4f} m/cell'
         )
 
     def _now_sec(self) -> float:
         return self.get_clock().now().nanoseconds / 1e9
+
+    def _files_metadata(self) -> dict:
+        return {
+            'pgm': f'{self._sequence:06d}_map.pgm',
+            'raw': f'{self._sequence:06d}_occupancy.bin',
+            'metadata': f'{self._sequence:06d}_metadata.json',
+        }
+
+    def _fixed_map_metadata(self, frame_id: str = 'map') -> dict:
+        return {
+            'frame_id': frame_id,
+            'width': self._canvas.width,
+            'height': self._canvas.height,
+            'resolution': self._canvas.resolution,
+            'origin': {
+                'position': {
+                    'x': self._canvas.origin_x,
+                    'y': self._canvas.origin_y,
+                    'z': 0.0,
+                },
+                'orientation': {
+                    'x': 0.0,
+                    'y': 0.0,
+                    'z': 0.0,
+                    'w': 1.0,
+                },
+            },
+            'pgm_y_axis': 'top-down; ROS grid rows are vertically flipped',
+        }
+
+    def _write_initial_unknown_snapshot(self) -> None:
+        data = unknown_canvas(self._canvas)
+        metadata = {
+            'sequence': self._sequence,
+            'trigger': 'initial_unknown',
+            'saved_utc': datetime.now(timezone.utc).isoformat(),
+            'node_time_sec': self._now_sec(),
+            'map_stamp': None,
+            'odom_stamp': None,
+            'map_odom_sync_delta_sec': None,
+            'map': self._fixed_map_metadata(),
+            'source_map': None,
+            'projection': {
+                'known_cells_copied': 0,
+                'known_cells_outside_canvas': 0,
+            },
+            'odom_pose': None,
+            'map_robot_pose': None,
+            'files': self._files_metadata(),
+        }
+        write_snapshot_files(
+            self._run_dir,
+            self._sequence,
+            occupancy_to_pgm(
+                data,
+                self._canvas.width,
+                self._canvas.height,
+            ),
+            occupancy_to_signed_bytes(data),
+            metadata,
+        )
+        self._sequence += 1
 
     def _on_map(self, msg: OccupancyGrid) -> None:
         if self._recording_stopped:
@@ -174,9 +270,6 @@ class MapSnapshotRecorder(Node):
                 tolerance,
             )
             if nearest is None:
-                # Once odometry has moved beyond this map's tolerance window,
-                # no future sample can make the pair valid. Keep the last valid
-                # pair as the completion fallback instead of waiting forever.
                 if (
                     self._completion_pending
                     and max(odom_stamps) > map_stamp + tolerance
@@ -207,12 +300,14 @@ class MapSnapshotRecorder(Node):
             'completion_topic': str(
                 self.get_parameter('completion_topic').value
             ),
+            'fixed_canvas': self._canvas.as_dict(),
+            'reject_known_outside_canvas': self._reject_known_outside,
             'distance_interval_m': self._policy.distance_interval_m,
             'time_interval_sec': self._policy.time_interval_sec,
             'min_interval_sec': self._policy.min_interval_sec,
             'max_odom_step_m': self._policy.max_odom_step_m,
             'pgm_unknown_value': 127,
-            'raw_encoding': 'signed int8, ROS row-major order',
+            'raw_encoding': 'signed int8, fixed-canvas ROS row-major order',
         }
         payload['sync_tolerance_sec'] = float(
             self.get_parameter('sync_tolerance_sec').value
@@ -253,14 +348,36 @@ class MapSnapshotRecorder(Node):
             },
         }
 
+    def _source_map_metadata(self, map_msg: OccupancyGrid) -> dict:
+        origin = map_msg.info.origin
+        return {
+            'frame_id': map_msg.header.frame_id or 'map',
+            'width': map_msg.info.width,
+            'height': map_msg.info.height,
+            'resolution': map_msg.info.resolution,
+            'origin': {
+                'position': {
+                    'x': origin.position.x,
+                    'y': origin.position.y,
+                    'z': origin.position.z,
+                },
+                'orientation': {
+                    'x': origin.orientation.x,
+                    'y': origin.orientation.y,
+                    'z': origin.orientation.z,
+                    'w': origin.orientation.w,
+                },
+            },
+        }
+
     def _snapshot_metadata(
         self,
         map_msg: OccupancyGrid,
         odom_msg: Odometry,
         sync_delta_sec: float | None,
         trigger: str,
+        projection: dict,
     ) -> dict:
-        origin = map_msg.info.origin
         odom_pose = odom_msg.pose.pose
         map_frame = map_msg.header.frame_id or 'map'
         return {
@@ -277,26 +394,9 @@ class MapSnapshotRecorder(Node):
                 'nanosec': odom_msg.header.stamp.nanosec,
             },
             'map_odom_sync_delta_sec': sync_delta_sec,
-            'map': {
-                'frame_id': map_frame,
-                'width': map_msg.info.width,
-                'height': map_msg.info.height,
-                'resolution': map_msg.info.resolution,
-                'origin': {
-                    'position': {
-                        'x': origin.position.x,
-                        'y': origin.position.y,
-                        'z': origin.position.z,
-                    },
-                    'orientation': {
-                        'x': origin.orientation.x,
-                        'y': origin.orientation.y,
-                        'z': origin.orientation.z,
-                        'w': origin.orientation.w,
-                    },
-                },
-                'pgm_y_axis': 'top-down; ROS grid rows are vertically flipped',
-            },
+            'map': self._fixed_map_metadata(map_frame),
+            'source_map': self._source_map_metadata(map_msg),
+            'projection': projection,
             'odom_pose': {
                 'frame_id': odom_msg.header.frame_id or 'odom',
                 'child_frame_id': odom_msg.child_frame_id,
@@ -313,12 +413,19 @@ class MapSnapshotRecorder(Node):
                 },
             },
             'map_robot_pose': self._map_robot_pose(map_msg),
-            'files': {
-                'pgm': f'{self._sequence:06d}_map.pgm',
-                'raw': f'{self._sequence:06d}_occupancy.bin',
-                'metadata': f'{self._sequence:06d}_metadata.json',
-            },
+            'files': self._files_metadata(),
         }
+
+    @staticmethod
+    def _source_map_is_axis_aligned(map_msg: OccupancyGrid) -> bool:
+        q = map_msg.info.origin.orientation
+        tolerance = 1e-5
+        return (
+            abs(float(q.x)) <= tolerance
+            and abs(float(q.y)) <= tolerance
+            and abs(float(q.z)) <= tolerance
+            and abs(abs(float(q.w)) - 1.0) <= tolerance
+        )
 
     def _capture_pair(
         self,
@@ -336,9 +443,41 @@ class MapSnapshotRecorder(Node):
             self.get_logger().warning('Ignoring invalid OccupancyGrid snapshot')
             return False
 
+        if not self._source_map_is_axis_aligned(map_msg):
+            self.get_logger().error(
+                'Source /map origin is rotated; fixed-canvas projection expects '
+                'the same axis-aligned map frame.'
+            )
+            return False
+
         now = self._now_sec()
         if not force and not self._policy.should_capture(now):
             return False
+
+        try:
+            fixed_data, projection = project_occupancy_to_fixed_canvas(
+                data=data,
+                source_width=width,
+                source_height=height,
+                source_resolution=float(map_msg.info.resolution),
+                source_origin_x=float(map_msg.info.origin.position.x),
+                source_origin_y=float(map_msg.info.origin.position.y),
+                canvas=self._canvas,
+            )
+        except ValueError as exc:
+            self.get_logger().error(f'Cannot project /map to fixed canvas: {exc}')
+            return False
+
+        outside = int(projection['known_cells_outside_canvas'])
+        if outside > 0:
+            message = (
+                f'{outside} known source-map cells fall outside the fixed canvas. '
+                'The configured map limit is too small.'
+            )
+            if self._reject_known_outside:
+                self.get_logger().error(message)
+                return False
+            self.get_logger().warning(message)
 
         prefix = f'{self._sequence:06d}'
         metadata = self._snapshot_metadata(
@@ -346,13 +485,18 @@ class MapSnapshotRecorder(Node):
             odom_msg,
             sync_delta_sec,
             trigger,
+            projection,
         )
         try:
             write_snapshot_files(
                 self._run_dir,
                 self._sequence,
-                occupancy_to_pgm(data, width, height),
-                occupancy_to_signed_bytes(data),
+                occupancy_to_pgm(
+                    fixed_data,
+                    self._canvas.width,
+                    self._canvas.height,
+                ),
+                occupancy_to_signed_bytes(fixed_data),
                 metadata,
             )
         except OSError as exc:
@@ -363,7 +507,9 @@ class MapSnapshotRecorder(Node):
         self._sequence += 1
         self.get_logger().info(
             f'Saved snapshot {prefix}: trigger={trigger}, '
-            f'map={width}x{height}'
+            f'fixed={self._canvas.width}x{self._canvas.height}, '
+            f'source={width}x{height}, '
+            f'known={projection["known_cells_copied"]}'
         )
         return True
 
