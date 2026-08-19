@@ -11,6 +11,9 @@ def generate_launch_description() -> LaunchDescription:
     package_dir = get_package_share_directory('frontier_exploration')
     world = os.path.join(package_dir, 'worlds', 'hospital_aws.sdf')
     base_launch = os.path.join(package_dir, 'launch', 'tb4_simulation_safe.launch.py')
+    default_rviz_config = os.path.join(
+        package_dir, 'rviz', 'hospital_exploration.rviz'
+    )
 
     model_path = PathJoinSubstitution([
         EnvironmentVariable('HOME'),
@@ -21,6 +24,7 @@ def generate_launch_description() -> LaunchDescription:
     ])
 
     use_rviz = LaunchConfiguration('use_rviz')
+    rviz_config_file = LaunchConfiguration('rviz_config_file')
     headless = LaunchConfiguration('headless')
     x_pose = LaunchConfiguration('x_pose')
     y_pose = LaunchConfiguration('y_pose')
@@ -31,6 +35,7 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             'world': world,
             'use_rviz': use_rviz,
+            'rviz_config_file': rviz_config_file,
             'headless': headless,
             'x_pose': x_pose,
             'y_pose': y_pose,
@@ -40,6 +45,11 @@ def generate_launch_description() -> LaunchDescription:
 
     return LaunchDescription([
         DeclareLaunchArgument('use_rviz', default_value='True'),
+        DeclareLaunchArgument(
+            'rviz_config_file',
+            default_value=default_rviz_config,
+            description='RViz config used by the Hospital simulation.',
+        ),
         DeclareLaunchArgument('headless', default_value='False'),
         DeclareLaunchArgument('x_pose', default_value='0.0'),
         DeclareLaunchArgument('y_pose', default_value='12.0'),
