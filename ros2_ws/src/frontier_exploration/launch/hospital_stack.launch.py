@@ -44,6 +44,7 @@ def generate_launch_description() -> LaunchDescription:
         ),
         launch_arguments={
             'use_sim_time': use_sim_time,
+            'use_composition': 'false',
         }.items(),
     )
 
