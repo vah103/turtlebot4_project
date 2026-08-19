@@ -1,6 +1,6 @@
 # LaMa snapshot recording
 
-`map_snapshot_recorder` now records every SLAM state on one fixed occupancy
+`map_snapshot_recorder` records every selected SLAM state on one fixed occupancy
 canvas chosen before the experiment. It does not derive geometry from the final
 SLAM map.
 
@@ -19,9 +19,6 @@ Snapshot `000000` is created immediately as an all-unknown (`-1`) canvas. Each
 later `/map` is projected into the same canvas using its metric origin. Unknown
 areas remain unknown. If known cells fall outside the configured limit, the
 recorder rejects that snapshot by default so an undersized limit is visible.
-
-The recorder does not resize the fixed canvas or create a LaMa mask. LaMa image
-normalization remains an offline preprocessing step.
 
 ## Compute the Hospital World canvas before SLAM
 
@@ -44,28 +41,17 @@ source install/setup.bash
 ros2 run frontier_exploration compute_hospital_canvas
 ```
 
-Defaults are `0.05 m/cell` resolution and a `2.0 m` margin around the known
-Hospital floor/wall geometry. Both can be changed explicitly, for example:
-
-```bash
-ros2 run frontier_exploration compute_hospital_canvas \
-  --resolution 0.05 \
-  --margin 2.0
-```
-
-The command prints the geometry bounds and a ready-to-use block containing:
+For the current Hospital world the fixed canvas is:
 
 ```text
-fixed_canvas_configured: true
-canvas_width_cells: ...
-canvas_height_cells: ...
-canvas_resolution: 0.05
-canvas_origin_x: ...
-canvas_origin_y: ...
+width:       1203 cells
+height:       583 cells
+resolution:  0.05 m/cell
+origin:      (-37.1, -14.6)
 ```
 
-Keep these values unchanged for all runs that use the same Hospital world and
-resolution.
+Those values were determined from the Hospital floor/wall geometry with a 2 m
+margin before SLAM and are stored in `config/map_snapshot_hospital.yaml`.
 
 ## Build and test
 
@@ -77,42 +63,89 @@ colcon test --packages-select frontier_exploration
 colcon test-result --verbose
 ```
 
-## Record one run
+## Record one Hospital run
 
-Start simulation, SLAM, Nav2, and frontier exploration first. Then launch the
-recorder with geometry chosen for that environment:
+Start Hospital simulation, SLAM, Nav2, and frontier exploration. Run the
+Hospital recorder while the experiment is active:
 
 ```bash
-ros2 launch frontier_exploration map_snapshot_recorder.launch.py \
-  use_sim_time:=true \
-  run_name:=lama_fixed_canvas_01 \
-  fixed_canvas_configured:=true \
-  canvas_width_cells:=<WIDTH> \
-  canvas_height_cells:=<HEIGHT> \
-  canvas_resolution:=<RESOLUTION> \
-  canvas_origin_x:=<ORIGIN_X> \
-  canvas_origin_y:=<ORIGIN_Y>
+ros2 launch frontier_exploration hospital_map_snapshot_recorder.launch.py \
+  run_name:=hospital_lama_01
 ```
 
-Do not fill these values from the final map after exploration; they must be
-selected before the run.
-
-Default output:
+The run directory contains the exact fixed-canvas states:
 
 ```text
-~/turtlebot4_lama_snapshots/lama_fixed_canvas_01/
+~/turtlebot4_lama_snapshots/hospital_lama_01/
   run.json
   manifest.jsonl
   000000_map.pgm
   000000_occupancy.bin
   000000_metadata.json
+  000001_map.pgm
   ...
 ```
 
-`run.json` stores the fixed geometry. Per-frame metadata stores both the fixed
-snapshot geometry and the original SLAM `/map` geometry plus its placement
-offset and number of known cells copied.
+`run.json` stores the fixed geometry. The `*_occupancy.bin` files preserve the
+exact signed-int8 occupancy values and are the source used by preprocessing.
 
-After the initial unknown frame, the recorder captures the first synchronized
-map/odom pair, then after 0.5 m of travel or 5 s by default. A final snapshot is
-forced when `/exploration_complete` becomes true.
+## Prepare the LaMa dataset
+
+After a recording run finishes, convert all fixed snapshots into LaMa input and
+mask PNGs:
+
+```bash
+ros2 run frontier_exploration prepare_lama_dataset \
+  ~/turtlebot4_lama_snapshots/hospital_lama_01
+```
+
+Defaults intentionally match the MapEx map scale used in our LaMa evaluation:
+
+- source snapshot: `0.05 m/cell`
+- model image: `0.10 m/pixel`
+- unknown mask: unknown=`255`, known=`0`
+- input map: free=`255`, occupied=`0`, unknown=`127`
+- dimensions padded with unknown cells to a multiple of 8
+
+For the current `1203 x 583` Hospital canvas this produces a metric-resampled
+size of `602 x 292`, then unknown padding produces the final LaMa image size
+`608 x 296`. Padding is only added toward `+X/+Y`, so the fixed metric origin is
+unchanged.
+
+Generated files stay inside the same run directory:
+
+```text
+~/turtlebot4_lama_snapshots/hospital_lama_01/
+  model_input/
+    000000.png
+    000001.png
+    ...
+  model_mask/
+    000000.png
+    000001.png
+    ...
+  preprocess.json
+  lama_dataset_manifest.jsonl
+```
+
+The preprocessor reads the raw occupancy binaries rather than the PGM preview,
+so unknown/free/occupied semantics are not reconstructed from image colors.
+During downsampling an all-unknown source footprint stays unknown; otherwise
+the maximum known occupancy in that footprint is retained so thin occupied
+walls are not erased.
+
+Re-running preprocessing refreshes only generated PNGs in `model_input/` and
+`model_mask/`; it does not modify the raw recorder snapshots.
+
+To override the defaults explicitly:
+
+```bash
+ros2 run frontier_exploration prepare_lama_dataset \
+  ~/turtlebot4_lama_snapshots/hospital_lama_01 \
+  --target-resolution 0.10 \
+  --pad-multiple 8
+```
+
+After preprocessing, select representative frames from early/middle/late
+exploration, run `big_lama`, and compare each `model_input` image with its LaMa
+prediction.
