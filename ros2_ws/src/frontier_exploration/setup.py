@@ -16,13 +16,18 @@ setup(
                 'launch/frontier_autonomy.launch.py',
                 'launch/nav2_sim_compat.launch.py',
                 'launch/map_snapshot_recorder.launch.py',
+                'launch/hospital_map_snapshot_recorder.launch.py',
                 'launch/tb4_simulation_safe.launch.py',
                 'launch/hospital_simulation.launch.py',
             ],
         ),
         (
             'share/' + package_name + '/config',
-            ['config/frontier.yaml', 'config/map_snapshot.yaml'],
+            [
+                'config/frontier.yaml',
+                'config/map_snapshot.yaml',
+                'config/map_snapshot_hospital.yaml',
+            ],
         ),
         (
             'share/' + package_name + '/worlds',
