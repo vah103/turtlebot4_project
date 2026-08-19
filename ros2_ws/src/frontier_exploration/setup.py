@@ -58,6 +58,10 @@ setup(
                 'map_snapshot_recorder = '
                 'frontier_exploration.map_snapshot_recorder:main'
             ),
+            (
+                'compute_hospital_canvas = '
+                'frontier_exploration.hospital_canvas:main'
+            ),
         ],
     },
 )
