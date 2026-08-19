@@ -8,6 +8,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument,
+    GroupAction,
     IncludeLaunchDescription,
     OpaqueFunction,
     RegisterEventHandler,
@@ -15,6 +16,7 @@ from launch.actions import (
 from launch.event_handlers import OnShutdown
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import SetRemap
 
 
 def _deep_merge(base: dict, override: dict) -> dict:
@@ -66,16 +68,24 @@ def _launch_nav2(context):
     finally:
         temporary.close()
 
-    nav2 = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(nav2_bringup_dir, 'launch', 'navigation_launch.py')
-        ),
-        launch_arguments={
-            'use_sim_time': LaunchConfiguration('use_sim_time').perform(context),
-            'params_file': merged_params_path,
-            'autostart': LaunchConfiguration('autostart').perform(context),
-            'use_composition': LaunchConfiguration('use_composition').perform(context),
-        }.items(),
+    nav2 = GroupAction(
+        [
+            # Nav2 Jazzy publishes TwistStamped while the Gazebo TB4 bridge
+            # expects an unstamped Twist on /cmd_vel. Keep Nav2 on a dedicated
+            # stamped topic; frontier_autonomy's sim_twist_adapter converts it.
+            SetRemap(src='/cmd_vel', dst='/cmd_vel_stamped'),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(nav2_bringup_dir, 'launch', 'navigation_launch.py')
+                ),
+                launch_arguments={
+                    'use_sim_time': LaunchConfiguration('use_sim_time').perform(context),
+                    'params_file': merged_params_path,
+                    'autostart': LaunchConfiguration('autostart').perform(context),
+                    'use_composition': LaunchConfiguration('use_composition').perform(context),
+                }.items(),
+            ),
+        ]
     )
 
     cleanup = RegisterEventHandler(
