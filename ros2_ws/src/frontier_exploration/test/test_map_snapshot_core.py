@@ -1,18 +1,125 @@
 import pytest
 
 from frontier_exploration.map_snapshot_core import (
+    FixedCanvasSpec,
     SnapshotPolicy,
     create_unique_run_dir,
     nearest_timestamp_index,
     occupancy_to_pgm,
     occupancy_to_signed_bytes,
+    project_occupancy_to_fixed_canvas,
+    unknown_canvas,
     write_snapshot_files,
 )
 
 
+def test_fixed_canvas_rejects_invalid_geometry():
+    with pytest.raises(ValueError):
+        FixedCanvasSpec(0, 10, 0.05, 0.0, 0.0)
+    with pytest.raises(ValueError):
+        FixedCanvasSpec(10, 10, 0.0, 0.0, 0.0)
+
+
+def test_unknown_canvas_is_all_unknown():
+    spec = FixedCanvasSpec(4, 3, 0.5, -1.0, -1.0)
+    assert unknown_canvas(spec) == [-1] * 12
+
+
+def test_projection_places_source_at_fixed_offset():
+    spec = FixedCanvasSpec(5, 4, 1.0, 0.0, 0.0)
+    fixed, info = project_occupancy_to_fixed_canvas(
+        data=[0, 100, -1, 0],
+        source_width=2,
+        source_height=2,
+        source_resolution=1.0,
+        source_origin_x=1.0,
+        source_origin_y=1.0,
+        canvas=spec,
+    )
+
+    assert fixed[1 * 5 + 1] == 0
+    assert fixed[1 * 5 + 2] == 100
+    assert fixed[2 * 5 + 1] == -1
+    assert fixed[2 * 5 + 2] == 0
+    assert info['source_offset_cells'] == {'x': 1, 'y': 1}
+    assert info['known_cells_copied'] == 3
+    assert info['known_cells_outside_canvas'] == 0
+
+
+def test_projection_keeps_same_world_cell_when_source_origin_changes():
+    spec = FixedCanvasSpec(6, 4, 1.0, 0.0, 0.0)
+
+    first, _ = project_occupancy_to_fixed_canvas(
+        data=[100],
+        source_width=1,
+        source_height=1,
+        source_resolution=1.0,
+        source_origin_x=2.0,
+        source_origin_y=1.0,
+        canvas=spec,
+    )
+    second, _ = project_occupancy_to_fixed_canvas(
+        data=[-1, 100],
+        source_width=2,
+        source_height=1,
+        source_resolution=1.0,
+        source_origin_x=1.0,
+        source_origin_y=1.0,
+        canvas=spec,
+    )
+
+    index = 1 * 6 + 2
+    assert first[index] == 100
+    assert second[index] == 100
+
+
+def test_projection_rejects_resolution_mismatch():
+    spec = FixedCanvasSpec(4, 4, 0.1, 0.0, 0.0)
+    with pytest.raises(ValueError, match='resolution'):
+        project_occupancy_to_fixed_canvas(
+            data=[0],
+            source_width=1,
+            source_height=1,
+            source_resolution=0.05,
+            source_origin_x=0.0,
+            source_origin_y=0.0,
+            canvas=spec,
+        )
+
+
+def test_projection_rejects_non_aligned_origin():
+    spec = FixedCanvasSpec(4, 4, 1.0, 0.0, 0.0)
+    with pytest.raises(ValueError, match='aligned'):
+        project_occupancy_to_fixed_canvas(
+            data=[0],
+            source_width=1,
+            source_height=1,
+            source_resolution=1.0,
+            source_origin_x=0.5,
+            source_origin_y=0.0,
+            canvas=spec,
+        )
+
+
+def test_projection_reports_known_cells_outside_canvas():
+    spec = FixedCanvasSpec(2, 2, 1.0, 0.0, 0.0)
+    fixed, info = project_occupancy_to_fixed_canvas(
+        data=[0, 100],
+        source_width=2,
+        source_height=1,
+        source_resolution=1.0,
+        source_origin_x=1.0,
+        source_origin_y=0.0,
+        canvas=spec,
+    )
+
+    assert fixed[1] == 0
+    assert info['known_cells_copied'] == 1
+    assert info['known_cells_outside_canvas'] == 1
+
+
 def test_policy_captures_first_snapshot():
     policy = SnapshotPolicy(0.5, 5.0, 1.0)
-
     assert policy.should_capture(0.0)
 
 
