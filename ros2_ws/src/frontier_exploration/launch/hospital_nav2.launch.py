@@ -80,21 +80,20 @@ def _launch_nav2(context):
 
     nav2 = GroupAction(
         [
-            # Nav2 Jazzy publishes TwistStamped while the Gazebo TB4 bridge
-            # expects an unstamped Twist on /cmd_vel. Keep Nav2 on a dedicated
-            # stamped topic; frontier_autonomy's sim_twist_adapter converts it.
+            # Nav2 Jazzy produces a stamped velocity command in this setup,
+            # while the Gazebo TB4 bridge expects Twist on /cmd_vel.
             SetRemap(src='/cmd_vel', dst='/cmd_vel_stamped'),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
                     os.path.join(nav2_bringup_dir, 'launch', 'navigation_launch.py')
                 ),
                 launch_arguments={
-                    # navigation_launch.py uses PythonExpression for some of
-                    # these flags, so pass Python boolean literals rather than
-                    # lower-case CLI strings such as "true"/"false".
                     'use_sim_time': _launch_bool(context, 'use_sim_time'),
                     'params_file': merged_params_path,
                     'autostart': _launch_bool(context, 'autostart'),
+                    # navigation_launch.py only loads composable nodes into an
+                    # already-existing container. Hospital launches it directly,
+                    # so non-composed mode is the correct standalone choice.
                     'use_composition': _launch_bool(context, 'use_composition'),
                 }.items(),
             ),
@@ -142,8 +141,11 @@ def generate_launch_description() -> LaunchDescription:
             ),
             DeclareLaunchArgument(
                 'use_composition',
-                default_value='true',
-                description='Use Nav2 component composition.',
+                default_value='false',
+                description=(
+                    'Use Nav2 component composition. Hospital defaults to false '
+                    'because no external nav2_container is launched.'
+                ),
             ),
             OpaqueFunction(function=_launch_nav2),
         ]
