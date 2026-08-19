@@ -1,6 +1,7 @@
 """ROS-independent helpers for recording occupancy-grid snapshots."""
 
 import json
+import math
 import os
 from dataclasses import dataclass
 from math import hypot, isclose
@@ -52,14 +53,18 @@ def project_occupancy_to_fixed_canvas(
     source_origin_x: float,
     source_origin_y: float,
     canvas: FixedCanvasSpec,
-    *,
-    alignment_tolerance_cells: float = 1e-3,
 ) -> tuple[list[int], dict]:
     """Project one axis-aligned ROS OccupancyGrid onto a fixed canvas.
 
-    The source grid is expected to use the same resolution and map axes as the
-    fixed canvas. Unknown source cells do not overwrite anything; the output is
-    rebuilt from an all-unknown canvas for every snapshot.
+    SLAM Toolbox may publish an OccupancyGrid whose origin is not exactly on the
+    same metric cell lattice as a canvas chosen before the run. Both grids use
+    the same resolution and axes, so each source cell is assigned to the fixed
+    cell containing its centre (nearest-cell resampling). This keeps every saved
+    snapshot on one fixed geometry without requiring an artificial exact-origin
+    alignment.
+
+    Unknown source cells do not overwrite anything; every output snapshot is
+    rebuilt from an all-unknown canvas.
     """
     if (
         source_width <= 0
@@ -85,18 +90,12 @@ def project_occupancy_to_fixed_canvas(
     y_offset_float = (
         float(source_origin_y) - canvas.origin_y
     ) / canvas.resolution
-    x_offset = round(x_offset_float)
-    y_offset = round(y_offset_float)
 
-    tolerance = max(0.0, float(alignment_tolerance_cells))
-    if (
-        abs(x_offset_float - x_offset) > tolerance
-        or abs(y_offset_float - y_offset) > tolerance
-    ):
-        raise ValueError(
-            'Source map origin is not aligned to the fixed canvas cell grid: '
-            f'offset=({x_offset_float:.6f}, {y_offset_float:.6f}) cells'
-        )
+    # Mapping by source-cell centres is equivalent, for equal resolutions, to
+    # rounding the origin offset to the nearest fixed cell. Use floor(x + 0.5)
+    # instead of Python round() so half-cell ties are deterministic.
+    x_offset = math.floor(x_offset_float + 0.5)
+    y_offset = math.floor(y_offset_float + 0.5)
 
     output = unknown_canvas(canvas)
     known_copied = 0
@@ -128,6 +127,15 @@ def project_occupancy_to_fixed_canvas(
             'x': x_offset,
             'y': y_offset,
         },
+        'source_offset_cells_float': {
+            'x': x_offset_float,
+            'y': y_offset_float,
+        },
+        'subcell_alignment_error_cells': {
+            'x': x_offset_float - x_offset,
+            'y': y_offset_float - y_offset,
+        },
+        'projection_method': 'nearest_cell_center',
         'known_cells_copied': known_copied,
         'known_cells_outside_canvas': known_outside_canvas,
     }
