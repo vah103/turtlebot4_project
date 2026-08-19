@@ -7,6 +7,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
 
 
 def generate_launch_description() -> LaunchDescription:
@@ -32,6 +33,14 @@ def generate_launch_description() -> LaunchDescription:
             'rviz_config_file': rviz_config_file,
             'headless': headless,
         }.items(),
+    )
+
+    map_visualizer = Node(
+        package='frontier_exploration',
+        executable='hospital_map_cloud_visualizer',
+        name='hospital_map_cloud_visualizer',
+        output='screen',
+        parameters=[{'use_sim_time': use_sim_time}],
     )
 
     slam = IncludeLaunchDescription(
@@ -74,6 +83,7 @@ def generate_launch_description() -> LaunchDescription:
                 description='Seconds after simulation start before Nav2 starts.',
             ),
             simulation,
+            map_visualizer,
             TimerAction(period=slam_delay_sec, actions=[slam]),
             TimerAction(period=nav2_delay_sec, actions=[nav2]),
         ]
