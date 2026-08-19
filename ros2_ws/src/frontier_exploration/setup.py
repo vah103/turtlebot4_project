@@ -67,6 +67,10 @@ setup(
                 'compute_hospital_canvas = '
                 'frontier_exploration.hospital_canvas:main'
             ),
+            (
+                'prepare_lama_dataset = '
+                'frontier_exploration.lama_dataset_preprocessor:main'
+            ),
         ],
     },
 )
