@@ -17,11 +17,16 @@ setup(
                 'launch/nav2_sim_compat.launch.py',
                 'launch/map_snapshot_recorder.launch.py',
                 'launch/tb4_simulation_safe.launch.py',
+                'launch/hospital_simulation.launch.py',
             ],
         ),
         (
             'share/' + package_name + '/config',
             ['config/frontier.yaml', 'config/map_snapshot.yaml'],
+        ),
+        (
+            'share/' + package_name + '/worlds',
+            ['worlds/hospital_aws.sdf'],
         ),
     ],
     install_requires=['setuptools'],
