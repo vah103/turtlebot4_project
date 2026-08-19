@@ -30,6 +30,16 @@ def _deep_merge(base: dict, override: dict) -> dict:
     return merged
 
 
+def _launch_bool(context, name: str) -> str:
+    """Return a PythonExpression-safe boolean literal for nested launches."""
+    raw = LaunchConfiguration(name).perform(context).strip().lower()
+    if raw in {'1', 'true', 'yes', 'on'}:
+        return 'True'
+    if raw in {'0', 'false', 'no', 'off'}:
+        return 'False'
+    raise RuntimeError(f'Invalid boolean launch value for {name}: {raw!r}')
+
+
 def _cleanup_temp_file(_context, path: str):
     try:
         os.remove(path)
@@ -79,10 +89,13 @@ def _launch_nav2(context):
                     os.path.join(nav2_bringup_dir, 'launch', 'navigation_launch.py')
                 ),
                 launch_arguments={
-                    'use_sim_time': LaunchConfiguration('use_sim_time').perform(context),
+                    # navigation_launch.py uses PythonExpression for some of
+                    # these flags, so pass Python boolean literals rather than
+                    # lower-case CLI strings such as "true"/"false".
+                    'use_sim_time': _launch_bool(context, 'use_sim_time'),
                     'params_file': merged_params_path,
-                    'autostart': LaunchConfiguration('autostart').perform(context),
-                    'use_composition': LaunchConfiguration('use_composition').perform(context),
+                    'autostart': _launch_bool(context, 'autostart'),
+                    'use_composition': _launch_bool(context, 'use_composition'),
                 }.items(),
             ),
         ]
