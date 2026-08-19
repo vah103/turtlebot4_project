@@ -1,0 +1,39 @@
+map_snapshot_recorder:
+  ros__parameters:
+    map_topic: /map
+    odom_topic: /odom
+    completion_topic: /exploration_complete
+    robot_frame: base_link
+    output_dir: ~/turtlebot4_lama_snapshots
+    run_name: ""
+
+    # Fixed before the run from Hospital World floor + wall collision geometry.
+    # Geometry bounds (m):
+    #   x: [-35.071523, 21.044177]
+    #   y: [-12.572083, 12.544517]
+    # A 2.0 m safety margin is applied on every side and snapped to 0.05 m cells.
+    fixed_canvas_configured: true
+    canvas_width_cells: 1203
+    canvas_height_cells: 583
+    canvas_resolution: 0.05
+    canvas_origin_x: -37.1
+    canvas_origin_y: -14.6
+
+    # Fail loudly if explored/known cells exceed the predefined map limit.
+    reject_known_outside_canvas: true
+
+    # Snapshot 000000 is the all-unknown fixed canvas. After that, capture the
+    # first valid SLAM state and then whenever either condition is met.
+    distance_interval_m: 0.5
+    time_interval_sec: 5.0
+    min_interval_sec: 1.0
+
+    # Pair each map with the nearest odometry sample by ROS timestamp.
+    sync_tolerance_sec: 0.25
+    odom_buffer_size: 400
+
+    # Ignore discontinuities caused by odometry reset or simulator jumps.
+    max_odom_step_m: 1.0
+
+    # Save one forced final snapshot, then stop the recorder process.
+    shutdown_on_completion: true
