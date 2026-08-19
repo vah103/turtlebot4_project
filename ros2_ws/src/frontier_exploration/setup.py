@@ -78,6 +78,10 @@ setup(
                 'frontier_exploration.map_snapshot_recorder:main'
             ),
             (
+                'hospital_map_cloud_visualizer = '
+                'frontier_exploration.hospital_map_cloud_visualizer:main'
+            ),
+            (
                 'compute_hospital_canvas = '
                 'frontier_exploration.hospital_canvas:main'
             ),
