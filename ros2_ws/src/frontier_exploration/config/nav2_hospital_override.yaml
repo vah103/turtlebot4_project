@@ -13,6 +13,21 @@ controller_server:
       # Widen the MPPI forward-velocity sampling distribution so trajectories
       # above the original 0.5 m/s operating region are explored effectively.
       vx_std: 0.5
+      # At 56 steps x 0.05 s, the MPPI horizon is 2.8 s. At 1.5 m/s that is
+      # about 4.2 m, so retain enough of the global path for the full horizon.
+      prune_distance: 5.0
+      GoalCritic:
+        threshold_to_consider: 4.2
+      PathFollowCritic:
+        threshold_to_consider: 4.2
+
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      # The Jazzy default is 3 x 3 m. A 10 x 10 m rolling window gives MPPI
+      # enough room to score a ~4.2 m forward trajectory at 1.5 m/s.
+      width: 10.0
+      height: 10.0
 
 behavior_server:
   ros__parameters:
