@@ -1,5 +1,6 @@
 from frontier_exploration.frontier_completion import (
     CompletionTracker,
+    ConfirmedUnreachableTracker,
     FailureRegionTracker,
 )
 
@@ -120,6 +121,25 @@ def test_busy_activity_restarts_empty_start_grace():
     tracker.observe_busy()
     assert not tracker.observe_ready(5.0, 5.0)
     assert tracker.observe_ready(10.0, 5.0)
+
+
+def test_confirmed_unreachable_tracker_marks_region_once():
+    tracker = ConfirmedUnreachableTracker(radius_m=0.5)
+
+    assert tracker.mark(1.0, 2.0)
+    assert tracker.contains(1.3, 2.0)
+    assert not tracker.mark(1.2, 2.0)
+    assert len(tracker.regions) == 1
+    assert not tracker.contains(2.0, 2.0)
+
+
+def test_confirmed_unreachable_tracker_can_be_revalidated():
+    tracker = ConfirmedUnreachableTracker(radius_m=0.5)
+    tracker.mark(1.0, 2.0)
+
+    tracker.clear_near(1.2, 2.0)
+    assert not tracker.contains(1.0, 2.0)
+    assert tracker.mark(1.0, 2.0)
 
 
 def test_failed_region_exhausts_after_bounded_attempts():
