@@ -1,4 +1,4 @@
-"""ROS-independent exploration completion and retry tracking."""
+"""ROS-independent exploration completion and frontier-state tracking."""
 
 from math import hypot
 
@@ -87,8 +87,51 @@ class CompletionTracker:
         return max(0.0, now_sec - self.first_idle_sec)
 
 
+class ConfirmedUnreachableTracker:
+    """Remember frontier regions proven unreachable by planner checks.
+
+    This tracker is deliberately separate from navigation failures. A frontier is
+    added only after the detector has exhausted all costmap-safe free goals for
+    that frontier segment without obtaining a Nav2 path (or if no safe free goal
+    exists at all).
+    """
+
+    def __init__(self, radius_m: float) -> None:
+        self.radius_m = max(0.0, float(radius_m))
+        self._regions: list[tuple[float, float]] = []
+
+    @property
+    def regions(self) -> tuple[tuple[float, float], ...]:
+        return tuple(self._regions)
+
+    def contains(self, x: float, y: float) -> bool:
+        return any(
+            hypot(x - known_x, y - known_y) <= self.radius_m
+            for known_x, known_y in self._regions
+        )
+
+    def mark(self, x: float, y: float) -> bool:
+        """Mark a region unreachable; return True only for a new region."""
+        if self.contains(x, y):
+            return False
+        self._regions.append((float(x), float(y)))
+        return True
+
+    def clear_near(self, x: float, y: float) -> None:
+        """Allow explicit revalidation if a later successful path reaches nearby."""
+        self._regions = [
+            region
+            for region in self._regions
+            if hypot(x - region[0], y - region[1]) > self.radius_m
+        ]
+
+
 class FailureRegionTracker:
-    """Count failures in nearby world-space regions until they are exhausted."""
+    """Legacy bounded-failure tracker retained for compatibility/tests.
+
+    The strict exploration detector no longer uses navigation failure exhaustion
+    as evidence that a frontier is unreachable.
+    """
 
     def __init__(self, radius_m: float, max_attempts: int) -> None:
         self.radius_m = max(0.0, float(radius_m))
