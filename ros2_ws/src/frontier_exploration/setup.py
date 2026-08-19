@@ -20,6 +20,7 @@ setup(
                 'launch/tb4_simulation_safe.launch.py',
                 'launch/hospital_simulation.launch.py',
                 'launch/hospital_nav2.launch.py',
+                'launch/hospital_stack.launch.py',
             ],
         ),
         (
