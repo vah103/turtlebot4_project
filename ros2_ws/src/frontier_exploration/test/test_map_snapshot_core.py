@@ -87,18 +87,23 @@ def test_projection_rejects_resolution_mismatch():
         )
 
 
-def test_projection_rejects_non_aligned_origin():
+def test_projection_accepts_subcell_origin_and_uses_nearest_cell():
     spec = FixedCanvasSpec(4, 4, 1.0, 0.0, 0.0)
-    with pytest.raises(ValueError, match='aligned'):
-        project_occupancy_to_fixed_canvas(
-            data=[0],
-            source_width=1,
-            source_height=1,
-            source_resolution=1.0,
-            source_origin_x=0.5,
-            source_origin_y=0.0,
-            canvas=spec,
-        )
+    fixed, info = project_occupancy_to_fixed_canvas(
+        data=[100],
+        source_width=1,
+        source_height=1,
+        source_resolution=1.0,
+        source_origin_x=0.2,
+        source_origin_y=0.1,
+        canvas=spec,
+    )
+
+    assert fixed[0] == 100
+    assert info['source_offset_cells'] == {'x': 0, 'y': 0}
+    assert info['source_offset_cells_float']['x'] == pytest.approx(0.2)
+    assert info['source_offset_cells_float']['y'] == pytest.approx(0.1)
+    assert info['projection_method'] == 'nearest_cell_center'
 
 
 def test_projection_reports_known_cells_outside_canvas():
