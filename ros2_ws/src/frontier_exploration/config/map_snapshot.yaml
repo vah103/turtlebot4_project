@@ -7,7 +7,20 @@ map_snapshot_recorder:
     output_dir: ~/turtlebot4_lama_snapshots
     run_name: ""
 
-    # Capture the first valid map, then whenever either condition is met.
+    # REQUIRED before each experiment. Do not derive these values from the
+    # final SLAM map. Set the map limit first, then enable the configuration.
+    fixed_canvas_configured: false
+    canvas_width_cells: 0
+    canvas_height_cells: 0
+    canvas_resolution: 0.0
+    canvas_origin_x: 0.0
+    canvas_origin_y: 0.0
+
+    # Fail loudly if explored/known cells exceed the predefined map limit.
+    reject_known_outside_canvas: true
+
+    # Snapshot 000000 is always the all-unknown fixed canvas. After that,
+    # capture the first valid SLAM map and then whenever either condition is met.
     distance_interval_m: 0.5
     time_interval_sec: 5.0
     min_interval_sec: 1.0
