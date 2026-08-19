@@ -33,6 +33,10 @@ setup(
             ],
         ),
         (
+            'share/' + package_name + '/rviz',
+            ['rviz/hospital_exploration.rviz'],
+        ),
+        (
             'share/' + package_name + '/worlds',
             ['worlds/hospital_aws.sdf'],
         ),
