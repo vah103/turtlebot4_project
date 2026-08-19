@@ -12,8 +12,12 @@ from launch.substitutions import LaunchConfiguration
 def generate_launch_description() -> LaunchDescription:
     package_dir = get_package_share_directory('frontier_exploration')
     slam_dir = get_package_share_directory('slam_toolbox')
+    default_rviz_config = os.path.join(
+        package_dir, 'rviz', 'hospital_exploration.rviz'
+    )
 
     use_rviz = LaunchConfiguration('use_rviz')
+    rviz_config_file = LaunchConfiguration('rviz_config_file')
     headless = LaunchConfiguration('headless')
     use_sim_time = LaunchConfiguration('use_sim_time')
     slam_delay_sec = LaunchConfiguration('slam_delay_sec')
@@ -25,6 +29,7 @@ def generate_launch_description() -> LaunchDescription:
         ),
         launch_arguments={
             'use_rviz': use_rviz,
+            'rviz_config_file': rviz_config_file,
             'headless': headless,
         }.items(),
     )
@@ -51,6 +56,11 @@ def generate_launch_description() -> LaunchDescription:
     return LaunchDescription(
         [
             DeclareLaunchArgument('use_rviz', default_value='True'),
+            DeclareLaunchArgument(
+                'rviz_config_file',
+                default_value=default_rviz_config,
+                description='RViz config used by the Hospital stack.',
+            ),
             DeclareLaunchArgument('headless', default_value='False'),
             DeclareLaunchArgument('use_sim_time', default_value='true'),
             DeclareLaunchArgument(
