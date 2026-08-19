@@ -23,6 +23,50 @@ recorder rejects that snapshot by default so an undersized limit is visible.
 The recorder does not resize the fixed canvas or create a LaMa mask. LaMa image
 normalization remains an offline preprocessing step.
 
+## Compute the Hospital World canvas before SLAM
+
+For `hospital_aws.sdf`, compute the fixed map limit directly from the known
+floor and wall collision meshes. This is done before exploration and therefore
+does not use the final SLAM map.
+
+Install the Hospital structural assets once if needed:
+
+```bash
+bash ~/turtlebot4_project/ros2_ws/src/frontier_exploration/scripts/setup_hospital_world_assets.sh
+```
+
+Build the package, then compute the bounds:
+
+```bash
+cd ~/turtlebot4_project/ros2_ws
+colcon build --packages-select frontier_exploration
+source install/setup.bash
+ros2 run frontier_exploration compute_hospital_canvas
+```
+
+Defaults are `0.05 m/cell` resolution and a `2.0 m` margin around the known
+Hospital floor/wall geometry. Both can be changed explicitly, for example:
+
+```bash
+ros2 run frontier_exploration compute_hospital_canvas \
+  --resolution 0.05 \
+  --margin 2.0
+```
+
+The command prints the geometry bounds and a ready-to-use block containing:
+
+```text
+fixed_canvas_configured: true
+canvas_width_cells: ...
+canvas_height_cells: ...
+canvas_resolution: 0.05
+canvas_origin_x: ...
+canvas_origin_y: ...
+```
+
+Keep these values unchanged for all runs that use the same Hospital world and
+resolution.
+
 ## Build and test
 
 ```bash
