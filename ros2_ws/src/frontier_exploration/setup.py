@@ -37,6 +37,13 @@ setup(
             ['rviz/hospital_exploration.rviz'],
         ),
         (
+            'share/' + package_name + '/urdf',
+            [
+                'urdf/create3_hospital.urdf.xacro',
+                'urdf/hospital_turtlebot4.urdf.xacro',
+            ],
+        ),
+        (
             'share/' + package_name + '/worlds',
             ['worlds/hospital_aws.sdf'],
         ),
