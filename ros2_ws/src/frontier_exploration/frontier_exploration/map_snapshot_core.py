@@ -2,8 +2,135 @@
 
 import json
 import os
-from math import hypot
+from dataclasses import dataclass
+from math import hypot, isclose
 from pathlib import Path
+
+
+@dataclass(frozen=True)
+class FixedCanvasSpec:
+    """Geometry shared by every snapshot in one experiment."""
+
+    width: int
+    height: int
+    resolution: float
+    origin_x: float
+    origin_y: float
+
+    def __post_init__(self) -> None:
+        if self.width <= 0 or self.height <= 0:
+            raise ValueError('Fixed canvas width and height must be positive')
+        if self.resolution <= 0.0:
+            raise ValueError('Fixed canvas resolution must be positive')
+
+    @property
+    def cell_count(self) -> int:
+        return self.width * self.height
+
+    def as_dict(self) -> dict:
+        return {
+            'width': self.width,
+            'height': self.height,
+            'resolution': self.resolution,
+            'origin': {
+                'x': self.origin_x,
+                'y': self.origin_y,
+            },
+        }
+
+
+def unknown_canvas(spec: FixedCanvasSpec) -> list[int]:
+    """Return an all-unknown fixed occupancy canvas."""
+    return [-1] * spec.cell_count
+
+
+def project_occupancy_to_fixed_canvas(
+    data: list[int],
+    source_width: int,
+    source_height: int,
+    source_resolution: float,
+    source_origin_x: float,
+    source_origin_y: float,
+    canvas: FixedCanvasSpec,
+    *,
+    alignment_tolerance_cells: float = 1e-3,
+) -> tuple[list[int], dict]:
+    """Project one axis-aligned ROS OccupancyGrid onto a fixed canvas.
+
+    The source grid is expected to use the same resolution and map axes as the
+    fixed canvas. Unknown source cells do not overwrite anything; the output is
+    rebuilt from an all-unknown canvas for every snapshot.
+    """
+    if (
+        source_width <= 0
+        or source_height <= 0
+        or len(data) != source_width * source_height
+    ):
+        raise ValueError('Source OccupancyGrid dimensions do not match its data')
+
+    if not isclose(
+        float(source_resolution),
+        canvas.resolution,
+        rel_tol=1e-6,
+        abs_tol=1e-9,
+    ):
+        raise ValueError(
+            'Source map resolution does not match fixed canvas resolution: '
+            f'{source_resolution} != {canvas.resolution}'
+        )
+
+    x_offset_float = (
+        float(source_origin_x) - canvas.origin_x
+    ) / canvas.resolution
+    y_offset_float = (
+        float(source_origin_y) - canvas.origin_y
+    ) / canvas.resolution
+    x_offset = round(x_offset_float)
+    y_offset = round(y_offset_float)
+
+    tolerance = max(0.0, float(alignment_tolerance_cells))
+    if (
+        abs(x_offset_float - x_offset) > tolerance
+        or abs(y_offset_float - y_offset) > tolerance
+    ):
+        raise ValueError(
+            'Source map origin is not aligned to the fixed canvas cell grid: '
+            f'offset=({x_offset_float:.6f}, {y_offset_float:.6f}) cells'
+        )
+
+    output = unknown_canvas(canvas)
+    known_copied = 0
+    known_outside_canvas = 0
+
+    for source_y in range(source_height):
+        canvas_y = source_y + y_offset
+        source_row = source_y * source_width
+        for source_x in range(source_width):
+            value = int(data[source_row + source_x])
+            if value < 0:
+                continue
+
+            canvas_x = source_x + x_offset
+            if (
+                canvas_x < 0
+                or canvas_x >= canvas.width
+                or canvas_y < 0
+                or canvas_y >= canvas.height
+            ):
+                known_outside_canvas += 1
+                continue
+
+            output[canvas_y * canvas.width + canvas_x] = value
+            known_copied += 1
+
+    return output, {
+        'source_offset_cells': {
+            'x': x_offset,
+            'y': y_offset,
+        },
+        'known_cells_copied': known_copied,
+        'known_cells_outside_canvas': known_outside_canvas,
+    }
 
 
 class SnapshotPolicy:
