@@ -9,7 +9,7 @@ from launch.substitutions import EnvironmentVariable, LaunchConfiguration, PathJ
 
 def generate_launch_description() -> LaunchDescription:
     package_dir = get_package_share_directory('frontier_exploration')
-    world = os.path.join(package_dir, 'worlds', 'hospital_aws.sdf')
+    world = os.path.join(package_dir, 'worlds', 'hospital_aws_flat.sdf')
     base_launch = os.path.join(package_dir, 'launch', 'tb4_simulation_safe.launch.py')
     default_rviz_config = os.path.join(
         package_dir, 'rviz', 'hospital_exploration.rviz'
@@ -53,7 +53,7 @@ def generate_launch_description() -> LaunchDescription:
         DeclareLaunchArgument(
             'rviz_config_file',
             default_value=default_rviz_config,
-            description='RViz config used by the Hospital simulation.',
+            description='RViz config used by the flat Hospital simulation.',
         ),
         DeclareLaunchArgument(
             'robot_sdf',
