@@ -1,4 +1,4 @@
-"""Launch Hospital simulation, then SLAM, then Nav2 with fixed delays."""
+"""Launch flat Hospital simulation, then SLAM, then Nav2 with fixed delays."""
 
 import os
 
@@ -26,10 +26,6 @@ def generate_launch_description() -> LaunchDescription:
     x_pose = LaunchConfiguration('x_pose')
     y_pose = LaunchConfiguration('y_pose')
     yaw = LaunchConfiguration('yaw')
-    keepout_enabled = LaunchConfiguration('keepout_enabled')
-    keepout_resolution = LaunchConfiguration('keepout_resolution')
-    keepout_safety_margin_m = LaunchConfiguration('keepout_safety_margin_m')
-    keepout_outer_padding_m = LaunchConfiguration('keepout_outer_padding_m')
 
     simulation = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -69,13 +65,6 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             'use_sim_time': use_sim_time,
             'use_composition': 'false',
-            'keepout_enabled': keepout_enabled,
-            'keepout_resolution': keepout_resolution,
-            'keepout_safety_margin_m': keepout_safety_margin_m,
-            'keepout_outer_padding_m': keepout_outer_padding_m,
-            'start_x': x_pose,
-            'start_y': y_pose,
-            'start_yaw': yaw,
         }.items(),
     )
 
@@ -85,47 +74,24 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument(
                 'rviz_config_file',
                 default_value=default_rviz_config,
-                description='RViz config used by the Hospital stack.',
+                description='RViz config used by the flat Hospital stack.',
             ),
             DeclareLaunchArgument('headless', default_value='False'),
             DeclareLaunchArgument('use_sim_time', default_value='true'),
             DeclareLaunchArgument(
                 'x_pose',
                 default_value='0.0',
-                description='Initial TurtleBot4 x in the Hospital SDF world.',
+                description='Initial TurtleBot4 x in the flat Hospital SDF world.',
             ),
             DeclareLaunchArgument(
                 'y_pose',
                 default_value='12.0',
-                description='Initial TurtleBot4 y in the Hospital SDF world.',
+                description='Initial TurtleBot4 y in the flat Hospital SDF world.',
             ),
             DeclareLaunchArgument(
                 'yaw',
                 default_value='-1.57',
-                description='Initial TurtleBot4 yaw in the Hospital SDF world.',
-            ),
-            DeclareLaunchArgument(
-                'keepout_enabled',
-                default_value='true',
-                description=(
-                    'Protect unsupported Hospital floor edges with a Nav2 '
-                    'collision-mesh-derived keepout mask.'
-                ),
-            ),
-            DeclareLaunchArgument(
-                'keepout_resolution',
-                default_value='0.05',
-                description='Hospital keepout mask resolution in m/cell.',
-            ),
-            DeclareLaunchArgument(
-                'keepout_safety_margin_m',
-                default_value='0.40',
-                description='Safety margin kept inside physical floor edges.',
-            ),
-            DeclareLaunchArgument(
-                'keepout_outer_padding_m',
-                default_value='2.0',
-                description='Blocked padding outside Hospital floor bounds.',
+                description='Initial TurtleBot4 yaw in the flat Hospital SDF world.',
             ),
             DeclareLaunchArgument(
                 'slam_delay_sec',
