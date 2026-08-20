@@ -1,6 +1,7 @@
 from frontier_exploration.frontier_completion import (
     CompletionTracker,
     ConfirmedUnreachableTracker,
+    DeferredRegionTracker,
     FailureRegionTracker,
 )
 
@@ -150,6 +151,58 @@ def test_confirmed_unreachable_tracker_can_clear_all_for_revalidation():
     assert tracker.clear_all() == 2
     assert tracker.regions == ()
     assert not tracker.contains(1.0, 2.0)
+
+
+def test_deferred_region_waits_between_costmap_checks():
+    tracker = DeferredRegionTracker(
+        radius_m=0.5,
+        max_checks=4,
+        retry_period_sec=10.0,
+    )
+
+    assert tracker.record_blocked(1.0, 2.0, 0.0) == (1, False)
+    assert tracker.has_pending()
+    assert tracker.is_waiting(1.2, 2.0, 9.9)
+    assert not tracker.is_waiting(1.2, 2.0, 10.0)
+    assert tracker.has_ready(10.0)
+
+
+def test_deferred_region_exhausts_only_after_spaced_checks():
+    tracker = DeferredRegionTracker(
+        radius_m=0.5,
+        max_checks=3,
+        retry_period_sec=10.0,
+    )
+
+    assert tracker.record_blocked(1.0, 2.0, 0.0) == (1, False)
+    assert tracker.record_blocked(1.1, 2.0, 10.0) == (2, False)
+    assert tracker.record_blocked(1.0, 2.1, 20.0) == (3, True)
+    assert not tracker.has_pending()
+
+
+def test_deferred_region_clears_when_safe_goal_appears():
+    tracker = DeferredRegionTracker(
+        radius_m=0.5,
+        max_checks=4,
+        retry_period_sec=10.0,
+    )
+    tracker.record_blocked(1.0, 2.0, 0.0)
+
+    assert tracker.clear_near(1.2, 2.0)
+    assert not tracker.has_pending()
+
+
+def test_deferred_region_forgets_disappeared_frontier():
+    tracker = DeferredRegionTracker(
+        radius_m=0.5,
+        max_checks=4,
+        retry_period_sec=10.0,
+    )
+    tracker.record_blocked(1.0, 2.0, 0.0)
+    tracker.record_blocked(5.0, 6.0, 0.0)
+
+    assert tracker.retain_near([(1.2, 2.0)]) == 1
+    assert len(tracker.regions) == 1
 
 
 def test_failed_region_exhausts_after_bounded_attempts():
