@@ -58,8 +58,6 @@ def generate_launch_description() -> LaunchDescription:
         }.items(),
     )
 
-    # The flat world has no negative obstacles or unsupported floor edges, so
-    # explicitly disable the Hospital keepout filter and run normal Nav2.
     nav2 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(package_dir, 'launch', 'hospital_nav2.launch.py')
@@ -67,10 +65,6 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             'use_sim_time': use_sim_time,
             'use_composition': 'false',
-            'keepout_enabled': 'false',
-            'start_x': x_pose,
-            'start_y': y_pose,
-            'start_yaw': yaw,
         }.items(),
     )
 
