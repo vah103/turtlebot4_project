@@ -1,9 +1,10 @@
 """Strict frontier completion semantics for the exploration baseline.
 
-A navigation failure is only temporary evidence. A frontier becomes permanently
-ignored for the current mission only when every costmap-safe free goal around
-that frontier segment has been checked by ComputePathToPose and none yields a
-path, or when the segment has no costmap-safe free goal at all.
+A navigation failure is only temporary evidence. A frontier becomes ignored only
+when every costmap-safe free goal around that frontier segment has been checked by
+ComputePathToPose and none yields a path, or when the segment has no safe free goal.
+Confirmed-unreachable evidence is revalidated after successful exploration because
+SLAM and costmaps may have changed enough to make an old no-path result stale.
 """
 
 from math import hypot
@@ -16,6 +17,7 @@ from visualization_msgs.msg import Marker, MarkerArray
 from frontier_exploration.frontier_completion import ConfirmedUnreachableTracker
 from frontier_exploration.frontier_core import (
     candidate_goal_cells,
+    candidate_goal_cells_with_standoff,
     representative_cell,
 )
 from frontier_exploration.frontier_detector import (
@@ -33,6 +35,7 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
     def __init__(self) -> None:
         super().__init__()
         self.declare_parameter('unreachable_frontier_radius_m', 0.50)
+        self.declare_parameter('frontier_goal_standoff_m', 0.30)
         self._unreachable_tracker = ConfirmedUnreachableTracker(
             radius_m=float(
                 self.get_parameter('unreachable_frontier_radius_m').value
@@ -42,6 +45,11 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
             'Strict completion enabled: navigation failure is temporary; '
             'a frontier is ignored only after all safe free goals fail '
             'ComputePathToPose'
+        )
+        self.get_logger().info(
+            'Frontier navigation goal standoff: '
+            f'{float(self.get_parameter("frontier_goal_standoff_m").value):.2f} m '
+            'into known free space before adjacent-cell fallback'
         )
 
     def _frontier_is_confirmed_unreachable(
@@ -61,9 +69,44 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
         point = _cell_to_world(representative, msg)
         if self._unreachable_tracker.mark(point.x, point.y):
             self.get_logger().warning(
-                'Confirmed unreachable frontier; ignoring this region for the '
-                f'current mission: x={point.x:.2f}, y={point.y:.2f}; {reason}'
+                'Confirmed unreachable frontier; ignoring this region until '
+                'successful exploration triggers revalidation: '
+                f'x={point.x:.2f}, y={point.y:.2f}; {reason}'
             )
+
+    def _goal_candidates_for_segment(
+        self,
+        segment: list[int],
+        msg: OccupancyGrid,
+    ) -> tuple[list[int], set[int]]:
+        """Return standoff goals first, followed by adjacent free-side fallback."""
+        data = list(msg.data)
+        adjacent = candidate_goal_cells(
+            segment,
+            self._latest_frontier_cells,
+            data,
+            msg.info.width,
+            msg.info.height,
+        )
+
+        resolution = max(float(msg.info.resolution), 1e-6)
+        standoff_m = max(
+            0.0, float(self.get_parameter('frontier_goal_standoff_m').value)
+        )
+        standoff_cells = max(1, round(standoff_m / resolution))
+        standoff = candidate_goal_cells_with_standoff(
+            segment,
+            self._latest_frontier_cells,
+            data,
+            msg.info.width,
+            msg.info.height,
+            standoff_cells,
+        )
+        standoff_set = set(standoff)
+        ordered = standoff + [
+            index for index in adjacent if index not in standoff_set
+        ]
+        return ordered, standoff_set
 
     def _build_candidates(
         self,
@@ -87,15 +130,12 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
                 representative_point.y - robot_y,
             )
             centroid_x, centroid_y = self._segment_centroid_world(segment, msg)
-            safe_goals: list[tuple[bool, float, float, int]] = []
+            safe_goals: list[tuple[bool, bool, float, float, int]] = []
+            goal_indices, standoff_set = self._goal_candidates_for_segment(
+                segment, msg
+            )
 
-            for index in candidate_goal_cells(
-                segment,
-                self._latest_frontier_cells,
-                list(msg.data),
-                msg.info.width,
-                msg.info.height,
-            ):
+            for index in goal_indices:
                 point = _cell_to_world(index, msg)
                 goal_distance = hypot(point.x - robot_x, point.y - robot_y)
 
@@ -120,10 +160,11 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
                 centroid_distance_sq = (
                     (point.x - centroid_x) ** 2 + (point.y - centroid_y) ** 2
                 )
-                # Prefer goals far enough to avoid a no-op navigation command,
-                # then prefer the goal nearest the frontier-segment centroid.
+                # Prefer deeper standoff goals, then goals far enough to avoid a
+                # no-op command, then the point nearest the segment centroid.
                 safe_goals.append(
                     (
+                        index not in standoff_set,
                         goal_distance < min_distance_m,
                         centroid_distance_sq,
                         goal_distance,
@@ -135,12 +176,12 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
                 self._mark_confirmed_unreachable(
                     representative,
                     msg,
-                    'no costmap-safe free goal exists next to the frontier',
+                    'no costmap-safe standoff or adjacent free goal exists',
                 )
                 continue
 
             safe_goals.sort()
-            for _, _, goal_distance, goal_index in safe_goals:
+            for _, _, _, goal_distance, goal_index in safe_goals:
                 candidates.append(
                     (
                         representative,
@@ -310,6 +351,16 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
             f'{reason}; {message}; retrying in about {retry_period:.1f}s'
         )
         self._publish_markers()
+
+    def _on_completed_goal(self, msg: PointStamped) -> None:
+        """Successful exploration invalidates old planner-unreachable evidence."""
+        cleared = self._unreachable_tracker.clear_all()
+        if cleared:
+            self.get_logger().info(
+                f'Revalidating {cleared} previously unreachable frontier '
+                'region(s) after successful exploration changed the map/costmap'
+            )
+        super()._on_completed_goal(msg)
 
     def _on_failed_goal(self, msg: PointStamped) -> None:
         """Navigation execution failure causes cooldown only, never exhaustion."""
