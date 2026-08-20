@@ -2,9 +2,10 @@
 
 A navigation failure is only temporary evidence. A frontier becomes ignored only
 when every costmap-safe free goal around that frontier segment has been checked by
-ComputePathToPose and none yields a path, or when the segment has no safe free goal.
-Confirmed-unreachable evidence is revalidated after successful exploration because
-SLAM and costmaps may have changed enough to make an old no-path result stale.
+ComputePathToPose and none yields a path, or after repeated costmap-blocked checks
+stay unresolved across a retry window. Confirmed-unreachable evidence is
+revalidated after successful exploration because SLAM and costmaps may have changed
+enough to make an old conclusion stale.
 """
 
 from math import hypot
@@ -14,7 +15,10 @@ from geometry_msgs.msg import Point, PointStamped
 from nav_msgs.msg import OccupancyGrid, Path
 from visualization_msgs.msg import Marker, MarkerArray
 
-from frontier_exploration.frontier_completion import ConfirmedUnreachableTracker
+from frontier_exploration.frontier_completion import (
+    ConfirmedUnreachableTracker,
+    DeferredRegionTracker,
+)
 from frontier_exploration.frontier_core import (
     candidate_goal_cells,
     candidate_goal_cells_with_standoff,
@@ -36,10 +40,23 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
         super().__init__()
         self.declare_parameter('unreachable_frontier_radius_m', 0.50)
         self.declare_parameter('frontier_goal_standoff_m', 0.30)
+        self.declare_parameter('costmap_blocked_retry_period_sec', 10.0)
+        self.declare_parameter('costmap_blocked_max_checks', 4)
+
+        unreachable_radius = float(
+            self.get_parameter('unreachable_frontier_radius_m').value
+        )
         self._unreachable_tracker = ConfirmedUnreachableTracker(
-            radius_m=float(
-                self.get_parameter('unreachable_frontier_radius_m').value
-            )
+            radius_m=unreachable_radius
+        )
+        self._costmap_deferred_tracker = DeferredRegionTracker(
+            radius_m=unreachable_radius,
+            max_checks=int(
+                self.get_parameter('costmap_blocked_max_checks').value
+            ),
+            retry_period_sec=float(
+                self.get_parameter('costmap_blocked_retry_period_sec').value
+            ),
         )
         self.get_logger().info(
             'Strict completion enabled: navigation failure is temporary; '
@@ -50,6 +67,12 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
             'Frontier navigation goal standoff: '
             f'{float(self.get_parameter("frontier_goal_standoff_m").value):.2f} m '
             'into known free space before adjacent-cell fallback'
+        )
+        self.get_logger().info(
+            'Costmap-blocked frontier retry: '
+            f'{self._costmap_deferred_tracker.max_checks} checks spaced by '
+            f'{self._costmap_deferred_tracker.retry_period_sec:.1f}s before '
+            'confirming unreachable'
         )
 
     def _frontier_is_confirmed_unreachable(
@@ -67,6 +90,7 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
         reason: str,
     ) -> None:
         point = _cell_to_world(representative, msg)
+        self._costmap_deferred_tracker.clear_near(point.x, point.y)
         if self._unreachable_tracker.mark(point.x, point.y):
             self.get_logger().warning(
                 'Confirmed unreachable frontier; ignoring this region until '
@@ -118,13 +142,25 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
         """Materialize every costmap-safe free goal for each frontier segment."""
         candidates: list[Candidate] = []
         source_frame = msg.header.frame_id or 'map'
+        now = self._now_sec()
+        current_frontier_points: list[tuple[float, float]] = []
 
         for segment in self._latest_segments:
             representative = representative_cell(segment, msg.info.width)
+            representative_point = _cell_to_world(representative, msg)
+            current_frontier_points.append(
+                (representative_point.x, representative_point.y)
+            )
+
             if self._frontier_is_confirmed_unreachable(representative, msg):
                 continue
+            if self._costmap_deferred_tracker.is_waiting(
+                representative_point.x,
+                representative_point.y,
+                now,
+            ):
+                continue
 
-            representative_point = _cell_to_world(representative, msg)
             frontier_distance = hypot(
                 representative_point.x - robot_x,
                 representative_point.y - robot_y,
@@ -173,13 +209,34 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
                 )
 
             if not safe_goals:
-                self._mark_confirmed_unreachable(
-                    representative,
-                    msg,
-                    'no costmap-safe standoff or adjacent free goal exists',
+                checks, exhausted = self._costmap_deferred_tracker.record_blocked(
+                    representative_point.x,
+                    representative_point.y,
+                    now,
                 )
+                if exhausted:
+                    self._mark_confirmed_unreachable(
+                        representative,
+                        msg,
+                        'no costmap-safe standoff or adjacent free goal after '
+                        f'{checks} spaced checks',
+                    )
+                else:
+                    self.get_logger().warning(
+                        'Deferring costmap-blocked frontier instead of declaring '
+                        'it unreachable: '
+                        f'x={representative_point.x:.2f}, '
+                        f'y={representative_point.y:.2f}; '
+                        f'check {checks}/'
+                        f'{self._costmap_deferred_tracker.max_checks}; retry in '
+                        f'{self._costmap_deferred_tracker.retry_period_sec:.1f}s'
+                    )
                 continue
 
+            self._costmap_deferred_tracker.clear_near(
+                representative_point.x,
+                representative_point.y,
+            )
             safe_goals.sort()
             for _, _, _, goal_distance, goal_index in safe_goals:
                 candidates.append(
@@ -190,6 +247,8 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
                         goal_distance,
                     )
                 )
+
+        self._costmap_deferred_tracker.retain_near(current_frontier_points)
 
         # Stable sort keeps every segment's ordered safe goals together while
         # still preferring the nearest frontier segment first.
@@ -352,13 +411,37 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
         )
         self._publish_markers()
 
+    def _retry_pending_planner_check(self) -> None:
+        """Rebuild candidates when a deferred costmap-blocked frontier is due."""
+        if (
+            not self._exploration_complete
+            and self._latest_map is not None
+            and self._selected_index is None
+            and self._planning_candidate is None
+            and not self._candidate_queue
+            and self._costmap_deferred_tracker.has_ready(self._now_sec())
+        ):
+            # Reuse the newest frozen map through RetryFrontierDetector's normal
+            # deferred-map path so candidate generation remains generation-safe.
+            self._deferred_map = self._latest_map
+        super()._retry_pending_planner_check()
+
+    def _check_exploration_completion(self) -> None:
+        """Do not finish while a costmap-blocked frontier still awaits rechecking."""
+        if self._costmap_deferred_tracker.has_pending():
+            self._completion_tracker.observe_busy()
+            return
+        super()._check_exploration_completion()
+
     def _on_completed_goal(self, msg: PointStamped) -> None:
-        """Successful exploration invalidates old planner-unreachable evidence."""
-        cleared = self._unreachable_tracker.clear_all()
-        if cleared:
+        """Successful exploration invalidates stale blocked/unreachable evidence."""
+        cleared_unreachable = self._unreachable_tracker.clear_all()
+        cleared_deferred = self._costmap_deferred_tracker.clear_all()
+        if cleared_unreachable or cleared_deferred:
             self.get_logger().info(
-                f'Revalidating {cleared} previously unreachable frontier '
-                'region(s) after successful exploration changed the map/costmap'
+                'Revalidating stale frontier evidence after successful '
+                'exploration changed the map/costmap: '
+                f'unreachable={cleared_unreachable}, deferred={cleared_deferred}'
             )
         super()._on_completed_goal(msg)
 
