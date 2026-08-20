@@ -94,6 +94,9 @@ class ConfirmedUnreachableTracker:
     added only after the detector has exhausted all costmap-safe free goals for
     that frontier segment without obtaining a Nav2 path (or if no safe free goal
     exists at all).
+
+    The detector may clear this evidence after successful exploration elsewhere,
+    because a changed SLAM map or costmap can make an old no-path conclusion stale.
     """
 
     def __init__(self, radius_m: float) -> None:
@@ -124,6 +127,12 @@ class ConfirmedUnreachableTracker:
             for region in self._regions
             if hypot(x - region[0], y - region[1]) > self.radius_m
         ]
+
+    def clear_all(self) -> int:
+        """Clear all no-path evidence and return the number of regions removed."""
+        count = len(self._regions)
+        self._regions.clear()
+        return count
 
 
 class FailureRegionTracker:
