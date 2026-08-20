@@ -32,8 +32,24 @@ def test_flat_hospital_uses_one_level_ground_and_no_aws_floor_mesh():
     assert normal == [0.0, 0.0, 1.0]
 
 
-def test_flat_hospital_stack_disables_keepout_filter():
-    launch_path = PACKAGE_ROOT / 'launch' / 'hospital_flat_stack.launch.py'
-    text = launch_path.read_text(encoding='utf-8')
-    assert "hospital_flat_simulation.launch.py" in text
-    assert "'keepout_enabled': 'false'" in text
+def test_default_hospital_runtime_uses_flat_world_without_keepout_filter():
+    simulation_text = (
+        PACKAGE_ROOT / 'launch' / 'hospital_simulation.launch.py'
+    ).read_text(encoding='utf-8')
+    stack_text = (
+        PACKAGE_ROOT / 'launch' / 'hospital_stack.launch.py'
+    ).read_text(encoding='utf-8')
+    nav2_text = (
+        PACKAGE_ROOT / 'launch' / 'hospital_nav2.launch.py'
+    ).read_text(encoding='utf-8')
+    nav2_override_text = (
+        PACKAGE_ROOT / 'config' / 'nav2_hospital_override.yaml'
+    ).read_text(encoding='utf-8')
+
+    assert "worlds', 'hospital_aws_flat.sdf'" in simulation_text
+    assert "hospital_simulation.launch.py" in stack_text
+
+    assert 'keepout_enabled' not in nav2_text
+    assert 'generate_hospital_keepout_mask' not in nav2_text
+    assert 'filter_mask_server' not in nav2_text
+    assert 'keepout_filter' not in nav2_override_text
