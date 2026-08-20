@@ -19,8 +19,10 @@ setup(
                 'launch/hospital_map_snapshot_recorder.launch.py',
                 'launch/tb4_simulation_safe.launch.py',
                 'launch/hospital_simulation.launch.py',
+                'launch/hospital_flat_simulation.launch.py',
                 'launch/hospital_nav2.launch.py',
                 'launch/hospital_stack.launch.py',
+                'launch/hospital_flat_stack.launch.py',
             ],
         ),
         (
@@ -45,7 +47,10 @@ setup(
         ),
         (
             'share/' + package_name + '/worlds',
-            ['worlds/hospital_aws.sdf'],
+            [
+                'worlds/hospital_aws.sdf',
+                'worlds/hospital_aws_flat.sdf',
+            ],
         ),
     ],
     install_requires=['setuptools'],
