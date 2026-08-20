@@ -142,6 +142,16 @@ def test_confirmed_unreachable_tracker_can_be_revalidated():
     assert tracker.mark(1.0, 2.0)
 
 
+def test_confirmed_unreachable_tracker_can_clear_all_for_revalidation():
+    tracker = ConfirmedUnreachableTracker(radius_m=0.5)
+    tracker.mark(1.0, 2.0)
+    tracker.mark(3.0, 4.0)
+
+    assert tracker.clear_all() == 2
+    assert tracker.regions == ()
+    assert not tracker.contains(1.0, 2.0)
+
+
 def test_failed_region_exhausts_after_bounded_attempts():
     tracker = FailureRegionTracker(radius_m=0.4, max_attempts=2)
 
