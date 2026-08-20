@@ -41,9 +41,15 @@ frontier_detector:
     planner_retry_period_sec: 1.0
     planner_rejection_retry_limit: 15
 
-    # A frontier is confirmed unreachable only after every costmap-safe free
-    # goal around that segment fails ComputePathToPose (or none exists). These
-    # regions are revalidated after later successful exploration.
+    # No-safe-goal costmap results are temporary evidence. Recheck the frontier
+    # several times before confirming it unreachable so SLAM/costmap updates get
+    # a chance to expose a valid standoff or adjacent free goal.
+    costmap_blocked_retry_period_sec: 10.0
+    costmap_blocked_max_checks: 4
+
+    # A frontier is confirmed unreachable after all costmap-safe goals fail
+    # ComputePathToPose, or after the bounded costmap-blocked checks above remain
+    # unresolved. These regions are revalidated after successful exploration.
     unreachable_frontier_radius_m: 0.50
 
     # Navigation execution failure is temporary only. The region cools down and
