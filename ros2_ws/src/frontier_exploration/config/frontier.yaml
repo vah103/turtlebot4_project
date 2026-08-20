@@ -27,6 +27,10 @@ frontier_detector:
     min_segment_size: 5
     min_selection_distance_m: 0.60
 
+    # Prefer navigation goals deeper inside known-free space before falling back
+    # to cells immediately adjacent to the frontier boundary.
+    frontier_goal_standoff_m: 0.30
+
     # Costmap-aware safe free goals near each frontier segment.
     require_global_costmap: true
     costmap_occ_threshold: 65
@@ -38,7 +42,8 @@ frontier_detector:
     planner_rejection_retry_limit: 15
 
     # A frontier is confirmed unreachable only after every costmap-safe free
-    # goal around that segment fails ComputePathToPose (or none exists).
+    # goal around that segment fails ComputePathToPose (or none exists). These
+    # regions are revalidated after later successful exploration.
     unreachable_frontier_radius_m: 0.50
 
     # Navigation execution failure is temporary only. The region cools down and
