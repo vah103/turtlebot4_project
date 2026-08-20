@@ -86,6 +86,10 @@ setup(
                 'frontier_exploration.hospital_canvas:main'
             ),
             (
+                'generate_hospital_keepout = '
+                'frontier_exploration.hospital_keepout:main'
+            ),
+            (
                 'prepare_lama_dataset = '
                 'frontier_exploration.lama_dataset_preprocessor:main'
             ),
