@@ -88,15 +88,14 @@ class CompletionTracker:
 
 
 class ConfirmedUnreachableTracker:
-    """Remember frontier regions proven unreachable by planner checks.
+    """Remember frontier regions proven unreachable by repeated planner checks.
 
     This tracker is deliberately separate from navigation failures. A frontier is
-    added only after the detector has exhausted all costmap-safe free goals for
-    that frontier segment without obtaining a Nav2 path (or if no safe free goal
-    exists at all).
+    added after all costmap-safe goals fail Nav2 planning, or after repeated
+    costmap-blocked checks remain unresolved across a retry window.
 
     The detector may clear this evidence after successful exploration elsewhere,
-    because a changed SLAM map or costmap can make an old no-path conclusion stale.
+    because a changed SLAM map or costmap can make an old conclusion stale.
     """
 
     def __init__(self, radius_m: float) -> None:
@@ -133,6 +132,114 @@ class ConfirmedUnreachableTracker:
         count = len(self._regions)
         self._regions.clear()
         return count
+
+
+class DeferredRegionTracker:
+    """Temporarily defer costmap-blocked frontiers before declaring them unreachable.
+
+    A region keeps its check count while waiting for the retry deadline. This lets
+    SLAM/costmap updates make a previously blocked goal usable without allowing
+    rapid map callbacks to exhaust the retry budget immediately.
+    """
+
+    def __init__(
+        self,
+        radius_m: float,
+        max_checks: int,
+        retry_period_sec: float,
+    ) -> None:
+        self.radius_m = max(0.0, float(radius_m))
+        self.max_checks = max(1, int(max_checks))
+        self.retry_period_sec = max(0.0, float(retry_period_sec))
+        self._regions: list[tuple[float, float, int, float]] = []
+
+    @property
+    def regions(self) -> tuple[tuple[float, float, int, float], ...]:
+        return tuple(self._regions)
+
+    def _find_index(self, x: float, y: float) -> int | None:
+        for index, (known_x, known_y, _, _) in enumerate(self._regions):
+            if hypot(x - known_x, y - known_y) <= self.radius_m:
+                return index
+        return None
+
+    def is_waiting(self, x: float, y: float, now_sec: float) -> bool:
+        """Return True while a nearby blocked region is still in its retry delay."""
+        index = self._find_index(x, y)
+        if index is None:
+            return False
+        return now_sec < self._regions[index][3]
+
+    def record_blocked(
+        self,
+        x: float,
+        y: float,
+        now_sec: float,
+    ) -> tuple[int, bool]:
+        """Record one costmap-blocked check and report whether checks are exhausted."""
+        index = self._find_index(x, y)
+        if index is None:
+            checks = 1
+        else:
+            _, _, previous_checks, _ = self._regions[index]
+            checks = previous_checks + 1
+
+        exhausted = checks >= self.max_checks
+        if exhausted:
+            if index is not None:
+                self._regions.pop(index)
+            return checks, True
+
+        retry_after = now_sec + self.retry_period_sec
+        entry = (float(x), float(y), checks, retry_after)
+        if index is None:
+            self._regions.append(entry)
+        else:
+            self._regions[index] = entry
+        return checks, False
+
+    def clear_near(self, x: float, y: float) -> bool:
+        """Drop deferred evidence when a nearby frontier gains a safe goal."""
+        before = len(self._regions)
+        self._regions = [
+            region
+            for region in self._regions
+            if hypot(x - region[0], y - region[1]) > self.radius_m
+        ]
+        return len(self._regions) != before
+
+    def clear_all(self) -> int:
+        """Clear all deferred costmap-blocked evidence."""
+        count = len(self._regions)
+        self._regions.clear()
+        return count
+
+    def has_pending(self) -> bool:
+        """Return True while at least one blocked frontier still needs rechecking."""
+        return bool(self._regions)
+
+    def has_ready(self, now_sec: float) -> bool:
+        """Return True when any deferred frontier is due for another check."""
+        return any(now_sec >= retry_after for _, _, _, retry_after in self._regions)
+
+    def retain_near(self, points: list[tuple[float, float]]) -> int:
+        """Forget deferred regions whose frontier disappeared from the current map."""
+        if not points:
+            removed = len(self._regions)
+            self._regions.clear()
+            return removed
+
+        kept = [
+            region
+            for region in self._regions
+            if any(
+                hypot(region[0] - x, region[1] - y) <= self.radius_m
+                for x, y in points
+            )
+        ]
+        removed = len(self._regions) - len(kept)
+        self._regions = kept
+        return removed
 
 
 class FailureRegionTracker:
