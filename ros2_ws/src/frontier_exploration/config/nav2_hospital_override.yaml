@@ -21,6 +21,18 @@ controller_server:
       PathFollowCritic:
         threshold_to_consider: 4.2
 
+# KeepoutFilter consumes a mask generated from the Hospital floor collision
+# mesh at launch. Unsupported floor edges, drop-offs, and raised non-driveable
+# floor pieces are lethal to the planner before the robot reaches them.
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      filters: ["keepout_filter"]
+      keepout_filter:
+        plugin: "nav2_costmap_2d::KeepoutFilter"
+        enabled: true
+        filter_info_topic: /costmap_filter_info
+
 local_costmap:
   local_costmap:
     ros__parameters:
@@ -28,6 +40,11 @@ local_costmap:
       # window gives MPPI enough room to score a ~4.2 m forward trajectory.
       width: 10
       height: 10
+      filters: ["keepout_filter"]
+      keepout_filter:
+        plugin: "nav2_costmap_2d::KeepoutFilter"
+        enabled: true
+        filter_info_topic: /costmap_filter_info
 
 behavior_server:
   ros__parameters:
