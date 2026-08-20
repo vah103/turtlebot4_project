@@ -73,5 +73,51 @@
       <pose>-0.013823 -0.013783 0 0 0 0</pose>
       <static>true</static>
     </include>
+
+    <!--
+      The stripped structural world does not load the two elevator door models
+      used by the original AWS scene, leaving two openings at the north end of
+      the corridor.  Close those openings with ordinary physical geometry so
+      lidar / SLAM sees a wall and frontier exploration cannot leave the
+      building.  These are real collision walls, not Nav2 keepout regions.
+
+      Their x/y positions follow the two elevator-door poses from the original
+      Hospital scene.  The 1.60 m width safely covers the ~1.42 m door collision
+      mesh while the 0.18 m thickness overlaps the surrounding wall enough to
+      avoid narrow navigation gaps.
+    -->
+    <model name="elevator_opening_blocker_left">
+      <static>true</static>
+      <pose>-1.51 19.35 1.30 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>1.60 0.18 2.60</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>1.60 0.18 2.60</size></box></geometry>
+          <material>
+            <ambient>0.86 0.86 0.86 1</ambient>
+            <diffuse>0.86 0.86 0.86 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="elevator_opening_blocker_right">
+      <static>true</static>
+      <pose>1.52843 19.3627 1.30 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>1.60 0.18 2.60</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>1.60 0.18 2.60</size></box></geometry>
+          <material>
+            <ambient>0.86 0.86 0.86 1</ambient>
+            <diffuse>0.86 0.86 0.86 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
   </world>
 </sdf>
