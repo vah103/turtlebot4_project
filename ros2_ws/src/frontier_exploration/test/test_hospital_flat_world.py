@@ -69,6 +69,17 @@ def test_flat_hospital_physically_closes_both_elevator_openings():
         assert collision_size[2] >= 2.30
 
 
+def test_flat_hospital_pins_physics_to_realtime_clock():
+    world_path = PACKAGE_ROOT / 'worlds' / 'hospital_aws_flat.sdf'
+    world = ET.parse(world_path).getroot().find('world')
+    assert world is not None
+
+    physics = world.find("physics[@name='hospital_realtime']")
+    assert physics is not None
+    assert abs(float(physics.findtext('max_step_size')) - 0.001) < 1e-12
+    assert abs(float(physics.findtext('real_time_factor')) - 1.0) < 1e-12
+
+
 def test_default_hospital_runtime_uses_flat_world_without_keepout_filter():
     simulation_text = (
         PACKAGE_ROOT / 'launch' / 'hospital_simulation.launch.py'
@@ -90,3 +101,36 @@ def test_default_hospital_runtime_uses_flat_world_without_keepout_filter():
     assert 'generate_hospital_keepout_mask' not in nav2_text
     assert 'filter_mask_server' not in nav2_text
     assert 'keepout_filter' not in nav2_override_text
+
+
+def test_hospital_runtime_uses_mapping_stability_profile():
+    stack_text = (
+        PACKAGE_ROOT / 'launch' / 'hospital_stack.launch.py'
+    ).read_text(encoding='utf-8')
+    slam_text = (
+        PACKAGE_ROOT / 'config' / 'hospital_slam.yaml'
+    ).read_text(encoding='utf-8')
+    nav2_text = (
+        PACKAGE_ROOT / 'config' / 'nav2_hospital_override.yaml'
+    ).read_text(encoding='utf-8')
+    drivetrain_text = (
+        PACKAGE_ROOT / 'urdf' / 'create3_hospital.urdf.xacro'
+    ).read_text(encoding='utf-8')
+
+    assert "config', 'hospital_slam.yaml'" in stack_text
+    assert "'slam_params_file': slam_params_file" in stack_text
+
+    assert 'minimum_time_interval: 0.15' in slam_text
+    assert 'minimum_travel_distance: 0.20' in slam_text
+    assert 'minimum_travel_heading: 0.20' in slam_text
+    assert 'do_loop_closing: true' in slam_text
+
+    assert 'controller_frequency: 15.0' in nav2_text
+    assert 'vx_max: 0.75' in nav2_text
+    assert 'batch_size: 1000' in nav2_text
+    assert 'width: 6' in nav2_text
+    assert 'height: 6' in nav2_text
+
+    assert '<max_linear_velocity>0.8</max_linear_velocity>' in drivetrain_text
+    assert '<max_angular_velocity>1.2</max_angular_velocity>' in drivetrain_text
+    assert '<odom_publish_frequency>50</odom_publish_frequency>' in drivetrain_text
