@@ -85,12 +85,9 @@ exploration_manager:
     retry_period_sec: 1.0
     failed_goal_topic: /frontier_failed_goal
     completed_goal_topic: /frontier_completed_goal
-    odom_topic: /odom
 
-    # Count either Nav2 distance-remaining improvement or real odometry motion
-    # as progress. This avoids false watchdog trips during detours/recovery while
-    # still canceling a robot that is physically no longer moving.
+    # Keep the stall watchdog tied to actual progress toward the Nav2 goal.
+    # Odometry jitter/oscillation must not keep a genuinely stuck goal alive.
     stall_timeout_sec: 30.0
     stall_progress_epsilon_m: 0.02
-    stall_motion_epsilon_m: 0.05
     navigation_timeout_sec: 180.0
