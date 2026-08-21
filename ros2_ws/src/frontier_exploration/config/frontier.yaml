@@ -52,12 +52,17 @@ frontier_detector:
     # unresolved. These regions are revalidated after successful exploration.
     unreachable_frontier_radius_m: 0.50
 
-    # Navigation execution failure is temporary only. The region cools down and
-    # is retried later; it is never permanently discarded because of fail count.
+    # Navigation execution failure remains temporary only. Suppress the whole
+    # local stall region rather than just one nearly identical frontier point.
+    # Repeated failures in the same area escalate 60 -> 120 -> 240 s, capped at
+    # 240 s, while never turning an execution failure into permanent unreachable.
     failed_goal_topic: /frontier_failed_goal
     completed_goal_topic: /frontier_completed_goal
-    failed_goal_radius_m: 0.40
+    failed_goal_radius_m: 0.90
     failed_goal_cooldown_sec: 60.0
+    failed_goal_cooldown_multiplier: 2.0
+    failed_goal_cooldown_max_sec: 240.0
+    failed_goal_repeat_window_sec: 600.0
     completed_frontier_radius_m: 0.40
     completed_frontier_cooldown_sec: 15.0
     post_goal_settle_sec: 1.0
@@ -80,8 +85,12 @@ exploration_manager:
     retry_period_sec: 1.0
     failed_goal_topic: /frontier_failed_goal
     completed_goal_topic: /frontier_completed_goal
+    odom_topic: /odom
 
-    # Allow rotation/local recovery and reset the watchdog on small progress.
+    # Count either Nav2 distance-remaining improvement or real odometry motion
+    # as progress. This avoids false watchdog trips during detours/recovery while
+    # still canceling a robot that is physically no longer moving.
     stall_timeout_sec: 30.0
     stall_progress_epsilon_m: 0.02
+    stall_motion_epsilon_m: 0.05
     navigation_timeout_sec: 180.0
