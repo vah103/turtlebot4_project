@@ -141,6 +141,18 @@ def project_occupancy_to_fixed_canvas(
     }
 
 
+def occupancy_known_mask(data: list[int]) -> bytes:
+    """Encode only known/unknown state for lightweight snapshot deduplication."""
+    return bytes(1 if int(value) >= 0 else 0 for value in data)
+
+
+def known_mask_change_count(previous: bytes, current: bytes) -> int:
+    """Count cells whose known/unknown state changed between two fixed maps."""
+    if len(previous) != len(current):
+        raise ValueError('Known-mask dimensions do not match')
+    return sum(first != second for first, second in zip(previous, current))
+
+
 class SnapshotPolicy:
     """Trigger snapshots after enough movement or elapsed time."""
 
