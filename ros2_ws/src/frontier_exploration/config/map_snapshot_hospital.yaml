@@ -27,11 +27,15 @@ map_snapshot_recorder:
     # Fail loudly if explored/known cells exceed the predefined map limit.
     reject_known_outside_canvas: true
 
-    # Snapshot 000000 is the all-unknown fixed canvas. After that, capture the
-    # first valid SLAM state and then whenever either condition is met.
+    # Snapshot 000000 is the all-unknown fixed canvas. After that, evaluate a
+    # checkpoint after 0.5 m of travel or 15 s. A checkpoint is written only if
+    # at least 250 cells changed known/unknown state since the last saved sample.
+    # This removes long runs of near-duplicate maps while preserving meaningful
+    # exploration progress. The first valid and final snapshots are always saved.
     distance_interval_m: 0.5
-    time_interval_sec: 5.0
+    time_interval_sec: 15.0
     min_interval_sec: 1.0
+    min_known_mask_change_cells: 250
 
     # Pair each map with the nearest odometry sample by ROS timestamp.
     sync_tolerance_sec: 0.25
