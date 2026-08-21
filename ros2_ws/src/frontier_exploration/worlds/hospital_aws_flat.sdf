@@ -21,6 +21,14 @@
     </plugin>
     <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
 
+    <!-- Keep /clock deterministic even when the server is launched headless.
+         A target real-time factor of 1 prevents the physics clock from racing
+         ahead just because no Gazebo client is rendering the scene. -->
+    <physics name="hospital_realtime" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
     <gravity>0 0 -9.8</gravity>
 
     <scene>
