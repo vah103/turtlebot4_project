@@ -5,15 +5,16 @@ enabled. Frontier selection, safety filtering, and failed-region suppression sta
 inside the detector so navigation state and exploration policy remain separated.
 """
 
-from math import isfinite
+from math import hypot, isfinite
 
 import rclpy
 from action_msgs.msg import GoalStatus
 from geometry_msgs.msg import PointStamped
 from nav2_msgs.action import NavigateToPose
-from nav_msgs.msg import Path
+from nav_msgs.msg import Odometry, Path
 from rclpy.action import ActionClient
 from rclpy.node import Node
+from rclpy.qos import qos_profile_sensor_data
 
 
 class ExplorationManager(Node):
@@ -27,8 +28,10 @@ class ExplorationManager(Node):
         self.declare_parameter('retry_period_sec', 1.0)
         self.declare_parameter('failed_goal_topic', '/frontier_failed_goal')
         self.declare_parameter('completed_goal_topic', '/frontier_completed_goal')
+        self.declare_parameter('odom_topic', '/odom')
         self.declare_parameter('stall_timeout_sec', 30.0)
         self.declare_parameter('stall_progress_epsilon_m', 0.02)
+        self.declare_parameter('stall_motion_epsilon_m', 0.05)
         self.declare_parameter('navigation_timeout_sec', 180.0)
 
         path_topic = str(self.get_parameter('path_topic').value)
@@ -37,6 +40,7 @@ class ExplorationManager(Node):
         completed_goal_topic = str(
             self.get_parameter('completed_goal_topic').value
         )
+        odom_topic = str(self.get_parameter('odom_topic').value)
         retry_period = max(
             0.2, float(self.get_parameter('retry_period_sec').value)
         )
@@ -51,6 +55,12 @@ class ExplorationManager(Node):
             PointStamped, completed_goal_topic, 10
         )
         self.create_subscription(Path, path_topic, self._on_path, 10)
+        self.create_subscription(
+            Odometry,
+            odom_topic,
+            self._on_odom,
+            qos_profile_sensor_data,
+        )
         self.create_timer(retry_period, self._process_pending_goal)
         self.create_timer(1.0, self._watch_navigation)
 
@@ -61,6 +71,8 @@ class ExplorationManager(Node):
         self._goal_started_sec: float | None = None
         self._last_progress_sec: float | None = None
         self._best_distance_remaining: float | None = None
+        self._latest_odom_xy: tuple[float, float] | None = None
+        self._last_progress_odom_xy: tuple[float, float] | None = None
         self._cancel_requested = False
         self._cancel_reason: str | None = None
         self._awaiting_fresh_path = False
@@ -78,10 +90,14 @@ class ExplorationManager(Node):
         self.get_logger().info(
             f'Completed frontier feedback: {completed_goal_topic}'
         )
+        self.get_logger().info(f'Navigation motion source: {odom_topic}')
         self.get_logger().info(
             'Navigation progress watchdog: '
             f'timeout={float(self.get_parameter("stall_timeout_sec").value):.1f}s, '
-            f'epsilon={float(self.get_parameter("stall_progress_epsilon_m").value):.2f}m'
+            'distance-remaining epsilon='
+            f'{float(self.get_parameter("stall_progress_epsilon_m").value):.2f}m, '
+            'odom-motion epsilon='
+            f'{float(self.get_parameter("stall_motion_epsilon_m").value):.2f}m'
         )
 
         if bool(self.get_parameter('enable_navigation').value):
@@ -97,6 +113,29 @@ class ExplorationManager(Node):
 
     def _now_sec(self) -> float:
         return self.get_clock().now().nanoseconds / 1e9
+
+    def _on_odom(self, msg: Odometry) -> None:
+        position = msg.pose.pose.position
+        current = (float(position.x), float(position.y))
+        self._latest_odom_xy = current
+
+        if self._active_goal is None or self._cancel_requested:
+            return
+        if self._last_progress_odom_xy is None:
+            self._last_progress_odom_xy = current
+            return
+
+        motion_epsilon = max(
+            0.0, float(self.get_parameter('stall_motion_epsilon_m').value)
+        )
+        if motion_epsilon <= 0.0:
+            return
+        if hypot(
+            current[0] - self._last_progress_odom_xy[0],
+            current[1] - self._last_progress_odom_xy[1],
+        ) >= motion_epsilon:
+            self._last_progress_odom_xy = current
+            self._last_progress_sec = self._now_sec()
 
     def _on_path(self, path: Path) -> None:
         if not path.poses:
@@ -158,6 +197,7 @@ class ExplorationManager(Node):
         self._goal_started_sec = now
         self._last_progress_sec = now
         self._best_distance_remaining = None
+        self._last_progress_odom_xy = self._latest_odom_xy
         self._cancel_requested = False
         self._cancel_reason = None
 
@@ -212,11 +252,13 @@ class ExplorationManager(Node):
         if self._best_distance_remaining is None:
             self._best_distance_remaining = distance
             self._last_progress_sec = self._now_sec()
+            self._last_progress_odom_xy = self._latest_odom_xy
             return
 
         if distance < self._best_distance_remaining - epsilon:
             self._best_distance_remaining = distance
             self._last_progress_sec = self._now_sec()
+            self._last_progress_odom_xy = self._latest_odom_xy
 
     def _watch_navigation(self) -> None:
         if (
@@ -266,6 +308,7 @@ class ExplorationManager(Node):
             self.get_logger().error(f'Failed to request goal cancellation: {exc}')
             self._cancel_requested = False
             self._last_progress_sec = self._now_sec()
+            self._last_progress_odom_xy = self._latest_odom_xy
             return
 
         if not response.goals_canceling:
@@ -274,6 +317,7 @@ class ExplorationManager(Node):
             )
             self._cancel_requested = False
             self._last_progress_sec = self._now_sec()
+            self._last_progress_odom_xy = self._latest_odom_xy
             return
 
         self.get_logger().info(
@@ -318,6 +362,7 @@ class ExplorationManager(Node):
         self._goal_started_sec = None
         self._last_progress_sec = None
         self._best_distance_remaining = None
+        self._last_progress_odom_xy = None
         self._cancel_requested = False
         self._cancel_reason = None
         self._pending_goal = None
@@ -361,7 +406,8 @@ def main(args=None) -> None:
         pass
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == '__main__':
