@@ -5,6 +5,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -16,11 +17,15 @@ def generate_launch_description() -> LaunchDescription:
     default_rviz_config = os.path.join(
         package_dir, 'rviz', 'hospital_exploration.rviz'
     )
+    default_slam_params = os.path.join(
+        package_dir, 'config', 'hospital_slam.yaml'
+    )
 
     use_rviz = LaunchConfiguration('use_rviz')
     rviz_config_file = LaunchConfiguration('rviz_config_file')
     headless = LaunchConfiguration('headless')
     use_sim_time = LaunchConfiguration('use_sim_time')
+    slam_params_file = LaunchConfiguration('slam_params_file')
     slam_delay_sec = LaunchConfiguration('slam_delay_sec')
     nav2_delay_sec = LaunchConfiguration('nav2_delay_sec')
     x_pose = LaunchConfiguration('x_pose')
@@ -41,7 +46,10 @@ def generate_launch_description() -> LaunchDescription:
         }.items(),
     )
 
+    # The point-cloud map fallback exists only for the bundled RViz view. Do not
+    # spend CPU converting every full OccupancyGrid when the long run is headless.
     map_visualizer = Node(
+        condition=IfCondition(use_rviz),
         package='frontier_exploration',
         executable='hospital_map_cloud_visualizer',
         name='hospital_map_cloud_visualizer',
@@ -55,6 +63,7 @@ def generate_launch_description() -> LaunchDescription:
         ),
         launch_arguments={
             'use_sim_time': use_sim_time,
+            'slam_params_file': slam_params_file,
         }.items(),
     )
 
@@ -78,6 +87,11 @@ def generate_launch_description() -> LaunchDescription:
             ),
             DeclareLaunchArgument('headless', default_value='False'),
             DeclareLaunchArgument('use_sim_time', default_value='true'),
+            DeclareLaunchArgument(
+                'slam_params_file',
+                default_value=default_slam_params,
+                description='slam_toolbox parameters tuned for Hospital mapping.',
+            ),
             DeclareLaunchArgument(
                 'x_pose',
                 default_value='0.0',
