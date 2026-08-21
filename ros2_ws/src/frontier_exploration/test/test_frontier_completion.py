@@ -1,4 +1,5 @@
 from frontier_exploration.frontier_completion import (
+    AdaptiveFailureCooldownTracker,
     CompletionTracker,
     ConfirmedUnreachableTracker,
     DeferredRegionTracker,
@@ -203,6 +204,37 @@ def test_deferred_region_forgets_disappeared_frontier():
 
     assert tracker.retain_near([(1.2, 2.0)]) == 1
     assert len(tracker.regions) == 1
+
+
+def test_adaptive_failure_cooldown_escalates_and_caps():
+    tracker = AdaptiveFailureCooldownTracker(
+        radius_m=0.9,
+        base_cooldown_sec=60.0,
+        max_cooldown_sec=240.0,
+        multiplier=2.0,
+        repeat_window_sec=600.0,
+    )
+
+    assert tracker.record_failure(1.0, 2.0, 0.0) == (1, 60.0)
+    assert tracker.record_failure(1.5, 2.0, 100.0) == (2, 120.0)
+    assert tracker.record_failure(1.2, 2.2, 200.0) == (3, 240.0)
+    assert tracker.record_failure(1.1, 2.1, 300.0) == (4, 240.0)
+
+
+def test_adaptive_failure_cooldown_forgets_old_or_successful_region():
+    tracker = AdaptiveFailureCooldownTracker(
+        radius_m=0.9,
+        base_cooldown_sec=60.0,
+        max_cooldown_sec=240.0,
+        multiplier=2.0,
+        repeat_window_sec=100.0,
+    )
+
+    assert tracker.record_failure(1.0, 2.0, 0.0) == (1, 60.0)
+    assert tracker.record_failure(1.1, 2.0, 101.0) == (1, 60.0)
+    assert tracker.record_failure(1.2, 2.0, 120.0) == (2, 120.0)
+    assert tracker.clear_near(1.0, 2.0)
+    assert tracker.record_failure(1.1, 2.0, 121.0) == (1, 60.0)
 
 
 def test_failed_region_exhausts_after_bounded_attempts():
