@@ -32,6 +32,7 @@ setup(
                 'config/map_snapshot.yaml',
                 'config/map_snapshot_hospital.yaml',
                 'config/nav2_hospital_override.yaml',
+                'config/hospital_slam.yaml',
             ],
         ),
         (
