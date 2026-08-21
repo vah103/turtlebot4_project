@@ -4,7 +4,9 @@ from frontier_exploration.map_snapshot_core import (
     FixedCanvasSpec,
     SnapshotPolicy,
     create_unique_run_dir,
+    known_mask_change_count,
     nearest_timestamp_index,
+    occupancy_known_mask,
     occupancy_to_pgm,
     occupancy_to_signed_bytes,
     project_occupancy_to_fixed_canvas,
@@ -121,6 +123,20 @@ def test_projection_reports_known_cells_outside_canvas():
     assert fixed[1] == 0
     assert info['known_cells_copied'] == 1
     assert info['known_cells_outside_canvas'] == 1
+
+
+def test_known_mask_change_ignores_occupancy_probability_only_changes():
+    first = occupancy_known_mask([-1, 0, 100, -1])
+    second = occupancy_known_mask([-1, 50, 10, 0])
+
+    assert first == bytes([0, 1, 1, 0])
+    assert second == bytes([0, 1, 1, 1])
+    assert known_mask_change_count(first, second) == 1
+
+
+def test_known_mask_change_rejects_different_canvas_sizes():
+    with pytest.raises(ValueError, match='dimensions'):
+        known_mask_change_count(bytes([0, 1]), bytes([0, 1, 0]))
 
 
 def test_policy_captures_first_snapshot():
