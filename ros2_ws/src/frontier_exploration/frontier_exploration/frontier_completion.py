@@ -242,6 +242,79 @@ class DeferredRegionTracker:
         return removed
 
 
+class AdaptiveFailureCooldownTracker:
+    """Escalate temporary cooldown for repeated navigation failures in one area.
+
+    This is deliberately temporary state only. Repeated execution failures never
+    prove that a frontier is geometrically unreachable.
+    """
+
+    def __init__(
+        self,
+        radius_m: float,
+        base_cooldown_sec: float,
+        max_cooldown_sec: float,
+        multiplier: float,
+        repeat_window_sec: float,
+    ) -> None:
+        self.radius_m = max(0.0, float(radius_m))
+        self.base_cooldown_sec = max(0.0, float(base_cooldown_sec))
+        self.max_cooldown_sec = max(
+            self.base_cooldown_sec,
+            float(max_cooldown_sec),
+        )
+        self.multiplier = max(1.0, float(multiplier))
+        self.repeat_window_sec = max(0.0, float(repeat_window_sec))
+        self._regions: list[tuple[float, float, int, float]] = []
+
+    def _prune(self, now_sec: float) -> None:
+        if self.repeat_window_sec <= 0.0:
+            self._regions.clear()
+            return
+        self._regions = [
+            region
+            for region in self._regions
+            if now_sec - region[3] <= self.repeat_window_sec
+        ]
+
+    def record_failure(
+        self,
+        x: float,
+        y: float,
+        now_sec: float,
+    ) -> tuple[int, float]:
+        """Return repeat count and temporary cooldown for this failure region."""
+        self._prune(now_sec)
+        index = None
+        attempts = 1
+        for candidate_index, region in enumerate(self._regions):
+            if hypot(x - region[0], y - region[1]) <= self.radius_m:
+                index = candidate_index
+                attempts = region[2] + 1
+                break
+
+        cooldown = self.base_cooldown_sec * (
+            self.multiplier ** max(0, attempts - 1)
+        )
+        cooldown = min(cooldown, self.max_cooldown_sec)
+        entry = (float(x), float(y), attempts, float(now_sec))
+        if index is None:
+            self._regions.append(entry)
+        else:
+            self._regions[index] = entry
+        return attempts, cooldown
+
+    def clear_near(self, x: float, y: float) -> bool:
+        """Forget repeat history after successful navigation in this area."""
+        before = len(self._regions)
+        self._regions = [
+            region
+            for region in self._regions
+            if hypot(x - region[0], y - region[1]) > self.radius_m
+        ]
+        return len(self._regions) != before
+
+
 class FailureRegionTracker:
     """Legacy bounded-failure tracker retained for compatibility/tests.
 
