@@ -22,7 +22,9 @@ from frontier_exploration.map_snapshot_core import (
     FixedCanvasSpec,
     SnapshotPolicy,
     create_unique_run_dir,
+    known_mask_change_count,
     nearest_timestamp_index,
+    occupancy_known_mask,
     occupancy_to_pgm,
     occupancy_to_signed_bytes,
     project_occupancy_to_fixed_canvas,
@@ -33,7 +35,7 @@ from frontier_exploration.map_snapshot_core import (
 
 
 class MapSnapshotRecorder(Node):
-    """Save every selected SLAM state on one preconfigured fixed canvas."""
+    """Save selected SLAM states on one preconfigured fixed canvas."""
 
     def __init__(self) -> None:
         super().__init__('map_snapshot_recorder')
@@ -58,6 +60,7 @@ class MapSnapshotRecorder(Node):
         self.declare_parameter('distance_interval_m', 0.5)
         self.declare_parameter('time_interval_sec', 5.0)
         self.declare_parameter('min_interval_sec', 1.0)
+        self.declare_parameter('min_known_mask_change_cells', 250)
         self.declare_parameter('sync_tolerance_sec', 0.25)
         self.declare_parameter('odom_buffer_size', 400)
         self.declare_parameter('max_odom_step_m', 1.0)
@@ -121,6 +124,8 @@ class MapSnapshotRecorder(Node):
         self._sequence = 0
         self._recording_stopped = False
         self._completion_pending = False
+        self._last_saved_known_mask: bytes | None = None
+        self._redundant_skip_count = 0
 
         self._tf_buffer = Buffer()
         self._tf_listener = TransformListener(self._tf_buffer, self)
@@ -159,7 +164,8 @@ class MapSnapshotRecorder(Node):
         self.get_logger().info(
             'Recording fixed-canvas LaMa snapshots in '
             f'{self._run_dir}: {self._canvas.width}x{self._canvas.height}, '
-            f'{self._canvas.resolution:.4f} m/cell'
+            f'{self._canvas.resolution:.4f} m/cell; '
+            'redundant known-mask states will be skipped'
         )
 
     def _now_sec(self) -> float:
@@ -209,6 +215,7 @@ class MapSnapshotRecorder(Node):
             'projection': {
                 'known_cells_copied': 0,
                 'known_cells_outside_canvas': 0,
+                'known_mask_changed_since_last_saved': 0,
             },
             'odom_pose': None,
             'map_robot_pose': None,
@@ -305,6 +312,9 @@ class MapSnapshotRecorder(Node):
             'distance_interval_m': self._policy.distance_interval_m,
             'time_interval_sec': self._policy.time_interval_sec,
             'min_interval_sec': self._policy.min_interval_sec,
+            'min_known_mask_change_cells': int(
+                self.get_parameter('min_known_mask_change_cells').value
+            ),
             'max_odom_step_m': self._policy.max_odom_step_m,
             'pgm_unknown_value': 127,
             'raw_encoding': 'signed int8, fixed-canvas ROS row-major order',
@@ -479,6 +489,43 @@ class MapSnapshotRecorder(Node):
                 return False
             self.get_logger().warning(message)
 
+        current_known_mask = occupancy_known_mask(fixed_data)
+        if self._last_saved_known_mask is None:
+            changed_known_mask_cells = int(projection['known_cells_copied'])
+        else:
+            changed_known_mask_cells = known_mask_change_count(
+                self._last_saved_known_mask,
+                current_known_mask,
+            )
+        projection['known_mask_changed_since_last_saved'] = (
+            changed_known_mask_cells
+        )
+
+        min_change = max(
+            0,
+            int(self.get_parameter('min_known_mask_change_cells').value),
+        )
+        if (
+            not force
+            and self._last_saved_known_mask is not None
+            and changed_known_mask_cells < min_change
+        ):
+            # This was a real distance/time checkpoint, but the map did not gain
+            # enough new information to justify another LaMa training sample.
+            self._policy.record_capture(now)
+            self._redundant_skip_count += 1
+            if (
+                self._redundant_skip_count == 1
+                or self._redundant_skip_count % 20 == 0
+            ):
+                self.get_logger().info(
+                    'Skipped redundant snapshot candidate: '
+                    f'known-mask change={changed_known_mask_cells} cells '
+                    f'(< {min_change}); total skipped='
+                    f'{self._redundant_skip_count}'
+                )
+            return False
+
         prefix = f'{self._sequence:06d}'
         metadata = self._snapshot_metadata(
             map_msg,
@@ -504,12 +551,14 @@ class MapSnapshotRecorder(Node):
             return False
 
         self._policy.record_capture(now)
+        self._last_saved_known_mask = current_known_mask
         self._sequence += 1
         self.get_logger().info(
             f'Saved snapshot {prefix}: trigger={trigger}, '
             f'fixed={self._canvas.width}x{self._canvas.height}, '
             f'source={width}x{height}, '
-            f'known={projection["known_cells_copied"]}'
+            f'known={projection["known_cells_copied"]}, '
+            f'known_mask_change={changed_known_mask_cells}'
         )
         return True
 
@@ -544,7 +593,10 @@ class MapSnapshotRecorder(Node):
         )
         if saved:
             self._recording_stopped = True
-            self.get_logger().info('Final snapshot saved; recording complete')
+            self.get_logger().info(
+                'Final snapshot saved; recording complete; '
+                f'redundant candidates skipped={self._redundant_skip_count}'
+            )
         else:
             self.get_logger().error(
                 'Final snapshot write failed; waiting for the next synchronized '
