@@ -16,6 +16,7 @@ from nav_msgs.msg import OccupancyGrid, Path
 from visualization_msgs.msg import Marker, MarkerArray
 
 from frontier_exploration.frontier_completion import (
+    AdaptiveFailureCooldownTracker,
     ConfirmedUnreachableTracker,
     DeferredRegionTracker,
 )
@@ -42,6 +43,9 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
         self.declare_parameter('frontier_goal_standoff_m', 0.30)
         self.declare_parameter('costmap_blocked_retry_period_sec', 10.0)
         self.declare_parameter('costmap_blocked_max_checks', 4)
+        self.declare_parameter('failed_goal_cooldown_multiplier', 2.0)
+        self.declare_parameter('failed_goal_cooldown_max_sec', 240.0)
+        self.declare_parameter('failed_goal_repeat_window_sec', 600.0)
 
         unreachable_radius = float(
             self.get_parameter('unreachable_frontier_radius_m').value
@@ -56,6 +60,21 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
             ),
             retry_period_sec=float(
                 self.get_parameter('costmap_blocked_retry_period_sec').value
+            ),
+        )
+        self._failure_cooldown_tracker = AdaptiveFailureCooldownTracker(
+            radius_m=float(self.get_parameter('failed_goal_radius_m').value),
+            base_cooldown_sec=float(
+                self.get_parameter('failed_goal_cooldown_sec').value
+            ),
+            max_cooldown_sec=float(
+                self.get_parameter('failed_goal_cooldown_max_sec').value
+            ),
+            multiplier=float(
+                self.get_parameter('failed_goal_cooldown_multiplier').value
+            ),
+            repeat_window_sec=float(
+                self.get_parameter('failed_goal_repeat_window_sec').value
             ),
         )
         self.get_logger().info(
@@ -73,6 +92,13 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
             f'{self._costmap_deferred_tracker.max_checks} checks spaced by '
             f'{self._costmap_deferred_tracker.retry_period_sec:.1f}s before '
             'confirming unreachable'
+        )
+        self.get_logger().info(
+            'Navigation-failure region cooldown: '
+            f'radius={self._failure_cooldown_tracker.radius_m:.2f}m, '
+            f'base={self._failure_cooldown_tracker.base_cooldown_sec:.1f}s, '
+            f'max={self._failure_cooldown_tracker.max_cooldown_sec:.1f}s, '
+            f'multiplier={self._failure_cooldown_tracker.multiplier:.1f}x'
         )
 
     def _frontier_is_confirmed_unreachable(
@@ -435,6 +461,12 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
 
     def _on_completed_goal(self, msg: PointStamped) -> None:
         """Successful exploration invalidates stale blocked/unreachable evidence."""
+        frontier_xy = self._selected_frontier_xy()
+        if frontier_xy is not None:
+            self._failure_cooldown_tracker.clear_near(
+                frontier_xy[0], frontier_xy[1]
+            )
+
         cleared_unreachable = self._unreachable_tracker.clear_all()
         cleared_deferred = self._costmap_deferred_tracker.clear_all()
         if cleared_unreachable or cleared_deferred:
@@ -448,18 +480,17 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
     def _on_failed_goal(self, msg: PointStamped) -> None:
         """Navigation execution failure causes cooldown only, never exhaustion."""
         self._completion_tracker.observe_busy()
-        cooldown = max(
-            0.0, float(self.get_parameter('failed_goal_cooldown_sec').value)
-        )
-        radius = max(
-            0.0, float(self.get_parameter('failed_goal_radius_m').value)
-        )
         frontier_xy = self._selected_frontier_xy()
         if frontier_xy is None:
             frontier_xy = (float(msg.point.x), float(msg.point.y))
 
-        # Replace any nearby cooldown with a fresh one rather than accumulating
-        # duplicate suppression entries.
+        now = self._now_sec()
+        attempts, cooldown = self._failure_cooldown_tracker.record_failure(
+            frontier_xy[0], frontier_xy[1], now
+        )
+        radius = self._failure_cooldown_tracker.radius_m
+
+        # Replace any nearby active suppression with the new adaptive expiry.
         self._failed_frontiers = [
             region
             for region in self._failed_frontiers
@@ -468,12 +499,13 @@ class StrictCompletionFrontierDetector(RetryFrontierDetector):
         ]
         if cooldown > 0.0:
             self._failed_frontiers.append(
-                (frontier_xy[0], frontier_xy[1], self._now_sec() + cooldown)
+                (frontier_xy[0], frontier_xy[1], now + cooldown)
             )
 
         self.get_logger().warning(
             'Navigation to reachable frontier failed; applying temporary '
-            f'cooldown={cooldown:.1f}s at x={frontier_xy[0]:.2f}, '
+            f'region cooldown={cooldown:.1f}s, repeat={attempts}, '
+            f'radius={radius:.2f}m at x={frontier_xy[0]:.2f}, '
             f'y={frontier_xy[1]:.2f}. This does NOT mark it unreachable.'
         )
         self._reset_selection_and_replan(
