@@ -3,7 +3,6 @@ from frontier_exploration.frontier_completion import (
     CompletionTracker,
     ConfirmedUnreachableTracker,
     DeferredRegionTracker,
-    FailureRegionTracker,
 )
 
 
@@ -235,21 +234,3 @@ def test_adaptive_failure_cooldown_forgets_old_or_successful_region():
     assert tracker.record_failure(1.2, 2.0, 120.0) == (2, 120.0)
     assert tracker.clear_near(1.0, 2.0)
     assert tracker.record_failure(1.1, 2.0, 121.0) == (1, 60.0)
-
-
-def test_failed_region_exhausts_after_bounded_attempts():
-    tracker = FailureRegionTracker(radius_m=0.4, max_attempts=2)
-
-    assert tracker.record_failure(1.0, 2.0) == (1, False)
-    assert not tracker.is_exhausted(1.2, 2.0)
-    assert tracker.record_failure(1.2, 2.0) == (2, True)
-    assert tracker.is_exhausted(1.0, 2.0)
-    assert not tracker.is_exhausted(2.0, 2.0)
-
-
-def test_success_clears_failed_region_history():
-    tracker = FailureRegionTracker(radius_m=0.4, max_attempts=1)
-    tracker.record_failure(1.0, 2.0)
-
-    tracker.clear_near(1.1, 2.0)
-    assert not tracker.is_exhausted(1.0, 2.0)

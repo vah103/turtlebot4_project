@@ -19,7 +19,7 @@ SLAM /map
   -> goal result -> map settle -> frontier refresh
 ```
 
-Baseline chạy trực tiếp trên raw SLAM `/map`. Node `frontier_map_preprocessor` vẫn được giữ trong package cho thí nghiệm riêng nhưng **không còn nằm trong launch baseline mặc định**, vì WFD đã tự giới hạn tìm kiếm trong reachable free-space và việc sửa occupancy map trước detector sẽ làm baseline kém thuần hơn.
+Baseline chạy trực tiếp trên raw SLAM `/map`. Node `frontier_map_preprocessor` vẫn được giữ cho thí nghiệm riêng dưới `frontier_exploration/experimental/` nhưng **không còn nằm trong launch baseline mặc định**, vì WFD đã tự giới hạn tìm kiếm trong reachable free-space và việc sửa occupancy map trước detector sẽ làm baseline kém thuần hơn.
 
 Điểm quan trọng: robot **không được gửi thẳng tới frontier representative**. Representative dùng để mô tả/xếp frontier; navigation goal được materialize từ một ô `free` ở phía explored-side và phải qua Nav2 costmap filter trước khi planner kiểm tra path.
 
@@ -38,7 +38,7 @@ Core ROS-independent nằm trong `frontier_exploration/frontier_core.py`.
 
 ## Safe navigation goal
 
-Với mỗi frontier segment, detector tìm các ô `free` lân cận ở phía explored-side và loại các goal bị global/local Nav2 costmap đánh giá blocked. Trong số còn lại, detector ưu tiên free goal vừa đủ xa robot và gần centroid nhất; nếu frontier representative đã đủ xa nhưng free goal phía trong chỉ hơi gần hơn ngưỡng, detector dùng safe fallback gần centroid thay vì loại cả frontier.
+Với mỗi frontier segment, detector tìm các ô `free` lân cận ở phía explored-side và loại các goal bị global/local Nav2 costmap đánh giá blocked. Trong số còn lại, detector ưu tiên free goal sâu hơn trong vùng known-free rồi mới fallback về free cell sát frontier.
 
 Candidate được xếp theo khoảng cách Euclid từ robot tới frontier representative, sau đó `ComputePathToPose` kiểm tra lần lượt. Vì vậy baseline vẫn là **Nearest Reachable Frontier**, không phải MRTSP/MapEx scoring.
 
@@ -54,7 +54,7 @@ Sau `SUCCEEDED`:
 4. chờ `post_goal_settle_sec`;
 5. chạy WFD và chọn frontier mới.
 
-Sau failure/stall, frontier đúng của goal đang thực thi được suppress tạm thời rồi detector chuyển sang candidate khác. Khi cooldown hết, frontier được thử lại; sau `failed_goal_max_attempts` lần thất bại, vùng đó được đánh dấu exhausted để exploration vẫn có thể kết thúc. Completed-frontier suppression chỉ ngắn hạn để chống immediate loop.
+Sau failure/stall, vùng frontier được suppress tạm thời rồi detector chuyển sang candidate khác. Navigation failure chỉ tạo cooldown tạm thời; failure lặp lại làm cooldown tăng dần nhưng **không** được dùng làm bằng chứng để đánh dấu frontier unreachable. Một frontier chỉ được xác nhận unreachable khi toàn bộ safe goal không có path qua `ComputePathToPose`, hoặc sau các costmap-blocked check được giãn thời gian vẫn không tìm được safe goal. Completed-frontier suppression chỉ ngắn hạn để chống immediate loop.
 
 ## Stopping condition
 
@@ -99,10 +99,12 @@ Progress watchdog:
 ```yaml
 stall_timeout_sec: 30.0
 stall_progress_epsilon_m: 0.02
+stall_motion_epsilon_m: 0.08
+stall_rotation_epsilon_rad: 0.35
 navigation_timeout_sec: 180.0
 ```
 
-Timeout 30 s cho phép Nav2 có thời gian xoay/recovery; timer chỉ reset khi `distance_remaining` cải thiện có ý nghĩa.
+Timeout 30 s được reset khi `distance_remaining` cải thiện có ý nghĩa hoặc odometry cho thấy robot thực sự tịnh tiến/xoay; hard timeout 180 s vẫn giới hạn tổng thời gian cho một goal.
 
 ## Tham số chính
 
@@ -113,10 +115,16 @@ frontier_detector:
   local_costmap_topic: /local_costmap/costmap
   segment_radius_m: 0.75
   min_selection_distance_m: 0.60
+  frontier_goal_standoff_m: 0.30
   costmap_occ_threshold: 65
-  failed_goal_radius_m: 0.40
+  unreachable_frontier_radius_m: 0.50
+  costmap_blocked_retry_period_sec: 10.0
+  costmap_blocked_max_checks: 4
+  failed_goal_radius_m: 0.90
   failed_goal_cooldown_sec: 60.0
-  failed_goal_max_attempts: 2
+  failed_goal_cooldown_multiplier: 2.0
+  failed_goal_cooldown_max_sec: 240.0
+  failed_goal_repeat_window_sec: 600.0
   completed_frontier_radius_m: 0.40
   completed_frontier_cooldown_sec: 15.0
   post_goal_settle_sec: 1.0
@@ -128,9 +136,13 @@ frontier_detector:
   completion_shutdown_delay_sec: 0.5
 
 exploration_manager:
+  odom_topic: /odom
   enable_navigation: false
   stall_timeout_sec: 30.0
   stall_progress_epsilon_m: 0.02
+  stall_motion_epsilon_m: 0.08
+  stall_rotation_epsilon_rad: 0.35
+  stall_odom_max_step_m: 1.0
 ```
 
 ## Build và test

@@ -8,10 +8,7 @@ from nav_msgs.msg import OccupancyGrid
 from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
 from std_msgs.msg import Bool
 
-from frontier_exploration.frontier_completion import (
-    CompletionTracker,
-    FailureRegionTracker,
-)
+from frontier_exploration.frontier_completion import CompletionTracker
 from frontier_exploration.frontier_core import candidate_goal_cells
 from frontier_exploration.frontier_detector import (
     Candidate,
@@ -32,7 +29,6 @@ class RetryFrontierDetector(FrontierDetector):
         self.declare_parameter('completed_goal_topic', '/frontier_completed_goal')
         self.declare_parameter('failed_goal_radius_m', 0.40)
         self.declare_parameter('failed_goal_cooldown_sec', 60.0)
-        self.declare_parameter('failed_goal_max_attempts', 2)
         self.declare_parameter('completed_frontier_radius_m', 0.40)
         self.declare_parameter('completed_frontier_cooldown_sec', 15.0)
         self.declare_parameter('post_goal_settle_sec', 1.0)
@@ -70,12 +66,6 @@ class RetryFrontierDetector(FrontierDetector):
             ),
             check_period_sec=float(
                 self.get_parameter('completion_check_period_sec').value
-            ),
-        )
-        self._failure_tracker = FailureRegionTracker(
-            radius_m=float(self.get_parameter('failed_goal_radius_m').value),
-            max_attempts=int(
-                self.get_parameter('failed_goal_max_attempts').value
             ),
         )
 
@@ -184,16 +174,8 @@ class RetryFrontierDetector(FrontierDetector):
             )
         )
 
-    def _is_exhausted_candidate(self, candidate: Candidate) -> bool:
-        if self._latest_map is None:
-            return False
-        point = _cell_to_world(candidate[0], self._latest_map)
-        return self._failure_tracker.is_exhausted(point.x, point.y)
-
     def _is_unavailable_candidate(self, candidate: Candidate) -> bool:
-        return self._is_temporarily_suppressed_candidate(
-            candidate
-        ) or self._is_exhausted_candidate(candidate)
+        return self._is_temporarily_suppressed_candidate(candidate)
 
     def _on_map(self, msg: OccupancyGrid) -> None:
         """Freeze candidate indices against one map snapshot until goal outcome."""
@@ -305,7 +287,6 @@ class RetryFrontierDetector(FrontierDetector):
         self._completion_tracker.observe_busy()
         frontier_xy = self._selected_frontier_xy()
         if frontier_xy is not None:
-            self._failure_tracker.clear_near(frontier_xy[0], frontier_xy[1])
             cooldown = max(
                 0.0,
                 float(
@@ -328,6 +309,7 @@ class RetryFrontierDetector(FrontierDetector):
         )
 
     def _on_failed_goal(self, msg: PointStamped) -> None:
+        """Temporarily suppress a navigation failure; never exhaust it permanently."""
         self._completion_tracker.observe_busy()
         cooldown = max(
             0.0, float(self.get_parameter('failed_goal_cooldown_sec').value)
@@ -335,23 +317,7 @@ class RetryFrontierDetector(FrontierDetector):
         frontier_xy = self._selected_frontier_xy()
         if frontier_xy is None:
             frontier_xy = (float(msg.point.x), float(msg.point.y))
-        attempts, exhausted = self._failure_tracker.record_failure(
-            frontier_xy[0], frontier_xy[1]
-        )
-        if exhausted:
-            failed_radius = self._failure_tracker.radius_m
-            self._failed_frontiers = [
-                region
-                for region in self._failed_frontiers
-                if hypot(frontier_xy[0] - region[0], frontier_xy[1] - region[1])
-                > failed_radius
-            ]
-            self.get_logger().warning(
-                'Exhausting repeatedly failed frontier region: '
-                f'x={frontier_xy[0]:.2f}, y={frontier_xy[1]:.2f}, '
-                f'attempts={attempts}'
-            )
-        elif cooldown > 0.0:
+        if cooldown > 0.0:
             self._failed_frontiers.append(
                 (frontier_xy[0], frontier_xy[1], self._now_sec() + cooldown)
             )
@@ -359,7 +325,6 @@ class RetryFrontierDetector(FrontierDetector):
             self.get_logger().warning(
                 'Temporarily suppressing failed frontier region: '
                 f'x={frontier_xy[0]:.2f}, y={frontier_xy[1]:.2f}, '
-                f'attempt={attempts}/{self._failure_tracker.max_attempts}, '
                 f'cooldown={cooldown:.1f}s'
             )
         self._reset_selection_and_replan(
@@ -371,7 +336,7 @@ class RetryFrontierDetector(FrontierDetector):
             return
         suppression_expired = self._prune_suppression_regions()
 
-        # If every candidate from the frozen snapshot was exhausted, consume the
+        # If every candidate from the frozen snapshot was consumed, use the
         # newest deferred map instead of staying idle on obsolete candidates.
         if (
             self._selected_index is None
@@ -416,7 +381,7 @@ class RetryFrontierDetector(FrontierDetector):
 
         if skipped:
             self.get_logger().info(
-                f'Skipped {skipped} suppressed or exhausted candidate(s)'
+                f'Skipped {skipped} temporarily suppressed candidate(s)'
             )
 
         if self._candidate_queue:
@@ -426,7 +391,7 @@ class RetryFrontierDetector(FrontierDetector):
         self._check_exploration_completion()
 
     def _check_exploration_completion(self) -> None:
-        """Finish after the planner repeatedly exhausts all usable frontiers."""
+        """Finish after stable checks find no usable frontier candidates."""
         if self._exploration_complete:
             return
         if self._latest_map is None:
@@ -448,8 +413,8 @@ class RetryFrontierDetector(FrontierDetector):
             return
 
         now = self._now_sec()
-        # A temporarily hidden frontier must either reappear or exhaust its
-        # bounded retries before the mission can end.
+        # A temporarily hidden frontier must reappear after its cooldown before
+        # completion can be declared.
         self._prune_suppression_regions()
         completion_blocked = bool(
             self._completed_frontiers or self._failed_frontiers

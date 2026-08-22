@@ -17,14 +17,15 @@ Nguồn mô tả chính: [`report/2026-08-03.md`](../../report/2026-08-03.md).
 
 - [`scenario_matrix.md`](scenario_matrix.md): ma trận các world và hạng mục đã xác minh.
 - [`verification_commands.md`](verification_commands.md): lệnh kiểm tra và quy trình capture dùng cho lần chạy tái lập tiếp theo.
+- `runs/20260803-140959/`: raw odometry trước/sau của run Stage 4 đã được gom từ thư mục evidence cũ. File `cmd_forward.txt` cũ rỗng 0 byte nên không được giữ lại.
 
 ## Giới hạn bằng chứng
 
-Phiên 03/08 không lưu raw terminal logs, rosbag hoặc ảnh RViz/Gazebo trong repository. Vì vậy thư mục này **không tuyên bố** các artifact đó đang tồn tại.
+Phiên 03/08 không lưu rosbag hoặc ảnh RViz/Gazebo trong repository. Raw evidence hiện có chỉ được giữ đúng theo những artifact thực sự tồn tại; không bổ sung dữ liệu giả hoặc suy diễn.
 
 Các tài liệu ở đây có hai mục đích:
 
 1. khóa phạm vi những gì đã thực sự được xác minh;
 2. chuẩn hóa cách capture raw evidence ở lần chạy tiếp theo để Stage 5 có dữ liệu tái lập tốt hơn.
 
-Khi có raw artifact mới, lưu dưới thư mục con theo ngày hoặc run ID và cập nhật manifest này. Không thay thế kết quả đã xác minh bằng dữ liệu giả lập hoặc mô tả không có nguồn.
+Khi có raw artifact mới, lưu dưới `runs/<run_id>/` và cập nhật manifest này. Không thay thế kết quả đã xác minh bằng dữ liệu giả lập hoặc mô tả không có nguồn.

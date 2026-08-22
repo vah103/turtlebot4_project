@@ -1,8 +1,10 @@
-"""TF-resilient entry point for the frontier map preprocessor."""
+"""TF-resilient entry point for the experimental frontier map preprocessor."""
 
 import rclpy
 
-from frontier_exploration.frontier_map_preprocessor import FrontierMapPreprocessor
+from frontier_exploration.experimental.frontier_map_preprocessor import (
+    FrontierMapPreprocessor,
+)
 from frontier_exploration.tf_pose import lookup_robot_xy
 
 

@@ -18,10 +18,8 @@ setup(
                 'launch/map_snapshot_recorder.launch.py',
                 'launch/hospital_map_snapshot_recorder.launch.py',
                 'launch/tb4_simulation_safe.launch.py',
-                'launch/hospital_simulation.launch.py',
                 'launch/hospital_flat_simulation.launch.py',
                 'launch/hospital_nav2.launch.py',
-                'launch/hospital_stack.launch.py',
                 'launch/hospital_flat_stack.launch.py',
             ],
         ),
@@ -48,10 +46,7 @@ setup(
         ),
         (
             'share/' + package_name + '/worlds',
-            [
-                'worlds/hospital_aws.sdf',
-                'worlds/hospital_aws_flat.sdf',
-            ],
+            ['worlds/hospital_aws_flat.sdf'],
         ),
     ],
     install_requires=['setuptools'],
@@ -65,7 +60,7 @@ setup(
         'console_scripts': [
             (
                 'frontier_map_preprocessor = '
-                'frontier_exploration.frontier_map_preprocessor_resilient:main'
+                'frontier_exploration.experimental.frontier_map_preprocessor_resilient:main'
             ),
             (
                 'frontier_detector = '
