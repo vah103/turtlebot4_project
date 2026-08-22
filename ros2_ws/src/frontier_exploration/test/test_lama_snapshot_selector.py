@@ -4,8 +4,8 @@ from pathlib import Path
 import pytest
 
 from frontier_exploration.lama_snapshot_selector import (
-    load_dataset_manifest,
-    materialize_selection,
+    load_raw_snapshot_records,
+    materialize_raw_selection,
     select_records_by_known_fraction,
 )
 
@@ -15,12 +15,44 @@ def _records(count: int) -> list[dict]:
     return [
         {
             'frame': f'{index:06d}',
-            'input': f'model_input/{index:06d}.png',
-            'mask': f'model_mask/{index:06d}.png',
+            'raw': f'{index:06d}_occupancy.bin',
+            'metadata': f'{index:06d}_metadata.json',
+            'pgm': f'{index:06d}_map.pgm',
             'known_fraction': index / denominator,
         }
         for index in range(count)
     ]
+
+
+def _write_raw_run(run_dir: Path, known_cells: list[int], total_cells: int = 100) -> None:
+    run_dir.mkdir(parents=True)
+    (run_dir / 'run.json').write_text(
+        json.dumps(
+            {
+                'fixed_canvas': {
+                    'width': total_cells,
+                    'height': 1,
+                    'resolution': 0.05,
+                    'origin': {'x': 0.0, 'y': 0.0},
+                }
+            }
+        ),
+        encoding='utf-8',
+    )
+
+    for index, count in enumerate(known_cells):
+        frame = f'{index:06d}'
+        (run_dir / f'{frame}_occupancy.bin').write_bytes(bytes([255]) * total_cells)
+        (run_dir / f'{frame}_map.pgm').write_bytes(b'pgm')
+        (run_dir / f'{frame}_metadata.json').write_text(
+            json.dumps(
+                {
+                    'sequence': index,
+                    'projection': {'known_cells_copied': count},
+                }
+            ),
+            encoding='utf-8',
+        )
 
 
 def test_select_even_known_fraction_targets_keeps_endpoints() -> None:
@@ -39,7 +71,6 @@ def test_select_even_known_fraction_targets_keeps_endpoints() -> None:
 
 def test_select_twenty_is_unique_and_chronological_with_plateaus() -> None:
     records = _records(60)
-    # Simulate several stretches where map coverage barely changes.
     for index in range(10, 20):
         records[index]['known_fraction'] = records[10]['known_fraction']
     for index in range(35, 43):
@@ -60,33 +91,44 @@ def test_select_rejects_more_snapshots_than_available() -> None:
         select_records_by_known_fraction(_records(19), count=20)
 
 
-def test_materialize_selection_copies_input_mask_and_writes_manifest(
+def test_load_raw_records_uses_metadata_without_preprocessed_pngs(
     tmp_path: Path,
 ) -> None:
     run_dir = tmp_path / 'run'
-    input_dir = run_dir / 'model_input'
-    mask_dir = run_dir / 'model_mask'
-    input_dir.mkdir(parents=True)
-    mask_dir.mkdir(parents=True)
+    _write_raw_run(run_dir, [0, 25, 50, 100])
 
-    records = _records(4)
-    manifest = run_dir / 'lama_dataset_manifest.jsonl'
-    with manifest.open('w', encoding='utf-8') as stream:
-        for record in records:
-            stream.write(json.dumps(record) + '\n')
-        
-    for record in records:
-        (run_dir / record['input']).write_bytes(b'input-' + record['frame'].encode())
-        (run_dir / record['mask']).write_bytes(b'mask-' + record['frame'].encode())
+    records = load_raw_snapshot_records(run_dir)
 
-    loaded = load_dataset_manifest(run_dir)
-    selected = select_records_by_known_fraction(loaded, count=3)
-    output_dir = materialize_selection(run_dir, selected, 'lama_eval_3')
+    assert [record['frame'] for record in records] == [
+        '000000',
+        '000001',
+        '000002',
+        '000003',
+    ]
+    assert [record['known_fraction'] for record in records] == [
+        0.0,
+        0.25,
+        0.5,
+        1.0,
+    ]
+    assert not (run_dir / 'model_input').exists()
+
+
+def test_materialize_raw_selection_is_preprocess_ready(tmp_path: Path) -> None:
+    run_dir = tmp_path / 'run'
+    _write_raw_run(run_dir, [0, 20, 40, 60, 80, 100])
+
+    records = load_raw_snapshot_records(run_dir)
+    selected = select_records_by_known_fraction(records, count=3)
+    output_dir = materialize_raw_selection(run_dir, selected, 'lama_eval_3')
 
     summary = json.loads((output_dir / 'selection.json').read_text())
     assert summary['count'] == 3
     assert summary['frames'][0] == '000000'
-    assert summary['frames'][-1] == '000003'
-    assert len(list((output_dir / 'model_input').glob('*.png'))) == 3
-    assert len(list((output_dir / 'model_mask').glob('*.png'))) == 3
+    assert summary['frames'][-1] == '000005'
+    assert (output_dir / 'run.json').is_file()
+    assert len(list(output_dir.glob('*_occupancy.bin'))) == 3
+    assert len(list(output_dir.glob('*_metadata.json'))) == 3
+    assert len(list(output_dir.glob('*_map.pgm'))) == 3
     assert len((output_dir / 'selection_manifest.jsonl').read_text().splitlines()) == 3
+    assert not (output_dir / 'model_input').exists()
