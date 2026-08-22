@@ -17,6 +17,11 @@ controller_server:
     enable_stamped_cmd_vel: false
     controller_frequency: 15.0
     FollowPath:
+      # Match MPPI's model timestep to the 15 Hz controller period. Keep the
+      # rollout horizon near the standard 2.8 s: 42 * 0.0666667 ~= 2.8 s.
+      model_dt: 0.0666667
+      time_steps: 42
+
       # Conservative mapping speed. The Gazebo drivetrain has a slightly higher
       # hard cap so Nav2/velocity_smoother, not the physics plugin, is the limiter.
       vx_max: 0.75
@@ -25,8 +30,8 @@ controller_server:
       wz_max: 1.0
       wz_std: 0.25
 
-      # Halve the default sampling workload. At 0.75 m/s the standard 2.8 s
-      # horizon spans ~2.1 m, so a huge batch and 10 m local costmap are wasteful.
+      # Halve the default sampling workload. At 0.75 m/s the ~2.8 s horizon
+      # spans ~2.1 m, so a huge batch and 10 m local costmap are wasteful.
       batch_size: 1000
       prune_distance: 3.0
       GoalCritic:
