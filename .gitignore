@@ -25,6 +25,7 @@ models/lama/
 results/lama/
 data/lama_runs/*
 !data/lama_runs/README.md
+data/robot_status/
 
 # Common model/checkpoint payloads
 *.ckpt
