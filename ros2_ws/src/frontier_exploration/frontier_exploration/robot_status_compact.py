@@ -4,6 +4,7 @@ import math
 
 import rclpy
 from geometry_msgs.msg import PointStamped
+from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
 
 from frontier_exploration.robot_status_core import (
     STATUS_NOT_OK,
@@ -21,11 +22,16 @@ class CompactRobotStatusMonitor(RobotStatusMonitor):
         self.declare_parameter('selected_frontier_topic', '/frontier_selected')
         self._frontier: tuple[float, float] | None = None
         self._frontier_frame = 'map'
+        frontier_qos = QoSProfile(
+            depth=1,
+            reliability=ReliabilityPolicy.RELIABLE,
+            durability=DurabilityPolicy.TRANSIENT_LOCAL,
+        )
         self.create_subscription(
             PointStamped,
             str(self.get_parameter('selected_frontier_topic').value),
             self._on_selected_frontier,
-            10,
+            frontier_qos,
         )
 
     def _on_selected_frontier(self, msg: PointStamped) -> None:
@@ -144,6 +150,12 @@ class CompactRobotStatusMonitor(RobotStatusMonitor):
             '=' * 72,
         ]
         return '\n'.join(lines) + '\n'
+
+    def _write_jsonl(self, state: dict) -> None:
+        enriched = dict(state)
+        enriched['selected_frontier'] = self._frontier
+        enriched['selected_frontier_frame'] = self._frontier_frame
+        super()._write_jsonl(enriched)
 
 
 def main(args=None) -> None:
