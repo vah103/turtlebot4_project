@@ -95,6 +95,10 @@ setup(
                 'prepare_lama_dataset = '
                 'frontier_exploration.lama_dataset_preprocessor:main'
             ),
+            (
+                'select_lama_snapshots = '
+                'frontier_exploration.lama_snapshot_selector:main'
+            ),
         ],
     },
 )
