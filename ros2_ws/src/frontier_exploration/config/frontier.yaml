@@ -16,6 +16,7 @@ frontier_detector:
     local_costmap_topic: /local_costmap/costmap
     marker_topic: /frontier_markers
     path_topic: /frontier_selected_path
+    selected_frontier_topic: /frontier_selected
     robot_frame: base_link
     odom_frame: odom
     planner_action: /compute_path_to_pose

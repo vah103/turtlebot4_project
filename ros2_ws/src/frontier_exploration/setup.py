@@ -91,6 +91,14 @@ setup(
                 'frontier_exploration.robot_status_monitor:main'
             ),
             (
+                'robot_status = '
+                'frontier_exploration.robot_status_compact:main'
+            ),
+            (
+                'robot_status_compact = '
+                'frontier_exploration.robot_status_compact:main'
+            ),
+            (
                 'hospital_map_cloud_visualizer = '
                 'frontier_exploration.hospital_map_cloud_visualizer:main'
             ),

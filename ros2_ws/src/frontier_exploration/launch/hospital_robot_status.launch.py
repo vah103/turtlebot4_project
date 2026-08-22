@@ -22,7 +22,7 @@ def generate_launch_description() -> LaunchDescription:
 
     monitor = Node(
         package='frontier_exploration',
-        executable='robot_status_monitor',
+        executable='robot_status_compact',
         name='robot_status_monitor',
         output='screen',
         emulate_tty=True,

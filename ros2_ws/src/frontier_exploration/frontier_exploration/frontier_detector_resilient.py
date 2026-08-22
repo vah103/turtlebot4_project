@@ -3,6 +3,8 @@
 from math import atan2, cos, hypot, sin
 
 import rclpy
+from geometry_msgs.msg import PointStamped
+from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
 
 from frontier_exploration.frontier_detector import _cell_to_world
 from frontier_exploration.frontier_detector_strict_completion import (
@@ -46,7 +48,19 @@ class ResilientFrontierDetector(StrictCompletionFrontierDetector):
     def __init__(self) -> None:
         super().__init__()
         self.declare_parameter('odom_frame', 'odom')
+        self.declare_parameter('selected_frontier_topic', '/frontier_selected')
         self._split_tf_notice_shown = False
+        selected_frontier_qos = QoSProfile(
+            depth=1,
+            reliability=ReliabilityPolicy.RELIABLE,
+            durability=DurabilityPolicy.TRANSIENT_LOCAL,
+        )
+        self._selected_frontier_pub = self.create_publisher(
+            PointStamped,
+            str(self.get_parameter('selected_frontier_topic').value),
+            selected_frontier_qos,
+        )
+        self._last_published_selected_index: int | None = None
         self._planner_client = _FrontierFacingPlannerClient(
             self,
             self._planner_client,
@@ -55,6 +69,25 @@ class ResilientFrontierDetector(StrictCompletionFrontierDetector):
             'Frontier planner goals face from the safe navigation goal toward '
             'the selected frontier'
         )
+
+    def _publish_selected_frontier(self) -> None:
+        if self._selected_index is None or self._latest_map is None:
+            return
+        if self._selected_index == self._last_published_selected_index:
+            return
+
+        point = _cell_to_world(self._selected_index, self._latest_map)
+        msg = PointStamped()
+        msg.header = self._latest_map.header
+        msg.point.x = float(point.x)
+        msg.point.y = float(point.y)
+        msg.point.z = 0.0
+        self._selected_frontier_pub.publish(msg)
+        self._last_published_selected_index = self._selected_index
+
+    def _on_plan_result(self, future, candidate) -> None:
+        super()._on_plan_result(future, candidate)
+        self._publish_selected_frontier()
 
     def _robot_position(self, map_frame: str) -> tuple[float, float] | None:
         robot_frame = str(self.get_parameter('robot_frame').value)
