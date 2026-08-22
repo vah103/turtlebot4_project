@@ -22,6 +22,10 @@ controller_server:
       model_dt: 0.0666667
       time_steps: 42
 
+      # Candidate-trajectory visualization is useful interactively but expensive
+      # during long autonomous mapping runs. Disable it to improve real-time factor.
+      visualize: false
+
       # Conservative mapping speed. The Gazebo drivetrain has a slightly higher
       # hard cap so Nav2/velocity_smoother, not the physics plugin, is the limiter.
       vx_max: 0.75
