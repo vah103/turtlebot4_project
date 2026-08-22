@@ -95,10 +95,15 @@ def resolve_lama_root(value: Path | None, *, start: Path | None = None) -> Path:
         project_root = find_project_root(start=start)
         candidates = [
             project_root / 'third_party' / 'lama',
+            Path.home() / 'lama',
             project_root / 'third_party' / 'lama_upstream',
         ]
         root = next(
-            (candidate for candidate in candidates if (candidate / 'bin' / 'predict.py').is_file()),
+            (
+                candidate
+                for candidate in candidates
+                if (candidate / 'bin' / 'predict.py').is_file()
+            ),
             candidates[0],
         )
 
@@ -283,7 +288,10 @@ def main(args: list[str] | None = None) -> None:
         '--lama-root',
         type=Path,
         default=None,
-        help='LaMa checkout/runtime root (default: project third_party/lama).',
+        help=(
+            'LaMa checkout/runtime root (auto-detect project third_party/lama, '
+            '~/lama, then pinned upstream checkout).'
+        ),
     )
     parser.add_argument(
         '--model-path',
