@@ -17,6 +17,7 @@ setup(
                 'launch/nav2_sim_compat.launch.py',
                 'launch/map_snapshot_recorder.launch.py',
                 'launch/hospital_map_snapshot_recorder.launch.py',
+                'launch/hospital_robot_status.launch.py',
                 'launch/tb4_simulation_safe.launch.py',
                 'launch/hospital_flat_simulation.launch.py',
                 'launch/hospital_nav2.launch.py',
@@ -29,6 +30,7 @@ setup(
                 'config/frontier.yaml',
                 'config/map_snapshot.yaml',
                 'config/map_snapshot_hospital.yaml',
+                'config/robot_status_hospital.yaml',
                 'config/nav2_hospital_override.yaml',
                 'config/hospital_slam.yaml',
                 'config/hospital_slam_no_loop.yaml',
@@ -83,6 +85,10 @@ setup(
             (
                 'hospital_map_snapshot_recorder = '
                 'frontier_exploration.hospital_map_snapshot_recorder:main'
+            ),
+            (
+                'robot_status_monitor = '
+                'frontier_exploration.robot_status_monitor:main'
             ),
             (
                 'hospital_map_cloud_visualizer = '
