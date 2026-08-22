@@ -1,3 +1,3 @@
-# Frontier trap fix
+# Frontier trap diagnostics
 
-This change keeps frontier goals farther inside known free space, requires local maneuvering clearance, preserves the approach heading instead of forcing the robot to face the frontier, stops repeated same-pose navigation failures with a latched `/robot_trapped` diagnostic, records the `/cmd_vel_nav -> /cmd_vel_smoothed -> /cmd_vel` chain in the status JSONL, and disables MPPI trajectory visualization during long Hospital runs.
+The hard frontier-policy changes from PR #25 were rolled back after they caused a regression: the detector rejected nearby frontiers and selected long paths. The retained changes are the latched `/robot_trapped` diagnostic, `/cmd_vel_nav -> /cmd_vel_smoothed -> /cmd_vel` status logging, and disabled MPPI trajectory visualization for long Hospital runs.
