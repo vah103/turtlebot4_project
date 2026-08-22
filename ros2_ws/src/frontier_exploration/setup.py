@@ -60,7 +60,8 @@ setup(
         'console_scripts': [
             (
                 'frontier_map_preprocessor = '
-                'frontier_exploration.experimental.frontier_map_preprocessor_resilient:main'
+                'frontier_exploration.experimental.'
+                'frontier_map_preprocessor_resilient:main'
             ),
             (
                 'frontier_detector = '
