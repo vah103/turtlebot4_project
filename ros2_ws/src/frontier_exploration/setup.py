@@ -122,6 +122,10 @@ setup(
                 'run_lama_inference = '
                 'frontier_exploration.lama_inference_cli:main'
             ),
+            (
+                'evaluate_lama_predictions = '
+                'frontier_exploration.lama_evaluator:main'
+            ),
         ],
     },
 )
