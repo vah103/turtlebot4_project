@@ -8,7 +8,17 @@ robot_status_monitor:
     failed_goal_topic: /frontier_failed_goal
     completed_goal_topic: /frontier_completed_goal
     completion_topic: /exploration_complete
+    trapped_topic: /robot_trapped
     navigate_action: /navigate_to_pose
+
+    # Read-only command-chain diagnostics. These topics let the status timeline
+    # distinguish controller-zero, downstream filtering, and physics/drive stalls.
+    cmd_vel_nav_topic: /cmd_vel_nav
+    cmd_vel_smoothed_topic: /cmd_vel_smoothed
+    cmd_vel_final_topic: /cmd_vel
+    cmd_vel_fresh_sec: 3.0
+    cmd_linear_motion_threshold_mps: 0.03
+    cmd_angular_motion_threshold_rps: 0.05
 
     map_frame: map
     odom_frame: odom
