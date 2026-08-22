@@ -4,7 +4,9 @@ map_snapshot_recorder:
     odom_topic: /odom
     completion_topic: /exploration_complete
     robot_frame: base_link
-    output_dir: ~/turtlebot4_lama_snapshots
+    # Relative paths are resolved from TURTLEBOT4_PROJECT_ROOT (or the
+    # repository root detected from the current working/module path).
+    output_dir: data/lama_runs
     run_name: ""
 
     # REQUIRED before each experiment. Do not derive these values from the
