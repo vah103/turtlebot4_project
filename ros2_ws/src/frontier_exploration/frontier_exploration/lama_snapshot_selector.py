@@ -1,10 +1,14 @@
-"""Select representative LaMa snapshots across one exploration run.
+"""Select representative raw snapshots before LaMa preprocessing.
 
-The preprocessor writes one record per frame to ``lama_dataset_manifest.jsonl``.
-This module chooses a fixed-size chronological subset that spans the observed
+Each recorded snapshot already has lightweight JSON metadata containing the
+number of known fixed-canvas cells. This module uses those metadata files to
+choose a fixed-size chronological subset spanning the observed
 ``known_fraction`` range, while always retaining the first and final frame.
-Selected input/mask PNGs are copied into a compact evaluation directory so LaMa
-inference can run on the subset directly.
+
+Only the selected raw occupancy snapshots are copied into a compact evaluation
+directory. ``prepare_lama_dataset`` can then preprocess that directory, so a
+20-frame evaluation does not waste time generating PNGs for every frame in the
+full exploration run.
 """
 
 from __future__ import annotations
@@ -16,49 +20,73 @@ import shutil
 from pathlib import Path
 
 
-def load_dataset_manifest(run_dir: Path) -> list[dict]:
-    """Load and validate the preprocessed LaMa manifest in chronological order."""
+def _load_canvas_cell_count(run_dir: Path) -> int:
+    run_path = run_dir / 'run.json'
+    if not run_path.is_file():
+        raise FileNotFoundError(f'Missing recorder metadata: {run_path}')
+
+    payload = json.loads(run_path.read_text(encoding='utf-8'))
+    fixed = payload.get('fixed_canvas')
+    if not isinstance(fixed, dict):
+        raise ValueError(f'run.json has no fixed_canvas object: {run_path}')
+
+    width = int(fixed['width'])
+    height = int(fixed['height'])
+    if width <= 0 or height <= 0:
+        raise ValueError('fixed_canvas width/height must be positive')
+    return width * height
+
+
+def load_raw_snapshot_records(run_dir: Path) -> list[dict]:
+    """Load chronological raw snapshot records using lightweight metadata."""
     run_dir = run_dir.expanduser().resolve()
-    manifest_path = run_dir / 'lama_dataset_manifest.jsonl'
-    if not manifest_path.is_file():
-        raise FileNotFoundError(
-            f'Missing {manifest_path}; run prepare_lama_dataset first'
-        )
+    total_cells = _load_canvas_cell_count(run_dir)
+
+    metadata_paths = sorted(run_dir.glob('*_metadata.json'))
+    if not metadata_paths:
+        raise FileNotFoundError(f'No *_metadata.json snapshots found in {run_dir}')
 
     records: list[dict] = []
-    with manifest_path.open('r', encoding='utf-8') as stream:
-        for line_number, raw_line in enumerate(stream, start=1):
-            line = raw_line.strip()
-            if not line:
-                continue
-            record = json.loads(line)
-            frame = str(record.get('frame', ''))
-            if not frame.isdigit():
-                raise ValueError(
-                    f'Invalid frame at {manifest_path}:{line_number}: {frame!r}'
-                )
-            known_fraction = float(record.get('known_fraction', math.nan))
-            if not math.isfinite(known_fraction):
-                raise ValueError(
-                    'Invalid known_fraction at '
-                    f'{manifest_path}:{line_number}: {known_fraction!r}'
-                )
-            input_rel = record.get('input')
-            mask_rel = record.get('mask')
-            if not isinstance(input_rel, str) or not isinstance(mask_rel, str):
-                raise ValueError(
-                    f'Missing input/mask path at {manifest_path}:{line_number}'
-                )
-            records.append(
-                {
-                    **record,
-                    'frame': frame,
-                    'known_fraction': known_fraction,
-                }
+    for metadata_path in metadata_paths:
+        frame = metadata_path.name.removesuffix('_metadata.json')
+        if not frame.isdigit():
+            continue
+
+        raw_path = run_dir / f'{frame}_occupancy.bin'
+        if not raw_path.is_file():
+            raise FileNotFoundError(f'Missing raw occupancy snapshot: {raw_path}')
+
+        payload = json.loads(metadata_path.read_text(encoding='utf-8'))
+        projection = payload.get('projection')
+        if not isinstance(projection, dict):
+            raise ValueError(f'Missing projection object in {metadata_path}')
+
+        known_cells = projection.get('known_cells_copied')
+        if known_cells is None:
+            raise ValueError(
+                f'Missing projection.known_cells_copied in {metadata_path}'
+            )
+        known_cells = int(known_cells)
+        if known_cells < 0 or known_cells > total_cells:
+            raise ValueError(
+                f'Invalid known cell count in {metadata_path}: {known_cells}'
             )
 
+        pgm_path = run_dir / f'{frame}_map.pgm'
+        records.append(
+            {
+                'frame': frame,
+                'raw': raw_path.name,
+                'metadata': metadata_path.name,
+                'pgm': pgm_path.name if pgm_path.is_file() else None,
+                'known_cells': known_cells,
+                'total_cells': total_cells,
+                'known_fraction': known_cells / total_cells,
+            }
+        )
+
     if not records:
-        raise ValueError(f'No records found in {manifest_path}')
+        raise ValueError(f'No valid numeric snapshot metadata found in {run_dir}')
 
     records.sort(key=lambda record: int(record['frame']))
     return records
@@ -97,8 +125,6 @@ def select_records_by_known_fraction(
 
     for slot in range(1, count - 1):
         min_index = previous_index + 1
-        # Leave exactly enough later indices for all remaining slots, including
-        # the final frame which is fixed to records[-1].
         max_index = total - (count - slot)
         target = targets[slot]
         best_index = min(
@@ -124,45 +150,46 @@ def select_records_by_known_fraction(
     return selected
 
 
-def _clean_pngs(directory: Path) -> None:
-    directory.mkdir(parents=True, exist_ok=True)
-    for path in directory.glob('*.png'):
-        path.unlink()
-
-
-def materialize_selection(
+def materialize_raw_selection(
     run_dir: Path,
     selected: list[dict],
     output_subdir: str = 'lama_eval_20',
 ) -> Path:
-    """Copy selected model input/mask images and write selection metadata."""
+    """Copy only selected raw snapshots into a preprocess-ready run directory."""
     run_dir = run_dir.expanduser().resolve()
     output_dir = run_dir / output_subdir
-    input_dir = output_dir / 'model_input'
-    mask_dir = output_dir / 'model_mask'
-    _clean_pngs(input_dir)
-    _clean_pngs(mask_dir)
+
+    if output_dir.exists():
+        shutil.rmtree(output_dir)
+    output_dir.mkdir(parents=True)
+
+    run_json = run_dir / 'run.json'
+    shutil.copy2(run_json, output_dir / 'run.json')
 
     manifest_records: list[dict] = []
     for record in selected:
-        source_input = run_dir / str(record['input'])
-        source_mask = run_dir / str(record['mask'])
-        if not source_input.is_file():
-            raise FileNotFoundError(f'Missing preprocessed input: {source_input}')
-        if not source_mask.is_file():
-            raise FileNotFoundError(f'Missing preprocessed mask: {source_mask}')
-
         frame = str(record['frame'])
-        destination_input = input_dir / f'{frame}.png'
-        destination_mask = mask_dir / f'{frame}.png'
-        shutil.copy2(source_input, destination_input)
-        shutil.copy2(source_mask, destination_mask)
+        source_raw = run_dir / str(record['raw'])
+        source_metadata = run_dir / str(record['metadata'])
+        destination_raw = output_dir / source_raw.name
+        destination_metadata = output_dir / source_metadata.name
+
+        shutil.copy2(source_raw, destination_raw)
+        shutil.copy2(source_metadata, destination_metadata)
+
+        source_pgm = None
+        if record.get('pgm'):
+            candidate = run_dir / str(record['pgm'])
+            if candidate.is_file():
+                source_pgm = candidate
+                shutil.copy2(candidate, output_dir / candidate.name)
 
         manifest_records.append(
             {
                 **record,
-                'selected_input': str(destination_input.relative_to(output_dir)),
-                'selected_mask': str(destination_mask.relative_to(output_dir)),
+                'selected_raw': destination_raw.name,
+                'selected_metadata': destination_metadata.name,
+                'selected_pgm': source_pgm.name if source_pgm else None,
             }
         )
 
@@ -172,17 +199,19 @@ def materialize_selection(
             stream.write(json.dumps(record, ensure_ascii=False) + '\n')
 
     summary = {
-        'method': 'chronological nearest-to-even-known-fraction targets',
-        'source_manifest': 'lama_dataset_manifest.jsonl',
+        'method': 'raw metadata selection before LaMa preprocessing',
+        'source_run': str(run_dir),
         'count': len(manifest_records),
         'first_frame': manifest_records[0]['frame'],
         'last_frame': manifest_records[-1]['frame'],
         'first_known_fraction': manifest_records[0]['known_fraction'],
         'last_known_fraction': manifest_records[-1]['known_fraction'],
-        'input_dir': 'model_input',
-        'mask_dir': 'model_mask',
         'manifest': manifest_path.name,
         'frames': [record['frame'] for record in manifest_records],
+        'next_step': (
+            'run prepare_lama_dataset on this directory; only selected raw '
+            'snapshots will be preprocessed'
+        ),
     }
     with (output_dir / 'selection.json').open('w', encoding='utf-8') as stream:
         json.dump(summary, stream, ensure_ascii=False, indent=2)
@@ -196,25 +225,28 @@ def select_snapshots(
     count: int = 20,
     output_subdir: str | None = None,
 ) -> Path:
-    """Load, select, and materialize a representative LaMa evaluation subset."""
-    records = load_dataset_manifest(run_dir)
+    """Select raw snapshots first and materialize a compact evaluation run."""
+    records = load_raw_snapshot_records(run_dir)
     selected = select_records_by_known_fraction(records, count=count)
     if output_subdir is None:
         output_subdir = f'lama_eval_{count}'
-    return materialize_selection(run_dir, selected, output_subdir=output_subdir)
+    return materialize_raw_selection(
+        run_dir,
+        selected,
+        output_subdir=output_subdir,
+    )
 
 
 def main(args: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(
         description=(
-            'Select a chronological LaMa evaluation subset spanning the observed '
-            'known_fraction range.'
+            'Select raw snapshots by known_fraction before LaMa preprocessing.'
         )
     )
     parser.add_argument(
         'run_dir',
         type=Path,
-        help='Preprocessed snapshot run containing lama_dataset_manifest.jsonl.',
+        help='Raw snapshot run containing run.json and *_metadata.json files.',
     )
     parser.add_argument(
         '--count',
@@ -235,13 +267,15 @@ def main(args: list[str] | None = None) -> None:
         output_subdir=parsed.output_subdir,
     )
     summary = json.loads((output_dir / 'selection.json').read_text(encoding='utf-8'))
-    print(f'Selected {summary["count"]} snapshots into {output_dir}')
-    for record in load_dataset_manifest(parsed.run_dir):
-        if record['frame'] in set(summary['frames']):
+    selected_frames = set(summary['frames'])
+    print(f'Selected {summary["count"]} raw snapshots into {output_dir}')
+    for record in load_raw_snapshot_records(parsed.run_dir):
+        if record['frame'] in selected_frames:
             print(
                 f'  frame={record["frame"]} '
                 f'known_fraction={record["known_fraction"]:.4f}'
             )
+    print('Next: run prepare_lama_dataset on the selected output directory.')
 
 
 if __name__ == '__main__':
