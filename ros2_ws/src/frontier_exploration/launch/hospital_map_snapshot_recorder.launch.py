@@ -40,8 +40,11 @@ def generate_launch_description() -> LaunchDescription:
             ),
             DeclareLaunchArgument(
                 'output_dir',
-                default_value='~/turtlebot4_lama_snapshots',
-                description='Parent directory for recorded runs.',
+                default_value='data/lama_runs',
+                description=(
+                    'Parent directory for recorded runs. Relative paths are '
+                    'resolved from the TurtleBot4 project root.'
+                ),
             ),
             DeclareLaunchArgument(
                 'run_name',
