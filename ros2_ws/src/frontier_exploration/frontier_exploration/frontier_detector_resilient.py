@@ -4,6 +4,7 @@ from math import atan2, cos, hypot, sin
 
 import rclpy
 from geometry_msgs.msg import PointStamped
+from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
 
 from frontier_exploration.frontier_detector import _cell_to_world
 from frontier_exploration.frontier_detector_strict_completion import (
@@ -49,10 +50,15 @@ class ResilientFrontierDetector(StrictCompletionFrontierDetector):
         self.declare_parameter('odom_frame', 'odom')
         self.declare_parameter('selected_frontier_topic', '/frontier_selected')
         self._split_tf_notice_shown = False
+        selected_frontier_qos = QoSProfile(
+            depth=1,
+            reliability=ReliabilityPolicy.RELIABLE,
+            durability=DurabilityPolicy.TRANSIENT_LOCAL,
+        )
         self._selected_frontier_pub = self.create_publisher(
             PointStamped,
             str(self.get_parameter('selected_frontier_topic').value),
-            10,
+            selected_frontier_qos,
         )
         self._last_published_selected_index: int | None = None
         self._planner_client = _FrontierFacingPlannerClient(
