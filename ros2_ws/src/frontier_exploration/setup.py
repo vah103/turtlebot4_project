@@ -72,7 +72,7 @@ setup(
             ),
             (
                 'exploration_manager = '
-                'frontier_exploration.exploration_manager:main'
+                'frontier_exploration.exploration_manager_resilient:main'
             ),
             (
                 'sim_twist_adapter = '
