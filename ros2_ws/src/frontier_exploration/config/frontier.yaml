@@ -28,15 +28,9 @@ frontier_detector:
     min_segment_size: 5
     min_selection_distance_m: 0.60
 
-    # Keep the navigation terminal pose deeper inside known-free space. The old
-    # 0.30 m standoff allowed a successful goal to end too close to a corner,
-    # leaving insufficient room for the next large heading change.
-    frontier_goal_standoff_m: 0.50
-
-    # In addition to checking the goal-center cost, require a full circular
-    # maneuvering area around the candidate to remain below the blocked threshold.
-    # This approximates room for the TurtleBot4 footprint to rotate and depart.
-    frontier_goal_clearance_m: 0.35
+    # Prefer navigation goals deeper inside known-free space before falling back
+    # to cells immediately adjacent to the frontier boundary.
+    frontier_goal_standoff_m: 0.30
 
     # Costmap-aware safe free goals near each frontier segment.
     require_global_costmap: true
