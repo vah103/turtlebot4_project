@@ -60,8 +60,8 @@ export LAMA_RUNS_ROOT="${TURTLEBOT4_PROJECT_ROOT}/data/lama_runs"
 export LAMA_RESULTS_ROOT="${TURTLEBOT4_PROJECT_ROOT}/results/lama"
 ```
 
-Full runs, upstream source, checkpoints and generated results are deliberately
-ignored. The upstream implementation is referenced as a pinned submodule at
+Full runs, the local runtime workspace, checkpoints and generated results are
+deliberately ignored. The upstream implementation is referenced as a pinned submodule at
 `third_party/lama_upstream`; it is not duplicated in this repository. Git
 contains integration code, configs, documentation and three reviewed samples,
 not the multi-gigabyte full run.
