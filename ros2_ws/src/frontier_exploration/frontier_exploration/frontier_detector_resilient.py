@@ -4,17 +4,19 @@ from math import atan2, cos, hypot, sin
 
 import rclpy
 from geometry_msgs.msg import PointStamped
+from nav_msgs.msg import OccupancyGrid
 from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
 
-from frontier_exploration.frontier_detector import _cell_to_world
+from frontier_exploration.frontier_detector import _cell_to_world, _world_to_cell
 from frontier_exploration.frontier_detector_strict_completion import (
     StrictCompletionFrontierDetector,
 )
+from frontier_exploration.navigation_safety import circle_is_clear
 from frontier_exploration.tf_pose import lookup_robot_xy
 
 
-class _FrontierFacingPlannerClient:
-    """Orient planner goals from the safe goal toward the selected frontier."""
+class _ApproachFacingPlannerClient:
+    """Keep the terminal goal yaw aligned with the approach to the safe goal."""
 
     def __init__(self, detector, client) -> None:
         self._detector = detector
@@ -27,28 +29,31 @@ class _FrontierFacingPlannerClient:
         candidate = self._detector._planning_candidate
         map_msg = self._detector._latest_map
         if candidate is not None and map_msg is not None:
-            _, representative, goal_index, _, _ = candidate
-            frontier = _cell_to_world(representative, map_msg)
+            _, _representative, goal_index, _, _ = candidate
             goal = _cell_to_world(goal_index, map_msg)
-            dx = frontier.x - goal.x
-            dy = frontier.y - goal.y
-            if hypot(dx, dy) > 1e-6:
-                yaw = atan2(dy, dx)
-                orientation = goal_msg.goal.pose.orientation
-                orientation.x = 0.0
-                orientation.y = 0.0
-                orientation.z = sin(yaw / 2.0)
-                orientation.w = cos(yaw / 2.0)
+            map_frame = map_msg.header.frame_id or 'map'
+            robot = self._detector._robot_position(map_frame)
+            if robot is not None:
+                dx = goal.x - robot[0]
+                dy = goal.y - robot[1]
+                if hypot(dx, dy) > 1e-6:
+                    yaw = atan2(dy, dx)
+                    orientation = goal_msg.goal.pose.orientation
+                    orientation.x = 0.0
+                    orientation.y = 0.0
+                    orientation.z = sin(yaw / 2.0)
+                    orientation.w = cos(yaw / 2.0)
         return self._client.send_goal_async(goal_msg)
 
 
 class ResilientFrontierDetector(StrictCompletionFrontierDetector):
-    """Use strict completion plus split-chain TF fallback when needed."""
+    """Use strict completion, clearance checks, and split-chain TF fallback."""
 
     def __init__(self) -> None:
         super().__init__()
         self.declare_parameter('odom_frame', 'odom')
         self.declare_parameter('selected_frontier_topic', '/frontier_selected')
+        self.declare_parameter('frontier_goal_clearance_m', 0.35)
         self._split_tf_notice_shown = False
         selected_frontier_qos = QoSProfile(
             depth=1,
@@ -61,14 +66,65 @@ class ResilientFrontierDetector(StrictCompletionFrontierDetector):
             selected_frontier_qos,
         )
         self._last_published_selected_index: int | None = None
-        self._planner_client = _FrontierFacingPlannerClient(
+        self._planner_client = _ApproachFacingPlannerClient(
             self,
             self._planner_client,
         )
         self.get_logger().info(
-            'Frontier planner goals face from the safe navigation goal toward '
-            'the selected frontier'
+            'Frontier planner terminal yaw follows the approach direction to '
+            'the safe goal; it no longer forces the robot to face the frontier'
         )
+        self.get_logger().info(
+            'Frontier goal turning-clearance radius: '
+            f'{float(self.get_parameter("frontier_goal_clearance_m").value):.2f} m'
+        )
+
+    def _point_blocked(
+        self,
+        costmap: OccupancyGrid,
+        x: float,
+        y: float,
+        source_frame: str,
+        *,
+        outside_is_blocked: bool,
+    ) -> bool:
+        if super()._point_blocked(
+            costmap,
+            x,
+            y,
+            source_frame,
+            outside_is_blocked=outside_is_blocked,
+        ):
+            return True
+
+        clearance = max(
+            0.0, float(self.get_parameter('frontier_goal_clearance_m').value)
+        )
+        if clearance <= 0.0:
+            return False
+
+        target_frame = costmap.header.frame_id or source_frame
+        transformed = self._transform_xy(x, y, source_frame, target_frame)
+        if transformed is None:
+            return outside_is_blocked
+        center_index = _world_to_cell(costmap, transformed[0], transformed[1])
+        if center_index is None:
+            return outside_is_blocked
+
+        clear = circle_is_clear(
+            costmap.data,
+            int(costmap.info.width),
+            int(costmap.info.height),
+            center_index,
+            float(costmap.info.resolution),
+            clearance,
+            int(self.get_parameter('costmap_occ_threshold').value),
+            unknown_is_blocked=bool(
+                self.get_parameter('costmap_unknown_is_blocked').value
+            ),
+            outside_is_blocked=outside_is_blocked,
+        )
+        return not clear
 
     def _publish_selected_frontier(self) -> None:
         if self._selected_index is None or self._latest_map is None:
