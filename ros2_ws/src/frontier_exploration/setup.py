@@ -106,7 +106,7 @@ setup(
             ),
             (
                 'run_lama_inference = '
-                'frontier_exploration.lama_inference_runner:main'
+                'frontier_exploration.lama_inference_cli:main'
             ),
         ],
     },
