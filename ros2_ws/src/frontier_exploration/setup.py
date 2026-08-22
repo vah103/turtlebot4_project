@@ -15,9 +15,44 @@ setup(
                 'launch/frontier_detector.launch.py',
                 'launch/frontier_autonomy.launch.py',
                 'launch/nav2_sim_compat.launch.py',
+                'launch/map_snapshot_recorder.launch.py',
+                'launch/hospital_map_snapshot_recorder.launch.py',
+                'launch/tb4_simulation_safe.launch.py',
+                'launch/hospital_simulation.launch.py',
+                'launch/hospital_flat_simulation.launch.py',
+                'launch/hospital_nav2.launch.py',
+                'launch/hospital_stack.launch.py',
+                'launch/hospital_flat_stack.launch.py',
             ],
         ),
-        ('share/' + package_name + '/config', ['config/frontier.yaml']),
+        (
+            'share/' + package_name + '/config',
+            [
+                'config/frontier.yaml',
+                'config/map_snapshot.yaml',
+                'config/map_snapshot_hospital.yaml',
+                'config/nav2_hospital_override.yaml',
+                'config/hospital_slam.yaml',
+            ],
+        ),
+        (
+            'share/' + package_name + '/rviz',
+            ['rviz/hospital_exploration.rviz'],
+        ),
+        (
+            'share/' + package_name + '/urdf',
+            [
+                'urdf/create3_hospital.urdf.xacro',
+                'urdf/hospital_turtlebot4.urdf.xacro',
+            ],
+        ),
+        (
+            'share/' + package_name + '/worlds',
+            [
+                'worlds/hospital_aws.sdf',
+                'worlds/hospital_aws_flat.sdf',
+            ],
+        ),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -28,10 +63,42 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'frontier_map_preprocessor = frontier_exploration.frontier_map_preprocessor_resilient:main',
-            'frontier_detector = frontier_exploration.frontier_detector_resilient:main',
-            'exploration_manager = frontier_exploration.exploration_manager:main',
-            'sim_twist_adapter = frontier_exploration.sim_twist_adapter:main',
+            (
+                'frontier_map_preprocessor = '
+                'frontier_exploration.frontier_map_preprocessor_resilient:main'
+            ),
+            (
+                'frontier_detector = '
+                'frontier_exploration.frontier_detector_resilient:main'
+            ),
+            (
+                'exploration_manager = '
+                'frontier_exploration.exploration_manager:main'
+            ),
+            (
+                'sim_twist_adapter = '
+                'frontier_exploration.sim_twist_adapter:main'
+            ),
+            (
+                'map_snapshot_recorder = '
+                'frontier_exploration.map_snapshot_recorder:main'
+            ),
+            (
+                'hospital_map_cloud_visualizer = '
+                'frontier_exploration.hospital_map_cloud_visualizer:main'
+            ),
+            (
+                'compute_hospital_canvas = '
+                'frontier_exploration.hospital_canvas:main'
+            ),
+            (
+                'generate_hospital_keepout = '
+                'frontier_exploration.hospital_keepout:main'
+            ),
+            (
+                'prepare_lama_dataset = '
+                'frontier_exploration.lama_dataset_preprocessor:main'
+            ),
         ],
     },
 )

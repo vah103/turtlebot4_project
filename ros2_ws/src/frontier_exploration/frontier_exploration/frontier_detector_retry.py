@@ -5,7 +5,13 @@ from math import hypot
 import rclpy
 from geometry_msgs.msg import PointStamped
 from nav_msgs.msg import OccupancyGrid
+from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
+from std_msgs.msg import Bool
 
+from frontier_exploration.frontier_completion import (
+    CompletionTracker,
+    FailureRegionTracker,
+)
 from frontier_exploration.frontier_core import candidate_goal_cells
 from frontier_exploration.frontier_detector import (
     Candidate,
@@ -26,9 +32,17 @@ class RetryFrontierDetector(FrontierDetector):
         self.declare_parameter('completed_goal_topic', '/frontier_completed_goal')
         self.declare_parameter('failed_goal_radius_m', 0.40)
         self.declare_parameter('failed_goal_cooldown_sec', 60.0)
+        self.declare_parameter('failed_goal_max_attempts', 2)
         self.declare_parameter('completed_frontier_radius_m', 0.40)
         self.declare_parameter('completed_frontier_cooldown_sec', 15.0)
         self.declare_parameter('post_goal_settle_sec', 1.0)
+        self.declare_parameter('completion_topic', '/exploration_complete')
+        self.declare_parameter('completion_stable_cycles', 5)
+        self.declare_parameter('completion_min_idle_sec', 10.0)
+        self.declare_parameter('completion_check_period_sec', 2.0)
+        self.declare_parameter('completion_startup_grace_sec', 20.0)
+        self.declare_parameter('shutdown_on_completion', True)
+        self.declare_parameter('completion_shutdown_delay_sec', 0.5)
 
         retry_period = max(
             0.1, float(self.get_parameter('planner_retry_period_sec').value)
@@ -37,6 +51,7 @@ class RetryFrontierDetector(FrontierDetector):
         completed_goal_topic = str(
             self.get_parameter('completed_goal_topic').value
         )
+        completion_topic = str(self.get_parameter('completion_topic').value)
 
         self._planner_retry_counts: dict[tuple[int, int], int] = {}
         self._retry_not_before_sec = 0.0
@@ -44,7 +59,34 @@ class RetryFrontierDetector(FrontierDetector):
         self._failed_frontiers: list[tuple[float, float, float]] = []
         self._completed_frontiers: list[tuple[float, float, float]] = []
         self._deferred_map: OccupancyGrid | None = None
-        self._completion_notice_shown = False
+        self._exploration_complete = False
+        self._completion_shutdown_timer = None
+        self._completion_tracker = CompletionTracker(
+            required_cycles=int(
+                self.get_parameter('completion_stable_cycles').value
+            ),
+            min_idle_sec=float(
+                self.get_parameter('completion_min_idle_sec').value
+            ),
+            check_period_sec=float(
+                self.get_parameter('completion_check_period_sec').value
+            ),
+        )
+        self._failure_tracker = FailureRegionTracker(
+            radius_m=float(self.get_parameter('failed_goal_radius_m').value),
+            max_attempts=int(
+                self.get_parameter('failed_goal_max_attempts').value
+            ),
+        )
+
+        completion_qos = QoSProfile(
+            depth=1,
+            reliability=ReliabilityPolicy.RELIABLE,
+            durability=DurabilityPolicy.TRANSIENT_LOCAL,
+        )
+        self._completion_pub = self.create_publisher(
+            Bool, completion_topic, completion_qos
+        )
 
         self._planner_retry_timer = self.create_timer(
             retry_period, self._retry_pending_planner_check
@@ -70,6 +112,13 @@ class RetryFrontierDetector(FrontierDetector):
         self.get_logger().info(
             'Post-goal map settle: '
             f'{float(self.get_parameter("post_goal_settle_sec").value):.2f}s'
+        )
+        self.get_logger().info(
+            'Completion policy: no safe reachable frontier for '
+            f'{self._completion_tracker.required_cycles} checks and at least '
+            f'{self._completion_tracker.min_idle_sec:.1f}s; '
+            f'publishing on {completion_topic}; '
+            'starts after a real candidate or the startup grace period'
         )
 
     def _now_sec(self) -> float:
@@ -135,8 +184,21 @@ class RetryFrontierDetector(FrontierDetector):
             )
         )
 
+    def _is_exhausted_candidate(self, candidate: Candidate) -> bool:
+        if self._latest_map is None:
+            return False
+        point = _cell_to_world(candidate[0], self._latest_map)
+        return self._failure_tracker.is_exhausted(point.x, point.y)
+
+    def _is_unavailable_candidate(self, candidate: Candidate) -> bool:
+        return self._is_temporarily_suppressed_candidate(
+            candidate
+        ) or self._is_exhausted_candidate(candidate)
+
     def _on_map(self, msg: OccupancyGrid) -> None:
         """Freeze candidate indices against one map snapshot until goal outcome."""
+        if self._exploration_complete:
+            return
         if self._selected_index is not None or self._planning_candidate is not None:
             self._deferred_map = msg
             return
@@ -146,14 +208,6 @@ class RetryFrontierDetector(FrontierDetector):
         # indices to keep the same world meaning across map geometry changes.
         self._candidate_signature = None
         super()._on_map(msg)
-
-        if self._latest_frontier_cells:
-            self._completion_notice_shown = False
-        elif not self._completion_notice_shown:
-            self.get_logger().info(
-                'No reachable frontier cells remain in the current map'
-            )
-            self._completion_notice_shown = True
 
     def _goal_index_for_segment(
         self,
@@ -248,8 +302,10 @@ class RetryFrontierDetector(FrontierDetector):
         super()._on_map(latest_map)
 
     def _on_completed_goal(self, msg: PointStamped) -> None:
+        self._completion_tracker.observe_busy()
         frontier_xy = self._selected_frontier_xy()
         if frontier_xy is not None:
+            self._failure_tracker.clear_near(frontier_xy[0], frontier_xy[1])
             cooldown = max(
                 0.0,
                 float(
@@ -272,30 +328,47 @@ class RetryFrontierDetector(FrontierDetector):
         )
 
     def _on_failed_goal(self, msg: PointStamped) -> None:
+        self._completion_tracker.observe_busy()
         cooldown = max(
             0.0, float(self.get_parameter('failed_goal_cooldown_sec').value)
         )
-        if cooldown <= 0.0:
-            return
-
         frontier_xy = self._selected_frontier_xy()
         if frontier_xy is None:
             frontier_xy = (float(msg.point.x), float(msg.point.y))
-        self._failed_frontiers.append(
-            (frontier_xy[0], frontier_xy[1], self._now_sec() + cooldown)
+        attempts, exhausted = self._failure_tracker.record_failure(
+            frontier_xy[0], frontier_xy[1]
         )
-        self._prune_suppression_regions()
-
-        self.get_logger().warning(
-            'Temporarily suppressing failed frontier region: '
-            f'x={frontier_xy[0]:.2f}, y={frontier_xy[1]:.2f}, '
-            f'cooldown={cooldown:.1f}s'
-        )
+        if exhausted:
+            failed_radius = self._failure_tracker.radius_m
+            self._failed_frontiers = [
+                region
+                for region in self._failed_frontiers
+                if hypot(frontier_xy[0] - region[0], frontier_xy[1] - region[1])
+                > failed_radius
+            ]
+            self.get_logger().warning(
+                'Exhausting repeatedly failed frontier region: '
+                f'x={frontier_xy[0]:.2f}, y={frontier_xy[1]:.2f}, '
+                f'attempts={attempts}'
+            )
+        elif cooldown > 0.0:
+            self._failed_frontiers.append(
+                (frontier_xy[0], frontier_xy[1], self._now_sec() + cooldown)
+            )
+            self._prune_suppression_regions()
+            self.get_logger().warning(
+                'Temporarily suppressing failed frontier region: '
+                f'x={frontier_xy[0]:.2f}, y={frontier_xy[1]:.2f}, '
+                f'attempt={attempts}/{self._failure_tracker.max_attempts}, '
+                f'cooldown={cooldown:.1f}s'
+            )
         self._reset_selection_and_replan(
             'Failed frontier feedback received; selecting another safe candidate'
         )
 
     def _retry_pending_planner_check(self) -> None:
+        if self._exploration_complete:
+            return
         suppression_expired = self._prune_suppression_regions()
 
         # If every candidate from the frozen snapshot was exhausted, consume the
@@ -328,12 +401,14 @@ class RetryFrontierDetector(FrontierDetector):
         self._start_next_path_check()
 
     def _start_next_path_check(self) -> None:
+        if self._exploration_complete:
+            return
         now = self._now_sec()
         if now < self._replan_not_before_sec or now < self._retry_not_before_sec:
             return
 
         skipped = 0
-        while self._candidate_queue and self._is_temporarily_suppressed_candidate(
+        while self._candidate_queue and self._is_unavailable_candidate(
             self._candidate_queue[0]
         ):
             self._candidate_queue.pop(0)
@@ -341,10 +416,111 @@ class RetryFrontierDetector(FrontierDetector):
 
         if skipped:
             self.get_logger().info(
-                f'Skipped {skipped} temporarily suppressed frontier candidate(s)'
+                f'Skipped {skipped} suppressed or exhausted candidate(s)'
             )
 
+        if self._candidate_queue:
+            self._completion_tracker.mark_started()
+
         super()._start_next_path_check()
+        self._check_exploration_completion()
+
+    def _check_exploration_completion(self) -> None:
+        """Finish after the planner repeatedly exhausts all usable frontiers."""
+        if self._exploration_complete:
+            return
+        if self._latest_map is None:
+            self._completion_tracker.observe_busy()
+            return
+        if (
+            self._selected_index is not None
+            or self._planning_candidate is not None
+            or self._candidate_queue
+            or self._deferred_map is not None
+        ):
+            self._completion_tracker.observe_busy()
+            return
+        if (
+            bool(self.get_parameter('require_global_costmap').value)
+            and self._global_costmap is None
+        ):
+            self._completion_tracker.observe_busy()
+            return
+
+        now = self._now_sec()
+        # A temporarily hidden frontier must either reappear or exhaust its
+        # bounded retries before the mission can end.
+        self._prune_suppression_regions()
+        completion_blocked = bool(
+            self._completed_frontiers or self._failed_frontiers
+        )
+        if not self._completion_tracker.started and not completion_blocked:
+            startup_grace = max(
+                0.0,
+                float(
+                    self.get_parameter('completion_startup_grace_sec').value
+                ),
+            )
+            if self._completion_tracker.observe_ready(now, startup_grace):
+                self.get_logger().info(
+                    'Completion checks enabled after inputs stayed ready '
+                    f'without candidates for {startup_grace:.1f}s'
+                )
+        previous_streak = self._completion_tracker.streak
+        newly_complete = self._completion_tracker.observe_exhausted(
+            now,
+            blocked=completion_blocked,
+        )
+        if self._completion_tracker.streak != previous_streak:
+            self.get_logger().info(
+                'No safe reachable frontier remains: '
+                f'check {self._completion_tracker.streak}/'
+                f'{self._completion_tracker.required_cycles}, '
+                f'idle={self._completion_tracker.idle_elapsed_sec(now):.1f}s'
+            )
+        if not newly_complete:
+            return
+
+        self._exploration_complete = True
+        self._publish_empty_path(self._latest_map.header.frame_id or 'map')
+        completion = Bool()
+        completion.data = True
+        self._completion_pub.publish(completion)
+        self.get_logger().info(
+            'Exploration complete: no safe reachable frontier remained after '
+            'stable planner checks'
+        )
+        self._schedule_completion_shutdown()
+
+    def _schedule_completion_shutdown(self) -> None:
+        """Give the latched completion message time to publish, then exit."""
+        if not bool(self.get_parameter('shutdown_on_completion').value):
+            return
+        delay = max(
+            0.05,
+            float(
+                self.get_parameter('completion_shutdown_delay_sec').value
+            ),
+        )
+        self.get_logger().info(
+            f'Shutting down frontier detector in {delay:.2f}s'
+        )
+        self._completion_shutdown_timer = self.create_timer(
+            delay,
+            self._shutdown_after_completion,
+        )
+
+    def _shutdown_after_completion(self) -> None:
+        if self._completion_shutdown_timer is not None:
+            self._completion_shutdown_timer.cancel()
+        if rclpy.ok():
+            rclpy.shutdown()
+
+    def _on_plan_result(self, future, candidate: PlanningCandidate) -> None:
+        super()._on_plan_result(future, candidate)
+        if self._selected_index is not None:
+            self._completion_tracker.mark_started()
+            self._completion_tracker.observe_busy()
 
     def _requeue_transient_planner_failure(
         self,
@@ -443,7 +619,8 @@ def main(args=None) -> None:
         pass
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == '__main__':

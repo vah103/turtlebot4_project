@@ -2,12 +2,14 @@
 
 import rclpy
 
-from frontier_exploration.frontier_detector_retry import RetryFrontierDetector
+from frontier_exploration.frontier_detector_strict_completion import (
+    StrictCompletionFrontierDetector,
+)
 from frontier_exploration.tf_pose import lookup_robot_xy
 
 
-class ResilientFrontierDetector(RetryFrontierDetector):
-    """Use split-chain TF composition when synchronized lookup is unavailable."""
+class ResilientFrontierDetector(StrictCompletionFrontierDetector):
+    """Use strict completion plus split-chain TF fallback when needed."""
 
     def __init__(self) -> None:
         super().__init__()
@@ -55,7 +57,8 @@ def main(args=None) -> None:
         pass
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == '__main__':

@@ -1,0 +1,50 @@
+{
+  "images": [
+    {
+      "path": "data/lama_samples/hospital_flat_lama_01_001/000050/input.png",
+      "blob_sha": "0f8840c27e2f5de8a24ac7c5100439c0272d3f8d",
+      "sha256": "14a1051e86856b69299cd9f2dd7c2b564d815947c0476b2de6b704eedb62b348"
+    },
+    {
+      "path": "data/lama_samples/hospital_flat_lama_01_001/000050/mask.png",
+      "blob_sha": "c260ba0971a19b2b5ce1a721d3d95f3b31c4f532",
+      "sha256": "ad341f51a792b711855811be931dccc382650226bb55ee8a6627f60be67b39e4"
+    },
+    {
+      "path": "data/lama_samples/hospital_flat_lama_01_001/000050/prediction.png",
+      "blob_sha": "eba9b60e1ae8c199bb4e66b98938beab1c2fd62e",
+      "sha256": "3a431d432106a327a5a45a6798973eb9af01def04942275c68f63778030dbe5b"
+    },
+    {
+      "path": "data/lama_samples/hospital_flat_lama_01_001/000708/input.png",
+      "blob_sha": "1e5c3a2eb8d82f66137612b053abde3936076648",
+      "sha256": "38f4b1bcb9658990ff4320977a9d748e5ec4d20fee3b84ce5c22cc3dc251cf68"
+    },
+    {
+      "path": "data/lama_samples/hospital_flat_lama_01_001/000708/mask.png",
+      "blob_sha": "378fd09bce2acc2c52ebaa274c531d4bdc646606",
+      "sha256": "cd6d742e35b807da5b3886c4b1c22853688c504c6574b03eebec1b2570375ac7"
+    },
+    {
+      "path": "data/lama_samples/hospital_flat_lama_01_001/000708/prediction.png",
+      "blob_sha": "56f1006555d01a468e7252500ea9989520443667",
+      "sha256": "f40d737824e94a352d1ba4fd751450d413aebcc05207787b354c4bdc6970fc54"
+    },
+    {
+      "path": "data/lama_samples/hospital_flat_lama_01_001/001415/input.png",
+      "blob_sha": "70c4e0fe82fab5211c618d44ef061d81b3524ad2",
+      "sha256": "0846d5b18f95bd71b3244825058f67fe9c4e37d6e77d7d27355a8e94f7fa74e4"
+    },
+    {
+      "path": "data/lama_samples/hospital_flat_lama_01_001/001415/mask.png",
+      "blob_sha": "a98e3546c024187502cd4d24c56c37c0cf3959e3",
+      "sha256": "a3f5893896a87b7048a4293eb0abc8628fe6c584983f8011f9bca248e95fbb0c"
+    },
+    {
+      "path": "data/lama_samples/hospital_flat_lama_01_001/001415/prediction.png",
+      "blob_sha": "2527dfbc0c574c43b1bb8ce35af1e014a25829ff",
+      "sha256": "f55c39e072ba33467a75d65262ad77454771d12b631264a9636e28c3f409d730"
+    }
+  ]
+}
+

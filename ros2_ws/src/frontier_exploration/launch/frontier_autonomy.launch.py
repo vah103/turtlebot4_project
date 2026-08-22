@@ -2,8 +2,15 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, TimerAction
+from launch.actions import (
+    DeclareLaunchArgument,
+    EmitEvent,
+    RegisterEventHandler,
+    TimerAction,
+)
 from launch.conditions import IfCondition
+from launch.event_handlers import OnProcessExit
+from launch.events import Shutdown
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
@@ -61,6 +68,18 @@ def generate_launch_description() -> LaunchDescription:
         output='screen',
         parameters=[config_path, common_time_parameter],
     )
+    shutdown_when_detector_exits = RegisterEventHandler(
+        OnProcessExit(
+            target_action=detector,
+            on_exit=[
+                EmitEvent(
+                    event=Shutdown(
+                        reason='Frontier detector finished or stopped'
+                    )
+                )
+            ],
+        )
+    )
 
     return LaunchDescription(
         [
@@ -84,6 +103,7 @@ def generate_launch_description() -> LaunchDescription:
             ),
             manager,
             adapter,
+            shutdown_when_detector_exits,
             # Give Nav2/SLAM/TF a short head start. The detector then runs WFD
             # directly on /map; detector-only map preprocessing is not part of
             # the basic baseline anymore.

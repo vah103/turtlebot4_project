@@ -17,6 +17,20 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 
+# LaMa local assets and generated experiment data
+# Keep code/config in Git, but do not commit the upstream LaMa checkout,
+# model checkpoints, full fixed-canvas runs, or generated predictions.
+third_party/lama/
+models/lama/
+results/lama/
+data/lama_runs/*
+!data/lama_runs/README.md
+
+# Common model/checkpoint payloads
+*.ckpt
+*.pth
+*.pt
+
 # Editors and local environment
 .vscode/
 .idea/

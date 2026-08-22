@@ -220,9 +220,9 @@ def candidate_goal_cells(
 ) -> list[int]:
     """Return unique free cells immediately on the explored side of a frontier.
 
-    The frontier cell itself is deliberately excluded. This mirrors the mature
-    frontier-exploration pattern of navigating to an accessible free cell adjacent
-    to the frontier geometry rather than directly to the free/unknown boundary.
+    The frontier cell itself is deliberately excluded. These cells remain useful
+    as a fallback, but strict exploration prefers deeper known-free goals when
+    enough explored space exists behind the frontier.
     """
     candidates: set[int] = set()
     for frontier_index in segment:
@@ -231,6 +231,81 @@ def candidate_goal_cells(
                 continue
             if data[neighbor] == FREE:
                 candidates.add(neighbor)
+    return sorted(candidates)
+
+
+def candidate_goal_cells_with_standoff(
+    segment: list[int],
+    frontier_cells: set[int],
+    data: list[int],
+    width: int,
+    height: int,
+    min_standoff_cells: int,
+    search_extra_cells: int = 4,
+) -> list[int]:
+    """Return known-free goals set back from the frontier boundary.
+
+    Search inward from the ordinary adjacent free-side candidates and return the
+    first cells that are at least ``min_standoff_cells`` away from every current
+    frontier cell. The search stays entirely in known free space. If no such cell
+    exists, an empty list is returned so callers can explicitly decide whether to
+    fall back to the adjacent goals.
+    """
+    immediate = candidate_goal_cells(
+        segment,
+        frontier_cells,
+        data,
+        width,
+        height,
+    )
+    standoff_cells = max(1, int(min_standoff_cells))
+    if standoff_cells <= 1 or not immediate:
+        return immediate
+
+    frontier_lookup = set(frontier_cells)
+    radius_sq = standoff_cells * standoff_cells
+    max_depth = max(0, standoff_cells - 1) + max(0, int(search_extra_cells))
+
+    def has_nearby_frontier(index: int) -> bool:
+        x = index % width
+        y = index // width
+        for dy in range(-standoff_cells, standoff_cells + 1):
+            ny = y + dy
+            if not 0 <= ny < height:
+                continue
+            for dx in range(-standoff_cells, standoff_cells + 1):
+                if dx * dx + dy * dy >= radius_sq:
+                    continue
+                nx = x + dx
+                if not 0 <= nx < width:
+                    continue
+                if ny * width + nx in frontier_lookup:
+                    return True
+        return False
+
+    queue = deque((index, 0) for index in immediate)
+    visited = set(immediate)
+    candidates: set[int] = set()
+
+    while queue:
+        current, depth = queue.popleft()
+        if not has_nearby_frontier(current):
+            candidates.add(current)
+            # Stop this branch at the first acceptable standoff layer so goals
+            # do not drift unnecessarily far away from the frontier.
+            continue
+
+        if depth >= max_depth:
+            continue
+
+        for neighbor in neighbors8(current, width, height):
+            if neighbor in visited or neighbor in frontier_lookup:
+                continue
+            if data[neighbor] != FREE:
+                continue
+            visited.add(neighbor)
+            queue.append((neighbor, depth + 1))
+
     return sorted(candidates)
 
 
