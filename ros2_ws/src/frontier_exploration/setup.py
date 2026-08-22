@@ -126,6 +126,10 @@ setup(
                 'evaluate_lama_predictions = '
                 'frontier_exploration.lama_evaluator:main'
             ),
+            (
+                'analyze_lama_evaluation = '
+                'frontier_exploration.lama_analysis_report:main'
+            ),
         ],
     },
 )
