@@ -1,0 +1,50 @@
+map_snapshot_recorder:
+  ros__parameters:
+    map_topic: /map
+    odom_topic: /odom
+    completion_topic: /exploration_complete
+    robot_frame: base_link
+    # Relative paths are resolved from TURTLEBOT4_PROJECT_ROOT (or the
+    # repository root detected from the current working/module path).
+    output_dir: data/lama_runs
+    run_name: ""
+
+    # Fixed before the run from Hospital World floor + wall collision geometry,
+    # transformed from SDF world coordinates into the robot/SLAM start frame.
+    # Robot start pose must match hospital_simulation.launch.py defaults:
+    #   x=0.0, y=12.0, yaw=-1.57 rad
+    # Hospital bounds in the SLAM-start frame are approximately:
+    #   x: [-0.572445, 24.588833]
+    #   y: [-35.091079, 21.044604]
+    # The simulated RPLIDAR reaches 20.0 m. Use a 25.0 m margin so sensor
+    # offset, SLAM pose corrections, and cell-grid rounding near maximum range
+    # cannot push otherwise valid known cells outside the predefined canvas.
+    fixed_canvas_configured: true
+    canvas_width_cells: 1504
+    canvas_height_cells: 2123
+    canvas_resolution: 0.05
+    canvas_origin_x: -25.6
+    canvas_origin_y: -60.1
+
+    # Fail loudly if explored/known cells exceed the predefined map limit.
+    reject_known_outside_canvas: true
+
+    # Snapshot 000000 is the all-unknown fixed canvas. After that, evaluate a
+    # checkpoint after 0.5 m of travel or 15 s. A checkpoint is written only if
+    # at least 250 cells changed known/unknown state since the last saved sample.
+    # This removes long runs of near-duplicate maps while preserving meaningful
+    # exploration progress. The first valid and final snapshots are always saved.
+    distance_interval_m: 0.5
+    time_interval_sec: 15.0
+    min_interval_sec: 1.0
+    min_known_mask_change_cells: 250
+
+    # Pair each map with the nearest odometry sample by ROS timestamp.
+    sync_tolerance_sec: 0.25
+    odom_buffer_size: 400
+
+    # Ignore discontinuities caused by odometry reset or simulator jumps.
+    max_odom_step_m: 1.0
+
+    # Save one forced final snapshot, then stop the recorder process.
+    shutdown_on_completion: true

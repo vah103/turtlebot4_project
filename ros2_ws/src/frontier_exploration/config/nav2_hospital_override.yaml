@@ -1,0 +1,58 @@
+# Hospital-world Nav2 overrides.
+# This file is merged on top of the installed ROS 2 Jazzy
+# nav2_bringup/params/nav2_params.yaml by hospital_nav2.launch.py.
+# Keep cmd_vel UNSTAMPED end-to-end because the Gazebo TB4 bridge subscribes
+# to geometry_msgs/msg/Twist on /cmd_vel.
+#
+# The active Hospital world uses one continuous flat ground plane, so no
+# keepout / costmap-filter region is required.
+#
+# Long mapping runs favour stable scan matching over maximum driving speed. The
+# previous 1.5 m/s MPPI profile also produced thousands of controller deadline
+# warnings on the target machine. The lower speed and smaller MPPI workload keep
+# Nav2 responsive while giving slam_toolbox denser, better-overlapped scans.
+
+controller_server:
+  ros__parameters:
+    enable_stamped_cmd_vel: false
+    controller_frequency: 15.0
+    FollowPath:
+      # Conservative mapping speed. The Gazebo drivetrain has a slightly higher
+      # hard cap so Nav2/velocity_smoother, not the physics plugin, is the limiter.
+      vx_max: 0.75
+      vx_min: -0.15
+      vx_std: 0.25
+      wz_max: 1.0
+      wz_std: 0.25
+
+      # Halve the default sampling workload. At 0.75 m/s the standard 2.8 s
+      # horizon spans ~2.1 m, so a huge batch and 10 m local costmap are wasteful.
+      batch_size: 1000
+      prune_distance: 3.0
+      GoalCritic:
+        threshold_to_consider: 2.2
+      PathFollowCritic:
+        threshold_to_consider: 2.2
+
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      # 6 x 6 m still contains the full ~2.1 m MPPI forward horizon with margin,
+      # while substantially reducing rolling-costmap work during long runs.
+      width: 6
+      height: 6
+
+behavior_server:
+  ros__parameters:
+    enable_stamped_cmd_vel: false
+
+velocity_smoother:
+  ros__parameters:
+    enable_stamped_cmd_vel: false
+    max_velocity: [0.75, 0.0, 1.0]
+    max_accel: [0.8, 0.0, 1.5]
+    max_decel: [-0.8, 0.0, -1.5]
+
+collision_monitor:
+  ros__parameters:
+    enable_stamped_cmd_vel: false

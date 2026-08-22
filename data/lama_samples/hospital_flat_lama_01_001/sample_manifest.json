@@ -1,0 +1,50 @@
+{
+  "source_run": "hospital_flat_lama_01_001",
+  "created_utc": "2026-08-20T16:08:49.093555+00:00",
+  "completed": true,
+  "completion_trigger": "exploration_complete",
+  "source_frame_count": 1416,
+  "source_run_size_gib": 8.44,
+  "fixed_canvas": {
+    "width_cells": 1504,
+    "height_cells": 2123,
+    "resolution_m_per_cell": 0.05,
+    "origin_x": -25.6,
+    "origin_y": -60.1
+  },
+  "sample_image": {
+    "width_pixels": 752,
+    "height_pixels": 1064,
+    "input_semantics": {
+      "free": 255,
+      "occupied": 0,
+      "unknown": 127
+    },
+    "mask_semantics": {
+      "unknown": 255,
+      "known": 0
+    }
+  },
+  "samples": [
+    {
+      "frame": "000050",
+      "stage": "early",
+      "files": ["000050/input.png", "000050/mask.png", "000050/prediction.png"]
+    },
+    {
+      "frame": "000708",
+      "stage": "middle",
+      "files": ["000708/input.png", "000708/mask.png", "000708/prediction.png"]
+    },
+    {
+      "frame": "001415",
+      "stage": "final",
+      "files": ["001415/input.png", "001415/mask.png", "001415/prediction.png"]
+    }
+  ],
+  "notes": [
+    "The three checkpoints are representative qualitative evidence.",
+    "The full raw run remains local and is intentionally excluded from Git.",
+    "The LaMa prediction must not be interpreted as measured ground truth."
+  ]
+}

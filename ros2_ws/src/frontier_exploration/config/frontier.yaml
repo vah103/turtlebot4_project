@@ -27,26 +27,48 @@ frontier_detector:
     min_segment_size: 5
     min_selection_distance_m: 0.60
 
-    # Costmap-aware free goal selection near each frontier segment.
+    # Prefer navigation goals deeper inside known-free space before falling back
+    # to cells immediately adjacent to the frontier boundary.
+    frontier_goal_standoff_m: 0.30
+
+    # Costmap-aware safe free goals near each frontier segment.
     require_global_costmap: true
     costmap_occ_threshold: 65
     costmap_unknown_is_blocked: true
 
-    # Planner startup / transient failure handling.
+    # Planner startup / transport failures are transient and never prove that a
+    # frontier is unreachable.
     planner_retry_period_sec: 1.0
     planner_rejection_retry_limit: 15
 
-    # Navigation outcome feedback and temporary frontier suppression.
+    # No-safe-goal costmap results are temporary evidence. Recheck the frontier
+    # several times before confirming it unreachable so SLAM/costmap updates get
+    # a chance to expose a valid standoff or adjacent free goal.
+    costmap_blocked_retry_period_sec: 10.0
+    costmap_blocked_max_checks: 4
+
+    # A frontier is confirmed unreachable after all costmap-safe goals fail
+    # ComputePathToPose, or after the bounded costmap-blocked checks above remain
+    # unresolved. These regions are revalidated after successful exploration.
+    unreachable_frontier_radius_m: 0.50
+
+    # Navigation execution failure remains temporary only. Suppress the whole
+    # local stall region rather than just one nearly identical frontier point.
+    # Repeated failures in the same area escalate 60 -> 120 -> 240 s, capped at
+    # 240 s, while never turning an execution failure into permanent unreachable.
     failed_goal_topic: /frontier_failed_goal
     completed_goal_topic: /frontier_completed_goal
-    failed_goal_radius_m: 0.40
+    failed_goal_radius_m: 0.90
     failed_goal_cooldown_sec: 60.0
-    failed_goal_max_attempts: 2
+    failed_goal_cooldown_multiplier: 2.0
+    failed_goal_cooldown_max_sec: 240.0
+    failed_goal_repeat_window_sec: 600.0
     completed_frontier_radius_m: 0.40
     completed_frontier_cooldown_sec: 15.0
     post_goal_settle_sec: 1.0
 
-    # End only after all safe candidates are repeatedly exhausted by Nav2.
+    # End only when no reachable frontier remains. Raw frontier geometry may
+    # still exist if every remaining region has been planner-confirmed unreachable.
     completion_topic: /exploration_complete
     completion_stable_cycles: 5
     completion_min_idle_sec: 10.0
@@ -64,7 +86,8 @@ exploration_manager:
     failed_goal_topic: /frontier_failed_goal
     completed_goal_topic: /frontier_completed_goal
 
-    # Allow rotation/local recovery and reset the watchdog on small progress.
+    # Keep the stall watchdog tied to actual progress toward the Nav2 goal.
+    # Odometry jitter/oscillation must not keep a genuinely stuck goal alive.
     stall_timeout_sec: 30.0
     stall_progress_epsilon_m: 0.02
     navigation_timeout_sec: 180.0

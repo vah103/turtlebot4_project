@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+  Hospital-like indoor test world for TurtleBot4 / LaMa experiments.
+  Structure and model placement adapted from the AWS RoboMaker Hospital World
+  Harmonic-compatible port used by hoale-motion/Robot_Omni_Navigation.
+  External model assets are installed separately by scripts/setup_hospital_world_assets.sh.
+-->
+<sdf version="1.9">
+  <world name="hospital_world">
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+
+    <gravity>0 0 -9.8</gravity>
+
+    <scene>
+      <ambient>0.6 0.6 0.6 1</ambient>
+      <background>0.4 0.4 0.4 1</background>
+      <shadows>false</shadows>
+    </scene>
+
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/Sun</uri>
+    </include>
+
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/Ground Plane</uri>
+      <pose>0 0 -0.1 0 0 0</pose>
+    </include>
+
+    <include>
+      <name>hospital_floor</name>
+      <uri>model://aws_robomaker_hospital_floor_01_floor</uri>
+      <pose>-0.001425 -0.014447 0 0 0 0</pose>
+      <static>true</static>
+    </include>
+
+    <include>
+      <name>hospital_walls</name>
+      <uri>model://aws_robomaker_hospital_floor_01_walls</uri>
+      <pose>-0.013823 -0.013783 0 0 0 0</pose>
+      <static>true</static>
+    </include>
+  </world>
+</sdf>

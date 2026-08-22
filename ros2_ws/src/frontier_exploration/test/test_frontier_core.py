@@ -2,6 +2,7 @@ from frontier_exploration.frontier_core import (
     FREE,
     UNKNOWN,
     candidate_goal_cells,
+    candidate_goal_cells_with_standoff,
     cluster_frontiers,
     detect_frontier_cells,
     reachable_free_cells,
@@ -34,7 +35,6 @@ def test_frontier_clustering_uses_eight_connectivity():
     width = 3
     height = 3
     diagonal_frontiers = {0, 4, 8}
-
     clusters = cluster_frontiers(
         diagonal_frontiers,
         width,
@@ -71,3 +71,32 @@ def test_candidate_goal_cells_stay_on_free_side_and_not_on_frontier():
     assert all(data[index] == FREE for index in goals)
     assert all(index not in frontier_cells for index in goals)
     assert any(index % width == 2 for index in goals)
+
+
+def test_standoff_goal_cells_move_deeper_into_known_free_space():
+    width = 12
+    height = 7
+    data = [100] * (width * height)
+
+    # Large known-free area ending at a vertical frontier at x=10.
+    for y in range(height):
+        for x in range(1, 11):
+            data[y * width + x] = FREE
+        data[y * width + 11] = UNKNOWN
+
+    segment = [y * width + 10 for y in range(1, 6)]
+    frontier_cells = set(segment)
+    goals = candidate_goal_cells_with_standoff(
+        segment,
+        frontier_cells,
+        data,
+        width,
+        height,
+        min_standoff_cells=3,
+        search_extra_cells=2,
+    )
+
+    assert goals
+    assert all(data[index] == FREE for index in goals)
+    # Frontier is at x=10; a 3-cell standoff should place goals at x<=7.
+    assert all(index % width <= 7 for index in goals)

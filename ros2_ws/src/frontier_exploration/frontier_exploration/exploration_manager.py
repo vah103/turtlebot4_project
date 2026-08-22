@@ -114,7 +114,12 @@ class ExplorationManager(Node):
             return
 
         pose = path.poses[-1]
-        pose.header.stamp = self.get_clock().now().to_msg()
+        # Use TF's "latest available transform" convention for the navigation
+        # goal. Stamping the goal with the current simulated time can put it a few
+        # milliseconds ahead of slam_toolbox's map->odom transform and Nav2 then
+        # rejects an otherwise valid goal with future-extrapolation errors.
+        pose.header.stamp.sec = 0
+        pose.header.stamp.nanosec = 0
         if self._awaiting_fresh_path:
             self._awaiting_fresh_path = False
             self.get_logger().info(
@@ -361,7 +366,8 @@ def main(args=None) -> None:
         pass
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == '__main__':

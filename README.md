@@ -83,10 +83,16 @@ Bộ evidence này chỉ ghi những kết quả đã được xác minh. Raw te
 ```text
 .joy/                         Metadata, roadmap và command library cho Joy
 evidence/                     Bộ bằng chứng và tài liệu tái lập theo stage
+data/lama_runs/               Snapshot LaMa đầy đủ, chỉ lưu local (Git ignored)
+data/lama_samples/            Ba mẫu LaMa đại diện đã kiểm tra và lưu Git
+docs/lama_local_layout.md     Chuẩn đường dẫn và cách migrate LaMa
 maps/                         Bản đồ đã version
 report/                       Báo cáo theo ngày
 ros2_ws/                      ROS 2 workspace và project tools
+scripts/lama/                 Script migrate/setup LaMa
 stage3_navigation_benchmark/  Runner, config và bằng chứng Stage 3
+third_party/lama/             LaMa runtime/model local (Git ignored)
+third_party/lama_upstream/    Mã nguồn LaMa được ghim bằng Git submodule
 PROJECT_STATUS.md             Trạng thái kỹ thuật hiện tại
 ```
 
@@ -117,6 +123,8 @@ Các node trong `tb4_project_tools` chỉ giám sát dữ liệu. Những lệnh
 
 - Commit code, config, CSV, text log, checksum, metadata và ảnh minh chứng có kích thước hợp lý.
 - Không commit trực tiếp payload rosbag lớn như `*.mcap` hoặc `*.db3`.
+- Không commit full LaMa run, upstream checkout hoặc model checkpoint; dùng
+  `data/lama_runs`, `third_party/lama` và `models/lama` ở local.
 - Dùng Git LFS hoặc kho lưu trữ ngoài Git cho dữ liệu lớn.
 - Không đánh dấu checkpoint hoàn thành nếu repository không có report hoặc evidence tương ứng.
 
