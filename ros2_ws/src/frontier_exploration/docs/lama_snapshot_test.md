@@ -56,6 +56,8 @@ margin before SLAM and are stored in `config/map_snapshot_hospital.yaml`.
 ## Build and test
 
 ```bash
+cd ~/turtlebot4_project
+export TURTLEBOT4_PROJECT_ROOT="$(pwd)"
 cd ~/turtlebot4_project/ros2_ws
 colcon build --packages-select frontier_exploration
 source install/setup.bash
@@ -76,7 +78,7 @@ ros2 launch frontier_exploration hospital_map_snapshot_recorder.launch.py \
 The run directory contains the exact fixed-canvas states:
 
 ```text
-~/turtlebot4_lama_snapshots/hospital_lama_01/
+~/turtlebot4_project/data/lama_runs/hospital_lama_01/
   run.json
   manifest.jsonl
   000000_map.pgm
@@ -96,7 +98,7 @@ mask PNGs:
 
 ```bash
 ros2 run frontier_exploration prepare_lama_dataset \
-  ~/turtlebot4_lama_snapshots/hospital_lama_01
+  "$TURTLEBOT4_PROJECT_ROOT/data/lama_runs/hospital_lama_01"
 ```
 
 Defaults intentionally match the MapEx map scale used in our LaMa evaluation:
@@ -115,7 +117,7 @@ unchanged.
 Generated files stay inside the same run directory:
 
 ```text
-~/turtlebot4_lama_snapshots/hospital_lama_01/
+~/turtlebot4_project/data/lama_runs/hospital_lama_01/
   model_input/
     000000.png
     000001.png
@@ -141,7 +143,7 @@ To override the defaults explicitly:
 
 ```bash
 ros2 run frontier_exploration prepare_lama_dataset \
-  ~/turtlebot4_lama_snapshots/hospital_lama_01 \
+  "$TURTLEBOT4_PROJECT_ROOT/data/lama_runs/hospital_lama_01" \
   --target-resolution 0.10 \
   --pad-multiple 8
 ```
@@ -149,3 +151,8 @@ ros2 run frontier_exploration prepare_lama_dataset \
 After preprocessing, select representative frames from early/middle/late
 exploration, run `big_lama`, and compare each `model_input` image with its LaMa
 prediction.
+
+The local LaMa checkout is stored at
+`$TURTLEBOT4_PROJECT_ROOT/third_party/lama`. See
+`docs/lama_local_layout.md` for migration, ignored payloads, and standard
+environment variables.
