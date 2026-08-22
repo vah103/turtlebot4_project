@@ -1,0 +1,13 @@
+{
+  "final_known_fraction": 0.16977431,
+  "pearson_progress_vs_miou": 0.9389507558771517,
+  "qualitative_frames": [
+    "000014",
+    "000432",
+    "000632",
+    "001081"
+  ],
+  "progress_csv": "evaluation_progress.csv",
+  "plot_svg": "evaluation_metrics.svg",
+  "report_html": "evaluation_report.html"
+}

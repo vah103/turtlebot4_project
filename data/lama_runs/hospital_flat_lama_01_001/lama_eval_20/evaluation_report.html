@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LaMa evaluation report</title>
+<style>
+body { font-family: sans-serif; max-width: 1500px; margin: 30px auto; padding: 0 20px; color: #222; }
+img { width: 100%; border: 1px solid #bbb; image-rendering: auto; }
+.images { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+figure { margin: 0; } figcaption { text-align: center; margin-top: 6px; }
+.frame { margin: 42px 0; border-top: 1px solid #ccc; padding-top: 20px; }
+.summary { background: #f5f5f5; padding: 16px 20px; }
+@media (max-width: 900px) { .images { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+<h1>LaMa Hospital evaluation</h1>
+<div class="summary">
+<p>Final pseudo-GT frame: <b>001415</b></p>
+<p>Pearson correlation(progress, mIoU): <b>0.939</b></p>
+<p>Plot: <a href="evaluation_metrics.svg">evaluation_metrics.svg</a> · Data: <a href="evaluation_progress.csv">evaluation_progress.csv</a></p>
+</div>
+<img src="evaluation_metrics.svg" alt="Evaluation plot">
+
+<section class="frame">
+<h2>Frame 000014 — progress 15.2%</h2>
+<p>known=2.6% · mIoU=25.9% · occupied IoU=8.7% · occupied F1=16.0%</p>
+<div class="images">
+<figure><img src="model_input/000014.png"><figcaption>Observed input</figcaption></figure>
+<figure><img src="model_mask/000014.png"><figcaption>Unknown mask</figcaption></figure>
+<figure><img src="prediction/000014.png"><figcaption>LaMa prediction</figcaption></figure>
+<figure><img src="model_input/001415.png"><figcaption>Final SLAM pseudo-GT</figcaption></figure>
+</div>
+</section>
+<section class="frame">
+<h2>Frame 000432 — progress 42.2%</h2>
+<p>known=7.2% · mIoU=52.2% · occupied IoU=21.6% · occupied F1=35.5%</p>
+<div class="images">
+<figure><img src="model_input/000432.png"><figcaption>Observed input</figcaption></figure>
+<figure><img src="model_mask/000432.png"><figcaption>Unknown mask</figcaption></figure>
+<figure><img src="prediction/000432.png"><figcaption>LaMa prediction</figcaption></figure>
+<figure><img src="model_input/001415.png"><figcaption>Final SLAM pseudo-GT</figcaption></figure>
+</div>
+</section>
+<section class="frame">
+<h2>Frame 000632 — progress 57.9%</h2>
+<p>known=9.8% · mIoU=63.7% · occupied IoU=36.2% · occupied F1=53.2%</p>
+<div class="images">
+<figure><img src="model_input/000632.png"><figcaption>Observed input</figcaption></figure>
+<figure><img src="model_mask/000632.png"><figcaption>Unknown mask</figcaption></figure>
+<figure><img src="prediction/000632.png"><figcaption>LaMa prediction</figcaption></figure>
+<figure><img src="model_input/001415.png"><figcaption>Final SLAM pseudo-GT</figcaption></figure>
+</div>
+</section>
+<section class="frame">
+<h2>Frame 001081 — progress 84.2%</h2>
+<p>known=14.3% · mIoU=69.5% · occupied IoU=46.9% · occupied F1=63.9%</p>
+<div class="images">
+<figure><img src="model_input/001081.png"><figcaption>Observed input</figcaption></figure>
+<figure><img src="model_mask/001081.png"><figcaption>Unknown mask</figcaption></figure>
+<figure><img src="prediction/001081.png"><figcaption>LaMa prediction</figcaption></figure>
+<figure><img src="model_input/001415.png"><figcaption>Final SLAM pseudo-GT</figcaption></figure>
+</div>
+</section>
+</body>
+</html>
