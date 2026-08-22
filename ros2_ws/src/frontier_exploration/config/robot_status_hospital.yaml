@@ -4,6 +4,7 @@ robot_status_monitor:
     odom_topic: /odom
     scan_topic: /scan
     path_topic: /frontier_selected_path
+    selected_frontier_topic: /frontier_selected
     failed_goal_topic: /frontier_failed_goal
     completed_goal_topic: /frontier_completed_goal
     completion_topic: /exploration_complete
