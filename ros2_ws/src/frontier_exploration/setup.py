@@ -104,6 +104,10 @@ setup(
                 'select_lama_snapshots = '
                 'frontier_exploration.lama_snapshot_selector:main'
             ),
+            (
+                'run_lama_inference = '
+                'frontier_exploration.lama_inference_runner:main'
+            ),
         ],
     },
 )
