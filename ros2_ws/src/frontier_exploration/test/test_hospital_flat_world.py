@@ -82,10 +82,10 @@ def test_flat_hospital_pins_physics_to_realtime_clock():
 
 def test_default_hospital_runtime_uses_flat_world_without_keepout_filter():
     simulation_text = (
-        PACKAGE_ROOT / 'launch' / 'hospital_simulation.launch.py'
+        PACKAGE_ROOT / 'launch' / 'hospital_flat_simulation.launch.py'
     ).read_text(encoding='utf-8')
     stack_text = (
-        PACKAGE_ROOT / 'launch' / 'hospital_stack.launch.py'
+        PACKAGE_ROOT / 'launch' / 'hospital_flat_stack.launch.py'
     ).read_text(encoding='utf-8')
     nav2_text = (
         PACKAGE_ROOT / 'launch' / 'hospital_nav2.launch.py'
@@ -95,7 +95,7 @@ def test_default_hospital_runtime_uses_flat_world_without_keepout_filter():
     ).read_text(encoding='utf-8')
 
     assert "worlds', 'hospital_aws_flat.sdf'" in simulation_text
-    assert "hospital_simulation.launch.py" in stack_text
+    assert "hospital_flat_simulation.launch.py" in stack_text
 
     assert 'keepout_enabled' not in nav2_text
     assert 'generate_hospital_keepout_mask' not in nav2_text
@@ -105,7 +105,7 @@ def test_default_hospital_runtime_uses_flat_world_without_keepout_filter():
 
 def test_hospital_runtime_uses_mapping_stability_profile():
     stack_text = (
-        PACKAGE_ROOT / 'launch' / 'hospital_stack.launch.py'
+        PACKAGE_ROOT / 'launch' / 'hospital_flat_stack.launch.py'
     ).read_text(encoding='utf-8')
     slam_text = (
         PACKAGE_ROOT / 'config' / 'hospital_slam.yaml'
