@@ -1,9 +1,7 @@
 """Record fixed-canvas SLAM map snapshots for LaMa evaluation."""
 
-import os
 from collections import deque
 from datetime import datetime, timezone
-from pathlib import Path
 
 import rclpy
 from nav_msgs.msg import OccupancyGrid, Odometry
@@ -32,6 +30,10 @@ from frontier_exploration.map_snapshot_core import (
     write_json_atomic,
     write_snapshot_files,
 )
+from frontier_exploration.project_paths import (
+    DEFAULT_LAMA_RUNS_DIR,
+    resolve_project_path,
+)
 
 
 class MapSnapshotRecorder(Node):
@@ -43,9 +45,7 @@ class MapSnapshotRecorder(Node):
         self.declare_parameter('odom_topic', '/odom')
         self.declare_parameter('completion_topic', '/exploration_complete')
         self.declare_parameter('robot_frame', 'base_link')
-        self.declare_parameter(
-            'output_dir', '~/turtlebot4_lama_snapshots'
-        )
+        self.declare_parameter('output_dir', DEFAULT_LAMA_RUNS_DIR)
         self.declare_parameter('run_name', '')
 
         # Fixed geometry must be decided before an experiment begins.
@@ -83,8 +83,8 @@ class MapSnapshotRecorder(Node):
             self.get_parameter('reject_known_outside_canvas').value
         )
 
-        output_dir = Path(
-            os.path.expanduser(str(self.get_parameter('output_dir').value))
+        output_dir = resolve_project_path(
+            str(self.get_parameter('output_dir').value)
         )
         run_name = str(self.get_parameter('run_name').value).strip()
         if not run_name:
