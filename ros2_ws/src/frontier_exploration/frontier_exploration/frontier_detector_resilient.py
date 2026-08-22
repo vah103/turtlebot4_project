@@ -65,7 +65,6 @@ class ResilientFrontierDetector(StrictCompletionFrontierDetector):
             str(self.get_parameter('selected_frontier_topic').value),
             selected_frontier_qos,
         )
-        self._last_published_selected_index: int | None = None
         self._planner_client = _ApproachFacingPlannerClient(
             self,
             self._planner_client,
@@ -129,8 +128,6 @@ class ResilientFrontierDetector(StrictCompletionFrontierDetector):
     def _publish_selected_frontier(self) -> None:
         if self._selected_index is None or self._latest_map is None:
             return
-        if self._selected_index == self._last_published_selected_index:
-            return
 
         point = _cell_to_world(self._selected_index, self._latest_map)
         msg = PointStamped()
@@ -139,7 +136,6 @@ class ResilientFrontierDetector(StrictCompletionFrontierDetector):
         msg.point.y = float(point.y)
         msg.point.z = 0.0
         self._selected_frontier_pub.publish(msg)
-        self._last_published_selected_index = self._selected_index
 
     def _on_plan_result(self, future, candidate) -> None:
         super()._on_plan_result(future, candidate)
