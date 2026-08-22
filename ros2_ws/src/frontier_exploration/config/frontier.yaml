@@ -80,14 +80,22 @@ frontier_detector:
 exploration_manager:
   ros__parameters:
     path_topic: /frontier_selected_path
+    odom_topic: /odom
     navigate_action: /navigate_to_pose
     enable_navigation: false
     retry_period_sec: 1.0
     failed_goal_topic: /frontier_failed_goal
     completed_goal_topic: /frontier_completed_goal
 
-    # Keep the stall watchdog tied to actual progress toward the Nav2 goal.
-    # Odometry jitter/oscillation must not keep a genuinely stuck goal alive.
+    # Primary progress signal remains Nav2 distance_remaining. Meaningful odometry
+    # motion also refreshes the stall timer so rotations/recovery motion are not
+    # canceled as false stalls. Thresholds are deliberately above normal jitter.
     stall_timeout_sec: 30.0
     stall_progress_epsilon_m: 0.02
+    stall_motion_epsilon_m: 0.08
+    stall_rotation_epsilon_rad: 0.35
+    stall_odom_max_step_m: 1.0
+
+    # Ultimate guard: even repeated recovery/rotation cannot keep one goal alive
+    # forever because this hard timeout does not reset on progress.
     navigation_timeout_sec: 180.0

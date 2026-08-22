@@ -5,15 +5,28 @@ enabled. Frontier selection, safety filtering, and failed-region suppression sta
 inside the detector so navigation state and exploration policy remain separated.
 """
 
-from math import isfinite
+from math import atan2, cos, hypot, isfinite, sin
 
 import rclpy
 from action_msgs.msg import GoalStatus
 from geometry_msgs.msg import PointStamped
 from nav2_msgs.action import NavigateToPose
-from nav_msgs.msg import Path
+from nav_msgs.msg import Odometry, Path
 from rclpy.action import ActionClient
 from rclpy.node import Node
+from rclpy.qos import qos_profile_sensor_data
+
+
+def _yaw_from_odometry(msg: Odometry) -> float:
+    q = msg.pose.pose.orientation
+    siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
+    cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
+    return atan2(siny_cosp, cosy_cosp)
+
+
+def _angular_distance(first: float, second: float) -> float:
+    delta = first - second
+    return abs(atan2(sin(delta), cos(delta)))
 
 
 class ExplorationManager(Node):
@@ -22,6 +35,7 @@ class ExplorationManager(Node):
     def __init__(self) -> None:
         super().__init__('exploration_manager')
         self.declare_parameter('path_topic', '/frontier_selected_path')
+        self.declare_parameter('odom_topic', '/odom')
         self.declare_parameter('navigate_action', '/navigate_to_pose')
         self.declare_parameter('enable_navigation', False)
         self.declare_parameter('retry_period_sec', 1.0)
@@ -29,9 +43,13 @@ class ExplorationManager(Node):
         self.declare_parameter('completed_goal_topic', '/frontier_completed_goal')
         self.declare_parameter('stall_timeout_sec', 30.0)
         self.declare_parameter('stall_progress_epsilon_m', 0.02)
+        self.declare_parameter('stall_motion_epsilon_m', 0.08)
+        self.declare_parameter('stall_rotation_epsilon_rad', 0.35)
+        self.declare_parameter('stall_odom_max_step_m', 1.0)
         self.declare_parameter('navigation_timeout_sec', 180.0)
 
         path_topic = str(self.get_parameter('path_topic').value)
+        odom_topic = str(self.get_parameter('odom_topic').value)
         navigate_action = str(self.get_parameter('navigate_action').value)
         failed_goal_topic = str(self.get_parameter('failed_goal_topic').value)
         completed_goal_topic = str(
@@ -51,6 +69,12 @@ class ExplorationManager(Node):
             PointStamped, completed_goal_topic, 10
         )
         self.create_subscription(Path, path_topic, self._on_path, 10)
+        self.create_subscription(
+            Odometry,
+            odom_topic,
+            self._on_odom,
+            qos_profile_sensor_data,
+        )
         self.create_timer(retry_period, self._process_pending_goal)
         self.create_timer(1.0, self._watch_navigation)
 
@@ -61,6 +85,8 @@ class ExplorationManager(Node):
         self._goal_started_sec: float | None = None
         self._last_progress_sec: float | None = None
         self._best_distance_remaining: float | None = None
+        self._latest_odom_pose: tuple[float, float, float] | None = None
+        self._motion_anchor_pose: tuple[float, float, float] | None = None
         self._cancel_requested = False
         self._cancel_reason: str | None = None
         self._awaiting_fresh_path = False
@@ -71,6 +97,7 @@ class ExplorationManager(Node):
         self.get_logger().info(
             f'Listening for validated frontier path on {path_topic}'
         )
+        self.get_logger().info(f'Navigation odometry: {odom_topic}')
         self.get_logger().info(f'NavigateToPose action: {navigate_action}')
         self.get_logger().info(
             f'Failed frontier feedback: {failed_goal_topic}'
@@ -81,7 +108,12 @@ class ExplorationManager(Node):
         self.get_logger().info(
             'Navigation progress watchdog: '
             f'timeout={float(self.get_parameter("stall_timeout_sec").value):.1f}s, '
-            f'epsilon={float(self.get_parameter("stall_progress_epsilon_m").value):.2f}m'
+            f'distance_epsilon='
+            f'{float(self.get_parameter("stall_progress_epsilon_m").value):.2f}m, '
+            f'motion_epsilon='
+            f'{float(self.get_parameter("stall_motion_epsilon_m").value):.2f}m, '
+            f'rotation_epsilon='
+            f'{float(self.get_parameter("stall_rotation_epsilon_rad").value):.2f}rad'
         )
 
         if bool(self.get_parameter('enable_navigation').value):
@@ -130,6 +162,57 @@ class ExplorationManager(Node):
         self._pending_goal = pose
         self._process_pending_goal()
 
+    def _on_odom(self, msg: Odometry) -> None:
+        position = msg.pose.pose.position
+        current_pose = (
+            float(position.x),
+            float(position.y),
+            _yaw_from_odometry(msg),
+        )
+        previous_pose = self._latest_odom_pose
+        self._latest_odom_pose = current_pose
+
+        if self._active_goal is None or self._cancel_requested:
+            return
+
+        # Reject teleport/reset-like odometry jumps. Move the anchor to the new
+        # coordinate system without rewarding the jump as navigation progress.
+        max_step = max(
+            0.0, float(self.get_parameter('stall_odom_max_step_m').value)
+        )
+        if previous_pose is not None and max_step > 0.0:
+            step = hypot(
+                current_pose[0] - previous_pose[0],
+                current_pose[1] - previous_pose[1],
+            )
+            if step > max_step:
+                self._motion_anchor_pose = current_pose
+                return
+
+        if self._motion_anchor_pose is None:
+            self._motion_anchor_pose = current_pose
+            return
+
+        anchor = self._motion_anchor_pose
+        translation = hypot(
+            current_pose[0] - anchor[0],
+            current_pose[1] - anchor[1],
+        )
+        rotation = _angular_distance(current_pose[2], anchor[2])
+        translation_epsilon = max(
+            0.0, float(self.get_parameter('stall_motion_epsilon_m').value)
+        )
+        rotation_epsilon = max(
+            0.0,
+            float(self.get_parameter('stall_rotation_epsilon_rad').value),
+        )
+
+        moved = translation_epsilon > 0.0 and translation >= translation_epsilon
+        rotated = rotation_epsilon > 0.0 and rotation >= rotation_epsilon
+        if moved or rotated:
+            self._last_progress_sec = self._now_sec()
+            self._motion_anchor_pose = current_pose
+
     def _process_pending_goal(self) -> None:
         if self._pending_goal is None or self._active_goal is not None:
             return
@@ -163,6 +246,7 @@ class ExplorationManager(Node):
         self._goal_started_sec = now
         self._last_progress_sec = now
         self._best_distance_remaining = None
+        self._motion_anchor_pose = self._latest_odom_pose
         self._cancel_requested = False
         self._cancel_reason = None
 
@@ -217,11 +301,13 @@ class ExplorationManager(Node):
         if self._best_distance_remaining is None:
             self._best_distance_remaining = distance
             self._last_progress_sec = self._now_sec()
+            self._motion_anchor_pose = self._latest_odom_pose
             return
 
         if distance < self._best_distance_remaining - epsilon:
             self._best_distance_remaining = distance
             self._last_progress_sec = self._now_sec()
+            self._motion_anchor_pose = self._latest_odom_pose
 
     def _watch_navigation(self) -> None:
         if (
@@ -271,6 +357,7 @@ class ExplorationManager(Node):
             self.get_logger().error(f'Failed to request goal cancellation: {exc}')
             self._cancel_requested = False
             self._last_progress_sec = self._now_sec()
+            self._motion_anchor_pose = self._latest_odom_pose
             return
 
         if not response.goals_canceling:
@@ -279,6 +366,7 @@ class ExplorationManager(Node):
             )
             self._cancel_requested = False
             self._last_progress_sec = self._now_sec()
+            self._motion_anchor_pose = self._latest_odom_pose
             return
 
         self.get_logger().info(
@@ -323,6 +411,7 @@ class ExplorationManager(Node):
         self._goal_started_sec = None
         self._last_progress_sec = None
         self._best_distance_remaining = None
+        self._motion_anchor_pose = None
         self._cancel_requested = False
         self._cancel_reason = None
         self._pending_goal = None
