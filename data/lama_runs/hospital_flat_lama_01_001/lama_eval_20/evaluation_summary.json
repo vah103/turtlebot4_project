@@ -1,0 +1,46 @@
+{
+  "evaluation_type": "unknown-at-snapshot vs final-SLAM pseudo-ground-truth",
+  "eval_dir": "/home/dell/turtlebot4_project/data/lama_runs/hospital_flat_lama_01_001/lama_eval_20",
+  "pseudo_gt_frame": "001415",
+  "threshold_grayscale": 127,
+  "class_rule": "occupied <= 127; free > 127",
+  "evaluation_region": "snapshot unknown pixels intersected with pixels known in pseudo-GT",
+  "frames_total": 20,
+  "frames_evaluable": 19,
+  "frames_without_labeled_unknown_pixels": [
+    "001415"
+  ],
+  "aggregate_pixels": 1303762,
+  "aggregate_confusion": {
+    "tp_occupied": 67780,
+    "fp_occupied": 478198,
+    "fn_occupied": 29947,
+    "tn_free": 727837
+  },
+  "micro_metrics": {
+    "accuracy": 0.6102471156545443,
+    "occupied_iou": 0.11768893519121414,
+    "free_iou": 0.5888734625585162,
+    "miou": 0.3532811988748652,
+    "occupied_precision": 0.12414419628629725,
+    "occupied_recall": 0.6935647262271429,
+    "occupied_f1": 0.2105933618660722,
+    "free_precision": 0.9604808230313652,
+    "free_recall": 0.603495752610828,
+    "free_f1": 0.741246520173193
+  },
+  "macro_frame_metrics": {
+    "accuracy": 0.7258458627109206,
+    "occupied_iou": 0.25211408394064017,
+    "free_iou": 0.7096426232312751,
+    "miou": 0.48087835358595765,
+    "occupied_precision": 0.2871179728740018,
+    "occupied_recall": 0.7065197333212447,
+    "occupied_f1": 0.38042668489664033,
+    "free_precision": 0.9633289390177053,
+    "free_recall": 0.7287417100467831,
+    "free_f1": 0.8397126799564341
+  },
+  "csv": "evaluation.csv",
+  "caveat": "The final SLAM map is a pseudo-ground-truth, not simulator ground truth. Pixels still unknown in that final map are excluded. The final frame normally has zero evaluable pixels because it is being used as its own GT."
+}

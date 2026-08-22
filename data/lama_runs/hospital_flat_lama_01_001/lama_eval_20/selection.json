@@ -1,0 +1,33 @@
+{
+  "method": "raw metadata selection before LaMa preprocessing",
+  "source_run": "/home/dell/turtlebot4_project/data/lama_runs/hospital_flat_lama_01_001",
+  "count": 20,
+  "first_frame": "000000",
+  "last_frame": "001415",
+  "first_known_fraction": 0.0,
+  "last_known_fraction": 0.16977430572954771,
+  "manifest": "selection_manifest.jsonl",
+  "frames": [
+    "000000",
+    "000005",
+    "000007",
+    "000014",
+    "000059",
+    "000131",
+    "000304",
+    "000348",
+    "000432",
+    "000493",
+    "000526",
+    "000632",
+    "000695",
+    "000790",
+    "000826",
+    "000928",
+    "001081",
+    "001218",
+    "001239",
+    "001415"
+  ],
+  "next_step": "run prepare_lama_dataset on this directory; only selected raw snapshots will be preprocessed"
+}

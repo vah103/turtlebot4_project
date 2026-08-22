@@ -1,0 +1,33 @@
+{
+  "dry_run": false,
+  "frames": 20,
+  "elapsed_sec": 2161.243611183003,
+  "mean_sec_per_frame": 108.06218055915015,
+  "lama_root": "/home/dell/turtlebot4_project/third_party/lama",
+  "model_path": "/home/dell/turtlebot4_project/third_party/lama/big-lama",
+  "checkpoint_override": null,
+  "python_executable": "/home/dell/miniforge3/envs/lama_cpu/bin/python3.8",
+  "prediction_dir": "/home/dell/turtlebot4_project/data/lama_runs/hospital_flat_lama_01_001/lama_eval_20/prediction",
+  "frame_ids": [
+    "000000",
+    "000005",
+    "000007",
+    "000014",
+    "000059",
+    "000131",
+    "000304",
+    "000348",
+    "000432",
+    "000493",
+    "000526",
+    "000632",
+    "000695",
+    "000790",
+    "000826",
+    "000928",
+    "001081",
+    "001218",
+    "001239",
+    "001415"
+  ]
+}
