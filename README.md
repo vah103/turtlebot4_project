@@ -84,14 +84,15 @@ Bộ evidence này chỉ ghi những kết quả đã được xác minh. Raw te
 .joy/                         Metadata, roadmap và command library cho Joy
 evidence/                     Bộ bằng chứng và tài liệu tái lập theo stage
 data/lama_runs/               Snapshot LaMa đầy đủ, chỉ lưu local (Git ignored)
-data/lama_samples/            Mẫu LaMa nhỏ đã kiểm tra để lưu Git
+data/lama_samples/            Ba mẫu LaMa đại diện đã kiểm tra và lưu Git
 docs/lama_local_layout.md     Chuẩn đường dẫn và cách migrate LaMa
 maps/                         Bản đồ đã version
 report/                       Báo cáo theo ngày
 ros2_ws/                      ROS 2 workspace và project tools
 scripts/lama/                 Script migrate/setup LaMa
 stage3_navigation_benchmark/  Runner, config và bằng chứng Stage 3
-third_party/lama/             LaMa workspace local (Git ignored)
+third_party/lama/             LaMa runtime/model local (Git ignored)
+third_party/lama_upstream/    Mã nguồn LaMa được ghim bằng Git submodule
 PROJECT_STATUS.md             Trạng thái kỹ thuật hiện tại
 ```
 
