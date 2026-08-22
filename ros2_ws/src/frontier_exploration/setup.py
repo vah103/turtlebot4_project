@@ -31,6 +31,7 @@ setup(
                 'config/map_snapshot_hospital.yaml',
                 'config/nav2_hospital_override.yaml',
                 'config/hospital_slam.yaml',
+                'config/hospital_slam_no_loop.yaml',
             ],
         ),
         (
@@ -78,6 +79,10 @@ setup(
             (
                 'map_snapshot_recorder = '
                 'frontier_exploration.map_snapshot_recorder:main'
+            ),
+            (
+                'hospital_map_snapshot_recorder = '
+                'frontier_exploration.hospital_map_snapshot_recorder:main'
             ),
             (
                 'hospital_map_cloud_visualizer = '

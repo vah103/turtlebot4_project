@@ -39,6 +39,17 @@ map_snapshot_recorder:
     min_interval_sec: 1.0
     min_known_mask_change_cells: 250
 
+    # Hospital map-integrity guard. Normal exploration is mostly unknown->known.
+    # A large known->unknown regression combined with a large total mask change
+    # is characteristic of the 000173->000174 pose-graph jump observed in the
+    # failed run. The recorder keeps saving for debugging but sets
+    # run.json: run_invalid=true and records the event details.
+    map_jump_detection_enabled: true
+    map_jump_min_previous_known_cells: 50000
+    map_jump_min_changed_cells: 20000
+    map_jump_min_changed_fraction: 0.15
+    map_jump_min_known_lost_cells: 5000
+
     # Pair each map with the nearest odometry sample by ROS timestamp.
     sync_tolerance_sec: 0.25
     odom_buffer_size: 400
