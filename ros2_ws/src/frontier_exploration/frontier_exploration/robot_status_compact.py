@@ -119,11 +119,14 @@ class CompactRobotStatusMonitor(RobotStatusMonitor):
             }
         return result
 
-    def _cmd_is_motion(self, sample: dict | None) -> bool:
+    def _cmd_is_fresh(self, sample: dict | None) -> bool:
         if not sample:
             return False
-        fresh = float(self.get_parameter('cmd_vel_fresh_sec').value)
-        if sample['age_sec'] > fresh:
+        fresh = max(0.0, float(self.get_parameter('cmd_vel_fresh_sec').value))
+        return sample['age_sec'] <= fresh
+
+    def _cmd_is_motion(self, sample: dict | None) -> bool:
+        if not self._cmd_is_fresh(sample):
             return False
         linear_threshold = float(
             self.get_parameter('cmd_linear_motion_threshold_mps').value
@@ -159,13 +162,16 @@ class CompactRobotStatusMonitor(RobotStatusMonitor):
         nav = snapshot.get('nav')
         smoothed = snapshot.get('smoothed')
         final = snapshot.get('final')
+        nav_fresh = self._cmd_is_fresh(nav)
+        smoothed_fresh = self._cmd_is_fresh(smoothed)
+        final_fresh = self._cmd_is_fresh(final)
         nav_motion = self._cmd_is_motion(nav)
         smoothed_motion = self._cmd_is_motion(smoothed)
         final_motion = self._cmd_is_motion(final)
 
-        if nav_motion and (smoothed is not None) and not smoothed_motion:
+        if nav_motion and smoothed_fresh and not smoothed_motion:
             return '⚠️ Nav2 đang ra lệnh nhưng velocity_smoother đưa vận tốc về gần 0.'
-        if (nav_motion or smoothed_motion) and (final is not None) and not final_motion:
+        if (nav_motion or smoothed_motion) and final_fresh and not final_motion:
             return '⚠️ Lệnh chuyển động bị chặn sau controller/smoother trước khi tới robot.'
         if final_motion:
             odom = state.get('odom') or {}
@@ -175,8 +181,10 @@ class CompactRobotStatusMonitor(RobotStatusMonitor):
             )
             if not moving:
                 return '🔴 /cmd_vel có lệnh nhưng odometry không chuyển động: nghi va chạm/physics.'
-        if nav is not None and not nav_motion:
+        if nav_fresh and not nav_motion:
             return '⚠️ Controller đang tạo vận tốc gần 0 tại goal/path hiện tại.'
+        if smoothed_fresh and not smoothed_motion and final_fresh and not final_motion:
+            return '⚠️ Chuỗi vận tốc đang ở gần 0; controller/recovery chưa tạo chuyển động.'
         return None
 
     def _obstruction_text(self, state: dict) -> str:
