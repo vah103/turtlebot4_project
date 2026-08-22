@@ -21,7 +21,7 @@ def generate_launch_description() -> LaunchDescription:
 
     recorder = Node(
         package='frontier_exploration',
-        executable='map_snapshot_recorder',
+        executable='hospital_map_snapshot_recorder',
         name='map_snapshot_recorder',
         output='screen',
         parameters=[
