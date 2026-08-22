@@ -4,7 +4,8 @@ LaMa code, snapshots and results use paths inside this repository:
 
 ```text
 turtlebot4_project/
-  third_party/lama/       local LaMa checkout, model and environment (ignored)
+  third_party/lama/       local LaMa runtime, model and environment (ignored)
+  third_party/lama_upstream/ pinned upstream source (Git submodule)
   data/lama_runs/         full snapshot runs and generated PNG pairs (ignored)
   data/lama_samples/      small reviewed samples that may be committed
   models/lama/            optional extracted checkpoints (ignored)
@@ -60,5 +61,28 @@ export LAMA_RESULTS_ROOT="${TURTLEBOT4_PROJECT_ROOT}/results/lama"
 ```
 
 Full runs, upstream source, checkpoints and generated results are deliberately
-ignored. Git should contain integration code, configs, documentation and only
-small reviewed samples—not multi-gigabyte experimental payloads.
+ignored. The upstream implementation is referenced as a pinned submodule at
+`third_party/lama_upstream`; it is not duplicated in this repository. Git
+contains integration code, configs, documentation and three reviewed samples,
+not the multi-gigabyte full run.
+
+## Chat-readable source and samples
+
+Initialize the pinned LaMa source after cloning:
+
+```bash
+git submodule update --init --recursive
+```
+
+The three representative checkpoints from
+`hospital_flat_lama_01_001` are stored under
+`data/lama_samples/hospital_flat_lama_01_001/`:
+
+- `000050`: early exploration
+- `000708`: middle exploration
+- `001415`: final exploration state
+
+Each checkpoint contains the model input, binary unknown-region mask, and LaMa
+prediction. `sample_manifest.json` records dimensions, geometry, completion
+state and provenance so another reviewer can interpret the files without the
+8.5 GiB local run.
