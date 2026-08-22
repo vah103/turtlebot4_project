@@ -1,0 +1,38 @@
+robot_status_monitor:
+  ros__parameters:
+    map_topic: /map
+    odom_topic: /odom
+    scan_topic: /scan
+    path_topic: /frontier_selected_path
+    failed_goal_topic: /frontier_failed_goal
+    completed_goal_topic: /frontier_completed_goal
+    completion_topic: /exploration_complete
+    navigate_action: /navigate_to_pose
+
+    map_frame: map
+    odom_frame: odom
+    base_frame: base_link
+
+    display_period_sec: 2.0
+    rate_window_sec: 5.0
+    startup_grace_sec: 15.0
+    clear_screen: true
+
+    moving_linear_threshold_mps: 0.02
+    moving_angular_threshold_rps: 0.05
+
+    odom_warning_sec: 2.0
+    odom_critical_sec: 5.0
+    scan_warning_sec: 2.0
+    scan_critical_sec: 5.0
+    map_warning_sec: 8.0
+    map_critical_sec: 20.0
+    tf_critical_sec: 5.0
+
+    navigation_stall_warning_sec: 20.0
+    consecutive_nav_failures_warning: 3
+
+    run_name: ""
+    lama_runs_dir: data/lama_runs
+    status_output_dir: data/robot_status
+    write_jsonl: true
