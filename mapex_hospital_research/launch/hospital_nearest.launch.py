@@ -7,10 +7,10 @@ Run directly after sourcing ROS/workspace setup:
 
 Hospital protocol keeps MapEx frontier generation + Euclidean ranking, uses
 Nav2 for execution, allows ranked frontiers below the original MapEx 1 m
-validity threshold, executes the exact selected frontier center with zero
-GridBased planner tolerance, and uses the Hospital mapping-stability profile
-(0.45 m/s + dense 0.10 m / 0.10 rad SLAM keyframes). The official-run wrappers
-also synchronize t=0 before policy computation and retain exact terminal states.
+validity threshold, executes the exact selected frontier x/y with position-only
+goal semantics, revalidates transient planner failures, and uses the Hospital
+mapping-stability profile. Official-run wrappers also synchronize t=0 before
+policy computation and retain exact terminal/revalidation states.
 """
 
 from __future__ import annotations
@@ -123,7 +123,7 @@ def generate_launch_description() -> LaunchDescription:
 
     return LaunchDescription(
         [
-            DeclareLaunchArgument("run_id", default_value="nearest_pilot_009"),
+            DeclareLaunchArgument("run_id", default_value="nearest_pilot_010"),
             DeclareLaunchArgument("use_rviz", default_value="True"),
             DeclareLaunchArgument("headless", default_value="False"),
             recorder,
