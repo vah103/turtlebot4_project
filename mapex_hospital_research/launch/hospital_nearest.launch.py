@@ -1,32 +1,34 @@
 #!/usr/bin/env python3
-"""Hospital v1 Nearest-Frontier baseline launch.
+"""Hospital v1 Nearest-Frontier baseline + research recorder.
 
-This launch intentionally reuses the stable frontier_exploration Hospital stack
-and starts the existing WFD + navigation baseline only after SLAM/Nav2 have had
-time to initialize. Protocol-sensitive values (world, spawn, SLAM, Nav2 and
-frontier parameters) remain owned by the frozen hospital_v1 configs.
-
-It can be run directly from the repository:
+Run directly from the repository after sourcing ROS/workspace setup:
 
     python3 mapex_hospital_research/launch/hospital_nearest.launch.py
 
-Optional UI-only launch arguments may be appended, for example:
-
-    use_rviz:=false headless:=true
+The default run id is `nearest_pilot_001`. A run directory is never overwritten.
+UI-only arguments may be appended, e.g. `use_rviz:=false headless:=true`.
 """
 
 from __future__ import annotations
 
 import os
 import sys
+from pathlib import Path
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription, LaunchService
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
+from launch.actions import (
+    DeclareLaunchArgument,
+    ExecuteProcess,
+    IncludeLaunchDescription,
+    TimerAction,
+)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
 
+WORKSPACE = Path(__file__).resolve().parents[1]
+RECORDER = WORKSPACE / "scripts" / "research_recorder.py"
 EXPLORATION_START_DELAY_S = 30.0
 
 
@@ -35,6 +37,19 @@ def generate_launch_description() -> LaunchDescription:
 
     use_rviz = LaunchConfiguration("use_rviz")
     headless = LaunchConfiguration("headless")
+    run_id = LaunchConfiguration("run_id")
+
+    recorder = ExecuteProcess(
+        cmd=[
+            sys.executable,
+            str(RECORDER),
+            "--method",
+            "nearest",
+            "--run-id",
+            run_id,
+        ],
+        output="screen",
+    )
 
     stack = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -65,8 +80,10 @@ def generate_launch_description() -> LaunchDescription:
 
     return LaunchDescription(
         [
+            DeclareLaunchArgument("run_id", default_value="nearest_pilot_001"),
             DeclareLaunchArgument("use_rviz", default_value="True"),
             DeclareLaunchArgument("headless", default_value="False"),
+            recorder,
             stack,
             TimerAction(period=EXPLORATION_START_DELAY_S, actions=[nearest]),
         ]
