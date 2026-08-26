@@ -1,0 +1,16 @@
+method: nearest_frontier
+
+frontier:
+  detector: wfd
+  min_frontier_size: null
+  reachable_only: true
+
+selection:
+  rule: nearest_reachable_frontier
+  distance_metric: null
+
+navigation:
+  validate_with_nav2_path: true
+
+runs:
+  target_count: 10
