@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Hospital v1 nearest baseline using the MapEx frontier policy.
+"""Hospital v1 Nearest baseline using the MapEx frontier policy.
 
-Run directly from the repository after sourcing ROS/workspace setup:
+Run directly after sourcing ROS/workspace setup:
 
     /usr/bin/python3 mapex_hospital_research/launch/hospital_nearest.launch.py
 
-Frontier generation and Euclidean ranking come from castacks/MapEx commit
-53636bd1c79153acc3c74a532837d78c926bae5e. Hospital execution replaces the
-original grid-simulator A* with Nav2. In addition, Hospital protocol disables
-the original 1.0 m locked-frontier validity rejection because pilot_005 showed
-that it deadlocks at startup when the only ranked representative is <1 m.
+Hospital protocol keeps MapEx frontier generation + Euclidean ranking, uses
+Nav2 for execution, and allows ranked frontiers below the original MapEx 1 m
+validity threshold because pilot_005 demonstrated a startup deadlock otherwise.
+The final official-run wrappers also synchronize t=0 before policy computation
+and retain exact exhausted/no-candidate decisions for replay.
 """
 
 from __future__ import annotations
@@ -35,8 +35,8 @@ from launch.substitutions import LaunchConfiguration
 
 
 WORKSPACE = Path(__file__).resolve().parents[1]
-RECORDER = WORKSPACE / "scripts" / "research_recorder_safe.py"
-MAPEX_NEAREST = WORKSPACE / "scripts" / "mapex_nearest_ros_hospital_adapted.py"
+RECORDER = WORKSPACE / "scripts" / "research_recorder_official.py"
+MAPEX_NEAREST = WORKSPACE / "scripts" / "mapex_nearest_ros_official.py"
 RESEARCH_MANAGER = WORKSPACE / "scripts" / "exploration_manager_research.py"
 EXPLORATION_START_DELAY_S = 30.0
 
@@ -122,7 +122,7 @@ def generate_launch_description() -> LaunchDescription:
 
     return LaunchDescription(
         [
-            DeclareLaunchArgument("run_id", default_value="nearest_pilot_006"),
+            DeclareLaunchArgument("run_id", default_value="nearest_pilot_007"),
             DeclareLaunchArgument("use_rviz", default_value="True"),
             DeclareLaunchArgument("headless", default_value="False"),
             recorder,
