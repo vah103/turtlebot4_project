@@ -6,12 +6,13 @@ implementation:
   source_files:
     - scripts/sim_utils.py
     - scripts/explore.py
-  ros_adapter: mapex_hospital_research/scripts/mapex_nearest_ros.py
+  ros_reference_adapter: mapex_hospital_research/scripts/mapex_nearest_ros.py
   hospital_runtime_wrapper: mapex_hospital_research/scripts/mapex_nearest_ros_hospital.py
   research_runtime_wrapper: mapex_hospital_research/scripts/mapex_nearest_ros_research.py
   hospital_adaptation_wrapper: mapex_hospital_research/scripts/mapex_nearest_ros_hospital_adapted.py
+  official_run_wrapper: mapex_hospital_research/scripts/mapex_nearest_ros_official.py
   research_navigation_manager: mapex_hospital_research/scripts/exploration_manager_research.py
-  recorder: mapex_hospital_research/scripts/research_recorder_safe.py
+  recorder: mapex_hospital_research/scripts/research_recorder_official.py
 
 frontier:
   detector: mapex_official_frontier_rule
@@ -38,15 +39,21 @@ execution_adapter:
   hospital_local_planner: nav2_compute_path_to_pose
   hospital_executor: nav2_navigate_to_pose
   frontier_goal_is_shifted_or_standoff: false
-  note: Frontier generation and Euclidean ranking remain MapEx nearest semantics. Hospital execution uses Nav2 and disables only the original 1.0 m locked-frontier rejection because it caused a reproducible startup deadlock. The same adaptation must be used by Nearest and full MapEx Hospital runs.
-  source_code_quirk: MapEx base.yaml sets unknown_as_occ=true, but sim_utils.get_inflated_planning_maps() hard-codes unknown_as_occ=False when calling inflate_map. Hospital does not attempt to reproduce this planner-specific inconsistency; both Nearest and MapEx use the same Nav2 execution adapter.
+  source_code_quirk: MapEx base.yaml sets unknown_as_occ=true, but sim_utils.get_inflated_planning_maps() hard-codes unknown_as_occ=false. Hospital does not reproduce this simulator-specific planner inconsistency; Nearest and MapEx use the same Nav2 execution adapter.
+
+benchmark_clock:
+  start_event: first_policy_decision_before_compute
+  include_first_decision_compute_time: true
+  note: The clock starts after map/TF/Nav2 are ready, immediately before the first frontier candidate computation. The same event must be used by full MapEx so LaMa/visibility/IG cost is included.
 
 logging:
   exact_decision_map: true
   exact_decision_map_raw_npz: true
   exact_decision_map_fixed_canvas_npz: true
+  exact_exhausted_no_candidate_state: true
   map_frame_robot_pose_per_decision: true
   all_ranked_candidates: true
+  stable_candidate_id: true
   candidate_below_1m_flag: true
   candidate_below_1m_is_rejected: false
   nav2_path_validation_status: true
@@ -55,7 +62,13 @@ logging:
   navigation_result_detail: true
   periodic_map_interval_s: 10.0
   final_map_snapshot: true
-  config_sha256_in_metadata: true
+  source_and_installed_runtime_sha256_in_metadata: true
+
+reproducibility:
+  simulator_seed_policy: intentionally_uncontrolled_gazebo_default_multiple_run_statistics
+  simulator_seed_value: null
+  rationale: Gazebo launch currently exposes no fixed seed; variability is handled through repeated runs and the policy is explicitly recorded instead of pretending a seed is fixed.
+  official_run_requires_clean_git: true
 
 navigation:
   goal_timeout_s: 180.0
@@ -68,8 +81,9 @@ termination:
   check_period_s: 2.0
   min_idle_s: 10.0
   startup_grace_s: 20.0
+  exact_terminal_policy_state_required: true
 
 runs:
-  pilot_run_id: nearest_pilot_006
+  pilot_run_id: nearest_pilot_007
   target_count: 10
   minimum_for_preliminary_analysis: 5
