@@ -8,6 +8,9 @@ implementation:
     - scripts/explore.py
   ros_adapter: mapex_hospital_research/scripts/mapex_nearest_ros.py
   hospital_runtime_wrapper: mapex_hospital_research/scripts/mapex_nearest_ros_hospital.py
+  research_runtime_wrapper: mapex_hospital_research/scripts/mapex_nearest_ros_research.py
+  research_navigation_manager: mapex_hospital_research/scripts/exploration_manager_research.py
+  recorder: mapex_hospital_research/scripts/research_recorder_safe.py
 
 frontier:
   detector: mapex_official_frontier_rule
@@ -37,6 +40,21 @@ execution_adapter:
   note: Nav2 replaces only the simulator execution layer; frontier generation and ranking remain MapEx nearest semantics.
   source_code_quirk: MapEx base.yaml sets unknown_as_occ=true, but sim_utils.get_inflated_planning_maps() hard-codes unknown_as_occ=False when calling inflate_map. Hospital does not attempt to reproduce this planner-specific inconsistency; both Nearest and MapEx use the same Nav2 execution adapter.
 
+logging:
+  exact_decision_map: true
+  exact_decision_map_raw_npz: true
+  exact_decision_map_fixed_canvas_npz: true
+  map_frame_robot_pose_per_decision: true
+  all_ranked_candidates: true
+  candidate_1m_rejection_status: true
+  nav2_path_validation_status: true
+  planner_timing_ms: true
+  selected_path_length: true
+  navigation_result_detail: true
+  periodic_map_interval_s: 10.0
+  final_map_snapshot: true
+  config_sha256_in_metadata: true
+
 navigation:
   goal_timeout_s: 180.0
   stall_timeout_s: 30.0
@@ -50,6 +68,6 @@ termination:
   startup_grace_s: 20.0
 
 runs:
-  pilot_run_id: nearest_pilot_003
+  pilot_run_id: nearest_pilot_005
   target_count: 10
   minimum_for_preliminary_analysis: 5
