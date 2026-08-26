@@ -128,11 +128,31 @@ selected_candidate_id,
 selected_distance_m,
 selected_path_length_m,
 frontier_x,frontier_y,
+planner_endpoint_x,planner_endpoint_y,
+planner_endpoint_to_frontier_m,
 goal_x,goal_y,
+goal_source,
 robot_map_x,robot_map_y,robot_map_yaw,
 result,
 navigation_detail,
 failure_reason
+```
+
+Semantics bắt buộc cho `hospital_v1` official runs:
+
+```text
+frontier_x/frontier_y          = exact MapEx frontier center
+planner_endpoint_x/y           = last pose returned by ComputePathToPose
+planner_endpoint_to_frontier_m = distance(planner endpoint, exact frontier)
+goal_x/goal_y                  = actual NavigateToPose goal
+goal_source                    = exact_frontier_center
+```
+
+`ComputePathToPose` có planner tolerance nên `planner_endpoint_x/y` có thể khác frontier. Endpoint đó **không được dùng làm execution goal**. Validator phải xác nhận:
+
+```text
+distance((goal_x,goal_y),(frontier_x,frontier_y)) <= 0.001 m
+goal_source = exact_frontier_center
 ```
 
 Khóa join chính:
@@ -240,6 +260,8 @@ Tối thiểu:
   "evaluation_roi_id": "hospital_connected_free_v1",
   "exploration_start_sim_s": 0.0,
   "exploration_start_source": "first_policy_decision_before_compute",
+  "execution_goal_semantics": "exact_frontier_center",
+  "planner_path_semantics": "reachability_evidence_only",
   "sim_seed": null,
   "sim_seed_policy": "intentionally_uncontrolled_gazebo_default_multiple_run_statistics",
   "config_sha256": {},
@@ -304,6 +326,8 @@ Post-run validator phải kiểm tra ít nhất:
 - failed goal có `failure_reason`;
 - selected candidate join được bằng ID;
 - không có `rejected_lt_1m`;
+- `goal_source=exact_frontier_center` và execution goal trùng exact frontier center;
+- planner endpoint được log riêng và offset audit tự nhất quán;
 - terminated official run có explicit terminal policy state;
 - với `no_nav2_reachable_ranked_candidate`: `candidate_count == nav2_checked_count`, planner-outcome counts cộng đúng, `nav2_path_success_count == 0`, và `terminal_reason` đúng;
 - provenance hashes đầy đủ;
