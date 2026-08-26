@@ -74,14 +74,17 @@ def main() -> int:
         (launch, "mapex_nearest_ros_official.py"),
         (launch, "research_recorder_official.py"),
         (adapted_policy, "Hospital adaptation allowing ranked frontier below 1 m"),
+        (adapted_policy, "all_ranked_candidates_failed_nav2_path_validation"),
         (official_policy, "first_policy_decision_before_compute"),
         (official_policy, "exhausted_no_ranked_candidate"),
         (official_policy, "candidate_id"),
+        (official_policy, "nav2_no_path_count"),
         (official_recorder, "frontier_exploration_start"),
         (official_recorder, "installed_hospital_world"),
         (official_recorder, "intentionally_uncontrolled_gazebo_default"),
         (validator, "selected_candidate_id"),
         (validator, "exhausted_no_ranked_candidate"),
+        (validator, "terminal Nav2 audit"),
         (protocol, "first policy decision before computation"),
         (protocol, "intentionally uncontrolled"),
         (schema, "below_1m is diagnostic only"),
@@ -104,6 +107,7 @@ def main() -> int:
     print("- Hospital below-1m bypass: ACTIVE")
     print("- benchmark t=0 before first policy compute: ACTIVE")
     print("- exact exhausted/no-candidate logging: ACTIVE")
+    print("- terminal Nav2 audit logging: ACTIVE")
     print("- stable candidate_id linkage: ACTIVE")
     print("- installed runtime provenance hashing: ACTIVE")
     print("- simulator seed policy: intentionally uncontrolled + repeated runs")
