@@ -4,29 +4,29 @@
 # Keep cmd_vel UNSTAMPED end-to-end because the Gazebo TB4 bridge subscribes
 # to geometry_msgs/msg/Twist on /cmd_vel.
 #
-# The active Hospital world uses one continuous flat ground plane, so no
-# keepout / costmap-filter region is required.
-#
-# Hospital has long, repetitive corridors. pilot_008 showed visible map warping
-# during a long autonomous run at the previous 0.75 m/s cap.  Keep the same Nav2
-# stack and lower the mapping-speed envelope so slam_toolbox receives more
-# overlapping geometry per metre; hospital_slam.yaml simultaneously uses denser
-# 0.10 m / 0.10 rad scan-graph spacing.
+# Hospital has long, repetitive corridors. Mapping stability is prioritized over
+# maximum speed, and MapEx frontier semantics are position-only: frontier policy
+# chooses an (x,y) cell, not a terminal robot heading.
 
 planner_server:
   ros__parameters:
     GridBased:
-      # Hospital frontier semantics require the exact selected frontier cell.
-      # The upstream TurtleBot4/NavFn profile uses 0.5 m tolerance, which can
-      # return a path ending half a metre short and make a near robot appear to
-      # have reached the frontier. A candidate that cannot be planned exactly is
-      # rejected by the policy and the next ranked candidate is tried instead.
+      # Candidate validation must reach the exact selected frontier cell rather
+      # than accepting the upstream NavFn 0.5 m fallback endpoint.
       tolerance: 0.0
 
 controller_server:
   ros__parameters:
     enable_stamped_cmd_vel: false
     controller_frequency: 15.0
+
+    # MapEx frontier centers have no yaw objective. The upstream SimpleGoalChecker
+    # requires yaw within 0.25 rad, which silently turned every frontier into an
+    # (x,y,yaw=0) task and could leave MPPI nearly stationary near a valid x/y.
+    # Keep the normal 0.25 m positional tolerance but make final yaw irrelevant.
+    general_goal_checker:
+      yaw_goal_tolerance: 3.141592653589793
+
     FollowPath:
       # Match MPPI's model timestep to the 15 Hz controller period. Keep the
       # rollout horizon near the standard 2.8 s: 42 * 0.0666667 ~= 2.8 s.
@@ -34,27 +34,27 @@ controller_server:
       time_steps: 42
 
       # Candidate-trajectory visualization is useful interactively but expensive
-      # during long autonomous mapping runs. Disable it to improve real-time factor.
+      # during long autonomous mapping runs.
       visualize: false
 
-      # Conservative Hospital mapping speed. 0.45 m/s is deliberately below the
-      # pilot_008 0.75 m/s cap so scan matching sees denser overlap in repetitive
-      # corridors. Angular speed stays at 1.0 rad/s, with SLAM rotational
-      # keyframes tightened separately to 0.10 rad.
+      # Conservative Hospital mapping speed for denser scan overlap.
       vx_max: 0.45
       vx_min: -0.12
       vx_std: 0.18
       wz_max: 1.0
       wz_std: 0.25
 
-      # At 0.45 m/s the ~2.8 s horizon spans ~1.26 m. Keep the reduced sampling
-      # workload and local planning footprint used by the stable Hospital stack.
       batch_size: 1000
       prune_distance: 3.0
       GoalCritic:
         threshold_to_consider: 2.2
       PathFollowCritic:
         threshold_to_consider: 2.2
+
+      # Final goal heading is not part of MapEx/Nearest frontier policy. Disable
+      # only the final-angle critic; path-angle/path-follow critics remain active.
+      GoalAngleCritic:
+        enabled: false
 
 local_costmap:
   local_costmap:
