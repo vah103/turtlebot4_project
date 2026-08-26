@@ -5,6 +5,7 @@
 ```text
 experiments/<method>/<run_id>/
 ├── metadata.json
+├── runtime_nav2_merged.yaml
 ├── metrics.csv
 ├── trajectory.csv
 ├── decisions.csv
@@ -12,9 +13,6 @@ experiments/<method>/<run_id>/
 ├── candidates.csv
 ├── snapshots.csv
 ├── maps/
-│   ├── periodic_*_raw.npz
-│   ├── periodic_*_canvas.npz
-│   └── final_*_raw/canvas.npz
 ├── predictions/
 ├── variance/
 ├── visibility/
@@ -39,20 +37,14 @@ experiments/<method>/<run_id>/
 
 `time_s=0` lấy từ `/frontier_exploration_start`, được publish **trước candidate computation của policy decision đầu tiên**.
 
-Recorder phải lưu:
-
 ```text
 exploration_start_sim_s
 exploration_start_source = first_policy_decision_before_compute
 ```
 
-Nhờ vậy computation của decision đầu tiên được tính vào Coverage-vs-time cho cả Nearest và MapEx.
-
 ## Exact policy decision map
 
-Đây là OccupancyGrid thực sự được freeze để tạo/rank candidate, không phải `latest_map` muộn hơn.
-
-Mỗi policy decision có:
+Mỗi policy decision giữ OccupancyGrid thực sự được freeze để tạo/rank candidate:
 
 ```text
 observed_map_raw.npz
@@ -75,9 +67,9 @@ source_stamp_s
 
 Canvas NPZ dùng canonical canvas để evaluation/alignment.
 
-## Exact exhausted state
+## Exact exhausted state và planner revalidation
 
-Ngay cả khi không có ranked candidate, policy vẫn phải tạo một `policy_decision_*` với exact map/pose và:
+Khi không có ranked candidate:
 
 ```text
 outcome = exhausted_no_ranked_candidate
@@ -85,7 +77,7 @@ candidate_count = 0
 terminal_reason = zero_ranked_candidates
 ```
 
-Nếu có candidates nhưng không candidate nào Nav2-reachable, terminal decision phải được ghi **trước completion window**:
+Nếu có candidates nhưng một planner sweep không tìm được candidate reachable:
 
 ```text
 outcome = no_nav2_reachable_ranked_candidate
@@ -93,9 +85,10 @@ terminal_reason = all_ranked_candidates_failed_nav2_path_validation
 nav2_path_success_count = 0
 nav2_checked_count = candidate_count
 nav2_no_path_count + nav2_rejected_count + nav2_error_count = nav2_checked_count
+planner_revalidation_period_s = 2.0
 ```
 
-Điều này cho phép replay termination chính xác mà không suy từ periodic snapshot.
+Một non-empty no-path state không được cache vĩnh viễn. Trước completion, stable candidate set phải được revalidate bằng Nav2 nhiều sweep theo completion protocol.
 
 ## metrics.csv
 
@@ -103,7 +96,7 @@ nav2_no_path_count + nav2_rejected_count + nav2_error_count = nav2_checked_count
 time_s,distance_m,known_fraction,coverage,occupied_iou,tu
 ```
 
-`occupied_iou` và `tu` có thể để trống khi chạy nếu periodic/final raw maps được lưu đầy đủ để tính offline sau khi evaluator được chốt.
+`distance_m` là cumulative odometry distance. `occupied_iou`/`tu` có thể để trống online nếu raw snapshots được giữ để tính offline.
 
 ## trajectory.csv
 
@@ -111,7 +104,7 @@ time_s,distance_m,known_fraction,coverage,occupied_iou,tu
 time_s,x,y,yaw,cumulative_distance_m
 ```
 
-Đây là odometry trajectory. Exact policy replay phải dùng map-frame robot pose trong `policy_decisions.csv`/`decision.json`.
+Đây là odometry trajectory. Exact policy replay dùng map-frame robot pose trong policy decision.
 
 ## decisions.csv
 
@@ -132,28 +125,39 @@ planner_endpoint_x,planner_endpoint_y,
 planner_endpoint_to_frontier_m,
 goal_x,goal_y,
 goal_source,
+goal_yaw_semantics,
 robot_map_x,robot_map_y,robot_map_yaw,
 result,
 navigation_detail,
 failure_reason
 ```
 
-Semantics bắt buộc cho `hospital_v1` official runs:
+Semantics bắt buộc:
 
 ```text
 frontier_x/frontier_y          = exact MapEx frontier center
-planner_endpoint_x/y           = last pose returned by ComputePathToPose
+planner_endpoint_x/y           = last pose returned by validation ComputePathToPose
 planner_endpoint_to_frontier_m = distance(planner endpoint, exact frontier)
-goal_x/goal_y                  = actual NavigateToPose goal
+goal_x/goal_y                  = actual NavigateToPose position
 goal_source                    = exact_frontier_center
+goal_yaw_semantics             = ignored_by_hospital_goal_checker
 ```
 
-`ComputePathToPose` có planner tolerance nên `planner_endpoint_x/y` có thể khác frontier. Endpoint đó **không được dùng làm execution goal**. Validator phải xác nhận:
+Official invariant:
 
 ```text
 distance((goal_x,goal_y),(frontier_x,frontier_y)) <= 0.001 m
 goal_source = exact_frontier_center
+goal_yaw_semantics = ignored_by_hospital_goal_checker
 ```
+
+`selected_path_length_m` có semantics:
+
+```text
+planner_validation_path_length_not_executed_trajectory
+```
+
+Nó **không** phải quãng đường robot thực sự chạy, vì `NavigateToPose` có thể replan. Quãng đường thực lấy từ `trajectory.csv` / `metrics.csv.distance_m`.
 
 Khóa join chính:
 
@@ -177,6 +181,7 @@ nav2_path_success_count,
 nav2_no_path_count,
 nav2_rejected_count,
 nav2_error_count,
+planner_revalidation_period_s,
 selected_candidate_id,
 selected_rank,
 selected_x,selected_y,
@@ -187,8 +192,6 @@ terminal_reason
 ```
 
 `robot_x/y/yaw` là map-frame pose dùng cho ranking.
-
-Các field `nav2_*_count` là audit của planner trên exact frozen decision. Với terminal `no_nav2_reachable_ranked_candidate`, validator phải xác nhận đã kiểm tra đủ toàn bộ ranked candidate và không có path thành công.
 
 ## candidates.csv
 
@@ -205,17 +208,23 @@ distance_cells,distance_m,
 below_1m,
 execution_suppressed,
 status,
+nav2_action_status,
 planner_check_ms,
 selected,
 selected_path_length_m,
 execution_result
 ```
 
-`candidate_id` ổn định trong từng `policy_decision_id`, ví dụ `candidate_0001`.
+`nav2_action_status` là ROS action status của `ComputePathToPose`. Candidate chỉ được `selected=true` khi:
+
+```text
+nav2_action_status == GoalStatus.STATUS_SUCCEEDED (4)
+AND path non-empty
+```
 
 ### Hospital `<1m` semantics
 
-`below_1m is diagnostic only` trong Hospital benchmark. Candidate `<1m` **không bị reject chỉ vì khoảng cách**; nó giữ rank và được gửi sang Nav2 như candidate khác.
+`below_1m is diagnostic only`. Candidate `<1m` không bị reject chỉ vì khoảng cách.
 
 Status hợp lệ có thể gồm:
 
@@ -227,15 +236,25 @@ checking_nav2_below_1m_allowed
 nav2_rejected
 nav2_request_error
 nav2_result_error
+nav2_action_failed
 nav2_no_path
 selected
 ```
 
-`rejected_lt_1m` là status không hợp lệ cho Hospital official runs và validator phải FAIL nếu xuất hiện.
+`rejected_lt_1m` là status không hợp lệ cho Hospital official runs.
+
+### Execution-failure cooldown
+
+Planner-valid frontier mà `NavigateToPose` fail chỉ bị execution suppression tạm thời:
+
+```text
+radius = 0.25 m
+cooldown = 30 s
+```
+
+Không có permanent suppression do controller failure. Một navigation success xóa temporary cooldowns cũ.
 
 ## snapshots.csv
-
-Recorder snapshots định kỳ/final:
 
 ```text
 snapshot_id,event,time_s,coverage,known_fraction,distance_m,
@@ -243,11 +262,11 @@ robot_map_x,robot_map_y,robot_map_yaw,
 raw_map_file,canvas_map_file,source_map_stamp_s,canvas_id
 ```
 
-Mỗi referenced NPZ phải tồn tại và readable. Terminated run phải có final snapshot.
+Terminated run phải có final snapshot.
 
 ## metadata.json
 
-Tối thiểu:
+Tối thiểu cho official run:
 
 ```json
 {
@@ -260,8 +279,11 @@ Tối thiểu:
   "evaluation_roi_id": "hospital_connected_free_v1",
   "exploration_start_sim_s": 0.0,
   "exploration_start_source": "first_policy_decision_before_compute",
-  "execution_goal_semantics": "exact_frontier_center",
+  "execution_goal_semantics": "exact_frontier_center_xy",
+  "goal_yaw_semantics": "ignored_by_hospital_goal_checker",
   "planner_path_semantics": "reachability_evidence_only",
+  "selected_path_length_semantics": "planner_validation_path_length_not_executed_trajectory",
+  "runtime_nav2_merged_file": "runtime_nav2_merged.yaml",
   "sim_seed": null,
   "sim_seed_policy": "intentionally_uncontrolled_gazebo_default_multiple_run_statistics",
   "config_sha256": {},
@@ -269,39 +291,74 @@ Tối thiểu:
 }
 ```
 
-`config_sha256` phải gồm cả source research code và installed runtime files thực tế (`frontier_exploration` package share), đặc biệt world/SLAM/Nav2/frontier config/launch.
+`config_sha256` phải gồm source research code, installed project runtime files, và thêm:
 
-Official runs yêu cầu clean git worktree.
+```text
+installed_nav2_base_params
+runtime_nav2_merged
+```
 
-## Periodic/final maps and offline correctness metrics
+`runtime_nav2_merged.yaml` là effective base Nav2 YAML + Hospital override của run đó và phải được giữ trong run directory.
 
-Periodic raw + fixed-canvas map mặc định mỗi `10 s` và final map được giữ để tính offline:
+## Position-only frontier goal runtime config
 
-- occupied IoU/AUC;
-- TU;
-- các correctness curves khác nếu evaluator được chốt sau pilot.
+Effective merged Nav2 config phải xác nhận:
 
-Việc evaluator chưa tồn tại lúc chạy không được làm mất raw map cần thiết.
+```text
+planner_server.GridBased.tolerance = 0.0
+controller_server.general_goal_checker.yaw_goal_tolerance = pi
+controller_server.FollowPath.GoalAngleCritic.enabled = false
+controller_server.FollowPath.vx_max = 0.45
+```
+
+Final yaw không phải frontier-policy objective.
+
+## SLAM A/B diagnostic
+
+`hospital_slam_no_loop.yaml` phải giữ cùng:
+
+```text
+minimum_travel_distance = 0.10
+minimum_travel_heading = 0.10
+minimum_time_interval = 0.15
+```
+
+với active `hospital_slam.yaml`; khác biệt chính dùng cho A/B là `do_loop_closing=false`.
+
+## Validation invariants
+
+Post-run validator kiểm tra **data/protocol integrity + experiment health**:
+
+- benchmark clock đúng;
+- metrics time/distance monotonic, coverage bounds đúng;
+- exact decision/snapshot NPZ tồn tại/readable;
+- selected candidate join bằng ID;
+- không có `rejected_lt_1m`;
+- selected planner candidate phải có `nav2_action_status=4`;
+- execution goal `x/y` trùng exact frontier;
+- `goal_yaw_semantics=ignored_by_hospital_goal_checker`;
+- planner endpoint audit tự nhất quán;
+- effective merged Nav2 YAML được archive/hash và có đúng tolerance/yaw/speed semantics;
+- terminated run không còn `PENDING`, failed goal có failure reason;
+- non-empty completion có repeated stable planner sweeps, không dùng cached no-path một lần;
+- no-path terminal counts cộng đúng và success count bằng 0;
+- official run clean git;
+- guard phát hiện pathology `SUCCEEDED` nhưng odometry gần như không di chuyển dù selected frontier ở xa.
 
 ## Full MapEx decision directory sau này
 
-MapEx dùng lại toàn bộ exact observed-map/candidate schema trên và thêm:
+MapEx dùng lại toàn bộ exact observed-map/candidate/execution schema trên và thêm:
 
 ```text
-decisions/policy_decision_000042/
-├── decision.json
-├── observed_map_raw.npz
-├── observed_map_canvas.npz
-├── g1.png
-├── g2.png
-├── g3.png
-├── mean.npy
-├── variance.npy
-├── candidates.csv
-└── visibility/
+g1.png
+g2.png
+g3.png
+mean.npy
+variance.npy
+visibility/
 ```
 
-Candidate table của MapEx thêm:
+Candidate table MapEx thêm:
 
 ```text
 predicted_visible_cells,ig,score,rank
@@ -312,26 +369,6 @@ Nếu có structural GT:
 ```text
 gt_visible_cells,gt_gain,gt_gain_per_m,gt_rank,prediction_error_summary
 ```
-
-## Validation invariants
-
-Post-run validator phải kiểm tra ít nhất:
-
-- benchmark clock source đúng;
-- metrics time và cumulative distance không giảm;
-- coverage/known_fraction trong `[0,1]`;
-- exact decision NPZ tồn tại/readable;
-- snapshot CSV references tồn tại/readable;
-- terminated goal không còn `PENDING`;
-- failed goal có `failure_reason`;
-- selected candidate join được bằng ID;
-- không có `rejected_lt_1m`;
-- `goal_source=exact_frontier_center` và execution goal trùng exact frontier center;
-- planner endpoint được log riêng và offset audit tự nhất quán;
-- terminated official run có explicit terminal policy state;
-- với `no_nav2_reachable_ranked_candidate`: `candidate_count == nav2_checked_count`, planner-outcome counts cộng đúng, `nav2_path_success_count == 0`, và `terminal_reason` đúng;
-- provenance hashes đầy đủ;
-- official run bắt đầu với clean git.
 
 ## Lightweight GitHub results
 
