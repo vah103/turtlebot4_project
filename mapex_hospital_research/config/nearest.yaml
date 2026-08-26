@@ -53,6 +53,7 @@ execution_adapter:
   execution_failure_suppression_radius_m: 0.25
   execution_failure_cooldown_s: 30.0
   execution_failure_is_permanent: false
+  completion_blocked_during_execution_failure_cooldown: true
   source_code_quirk: MapEx base.yaml sets unknown_as_occ=true, but sim_utils.get_inflated_planning_maps() hard-codes unknown_as_occ=false. Hospital does not reproduce this simulator-specific planner inconsistency; Nearest and MapEx use the same Nav2 execution adapter.
 
 mapping_profile:
@@ -94,6 +95,8 @@ logging:
   source_and_installed_runtime_sha256_in_metadata: true
   archive_nav2_base_params: true
   archive_effective_merged_nav2_yaml: true
+  hash_research_navigation_manager: true
+  hash_installed_robot_and_diffdrive_runtime: true
 
 reproducibility:
   simulator_seed_policy: intentionally_uncontrolled_gazebo_default_multiple_run_statistics
@@ -115,6 +118,8 @@ termination:
   min_idle_s: 10.0
   startup_grace_s: 20.0
   nonempty_frontier_requires_planner_revalidation_each_stable_cycle: true
+  final_revalidation_sweeps_must_be_consecutive_and_stable: true
+  completion_blocked_during_execution_failure_cooldown: true
   exact_terminal_policy_state_required: true
 
 validation:
@@ -123,6 +128,7 @@ validation:
   success_without_motion_guard: true
   effective_nav2_config_check: true
   terminal_revalidation_audit: true
+  complete_runtime_provenance_required: true
 
 runs:
   pilot_run_id: nearest_pilot_010
