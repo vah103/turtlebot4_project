@@ -1,19 +1,29 @@
 #!/usr/bin/env python3
-"""Validate that a Hospital Nearest run is complete enough for offline research."""
+"""Validate Hospital Nearest run integrity and experiment health.
+
+A PASS now means more than files being readable: official runs must also prove
+position-only frontier-goal semantics, successful planner action statuses,
+periodic no-path revalidation, effective Nav2 configuration provenance, and no
+obvious "goal succeeded without physical motion" pathology.
+"""
 
 from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import math
 from pathlib import Path
 
 import numpy as np
+import yaml
 
 
 WORKSPACE = Path(__file__).resolve().parents[1]
 CANVAS_SHAPE = (2123, 1504)
+PLANNER_STATUS_SUCCEEDED = 4
+EXPECTED_REVALIDATION_SWEEPS = 5
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -21,6 +31,14 @@ def read_csv(path: Path) -> list[dict[str, str]]:
         return []
     with path.open(newline="", encoding="utf-8") as handle:
         return list(csv.DictReader(handle))
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def as_float(value: str, label: str, errors: list[str]) -> float | None:
@@ -61,15 +79,45 @@ def check_npz(path: Path, errors: list[str], *, canvas: bool = False) -> None:
         errors.append(f"cannot read {path}: {exc}")
 
 
+def nested(mapping: dict, *keys, default=None):
+    cur = mapping
+    for key in keys:
+        if not isinstance(cur, dict) or key not in cur:
+            return default
+        cur = cur[key]
+    return cur
+
+
+def cumulative_distance_at(trajectory: list[dict[str, str]], t: float) -> float | None:
+    best = None
+    for row in trajectory:
+        try:
+            rt = float(row["time_s"])
+            rd = float(row["cumulative_distance_m"])
+        except Exception:
+            continue
+        if rt <= t + 1e-6:
+            best = rd
+        else:
+            break
+    return best
+
+
+def candidate_signature(rows: list[dict[str, str]]) -> tuple:
+    ordered = sorted(rows, key=lambda r: int(float(r.get("raw_rank", "0") or 0)))
+    return tuple((r.get("row", ""), r.get("col", "")) for r in ordered)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--run-id", default="nearest_pilot_007")
+    parser.add_argument("--run-id", default="nearest_pilot_010")
     parser.add_argument("--allow-running", action="store_true")
     args = parser.parse_args()
 
     run_dir = WORKSPACE / "experiments" / "nearest" / args.run_id
     errors: list[str] = []
     warnings: list[str] = []
+    health_issues: list[str] = []
     official = args.run_id.startswith("nearest_") and not args.run_id.startswith(
         "nearest_pilot_"
     )
@@ -111,12 +159,27 @@ def main() -> int:
         errors.append("metadata missing explicit simulator seed policy")
 
     execution_goal_semantics = str(metadata.get("execution_goal_semantics", ""))
-    if official and execution_goal_semantics != "exact_frontier_center":
-        errors.append("official run metadata must use exact_frontier_center execution goals")
-    elif execution_goal_semantics and execution_goal_semantics != "exact_frontier_center":
-        warnings.append(
-            f"unexpected execution_goal_semantics={execution_goal_semantics!r}"
+    accepted_semantics = {"exact_frontier_center_xy"}
+    if official and execution_goal_semantics not in accepted_semantics:
+        errors.append(
+            "official run metadata must use exact_frontier_center_xy execution semantics"
         )
+    elif execution_goal_semantics and execution_goal_semantics not in accepted_semantics:
+        warnings.append(
+            f"legacy execution_goal_semantics={execution_goal_semantics!r}"
+        )
+
+    yaw_semantics = str(metadata.get("goal_yaw_semantics", ""))
+    if official and yaw_semantics != "ignored_by_hospital_goal_checker":
+        errors.append("official run must use position-only frontier goals (yaw ignored)")
+    elif yaw_semantics and yaw_semantics != "ignored_by_hospital_goal_checker":
+        warnings.append(f"legacy goal_yaw_semantics={yaw_semantics!r}")
+
+    if metadata.get("selected_path_length_semantics") not in {
+        None,
+        "planner_validation_path_length_not_executed_trajectory",
+    }:
+        warnings.append("unexpected selected_path_length_semantics metadata")
 
     dirty = metadata.get("git_dirty_at_recorder_start")
     if official and dirty is not False:
@@ -136,13 +199,71 @@ def main() -> int:
         "installed_hospital_nav2_override",
         "installed_frontier_config",
         "installed_hospital_world",
+        "installed_nav2_base_params",
+        "runtime_nav2_merged",
     }
     if not isinstance(hashes, dict):
         errors.append("metadata missing config_sha256 provenance")
+        hashes = {}
     else:
         for key in sorted(required_hashes):
             if not hashes.get(key):
-                errors.append(f"metadata config_sha256 missing {key}")
+                if official:
+                    errors.append(f"metadata config_sha256 missing {key}")
+                else:
+                    warnings.append(f"older pilot provenance missing {key}")
+
+    merged_name = str(metadata.get("runtime_nav2_merged_file", ""))
+    merged_path = run_dir / merged_name if merged_name else None
+    merged: dict = {}
+    if not merged_name or merged_path is None or not merged_path.exists():
+        if official:
+            errors.append("official run missing archived runtime_nav2_merged.yaml")
+        else:
+            warnings.append("older pilot has no archived effective Nav2 YAML")
+    else:
+        expected_hash = str(hashes.get("runtime_nav2_merged", ""))
+        if expected_hash and sha256_file(merged_path) != expected_hash:
+            errors.append("runtime_nav2_merged.yaml SHA-256 mismatch")
+        try:
+            merged = yaml.safe_load(merged_path.read_text(encoding="utf-8")) or {}
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"cannot parse archived effective Nav2 YAML: {exc}")
+
+    if merged:
+        tolerance = nested(
+            merged, "planner_server", "ros__parameters", "GridBased", "tolerance"
+        )
+        yaw_tol = nested(
+            merged,
+            "controller_server",
+            "ros__parameters",
+            "general_goal_checker",
+            "yaw_goal_tolerance",
+        )
+        goal_angle_enabled = nested(
+            merged,
+            "controller_server",
+            "ros__parameters",
+            "FollowPath",
+            "GoalAngleCritic",
+            "enabled",
+        )
+        vx_max = nested(
+            merged,
+            "controller_server",
+            "ros__parameters",
+            "FollowPath",
+            "vx_max",
+        )
+        if tolerance is None or abs(float(tolerance)) > 1e-9:
+            errors.append(f"effective Nav2 GridBased tolerance is not 0.0: {tolerance!r}")
+        if yaw_tol is None or float(yaw_tol) < math.pi - 0.01:
+            errors.append(f"effective Nav2 still constrains frontier goal yaw: {yaw_tol!r}")
+        if goal_angle_enabled is not False:
+            errors.append("effective Nav2 GoalAngleCritic must be disabled for frontier goals")
+        if vx_max is None or abs(float(vx_max) - 0.45) > 1e-6:
+            errors.append(f"effective Hospital mapping vx_max is not 0.45: {vx_max!r}")
 
     metrics = read_csv(run_dir / "metrics.csv")
     trajectory = read_csv(run_dir / "trajectory.csv")
@@ -179,7 +300,6 @@ def main() -> int:
 
     if not trajectory:
         errors.append("trajectory.csv has no samples")
-
     if not policy_decisions:
         errors.append("no policy decisions logged")
 
@@ -196,6 +316,17 @@ def main() -> int:
             errors.append(f"{pid}: candidate row missing candidate_id")
         if row.get("status") == "rejected_lt_1m":
             errors.append(f"{pid}: below-1m candidate was incorrectly rejected")
+        if str(row.get("selected", "")).lower() == "true":
+            action_status = row.get("nav2_action_status", "")
+            if action_status == "":
+                if official:
+                    errors.append(f"{pid}: selected candidate missing Nav2 action status")
+                else:
+                    warnings.append(f"{pid}: older pilot selected row has no action status")
+            elif int(float(action_status)) != PLANNER_STATUS_SUCCEEDED:
+                errors.append(
+                    f"{pid}: selected candidate action status={action_status}, expected 4"
+                )
 
     for pid, row in policy_by_id.items():
         decision_dir = run_dir / "decisions" / pid
@@ -209,10 +340,7 @@ def main() -> int:
             if not path.exists():
                 errors.append(f"{pid}: missing {path.name}")
         check_npz(decision_dir / "observed_map_raw.npz", errors)
-        check_npz(
-            decision_dir / "observed_map_canvas.npz", errors, canvas=True
-        )
-
+        check_npz(decision_dir / "observed_map_canvas.npz", errors, canvas=True)
         count = int(float(row.get("candidate_count", "0") or 0))
         if count > 0 and not candidate_groups.get(pid):
             errors.append(f"{pid}: candidate_count={count} but no candidate rows")
@@ -280,6 +408,11 @@ def main() -> int:
                 )
             else:
                 legacy_goal_semantics_seen = True
+        if row.get("goal_yaw_semantics", "") != "ignored_by_hospital_goal_checker":
+            if official:
+                errors.append(f"{did}: frontier goal yaw is not explicitly ignored")
+            else:
+                legacy_goal_semantics_seen = True
 
         px_text = row.get("planner_endpoint_x", "")
         py_text = row.get("planner_endpoint_y", "")
@@ -291,11 +424,7 @@ def main() -> int:
             py = as_float(py_text, f"{did} planner_endpoint_y", errors)
             fx = as_float(row.get("frontier_x", ""), f"{did} frontier_x", errors)
             fy = as_float(row.get("frontier_y", ""), f"{did} frontier_y", errors)
-            reported = as_float(
-                offset_text,
-                f"{did} planner_endpoint_to_frontier_m",
-                errors,
-            )
+            reported = as_float(offset_text, f"{did} planner_endpoint_to_frontier_m", errors)
             if None not in {px, py, fx, fy, reported}:
                 recomputed = math.hypot(px - fx, py - fy)
                 if abs(recomputed - reported) > 2e-3:
@@ -305,10 +434,32 @@ def main() -> int:
                     )
 
     if legacy_goal_semantics_seen and not official:
-        warnings.append(
-            "pilot contains legacy/path-endpoint execution-goal semantics; do not use "
-            "it as an official benchmark run"
-        )
+        warnings.append("pilot contains legacy execution-goal semantics")
+
+    # Health check for the exact pathology seen in pilot_007: a goal much farther
+    # away than the robot physically travelled is reported SUCCEEDED.
+    for index, row in enumerate(decisions[:-1]):
+        if row.get("result") != "SUCCEEDED":
+            continue
+        try:
+            selected_distance = float(row.get("selected_distance_m", ""))
+            t0 = float(row.get("time_s", ""))
+            t1 = float(decisions[index + 1].get("time_s", ""))
+        except Exception:
+            continue
+        if selected_distance < 0.35:
+            continue
+        d0 = cumulative_distance_at(trajectory, t0)
+        d1 = cumulative_distance_at(trajectory, t1)
+        if d0 is None or d1 is None:
+            continue
+        physical_motion = max(0.0, d1 - d0)
+        if physical_motion < 0.10:
+            health_issues.append(
+                f"{row.get('decision_id')}: SUCCEEDED at selected_distance="
+                f"{selected_distance:.3f}m but odom motion before next decision was "
+                f"only {physical_motion:.3f}m"
+            )
 
     if not snapshots:
         errors.append("snapshots.csv is empty")
@@ -320,11 +471,11 @@ def main() -> int:
             continue
         check_npz(run_dir / raw_rel, errors)
         check_npz(run_dir / canvas_rel, errors, canvas=True)
-
     if termination and not any(row.get("event") == "final" for row in snapshots):
         errors.append("terminated run has no final recorder snapshot")
 
     terminal_audit_ok = False
+    revalidation_audit_ok = False
     if termination and policy_decisions:
         terminal_outcomes = {
             "exhausted_no_ranked_candidate",
@@ -334,15 +485,11 @@ def main() -> int:
             row for row in policy_decisions if row.get("outcome") in terminal_outcomes
         ]
         if not terminal_rows:
-            message = (
-                "terminated run has no explicit exhausted/no-Nav2-reachable policy state"
-            )
+            message = "terminated run has no explicit exhausted/no-Nav2-reachable policy state"
             if official:
                 errors.append(message)
             else:
-                warnings.append(
-                    message + "; inspect termination_reason if this was an older pilot"
-                )
+                warnings.append(message + "; older/interrupted pilot")
         else:
             terminal = terminal_rows[-1]
             pid = terminal.get("policy_decision_id", "")
@@ -352,6 +499,7 @@ def main() -> int:
                 if reason and reason != "zero_ranked_candidates":
                     errors.append(f"{pid}: unexpected terminal_reason={reason!r}")
                 terminal_audit_ok = True
+                revalidation_audit_ok = True
             else:
                 required_terminal_fields = [
                     "nav2_checked_count",
@@ -360,6 +508,7 @@ def main() -> int:
                     "nav2_rejected_count",
                     "nav2_error_count",
                     "terminal_reason",
+                    "planner_revalidation_period_s",
                 ]
                 missing = [
                     field for field in required_terminal_fields if terminal.get(field, "") == ""
@@ -372,14 +521,10 @@ def main() -> int:
                         warnings.append(message + " (older pilot schema)")
                 else:
                     candidate_count = as_count(
-                        terminal.get("candidate_count", ""),
-                        f"{pid} candidate_count",
-                        errors,
+                        terminal.get("candidate_count", ""), f"{pid} candidate_count", errors
                     )
                     checked = as_count(
-                        terminal.get("nav2_checked_count", ""),
-                        f"{pid} nav2_checked_count",
-                        errors,
+                        terminal.get("nav2_checked_count", ""), f"{pid} nav2_checked_count", errors
                     )
                     success = as_count(
                         terminal.get("nav2_path_success_count", ""),
@@ -387,9 +532,7 @@ def main() -> int:
                         errors,
                     )
                     no_path = as_count(
-                        terminal.get("nav2_no_path_count", ""),
-                        f"{pid} nav2_no_path_count",
-                        errors,
+                        terminal.get("nav2_no_path_count", ""), f"{pid} nav2_no_path_count", errors
                     )
                     rejected = as_count(
                         terminal.get("nav2_rejected_count", ""),
@@ -397,9 +540,7 @@ def main() -> int:
                         errors,
                     )
                     nav_errors = as_count(
-                        terminal.get("nav2_error_count", ""),
-                        f"{pid} nav2_error_count",
-                        errors,
+                        terminal.get("nav2_error_count", ""), f"{pid} nav2_error_count", errors
                     )
                     if None not in {
                         candidate_count,
@@ -412,8 +553,7 @@ def main() -> int:
                         expected_checked = success + no_path + rejected + nav_errors
                         if checked != expected_checked:
                             errors.append(
-                                f"{pid}: nav2_checked_count={checked} != "
-                                f"outcome sum={expected_checked}"
+                                f"{pid}: nav2_checked_count={checked} != outcome sum={expected_checked}"
                             )
                         if candidate_count != checked:
                             errors.append(
@@ -425,13 +565,52 @@ def main() -> int:
                                 f"{pid}: no_nav2_reachable terminal state has "
                                 f"nav2_path_success_count={success}"
                             )
-                    reason = terminal.get("terminal_reason", "")
-                    if reason != "all_ranked_candidates_failed_nav2_path_validation":
-                        errors.append(f"{pid}: unexpected terminal_reason={reason!r}")
+                    if terminal.get("terminal_reason") != (
+                        "all_ranked_candidates_failed_nav2_path_validation"
+                    ):
+                        errors.append(
+                            f"{pid}: unexpected terminal_reason="
+                            f"{terminal.get('terminal_reason')!r}"
+                        )
                     terminal_audit_ok = True
+
+                no_nav_rows = [
+                    row
+                    for row in terminal_rows
+                    if row.get("outcome") == "no_nav2_reachable_ranked_candidate"
+                ]
+                if len(no_nav_rows) >= EXPECTED_REVALIDATION_SWEEPS:
+                    last = no_nav_rows[-EXPECTED_REVALIDATION_SWEEPS:]
+                    signatures = [
+                        candidate_signature(candidate_groups.get(r["policy_decision_id"], []))
+                        for r in last
+                    ]
+                    if all(sig == signatures[0] for sig in signatures[1:]):
+                        revalidation_audit_ok = True
+                    else:
+                        errors.append(
+                            "completion window did not use a stable candidate set across "
+                            f"the final {EXPECTED_REVALIDATION_SWEEPS} planner sweeps"
+                        )
+                else:
+                    message = (
+                        f"only {len(no_nav_rows)} no-path planner sweeps logged; expected "
+                        f"at least {EXPECTED_REVALIDATION_SWEEPS} for stable completion"
+                    )
+                    if official:
+                        errors.append(message)
+                    else:
+                        warnings.append(message)
+
+    if health_issues:
+        if official:
+            errors.extend(f"experiment health: {item}" for item in health_issues)
+        else:
+            warnings.extend(f"experiment health: {item}" for item in health_issues)
 
     if errors:
         print("NEAREST RUN VALIDATION: FAIL")
+        print("DATA / PROTOCOL / HEALTH CHECKS:")
         for error in errors:
             print(f"- {error}")
         if warnings:
@@ -449,12 +628,17 @@ def main() -> int:
     print(f"- termination: {termination or 'RUNNING'}")
     print("- benchmark t=0: pre-compute")
     print("- Hospital below-1m adaptation: consistent")
+    print("- planner action status: audited")
+    print("- frontier goal yaw: ignored")
     print("- candidate linkage + snapshot integrity: OK")
     if exact_goal_execution_ok:
-        print("- exact frontier execution goal: OK")
+        print("- exact frontier x/y execution goal: OK")
     if terminal_audit_ok:
         print("- terminal Nav2 audit: OK")
-    print("- provenance: OK")
+    if revalidation_audit_ok:
+        print("- terminal planner revalidation: OK")
+    print("- effective Nav2 config provenance: OK")
+    print("- experiment health: no success-without-motion pathology detected")
     if warnings:
         print("Warnings:")
         for warning in warnings:
