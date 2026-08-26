@@ -92,7 +92,8 @@ detect MapEx frontier regions
 → giữ candidate kể cả <1m
 → Nav2 ComputePathToPose
 → no path/rejected/error: thử rank tiếp theo
-→ valid path: NavigateToPose
+→ valid path: giữ exact frontier center làm execution goal
+→ NavigateToPose(exact frontier center)
 ```
 
 `below_1m` vẫn được log để audit. Adaptation này phải giống nhau giữa Nearest, full MapEx và proposed method.
@@ -112,10 +113,25 @@ MapEx simulator A* (`pyastar2d`) được thay bằng:
 MapEx frontier generation + method-specific scoring
 → Hospital below-1m adaptation
 → Nav2 ComputePathToPose
-→ Nav2 NavigateToPose
+→ path tồn tại? dùng làm reachability evidence
+→ Nav2 NavigateToPose(exact frontier center)
 ```
 
-Goal vẫn là chính frontier-center, không shift/standoff.
+**Execution-goal invariant:** endpoint cuối của `ComputePathToPose` không được dùng thay cho frontier center. Planner có tolerance nên endpoint có thể cách requested frontier đáng kể. `hospital_v1` chỉ dùng path để xác nhận candidate có planner path; goal thực thi phải lấy từ `/frontier_selected` và có `x/y` trùng exact MapEx frontier center.
+
+Recorder phải giữ riêng:
+
+```text
+frontier_x/frontier_y              = exact MapEx frontier center
+goal_x/goal_y                      = actual NavigateToPose goal
+planner_endpoint_x/y               = last pose of ComputePathToPose path
+planner_endpoint_to_frontier_m     = audit only
+goal_source                        = exact_frontier_center
+```
+
+`goal_x/y` phải trùng `frontier_x/y` trong official runs. Path endpoint chỉ là diagnostic/reachability evidence, không phải nearest-safe-cell substitution hay standoff goal.
+
+`nearest_pilot_007` đã phát hiện bug adapter cũ: planner endpoint bị snap khoảng `0.5 m` theo tolerance và manager gửi endpoint đó thay vì exact frontier, làm Nav2 báo success khi robot gần như không di chuyển. Các run dùng semantics cũ không được tính là official benchmark.
 
 ## Benchmark clock
 
@@ -180,7 +196,7 @@ và tối thiểu:
 
 ### Navigation result detail
 
-Ngoài `SUCCEEDED/FAILED`, giữ detail khi có thể: rejected, timeout, stall/no-progress, Nav2 status/result error.
+Ngoài `SUCCEEDED/FAILED`, giữ detail khi có thể: rejected, timeout, stall/no-progress, Nav2 status/result error. Detail phải gắn với exact frontier execution goal, không với planner endpoint.
 
 ### Periodic/final map retention
 
@@ -245,4 +261,4 @@ MapEx thêm prediction/variance/visibility/IG/ranking data theo `docs/DATA_SCHEM
 
 ## Fair-comparison rule
 
-Không đổi spawn, sensor, SLAM, Nav2, timeout, stopping condition, canvas, ROI, frontier-generation semantics, Hospital below-1m adaptation, benchmark-clock definition hoặc resource budget giữa Nearest và MapEx mà không ghi rõ lý do và đánh giá lại baseline.
+Không đổi spawn, sensor, SLAM, Nav2, timeout, stopping condition, canvas, ROI, frontier-generation semantics, Hospital below-1m adaptation, exact-frontier execution-goal semantics, benchmark-clock definition hoặc resource budget giữa Nearest và MapEx mà không ghi rõ lý do và đánh giá lại baseline.
