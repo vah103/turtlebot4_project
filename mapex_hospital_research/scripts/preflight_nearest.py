@@ -33,6 +33,14 @@ ROI = (
     / "hospital_connected_free_v1.npy"
 )
 ROI_EXPECTED_SHA256 = "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1"
+SOURCE_NAV2_OVERRIDE = (
+    REPO_ROOT
+    / "ros2_ws/src/frontier_exploration/config/nav2_hospital_override.yaml"
+)
+INSTALLED_NAV2_OVERRIDE = (
+    REPO_ROOT
+    / "ros2_ws/install/frontier_exploration/share/frontier_exploration/config/nav2_hospital_override.yaml"
+)
 
 
 def sha256(path: Path) -> str:
@@ -61,6 +69,21 @@ def main() -> int:
         actual = sha256(ROI)
         if actual != ROI_EXPECTED_SHA256:
             errors.append(f"ROI SHA-256 mismatch: {actual} != {ROI_EXPECTED_SHA256}")
+
+    if not SOURCE_NAV2_OVERRIDE.exists() or "tolerance: 0.0" not in SOURCE_NAV2_OVERRIDE.read_text(
+        encoding="utf-8"
+    ):
+        errors.append("source Hospital Nav2 override is missing GridBased tolerance: 0.0")
+
+    if not INSTALLED_NAV2_OVERRIDE.exists():
+        errors.append(
+            "installed Hospital Nav2 override is missing; rebuild frontier_exploration"
+        )
+    elif "tolerance: 0.0" not in INSTALLED_NAV2_OVERRIDE.read_text(encoding="utf-8"):
+        errors.append(
+            "installed Hospital Nav2 override is stale (missing tolerance: 0.0); "
+            "run colcon build --symlink-install --packages-select frontier_exploration"
+        )
 
     launch = WORKSPACE / "launch" / "hospital_nearest.launch.py"
     official_policy = WORKSPACE / "scripts" / "mapex_nearest_ros_official.py"
@@ -115,6 +138,7 @@ def main() -> int:
     print("- Frozen ROI SHA-256: OK")
     print("- Hospital below-1m bypass: ACTIVE")
     print("- exact frontier execution goal: ACTIVE")
+    print("- installed Nav2 exact-planner tolerance: ACTIVE")
     print("- benchmark t=0 before first policy compute: ACTIVE")
     print("- exact exhausted/no-candidate logging: ACTIVE")
     print("- terminal Nav2 audit logging: ACTIVE")
