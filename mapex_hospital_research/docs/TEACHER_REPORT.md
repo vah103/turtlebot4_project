@@ -4,9 +4,13 @@ Tài liệu này quy định cách chuyển kết quả kỹ thuật trong `mape
 
 ## Nơi lưu báo cáo chính
 
-Báo cáo chính nằm trong Google Docs **`TurtleBot4`**, tab:
+Báo cáo chính nằm trong Google Docs **`TurtleBot4`**.
 
-**`Báo cáo nghiên cứu MapEx Hospital`**
+- Google Doc ID: `16tNFhp4qvS8rlGTzL_8DQ_3fGJJoasrL1hJAQ16xPkk`
+- Report tab: **`Báo cáo nghiên cứu MapEx Hospital`**
+- Report tab ID hiện tại: `t.ckeebywhh2ie`
+
+Khi cập nhật báo cáo, phải nhắm đúng document ID trên; không tìm/chọn file chỉ theo tên `TurtleBot4` nếu có nhiều file trùng tên.
 
 Repo là nguồn bằng chứng kỹ thuật; Google Docs là bản trình bày teacher-facing.
 
@@ -75,6 +79,29 @@ Mỗi phần báo cáo nên ưu tiên cấu trúc:
 
 Các mục chưa có kết quả được giữ như placeholder; không điền số giả định.
 
+## Quy tắc trình bày stage analysis
+
+Khi so sánh tại **cùng một absolute coverage stage**, coverage là trục căn chỉnh trạng thái chứ không phải đại lượng cần so giữa hai method tại chính mốc đó.
+
+Ví dụ tại stage quanh 60% coverage, nên so:
+- thời gian để đạt stage đó;
+- quãng đường để đạt stage đó;
+- số failed goals / success rate đến stage đó;
+- prediction quality;
+- uncertainty calibration;
+- visibility error;
+- IG/ranking quality;
+- computation cost nếu có.
+
+Không viết kiểu "MapEx có coverage cao hơn Nearest tại cùng 60% coverage".
+
+Hiệu quả exploration tổng thể phải được đánh giá riêng bằng:
+- Coverage vs time;
+- Coverage vs distance;
+- Coverage AUC theo time/distance;
+- final coverage dưới cùng fixed time/distance budget;
+- total time/distance nếu stopping condition cho phép so trực tiếp.
+
 ## Quy tắc tính nhất quán
 
 - Mọi con số trong Google Docs phải truy ngược được về `experiments/` hoặc `results/`.
@@ -89,5 +116,5 @@ Sau một milestone có kết quả đủ tin cậy:
 1. lưu dữ liệu và summary trong repo;
 2. cập nhật `STATUS.md`;
 3. cập nhật `docs/experiment_notes.md` nếu có quyết định/lỗi quan trọng;
-4. viết/cập nhật phần tương ứng trong Google Docs `TurtleBot4` → `Báo cáo nghiên cứu MapEx Hospital` theo phong cách teacher-facing;
+4. viết/cập nhật phần tương ứng trong Google Docs ID `16tNFhp4qvS8rlGTzL_8DQ_3fGJJoasrL1hJAQ16xPkk`, tab `Báo cáo nghiên cứu MapEx Hospital`, theo phong cách teacher-facing;
 5. kiểm tra các số liệu trong báo cáo khớp với file kết quả trong repo.
