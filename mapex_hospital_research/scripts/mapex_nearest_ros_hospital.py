@@ -7,12 +7,13 @@ runtime diagnostics, visualization, and explicit startup-failure semantics so
 a run with no usable frontier is never mislabeled as successful exploration
 completion.
 
-Important semantic correction:
-MapEx's ``cur_pose_dist_threshold_m`` is used when checking whether an already
-locked frontier remains valid. It is NOT a global minimum-distance filter for
-newly detected frontier candidates. The Hospital adapter therefore keeps all
-new region centers (>10 cells) in the nearest ranking, regardless of whether
-they are initially within 1 m of the robot.
+MapEx 1 m semantics:
+``cur_pose_dist_threshold_m`` is not a frontier-detection filter. MapEx first
+scores/ranks all frontier region centers, selects the lowest-cost candidate,
+then validates that locked candidate. A candidate closer than 1 m is invalid,
+so it is removed and the next-lowest-cost candidate is tried. This Hospital
+adapter reproduces that order: rank all centers -> reject selected candidate
+if <1 m -> try the next candidate -> Nav2 path validation.
 
 Visualization is diagnostic only and does not alter frontier detection,
 ranking, planning validation, or navigation execution. The node publishes
@@ -108,9 +109,9 @@ class HospitalMapExNearestROS(MapExNearestROS):
             "is recorded as policy failure, not exploration completion"
         )
         self.get_logger().info(
-            "MapEx semantic correction active: the 1.0 m cur_pose threshold is "
-            "diagnostic/locked-frontier validity only; new candidates are NOT "
-            "filtered by distance"
+            "MapEx 1.0 m validity semantics active: rank all frontier centers first; "
+            "a selected candidate <1.0 m is rejected and the next ranked candidate "
+            "is tried before Nav2 path validation"
         )
         self.get_logger().info(
             "RViz visualization enabled by default: /map_cloud, "
@@ -306,10 +307,7 @@ class HospitalMapExNearestROS(MapExNearestROS):
                 size > REGION_SIZE_THRESHOLD for size in sizes
             ),
             "center_count": len(centers),
-            # This is informational only. In official MapEx the 1 m threshold
-            # validates an already locked frontier; it does not remove a newly
-            # detected candidate before ranking.
-            "centers_beyond_locked_validity_distance": sum(
+            "centers_at_or_beyond_1m": sum(
                 distance >= MIN_FRONTIER_DISTANCE_M for distance in distances
             ),
             "min_center_distance_m": min(distances) if distances else None,
@@ -317,7 +315,7 @@ class HospitalMapExNearestROS(MapExNearestROS):
         }
 
     def _compute_candidates(self, msg, robot_xy):
-        """Rank all MapEx region centers; do not apply 1 m as a new-goal filter."""
+        """Rank all MapEx region centers; 1 m validity is applied after ranking."""
         grid = np.asarray(msg.data, dtype=np.int16).reshape(
             int(msg.info.height), int(msg.info.width)
         )
@@ -341,11 +339,15 @@ class HospitalMapExNearestROS(MapExNearestROS):
         candidates.sort(key=lambda item: item.distance_cells)
 
         diag = self._diagnostics(msg, robot_xy)
-        diag["usable_candidate_count"] = len(candidates)
+        diag["ranked_candidate_count"] = len(candidates)
+        diag["validity_candidate_count"] = sum(
+            item.distance_m >= MIN_FRONTIER_DISTANCE_M for item in candidates
+        )
         signature = tuple(diag.items())
         if signature != self._last_diag_signature:
             self._last_diag_signature = signature
             self._last_diag = diag
+            ranked_distances = [round(item.distance_m, 3) for item in candidates]
             self.get_logger().warning(
                 "MapEx frontier audit: "
                 f"free={diag['free_cells']}, unknown={diag['unknown_cells']}, "
@@ -354,16 +356,29 @@ class HospitalMapExNearestROS(MapExNearestROS):
                 f"max_region={diag['max_region_size']}, "
                 f"large_regions(>10)={diag['large_region_count']}, "
                 f"centers={diag['center_count']}, "
-                f"centers>=1m(lock-validity-only)="
-                f"{diag['centers_beyond_locked_validity_distance']}, "
-                f"usable_candidates={diag['usable_candidate_count']}, "
-                f"min_center_dist={diag['min_center_distance_m']}"
+                f"ranked={diag['ranked_candidate_count']}, "
+                f">=1m_valid={diag['validity_candidate_count']}, "
+                f"distances_m={ranked_distances}"
             )
 
         self._publish_markers(msg, candidates=candidates)
         return candidates
 
     def _plan_next_candidate(self) -> None:
+        # MapEx ranks all frontiers first. The 1 m rule is then part of locked
+        # frontier validity: reject the current lowest-cost candidate and reselect
+        # the next-lowest-cost candidate until one is at least 1 m away.
+        while self.planning_index < len(self.current_candidates):
+            candidate = self.current_candidates[self.planning_index]
+            if candidate.distance_m >= MIN_FRONTIER_DISTANCE_M:
+                break
+            self.get_logger().info(
+                "Rejecting ranked MapEx frontier by 1.0 m validity rule: "
+                f"rank={self.planning_index + 1}, "
+                f"distance={candidate.distance_m:.3f} m; trying next candidate"
+            )
+            self.planning_index += 1
+
         if (
             self.decision_map is not None
             and self.planning_index < len(self.current_candidates)
@@ -385,8 +400,10 @@ class HospitalMapExNearestROS(MapExNearestROS):
             return "mapex_nearest_startup_no_frontier_cells"
         if int(diag.get("large_region_count", 0) or 0) == 0:
             return "mapex_nearest_startup_no_region_larger_than_10_cells"
-        if int(diag.get("usable_candidate_count", 0) or 0) == 0:
+        if int(diag.get("ranked_candidate_count", 0) or 0) == 0:
             return "mapex_nearest_startup_all_candidates_suppressed"
+        if int(diag.get("validity_candidate_count", 0) or 0) == 0:
+            return "mapex_nearest_startup_all_ranked_frontiers_within_1m"
         return "mapex_nearest_startup_no_nav2_reachable_frontier"
 
     def _observe_exhausted(self) -> None:
