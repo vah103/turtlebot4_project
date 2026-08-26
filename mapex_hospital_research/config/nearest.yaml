@@ -31,6 +31,7 @@ execution_adapter:
   hospital_executor: nav2_navigate_to_pose
   frontier_goal_is_shifted_or_standoff: false
   note: Nav2 replaces only the simulator execution layer; frontier generation and ranking remain MapEx nearest semantics.
+  source_code_quirk: MapEx base.yaml sets unknown_as_occ=true, but sim_utils.get_inflated_planning_maps() hard-codes unknown_as_occ=False when calling inflate_map. Hospital does not attempt to reproduce this planner-specific inconsistency; both Nearest and MapEx use the same Nav2 execution adapter.
 
 navigation:
   goal_timeout_s: 180.0
