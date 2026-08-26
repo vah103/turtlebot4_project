@@ -6,10 +6,10 @@ Run directly after sourcing ROS/workspace setup:
     /usr/bin/python3 mapex_hospital_research/launch/hospital_nearest.launch.py
 
 Hospital protocol keeps MapEx frontier generation + Euclidean ranking, uses
-Nav2 for execution, and allows ranked frontiers below the original MapEx 1 m
-validity threshold because pilot_005 demonstrated a startup deadlock otherwise.
-The final official-run wrappers also synchronize t=0 before policy computation
-and retain exact exhausted/no-candidate decisions for replay.
+Nav2 for execution, allows ranked frontiers below the original MapEx 1 m
+validity threshold, and executes the exact selected frontier center with zero
+GridBased planner tolerance. The official-run wrappers also synchronize t=0
+before policy computation and retain exact exhausted/no-candidate decisions.
 """
 
 from __future__ import annotations
@@ -122,7 +122,7 @@ def generate_launch_description() -> LaunchDescription:
 
     return LaunchDescription(
         [
-            DeclareLaunchArgument("run_id", default_value="nearest_pilot_007"),
+            DeclareLaunchArgument("run_id", default_value="nearest_pilot_008"),
             DeclareLaunchArgument("use_rviz", default_value="True"),
             DeclareLaunchArgument("headless", default_value="False"),
             recorder,
