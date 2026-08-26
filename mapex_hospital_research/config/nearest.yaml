@@ -1,17 +1,36 @@
 method: nearest_frontier
 protocol_version: hospital_v1
+implementation:
+  source_repository: castacks/MapEx
+  source_commit: 53636bd1c79153acc3c74a532837d78c926bae5e
+  source_files:
+    - scripts/sim_utils.py
+    - scripts/explore.py
+  ros_adapter: mapex_hospital_research/scripts/mapex_nearest_ros.py
 
 frontier:
-  detector: wfd_raw_slam_map
-  min_frontier_size_cells: 5
-  min_segment_size_cells: 5
-  min_selection_distance_m: 0.60
-  reachable_only: true
+  detector: mapex_official_frontier_rule
+  free_cell_rule: occupancy_value_equals_0
+  unknown_cell_rule: occupancy_value_less_than_0
+  adjacency_to_unknown: 8_neighbor
+  region_connectivity: 8
+  region_size_threshold_cells: 10
+  keep_region_rule: strictly_greater_than_threshold
+  representative_rule: region_cell_closest_to_arithmetic_mean_row_col
+  min_selection_distance_m: 1.0
 
 selection:
-  rule: nearest_reachable_frontier
-  distance_metric: euclidean_robot_to_frontier_representative
-  validate_with_nav2_compute_path: true
+  rule: minimum_euclidean_distance_to_frontier_center
+  distance_metric: euclidean_grid_distance
+  lock_selected_frontier_until_goal_outcome: true
+  no_path_rule: remove_current_candidate_and_try_next_lowest_cost
+
+execution_adapter:
+  original_mapex_local_planner: pyastar2d_astar_allow_diagonal_false
+  hospital_local_planner: nav2_compute_path_to_pose
+  hospital_executor: nav2_navigate_to_pose
+  frontier_goal_is_shifted_or_standoff: false
+  note: Nav2 replaces only the simulator execution layer; frontier generation and ranking remain MapEx nearest semantics.
 
 navigation:
   goal_timeout_s: 180.0
@@ -19,7 +38,7 @@ navigation:
   use_same_hospital_nav2_stack: true
 
 termination:
-  rule: no_reachable_frontier_stable_completion
+  rule: no_planner_reachable_mapex_frontier_stable_completion
   stable_cycles: 5
   check_period_s: 2.0
   min_idle_s: 10.0
