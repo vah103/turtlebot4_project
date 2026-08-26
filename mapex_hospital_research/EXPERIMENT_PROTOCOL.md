@@ -61,11 +61,14 @@ ROI/canvas không được đổi giữa Nearest, MapEx và proposed method tron
 
 - Nav2: `hospital_nav2.launch.py` + `nav2_hospital_override.yaml`
 - Maximum speed: `0.75 m/s`
+- `GridBased` planner goal tolerance: **`0.0 m`**
 - Hard timeout per goal: `180 s`
 - Stall timeout: `30 s`
 - Goal checker/sensor/SLAM/Nav2 params giống nhau giữa methods
 - LiDAR topic: `/scan`
 - SLAM max range: `20.0 m`
+
+Planner tolerance `0.0 m` là một phần của `hospital_v1`: candidate chỉ được coi là planner-reachable khi Nav2 lập được path tới exact selected frontier cell. Không dùng tolerance `0.5 m` để snap sang điểm gần hơn.
 
 ## Frontier policy shared by Nearest and MapEx
 
@@ -90,7 +93,7 @@ detect MapEx frontier regions
 → representative
 → score/rank
 → giữ candidate kể cả <1m
-→ Nav2 ComputePathToPose
+→ Nav2 ComputePathToPose với planner tolerance 0.0 m
 → no path/rejected/error: thử rank tiếp theo
 → valid path: giữ exact frontier center làm execution goal
 → NavigateToPose(exact frontier center)
@@ -112,12 +115,12 @@ MapEx simulator A* (`pyastar2d`) được thay bằng:
 ```text
 MapEx frontier generation + method-specific scoring
 → Hospital below-1m adaptation
-→ Nav2 ComputePathToPose
+→ Nav2 ComputePathToPose(tolerance=0.0 m)
 → path tồn tại? dùng làm reachability evidence
 → Nav2 NavigateToPose(exact frontier center)
 ```
 
-**Execution-goal invariant:** endpoint cuối của `ComputePathToPose` không được dùng thay cho frontier center. Planner có tolerance nên endpoint có thể cách requested frontier đáng kể. `hospital_v1` chỉ dùng path để xác nhận candidate có planner path; goal thực thi phải lấy từ `/frontier_selected` và có `x/y` trùng exact MapEx frontier center.
+**Execution-goal invariant:** endpoint cuối của `ComputePathToPose` không được dùng thay cho frontier center. `hospital_v1` dùng planner tolerance `0.0 m`, nhưng vẫn log endpoint để audit. Goal thực thi phải lấy từ `/frontier_selected` và có `x/y` trùng exact MapEx frontier center.
 
 Recorder phải giữ riêng:
 
@@ -131,7 +134,7 @@ goal_source                        = exact_frontier_center
 
 `goal_x/y` phải trùng `frontier_x/y` trong official runs. Path endpoint chỉ là diagnostic/reachability evidence, không phải nearest-safe-cell substitution hay standoff goal.
 
-`nearest_pilot_007` đã phát hiện bug adapter cũ: planner endpoint bị snap khoảng `0.5 m` theo tolerance và manager gửi endpoint đó thay vì exact frontier, làm Nav2 báo success khi robot gần như không di chuyển. Các run dùng semantics cũ không được tính là official benchmark.
+`nearest_pilot_007` đã phát hiện bug adapter cũ: planner endpoint bị snap khoảng `0.5 m` theo tolerance và manager gửi endpoint đó thay vì exact frontier, làm Nav2 báo success khi robot gần như không di chuyển. Các run dùng semantics cũ không được tính là official benchmark. `nearest_pilot_008` là final runtime check cho exact-frontier execution + planner tolerance `0.0 m`.
 
 ## Benchmark clock
 
@@ -248,7 +251,8 @@ MapEx thêm prediction/variance/visibility/IG/ranking data theo `docs/DATA_SCHEM
 - MapEx target: `10` runs
 - Minimum preliminary: `5` per method
 - `nearest_pilot_005`: diagnostic deadlock pilot, không benchmark
-- `nearest_pilot_007`: pilot cuối để validate motion + final logging schema
+- `nearest_pilot_007`: diagnostic execution-adapter bug (tolerance-snapped path endpoint), không benchmark
+- `nearest_pilot_008`: final exact-frontier execution runtime check trước official runs
 - Pilot/debug không tính vào official benchmark
 
 ## Exploration-stage comparison
@@ -261,4 +265,4 @@ MapEx thêm prediction/variance/visibility/IG/ranking data theo `docs/DATA_SCHEM
 
 ## Fair-comparison rule
 
-Không đổi spawn, sensor, SLAM, Nav2, timeout, stopping condition, canvas, ROI, frontier-generation semantics, Hospital below-1m adaptation, exact-frontier execution-goal semantics, benchmark-clock definition hoặc resource budget giữa Nearest và MapEx mà không ghi rõ lý do và đánh giá lại baseline.
+Không đổi spawn, sensor, SLAM, Nav2, planner tolerance, timeout, stopping condition, canvas, ROI, frontier-generation semantics, Hospital below-1m adaptation, exact-frontier execution-goal semantics, benchmark-clock definition hoặc resource budget giữa Nearest và MapEx mà không ghi rõ lý do và đánh giá lại baseline.
