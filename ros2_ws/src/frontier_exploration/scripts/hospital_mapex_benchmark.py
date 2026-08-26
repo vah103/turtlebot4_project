@@ -5,12 +5,13 @@ The full benchmark implementation lives in ``hospital_mapex_benchmark_legacy.py`
 This wrapper adds Hospital-specific safety checks without changing the upstream
 MapEx exploration/metric pipeline:
 
-1. robust discovery of the flat-world elevator blockers; and
-2. structural-GT validation against the committed final Hospital SLAM snapshot.
+1. normalize the AWS Hospital COLLADA wall mesh into Gazebo coordinates;
+2. robustly discover the flat-world elevator blockers; and
+3. validate structural GT against the committed final Hospital SLAM snapshot.
 
 Important: ``occ_map.npy`` intentionally stores every cell outside valid-space as
-occupied, as expected by the MapEx KTH loader.  That representation must NOT be
-used directly for wall validation.  Validation below rebuilds an explicit wall
+occupied, as expected by the MapEx KTH loader. That representation must NOT be
+used directly for wall validation. Validation below rebuilds an explicit wall
 raster from the collision mesh and blocker boxes.
 """
 
@@ -34,6 +35,142 @@ if _spec is None or _spec.loader is None:
     raise RuntimeError(f"Could not load legacy benchmark: {LEGACY_PATH}")
 legacy = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(legacy)
+
+
+# ---------------------------------------------------------------------------
+# AWS Hospital COLLADA normalization
+# ---------------------------------------------------------------------------
+def _local_xml_name(tag: str) -> str:
+    return tag.rsplit("}", 1)[-1]
+
+
+def _collada_asset_metadata(mesh_path: Path) -> Tuple[float, str]:
+    """Return COLLADA unit scale (metres/unit) and declared up axis."""
+    root = ET.parse(mesh_path).getroot()
+    unit_scale = 1.0
+    up_axis = "Z_UP"
+
+    asset = next(
+        (node for node in root if _local_xml_name(node.tag) == "asset"),
+        None,
+    )
+    if asset is not None:
+        for child in asset:
+            name = _local_xml_name(child.tag)
+            if name == "unit":
+                unit_scale = float(child.attrib.get("meter", "1.0"))
+            elif name == "up_axis" and child.text:
+                up_axis = child.text.strip().upper()
+
+    if unit_scale <= 0.0:
+        raise RuntimeError(
+            f"Invalid COLLADA unit scale {unit_scale}: {mesh_path}"
+        )
+    return unit_scale, up_axis
+
+
+def load_wall_section_polylines(mesh_path: Path, z_slice: float):
+    """Load the AWS wall mesh in Gazebo metres and take a horizontal section.
+
+    The source Hospital DAE declares ``unit meter=0.01`` and ``Y_UP``. Depending
+    on the trimesh/pycollada versions, those asset transforms may or may not be
+    applied automatically. We therefore inspect the loaded extents and only
+    apply the missing transforms:
+
+      COLLADA (X,Y,Z) -> Gazebo (X,-Z,Y)
+
+    This is the same coordinate convention already used by hospital_canvas.py.
+    """
+    np = legacy.np
+    trimesh = legacy.require_import(
+        "trimesh", "python3 -m pip install trimesh pycollada"
+    )
+
+    loaded = trimesh.load(str(mesh_path), force="scene")
+    if isinstance(loaded, trimesh.Scene):
+        meshes = []
+        for node_name in loaded.graph.nodes_geometry:
+            transform, geom_name = loaded.graph[node_name]
+            geom = loaded.geometry[geom_name].copy()
+            geom.apply_transform(transform)
+            meshes.append(geom)
+        if not meshes:
+            raise RuntimeError("Hospital wall DAE contains no geometry.")
+        mesh = trimesh.util.concatenate(meshes)
+    else:
+        mesh = loaded.copy()
+
+    unit_scale, up_axis = _collada_asset_metadata(mesh_path)
+    extents = np.asarray(mesh.extents, dtype=np.float64)
+    if extents.shape != (3,) or not np.all(np.isfinite(extents)):
+        raise RuntimeError(f"Invalid Hospital wall mesh extents: {extents}")
+
+    # Some COLLADA loaders honor <unit meter=...>; some return authoring units.
+    # The real Hospital floor is tens of metres wide, not thousands. Apply the
+    # declared unit scale only when the loaded geometry is clearly unscaled.
+    applied_scale = False
+    if unit_scale != 1.0 and float(np.max(extents)) > 200.0:
+        mesh.apply_scale(unit_scale)
+        extents = np.asarray(mesh.extents, dtype=np.float64)
+        applied_scale = True
+
+    # For this AWS asset, after metric scaling the vertical span is ~3 m and the
+    # second planar span is ~25 m. If Y is still the short/vertical dimension,
+    # trimesh has preserved COLLADA Y_UP and we must rotate into Gazebo Z_UP.
+    applied_axis = False
+    if up_axis == "Y_UP" and extents[1] < 0.5 * extents[2]:
+        transform = np.array(
+            [
+                [1.0, 0.0, 0.0, 0.0],
+                [0.0, 0.0, -1.0, 0.0],
+                [0.0, 1.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0, 1.0],
+            ],
+            dtype=np.float64,
+        )
+        mesh.apply_transform(transform)
+        extents = np.asarray(mesh.extents, dtype=np.float64)
+        applied_axis = True
+    elif up_axis not in ("Y_UP", "Z_UP"):
+        raise RuntimeError(
+            f"Unsupported COLLADA up_axis {up_axis!r}: {mesh_path}"
+        )
+
+    # Sanity check after normalization. A bad units/axis interpretation is much
+    # better caught here than after an expensive benchmark run.
+    if float(np.max(extents[:2])) > 100.0 or float(extents[2]) > 10.0:
+        raise RuntimeError(
+            "Hospital wall mesh normalization produced implausible extents "
+            f"{extents.tolist()} m (unit_scale={unit_scale}, up_axis={up_axis})."
+        )
+
+    if applied_scale or applied_axis:
+        legacy.log(
+            "Normalized Hospital DAE: "
+            f"unit_scale={'applied' if applied_scale else 'already metric'}, "
+            f"Y_UP->Z_UP={'applied' if applied_axis else 'already applied'}, "
+            f"extents_m={[round(float(v), 3) for v in extents]}"
+        )
+
+    section = mesh.section(
+        plane_origin=np.array([0.0, 0.0, z_slice]),
+        plane_normal=np.array([0.0, 0.0, 1.0]),
+    )
+    if section is None:
+        raise RuntimeError(f"No wall-mesh section found at z={z_slice:.3f} m.")
+
+    polylines = [
+        np.asarray(p, dtype=np.float64)[:, :2]
+        for p in section.discrete
+        if len(p) >= 2
+    ]
+    segment_count = int(sum(max(0, len(p) - 1) for p in polylines))
+    entity_count = len(section.entities)
+    return polylines, entity_count, segment_count
+
+
+# Replace the legacy loader before either GT building or validation runs.
+legacy.load_wall_section_polylines = load_wall_section_polylines
 
 
 # ---------------------------------------------------------------------------
@@ -142,7 +279,7 @@ def _build_explicit_wall_mask(
     (wall_x, wall_y, wall_yaw), blockers = find_world_model_geometry(
         legacy.HOSPITAL_WORLD_SDF
     )
-    polylines, _entity_count, _segment_count = legacy.load_wall_section_polylines(
+    polylines, _entity_count, _segment_count = load_wall_section_polylines(
         mesh_path, z_slice
     )
 
@@ -155,9 +292,7 @@ def _build_explicit_wall_mask(
             poly_world, spawn_x, spawn_y, spawn_yaw
         )
         rc = legacy.metric_xy_to_raw_rc(poly_slam)
-        legacy.rasterize_polyline(
-            obstacle, rc, wall_thickness_cells, cv2
-        )
+        legacy.rasterize_polyline(obstacle, rc, wall_thickness_cells, cv2)
 
     if include_flat_blockers:
         for x, y, yaw, sx, sy in blockers:
@@ -183,7 +318,7 @@ def _wall_mask_as_lama_image(wall_raw, target_shape):
     if block != 2:
         raise RuntimeError(f"Unexpected Hospital downsample factor: {block}")
 
-    # The dataset preprocessor uses ceil-sized 0.10 m cells.  For a binary
+    # The dataset preprocessor uses ceil-sized 0.10 m cells. For a binary
     # obstacle mask, any occupied source cell makes the target cell occupied.
     pad_h = (-source_h) % block
     pad_w = (-source_w) % block
@@ -266,7 +401,7 @@ def validate_structural_gt(
             "Validation reference/structural wall map contains no usable cells."
         )
 
-    # SLAM and mesh rasterization need a small spatial tolerance.  The metric
+    # SLAM and mesh rasterization need a small spatial tolerance. The metric
     # remains reference-wall recall: an observed occupied cell is matched when
     # a structural wall lies within 0.20 m.
     kernel = np.ones((3, 3), dtype=np.uint8)
