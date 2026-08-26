@@ -13,9 +13,11 @@ Hospital ổn định → Nearest baseline → MapEx closed-loop → nhiều run
 Đọc theo thứ tự:
 1. `STATUS.md` — đang làm đến đâu, việc tiếp theo là gì.
 2. `ROADMAP.md` — toàn bộ lộ trình nghiên cứu.
-3. `EXPERIMENT_PROTOCOL.md` — các điều kiện phải giữ cố định giữa các run.
-4. `docs/DATA_SCHEMA.md` — dữ liệu mỗi run phải lưu như thế nào.
-5. Sau đó mới đọc code liên quan trong `src/`, `scripts/`, `analysis/`.
+3. `references/README.md` — index tài liệu tham chiếu.
+4. `references/MAPEX_PAPER.md` — paper MapEx gốc và pipeline cần bám theo.
+5. `EXPERIMENT_PROTOCOL.md` — các điều kiện phải giữ cố định giữa các run.
+6. `docs/DATA_SCHEMA.md` — dữ liệu mỗi run phải lưu như thế nào.
+7. Sau đó mới đọc code liên quan trong `src/`, `scripts/`, `analysis/`.
 
 Không cần dựa vào báo cáo cũ để giả định rằng ranking, uncertainty hay visibility là bottleneck.
 
@@ -31,11 +33,17 @@ Các launch/file cũ chỉ được coi là dependency. Code nghiên cứu mới
 
 ```text
 mapex_hospital_research/
+├── AGENTS.md
 ├── README.md
 ├── ROADMAP.md
 ├── STATUS.md
 ├── EXPERIMENT_PROTOCOL.md
 ├── .gitignore
+├── references/
+│   ├── README.md
+│   ├── MAPEX_PAPER.md
+│   ├── RESEARCH_ROADMAP.md
+│   └── RELATED_WORK.md
 ├── config/
 ├── launch/
 ├── src/
