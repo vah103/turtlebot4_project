@@ -39,6 +39,31 @@ class HospitalAdaptedNearestROS(ResearchHospitalMapExNearestROS):
             "their below_1m status remains logged."
         )
 
+    @staticmethod
+    def _nav2_audit_from_rows(rows: list[dict]) -> dict[str, int]:
+        """Summarize Nav2 planner outcomes for one frozen policy decision."""
+        path_success = sum(bool(item.get("selected")) for item in rows)
+        no_path = sum(item.get("status") == "nav2_no_path" for item in rows)
+        rejected = sum(item.get("status") == "nav2_rejected" for item in rows)
+        errors = sum(
+            item.get("status") in {"nav2_request_error", "nav2_result_error"}
+            for item in rows
+        )
+        return {
+            "nav2_path_success_count": int(path_success),
+            "nav2_no_path_count": int(no_path),
+            "nav2_rejected_count": int(rejected),
+            "nav2_error_count": int(errors),
+            "nav2_checked_count": int(path_success + no_path + rejected + errors),
+        }
+
+    def _refresh_nav2_audit_fields(self) -> None:
+        if self._current_policy is None:
+            return
+        self._current_policy.update(
+            self._nav2_audit_from_rows(self._current_policy.get("candidates", []))
+        )
+
     def _plan_next_candidate(self) -> None:
         """Try ranked candidates without the original MapEx 1 m rejection."""
         self._begin_policy_decision_if_needed()
@@ -56,15 +81,24 @@ class HospitalAdaptedNearestROS(ResearchHospitalMapExNearestROS):
             self.planning = False
             self._viz_checking_candidate = None
             self.exhausted_signature = self.current_candidate_signature
-            if (
-                self._current_policy is not None
-                and self._current_policy.get("outcome") in {"planning", "selected_for_navigation"}
-            ):
-                self._current_policy["outcome"] = "no_nav2_reachable_ranked_candidate"
+
+            # This is the exact terminal state for a non-empty candidate set:
+            # every ranked candidate has already been submitted to Nav2 and none
+            # produced a usable path.  Persist it BEFORE entering the completion
+            # window, regardless of whatever transient outcome was written last.
+            if self._current_policy is not None:
+                self._refresh_nav2_audit_fields()
+                self._current_policy["outcome"] = (
+                    "no_nav2_reachable_ranked_candidate"
+                )
+                self._current_policy["terminal_reason"] = (
+                    "all_ranked_candidates_failed_nav2_path_validation"
+                )
                 self._write_policy_files()
+
             self.get_logger().warning(
                 "All current ranked MapEx frontier centers failed Nav2 path "
-                "validation; waiting for a changed frontier set"
+                "validation; terminal policy state saved before completion window"
             )
             self._observe_exhausted()
             self._publish_markers(self.decision_map or self.latest_map)
