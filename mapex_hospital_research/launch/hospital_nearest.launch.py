@@ -30,12 +30,12 @@ from launch.event_handlers import OnProcessExit
 from launch.events import Shutdown
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import Node
 
 
 WORKSPACE = Path(__file__).resolve().parents[1]
 RECORDER = WORKSPACE / "scripts" / "research_recorder_safe.py"
-MAPEX_NEAREST = WORKSPACE / "scripts" / "mapex_nearest_ros_hospital.py"
+MAPEX_NEAREST = WORKSPACE / "scripts" / "mapex_nearest_ros_research.py"
+RESEARCH_MANAGER = WORKSPACE / "scripts" / "exploration_manager_research.py"
 EXPLORATION_START_DELAY_S = 30.0
 
 
@@ -75,19 +75,28 @@ def generate_launch_description() -> LaunchDescription:
         }.items(),
     )
 
-    manager = Node(
-        package="frontier_exploration",
-        executable="exploration_manager",
-        name="exploration_manager",
-        output="screen",
-        parameters=[
+    manager = ExecuteProcess(
+        cmd=[
+            sys.executable,
+            str(RESEARCH_MANAGER),
+            "--ros-args",
+            "--params-file",
             frontier_config,
-            {"use_sim_time": True, "enable_navigation": True},
+            "-p",
+            "use_sim_time:=true",
+            "-p",
+            "enable_navigation:=true",
         ],
+        output="screen",
     )
 
     mapex_nearest = ExecuteProcess(
-        cmd=[sys.executable, str(MAPEX_NEAREST)],
+        cmd=[
+            sys.executable,
+            str(MAPEX_NEAREST),
+            "--run-id",
+            run_id,
+        ],
         output="screen",
     )
 
@@ -111,7 +120,7 @@ def generate_launch_description() -> LaunchDescription:
 
     return LaunchDescription(
         [
-            DeclareLaunchArgument("run_id", default_value="nearest_pilot_004"),
+            DeclareLaunchArgument("run_id", default_value="nearest_pilot_005"),
             DeclareLaunchArgument("use_rviz", default_value="True"),
             DeclareLaunchArgument("headless", default_value="False"),
             recorder,
