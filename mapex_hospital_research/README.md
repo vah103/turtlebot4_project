@@ -17,7 +17,8 @@ Hospital ổn định → Nearest baseline → MapEx closed-loop → nhiều run
 4. `references/MAPEX_PAPER.md` — paper MapEx gốc và pipeline cần bám theo.
 5. `EXPERIMENT_PROTOCOL.md` — các điều kiện phải giữ cố định giữa các run.
 6. `docs/DATA_SCHEMA.md` — dữ liệu mỗi run phải lưu như thế nào.
-7. Sau đó mới đọc code liên quan trong `src/`, `scripts/`, `analysis/`.
+7. `docs/TEACHER_REPORT.md` — cách chuyển kết quả đã xác minh thành báo cáo cho giảng viên.
+8. Sau đó mới đọc code liên quan trong `src/`, `scripts/`, `analysis/`.
 
 Không cần dựa vào báo cáo cũ để giả định rằng ranking, uncertainty hay visibility là bottleneck.
 
@@ -28,6 +29,13 @@ Workspace này có thể tái sử dụng ROS2 package hiện có tại:
 `ros2_ws/src/frontier_exploration/`
 
 Các launch/file cũ chỉ được coi là dependency. Code nghiên cứu mới và kết quả mới phải nằm trong workspace này.
+
+## Báo cáo cho giảng viên
+
+- Repo này là **source of evidence**: code, config, run data, summary, figure, log và quyết định kỹ thuật.
+- Google Docs **`TurtleBot4`**, tab **`Báo cáo nghiên cứu MapEx Hospital`**, là bản **teacher-facing**.
+- Chỉ đưa kết quả đã xác minh vào báo cáo chính; pilot/debug vẫn lưu trong repo.
+- Quy tắc chi tiết: `docs/TEACHER_REPORT.md`.
 
 ## Cấu trúc
 
@@ -53,6 +61,8 @@ mapex_hospital_research/
 ├── experiments/
 ├── results/
 └── docs/
+    ├── DATA_SCHEMA.md
+    └── TEACHER_REPORT.md
 ```
 
 ## Quy tắc dữ liệu
