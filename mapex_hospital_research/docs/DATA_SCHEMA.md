@@ -2,8 +2,6 @@
 
 ## Run layout
 
-Mỗi run phải theo cấu trúc:
-
 ```text
 experiments/<method>/<run_id>/
 ├── metadata.json
@@ -29,34 +27,39 @@ experiments/<method>/<run_id>/
 └── logs/
 ```
 
-`method` ban đầu là `nearest` hoặc `mapex`.
+## Canonical grids
 
-## Canonical grids / masks
+- Fixed canvas: `hospital_canvas_v1`, `0.05 m`, `1504 x 2123`, origin `(-25.6,-60.1)`.
+- Evaluation ROI: `hospital_connected_free_v1`, denominator `215435`.
+- ROI SHA-256: `05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1`.
 
-Trước benchmark phải chốt và giữ nguyên giữa mọi method/run:
+`known_fraction` dùng full fixed canvas. `coverage` dùng frozen ROI. Không crop động và không normalize final state riêng từng run.
 
-### Fixed logging canvas `C_log`
+## Benchmark clock
 
-Một grid cố định có cùng resolution, width/height, origin và frame/alignment. Nó dùng để tính `known_fraction`, coverage-aligned snapshot và các metric offline nhất quán.
+`time_s=0` lấy từ `/frontier_exploration_start`, được publish **trước candidate computation của policy decision đầu tiên**.
 
-### Canonical evaluation ROI `R_eval`
+Recorder phải lưu:
 
-Một mask cố định trên Hospital chỉ chứa các cell được tính vào metric exploration chính. ROI và denominator không được đổi giữa Nearest và MapEx. Nếu ROI thay đổi thì protocol version phải đổi và baseline liên quan phải chạy lại.
+```text
+exploration_start_sim_s
+exploration_start_source = first_policy_decision_before_compute
+```
 
-## Hai loại map snapshot khác nhau
+Nhờ vậy computation của decision đầu tiên được tính vào Coverage-vs-time cho cả Nearest và MapEx.
 
-### Exact policy decision map
+## Exact policy decision map
 
-Đây là map **thực sự đã được freeze và dùng để tạo/rank candidate**. Nó phải do policy process lưu, không được lấy một `latest_map` muộn hơn rồi gọi là decision snapshot.
+Đây là OccupancyGrid thực sự được freeze để tạo/rank candidate, không phải `latest_map` muộn hơn.
 
-Mỗi policy decision lưu cả:
+Mỗi policy decision có:
 
 ```text
 observed_map_raw.npz
 observed_map_canvas.npz
 ```
 
-`observed_map_raw.npz` tối thiểu chứa:
+Raw NPZ tối thiểu:
 
 ```text
 data
@@ -70,77 +73,24 @@ frame_id
 source_stamp_s
 ```
 
-Raw map dùng để replay exact frontier generation/ranking. Canvas map dùng cho alignment/evaluation.
+Canvas NPZ dùng canonical canvas để evaluation/alignment.
 
-### Periodic/final recorder snapshot
+## Exact exhausted state
 
-Recorder lưu raw + fixed-canvas map định kỳ (mặc định 10 s) và final map. Các snapshot này dùng để tính metric offline như occupied IoU/TU/AUC và không được coi là exact decision state nếu timestamp khác decision map.
-
-## Metric definitions
-
-Ký hiệu `K_t` là tập cell đã biết tại thời điểm `t` sau khi map được đưa về grid chuẩn.
-
-### `known_fraction`
+Ngay cả khi không có ranked candidate, policy vẫn phải tạo một `policy_decision_*` với exact map/pose và:
 
 ```text
-known_fraction(t) = |K_t ∩ C_log| / |C_log|
+outcome = exhausted_no_ranked_candidate
+candidate_count = 0
 ```
 
-Denominator luôn là fixed logging canvas, không crop động và không normalize final state của từng run thành 100%.
-
-### `coverage`
+Nếu có candidates nhưng không candidate nào Nav2-reachable:
 
 ```text
-coverage(t) = |K_t ∩ R_eval| / |R_eval|
+outcome = no_nav2_reachable_ranked_candidate
 ```
 
-`R_eval` giống hệt giữa mọi run/phương pháp. Coverage chỉ đo phần không gian đã được quan sát/biết, không nói occupancy classification đúng hay sai.
-
-### `occupied_iou`
-
-Khi triển khai, occupied IoU phải so occupied cells với GT trên cùng evaluation mask/alignment. Threshold/công thức phải được ghi trong protocol trước khi báo cáo. Periodic/final raw maps được lưu để có thể tính metric này offline mà không rerun robot.
-
-### `tu`
-
-Topological Understanding được tính offline sau khi định nghĩa/evaluator được chốt. Periodic/final maps phải đủ để tính lại mà không cần chạy lại exploration.
-
-## Exploration-stage analysis
-
-Primary stage axis dùng absolute `coverage` trên `R_eval` hoặc absolute `known_fraction` trên cùng `C_log`; không kéo giãn final progress riêng của từng run thành 100%.
-
-Tại cùng stage nên so:
-- time-to-stage;
-- distance-to-stage;
-- goals attempted/succeeded/failed;
-- success rate;
-- computation cost;
-- với MapEx: prediction, uncertainty, visibility, IG và ranking metrics.
-
-Hiệu quả tổng thể tính riêng từ Coverage-vs-time, Coverage-vs-distance, AUC và final coverage dưới fixed common budget.
-
-## metadata.json
-
-Field tối thiểu:
-
-```json
-{
-  "run_id": "nearest_001",
-  "method": "nearest",
-  "start_time": "ISO-8601",
-  "git_commit": "...",
-  "git_dirty_at_recorder_start": false,
-  "protocol_version": "hospital_v1",
-  "fixed_canvas_id": "hospital_canvas_v1",
-  "evaluation_roi_id": "hospital_connected_free_v1",
-  "world": "hospital_flat",
-  "spawn": {"x": 0.0, "y": 12.0, "yaw": -1.57},
-  "config_sha256": {},
-  "termination_reason": null,
-  "notes": ""
-}
-```
-
-`config_sha256` phải chứa hash của code/config quan trọng để phát hiện run dùng code local khác nhau.
+Điều này cho phép replay termination chính xác mà không suy từ periodic snapshot.
 
 ## metrics.csv
 
@@ -148,7 +98,7 @@ Field tối thiểu:
 time_s,distance_m,known_fraction,coverage,occupied_iou,tu
 ```
 
-Có thể để trống metric chưa triển khai ở runtime nếu raw snapshots đủ để tính offline.
+`occupied_iou` và `tu` có thể để trống khi chạy nếu periodic/final raw maps được lưu đầy đủ để tính offline sau khi evaluator được chốt.
 
 ## trajectory.csv
 
@@ -156,11 +106,11 @@ Có thể để trống metric chưa triển khai ở runtime nếu raw snapshot
 time_s,x,y,yaw,cumulative_distance_m
 ```
 
-Đây là odometry trajectory. Không dùng odom pose thay cho map-frame pose trong exact policy replay.
+Đây là odometry trajectory. Exact policy replay phải dùng map-frame robot pose trong `policy_decisions.csv`/`decision.json`.
 
 ## decisions.csv
 
-Nearest runtime hiện lưu:
+Mỗi selected navigation goal:
 
 ```text
 decision_id,
@@ -180,11 +130,13 @@ navigation_detail,
 failure_reason
 ```
 
-`policy_decision_id` là khóa nối sang exact policy state dưới `decisions/policy_decision_*`.
+Khóa join chính:
+
+```text
+policy_decision_id + selected_candidate_id
+```
 
 ## policy_decisions.csv
-
-Mỗi policy decision tối thiểu lưu:
 
 ```text
 policy_decision_id,
@@ -193,7 +145,9 @@ map_stamp_s,
 robot_x,robot_y,robot_yaw,
 candidate_compute_ms,
 candidate_count,
-valid_ge_1m_count,
+below_1m_count,
+hospital_1m_rule_enforced,
+selected_candidate_id,
 selected_rank,
 selected_x,selected_y,
 selected_distance_m,
@@ -201,14 +155,15 @@ selected_path_length_m,
 outcome
 ```
 
-Map-frame `(robot_x, robot_y)` phải là pose dùng khi tính ranking.
+`robot_x/y/yaw` là map-frame pose dùng cho ranking.
 
 ## candidates.csv
 
-Mỗi candidate của mỗi policy decision lưu:
+Mỗi candidate:
 
 ```text
 policy_decision_id,
+candidate_id,
 raw_rank,
 policy_rank,
 row,col,
@@ -223,13 +178,19 @@ selected_path_length_m,
 execution_result
 ```
 
-Các `status` điển hình:
+`candidate_id` ổn định trong từng `policy_decision_id`, ví dụ `candidate_0001`.
+
+### Hospital `<1m` semantics
+
+`below_1m is diagnostic only` trong Hospital benchmark. Candidate `<1m` **không bị reject chỉ vì khoảng cách**; nó giữ rank và được gửi sang Nav2 như candidate khác.
+
+Status hợp lệ có thể gồm:
 
 ```text
 ranked
 execution_suppressed
-rejected_lt_1m
 checking_nav2
+checking_nav2_below_1m_allowed
 nav2_rejected
 nav2_request_error
 nav2_result_error
@@ -237,21 +198,11 @@ nav2_no_path
 selected
 ```
 
-Rule 1 m phải được diễn giải đúng thứ tự MapEx:
-
-```text
-rank toàn bộ frontier
-→ xét candidate thấp cost nhất
-→ nếu distance < 1 m: reject candidate đó
-→ thử rank tiếp theo
-→ Nav2 path validation
-```
-
-Không áp dụng 1 m như frontier-detection filter trước ranking.
+`rejected_lt_1m` là status không hợp lệ cho Hospital official runs và validator phải FAIL nếu xuất hiện.
 
 ## snapshots.csv
 
-Liên kết các periodic/final map với:
+Recorder snapshots định kỳ/final:
 
 ```text
 snapshot_id,event,time_s,coverage,known_fraction,distance_m,
@@ -259,9 +210,47 @@ robot_map_x,robot_map_y,robot_map_yaw,
 raw_map_file,canvas_map_file,source_map_stamp_s,canvas_id
 ```
 
-## MapEx decision directory sau này
+Mỗi referenced NPZ phải tồn tại và readable. Terminated run phải có final snapshot.
 
-MapEx full giữ cùng exact observed-map/candidate schema ở trên và thêm:
+## metadata.json
+
+Tối thiểu:
+
+```json
+{
+  "run_id": "nearest_001",
+  "method": "nearest",
+  "git_commit": "...",
+  "git_dirty_at_recorder_start": false,
+  "protocol_version": "hospital_v1",
+  "fixed_canvas_id": "hospital_canvas_v1",
+  "evaluation_roi_id": "hospital_connected_free_v1",
+  "exploration_start_sim_s": 0.0,
+  "exploration_start_source": "first_policy_decision_before_compute",
+  "sim_seed": null,
+  "sim_seed_policy": "intentionally_uncontrolled_gazebo_default_multiple_run_statistics",
+  "config_sha256": {},
+  "termination_reason": null
+}
+```
+
+`config_sha256` phải gồm cả source research code và installed runtime files thực tế (`frontier_exploration` package share), đặc biệt world/SLAM/Nav2/frontier config/launch.
+
+Official runs yêu cầu clean git worktree.
+
+## Periodic/final maps and offline correctness metrics
+
+Periodic raw + fixed-canvas map mặc định mỗi `10 s` và final map được giữ để tính offline:
+
+- occupied IoU/AUC;
+- TU;
+- các correctness curves khác nếu evaluator được chốt sau pilot.
+
+Việc evaluator chưa tồn tại lúc chạy không được làm mất raw map cần thiết.
+
+## Full MapEx decision directory sau này
+
+MapEx dùng lại toàn bộ exact observed-map/candidate schema trên và thêm:
 
 ```text
 decisions/policy_decision_000042/
@@ -283,12 +272,28 @@ Candidate table của MapEx thêm:
 predicted_visible_cells,ig,score,rank
 ```
 
-Nếu có structural GT, thêm:
+Nếu có structural GT:
 
 ```text
 gt_visible_cells,gt_gain,gt_gain_per_m,gt_rank,prediction_error_summary
 ```
 
-## Lightweight summary committed to GitHub
+## Validation invariants
 
-Sau mỗi run, chỉ commit summary/figure nhỏ dưới `results/`. Raw `.npz`, prediction arrays, large logs và hàng nghìn frame giữ local hoặc external storage.
+Post-run validator phải kiểm tra ít nhất:
+
+- benchmark clock source đúng;
+- metrics time và cumulative distance không giảm;
+- coverage/known_fraction trong `[0,1]`;
+- exact decision NPZ tồn tại/readable;
+- snapshot CSV references tồn tại/readable;
+- terminated goal không còn `PENDING`;
+- failed goal có `failure_reason`;
+- selected candidate join được bằng ID;
+- không có `rejected_lt_1m`;
+- provenance hashes đầy đủ;
+- official run bắt đầu với clean git.
+
+## Lightweight GitHub results
+
+Raw `.npz`/logs giữ local hoặc external storage. Chỉ commit summary/figure/table nhỏ dưới `results/`.
