@@ -24,6 +24,7 @@ WORKSPACE = Path(__file__).resolve().parents[1]
 CANVAS_SHAPE = (2123, 1504)
 PLANNER_STATUS_SUCCEEDED = 4
 EXPECTED_REVALIDATION_SWEEPS = 5
+EXPECTED_REVALIDATION_PERIOD_S = 2.0
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -191,13 +192,20 @@ def main() -> int:
     required_hashes = {
         "nearest_official_policy",
         "nearest_hospital_adapted",
+        "research_navigation_manager",
         "official_recorder",
         "nearest_config",
         "experiment_protocol",
+        "data_schema",
         "installed_hospital_flat_stack",
+        "installed_hospital_flat_simulation",
+        "installed_tb4_simulation_safe",
+        "installed_hospital_nav2_launch",
+        "installed_frontier_config",
         "installed_hospital_slam",
         "installed_hospital_nav2_override",
-        "installed_frontier_config",
+        "installed_hospital_robot_urdf",
+        "installed_create3_hospital_urdf",
         "installed_hospital_world",
         "installed_nav2_base_params",
         "runtime_nav2_merged",
@@ -542,6 +550,16 @@ def main() -> int:
                     nav_errors = as_count(
                         terminal.get("nav2_error_count", ""), f"{pid} nav2_error_count", errors
                     )
+                    period = as_float(
+                        terminal.get("planner_revalidation_period_s", ""),
+                        f"{pid} planner_revalidation_period_s",
+                        errors,
+                    )
+                    if period is not None and abs(period - EXPECTED_REVALIDATION_PERIOD_S) > 1e-6:
+                        errors.append(
+                            f"{pid}: planner_revalidation_period_s={period} != "
+                            f"{EXPECTED_REVALIDATION_PERIOD_S}"
+                        )
                     if None not in {
                         candidate_count,
                         checked,
@@ -574,28 +592,55 @@ def main() -> int:
                         )
                     terminal_audit_ok = True
 
-                no_nav_rows = [
-                    row
-                    for row in terminal_rows
-                    if row.get("outcome") == "no_nav2_reachable_ranked_candidate"
-                ]
-                if len(no_nav_rows) >= EXPECTED_REVALIDATION_SWEEPS:
-                    last = no_nav_rows[-EXPECTED_REVALIDATION_SWEEPS:]
-                    signatures = [
-                        candidate_signature(candidate_groups.get(r["policy_decision_id"], []))
-                        for r in last
-                    ]
-                    if all(sig == signatures[0] for sig in signatures[1:]):
-                        revalidation_audit_ok = True
-                    else:
+                if len(policy_decisions) >= EXPECTED_REVALIDATION_SWEEPS:
+                    final_sweeps = policy_decisions[-EXPECTED_REVALIDATION_SWEEPS:]
+                    expected_outcome = "no_nav2_reachable_ranked_candidate"
+                    if not all(
+                        row.get("outcome") == expected_outcome for row in final_sweeps
+                    ):
                         errors.append(
-                            "completion window did not use a stable candidate set across "
-                            f"the final {EXPECTED_REVALIDATION_SWEEPS} planner sweeps"
+                            "the final policy decisions are not all no-path planner "
+                            "revalidation sweeps"
                         )
+                    else:
+                        signatures = [
+                            candidate_signature(
+                                candidate_groups.get(row["policy_decision_id"], [])
+                            )
+                            for row in final_sweeps
+                        ]
+                        if not all(sig == signatures[0] for sig in signatures[1:]):
+                            errors.append(
+                                "completion window did not use a stable candidate set "
+                                f"across the final {EXPECTED_REVALIDATION_SWEEPS} sweeps"
+                            )
+                        periods_ok = True
+                        for row in final_sweeps:
+                            try:
+                                sweep_period = float(row["planner_revalidation_period_s"])
+                            except Exception:
+                                periods_ok = False
+                                errors.append(
+                                    f"{row.get('policy_decision_id')}: missing/invalid "
+                                    "planner_revalidation_period_s"
+                                )
+                                continue
+                            if abs(sweep_period - EXPECTED_REVALIDATION_PERIOD_S) > 1e-6:
+                                periods_ok = False
+                                errors.append(
+                                    f"{row.get('policy_decision_id')}: planner "
+                                    f"revalidation period {sweep_period} != "
+                                    f"{EXPECTED_REVALIDATION_PERIOD_S}"
+                                )
+                        if (
+                            all(sig == signatures[0] for sig in signatures[1:])
+                            and periods_ok
+                        ):
+                            revalidation_audit_ok = True
                 else:
                     message = (
-                        f"only {len(no_nav_rows)} no-path planner sweeps logged; expected "
-                        f"at least {EXPECTED_REVALIDATION_SWEEPS} for stable completion"
+                        f"only {len(policy_decisions)} policy decisions logged; expected "
+                        f"at least {EXPECTED_REVALIDATION_SWEEPS} final revalidation sweeps"
                     )
                     if official:
                         errors.append(message)
