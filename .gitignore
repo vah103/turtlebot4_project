@@ -17,6 +17,15 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 
+# Local research environments and generated artifacts
+.venv_gt/
+artifacts/
+
+# Local third-party checkouts used by the research workspace
+third_party/MapEx/
+third_party/mapex/
+third_party/aws-hospital-world/
+
 # LaMa local assets and generated experiment data
 # Keep code/config in Git, but do not commit the upstream LaMa checkout,
 # model checkpoints, full fixed-canvas runs, or generated predictions.
