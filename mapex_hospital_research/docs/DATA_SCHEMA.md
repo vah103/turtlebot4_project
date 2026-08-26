@@ -88,6 +88,26 @@ Primary stage axis:
 
 Nếu một run kết thúc trước một stage thì run đó không đóng góp sample cho stage chưa đạt.
 
+### Same-stage comparison semantics
+
+Khi hai run/method được căn chỉnh tại cùng một coverage stage, `coverage` chỉ là biến alignment.
+
+Tại mỗi stage nên tổng hợp các đại lượng như:
+- `time_to_stage_s`;
+- `distance_to_stage_m`;
+- goals attempted/succeeded/failed đến stage;
+- success rate đến stage;
+- computation cost nếu có;
+- với MapEx: prediction, uncertainty, visibility, IG và ranking metrics tại stage.
+
+Không tạo kết luận kiểu "method A có coverage cao hơn method B tại cùng coverage stage".
+
+Các metric hiệu quả exploration tổng thể được tính riêng từ curve/raw run data:
+- Coverage vs time;
+- Coverage vs distance;
+- Coverage AUC theo time/distance;
+- final coverage dưới fixed time/distance budget.
+
 Có thể phân tích phụ theo fixed resource budget:
 
 ```text
