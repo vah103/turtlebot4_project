@@ -1,5 +1,5 @@
 experiment:
-  protocol_version: null
+  protocol_version: hospital_v1
   world: hospital_flat
   robot: turtlebot4
   use_sim_time: true
@@ -8,8 +8,8 @@ experiment:
     y: 12.0
     yaw: -1.57
   map_resolution_m: 0.05
-  goal_timeout_s: null
-  stopping_condition: null
+  goal_timeout_s: 180.0
+  stopping_condition: no_reachable_frontier_stable_completion
   random_seed: null
 
 slam:
@@ -38,11 +38,13 @@ canonical_evaluation_roi:
   alignment_rule: same 0.05 m fixed canvas, origin and SLAM-start frame as hospital_canvas_v1
   valid_cell_rule: 8-connected structural free-space component containing the robot start after wall mesh + flat elevator blockers are rasterized and one-cell cracks are closed
   excluded_cell_rule: obstacles, disconnected free pockets, cells outside fixed Hospital bounds, and fixed-canvas safety padding
-  denominator_cells: null
+  denominator_cells: 215435
+  mask_sha256: 05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1
 
 resource_budget:
   time_s: null
   distance_m: null
+  policy: not_a_run_termination_condition_in_hospital_v1; common offline analysis budgets may be chosen after the pilot without changing controller behavior
 
 logging:
   root_dir: mapex_hospital_research/experiments
