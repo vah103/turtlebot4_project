@@ -102,9 +102,12 @@ MapEx additionally logs all decision-level data defined in `docs/DATA_SCHEMA.md`
 ## Exploration-stage comparison rule
 
 - Không kéo giãn final state của từng run thành 100% progress.
-- Primary comparison dùng absolute `coverage` trên cùng `R_eval`; có thể dùng absolute `known_fraction` nếu fixed canvas giống hệt.
+- Primary stage axis dùng absolute `coverage` trên cùng `R_eval`; có thể dùng absolute `known_fraction` nếu fixed canvas giống hệt.
 - Stage threshold phải được chốt một lần sau pilot và không đổi giữa method.
 - Run kết thúc trước một stage không được giả lập/normalize để có sample ở stage đó.
+- Tại cùng một coverage stage, coverage chỉ là biến căn chỉnh trạng thái; không so coverage với coverage tại chính mốc đó.
+- Tại cùng stage, so các đại lượng như time-to-stage, distance-to-stage, goal failures/success, computation cost và các metric chẩn đoán pipeline tương ứng.
+- Hiệu quả exploration tổng thể phải báo bằng Coverage-vs-time, Coverage-vs-distance, Coverage AUC và final coverage dưới cùng fixed budget.
 - Có thể báo thêm time-progress hoặc distance-progress theo fixed common budget.
 
 ## Fair-comparison rule
