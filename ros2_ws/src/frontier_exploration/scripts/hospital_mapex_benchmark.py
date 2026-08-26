@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
 """Validated entry point for the Hospital MapEx benchmark.
 
-The original benchmark implementation is kept in
-``hospital_mapex_benchmark_legacy.py``.  This wrapper adds two things that are
-important for the Hospital experiment:
+The full benchmark implementation lives in ``hospital_mapex_benchmark_legacy.py``.
+This wrapper adds Hospital-specific safety checks without changing the upstream
+MapEx exploration/metric pipeline:
 
-1. robust discovery of the flat-world elevator blocker boxes; and
-2. a structural-GT sanity check against the committed final Hospital SLAM
-   snapshot (001415) before an expensive benchmark is allowed to continue.
+1. robust discovery of the flat-world elevator blockers; and
+2. structural-GT validation against the committed final Hospital SLAM snapshot.
 
-The old "valid space touches bounding box" message is therefore treated as a
-clipping note, not as a pass/fail criterion by itself.  The actual gate uses
-wall agreement and free-space conflict, matching the diagnostics used in the
-Hospital analysis report.
+Important: ``occ_map.npy`` intentionally stores every cell outside valid-space as
+occupied, as expected by the MapEx KTH loader.  That representation must NOT be
+used directly for wall validation.  Validation below rebuilds an explicit wall
+raster from the collision mesh and blocker boxes.
 """
 
 from __future__ import annotations
 
 import importlib.util
+import inspect
 import json
 import sys
 import xml.etree.ElementTree as ET
@@ -27,7 +27,9 @@ from typing import List, Optional, Tuple
 HERE = Path(__file__).resolve().parent
 LEGACY_PATH = HERE / "hospital_mapex_benchmark_legacy.py"
 
-_spec = importlib.util.spec_from_file_location("hospital_mapex_benchmark_legacy", LEGACY_PATH)
+_spec = importlib.util.spec_from_file_location(
+    "hospital_mapex_benchmark_legacy", LEGACY_PATH
+)
 if _spec is None or _spec.loader is None:
     raise RuntimeError(f"Could not load legacy benchmark: {LEGACY_PATH}")
 legacy = importlib.util.module_from_spec(_spec)
@@ -39,13 +41,11 @@ _spec.loader.exec_module(legacy)
 # ---------------------------------------------------------------------------
 def find_world_model_geometry(
     sdf_path: Path,
-) -> Tuple[Tuple[float, float, float], List[Tuple[float, float, float, float, float]]]:
-    """Return wall pose and every elevator blocker box from the flat world.
-
-    Older revisions used names such as ``elevator_opening_blocker_left`` while
-    a later revision used ``elevator_blocker_left``.  Geometry, not an exact
-    naming convention, should decide whether the boxes enter structural GT.
-    """
+) -> Tuple[
+    Tuple[float, float, float],
+    List[Tuple[float, float, float, float, float]],
+]:
+    """Return wall pose and every elevator blocker box from the flat world."""
     root = ET.parse(sdf_path).getroot()
     wall_pose: Optional[Tuple[float, float, float]] = None
 
@@ -80,13 +80,15 @@ legacy.find_world_model_geometry = find_world_model_geometry
 
 
 # ---------------------------------------------------------------------------
-# Better interpretation of the bounding-box diagnostic
+# Boundary-touch is diagnostic only
 # ---------------------------------------------------------------------------
 _original_log = legacy.log
 
 
 def log(msg: str) -> None:
-    if msg.startswith("WARNING: connected free space touches the configured Hospital bounding box"):
+    if msg.startswith(
+        "WARNING: connected free space touches the configured Hospital bounding box"
+    ):
         _original_log(
             "NOTE: valid space touches the configured clipping bounds; "
             "this is not a failure by itself. Running structural-GT validation next."
@@ -108,60 +110,125 @@ FINAL_REFERENCE = (
     / "001415.png"
 )
 
-# Deliberately looser than the values observed in the Hospital report
-# (wall match 78.7--94.4%, free-space conflict <2%).  These are guard rails,
-# not numbers to optimize against.
+# Guard rails. The Hospital analysis observed substantially better agreement.
 MIN_WALL_MATCH = 0.70
 MAX_FREE_CONFLICT = 0.05
+WALL_MATCH_TOLERANCE_PIXELS = 2  # 0.20 m at the 0.10 m validation scale.
 
 
-def _structural_map_as_lama_image(occ_raw, target_shape):
-    """Convert raw 0.05 m structural map to the exact LaMa image geometry.
-
-    Raw structural convention: 0=occupied/invalid, 254=free.
-    LaMa convention: 0=occupied, 255=free, 127=unknown.
-
-    Downsampling preserves obstacles with a 2x2 minimum.  The image is then
-    flipped to top-down PNG order and padded on +Y (the top of the PNG), exactly
-    like ``lama_dataset_preprocessor.py``.
-    """
+def _build_explicit_wall_mask(
+    aws_root: Path,
+    spawn_x: float,
+    spawn_y: float,
+    spawn_yaw: float,
+    z_slice: float,
+    wall_thickness_cells: int,
+    include_flat_blockers: bool,
+):
+    """Rasterize only physical Hospital walls/blockers on the 0.05 m canvas."""
     np = legacy.np
-    source_h, source_w = occ_raw.shape
+    cv2 = legacy.require_import("cv2", "python3 -m pip install opencv-python")
+
+    mesh_path = (
+        aws_root
+        / "models"
+        / "aws_robomaker_hospital_floor_01_walls"
+        / "meshes"
+        / "aws_robomaker_hospital_floor_01_walls_collision.dae"
+    )
+    if not mesh_path.exists():
+        raise RuntimeError(f"Hospital collision mesh missing: {mesh_path}")
+
+    (wall_x, wall_y, wall_yaw), blockers = find_world_model_geometry(
+        legacy.HOSPITAL_WORLD_SDF
+    )
+    polylines, _entity_count, _segment_count = legacy.load_wall_section_polylines(
+        mesh_path, z_slice
+    )
+
+    obstacle = np.zeros(
+        (legacy.CANVAS_HEIGHT, legacy.CANVAS_WIDTH), dtype=np.uint8
+    )
+    for poly in polylines:
+        poly_world = legacy.transform_xy(poly, wall_x, wall_y, wall_yaw)
+        poly_slam = legacy.world_to_slam(
+            poly_world, spawn_x, spawn_y, spawn_yaw
+        )
+        rc = legacy.metric_xy_to_raw_rc(poly_slam)
+        legacy.rasterize_polyline(
+            obstacle, rc, wall_thickness_cells, cv2
+        )
+
+    if include_flat_blockers:
+        for x, y, yaw, sx, sy in blockers:
+            corners_world = legacy.rectangle_corners(x, y, yaw, sx, sy)
+            corners_slam = legacy.world_to_slam(
+                corners_world, spawn_x, spawn_y, spawn_yaw
+            )
+            rc = legacy.metric_xy_to_raw_rc(corners_slam)
+            polygon = np.stack([rc[:, 1], rc[:, 0]], axis=1).astype(np.int32)
+            cv2.fillPoly(obstacle, [polygon], 255)
+
+    # Same crack-closing dilation used by the GT builder.
+    kernel = np.ones((3, 3), dtype=np.uint8)
+    obstacle_closed = cv2.dilate(obstacle, kernel, iterations=1)
+    return obstacle_closed > 0
+
+
+def _wall_mask_as_lama_image(wall_raw, target_shape):
+    """Convert 0.05 m wall mask to the final LaMa top-down image geometry."""
+    np = legacy.np
+    source_h, source_w = wall_raw.shape
     block = int(round(0.10 / legacy.CANVAS_RESOLUTION))
     if block != 2:
         raise RuntimeError(f"Unexpected Hospital downsample factor: {block}")
 
+    # The dataset preprocessor uses ceil-sized 0.10 m cells.  For a binary
+    # obstacle mask, any occupied source cell makes the target cell occupied.
     pad_h = (-source_h) % block
     pad_w = (-source_w) % block
     padded = np.pad(
-        occ_raw,
+        wall_raw.astype(np.uint8),
         ((0, pad_h), (0, pad_w)),
         mode="constant",
-        constant_values=254,
+        constant_values=0,
     )
     reduced = padded.reshape(
         padded.shape[0] // block,
         block,
         padded.shape[1] // block,
         block,
-    ).min(axis=(1, 3))
+    ).max(axis=(1, 3)).astype(bool)
 
     top_down = reduced[::-1, :]
     target_h, target_w = target_shape
     if top_down.shape[1] > target_w or top_down.shape[0] > target_h:
         raise RuntimeError(
-            f"Structural map {top_down.shape} is larger than reference {target_shape}."
+            f"Structural wall map {top_down.shape} is larger than "
+            f"reference {target_shape}."
         )
 
-    output = np.full((target_h, target_w), 127, dtype=np.uint8)
+    output = np.zeros((target_h, target_w), dtype=bool)
     pad_top = target_h - top_down.shape[0]
-    output[pad_top : pad_top + top_down.shape[0], : top_down.shape[1]] = np.where(
-        top_down > 127, 255, 0
-    ).astype(np.uint8)
+    output[
+        pad_top : pad_top + top_down.shape[0],
+        : top_down.shape[1],
+    ] = top_down
     return output
 
 
-def validate_structural_gt(map_dir: Path, metadata: dict) -> dict:
+def validate_structural_gt(
+    map_dir: Path,
+    metadata: dict,
+    *,
+    aws_root: Path,
+    spawn_x: float,
+    spawn_y: float,
+    spawn_yaw: float,
+    z_slice: float,
+    wall_thickness_cells: int,
+    include_flat_blockers: bool,
+) -> dict:
     np = legacy.np
     cv2 = legacy.require_import("cv2", "python3 -m pip install opencv-python")
 
@@ -173,23 +240,58 @@ def validate_structural_gt(map_dir: Path, metadata: dict) -> dict:
 
     reference = cv2.imread(str(FINAL_REFERENCE), cv2.IMREAD_GRAYSCALE)
     if reference is None:
-        raise RuntimeError(f"Could not read GT validation reference: {FINAL_REFERENCE}")
+        raise RuntimeError(
+            f"Could not read GT validation reference: {FINAL_REFERENCE}"
+        )
 
-    occ_raw = np.load(map_dir / "occ_map.npy")
-    structural = _structural_map_as_lama_image(occ_raw, reference.shape)
+    wall_raw = _build_explicit_wall_mask(
+        aws_root=aws_root,
+        spawn_x=spawn_x,
+        spawn_y=spawn_y,
+        spawn_yaw=spawn_yaw,
+        z_slice=z_slice,
+        wall_thickness_cells=wall_thickness_cells,
+        include_flat_blockers=include_flat_blockers,
+    )
+    structural_occ = _wall_mask_as_lama_image(wall_raw, reference.shape)
 
     reference_occ = reference <= 64
     reference_free = reference >= 192
-    structural_occ = structural <= 64
 
     occ_count = int(reference_occ.sum())
     free_count = int(reference_free.sum())
-    if occ_count == 0 or free_count == 0:
-        raise RuntimeError("Reference snapshot contains no usable occupied/free cells.")
+    structural_count = int(structural_occ.sum())
+    if occ_count == 0 or free_count == 0 or structural_count == 0:
+        raise RuntimeError(
+            "Validation reference/structural wall map contains no usable cells."
+        )
 
-    wall_match = float((structural_occ & reference_occ).sum() / occ_count)
-    free_conflict = float((structural_occ & reference_free).sum() / free_count)
+    # SLAM and mesh rasterization need a small spatial tolerance.  The metric
+    # remains reference-wall recall: an observed occupied cell is matched when
+    # a structural wall lies within 0.20 m.
+    kernel = np.ones((3, 3), dtype=np.uint8)
+    structural_near = cv2.dilate(
+        structural_occ.astype(np.uint8),
+        kernel,
+        iterations=WALL_MATCH_TOLERANCE_PIXELS,
+    ).astype(bool)
+    reference_near = cv2.dilate(
+        reference_occ.astype(np.uint8),
+        kernel,
+        iterations=WALL_MATCH_TOLERANCE_PIXELS,
+    ).astype(bool)
 
+    wall_match = float((structural_near & reference_occ).sum() / occ_count)
+    wall_precision = float(
+        (structural_occ & reference_near).sum() / structural_count
+    )
+    # Only explicit physical wall cells are tested against observed free space.
+    # Do NOT use MapEx occ_map.npy here: outside-valid is intentionally 0 there.
+    free_conflict = float(
+        (structural_occ & reference_free).sum() / structural_count
+    )
+
+    occ_raw = np.load(map_dir / "occ_map.npy")
     start_rc = legacy.metric_xy_to_raw_rc(
         np.array([[0.0, 0.0]], dtype=np.float64)
     )[0]
@@ -208,28 +310,38 @@ def validate_structural_gt(map_dir: Path, metadata: dict) -> dict:
 
     validation = {
         "passed": passed,
-        "reference": str(FINAL_REFERENCE.relative_to(legacy.PROJECT_ROOT)),
+        "reference": str(
+            FINAL_REFERENCE.relative_to(legacy.PROJECT_ROOT)
+        ),
         "wall_match": wall_match,
+        "wall_precision": wall_precision,
         "free_space_conflict": free_conflict,
         "start_is_free": start_is_free,
+        "explicit_wall_cells_0p10m": structural_count,
         "thresholds": {
             "min_wall_match": MIN_WALL_MATCH,
             "max_free_space_conflict": MAX_FREE_CONFLICT,
+            "wall_match_tolerance_pixels": WALL_MATCH_TOLERANCE_PIXELS,
         },
         "note": (
-            "Boundary-touch is recorded separately as a clipping diagnostic; "
-            "it is not by itself a GT failure."
+            "Validation uses explicit collision-mesh walls plus flat-world "
+            "elevator blockers. Outside-valid cells in MapEx occ_map.npy are "
+            "not treated as physical walls."
         ),
     }
     metadata["validation"] = validation
 
     metadata_path = map_dir / "hospital_map_metadata.json"
-    metadata_path.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
+    metadata_path.write_text(
+        json.dumps(metadata, indent=2), encoding="utf-8"
+    )
 
     status = "PASS" if passed else "FAIL"
     legacy.log(
         f"GT validation: {status} | wall_match={wall_match * 100:.1f}% | "
-        f"free_conflict={free_conflict * 100:.2f}% | start_free={start_is_free}"
+        f"wall_precision={wall_precision * 100:.1f}% | "
+        f"free_conflict={free_conflict * 100:.2f}% | "
+        f"start_free={start_is_free}"
     )
 
     if not passed:
@@ -244,11 +356,27 @@ def validate_structural_gt(map_dir: Path, metadata: dict) -> dict:
 
 
 _original_build_hospital_map = legacy.build_hospital_map
+_build_signature = inspect.signature(_original_build_hospital_map)
 
 
 def build_hospital_map(*args, **kwargs):
-    map_dir, start_pose, metadata = _original_build_hospital_map(*args, **kwargs)
-    metadata = validate_structural_gt(map_dir, metadata)
+    bound = _build_signature.bind(*args, **kwargs)
+    params = bound.arguments
+
+    map_dir, start_pose, metadata = _original_build_hospital_map(
+        *args, **kwargs
+    )
+    metadata = validate_structural_gt(
+        map_dir,
+        metadata,
+        aws_root=Path(params["aws_root"]),
+        spawn_x=float(params["spawn_x"]),
+        spawn_y=float(params["spawn_y"]),
+        spawn_yaw=float(params["spawn_yaw"]),
+        z_slice=float(params["z_slice"]),
+        wall_thickness_cells=int(params["wall_thickness_cells"]),
+        include_flat_blockers=bool(params["include_flat_blockers"]),
+    )
     return map_dir, start_pose, metadata
 
 
