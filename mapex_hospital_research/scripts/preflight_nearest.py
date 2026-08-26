@@ -15,6 +15,7 @@ FILES = [
     WORKSPACE / "scripts" / "mapex_nearest_ros.py",
     WORKSPACE / "scripts" / "mapex_nearest_ros_hospital.py",
     WORKSPACE / "scripts" / "mapex_nearest_ros_research.py",
+    WORKSPACE / "scripts" / "mapex_nearest_ros_hospital_adapted.py",
     WORKSPACE / "scripts" / "research_recorder.py",
     WORKSPACE / "scripts" / "research_recorder_safe.py",
     WORKSPACE / "scripts" / "exploration_manager_research.py",
@@ -64,21 +65,22 @@ def main() -> int:
             )
 
     base_policy = WORKSPACE / "scripts" / "mapex_nearest_ros.py"
+    adapted_policy = WORKSPACE / "scripts" / "mapex_nearest_ros_hospital_adapted.py"
     research_policy = WORKSPACE / "scripts" / "mapex_nearest_ros_research.py"
-    hospital_policy = WORKSPACE / "scripts" / "mapex_nearest_ros_hospital.py"
     recorder = WORKSPACE / "scripts" / "research_recorder_safe.py"
     launch = WORKSPACE / "launch" / "hospital_nearest.launch.py"
 
     checks = [
         (base_policy, "The 1 m rule is intentionally NOT applied here"),
         (base_policy, "MapEx locked-frontier validity rejected candidate <1.0 m"),
-        (hospital_policy, "rejected and the next ranked candidate"),
+        (adapted_policy, "NOT enforced"),
+        (adapted_policy, "checking_nav2_below_1m_allowed"),
+        (adapted_policy, "Hospital adaptation allowing ranked frontier below 1 m"),
         (research_policy, "observed_map_raw.npz"),
-        (research_policy, "rejected_lt_1m"),
         (research_policy, "candidates.csv"),
         (recorder, "PERIODIC_MAP_INTERVAL_S = 10.0"),
         (recorder, "policy_decision_id"),
-        (launch, "mapex_nearest_ros_research.py"),
+        (launch, "mapex_nearest_ros_hospital_adapted.py"),
         (launch, "exploration_manager_research.py"),
     ]
     for path, needle in checks:
@@ -87,17 +89,13 @@ def main() -> int:
                 f"runtime invariant missing in {path.relative_to(REPO_ROOT)}: {needle}"
             )
 
-    # Guard specifically against accidentally reintroducing the old pre-ranking
-    # distance filter in _compute_candidates().
-    if base_policy.exists():
-        text = base_policy.read_text(encoding="utf-8")
-        compute_start = text.find("def _compute_candidates")
-        signature_start = text.find("def _signature", compute_start)
-        compute_block = text[compute_start:signature_start]
-        if "distance_m < MIN_FRONTIER_DISTANCE_M" in compute_block:
-            errors.append(
-                "old 1 m pre-ranking filter is present inside _compute_candidates"
-            )
+    # The base adapter remains a faithful MapEx reference, but the Hospital launch
+    # must go through the explicit adaptation wrapper so below-1m candidates are
+    # allowed instead of being rejected before Nav2.
+    if launch.exists():
+        text = launch.read_text(encoding="utf-8")
+        if "mapex_nearest_ros_hospital_adapted.py" not in text:
+            errors.append("Hospital launch is not using the below-1m adaptation wrapper")
 
     if errors:
         print("NEAREST PREFLIGHT: FAIL")
@@ -108,7 +106,8 @@ def main() -> int:
     print("NEAREST PREFLIGHT: PASS")
     print("- Python syntax: OK")
     print("- Frozen ROI SHA-256: OK")
-    print("- post-ranking 1 m validity rule: OK")
+    print("- original MapEx 1 m rule retained in reference adapter")
+    print("- Hospital below-1m bypass: ACTIVE")
     print("- exact decision-map/candidate logging: present")
     print("- periodic/final replay snapshots: present")
     print("- detailed navigation-result logging: present")
