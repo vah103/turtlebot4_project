@@ -199,7 +199,7 @@ def main() -> int:
         (adapted_policy, "GoalStatus.STATUS_SUCCEEDED"),
         (adapted_policy, "PLANNER_REVALIDATE_PERIOD_S"),
         (adapted_policy, "EXECUTION_FAILURE_COOLDOWN_S"),
-        (adapted_policy, "current robot yaw as a neutral seed"),
+        (adapted_policy, "yaw as a neutral seed"),
         (official_policy, "first_policy_decision_before_compute"),
         (official_policy, "nav2_action_status"),
         (research_manager, "ignored_by_hospital_goal_checker"),
@@ -210,7 +210,7 @@ def main() -> int:
         (validator, "terminal planner revalidation"),
         (validator, "runtime_nav2_merged"),
         (protocol, "position-only"),
-        (protocol, "planner revalidation"),
+        (protocol, "Planner revalidation"),
         (schema, "goal_yaw_semantics"),
         (schema, "planner_validation_path_length_not_executed_trajectory"),
     ]
