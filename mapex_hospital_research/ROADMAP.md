@@ -13,11 +13,13 @@ Không giả định trước ranking, uncertainty, visibility hay WFD là vấn
 Việc cần làm:
 - Chạy ổn định simulation + SLAM + Nav2.
 - Cố định world, spawn, sensor, resolution, SLAM/Nav2 params, timeout, stopping condition, seed nếu có.
+- Chốt một fixed logging canvas và một canonical evaluation ROI/mask dùng chung cho mọi run/phương pháp.
 - Kiểm tra khả năng tái lập.
 
 Kết quả cần có:
 - Một cấu hình chuẩn dùng cho mọi phương pháp.
 - Simulation/SLAM/Nav2 ổn định.
+- Denominator của `known_fraction` và `coverage` được cố định trước khi chạy benchmark.
 
 ## 2. Nearest Frontier baseline
 
@@ -38,16 +40,36 @@ Pipeline:
 
 ## 4. Phân tích theo exploration stage
 
-Chuẩn hóa tiến độ của từng run theo known_fraction đạt được từ đầu đến cuối, rồi chia tương đối:
+### 4.1 Trục stage chính: absolute exploration state
+
+Không chuẩn hóa final known fraction của từng run thành 100%.
+
+Stage chính phải dựa trên một đại lượng tuyệt đối có cùng denominator cho mọi run, ưu tiên `coverage` trên canonical evaluation ROI. Nếu dùng `known_fraction` thì fixed logging canvas phải giống hệt giữa mọi run.
+
+Ví dụ, nếu các run thực sự đi qua đủ các mốc, có thể chia:
 - 0–20%: very early
 - 20–40%: early
 - 40–60%: mid
 - 60–80%: late
 - 80–100%: very late
 
-Không mặc định known_fraction tuyệt đối đạt 100%.
+Các ngưỡng thực tế được chốt một lần sau pilot dựa trên vùng giá trị mà các phương pháp có thể so sánh công bằng. Nếu một run kết thúc trước một stage thì run đó không có sample ở stage đó; không kéo giãn final state của run thành 100%.
 
-Kết quả: biết failure xuất hiện ở stage nào và có lặp lại giữa nhiều run hay không.
+### 4.2 Trục phụ: normalized resource-budget progress
+
+Có thể phân tích thêm theo resource budget để biết failure xuất hiện sớm/muộn theo chi phí đã dùng:
+- `time_progress = time_s / fixed_time_budget_s`
+- `distance_progress = distance_m / fixed_distance_budget_m`
+
+Time/distance budget phải cố định và giống nhau giữa các phương pháp. Đây là phân tích phụ, không thay thế absolute exploration state.
+
+### 4.3 Định nghĩa dùng trong workspace
+
+- `known_fraction`: tỷ lệ cell đã biết (`occupancy != unknown`) trên fixed logging canvas. Đây chủ yếu là progress/debugging proxy và chỉ so được khi canvas/resolution/origin cố định.
+- `coverage`: tỷ lệ cell trong canonical evaluation ROI đã được quan sát/biết ở thời điểm hiện tại. Đây là metric exploration chính; ROI và denominator phải cố định giữa mọi run.
+- `occupied IoU`: metric riêng để đánh giá correctness của occupied mapping; không dùng coverage để suy ra map correctness.
+
+Kết quả: biết failure xuất hiện ở absolute exploration state nào, có lặp lại giữa nhiều run hay không, và có phụ thuộc resource budget hay không.
 
 ## 5. Log toàn bộ quyết định MapEx
 
