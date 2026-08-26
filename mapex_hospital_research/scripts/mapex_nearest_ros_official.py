@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 """Final Hospital Nearest research wrapper used by benchmark launches.
 
-This layer does not change frontier generation, Euclidean ranking, the Hospital
-below-1m adaptation, or Nav2 execution.  It only closes reproducibility gaps
-needed before official runs:
+This layer does not change frontier generation or Euclidean ranking. It closes
+reproducibility gaps needed before official runs:
 
-- emit the exploration start timestamp *before* first candidate computation;
+- emit the exploration start timestamp before first candidate computation;
 - save an exact frozen policy state even when the ranked candidate set is empty;
 - assign a stable candidate_id within each policy decision;
-- publish the selected candidate_id so decisions.csv can join candidates.csv
-  without relying on coordinates/rank inference;
-- persist explicit Nav2 planner outcome counts and terminal reason.
+- publish the selected candidate_id for direct decisions/candidates joins;
+- persist explicit Nav2 planner outcome counts, action status and terminal reason.
 """
 
 from __future__ import annotations
@@ -40,7 +38,8 @@ class OfficialHospitalNearestROS(HospitalAdaptedNearestROS):
         self._last_exact_empty_signature: tuple | None = None
         self.get_logger().info(
             "Official-run logging wrapper active: pre-compute t=0, exact empty "
-            "candidate decisions, stable candidate IDs, terminal Nav2 audit"
+            "candidate decisions, stable candidate IDs, Nav2 action status and "
+            "terminal revalidation audit"
         )
 
     def _publish_start_once(self, msg) -> None:
@@ -72,8 +71,8 @@ class OfficialHospitalNearestROS(HospitalAdaptedNearestROS):
         self._ensure_candidate_ids(self._last_candidate_audit)
 
         # Base _tick() returns before _plan_next_candidate() when candidates is
-        # empty. Save that exact termination-relevant state here, once per stable
-        # empty signature, so offline replay has the actual map + pose + audit.
+        # empty. Save that exact termination-relevant state once per stable empty
+        # signature so offline replay has the actual map + pose + audit.
         if not candidates:
             signature = self._signature(msg, candidates)
             if (
@@ -123,6 +122,7 @@ class OfficialHospitalNearestROS(HospitalAdaptedNearestROS):
             "mapex_original_cur_pose_dist_threshold_m", 1.0
         )
         self._current_policy.setdefault("terminal_reason", "")
+        self._current_policy.setdefault("planner_revalidation_period_s", "")
 
         selected = next((item for item in candidates if item.get("selected")), None)
         self._current_policy["selected_candidate_id"] = (
@@ -147,6 +147,7 @@ class OfficialHospitalNearestROS(HospitalAdaptedNearestROS):
             "below_1m",
             "execution_suppressed",
             "status",
+            "nav2_action_status",
             "planner_check_ms",
             "selected",
             "selected_path_length_m",
@@ -177,6 +178,7 @@ class OfficialHospitalNearestROS(HospitalAdaptedNearestROS):
             "nav2_no_path_count",
             "nav2_rejected_count",
             "nav2_error_count",
+            "planner_revalidation_period_s",
             "selected_candidate_id",
             "selected_rank",
             "selected_x",
@@ -200,6 +202,7 @@ class OfficialHospitalNearestROS(HospitalAdaptedNearestROS):
                 item.update(self._nav2_audit_from_rows(rows))
                 item.setdefault("hospital_1m_rule_enforced", False)
                 item.setdefault("terminal_reason", "")
+                item.setdefault("planner_revalidation_period_s", "")
                 chosen = next((row for row in rows if row.get("selected")), None)
                 item["selected_candidate_id"] = (
                     "" if chosen is None else chosen.get("candidate_id", "")
