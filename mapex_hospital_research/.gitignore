@@ -15,6 +15,9 @@ experiments/**/variance/*.png
 experiments/**/visibility/*.png
 experiments/**/decisions/**/visibility/
 
+# Generated ground-truth / ROI artifacts
+ground_truth/**/generated/
+
 # Generated bulk results
 results/raw/
 results/cache/
