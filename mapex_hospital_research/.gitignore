@@ -1,0 +1,37 @@
+# Heavy experiment data
+experiments/**/rosbag*/
+experiments/**/*.db3
+experiments/**/*.mcap
+experiments/**/*.bag
+experiments/**/*.npy
+experiments/**/*.npz
+experiments/**/*.pt
+experiments/**/*.pth
+experiments/**/*.ckpt
+experiments/**/*.log
+experiments/**/maps/*.png
+experiments/**/predictions/*.png
+experiments/**/variance/*.png
+experiments/**/visibility/*.png
+experiments/**/decisions/**/visibility/
+
+# Generated bulk results
+results/raw/
+results/cache/
+results/**/*.npy
+results/**/*.npz
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Keep lightweight summaries, figures and tables committed
+!results/summary/
+!results/summary/**
+!results/figures/
+!results/figures/**
+!results/tables/
+!results/tables/**
+!results/oracle/
+!results/oracle/**
