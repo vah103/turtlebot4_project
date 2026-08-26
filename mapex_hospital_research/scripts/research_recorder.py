@@ -18,7 +18,7 @@ from nav_msgs.msg import OccupancyGrid, Odometry, Path as NavPath
 from rclpy.node import Node
 from rclpy.parameter import Parameter
 from rclpy.time import Time
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, Int32
 from tf2_ros import Buffer, TransformException, TransformListener
 
 
@@ -43,6 +43,8 @@ CANVAS_ORIGIN_X = -25.6
 CANVAS_ORIGIN_Y = -60.1
 ROI_DENOMINATOR = 215435
 ROI_SHA256 = "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1"
+MAPEX_SOURCE_REPOSITORY = "castacks/MapEx"
+MAPEX_SOURCE_COMMIT = "53636bd1c79153acc3c74a532837d78c926bae5e"
 
 
 def git_commit() -> str | None:
@@ -121,6 +123,15 @@ class ResearchRecorder(Node):
             "termination_reason": None,
             "notes": "",
         }
+        if method == "nearest":
+            self.metadata["policy_source_repository"] = MAPEX_SOURCE_REPOSITORY
+            self.metadata["policy_source_commit"] = MAPEX_SOURCE_COMMIT
+            self.metadata["policy_adapter"] = (
+                "mapex_hospital_research/scripts/mapex_nearest_ros.py"
+            )
+            self.metadata["execution_adapter"] = (
+                "Nav2 ComputePathToPose + NavigateToPose replaces MapEx pyastar2d"
+            )
         self.metadata_path = self.run_dir / "metadata.json"
         self._write_metadata()
 
@@ -159,6 +170,7 @@ class ResearchRecorder(Node):
         self.latest_map: OccupancyGrid | None = None
         self.latest_known_fraction: float | None = None
         self.latest_coverage: float | None = None
+        self.latest_candidate_count: int | None = None
         self.t0_sim: float | None = None
         self.last_odom_xy: tuple[float, float] | None = None
         self.last_trajectory_write_sim: float | None = None
@@ -173,6 +185,9 @@ class ResearchRecorder(Node):
         )
         self.create_subscription(
             PointStamped, "/frontier_selected", self._on_selected_frontier, 10
+        )
+        self.create_subscription(
+            Int32, "/frontier_candidate_count", self._on_candidate_count, 10
         )
         self.create_subscription(
             PointStamped, "/frontier_completed_goal", self._on_goal_success, 10
@@ -294,6 +309,9 @@ class ResearchRecorder(Node):
             self.get_logger().error(f"Map metric computation failed: {exc}")
             raise
 
+    def _on_candidate_count(self, msg: Int32) -> None:
+        self.latest_candidate_count = int(msg.data)
+
     def _sample_metrics(self) -> None:
         elapsed = self._elapsed()
         if (
@@ -376,7 +394,9 @@ class ResearchRecorder(Node):
                 if self.latest_known_fraction is None
                 else f"{self.latest_known_fraction:.8f}"
             ),
-            "num_candidates": "",
+            "num_candidates": (
+                "" if self.latest_candidate_count is None else str(self.latest_candidate_count)
+            ),
             "selected_candidate_id": f"frontier_{decision_number:06d}",
             "selected_distance_m": "",
             "selected_path_length_m": f"{path_length(msg):.4f}",
