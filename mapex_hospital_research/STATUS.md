@@ -11,6 +11,8 @@
 - Tạo cấu trúc lưu code, config, experiment, result và tài liệu handoff.
 - Chốt semantic của `known_fraction` và `coverage` trong `docs/DATA_SCHEMA.md`.
 - Sửa stage analysis để không normalize final state riêng của từng run thành 100%.
+- Thiết lập workflow báo cáo teacher-facing: repo là source of evidence; Google Docs `TurtleBot4` → tab `Báo cáo nghiên cứu MapEx Hospital` là báo cáo chính cho giảng viên.
+- Thêm `docs/TEACHER_REPORT.md` và quy tắc agent phải cập nhật báo cáo sau milestone có kết quả đã xác minh.
 
 ## In progress
 
@@ -30,7 +32,7 @@
 
 ## Latest result
 
-Chưa có run nghiên cứu mới. Metric/stage definitions đã được làm rõ trước khi bắt đầu thu dữ liệu benchmark.
+Chưa có run nghiên cứu mới. Metric/stage definitions đã được làm rõ và workflow báo cáo cho giảng viên đã được chuẩn hóa trước khi bắt đầu thu dữ liệu benchmark.
 
 ## Important decisions
 
@@ -42,8 +44,9 @@ Chưa có run nghiên cứu mới. Metric/stage definitions đã được làm r
 - `coverage` là exploration metric chính trên canonical evaluation ROI, denominator cố định.
 - Stage chính dùng absolute exploration state; không kéo giãn final state của từng run thành 100%.
 - Có thể phân tích phụ theo normalized time/distance progress nhưng phải dùng common fixed budgets.
+- Google Docs teacher report chỉ nhận kết quả đã xác minh; pilot/debug không được trình bày như kết quả chính thức.
 - Dữ liệu nặng không commit lên GitHub.
 
 ## Handoff rule
 
-Mỗi khi hoàn thành một bước lớn, cập nhật file này trước khi kết thúc phiên làm việc.
+Mỗi khi hoàn thành một bước lớn, cập nhật file này trước khi kết thúc phiên làm việc. Nếu milestone có kết quả đủ tin cậy, đồng thời cập nhật Google Docs teacher report theo `docs/TEACHER_REPORT.md`.
