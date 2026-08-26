@@ -10,10 +10,12 @@ Policy semantics are ported from castacks/MapEx commit
 * representative = region cell closest to the arithmetic mean row/column;
 * score = Euclidean distance from the current robot pose;
 * choose the minimum-score frontier;
+* validate the selected/locked frontier after ranking: if it is <1 m from the
+  robot, remove it and try the next-lowest-cost frontier;
 * if the local planner cannot reach it, try the next-lowest-cost frontier.
 
 The original MapEx implementation executes the policy in a grid simulator with
-pyastar2d.  This adapter intentionally replaces only that execution layer:
+pyastar2d. This adapter intentionally replaces only that execution layer:
 Nav2 ComputePathToPose is used as the reachability/local-planning test and the
 existing TurtleBot4 exploration_manager executes the validated goal.
 """
@@ -152,7 +154,8 @@ class MapExNearestROS(Node):
         self.get_logger().info(
             "Official MapEx nearest policy adapter active: "
             f"source_commit={MAPEX_SOURCE_COMMIT}, region_size>10, "
-            "8-connected regions, Euclidean frontier score, min_distance=1.0 m"
+            "8-connected regions, Euclidean frontier score, "
+            "1.0 m post-ranking locked-frontier validity"
         )
         self.get_logger().info(
             "Execution adapter: Nav2 ComputePathToPose replaces MapEx pyastar2d A*; "
@@ -300,18 +303,24 @@ class MapExNearestROS(Node):
     def _compute_candidates(
         self, msg: OccupancyGrid, robot_xy: tuple[float, float]
     ) -> list[FrontierCandidate]:
+        """Generate/rank all unsuppressed MapEx frontier centers.
+
+        The 1 m rule is intentionally NOT applied here. Official MapEx ranks the
+        frontier centers first, then validates the currently selected/locked
+        candidate and reselects when that candidate is too close.
+        """
         grid = np.asarray(msg.data, dtype=np.int16).reshape(
             int(msg.info.height), int(msg.info.width)
         )
         centers = self._region_representatives(self._frontier_mask(grid))
-        robot_row, robot_col = self._world_to_grid_float(robot_xy[0], robot_xy[1], msg)
+        robot_row, robot_col = self._world_to_grid_float(
+            robot_xy[0], robot_xy[1], msg
+        )
         res = float(msg.info.resolution)
         candidates: list[FrontierCandidate] = []
         for row, col in centers:
             distance_cells = math.hypot(row - robot_row, col - robot_col)
             distance_m = distance_cells * res
-            if distance_m < MIN_FRONTIER_DISTANCE_M:
-                continue
             x, y = self._cell_to_world(row, col, msg)
             if self._is_execution_suppressed(x, y):
                 continue
@@ -425,12 +434,27 @@ class MapExNearestROS(Node):
         if self.decision_map is None:
             self.planning = False
             return
+
+        # Official MapEx order: candidates are already ranked; invalidate the
+        # selected/locked candidate if it is closer than 1 m, then reselect the
+        # next-lowest-cost candidate. This is not a pre-ranking detection filter.
+        while self.planning_index < len(self.current_candidates):
+            candidate = self.current_candidates[self.planning_index]
+            if candidate.distance_m >= MIN_FRONTIER_DISTANCE_M:
+                break
+            self.get_logger().info(
+                "MapEx locked-frontier validity rejected candidate <1.0 m: "
+                f"rank={self.planning_index + 1}, "
+                f"distance={candidate.distance_m:.3f} m; trying next candidate"
+            )
+            self.planning_index += 1
+
         if self.planning_index >= len(self.current_candidates):
             self.planning = False
             self.exhausted_signature = self.current_candidate_signature
             self.get_logger().warning(
-                "All current MapEx frontier centers failed Nav2 path validation; "
-                "waiting for a changed frontier set"
+                "All current MapEx frontier centers failed 1 m validity and/or "
+                "Nav2 path validation; waiting for a changed frontier set"
             )
             self._observe_exhausted()
             return
