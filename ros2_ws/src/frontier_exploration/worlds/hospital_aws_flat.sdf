@@ -93,8 +93,12 @@
       Hospital scene.  The 1.60 m width safely covers the ~1.42 m door collision
       mesh while the 0.18 m thickness overlaps the surrounding wall enough to
       avoid narrow navigation gaps.
+
+      Keep "elevator_blocker" in the model names: the offline Hospital MapEx
+      benchmark discovers these collision boxes by that marker and rasterizes
+      them into its structural ground truth.
     -->
-    <model name="elevator_opening_blocker_left">
+    <model name="elevator_blocker_left">
       <static>true</static>
       <pose>-1.51 19.35 1.30 0 0 0</pose>
       <link name="link">
@@ -111,7 +115,7 @@
       </link>
     </model>
 
-    <model name="elevator_opening_blocker_right">
+    <model name="elevator_blocker_right">
       <static>true</static>
       <pose>1.52843 19.3627 1.30 0 0 0</pose>
       <link name="link">
