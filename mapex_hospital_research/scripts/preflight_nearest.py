@@ -4,8 +4,11 @@
 from __future__ import annotations
 
 import hashlib
+import math
 import py_compile
 from pathlib import Path
+
+import yaml
 
 
 WORKSPACE = Path(__file__).resolve().parents[1]
@@ -33,19 +36,16 @@ ROI = (
     / "hospital_connected_free_v1.npy"
 )
 ROI_EXPECTED_SHA256 = "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1"
-SOURCE_NAV2_OVERRIDE = (
-    REPO_ROOT
-    / "ros2_ws/src/frontier_exploration/config/nav2_hospital_override.yaml"
+SOURCE_CONFIG = REPO_ROOT / "ros2_ws/src/frontier_exploration/config"
+INSTALLED_CONFIG = (
+    REPO_ROOT / "ros2_ws/install/frontier_exploration/share/frontier_exploration/config"
 )
-INSTALLED_NAV2_OVERRIDE = (
-    REPO_ROOT
-    / "ros2_ws/install/frontier_exploration/share/frontier_exploration/config/nav2_hospital_override.yaml"
-)
-SOURCE_SLAM = REPO_ROOT / "ros2_ws/src/frontier_exploration/config/hospital_slam.yaml"
-INSTALLED_SLAM = (
-    REPO_ROOT
-    / "ros2_ws/install/frontier_exploration/share/frontier_exploration/config/hospital_slam.yaml"
-)
+SOURCE_NAV2_OVERRIDE = SOURCE_CONFIG / "nav2_hospital_override.yaml"
+INSTALLED_NAV2_OVERRIDE = INSTALLED_CONFIG / "nav2_hospital_override.yaml"
+SOURCE_SLAM = SOURCE_CONFIG / "hospital_slam.yaml"
+INSTALLED_SLAM = INSTALLED_CONFIG / "hospital_slam.yaml"
+SOURCE_SLAM_NO_LOOP = SOURCE_CONFIG / "hospital_slam_no_loop.yaml"
+INSTALLED_SLAM_NO_LOOP = INSTALLED_CONFIG / "hospital_slam_no_loop.yaml"
 
 
 def sha256(path: Path) -> str:
@@ -56,14 +56,95 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _require_text(path: Path, needles: list[str], label: str, errors: list[str]) -> None:
+def load_yaml(path: Path, label: str, errors: list[str]) -> dict:
     if not path.exists():
         errors.append(f"missing {label}: {path}")
+        return {}
+    try:
+        return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except Exception as exc:  # noqa: BLE001
+        errors.append(f"cannot parse {label}: {exc}")
+        return {}
+
+
+def nested(mapping: dict, *keys):
+    cur = mapping
+    for key in keys:
+        if not isinstance(cur, dict) or key not in cur:
+            return None
+        cur = cur[key]
+    return cur
+
+
+def check_nav2(path: Path, label: str, errors: list[str]) -> None:
+    cfg = load_yaml(path, label, errors)
+    if not cfg:
         return
-    text = path.read_text(encoding="utf-8")
-    missing = [needle for needle in needles if needle not in text]
-    if missing:
-        errors.append(f"{label} is stale/misconfigured; missing: {', '.join(missing)}")
+    checks = {
+        "GridBased tolerance": (
+            nested(cfg, "planner_server", "ros__parameters", "GridBased", "tolerance"),
+            0.0,
+        ),
+        "MPPI vx_max": (
+            nested(cfg, "controller_server", "ros__parameters", "FollowPath", "vx_max"),
+            0.45,
+        ),
+        "goal yaw tolerance": (
+            nested(
+                cfg,
+                "controller_server",
+                "ros__parameters",
+                "general_goal_checker",
+                "yaw_goal_tolerance",
+            ),
+            math.pi,
+        ),
+    }
+    for name, (actual, expected) in checks.items():
+        try:
+            if abs(float(actual) - expected) > 1e-6:
+                errors.append(f"{label}: {name}={actual!r}, expected {expected}")
+        except Exception:
+            errors.append(f"{label}: missing/invalid {name}: {actual!r}")
+
+    enabled = nested(
+        cfg,
+        "controller_server",
+        "ros__parameters",
+        "FollowPath",
+        "GoalAngleCritic",
+        "enabled",
+    )
+    if enabled is not False:
+        errors.append(f"{label}: GoalAngleCritic.enabled must be false, got {enabled!r}")
+
+    max_velocity = nested(cfg, "velocity_smoother", "ros__parameters", "max_velocity")
+    if not isinstance(max_velocity, list) or not max_velocity or abs(float(max_velocity[0]) - 0.45) > 1e-6:
+        errors.append(f"{label}: velocity_smoother max linear velocity is not 0.45")
+
+
+def check_slam(path: Path, label: str, errors: list[str], *, loop_expected: bool) -> None:
+    cfg = load_yaml(path, label, errors)
+    if not cfg:
+        return
+    params = nested(cfg, "slam_toolbox", "ros__parameters") or {}
+    expected = {
+        "minimum_travel_distance": 0.10,
+        "minimum_travel_heading": 0.10,
+        "minimum_time_interval": 0.15,
+    }
+    for key, value in expected.items():
+        actual = params.get(key)
+        try:
+            if abs(float(actual) - value) > 1e-6:
+                errors.append(f"{label}: {key}={actual!r}, expected {value}")
+        except Exception:
+            errors.append(f"{label}: missing/invalid {key}: {actual!r}")
+    if params.get("do_loop_closing") is not loop_expected:
+        errors.append(
+            f"{label}: do_loop_closing={params.get('do_loop_closing')!r}, "
+            f"expected {loop_expected}"
+        )
 
 
 def main() -> int:
@@ -85,41 +166,22 @@ def main() -> int:
         if actual != ROI_EXPECTED_SHA256:
             errors.append(f"ROI SHA-256 mismatch: {actual} != {ROI_EXPECTED_SHA256}")
 
-    nav2_needles = [
-        "tolerance: 0.0",
-        "vx_max: 0.45",
-        "max_velocity: [0.45, 0.0, 1.0]",
-    ]
-    slam_needles = [
-        "minimum_travel_distance: 0.10",
-        "minimum_travel_heading: 0.10",
-    ]
-    _require_text(SOURCE_NAV2_OVERRIDE, nav2_needles, "source Hospital Nav2 override", errors)
-    _require_text(SOURCE_SLAM, slam_needles, "source Hospital SLAM profile", errors)
-
-    if not INSTALLED_NAV2_OVERRIDE.exists():
-        errors.append(
-            "installed Hospital Nav2 override is missing; rebuild frontier_exploration"
-        )
-    else:
-        _require_text(
-            INSTALLED_NAV2_OVERRIDE,
-            nav2_needles,
-            "installed Hospital Nav2 override",
-            errors,
-        )
-
-    if not INSTALLED_SLAM.exists():
-        errors.append(
-            "installed Hospital SLAM profile is missing; rebuild frontier_exploration"
-        )
-    else:
-        _require_text(
-            INSTALLED_SLAM,
-            slam_needles,
-            "installed Hospital SLAM profile",
-            errors,
-        )
+    check_nav2(SOURCE_NAV2_OVERRIDE, "source Hospital Nav2 override", errors)
+    check_nav2(INSTALLED_NAV2_OVERRIDE, "installed Hospital Nav2 override", errors)
+    check_slam(SOURCE_SLAM, "source Hospital SLAM profile", errors, loop_expected=True)
+    check_slam(INSTALLED_SLAM, "installed Hospital SLAM profile", errors, loop_expected=True)
+    check_slam(
+        SOURCE_SLAM_NO_LOOP,
+        "source no-loop SLAM diagnostic",
+        errors,
+        loop_expected=False,
+    )
+    check_slam(
+        INSTALLED_SLAM_NO_LOOP,
+        "installed no-loop SLAM diagnostic",
+        errors,
+        loop_expected=False,
+    )
 
     launch = WORKSPACE / "launch" / "hospital_nearest.launch.py"
     official_policy = WORKSPACE / "scripts" / "mapex_nearest_ros_official.py"
@@ -133,38 +195,30 @@ def main() -> int:
     checks = [
         (launch, "mapex_nearest_ros_official.py"),
         (launch, "research_recorder_official.py"),
-        (launch, "nearest_pilot_009"),
-        (adapted_policy, "Hospital adaptation allowing ranked frontier below 1 m"),
-        (adapted_policy, "all_ranked_candidates_failed_nav2_path_validation"),
+        (launch, "nearest_pilot_010"),
+        (adapted_policy, "GoalStatus.STATUS_SUCCEEDED"),
+        (adapted_policy, "PLANNER_REVALIDATE_PERIOD_S"),
+        (adapted_policy, "EXECUTION_FAILURE_COOLDOWN_S"),
+        (adapted_policy, "current robot yaw as a neutral seed"),
         (official_policy, "first_policy_decision_before_compute"),
-        (official_policy, "exhausted_no_ranked_candidate"),
-        (official_policy, "candidate_id"),
-        (official_policy, "nav2_no_path_count"),
-        (research_manager, "EXACT FRONTIER EXECUTION ACTIVE"),
-        (research_manager, "goal_source\": \"exact_frontier_center"),
-        (official_recorder, "frontier_exploration_start"),
-        (official_recorder, "installed_hospital_world"),
-        (official_recorder, "intentionally_uncontrolled_gazebo_default"),
-        (official_recorder, "execution_goal_semantics"),
-        (official_recorder, "planner_endpoint_to_frontier_m"),
-        (validator, "selected_candidate_id"),
-        (validator, "exhausted_no_ranked_candidate"),
-        (validator, "terminal Nav2 audit"),
-        (validator, "exact frontier execution goal"),
-        (protocol, "first policy decision before computation"),
-        (protocol, "intentionally uncontrolled"),
-        (protocol, "NavigateToPose(exact frontier center)"),
-        (protocol, "0.45 m/s"),
-        (protocol, "0.10 m"),
-        (protocol, "0.10 rad"),
-        (schema, "below_1m is diagnostic only"),
-        (schema, "planner_endpoint_to_frontier_m"),
-        (schema, "goal_source=exact_frontier_center"),
+        (official_policy, "nav2_action_status"),
+        (research_manager, "ignored_by_hospital_goal_checker"),
+        (official_recorder, "runtime_nav2_merged.yaml"),
+        (official_recorder, "installed_nav2_base_params"),
+        (official_recorder, "selected_path_length_semantics"),
+        (validator, "experiment health"),
+        (validator, "terminal planner revalidation"),
+        (validator, "runtime_nav2_merged"),
+        (protocol, "position-only"),
+        (protocol, "planner revalidation"),
+        (schema, "goal_yaw_semantics"),
+        (schema, "planner_validation_path_length_not_executed_trajectory"),
     ]
     for path, needle in checks:
         if path.exists() and needle not in path.read_text(encoding="utf-8"):
             errors.append(
-                f"runtime/protocol invariant missing in {path.relative_to(REPO_ROOT)}: {needle}"
+                f"runtime/protocol invariant missing in "
+                f"{path.relative_to(REPO_ROOT)}: {needle}"
             )
 
     if errors:
@@ -177,17 +231,17 @@ def main() -> int:
     print("- Python syntax: OK")
     print("- Frozen ROI SHA-256: OK")
     print("- Hospital below-1m bypass: ACTIVE")
-    print("- exact frontier execution goal: ACTIVE")
-    print("- installed Nav2 exact-planner tolerance: ACTIVE")
-    print("- installed mapping speed cap 0.45 m/s: ACTIVE")
+    print("- exact frontier x/y execution: ACTIVE")
+    print("- frontier goal yaw constraint: DISABLED")
+    print("- Nav2 planner action status check: ACTIVE")
+    print("- transient no-path planner revalidation: ACTIVE")
+    print("- bounded execution-failure cooldown: ACTIVE")
+    print("- installed Nav2 tolerance/speed/yaw semantics: ACTIVE")
     print("- installed SLAM keyframe spacing 0.10 m / 0.10 rad: ACTIVE")
+    print("- no-loop SLAM A/B profile synchronized: ACTIVE")
     print("- benchmark t=0 before first policy compute: ACTIVE")
-    print("- exact exhausted/no-candidate logging: ACTIVE")
-    print("- terminal Nav2 audit logging: ACTIVE")
-    print("- stable candidate_id linkage: ACTIVE")
-    print("- installed runtime provenance hashing: ACTIVE")
-    print("- simulator seed policy: intentionally uncontrolled + repeated runs")
-    print("- strict post-run validator: present")
+    print("- effective Nav2 config archival/provenance: ACTIVE")
+    print("- strict data + experiment-health validator: present")
     return 0
 
 
