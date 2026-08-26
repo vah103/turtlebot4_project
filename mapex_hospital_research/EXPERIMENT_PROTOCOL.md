@@ -21,7 +21,7 @@ Mọi phương pháp so sánh phải dùng cùng protocol, trừ khi thay đổi
 
 - SLAM package/config: `slam_toolbox` với `ros2_ws/src/frontier_exploration/config/hospital_slam.yaml`
 - Map resolution: `0.05 m/cell`
-- Map frame: `map`; mọi snapshot được đưa về fixed SLAM-start canvas để logging/evaluation.
+- Map frame: `map`; mọi evaluation snapshot được đưa về fixed SLAM-start canvas.
 
 ### Fixed logging canvas
 
@@ -40,7 +40,7 @@ Mọi phương pháp so sánh phải dùng cùng protocol, trừ khi thay đổi
 - ROI specification: `ground_truth/hospital/roi_v1.yaml`
 - ROI alignment: cùng resolution `0.05 m`, origin, kích thước và SLAM-start frame của `hospital_canvas_v1`.
 - Structural source: Hospital wall collision mesh + flat-world elevator blockers; wall slice `z=0.30 m`, wall raster thickness `2 cells`, sau đó dilate `1 cell` để đóng raster cracks.
-- Valid-cell rule: trong fixed Hospital bounds `x=[-0.572445, 24.588833]`, `y=[-35.091079, 21.044604]` ở SLAM-start frame, lấy các free cells thuộc **8-connected component chứa robot start `(0,0)`** sau khi structural obstacles được rasterize.
+- Valid-cell rule: trong fixed Hospital bounds `x=[-0.572445, 24.588833]`, `y=[-35.091079,21.044604]` ở SLAM-start frame, lấy các free cells thuộc **8-connected component chứa robot start `(0,0)`** sau khi structural obstacles được rasterize.
 - Excluded cells: obstacle cells, disconnected free-space pockets, vùng ngoài Hospital bounds và toàn bộ safety padding của fixed canvas.
 - Total denominator cells: `215435`.
 - Frozen mask SHA-256: `05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1`.
@@ -77,8 +77,26 @@ ROI phải giống hệt giữa Nearest và MapEx. Thay đổi ROI yêu cầu RO
 - Frontier-region connectivity: **8-connected**.
 - Region-size threshold: MapEx gốc dùng `region_size_threshold = 10` và giữ region khi `size > 10`.
 - Frontier representative: tính arithmetic mean của `(row, col)` trong region, sau đó lấy frontier cell có Euclidean distance nhỏ nhất tới mean.
-- Minimum robot-to-frontier distance: `1.0 m`, theo `cur_pose_dist_threshold_m` của MapEx base config.
 - Không dùng WFD reachable-BFS, segment split, standoff goal hoặc nearest-safe-cell substitution để tạo/chuyển frontier trong baseline MapEx-nearest này.
+
+### Exact `cur_pose_dist_threshold_m = 1.0` semantics
+
+Rule 1 m **không phải frontier-detection filter và không được áp dụng trước ranking**.
+
+Control flow phải là:
+
+```text
+1. detect toàn bộ MapEx frontier regions
+2. lấy representative của từng region >10
+3. score/rank toàn bộ candidate theo method hiện tại
+4. lấy candidate cost thấp nhất làm locked candidate
+5. nếu locked candidate cách robot <1.0 m -> candidate invalid -> remove/reselect
+6. thử candidate có rank tiếp theo
+7. candidate hợp lệ mới đi qua local-planner/Nav2 path validation
+8. nếu no path -> remove/reselect candidate tiếp theo
+```
+
+Điều này bám theo `is_locked_frontier_center_valid()` + `reselect_frontier_from_frontier_region_centers()` trong code MapEx gốc. Không được chuyển rule này thành `if distance < 1m: continue` ở bước tạo frontier trước ranking.
 
 ### Nearest scoring
 
@@ -89,7 +107,7 @@ cost(frontier_i) = EuclideanDistance(current_pose, frontier_center_i)
 selected = argmin(cost)
 ```
 
-Frontier đã chọn được lock cho tới khi đạt goal/outcome. Nếu local planner không tìm được path tới frontier-center đó thì bỏ candidate hiện tại và thử candidate có cost thấp tiếp theo, đúng control flow của MapEx.
+Frontier hợp lệ đã chọn được lock cho tới khi đạt goal/outcome. Nếu local planner không tìm được path tới frontier-center đó thì bỏ candidate hiện tại và thử candidate có cost thấp tiếp theo.
 
 ### ROS/TurtleBot4 execution adapter
 
@@ -98,6 +116,8 @@ MapEx gốc chạy grid simulator và dùng `pyastar2d.astar_path(..., allow_dia
 ```text
 MapEx frontier generation + scoring
         ↓
+post-ranking locked-frontier validity (<1 m -> reject/reselect)
+        ↓
 Nav2 ComputePathToPose  (thay pyastar2d A* reachability/local planning)
         ↓
 Nav2 NavigateToPose     (TurtleBot4 execution)
@@ -105,7 +125,60 @@ Nav2 NavigateToPose     (TurtleBot4 execution)
 
 Goal gửi sang Nav2 vẫn là chính MapEx frontier-center cell; adapter không tự dịch goal vào sâu trong free space. Nếu `ComputePathToPose` không có path, adapter thử frontier tiếp theo giống vòng reselect của MapEx. Navigation execution failure là hiện tượng riêng của robot/ROS mà simulator MapEx gốc không mô hình hóa; adapter tạm bỏ vùng goal vừa fail và reselect, đồng thời logger phải ghi failure này.
 
-Implementation Hospital: `scripts/mapex_nearest_ros.py`. File `ros2_ws/src/frontier_exploration/frontier_exploration/frontier_detector*.py` cũ không được dùng trong Nearest research launch.
+Implementation runtime hiện tại:
+- base policy: `scripts/mapex_nearest_ros.py`
+- Hospital audit/visualization: `scripts/mapex_nearest_ros_hospital.py`
+- exact research logging: `scripts/mapex_nearest_ros_research.py`
+- navigation detail wrapper: `scripts/exploration_manager_research.py`
+- recorder: `scripts/research_recorder_safe.py`
+
+File `ros2_ws/src/frontier_exploration/frontier_exploration/frontier_detector*.py` cũ không được dùng trong Nearest research launch.
+
+## Required replay logging before official runs
+
+Mọi official Nearest/MapEx run phải lưu đủ dữ liệu để analysis/oracle/offline metric không cần rerun robot chỉ vì thiếu log.
+
+### Exact policy decision state
+
+Tại mỗi policy decision phải lưu **chính OccupancyGrid đã freeze để tạo/rank candidate**, gồm:
+- raw OccupancyGrid values;
+- width/height/resolution/origin/frame/map timestamp;
+- exact fixed-canvas reprojection;
+- map-frame robot pose dùng cho ranking;
+- candidate-generation/ranking computation time.
+
+Không được lấy một `latest_map` muộn hơn sau `ComputePathToPose` rồi gọi đó là decision snapshot.
+
+### Candidate-level logging
+
+Mỗi decision phải lưu toàn bộ candidate set tối thiểu:
+- row/col và x/y;
+- Euclidean distance;
+- raw/policy rank;
+- `<1m` validity rejection;
+- execution-suppression state;
+- Nav2 path validation result;
+- planner check time;
+- selected flag/path length;
+- execution success/failure.
+
+### Navigation result detail
+
+Ngoài `SUCCEEDED/FAILED`, phải giữ detail khi có thể: rejected, timeout, stall/no-progress, Nav2 status/result error.
+
+### Periodic/final map retention
+
+Recorder lưu raw + fixed-canvas snapshot định kỳ mặc định `10 s` và final map. Mục đích là cho phép tính occupied IoU/TU và các AUC offline sau khi evaluator được chốt.
+
+### Provenance
+
+`metadata.json` phải giữ:
+- git commit;
+- git dirty state;
+- protocol/canvas/ROI IDs;
+- SHA-256 của code/config chính;
+- world/spawn;
+- termination reason.
 
 ## Exploration termination
 
@@ -116,6 +189,8 @@ MapEx gốc kết thúc/fail một trial khi không còn frontier region hợp l
 - check period `2 s`;
 - idle ít nhất `10 s`;
 - startup grace `20 s`.
+
+Nếu trước khi mission thật sự start không tồn tại usable candidate thì phải ghi **policy failure**, không được gán nhầm successful exploration completion.
 
 Wrapper này là protocol-level ROS adaptation và phải giống nhau giữa Nearest và MapEx; nó không thay frontier score/ranking.
 
@@ -134,10 +209,11 @@ Khi đã chọn budget để báo cáo, budget đó phải giống nhau giữa m
 
 ## Repetition
 
-- Nearest target runs: 10
-- MapEx target runs: 10
-- Minimum acceptable runs before preliminary analysis: 5 per method
-- Trước official runs: chạy `nearest_pilot_001` để xác nhận logger, alignment và termination.
+- Nearest target runs: `10`
+- MapEx target runs: `10`
+- Minimum acceptable runs before preliminary analysis: `5` per method
+- Trước official runs: chạy `nearest_pilot_005` để xác nhận robot motion, logger, alignment, exact decision snapshots, candidate logs và termination.
+- Pilot/debug không được tính vào official benchmark.
 
 ## Metrics required per run
 
@@ -151,8 +227,10 @@ Khi đã chọn budget để báo cáo, budget đó phải giống nhau giữa m
 - failed goals
 - success rate
 - termination reason
+- computation timing
+- raw/periodic maps đủ để tính occupied IoU/TU offline
 
-MapEx additionally logs all decision-level data defined in `docs/DATA_SCHEMA.md`.
+MapEx additionally logs all decision-level prediction/variance/visibility/IG data defined in `docs/DATA_SCHEMA.md`.
 
 ## Exploration-stage comparison rule
 
@@ -167,4 +245,4 @@ MapEx additionally logs all decision-level data defined in `docs/DATA_SCHEMA.md`
 
 ## Fair-comparison rule
 
-Không được thay spawn, Nav2, SLAM, sensor, timeout, stopping condition, fixed canvas, evaluation ROI, frontier-generation semantics hoặc resource budget giữa Nearest và MapEx mà không ghi rõ lý do và chạy lại baseline tương ứng.
+Không được thay spawn, Nav2, SLAM, sensor, timeout, stopping condition, fixed canvas, evaluation ROI, frontier-generation semantics, post-ranking 1 m validity rule hoặc resource budget giữa Nearest và MapEx mà không ghi rõ lý do và chạy lại baseline tương ứng.
