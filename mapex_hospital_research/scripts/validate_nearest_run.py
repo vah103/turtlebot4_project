@@ -24,7 +24,7 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--run-id", default="nearest_pilot_005")
+    parser.add_argument("--run-id", default="nearest_pilot_006")
     parser.add_argument("--allow-running", action="store_true")
     args = parser.parse_args()
 
@@ -139,6 +139,15 @@ def main() -> int:
         if pid not in candidate_policy_ids:
             errors.append(f"{pid}: no rows in global candidates.csv")
 
+    # Hospital adaptation deliberately allows candidates below the original MapEx
+    # 1 m threshold. Flag accidental reintroduction of the old rejection status.
+    for row in candidates:
+        if row.get("status") == "rejected_lt_1m":
+            errors.append(
+                f"{row.get('policy_decision_id')}: below-1m candidate was rejected; "
+                "Hospital adaptation is not active"
+            )
+
     if not snapshots:
         errors.append("snapshots.csv is empty")
     elif termination and not any(row.get("event") == "final" for row in snapshots):
@@ -166,6 +175,7 @@ def main() -> int:
     print(f"- candidate rows: {len(candidates)}")
     print(f"- periodic/final snapshots: {len(snapshots)}")
     print(f"- termination: {termination or 'RUNNING'}")
+    print("- Hospital below-1m adaptation: consistent")
     if warnings:
         print("Warnings:")
         for warning in warnings:
