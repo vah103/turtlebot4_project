@@ -1,4 +1,5 @@
 experiment:
+  protocol_version: null
   world: hospital
   robot: turtlebot4
   use_sim_time: true
@@ -20,6 +21,28 @@ nav2:
 sensor:
   lidar_topic: null
   max_range_m: null
+
+fixed_logging_canvas:
+  id: null
+  resolution_m: null
+  width_cells: null
+  height_cells: null
+  origin_x_m: null
+  origin_y_m: null
+  frame: null
+  alignment_rule: null
+
+canonical_evaluation_roi:
+  id: null
+  source_or_mask: null
+  alignment_rule: null
+  valid_cell_rule: null
+  excluded_cell_rule: null
+  denominator_cells: null
+
+resource_budget:
+  time_s: null
+  distance_m: null
 
 logging:
   root_dir: mapex_hospital_research/experiments
