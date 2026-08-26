@@ -59,7 +59,6 @@ ROI phải giống hệt giữa Nearest và MapEx. Thay đổi ROI yêu cầu RO
 - Maximum speed: `0.75 m/s`
 - Per-goal hard timeout: `180 s`
 - Stall timeout: `30 s` nếu không có meaningful progress
-- Recovery behavior: giữ nguyên Nav2 stack hiện tại; execution failure chỉ suppress frontier tạm thời, không tự coi là permanently unreachable.
 - Goal acceptance: dùng cùng Nav2 goal-checker configuration của Hospital stack cho mọi method; research code không override riêng giữa Nearest và MapEx.
 
 ## Sensor
@@ -68,17 +67,59 @@ ROI phải giống hệt giữa Nearest và MapEx. Thay đổi ROI yêu cầu RO
 - Max range used by SLAM: `20.0 m`
 - Sensor model/update rate: giữ nguyên TurtleBot4 RPLidar simulation description; research methods không override sensor parameters.
 
-## Exploration
+## Frontier policy shared by Nearest and MapEx
 
-- Frontier detector: WFD-style reachable-space BFS trên raw SLAM `/map`, sau đó 8-connected frontier clustering.
-- Minimum frontier cluster size: `5 cells`
-- Minimum split segment size: `5 cells`
-- Minimum selection distance: `0.60 m`
-- Nearest rule: candidate frontier được sắp theo Euclidean distance từ robot tới frontier representative; goal phải qua costmap safety + Nav2 `ComputePathToPose` reachability check trước khi được chọn.
-- Stopping condition: `/exploration_complete` khi không còn reachable frontier, trạng thái này ổn định `5` cycles, check mỗi `2 s`, và idle ít nhất `10 s` (startup grace `20 s`).
-- Random seed policy: Nearest không có random frontier selection; repeated runs vẫn được dùng để đo simulator/SLAM/navigation variability.
+Để so đúng với implementation được tác giả MapEx công bố, Nearest và MapEx Hospital phải dùng cùng frontier-generation semantics từ `castacks/MapEx` commit `53636bd1c79153acc3c74a532837d78c926bae5e`, chủ yếu từ `scripts/sim_utils.py` và control flow trong `scripts/explore.py`.
 
-### Resource budgets for secondary analysis
+- Observed free: ROS occupancy value `0`.
+- Unknown: ROS occupancy value `< 0`.
+- Frontier cell: free cell có ít nhất một unknown cell trong **8-neighbourhood**.
+- Frontier-region connectivity: **8-connected**.
+- Region-size threshold: MapEx gốc dùng `region_size_threshold = 10` và giữ region khi `size > 10`.
+- Frontier representative: tính arithmetic mean của `(row, col)` trong region, sau đó lấy frontier cell có Euclidean distance nhỏ nhất tới mean.
+- Minimum robot-to-frontier distance: `1.0 m`, theo `cur_pose_dist_threshold_m` của MapEx base config.
+- Không dùng WFD reachable-BFS, segment split, standoff goal hoặc nearest-safe-cell substitution để tạo/chuyển frontier trong baseline MapEx-nearest này.
+
+### Nearest scoring
+
+Nearest dùng đúng score mode của MapEx:
+
+```text
+cost(frontier_i) = EuclideanDistance(current_pose, frontier_center_i)
+selected = argmin(cost)
+```
+
+Frontier đã chọn được lock cho tới khi đạt goal/outcome. Nếu local planner không tìm được path tới frontier-center đó thì bỏ candidate hiện tại và thử candidate có cost thấp tiếp theo, đúng control flow của MapEx.
+
+### ROS/TurtleBot4 execution adapter
+
+MapEx gốc chạy grid simulator và dùng `pyastar2d.astar_path(..., allow_diagonal=False)`. Hospital benchmark không giả lập robot bằng pixel steps; vì vậy **chỉ execution layer được thay**:
+
+```text
+MapEx frontier generation + scoring
+        ↓
+Nav2 ComputePathToPose  (thay pyastar2d A* reachability/local planning)
+        ↓
+Nav2 NavigateToPose     (TurtleBot4 execution)
+```
+
+Goal gửi sang Nav2 vẫn là chính MapEx frontier-center cell; adapter không tự dịch goal vào sâu trong free space. Nếu `ComputePathToPose` không có path, adapter thử frontier tiếp theo giống vòng reselect của MapEx. Navigation execution failure là hiện tượng riêng của robot/ROS mà simulator MapEx gốc không mô hình hóa; adapter tạm bỏ vùng goal vừa fail và reselect, đồng thời logger phải ghi failure này.
+
+Implementation Hospital: `scripts/mapex_nearest_ros.py`. File `ros2_ws/src/frontier_exploration/frontier_exploration/frontier_detector*.py` cũ không được dùng trong Nearest research launch.
+
+## Exploration termination
+
+MapEx gốc kết thúc/fail một trial khi không còn frontier region hợp lệ/candidate A* reachable. Trong ROS, map/TF/Nav2 cập nhật bất đồng bộ nên `hospital_v1` dùng một stabilization wrapper chung cho Nearest và MapEx trước khi tuyên bố completion:
+
+- không còn planner-reachable frontier theo policy ở trên;
+- stable `5` checks;
+- check period `2 s`;
+- idle ít nhất `10 s`;
+- startup grace `20 s`.
+
+Wrapper này là protocol-level ROS adaptation và phải giống nhau giữa Nearest và MapEx; nó không thay frontier score/ranking.
+
+## Resource budgets for secondary analysis
 
 `hospital_v1` không dùng fixed time/distance budget làm controller termination. Primary run termination là exploration completion ở trên. Sau pilot có thể chọn một common offline analysis window/budget từ raw logs để báo thêm final coverage hoặc normalized resource progress; việc chọn cutoff phân tích không được thay đổi controller behavior hoặc ROI.
 
@@ -121,9 +162,9 @@ MapEx additionally logs all decision-level data defined in `docs/DATA_SCHEMA.md`
 - Run kết thúc trước một stage không được giả lập/normalize để có sample ở stage đó.
 - Tại cùng một coverage stage, coverage chỉ là biến căn chỉnh trạng thái; không so coverage với coverage tại chính mốc đó.
 - Tại cùng stage, so các đại lượng như time-to-stage, distance-to-stage, goal failures/success, computation cost và các metric chẩn đoán pipeline tương ứng.
-- Hiệu quả exploration tổng thể phải báo bằng Coverage-vs-time, Coverage-vs-distance, Coverage AUC và final coverage dưới cùng fixed budget nếu budget được sử dụng.
+- Hiệu quả exploration tổng thể phải báo bằng Coverage-vs-time, Coverage-vs-distance, Coverage AUC và final coverage dưới cùng fixed budget.
 - Có thể báo thêm time-progress hoặc distance-progress theo fixed common budget.
 
 ## Fair-comparison rule
 
-Không được thay spawn, Nav2, SLAM, sensor, timeout, stopping condition, fixed canvas hoặc evaluation ROI giữa Nearest và MapEx mà không ghi rõ lý do và chạy lại baseline tương ứng. Nếu một resource budget được dùng như termination condition trong tương lai, việc thay budget cũng yêu cầu protocol mới và baseline rerun.
+Không được thay spawn, Nav2, SLAM, sensor, timeout, stopping condition, fixed canvas, evaluation ROI, frontier-generation semantics hoặc resource budget giữa Nearest và MapEx mà không ghi rõ lý do và chạy lại baseline tương ứng.
