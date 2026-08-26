@@ -31,6 +31,14 @@ Nếu sau này thêm fixed seed thì đó là thay đổi protocol và baseline 
 - SLAM: `slam_toolbox` với `hospital_slam.yaml`
 - Resolution: `0.05 m/cell`
 - Map frame: `map`
+- LiDAR topic: `/scan`
+- SLAM max range: `20.0 m`
+- `minimum_travel_distance`: **`0.10 m`**
+- `minimum_travel_heading`: **`0.10 rad`**
+- `minimum_time_interval`: `0.15 s`
+- loop-closure/matcher thresholds giữ nguyên so với profile trước pilot_009.
+
+`nearest_pilot_008` cho thấy map bị warp rõ trong long autonomous run với profile cũ `0.75 m/s` + `0.20 m / 0.20 rad`. Trước official runs, `hospital_v1` chốt profile ổn định hơn: giảm tốc và tăng mật độ scan graph, nhưng **không nới loop-closure thresholds** để tránh che drift bằng false closures trong hành lang lặp lại.
 
 ### Fixed logging canvas
 
@@ -60,15 +68,16 @@ ROI/canvas không được đổi giữa Nearest, MapEx và proposed method tron
 ## Navigation
 
 - Nav2: `hospital_nav2.launch.py` + `nav2_hospital_override.yaml`
-- Maximum speed: `0.75 m/s`
+- Maximum linear speed: **`0.45 m/s`**
+- Maximum angular speed: `1.0 rad/s`
 - `GridBased` planner goal tolerance: **`0.0 m`**
 - Hard timeout per goal: `180 s`
 - Stall timeout: `30 s`
 - Goal checker/sensor/SLAM/Nav2 params giống nhau giữa methods
-- LiDAR topic: `/scan`
-- SLAM max range: `20.0 m`
 
 Planner tolerance `0.0 m` là một phần của `hospital_v1`: candidate chỉ được coi là planner-reachable khi Nav2 lập được path tới exact selected frontier cell. Không dùng tolerance `0.5 m` để snap sang điểm gần hơn.
+
+Mapping speed `0.45 m/s` cũng là một phần của `hospital_v1` từ pilot_009 trở đi. Nó được áp dụng giống nhau cho Nearest, full MapEx và proposed method; không được tăng riêng cho một method.
 
 ## Frontier policy shared by Nearest and MapEx
 
@@ -134,7 +143,9 @@ goal_source                        = exact_frontier_center
 
 `goal_x/y` phải trùng `frontier_x/y` trong official runs. Path endpoint chỉ là diagnostic/reachability evidence, không phải nearest-safe-cell substitution hay standoff goal.
 
-`nearest_pilot_007` đã phát hiện bug adapter cũ: planner endpoint bị snap khoảng `0.5 m` theo tolerance và manager gửi endpoint đó thay vì exact frontier, làm Nav2 báo success khi robot gần như không di chuyển. Các run dùng semantics cũ không được tính là official benchmark. `nearest_pilot_008` là final runtime check cho exact-frontier execution + planner tolerance `0.0 m`.
+`nearest_pilot_007` đã phát hiện bug adapter cũ: planner endpoint bị snap khoảng `0.5 m` theo tolerance và manager gửi endpoint đó thay vì exact frontier, làm Nav2 báo success khi robot gần như không di chuyển. Các run dùng semantics cũ không được tính là official benchmark.
+
+`nearest_pilot_008` xác nhận exact-frontier execution/logging đã hoạt động nhưng đồng thời lộ ra vấn đề khác: map occupancy bị warp trong long run. Vì vậy pilot_008 cũng chỉ là diagnostic. `nearest_pilot_009` là stability pilot đầu tiên dùng mapping profile chính thức `0.45 m/s` + `0.10 m / 0.10 rad` trước khi khóa official runs.
 
 ## Benchmark clock
 
@@ -252,7 +263,8 @@ MapEx thêm prediction/variance/visibility/IG/ranking data theo `docs/DATA_SCHEM
 - Minimum preliminary: `5` per method
 - `nearest_pilot_005`: diagnostic deadlock pilot, không benchmark
 - `nearest_pilot_007`: diagnostic execution-adapter bug (tolerance-snapped path endpoint), không benchmark
-- `nearest_pilot_008`: final exact-frontier execution runtime check trước official runs
+- `nearest_pilot_008`: diagnostic exact-frontier run; logging PASS nhưng map bị warp, không benchmark
+- `nearest_pilot_009`: mapping-stability pilot với `0.45 m/s`, `0.10 m`, `0.10 rad`
 - Pilot/debug không tính vào official benchmark
 
 ## Exploration-stage comparison
@@ -265,4 +277,4 @@ MapEx thêm prediction/variance/visibility/IG/ranking data theo `docs/DATA_SCHEM
 
 ## Fair-comparison rule
 
-Không đổi spawn, sensor, SLAM, Nav2, planner tolerance, timeout, stopping condition, canvas, ROI, frontier-generation semantics, Hospital below-1m adaptation, exact-frontier execution-goal semantics, benchmark-clock definition hoặc resource budget giữa Nearest và MapEx mà không ghi rõ lý do và đánh giá lại baseline.
+Không đổi spawn, sensor, SLAM, Nav2, mapping speed, SLAM keyframe spacing, planner tolerance, timeout, stopping condition, canvas, ROI, frontier-generation semantics, Hospital below-1m adaptation, exact-frontier execution-goal semantics, benchmark-clock definition hoặc resource budget giữa Nearest và MapEx mà không ghi rõ lý do và đánh giá lại baseline.
