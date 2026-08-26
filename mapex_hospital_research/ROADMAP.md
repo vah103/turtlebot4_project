@@ -55,7 +55,28 @@ Ví dụ, nếu các run thực sự đi qua đủ các mốc, có thể chia:
 
 Các ngưỡng thực tế được chốt một lần sau pilot dựa trên vùng giá trị mà các phương pháp có thể so sánh công bằng. Nếu một run kết thúc trước một stage thì run đó không có sample ở stage đó; không kéo giãn final state của run thành 100%.
 
-### 4.2 Trục phụ: normalized resource-budget progress
+### 4.2 So sánh tại cùng coverage stage
+
+Khi hai method được căn chỉnh tại cùng một absolute coverage stage, `coverage` là **trục căn chỉnh trạng thái**, không phải đại lượng cần so tại chính mốc đó.
+
+Ví dụ tại stage quanh 60% coverage, nên so giữa MapEx và Nearest:
+- thời gian để đạt stage;
+- quãng đường để đạt stage;
+- số goal attempted/succeeded/failed đến stage;
+- success rate;
+- các metric chẩn đoán MapEx như prediction error, uncertainty calibration, visibility error, IG/ranking quality;
+- computation cost nếu có.
+
+Không diễn giải kiểu "MapEx có coverage cao hơn Nearest tại cùng 60% coverage".
+
+Hiệu quả exploration tổng thể phải được đánh giá trên các trục riêng:
+- Coverage vs time;
+- Coverage vs distance;
+- Coverage AUC theo time/distance;
+- final coverage dưới cùng fixed time/distance budget;
+- total time/distance khi stopping condition cho phép so trực tiếp.
+
+### 4.3 Trục phụ: normalized resource-budget progress
 
 Có thể phân tích thêm theo resource budget để biết failure xuất hiện sớm/muộn theo chi phí đã dùng:
 - `time_progress = time_s / fixed_time_budget_s`
@@ -63,13 +84,13 @@ Có thể phân tích thêm theo resource budget để biết failure xuất hi�
 
 Time/distance budget phải cố định và giống nhau giữa các phương pháp. Đây là phân tích phụ, không thay thế absolute exploration state.
 
-### 4.3 Định nghĩa dùng trong workspace
+### 4.4 Định nghĩa dùng trong workspace
 
 - `known_fraction`: tỷ lệ cell đã biết (`occupancy != unknown`) trên fixed logging canvas. Đây chủ yếu là progress/debugging proxy và chỉ so được khi canvas/resolution/origin cố định.
 - `coverage`: tỷ lệ cell trong canonical evaluation ROI đã được quan sát/biết ở thời điểm hiện tại. Đây là metric exploration chính; ROI và denominator phải cố định giữa mọi run.
 - `occupied IoU`: metric riêng để đánh giá correctness của occupied mapping; không dùng coverage để suy ra map correctness.
 
-Kết quả: biết failure xuất hiện ở absolute exploration state nào, có lặp lại giữa nhiều run hay không, và có phụ thuộc resource budget hay không.
+Kết quả: biết failure xuất hiện ở absolute exploration state nào, có lặp lại giữa nhiều run hay không, có phụ thuộc resource budget hay không, và method nào đạt cùng exploration state với chi phí thấp hơn.
 
 ## 5. Log toàn bộ quyết định MapEx
 
