@@ -1,16 +1,31 @@
 method: nearest_frontier
+protocol_version: hospital_v1
 
 frontier:
-  detector: wfd
-  min_frontier_size: null
+  detector: wfd_raw_slam_map
+  min_frontier_size_cells: 5
+  min_segment_size_cells: 5
+  min_selection_distance_m: 0.60
   reachable_only: true
 
 selection:
   rule: nearest_reachable_frontier
-  distance_metric: null
+  distance_metric: euclidean_robot_to_frontier_representative
+  validate_with_nav2_compute_path: true
 
 navigation:
-  validate_with_nav2_path: true
+  goal_timeout_s: 180.0
+  stall_timeout_s: 30.0
+  use_same_hospital_nav2_stack: true
+
+termination:
+  rule: no_reachable_frontier_stable_completion
+  stable_cycles: 5
+  check_period_s: 2.0
+  min_idle_s: 10.0
+  startup_grace_s: 20.0
 
 runs:
+  pilot_run_id: nearest_pilot_001
   target_count: 10
+  minimum_for_preliminary_analysis: 5
