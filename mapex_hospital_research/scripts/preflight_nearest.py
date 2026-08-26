@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import hashlib
 import py_compile
-import sys
 from pathlib import Path
 
 
@@ -64,12 +63,15 @@ def main() -> int:
                 f"{actual} != {ROI_EXPECTED_SHA256}"
             )
 
+    base_policy = WORKSPACE / "scripts" / "mapex_nearest_ros.py"
     research_policy = WORKSPACE / "scripts" / "mapex_nearest_ros_research.py"
     hospital_policy = WORKSPACE / "scripts" / "mapex_nearest_ros_hospital.py"
     recorder = WORKSPACE / "scripts" / "research_recorder_safe.py"
     launch = WORKSPACE / "launch" / "hospital_nearest.launch.py"
 
     checks = [
+        (base_policy, "The 1 m rule is intentionally NOT applied here"),
+        (base_policy, "MapEx locked-frontier validity rejected candidate <1.0 m"),
         (hospital_policy, "rejected and the next ranked candidate"),
         (research_policy, "observed_map_raw.npz"),
         (research_policy, "rejected_lt_1m"),
@@ -85,6 +87,18 @@ def main() -> int:
                 f"runtime invariant missing in {path.relative_to(REPO_ROOT)}: {needle}"
             )
 
+    # Guard specifically against accidentally reintroducing the old pre-ranking
+    # distance filter in _compute_candidates().
+    if base_policy.exists():
+        text = base_policy.read_text(encoding="utf-8")
+        compute_start = text.find("def _compute_candidates")
+        signature_start = text.find("def _signature", compute_start)
+        compute_block = text[compute_start:signature_start]
+        if "distance_m < MIN_FRONTIER_DISTANCE_M" in compute_block:
+            errors.append(
+                "old 1 m pre-ranking filter is present inside _compute_candidates"
+            )
+
     if errors:
         print("NEAREST PREFLIGHT: FAIL")
         for error in errors:
@@ -94,7 +108,7 @@ def main() -> int:
     print("NEAREST PREFLIGHT: PASS")
     print("- Python syntax: OK")
     print("- Frozen ROI SHA-256: OK")
-    print("- post-ranking 1 m validity rule: present")
+    print("- post-ranking 1 m validity rule: OK")
     print("- exact decision-map/candidate logging: present")
     print("- periodic/final replay snapshots: present")
     print("- detailed navigation-result logging: present")
