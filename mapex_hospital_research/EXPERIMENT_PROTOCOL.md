@@ -13,92 +13,89 @@ Mọi phương pháp so sánh phải dùng cùng protocol, trừ khi thay đổi
 - World: `Hospital flat` (`hospital_aws_flat.sdf`)
 - Simulator: Gazebo / TurtleBot4 simulation stack hiện có trong `frontier_exploration`
 - Robot: TurtleBot4
-- Spawn x: `0.0 m`
-- Spawn y: `12.0 m`
-- Spawn yaw: `-1.57 rad`
+- Spawn: `x=0.0 m`, `y=12.0 m`, `yaw=-1.57 rad`
+
+### Simulator seed policy
+
+Gazebo launch hiện tại không expose một seed cố định. Vì vậy `hospital_v1` chọn rõ policy:
+
+- simulator seed: **intentionally uncontrolled** (Gazebo default);
+- không giả vờ rằng các run có cùng random seed;
+- variability được xử lý bằng repeated runs (`5` tối thiểu, mục tiêu `10` mỗi method);
+- metadata của mỗi run phải ghi `sim_seed_policy=intentionally_uncontrolled_gazebo_default_multiple_run_statistics`.
+
+Nếu sau này thêm fixed seed thì đó là thay đổi protocol và baseline liên quan phải được xem xét chạy lại.
 
 ## Mapping / SLAM
 
-- SLAM package/config: `slam_toolbox` với `ros2_ws/src/frontier_exploration/config/hospital_slam.yaml`
-- Map resolution: `0.05 m/cell`
-- Map frame: `map`; mọi evaluation snapshot được đưa về fixed SLAM-start canvas.
+- SLAM: `slam_toolbox` với `hospital_slam.yaml`
+- Resolution: `0.05 m/cell`
+- Map frame: `map`
 
 ### Fixed logging canvas
 
 - ID: `hospital_canvas_v1`
 - Resolution: `0.05 m/cell`
-- Width: `1504 cells`
-- Height: `2123 cells`
+- Width: `1504`
+- Height: `2123`
 - Origin: `(-25.6, -60.1) m`
-- Alignment rule: reproject mọi SLAM snapshot lên đúng grid này; không crop theo bounding box động.
 
-`known_fraction` được tính trên canvas cố định này. Không crop theo bounding box động và không chuẩn hóa final known fraction của từng run thành 100%.
+Không crop theo bounding box động và không normalize final known fraction riêng từng run thành 100%.
 
 ### Canonical evaluation ROI
 
-- ROI ID: `hospital_connected_free_v1`
-- ROI specification: `ground_truth/hospital/roi_v1.yaml`
-- ROI alignment: cùng resolution `0.05 m`, origin, kích thước và SLAM-start frame của `hospital_canvas_v1`.
-- Structural source: Hospital wall collision mesh + flat-world elevator blockers; wall slice `z=0.30 m`, wall raster thickness `2 cells`, sau đó dilate `1 cell` để đóng raster cracks.
-- Valid-cell rule: trong fixed Hospital bounds `x=[-0.572445, 24.588833]`, `y=[-35.091079,21.044604]` ở SLAM-start frame, lấy các free cells thuộc **8-connected component chứa robot start `(0,0)`** sau khi structural obstacles được rasterize.
-- Excluded cells: obstacle cells, disconnected free-space pockets, vùng ngoài Hospital bounds và toàn bộ safety padding của fixed canvas.
-- Total denominator cells: `215435`.
-- Frozen mask SHA-256: `05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1`.
+- ROI: `hospital_connected_free_v1`
+- Denominator: `215435` cells
+- Mask SHA-256: `05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1`
+- Bounds SLAM-start: `x=[-0.572445,24.588833]`, `y=[-35.091079,21.044604]`
+- Structural source: Hospital wall collision mesh + flat elevator blockers
+- Connectivity: 8-connected free component containing start `(0,0)`
 
 ```text
 coverage(t) = known cells inside hospital_connected_free_v1 / 215435
 ```
 
-ROI phải giống hệt giữa Nearest và MapEx. Thay đổi ROI yêu cầu ROI ID mới và chạy lại baseline.
+ROI/canvas không được đổi giữa Nearest, MapEx và proposed method trong `hospital_v1`.
 
 ## Navigation
 
-- Nav2 config: `hospital_nav2.launch.py` + `nav2_hospital_override.yaml`
+- Nav2: `hospital_nav2.launch.py` + `nav2_hospital_override.yaml`
 - Maximum speed: `0.75 m/s`
-- Per-goal hard timeout: `180 s`
-- Stall timeout: `30 s` nếu không có meaningful progress
-- Goal acceptance: dùng cùng Nav2 goal-checker configuration của Hospital stack cho mọi method.
-
-## Sensor
-
+- Hard timeout per goal: `180 s`
+- Stall timeout: `30 s`
+- Goal checker/sensor/SLAM/Nav2 params giống nhau giữa methods
 - LiDAR topic: `/scan`
-- Max range used by SLAM: `20.0 m`
-- Sensor model/update rate: giữ nguyên TurtleBot4 RPLidar simulation description.
+- SLAM max range: `20.0 m`
 
 ## Frontier policy shared by Nearest and MapEx
 
-Nearest và MapEx Hospital dùng cùng frontier-generation semantics từ `castacks/MapEx` commit `53636bd1c79153acc3c74a532837d78c926bae5e`:
+Frontier generation bám theo `castacks/MapEx` commit `53636bd1c79153acc3c74a532837d78c926bae5e`:
 
-- Observed free: ROS occupancy value `0`.
-- Unknown: ROS occupancy value `< 0`.
-- Frontier cell: free cell có ít nhất một unknown cell trong **8-neighbourhood**.
-- Frontier-region connectivity: **8-connected**.
-- Region-size threshold: giữ region khi `size > 10`.
-- Frontier representative: arithmetic mean của `(row,col)`, sau đó lấy frontier cell gần mean nhất.
-- Không dùng WFD reachable-BFS, segment split, standoff goal hoặc nearest-safe-cell substitution.
+- free: occupancy `0`;
+- unknown: occupancy `<0`;
+- frontier cell: free cell kề unknown trong 8-neighbourhood;
+- frontier regions: 8-connected;
+- giữ region khi `size > 10`;
+- representative: frontier cell gần arithmetic mean `(row,col)` của region nhất;
+- không dùng custom WFD reachable-BFS, segment split, standoff hoặc nearest-safe-cell substitution.
 
-### Hospital adaptation of MapEx `cur_pose_dist_threshold_m = 1.0`
+### Hospital adaptation of MapEx 1 m rule
 
-MapEx gốc có rule hậu-ranking: candidate đã chọn nếu cách robot `<1.0 m` thì bị loại và reselect candidate tiếp theo.
+MapEx gốc reject selected frontier nếu `<1.0 m` sau ranking. `nearest_pilot_005` cho thấy rule này deadlock ngay startup Hospital: `534` frontier cells, `1` large region, `1` representative ở `0.469 m`, candidate duy nhất bị reject trước Nav2.
 
-`nearest_pilot_005` trên Hospital xác nhận rule này gây startup deadlock: có `534` frontier cells, `1` large region, `1` representative duy nhất ở `0.469 m`; candidate duy nhất bị reject trước khi Nav2 được hỏi path. Vì đây là incompatibility giữa simulator policy và Hospital/SLAM frontier geometry, `hospital_v1` **không enforce rule 1 m**.
-
-Hospital control flow chính thức từ pilot_006 trở đi:
+Vì vậy từ pilot_006 trở đi, Hospital **không enforce 1 m rejection**:
 
 ```text
-1. detect toàn bộ MapEx frontier regions
-2. lấy representative của từng region >10
-3. score/rank toàn bộ candidate theo method hiện tại
-4. lấy candidate cost thấp nhất
-5. KHÔNG reject chỉ vì distance <1.0 m
-6. gửi candidate sang Nav2 ComputePathToPose
-7. nếu no path/rejected/error -> thử candidate có rank tiếp theo
-8. candidate có path -> NavigateToPose và lock tới goal outcome
+detect MapEx frontier regions
+→ representative
+→ score/rank
+→ giữ candidate kể cả <1m
+→ Nav2 ComputePathToPose
+→ no path/rejected/error: thử rank tiếp theo
+→ valid path: NavigateToPose
 ```
 
-Distance vẫn được log và mỗi candidate có cờ `below_1m` để audit/offline analysis.
-
-**Fairness rule:** adaptation này phải dùng giống hệt cho Nearest, MapEx original Hospital và proposed method. Không được bật lại 1 m cho một method riêng lẻ.
+`below_1m` vẫn được log để audit. Adaptation này phải giống nhau giữa Nearest, full MapEx và proposed method.
 
 ### Nearest scoring
 
@@ -107,59 +104,79 @@ cost(frontier_i) = EuclideanDistance(current_pose, frontier_center_i)
 selected = argmin(cost)
 ```
 
-Nếu Nav2 không tìm được path tới candidate hiện tại thì bỏ candidate đó và thử candidate có cost thấp tiếp theo.
+## ROS/TurtleBot4 execution adapter
 
-### ROS/TurtleBot4 execution adapter
-
-MapEx gốc dùng `pyastar2d.astar_path(..., allow_diagonal=False)`. Hospital dùng:
+MapEx simulator A* (`pyastar2d`) được thay bằng:
 
 ```text
-MapEx frontier generation + scoring
-        ↓
-Hospital adaptation: allow candidate <1 m
-        ↓
-Nav2 ComputePathToPose
-        ↓
-Nav2 NavigateToPose
+MapEx frontier generation + method-specific scoring
+→ Hospital below-1m adaptation
+→ Nav2 ComputePathToPose
+→ Nav2 NavigateToPose
 ```
 
-Goal vẫn là chính MapEx frontier-center cell; adapter không shift goal hoặc tạo standoff.
+Goal vẫn là chính frontier-center, không shift/standoff.
 
-Runtime:
-- MapEx reference adapter: `scripts/mapex_nearest_ros.py`
-- Hospital audit/visualization: `scripts/mapex_nearest_ros_hospital.py`
-- exact research logging: `scripts/mapex_nearest_ros_research.py`
-- Hospital 1 m adaptation used by launch: `scripts/mapex_nearest_ros_hospital_adapted.py`
-- navigation detail wrapper: `scripts/exploration_manager_research.py`
-- recorder: `scripts/research_recorder_safe.py`
+## Benchmark clock
 
-File `frontier_detector*.py` cũ không được dùng trong Nearest research launch.
+`time_s = 0` phải bắt đầu tại **first policy decision before computation**: sau khi map/TF/Nav2 đã ready nhưng ngay trước lần đầu chạy candidate computation.
+
+Điều này đảm bảo:
+
+- Nearest tính cả frontier-generation/ranking cost của decision đầu;
+- MapEx sau này tính cả LaMa ensemble, mean/variance, visibility, IG và ranking của decision đầu;
+- không bias Coverage-vs-time bằng cách bắt đầu clock sau khi path đã được chọn.
+
+Policy publish timestamp chính xác qua `/frontier_exploration_start`; recorder dùng timestamp đó làm `exploration_start_sim_s`.
 
 ## Required replay logging before official runs
 
-Mọi official Nearest/MapEx run phải lưu đủ dữ liệu để analysis/oracle/offline metric không cần rerun robot chỉ vì thiếu log.
-
 ### Exact policy decision state
 
-Tại mỗi decision lưu chính OccupancyGrid đã freeze để tạo/rank candidate:
-- raw OccupancyGrid values;
-- width/height/resolution/origin/frame/map timestamp;
-- exact fixed-canvas reprojection;
+Mỗi policy decision phải lưu chính frozen OccupancyGrid dùng để tính/rank candidate:
+
+- raw OccupancyGrid + width/height/resolution/origin/frame/timestamp;
+- fixed-canvas reprojection;
 - map-frame robot pose dùng cho ranking;
-- candidate-generation/ranking computation time.
+- candidate-generation computation time;
+- full candidate set/ranking/status.
 
-### Candidate-level logging
+### Exact exhausted state
 
-Mỗi decision lưu toàn bộ candidate set:
-- row/col và x/y;
-- Euclidean distance;
+Khi ranked candidate set rỗng, vẫn phải lưu một exact policy decision có map + pose + candidate audit và:
+
+```text
+outcome = exhausted_no_ranked_candidate
+```
+
+Không được chỉ dựa vào periodic/final recorder snapshot để suy ra termination state.
+
+Nếu có candidates nhưng tất cả fail Nav2 path validation, policy decision phải kết thúc bằng:
+
+```text
+outcome = no_nav2_reachable_ranked_candidate
+```
+
+### Candidate-level schema
+
+Mỗi candidate có khóa ổn định trong policy decision:
+
+```text
+policy_decision_id + candidate_id
+```
+
+và tối thiểu:
+
 - raw/policy rank;
-- `below_1m` flag (diagnostic only; không reject trong Hospital);
-- execution-suppression state;
-- Nav2 path validation result;
-- planner check time;
+- row/col, x/y;
+- distance;
+- `below_1m` (diagnostic only);
+- execution-suppressed flag;
+- Nav2 path status/timing;
 - selected flag/path length;
-- execution success/failure.
+- execution result.
+
+`decisions.csv.selected_candidate_id` phải join trực tiếp tới `candidates.csv`, không suy ra từ tọa độ.
 
 ### Navigation result detail
 
@@ -167,66 +184,65 @@ Ngoài `SUCCEEDED/FAILED`, giữ detail khi có thể: rejected, timeout, stall/
 
 ### Periodic/final map retention
 
-Recorder lưu raw + fixed-canvas snapshot định kỳ mặc định `10 s` và final map để có thể tính occupied IoU/TU và AUC offline.
+Recorder lưu raw + fixed-canvas snapshot mỗi `10 s` và final map. Các map này dùng để tính offline occupied IoU/TU/AUC khi evaluator được chốt.
 
 ### Provenance
 
-`metadata.json` phải giữ git commit, git dirty state, protocol/canvas/ROI IDs, SHA-256 của code/config chính, world/spawn và termination reason.
+`metadata.json` phải giữ:
+
+- git commit + git dirty state;
+- protocol/canvas/ROI IDs;
+- source code/config SHA-256;
+- SHA-256 của **installed runtime files thực tế** dưới package share;
+- world/spawn;
+- simulator seed policy;
+- benchmark-clock source;
+- termination reason.
+
+Official run (`nearest_001...`) phải bắt đầu từ clean git worktree.
 
 ## Exploration termination
 
 Primary termination:
-- không còn planner-reachable frontier theo Hospital policy ở trên;
+
+- không còn planner-reachable frontier theo Hospital policy;
 - stable `5` checks;
 - check period `2 s`;
 - idle ít nhất `10 s`;
 - startup grace `20 s`.
 
-Nếu trước khi mission thật sự start không tồn tại candidate Nav2-reachable thì ghi **policy failure**, không gán nhầm successful completion.
-
-## Resource budgets for secondary analysis
-
-`hospital_v1` không dùng fixed time/distance budget làm controller termination. Sau pilot có thể chọn common offline analysis window/budget từ raw logs.
-
-```text
-time_progress = time_s / fixed_time_budget_s
-distance_progress = distance_m / fixed_distance_budget_m
-```
-
-Budget báo cáo phải giống nhau giữa mọi phương pháp.
-
-## Repetition
-
-- Nearest target runs: `10`
-- MapEx target runs: `10`
-- Minimum acceptable runs before preliminary analysis: `5` per method
-- `nearest_pilot_005`: invalid for benchmark; demonstrated 1 m startup deadlock.
-- Trước official runs: chạy `nearest_pilot_006` để xác nhận motion + logging + termination với Hospital adaptation.
-- Pilot/debug không được tính vào official benchmark.
+Nếu mission chưa thật sự start và không tồn tại Nav2-reachable candidate thì ghi policy failure, không gán successful completion.
 
 ## Metrics required per run
 
-- absolute `known_fraction` vs time/distance
-- `coverage` vs time
-- `coverage` vs distance
-- total distance/time
-- number of frontier goals
-- successful/failed goals + success rate
-- termination reason
-- computation timing
-- raw/periodic maps đủ để tính occupied IoU/TU offline
+- `known_fraction` vs time/distance;
+- `coverage` vs time/distance;
+- total distance/time;
+- frontier goals attempted/succeeded/failed;
+- success rate;
+- termination reason;
+- computation timing;
+- raw maps đủ để tính occupied IoU/TU offline.
 
-MapEx additionally logs all prediction/variance/visibility/IG data defined trong `docs/DATA_SCHEMA.md`.
+MapEx thêm prediction/variance/visibility/IG/ranking data theo `docs/DATA_SCHEMA.md`.
 
-## Exploration-stage comparison rule
+## Repetition
 
-- Không kéo giãn final state của từng run thành 100% progress.
-- Primary stage axis dùng absolute `coverage` trên cùng `R_eval`.
-- Stage threshold chốt một lần sau pilot và giữ nguyên giữa methods.
-- Run kết thúc trước một stage không được normalize để tạo sample giả.
-- Tại cùng stage so time-to-stage, distance-to-stage, goal outcome, computation và diagnostic metrics; coverage chỉ là biến alignment.
+- Nearest target: `10` runs
+- MapEx target: `10` runs
+- Minimum preliminary: `5` per method
+- `nearest_pilot_005`: diagnostic deadlock pilot, không benchmark
+- `nearest_pilot_007`: pilot cuối để validate motion + final logging schema
+- Pilot/debug không tính vào official benchmark
+
+## Exploration-stage comparison
+
+- Primary stage axis: absolute `coverage` trên cùng ROI.
+- Không kéo giãn final state từng run thành 100%.
+- Stage threshold chốt một lần sau pilot.
+- Tại cùng coverage stage so time-to-stage, distance-to-stage, goal outcomes, computation và diagnostic metrics.
 - Hiệu quả tổng thể báo bằng Coverage-vs-time, Coverage-vs-distance, Coverage AUC và final coverage dưới cùng fixed budget.
 
 ## Fair-comparison rule
 
-Không được thay spawn, Nav2, SLAM, sensor, timeout, stopping condition, fixed canvas, evaluation ROI, frontier-generation semantics, Hospital below-1m adaptation hoặc resource budget giữa Nearest và MapEx mà không ghi rõ lý do và chạy lại baseline tương ứng.
+Không đổi spawn, sensor, SLAM, Nav2, timeout, stopping condition, canvas, ROI, frontier-generation semantics, Hospital below-1m adaptation, benchmark-clock definition hoặc resource budget giữa Nearest và MapEx mà không ghi rõ lý do và đánh giá lại baseline.
