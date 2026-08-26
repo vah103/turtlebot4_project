@@ -19,15 +19,16 @@
 - Chốt fixed logging canvas `hospital_canvas_v1`: 0.05 m, 1504 x 2123, origin (-25.6, -60.1).
 - Chốt định nghĩa canonical evaluation ROI `hospital_connected_free_v1`: connected structural free space từ spawn, loại obstacle, disconnected pockets, ngoài Hospital bounds và canvas padding.
 - Ghi ROI spec vào `ground_truth/hospital/roi_v1.yaml` và cập nhật `config/hospital.yaml` + `EXPERIMENT_PROTOCOL.md`.
+- Thêm `scripts/generate_hospital_roi.py` để sinh ROI mask deterministic, tính denominator + SHA-256 và cập nhật protocol/config tự động.
 
 ## In progress
 
-- Generate canonical ROI mask một lần và freeze `denominator_cells` trước run `nearest_001`.
+- Chạy ROI generator trên Ubuntu một lần và freeze `denominator_cells` trước run `nearest_001`.
 - Chốt các protocol field còn lại: timeout/stopping condition/resource budget nếu cần.
 
 ## Next actions
 
-1. Generate `hospital_connected_free_v1` mask theo `ground_truth/hospital/roi_v1.yaml` và ghi denominator cố định.
+1. Chạy `python3 mapex_hospital_research/scripts/generate_hospital_roi.py` và commit các file YAML/MD nhẹ mà script cập nhật.
 2. Chốt goal timeout, stopping condition và các field protocol còn TODO.
 3. Gán protocol version `hospital_v1` sau khi denominator đã freeze.
 4. Tạo launch mới cho Nearest baseline trong workspace này.
@@ -35,7 +36,7 @@
 
 ## Latest result
 
-Hospital full stack đã được xác nhận chạy bình thường. Fixed logging canvas và định nghĩa canonical ROI đã được chốt; chưa bắt đầu benchmark. ROI denominator vẫn phải được generate/freeze trước `nearest_001`.
+Hospital full stack đã được xác nhận chạy bình thường. Fixed logging canvas, định nghĩa canonical ROI và ROI generator đã được chốt; chưa bắt đầu benchmark. ROI denominator vẫn phải được generate/freeze trên Ubuntu trước `nearest_001`.
 
 ## Important decisions
 
