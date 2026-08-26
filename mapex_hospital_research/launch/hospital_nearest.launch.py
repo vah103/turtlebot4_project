@@ -6,7 +6,7 @@ Run directly from the repository after sourcing ROS/workspace setup:
     /usr/bin/python3 mapex_hospital_research/launch/hospital_nearest.launch.py
 
 The frontier policy comes from castacks/MapEx commit
-53636bd1c79153acc3c74a532837d78c926bae5e.  Only the original grid-simulator
+53636bd1c79153acc3c74a532837d78c926bae5e. Only the original grid-simulator
 A* execution layer is replaced by Nav2 for TurtleBot4 Hospital execution.
 """
 
@@ -31,12 +31,11 @@ from launch.events import Shutdown
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
-from launch_ros.parameter_descriptions import ParameterValue
 
 
 WORKSPACE = Path(__file__).resolve().parents[1]
-RECORDER = WORKSPACE / "scripts" / "research_recorder.py"
-MAPEX_NEAREST = WORKSPACE / "scripts" / "mapex_nearest_ros.py"
+RECORDER = WORKSPACE / "scripts" / "research_recorder_safe.py"
+MAPEX_NEAREST = WORKSPACE / "scripts" / "mapex_nearest_ros_hospital.py"
 EXPLORATION_START_DELAY_S = 30.0
 
 
@@ -112,7 +111,7 @@ def generate_launch_description() -> LaunchDescription:
 
     return LaunchDescription(
         [
-            DeclareLaunchArgument("run_id", default_value="nearest_pilot_001"),
+            DeclareLaunchArgument("run_id", default_value="nearest_pilot_002"),
             DeclareLaunchArgument("use_rviz", default_value="True"),
             DeclareLaunchArgument("headless", default_value="False"),
             recorder,
