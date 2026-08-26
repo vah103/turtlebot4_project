@@ -7,6 +7,7 @@ implementation:
     - scripts/sim_utils.py
     - scripts/explore.py
   ros_adapter: mapex_hospital_research/scripts/mapex_nearest_ros.py
+  hospital_runtime_wrapper: mapex_hospital_research/scripts/mapex_nearest_ros_hospital.py
 
 frontier:
   detector: mapex_official_frontier_rule
@@ -17,11 +18,14 @@ frontier:
   region_size_threshold_cells: 10
   keep_region_rule: strictly_greater_than_threshold
   representative_rule: region_cell_closest_to_arithmetic_mean_row_col
-  min_selection_distance_m: 1.0
 
 selection:
   rule: minimum_euclidean_distance_to_frontier_center
   distance_metric: euclidean_grid_distance
+  cur_pose_dist_threshold_m: 1.0
+  cur_pose_distance_semantics: applied_after_ranking_as_locked_frontier_validity_check
+  reject_candidate_when_distance_less_than_m: 1.0
+  reject_then_try_next_ranked_candidate: true
   lock_selected_frontier_until_goal_outcome: true
   no_path_rule: remove_current_candidate_and_try_next_lowest_cost
 
@@ -46,6 +50,6 @@ termination:
   startup_grace_s: 20.0
 
 runs:
-  pilot_run_id: nearest_pilot_001
+  pilot_run_id: nearest_pilot_003
   target_count: 10
   minimum_for_preliminary_analysis: 5
