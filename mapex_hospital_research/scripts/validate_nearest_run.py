@@ -31,6 +31,18 @@ def as_float(value: str, label: str, errors: list[str]) -> float | None:
         return None
 
 
+def as_count(value: str, label: str, errors: list[str]) -> int | None:
+    try:
+        parsed = int(float(value))
+    except Exception:  # noqa: BLE001
+        errors.append(f"invalid count value for {label}: {value!r}")
+        return None
+    if parsed < 0:
+        errors.append(f"negative count for {label}: {parsed}")
+        return None
+    return parsed
+
+
 def check_npz(path: Path, errors: list[str], *, canvas: bool = False) -> None:
     if not path.exists():
         errors.append(f"missing snapshot file: {path}")
@@ -238,16 +250,111 @@ def main() -> int:
     if termination and not any(row.get("event") == "final" for row in snapshots):
         errors.append("terminated run has no final recorder snapshot")
 
+    terminal_audit_ok = False
     if termination and policy_decisions:
         terminal_outcomes = {
             "exhausted_no_ranked_candidate",
             "no_nav2_reachable_ranked_candidate",
         }
-        if not any(row.get("outcome") in terminal_outcomes for row in policy_decisions):
-            warnings.append(
-                "terminated run has no explicit exhausted/no-Nav2-reachable policy state; "
-                "inspect termination_reason if this was an interruption/policy error"
+        terminal_rows = [
+            row for row in policy_decisions if row.get("outcome") in terminal_outcomes
+        ]
+        if not terminal_rows:
+            message = (
+                "terminated run has no explicit exhausted/no-Nav2-reachable policy state"
             )
+            if official:
+                errors.append(message)
+            else:
+                warnings.append(
+                    message + "; inspect termination_reason if this was an older pilot"
+                )
+        else:
+            terminal = terminal_rows[-1]
+            pid = terminal.get("policy_decision_id", "")
+            outcome = terminal.get("outcome", "")
+            if outcome == "exhausted_no_ranked_candidate":
+                reason = terminal.get("terminal_reason", "")
+                if reason and reason != "zero_ranked_candidates":
+                    errors.append(f"{pid}: unexpected terminal_reason={reason!r}")
+                terminal_audit_ok = True
+            else:
+                required_terminal_fields = [
+                    "nav2_checked_count",
+                    "nav2_path_success_count",
+                    "nav2_no_path_count",
+                    "nav2_rejected_count",
+                    "nav2_error_count",
+                    "terminal_reason",
+                ]
+                missing = [
+                    field for field in required_terminal_fields if terminal.get(field, "") == ""
+                ]
+                if missing:
+                    message = f"{pid}: terminal Nav2 audit missing {', '.join(missing)}"
+                    if official:
+                        errors.append(message)
+                    else:
+                        warnings.append(message + " (older pilot schema)")
+                else:
+                    candidate_count = as_count(
+                        terminal.get("candidate_count", ""),
+                        f"{pid} candidate_count",
+                        errors,
+                    )
+                    checked = as_count(
+                        terminal.get("nav2_checked_count", ""),
+                        f"{pid} nav2_checked_count",
+                        errors,
+                    )
+                    success = as_count(
+                        terminal.get("nav2_path_success_count", ""),
+                        f"{pid} nav2_path_success_count",
+                        errors,
+                    )
+                    no_path = as_count(
+                        terminal.get("nav2_no_path_count", ""),
+                        f"{pid} nav2_no_path_count",
+                        errors,
+                    )
+                    rejected = as_count(
+                        terminal.get("nav2_rejected_count", ""),
+                        f"{pid} nav2_rejected_count",
+                        errors,
+                    )
+                    nav_errors = as_count(
+                        terminal.get("nav2_error_count", ""),
+                        f"{pid} nav2_error_count",
+                        errors,
+                    )
+                    if None not in {
+                        candidate_count,
+                        checked,
+                        success,
+                        no_path,
+                        rejected,
+                        nav_errors,
+                    }:
+                        expected_checked = success + no_path + rejected + nav_errors
+                        if checked != expected_checked:
+                            errors.append(
+                                f"{pid}: nav2_checked_count={checked} != "
+                                f"outcome sum={expected_checked}"
+                            )
+                        if candidate_count != checked:
+                            errors.append(
+                                f"{pid}: terminal candidate_count={candidate_count} != "
+                                f"nav2_checked_count={checked}"
+                            )
+                        if success != 0:
+                            errors.append(
+                                f"{pid}: no_nav2_reachable terminal state has "
+                                f"nav2_path_success_count={success}"
+                            )
+                    reason = terminal.get("terminal_reason", "")
+                    if reason != "all_ranked_candidates_failed_nav2_path_validation":
+                        errors.append(f"{pid}: unexpected terminal_reason={reason!r}")
+                    terminal_audit_ok = True
 
     if errors:
         print("NEAREST RUN VALIDATION: FAIL")
@@ -269,6 +376,8 @@ def main() -> int:
     print("- benchmark t=0: pre-compute")
     print("- Hospital below-1m adaptation: consistent")
     print("- candidate linkage + snapshot integrity: OK")
+    if terminal_audit_ok:
+        print("- terminal Nav2 audit: OK")
     print("- provenance: OK")
     if warnings:
         print("Warnings:")
