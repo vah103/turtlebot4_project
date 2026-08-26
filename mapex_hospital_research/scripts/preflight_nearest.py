@@ -16,9 +16,12 @@ FILES = [
     WORKSPACE / "scripts" / "mapex_nearest_ros_hospital.py",
     WORKSPACE / "scripts" / "mapex_nearest_ros_research.py",
     WORKSPACE / "scripts" / "mapex_nearest_ros_hospital_adapted.py",
+    WORKSPACE / "scripts" / "mapex_nearest_ros_official.py",
     WORKSPACE / "scripts" / "research_recorder.py",
     WORKSPACE / "scripts" / "research_recorder_safe.py",
+    WORKSPACE / "scripts" / "research_recorder_official.py",
     WORKSPACE / "scripts" / "exploration_manager_research.py",
+    WORKSPACE / "scripts" / "validate_nearest_run.py",
     WORKSPACE / "launch" / "hospital_nearest.launch.py",
 ]
 
@@ -53,49 +56,41 @@ def main() -> int:
             errors.append(f"syntax error: {path.relative_to(REPO_ROOT)}: {exc}")
 
     if not ROI.exists():
-        errors.append(
-            "missing frozen ROI: run scripts/generate_hospital_roi.py before the pilot"
-        )
+        errors.append("missing frozen ROI")
     else:
         actual = sha256(ROI)
         if actual != ROI_EXPECTED_SHA256:
-            errors.append(
-                "ROI SHA-256 mismatch: "
-                f"{actual} != {ROI_EXPECTED_SHA256}"
-            )
+            errors.append(f"ROI SHA-256 mismatch: {actual} != {ROI_EXPECTED_SHA256}")
 
-    base_policy = WORKSPACE / "scripts" / "mapex_nearest_ros.py"
-    adapted_policy = WORKSPACE / "scripts" / "mapex_nearest_ros_hospital_adapted.py"
-    research_policy = WORKSPACE / "scripts" / "mapex_nearest_ros_research.py"
-    recorder = WORKSPACE / "scripts" / "research_recorder_safe.py"
     launch = WORKSPACE / "launch" / "hospital_nearest.launch.py"
+    official_policy = WORKSPACE / "scripts" / "mapex_nearest_ros_official.py"
+    adapted_policy = WORKSPACE / "scripts" / "mapex_nearest_ros_hospital_adapted.py"
+    official_recorder = WORKSPACE / "scripts" / "research_recorder_official.py"
+    validator = WORKSPACE / "scripts" / "validate_nearest_run.py"
+    protocol = WORKSPACE / "EXPERIMENT_PROTOCOL.md"
+    schema = WORKSPACE / "docs" / "DATA_SCHEMA.md"
 
     checks = [
-        (base_policy, "The 1 m rule is intentionally NOT applied here"),
-        (base_policy, "MapEx locked-frontier validity rejected candidate <1.0 m"),
-        (adapted_policy, "NOT enforced"),
-        (adapted_policy, "checking_nav2_below_1m_allowed"),
+        (launch, "mapex_nearest_ros_official.py"),
+        (launch, "research_recorder_official.py"),
         (adapted_policy, "Hospital adaptation allowing ranked frontier below 1 m"),
-        (research_policy, "observed_map_raw.npz"),
-        (research_policy, "candidates.csv"),
-        (recorder, "PERIODIC_MAP_INTERVAL_S = 10.0"),
-        (recorder, "policy_decision_id"),
-        (launch, "mapex_nearest_ros_hospital_adapted.py"),
-        (launch, "exploration_manager_research.py"),
+        (official_policy, "first_policy_decision_before_compute"),
+        (official_policy, "exhausted_no_ranked_candidate"),
+        (official_policy, "candidate_id"),
+        (official_recorder, "frontier_exploration_start"),
+        (official_recorder, "installed_hospital_world"),
+        (official_recorder, "intentionally_uncontrolled_gazebo_default"),
+        (validator, "selected_candidate_id"),
+        (validator, "exhausted_no_ranked_candidate"),
+        (protocol, "first policy decision before computation"),
+        (protocol, "intentionally uncontrolled"),
+        (schema, "below_1m is diagnostic only"),
     ]
     for path, needle in checks:
         if path.exists() and needle not in path.read_text(encoding="utf-8"):
             errors.append(
-                f"runtime invariant missing in {path.relative_to(REPO_ROOT)}: {needle}"
+                f"runtime/protocol invariant missing in {path.relative_to(REPO_ROOT)}: {needle}"
             )
-
-    # The base adapter remains a faithful MapEx reference, but the Hospital launch
-    # must go through the explicit adaptation wrapper so below-1m candidates are
-    # allowed instead of being rejected before Nav2.
-    if launch.exists():
-        text = launch.read_text(encoding="utf-8")
-        if "mapex_nearest_ros_hospital_adapted.py" not in text:
-            errors.append("Hospital launch is not using the below-1m adaptation wrapper")
 
     if errors:
         print("NEAREST PREFLIGHT: FAIL")
@@ -106,11 +101,13 @@ def main() -> int:
     print("NEAREST PREFLIGHT: PASS")
     print("- Python syntax: OK")
     print("- Frozen ROI SHA-256: OK")
-    print("- original MapEx 1 m rule retained in reference adapter")
     print("- Hospital below-1m bypass: ACTIVE")
-    print("- exact decision-map/candidate logging: present")
-    print("- periodic/final replay snapshots: present")
-    print("- detailed navigation-result logging: present")
+    print("- benchmark t=0 before first policy compute: ACTIVE")
+    print("- exact exhausted/no-candidate logging: ACTIVE")
+    print("- stable candidate_id linkage: ACTIVE")
+    print("- installed runtime provenance hashing: ACTIVE")
+    print("- simulator seed policy: intentionally uncontrolled + repeated runs")
+    print("- strict post-run validator: present")
     return 0
 
 
