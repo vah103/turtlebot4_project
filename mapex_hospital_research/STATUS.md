@@ -11,7 +11,9 @@
 - Tạo cấu trúc lưu code, config, experiment, result và tài liệu handoff.
 - Chốt semantic của `known_fraction` và `coverage` trong `docs/DATA_SCHEMA.md`.
 - Sửa stage analysis để không normalize final state riêng của từng run thành 100%.
+- Làm rõ same-stage comparison: tại cùng coverage stage, coverage là biến alignment; so time/distance-to-stage, goal outcomes và diagnostic metrics thay vì so coverage với coverage.
 - Thiết lập workflow báo cáo teacher-facing: repo là source of evidence; Google Docs `TurtleBot4` → tab `Báo cáo nghiên cứu MapEx Hospital` là báo cáo chính cho giảng viên.
+- Ghi cố định Google Doc ID và report tab ID trong `docs/TEACHER_REPORT.md` để tránh chọn nhầm file trùng tên.
 - Thêm `docs/TEACHER_REPORT.md` và quy tắc agent phải cập nhật báo cáo sau milestone có kết quả đã xác minh.
 
 ## In progress
@@ -32,7 +34,7 @@
 
 ## Latest result
 
-Chưa có run nghiên cứu mới. Metric/stage definitions đã được làm rõ và workflow báo cáo cho giảng viên đã được chuẩn hóa trước khi bắt đầu thu dữ liệu benchmark.
+Chưa có run nghiên cứu mới. Metric/stage definitions, same-stage comparison semantics và workflow báo cáo cho giảng viên đã được làm rõ trước khi bắt đầu thu dữ liệu benchmark.
 
 ## Important decisions
 
@@ -43,6 +45,8 @@ Chưa có run nghiên cứu mới. Metric/stage definitions đã được làm r
 - `known_fraction` là progress/debugging proxy trên fixed logging canvas, denominator cố định.
 - `coverage` là exploration metric chính trên canonical evaluation ROI, denominator cố định.
 - Stage chính dùng absolute exploration state; không kéo giãn final state của từng run thành 100%.
+- Tại cùng coverage stage, coverage chỉ dùng để căn chỉnh trạng thái; so time/distance-to-stage, goal outcomes và các diagnostic metrics.
+- Overall exploration efficiency báo riêng bằng Coverage-vs-time, Coverage-vs-distance, AUC và final coverage dưới cùng fixed budget.
 - Có thể phân tích phụ theo normalized time/distance progress nhưng phải dùng common fixed budgets.
 - Google Docs teacher report chỉ nhận kết quả đã xác minh; pilot/debug không được trình bày như kết quả chính thức.
 - Dữ liệu nặng không commit lên GitHub.
