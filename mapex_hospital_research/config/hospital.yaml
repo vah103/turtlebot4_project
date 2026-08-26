@@ -1,43 +1,43 @@
 experiment:
   protocol_version: null
-  world: hospital
+  world: hospital_flat
   robot: turtlebot4
   use_sim_time: true
   spawn:
-    x: null
-    y: null
-    yaw: null
-  map_resolution_m: null
+    x: 0.0
+    y: 12.0
+    yaw: -1.57
+  map_resolution_m: 0.05
   goal_timeout_s: null
   stopping_condition: null
   random_seed: null
 
 slam:
-  launch_or_config: null
+  launch_or_config: ros2_ws/src/frontier_exploration/config/hospital_slam.yaml
 
 nav2:
-  launch_or_config: null
+  launch_or_config: ros2_ws/src/frontier_exploration/launch/hospital_nav2.launch.py + config/nav2_hospital_override.yaml
 
 sensor:
-  lidar_topic: null
-  max_range_m: null
+  lidar_topic: /scan
+  max_range_m: 20.0
 
 fixed_logging_canvas:
-  id: null
-  resolution_m: null
-  width_cells: null
-  height_cells: null
-  origin_x_m: null
-  origin_y_m: null
-  frame: null
-  alignment_rule: null
+  id: hospital_canvas_v1
+  resolution_m: 0.05
+  width_cells: 1504
+  height_cells: 2123
+  origin_x_m: -25.6
+  origin_y_m: -60.1
+  frame: slam_start_map
+  alignment_rule: reproject every SLAM snapshot onto this fixed grid; never crop dynamically
 
 canonical_evaluation_roi:
-  id: null
-  source_or_mask: null
-  alignment_rule: null
-  valid_cell_rule: null
-  excluded_cell_rule: null
+  id: hospital_connected_free_v1
+  source_or_mask: mapex_hospital_research/ground_truth/hospital/roi_v1.yaml
+  alignment_rule: same 0.05 m fixed canvas, origin and SLAM-start frame as hospital_canvas_v1
+  valid_cell_rule: 8-connected structural free-space component containing the robot start after wall mesh + flat elevator blockers are rasterized and one-cell cracks are closed
+  excluded_cell_rule: obstacles, disconnected free pockets, cells outside fixed Hospital bounds, and fixed-canvas safety padding
   denominator_cells: null
 
 resource_budget:
