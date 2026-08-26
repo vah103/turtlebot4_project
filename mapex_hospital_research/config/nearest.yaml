@@ -32,17 +32,27 @@ selection:
   hospital_distance_adaptation_reason: nearest_pilot_005_startup_deadlock_single_ranked_center_at_0.469m
   below_1m_candidate_rule: keep_rank_and_send_to_nav2_compute_path_to_pose
   lock_selected_frontier_until_goal_outcome: true
-  no_path_rule: remove_current_candidate_and_try_next_lowest_cost
+  no_path_rule: transient_revalidate_same_ranked_set_before_completion
 
 execution_adapter:
   original_mapex_local_planner: pyastar2d_astar_allow_diagonal_false
   hospital_local_planner: nav2_compute_path_to_pose
   hospital_executor: nav2_navigate_to_pose
   planner_goal_tolerance_m: 0.0
+  planner_action_requires_status_succeeded: true
   planner_path_semantics: reachability_evidence_only
-  navigate_goal_source: exact_frontier_center
+  selected_path_length_semantics: planner_validation_path_length_not_executed_trajectory
+  navigate_goal_source: exact_frontier_center_xy
+  frontier_goal_position_only: true
+  frontier_goal_yaw_semantics: ignored_by_hospital_goal_checker
+  goal_checker_yaw_tolerance_rad: 3.141592653589793
+  goal_angle_critic_enabled: false
   frontier_goal_is_shifted_or_standoff: false
   planner_endpoint_is_execution_goal: false
+  planner_revalidation_period_s: 2.0
+  execution_failure_suppression_radius_m: 0.25
+  execution_failure_cooldown_s: 30.0
+  execution_failure_is_permanent: false
   source_code_quirk: MapEx base.yaml sets unknown_as_occ=true, but sim_utils.get_inflated_planning_maps() hard-codes unknown_as_occ=false. Hospital does not reproduce this simulator-specific planner inconsistency; Nearest and MapEx use the same Nav2 execution adapter.
 
 mapping_profile:
@@ -53,7 +63,7 @@ mapping_profile:
   slam_minimum_time_interval_s: 0.15
   slam_max_laser_range_m: 20.0
   loop_closure_thresholds_changed_for_pilot_009: false
-  reason: nearest_pilot_008_showed_visible_long_run_map_warping_at_0.75mps_and_0.20m_0.20rad_keyframes
+  no_loop_ab_profile_matches_active_keyframe_spacing: true
 
 benchmark_clock:
   start_event: first_policy_decision_before_compute
@@ -71,15 +81,19 @@ logging:
   candidate_below_1m_flag: true
   candidate_below_1m_is_rejected: false
   nav2_path_validation_status: true
+  nav2_action_status: true
   planner_timing_ms: true
   selected_path_length: true
   planner_endpoint_audit: true
   planner_endpoint_to_frontier_m: true
   exact_execution_goal_audit: true
+  goal_yaw_semantics_audit: true
   navigation_result_detail: true
   periodic_map_interval_s: 10.0
   final_map_snapshot: true
   source_and_installed_runtime_sha256_in_metadata: true
+  archive_nav2_base_params: true
+  archive_effective_merged_nav2_yaml: true
 
 reproducibility:
   simulator_seed_policy: intentionally_uncontrolled_gazebo_default_multiple_run_statistics
@@ -100,9 +114,17 @@ termination:
   check_period_s: 2.0
   min_idle_s: 10.0
   startup_grace_s: 20.0
+  nonempty_frontier_requires_planner_revalidation_each_stable_cycle: true
   exact_terminal_policy_state_required: true
 
+validation:
+  data_integrity_checks: true
+  experiment_health_checks: true
+  success_without_motion_guard: true
+  effective_nav2_config_check: true
+  terminal_revalidation_audit: true
+
 runs:
-  pilot_run_id: nearest_pilot_009
+  pilot_run_id: nearest_pilot_010
   target_count: 10
   minimum_for_preliminary_analysis: 5
