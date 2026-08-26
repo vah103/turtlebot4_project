@@ -31,14 +31,13 @@ Nếu sau này thêm fixed seed thì đó là thay đổi protocol và baseline 
 - SLAM: `slam_toolbox` với `hospital_slam.yaml`
 - Resolution: `0.05 m/cell`
 - Map frame: `map`
-- LiDAR topic: `/scan`
-- SLAM max range: `20.0 m`
-- `minimum_travel_distance`: **`0.10 m`**
-- `minimum_travel_heading`: **`0.10 rad`**
-- `minimum_time_interval`: `0.15 s`
-- loop-closure/matcher thresholds giữ nguyên so với profile trước pilot_009.
+- Mapping speed cap: `0.45 m/s`
+- `minimum_travel_distance = 0.10 m`
+- `minimum_travel_heading = 0.10 rad`
+- `minimum_time_interval = 0.15 s`
+- LiDAR max range dùng bởi SLAM: `20 m`
 
-`nearest_pilot_008` cho thấy map bị warp rõ trong long autonomous run với profile cũ `0.75 m/s` + `0.20 m / 0.20 rad`. Trước official runs, `hospital_v1` chốt profile ổn định hơn: giảm tốc và tăng mật độ scan graph, nhưng **không nới loop-closure thresholds** để tránh che drift bằng false closures trong hành lang lặp lại.
+`hospital_slam_no_loop.yaml` phải giống active profile về scan/keyframe parameters và chỉ khác ở `do_loop_closing=false` + debug logging, để A/B test loop closure không bị confound bởi keyframe spacing.
 
 ### Fixed logging canvas
 
@@ -68,16 +67,25 @@ ROI/canvas không được đổi giữa Nearest, MapEx và proposed method tron
 ## Navigation
 
 - Nav2: `hospital_nav2.launch.py` + `nav2_hospital_override.yaml`
-- Maximum linear speed: **`0.45 m/s`**
-- Maximum angular speed: `1.0 rad/s`
-- `GridBased` planner goal tolerance: **`0.0 m`**
+- Maximum speed: `0.45 m/s`
+- `GridBased` planner tolerance: `0.0 m`
 - Hard timeout per goal: `180 s`
 - Stall timeout: `30 s`
-- Goal checker/sensor/SLAM/Nav2 params giống nhau giữa methods
+- LiDAR topic: `/scan`
 
-Planner tolerance `0.0 m` là một phần của `hospital_v1`: candidate chỉ được coi là planner-reachable khi Nav2 lập được path tới exact selected frontier cell. Không dùng tolerance `0.5 m` để snap sang điểm gần hơn.
+### Position-only frontier goal semantics
 
-Mapping speed `0.45 m/s` cũng là một phần của `hospital_v1` từ pilot_009 trở đi. Nó được áp dụng giống nhau cho Nearest, full MapEx và proposed method; không được tăng riêng cho một method.
+MapEx frontier là một **position-only** target `(x,y)`. Frontier policy không định nghĩa terminal yaw.
+
+Vì vậy Hospital execution phải đảm bảo:
+
+- exact frontier `x/y` là execution position;
+- không ép frontier thành `(x,y,yaw=0)`;
+- `general_goal_checker.yaw_goal_tolerance = pi`;
+- `FollowPath.GoalAngleCritic.enabled = false`;
+- quaternion trong request chỉ là neutral orientation seed, không phải policy objective.
+
+`xy_goal_tolerance` của Nav2 vẫn được giữ theo base Nav2 config; chỉ final yaw constraint bị vô hiệu hóa.
 
 ## Frontier policy shared by Nearest and MapEx
 
@@ -95,17 +103,17 @@ Frontier generation bám theo `castacks/MapEx` commit `53636bd1c79153acc3c74a532
 
 MapEx gốc reject selected frontier nếu `<1.0 m` sau ranking. `nearest_pilot_005` cho thấy rule này deadlock ngay startup Hospital: `534` frontier cells, `1` large region, `1` representative ở `0.469 m`, candidate duy nhất bị reject trước Nav2.
 
-Vì vậy từ pilot_006 trở đi, Hospital **không enforce 1 m rejection**:
+Vì vậy Hospital **không enforce 1 m rejection**:
 
 ```text
 detect MapEx frontier regions
 → representative
 → score/rank
 → giữ candidate kể cả <1m
-→ Nav2 ComputePathToPose với planner tolerance 0.0 m
-→ no path/rejected/error: thử rank tiếp theo
-→ valid path: giữ exact frontier center làm execution goal
-→ NavigateToPose(exact frontier center)
+→ Nav2 ComputePathToPose
+→ chỉ accept nếu action status == SUCCEEDED và path non-empty
+→ valid path: giữ exact frontier x/y làm execution position
+→ NavigateToPose(exact frontier x/y, yaw unconstrained)
 ```
 
 `below_1m` vẫn được log để audit. Adaptation này phải giống nhau giữa Nearest, full MapEx và proposed method.
@@ -125,37 +133,42 @@ MapEx simulator A* (`pyastar2d`) được thay bằng:
 MapEx frontier generation + method-specific scoring
 → Hospital below-1m adaptation
 → Nav2 ComputePathToPose(tolerance=0.0 m)
-→ path tồn tại? dùng làm reachability evidence
-→ Nav2 NavigateToPose(exact frontier center)
+→ require action STATUS_SUCCEEDED + non-empty path
+→ path dùng như reachability evidence
+→ Nav2 NavigateToPose(exact frontier x/y; final yaw ignored)
 ```
 
-**Execution-goal invariant:** endpoint cuối của `ComputePathToPose` không được dùng thay cho frontier center. `hospital_v1` dùng planner tolerance `0.0 m`, nhưng vẫn log endpoint để audit. Goal thực thi phải lấy từ `/frontier_selected` và có `x/y` trùng exact MapEx frontier center.
+**Execution-goal invariant:** endpoint cuối của `ComputePathToPose` không được dùng thay cho frontier center. Goal thực thi phải có `x/y` trùng exact MapEx frontier center. Path endpoint chỉ là diagnostic/reachability evidence.
 
 Recorder phải giữ riêng:
 
 ```text
 frontier_x/frontier_y              = exact MapEx frontier center
-goal_x/goal_y                      = actual NavigateToPose goal
-planner_endpoint_x/y               = last pose of ComputePathToPose path
+goal_x/goal_y                      = actual NavigateToPose position
+planner_endpoint_x/y               = last pose of validation path
 planner_endpoint_to_frontier_m     = audit only
 goal_source                        = exact_frontier_center
+goal_yaw_semantics                 = ignored_by_hospital_goal_checker
 ```
 
-`goal_x/y` phải trùng `frontier_x/y` trong official runs. Path endpoint chỉ là diagnostic/reachability evidence, không phải nearest-safe-cell substitution hay standoff goal.
+`selected_path_length_m` là **planner validation path length**, không phải quãng đường robot thực thi thực tế. Quãng đường thực tế lấy từ odometry/trajectory.
 
-`nearest_pilot_007` đã phát hiện bug adapter cũ: planner endpoint bị snap khoảng `0.5 m` theo tolerance và manager gửi endpoint đó thay vì exact frontier, làm Nav2 báo success khi robot gần như không di chuyển. Các run dùng semantics cũ không được tính là official benchmark.
+## Planner revalidation and execution failures
 
-`nearest_pilot_008` xác nhận exact-frontier execution/logging đã hoạt động nhưng đồng thời lộ ra vấn đề khác: map occupancy bị warp trong long run. Vì vậy pilot_008 cũng chỉ là diagnostic. `nearest_pilot_009` là stability pilot đầu tiên dùng mapping profile chính thức `0.45 m/s` + `0.10 m / 0.10 rad` trước khi khóa official runs.
+Một lần `ComputePathToPose` no-path/rejected/error không được coi là bằng chứng vĩnh viễn trong hệ ROS online.
+
+- stable non-empty ranked candidate set phải chạy **planner revalidation** mỗi `2 s` trước khi tăng completion streak;
+- completion cần `5` validated exhausted sweeps trên stable set;
+- nếu map/frontier set thay đổi, completion window reset;
+- planner-valid frontier nhưng `NavigateToPose` execution fail chỉ bị suppress tạm thời trong bán kính `0.25 m` trong `30 s`;
+- execution failure không được biến planner-reachable frontier thành permanent unreachable;
+- một navigation success xóa các temporary execution-failure cooldown cũ.
 
 ## Benchmark clock
 
-`time_s = 0` phải bắt đầu tại **first policy decision before computation**: sau khi map/TF/Nav2 đã ready nhưng ngay trước lần đầu chạy candidate computation.
+`time_s = 0` bắt đầu tại **first policy decision before computation**: sau khi map/TF/Nav2 ready nhưng ngay trước lần đầu candidate computation.
 
-Điều này đảm bảo:
-
-- Nearest tính cả frontier-generation/ranking cost của decision đầu;
-- MapEx sau này tính cả LaMa ensemble, mean/variance, visibility, IG và ranking của decision đầu;
-- không bias Coverage-vs-time bằng cách bắt đầu clock sau khi path đã được chọn.
+Điều này đảm bảo Nearest tính cả frontier-generation/ranking cost đầu tiên và MapEx sau này tính cả LaMa/visibility/IG cost đầu tiên.
 
 Policy publish timestamp chính xác qua `/frontier_exploration_start`; recorder dùng timestamp đó làm `exploration_start_sim_s`.
 
@@ -163,33 +176,34 @@ Policy publish timestamp chính xác qua `/frontier_exploration_start`; recorder
 
 ### Exact policy decision state
 
-Mỗi policy decision phải lưu chính frozen OccupancyGrid dùng để tính/rank candidate:
+Mỗi policy decision phải lưu:
 
 - raw OccupancyGrid + width/height/resolution/origin/frame/timestamp;
 - fixed-canvas reprojection;
 - map-frame robot pose dùng cho ranking;
 - candidate-generation computation time;
-- full candidate set/ranking/status.
+- full candidate set/ranking/status;
+- Nav2 action status cho mỗi planner check.
 
 ### Exact exhausted state
 
-Khi ranked candidate set rỗng, vẫn phải lưu một exact policy decision có map + pose + candidate audit và:
+Khi ranked candidate set rỗng:
 
 ```text
 outcome = exhausted_no_ranked_candidate
 ```
 
-Không được chỉ dựa vào periodic/final recorder snapshot để suy ra termination state.
-
-Nếu có candidates nhưng tất cả fail Nav2 path validation, policy decision phải kết thúc bằng:
+Nếu có candidates nhưng cả planner sweep fail:
 
 ```text
 outcome = no_nav2_reachable_ranked_candidate
 ```
 
+Non-empty completion phải có repeated terminal decisions từ planner revalidation, không chỉ lặp một cached no-path signature.
+
 ### Candidate-level schema
 
-Mỗi candidate có khóa ổn định trong policy decision:
+Mỗi candidate có khóa ổn định:
 
 ```text
 policy_decision_id + candidate_id
@@ -200,34 +214,26 @@ và tối thiểu:
 - raw/policy rank;
 - row/col, x/y;
 - distance;
-- `below_1m` (diagnostic only);
+- `below_1m`;
 - execution-suppressed flag;
-- Nav2 path status/timing;
+- Nav2 action status + path status/timing;
 - selected flag/path length;
 - execution result.
 
-`decisions.csv.selected_candidate_id` phải join trực tiếp tới `candidates.csv`, không suy ra từ tọa độ.
-
-### Navigation result detail
-
-Ngoài `SUCCEEDED/FAILED`, giữ detail khi có thể: rejected, timeout, stall/no-progress, Nav2 status/result error. Detail phải gắn với exact frontier execution goal, không với planner endpoint.
+`decisions.csv.selected_candidate_id` phải join trực tiếp tới `candidates.csv`.
 
 ### Periodic/final map retention
 
-Recorder lưu raw + fixed-canvas snapshot mỗi `10 s` và final map. Các map này dùng để tính offline occupied IoU/TU/AUC khi evaluator được chốt.
+Recorder lưu raw + fixed-canvas snapshot mỗi `10 s` và final map.
 
-### Provenance
+### Effective runtime provenance
 
-`metadata.json` phải giữ:
+Mỗi run phải hash source/installed runtime files và ayrıca lưu:
 
-- git commit + git dirty state;
-- protocol/canvas/ROI IDs;
-- source code/config SHA-256;
-- SHA-256 của **installed runtime files thực tế** dưới package share;
-- world/spawn;
-- simulator seed policy;
-- benchmark-clock source;
-- termination reason.
+- base `/opt/ros/.../nav2_bringup/params/nav2_params.yaml` hash;
+- `runtime_nav2_merged.yaml` là effective base+Hospital override dùng cho run;
+- hash của merged YAML;
+- world/spawn, seed policy, benchmark clock source, termination reason.
 
 Official run (`nearest_001...`) phải bắt đầu từ clean git worktree.
 
@@ -236,8 +242,8 @@ Official run (`nearest_001...`) phải bắt đầu từ clean git worktree.
 Primary termination:
 
 - không còn planner-reachable frontier theo Hospital policy;
-- stable `5` checks;
-- check period `2 s`;
+- non-empty stable set được planner revalidate mỗi `2 s`;
+- stable `5` exhausted sweeps;
 - idle ít nhất `10 s`;
 - startup grace `20 s`.
 
@@ -247,34 +253,27 @@ Nếu mission chưa thật sự start và không tồn tại Nav2-reachable cand
 
 - `known_fraction` vs time/distance;
 - `coverage` vs time/distance;
-- total distance/time;
+- total odometry distance/time;
 - frontier goals attempted/succeeded/failed;
 - success rate;
 - termination reason;
 - computation timing;
 - raw maps đủ để tính occupied IoU/TU offline.
 
-MapEx thêm prediction/variance/visibility/IG/ranking data theo `docs/DATA_SCHEMA.md`.
+Validator phải tách **data/protocol integrity** khỏi **experiment health** và phát hiện tối thiểu pathology "goal SUCCEEDED nhưng robot gần như không di chuyển".
 
 ## Repetition
 
 - Nearest target: `10` runs
 - MapEx target: `10` runs
 - Minimum preliminary: `5` per method
-- `nearest_pilot_005`: diagnostic deadlock pilot, không benchmark
-- `nearest_pilot_007`: diagnostic execution-adapter bug (tolerance-snapped path endpoint), không benchmark
-- `nearest_pilot_008`: diagnostic exact-frontier run; logging PASS nhưng map bị warp, không benchmark
-- `nearest_pilot_009`: mapping-stability pilot với `0.45 m/s`, `0.10 m`, `0.10 rad`
+- `nearest_pilot_005`: diagnostic 1 m deadlock
+- `nearest_pilot_007`: diagnostic tolerance-snapped execution-goal bug
+- `nearest_pilot_008`: exact-frontier execution check; map warping observed
+- `nearest_pilot_009`: mapping-profile/controller diagnostic; revealed artificial yaw/runtime robustness issues
+- `nearest_pilot_010`: corrected execution/revalidation/provenance validation pilot
 - Pilot/debug không tính vào official benchmark
-
-## Exploration-stage comparison
-
-- Primary stage axis: absolute `coverage` trên cùng ROI.
-- Không kéo giãn final state từng run thành 100%.
-- Stage threshold chốt một lần sau pilot.
-- Tại cùng coverage stage so time-to-stage, distance-to-stage, goal outcomes, computation và diagnostic metrics.
-- Hiệu quả tổng thể báo bằng Coverage-vs-time, Coverage-vs-distance, Coverage AUC và final coverage dưới cùng fixed budget.
 
 ## Fair-comparison rule
 
-Không đổi spawn, sensor, SLAM, Nav2, mapping speed, SLAM keyframe spacing, planner tolerance, timeout, stopping condition, canvas, ROI, frontier-generation semantics, Hospital below-1m adaptation, exact-frontier execution-goal semantics, benchmark-clock definition hoặc resource budget giữa Nearest và MapEx mà không ghi rõ lý do và đánh giá lại baseline.
+Không đổi spawn, sensor, SLAM, Nav2, planner tolerance, timeout, stopping condition, canvas, ROI, frontier-generation semantics, Hospital below-1m adaptation, position-only goal semantics, planner revalidation, execution-failure cooldown, benchmark-clock definition hoặc resource budget giữa Nearest và MapEx mà không ghi rõ lý do và đánh giá lại baseline.
