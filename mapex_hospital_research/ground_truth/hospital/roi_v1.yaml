@@ -32,5 +32,7 @@ roi:
     numerator: cells in ROI that are known in the aligned SLAM map
     denominator: all cells in the frozen ROI mask
   generated_mask: mapex_hospital_research/ground_truth/hospital/generated/hospital_connected_free_v1.npy
-  denominator_cells: null
-  freeze_rule: generate once before nearest_001, record denominator_cells, then never change this mask within protocol v1; any ROI change requires a new ROI ID and baseline rerun
+  generated_metadata: mapex_hospital_research/ground_truth/hospital/generated/hospital_connected_free_v1_metadata.json
+  denominator_cells: 215435
+  mask_sha256: 05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1
+  freeze_rule: this mask is frozen for hospital_v1; any ROI change requires a new ROI ID and rerunning the corresponding baseline
