@@ -65,6 +65,7 @@ def main() -> int:
     launch = WORKSPACE / "launch" / "hospital_nearest.launch.py"
     official_policy = WORKSPACE / "scripts" / "mapex_nearest_ros_official.py"
     adapted_policy = WORKSPACE / "scripts" / "mapex_nearest_ros_hospital_adapted.py"
+    research_manager = WORKSPACE / "scripts" / "exploration_manager_research.py"
     official_recorder = WORKSPACE / "scripts" / "research_recorder_official.py"
     validator = WORKSPACE / "scripts" / "validate_nearest_run.py"
     protocol = WORKSPACE / "EXPERIMENT_PROTOCOL.md"
@@ -79,15 +80,23 @@ def main() -> int:
         (official_policy, "exhausted_no_ranked_candidate"),
         (official_policy, "candidate_id"),
         (official_policy, "nav2_no_path_count"),
+        (research_manager, "EXACT FRONTIER EXECUTION ACTIVE"),
+        (research_manager, "goal_source\": \"exact_frontier_center"),
         (official_recorder, "frontier_exploration_start"),
         (official_recorder, "installed_hospital_world"),
         (official_recorder, "intentionally_uncontrolled_gazebo_default"),
+        (official_recorder, "execution_goal_semantics"),
+        (official_recorder, "planner_endpoint_to_frontier_m"),
         (validator, "selected_candidate_id"),
         (validator, "exhausted_no_ranked_candidate"),
         (validator, "terminal Nav2 audit"),
+        (validator, "exact frontier execution goal"),
         (protocol, "first policy decision before computation"),
         (protocol, "intentionally uncontrolled"),
+        (protocol, "NavigateToPose(exact frontier center)"),
         (schema, "below_1m is diagnostic only"),
+        (schema, "planner_endpoint_to_frontier_m"),
+        (schema, "goal_source=exact_frontier_center"),
     ]
     for path, needle in checks:
         if path.exists() and needle not in path.read_text(encoding="utf-8"):
@@ -105,6 +114,7 @@ def main() -> int:
     print("- Python syntax: OK")
     print("- Frozen ROI SHA-256: OK")
     print("- Hospital below-1m bypass: ACTIVE")
+    print("- exact frontier execution goal: ACTIVE")
     print("- benchmark t=0 before first policy compute: ACTIVE")
     print("- exact exhausted/no-candidate logging: ACTIVE")
     print("- terminal Nav2 audit logging: ACTIVE")
