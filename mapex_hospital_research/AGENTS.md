@@ -6,9 +6,13 @@ Khi được yêu cầu làm việc trong `mapex_hospital_research/`, hãy coi f
 
 1. `STATUS.md`
 2. `ROADMAP.md`
-3. `EXPERIMENT_PROTOCOL.md`
-4. `README.md`
-5. `docs/DATA_SCHEMA.md` nếu công việc liên quan dữ liệu/experiment.
+3. `references/README.md`
+4. `references/MAPEX_PAPER.md`
+5. `EXPERIMENT_PROTOCOL.md`
+6. `README.md`
+7. `docs/DATA_SCHEMA.md` nếu công việc liên quan dữ liệu/experiment.
+
+Nếu cần đối chiếu phương pháp gốc MapEx, ưu tiên paper gốc được dẫn trong `references/MAPEX_PAPER.md` thay vì suy từ ghi chú cũ.
 
 ## Quy tắc nghiên cứu
 
@@ -31,3 +35,4 @@ Khi được yêu cầu làm việc trong `mapex_hospital_research/`, hãy coi f
 - Cập nhật `STATUS.md` với DONE / IN PROGRESS / NEXT ACTION / LATEST RESULT.
 - Nếu thay protocol, cập nhật `EXPERIMENT_PROTOCOL.md`.
 - Nếu phát hiện lỗi hoặc quyết định quan trọng, ghi `docs/experiment_notes.md`.
+- Nếu thêm hoặc dùng paper mới để đưa ra quyết định nghiên cứu, cập nhật `references/RELATED_WORK.md` hoặc file reference tương ứng.
