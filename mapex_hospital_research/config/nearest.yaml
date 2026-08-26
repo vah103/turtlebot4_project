@@ -45,6 +45,16 @@ execution_adapter:
   planner_endpoint_is_execution_goal: false
   source_code_quirk: MapEx base.yaml sets unknown_as_occ=true, but sim_utils.get_inflated_planning_maps() hard-codes unknown_as_occ=false. Hospital does not reproduce this simulator-specific planner inconsistency; Nearest and MapEx use the same Nav2 execution adapter.
 
+mapping_profile:
+  nav2_max_linear_speed_mps: 0.45
+  nav2_max_angular_speed_radps: 1.0
+  slam_minimum_travel_distance_m: 0.10
+  slam_minimum_travel_heading_rad: 0.10
+  slam_minimum_time_interval_s: 0.15
+  slam_max_laser_range_m: 20.0
+  loop_closure_thresholds_changed_for_pilot_009: false
+  reason: nearest_pilot_008_showed_visible_long_run_map_warping_at_0.75mps_and_0.20m_0.20rad_keyframes
+
 benchmark_clock:
   start_event: first_policy_decision_before_compute
   include_first_decision_compute_time: true
@@ -82,6 +92,7 @@ navigation:
   stall_timeout_s: 30.0
   use_same_hospital_nav2_stack: true
   gridbased_planner_tolerance_m: 0.0
+  maximum_linear_speed_mps: 0.45
 
 termination:
   rule: no_planner_reachable_mapex_frontier_stable_completion
@@ -92,6 +103,6 @@ termination:
   exact_terminal_policy_state_required: true
 
 runs:
-  pilot_run_id: nearest_pilot_008
+  pilot_run_id: nearest_pilot_009
   target_count: 10
   minimum_for_preliminary_analysis: 5
