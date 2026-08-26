@@ -1,19 +1,6 @@
-# Heavy experiment data
-experiments/**/rosbag*/
-experiments/**/*.db3
-experiments/**/*.mcap
-experiments/**/*.bag
-experiments/**/*.npy
-experiments/**/*.npz
-experiments/**/*.pt
-experiments/**/*.pth
-experiments/**/*.ckpt
-experiments/**/*.log
-experiments/**/maps/*.png
-experiments/**/predictions/*.png
-experiments/**/variance/*.png
-experiments/**/visibility/*.png
-experiments/**/decisions/**/visibility/
+# Raw experiment runs are local-only. This prevents pilot/official CSV/JSON/NPZ
+# output from making the worktree dirty between benchmark runs.
+experiments/**
 
 # Generated ground-truth / ROI artifacts
 ground_truth/**/generated/
