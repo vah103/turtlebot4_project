@@ -2,57 +2,59 @@
 
 ## Current stage
 
-**Stage 1 — Chuẩn hóa môi trường Hospital**
+**Stage 2 — Nearest baseline (pilot + logging validation)**
 
 ## Done
 
 - Tạo workspace `mapex_hospital_research/`.
 - Chốt lộ trình nghiên cứu theo hướng: failure → bottleneck → oracle → research gap.
-- Tạo cấu trúc lưu code, config, experiment, result và tài liệu handoff.
 - Chốt semantic của `known_fraction` và `coverage` trong `docs/DATA_SCHEMA.md`.
-- Sửa stage analysis để không normalize final state riêng của từng run thành 100%.
-- Làm rõ same-stage comparison: tại cùng coverage stage, coverage là biến alignment; so time/distance-to-stage, goal outcomes và diagnostic metrics thay vì so coverage với coverage.
-- Thiết lập workflow báo cáo teacher-facing: repo là source of evidence; Google Docs `TurtleBot4` → tab `Báo cáo nghiên cứu MapEx Hospital` là báo cáo chính cho giảng viên.
-- Ghi cố định Google Doc ID và report tab ID trong `docs/TEACHER_REPORT.md` để tránh chọn nhầm file trùng tên.
-- Thêm `docs/TEACHER_REPORT.md` và quy tắc agent phải cập nhật báo cáo sau milestone có kết quả đã xác minh.
 - Xác nhận `hospital_flat_stack.launch.py` chạy ổn định simulation + SLAM + Nav2.
-- Chốt fixed logging canvas `hospital_canvas_v1`: 0.05 m, 1504 x 2123, origin (-25.6, -60.1).
-- Chốt định nghĩa canonical evaluation ROI `hospital_connected_free_v1`: connected structural free space từ spawn, loại obstacle, disconnected pockets, ngoài Hospital bounds và canvas padding.
-- Ghi ROI spec vào `ground_truth/hospital/roi_v1.yaml` và cập nhật `config/hospital.yaml` + `EXPERIMENT_PROTOCOL.md`.
-- Thêm `scripts/generate_hospital_roi.py` để sinh ROI mask deterministic, tính denominator + SHA-256 và cập nhật protocol/config tự động.
+- Chốt fixed logging canvas `hospital_canvas_v1`: `0.05 m`, `1504 x 2123`, origin `(-25.6, -60.1)`.
+- Chốt canonical evaluation ROI `hospital_connected_free_v1` là 8-connected structural free space chứa robot start, loại obstacle/disconnected/outside/padding.
+- Thêm deterministic ROI generator có COLLADA normalization + segment dedup.
+- Generate/freeze ROI trên Ubuntu:
+  - denominator `215435` cells
+  - SHA-256 `05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1`
+  - `1040` unique wall segments
+  - `2` elevator blockers
+- Gán protocol `hospital_v1`.
+- Chốt Nearest baseline dùng WFD trên raw `/map`, min cluster `5`, Euclidean nearest frontier representative, costmap + Nav2 planning validation.
+- Chốt per-goal hard timeout `180 s`, stall timeout `30 s`, strict no-reachable-frontier completion.
+- Tạo `launch/hospital_nearest.launch.py` để chạy full Hospital stack + Nearest.
+- Tạo `scripts/research_recorder.py` và nối trực tiếp vào Nearest launch để tự ghi metadata, metrics, trajectory và decisions.
 
 ## In progress
 
-- Chạy ROI generator trên Ubuntu một lần và freeze `denominator_cells` trước run `nearest_001`.
-- Chốt các protocol field còn lại: timeout/stopping condition/resource budget nếu cần.
+- Chạy `nearest_pilot_001` để xác nhận recorder, fixed-canvas alignment, coverage denominator và termination thực tế.
+- Sau pilot, kiểm tra dữ liệu trước khi bắt đầu official Nearest runs.
 
 ## Next actions
 
-1. Chạy `python3 mapex_hospital_research/scripts/generate_hospital_roi.py` và commit các file YAML/MD nhẹ mà script cập nhật.
-2. Chốt goal timeout, stopping condition và các field protocol còn TODO.
-3. Gán protocol version `hospital_v1` sau khi denominator đã freeze.
-4. Tạo launch mới cho Nearest baseline trong workspace này.
-5. Chạy thử 1 run Nearest để kiểm tra logging và cấu trúc dữ liệu.
+1. Pull phiên bản repo mới sau khi giữ lại local generated ROI mask.
+2. Chạy `python3 mapex_hospital_research/launch/hospital_nearest.launch.py`.
+3. Kiểm tra `experiments/nearest/nearest_pilot_001/metadata.json`, `metrics.csv`, `trajectory.csv`, `decisions.csv`.
+4. Nếu pilot hợp lệ, chốt stage thresholds/common offline analysis budget nếu cần.
+5. Chạy minimum 5, target 10 official Nearest runs.
+6. Sau đó chuyển sang MapEx closed-loop dưới đúng `hospital_v1`.
 
 ## Latest result
 
-Hospital full stack đã được xác nhận chạy bình thường. Fixed logging canvas, định nghĩa canonical ROI và ROI generator đã được chốt; chưa bắt đầu benchmark. ROI denominator vẫn phải được generate/freeze trên Ubuntu trước `nearest_001`.
+Stage 1 đã hoàn tất. ROI chính thức đã freeze và Nearest pilot stack + recorder đã được triển khai. Chưa có benchmark research run mới; bước kế tiếp là `nearest_pilot_001`.
 
 ## Important decisions
 
 - Không dùng kết luận của báo cáo cũ làm giả định ban đầu.
 - Nearest là baseline đầu tiên; UPEN và IG-Hector chưa cần ở giai đoạn chẩn đoán.
 - MapEx phải được chạy closed-loop trước khi kết luận failure.
-- Mỗi run phải lưu metadata + metric + dữ liệu quyết định đủ để phân tích offline sau này.
 - `known_fraction` là progress/debugging proxy trên fixed logging canvas, denominator cố định.
-- `coverage` là exploration metric chính trên canonical evaluation ROI, denominator cố định.
-- `hospital_connected_free_v1` chỉ gồm 8-connected structural free cells chứa robot start trên grid 0.05 m; obstacle cells không nằm trong coverage denominator và được đánh giá correctness riêng bằng occupied IoU.
-- Stage chính dùng absolute exploration state; không kéo giãn final state của từng run thành 100%.
-- Tại cùng coverage stage, coverage chỉ dùng để căn chỉnh trạng thái; so time/distance-to-stage, goal outcomes và các diagnostic metrics.
-- Overall exploration efficiency báo riêng bằng Coverage-vs-time, Coverage-vs-distance, AUC và final coverage dưới cùng fixed budget.
-- Có thể phân tích phụ theo normalized time/distance progress nhưng phải dùng common fixed budgets.
-- Google Docs teacher report chỉ nhận kết quả đã xác minh; pilot/debug không được trình bày như kết quả chính thức.
+- `coverage` là exploration metric chính trên frozen ROI `hospital_connected_free_v1`.
+- ROI denominator `215435` và SHA-256 ở trên không được thay đổi trong `hospital_v1`.
+- Stage chính dùng absolute exploration state; không normalize final state riêng của từng run thành 100%.
+- Tại cùng coverage stage, coverage chỉ dùng để căn chỉnh trạng thái; so time/distance-to-stage, goal outcomes và diagnostic metrics.
+- `hospital_v1` không dùng fixed time/distance budget làm controller termination; common budget có thể được chọn offline sau pilot nếu cần cho secondary analysis.
 - Dữ liệu nặng không commit lên GitHub.
+- Google Docs teacher report chỉ nhận milestone/kết quả đã xác minh; pilot/debug không được trình bày như kết quả chính thức.
 
 ## Handoff rule
 
