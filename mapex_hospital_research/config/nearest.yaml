@@ -9,6 +9,7 @@ implementation:
   ros_adapter: mapex_hospital_research/scripts/mapex_nearest_ros.py
   hospital_runtime_wrapper: mapex_hospital_research/scripts/mapex_nearest_ros_hospital.py
   research_runtime_wrapper: mapex_hospital_research/scripts/mapex_nearest_ros_research.py
+  hospital_adaptation_wrapper: mapex_hospital_research/scripts/mapex_nearest_ros_hospital_adapted.py
   research_navigation_manager: mapex_hospital_research/scripts/exploration_manager_research.py
   recorder: mapex_hospital_research/scripts/research_recorder_safe.py
 
@@ -25,10 +26,10 @@ frontier:
 selection:
   rule: minimum_euclidean_distance_to_frontier_center
   distance_metric: euclidean_grid_distance
-  cur_pose_dist_threshold_m: 1.0
-  cur_pose_distance_semantics: applied_after_ranking_as_locked_frontier_validity_check
-  reject_candidate_when_distance_less_than_m: 1.0
-  reject_then_try_next_ranked_candidate: true
+  mapex_original_cur_pose_dist_threshold_m: 1.0
+  hospital_enforce_cur_pose_dist_threshold: false
+  hospital_distance_adaptation_reason: nearest_pilot_005_startup_deadlock_single_ranked_center_at_0.469m
+  below_1m_candidate_rule: keep_rank_and_send_to_nav2_compute_path_to_pose
   lock_selected_frontier_until_goal_outcome: true
   no_path_rule: remove_current_candidate_and_try_next_lowest_cost
 
@@ -37,7 +38,7 @@ execution_adapter:
   hospital_local_planner: nav2_compute_path_to_pose
   hospital_executor: nav2_navigate_to_pose
   frontier_goal_is_shifted_or_standoff: false
-  note: Nav2 replaces only the simulator execution layer; frontier generation and ranking remain MapEx nearest semantics.
+  note: Frontier generation and Euclidean ranking remain MapEx nearest semantics. Hospital execution uses Nav2 and disables only the original 1.0 m locked-frontier rejection because it caused a reproducible startup deadlock. The same adaptation must be used by Nearest and full MapEx Hospital runs.
   source_code_quirk: MapEx base.yaml sets unknown_as_occ=true, but sim_utils.get_inflated_planning_maps() hard-codes unknown_as_occ=False when calling inflate_map. Hospital does not attempt to reproduce this planner-specific inconsistency; both Nearest and MapEx use the same Nav2 execution adapter.
 
 logging:
@@ -46,7 +47,8 @@ logging:
   exact_decision_map_fixed_canvas_npz: true
   map_frame_robot_pose_per_decision: true
   all_ranked_candidates: true
-  candidate_1m_rejection_status: true
+  candidate_below_1m_flag: true
+  candidate_below_1m_is_rejected: false
   nav2_path_validation_status: true
   planner_timing_ms: true
   selected_path_length: true
@@ -68,6 +70,6 @@ termination:
   startup_grace_s: 20.0
 
 runs:
-  pilot_run_id: nearest_pilot_005
+  pilot_run_id: nearest_pilot_006
   target_count: 10
   minimum_for_preliminary_analysis: 5
