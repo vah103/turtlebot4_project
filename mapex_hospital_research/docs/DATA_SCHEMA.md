@@ -82,12 +82,17 @@ Ngay cả khi không có ranked candidate, policy vẫn phải tạo một `poli
 ```text
 outcome = exhausted_no_ranked_candidate
 candidate_count = 0
+terminal_reason = zero_ranked_candidates
 ```
 
-Nếu có candidates nhưng không candidate nào Nav2-reachable:
+Nếu có candidates nhưng không candidate nào Nav2-reachable, terminal decision phải được ghi **trước completion window**:
 
 ```text
 outcome = no_nav2_reachable_ranked_candidate
+terminal_reason = all_ranked_candidates_failed_nav2_path_validation
+nav2_path_success_count = 0
+nav2_checked_count = candidate_count
+nav2_no_path_count + nav2_rejected_count + nav2_error_count = nav2_checked_count
 ```
 
 Điều này cho phép replay termination chính xác mà không suy từ periodic snapshot.
@@ -147,15 +152,23 @@ candidate_compute_ms,
 candidate_count,
 below_1m_count,
 hospital_1m_rule_enforced,
+nav2_checked_count,
+nav2_path_success_count,
+nav2_no_path_count,
+nav2_rejected_count,
+nav2_error_count,
 selected_candidate_id,
 selected_rank,
 selected_x,selected_y,
 selected_distance_m,
 selected_path_length_m,
-outcome
+outcome,
+terminal_reason
 ```
 
 `robot_x/y/yaw` là map-frame pose dùng cho ranking.
+
+Các field `nav2_*_count` là audit của planner trên exact frozen decision. Với terminal `no_nav2_reachable_ranked_candidate`, validator phải xác nhận đã kiểm tra đủ toàn bộ ranked candidate và không có path thành công.
 
 ## candidates.csv
 
@@ -291,6 +304,8 @@ Post-run validator phải kiểm tra ít nhất:
 - failed goal có `failure_reason`;
 - selected candidate join được bằng ID;
 - không có `rejected_lt_1m`;
+- terminated official run có explicit terminal policy state;
+- với `no_nav2_reachable_ranked_candidate`: `candidate_count == nav2_checked_count`, planner-outcome counts cộng đúng, `nav2_path_success_count == 0`, và `terminal_reason` đúng;
 - provenance hashes đầy đủ;
 - official run bắt đầu với clean git.
 
