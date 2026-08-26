@@ -1,0 +1,28 @@
+method: mapex
+
+prediction:
+  model: lama_ensemble
+  ensemble_members: 3
+  target_resolution_m: null
+  checkpoint_g1: null
+  checkpoint_g2: null
+  checkpoint_g3: null
+
+frontier:
+  detector: wfd
+  min_frontier_size: null
+
+visibility:
+  ray_length_m: null
+  num_rays: null
+  occupancy_threshold: null
+
+information_gain:
+  source: ensemble_variance
+
+selection:
+  score: IG_over_distance
+  distance_metric: euclidean
+
+runs:
+  target_count: 10
