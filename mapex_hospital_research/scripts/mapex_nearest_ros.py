@@ -128,13 +128,14 @@ class MapExNearestROS(Node):
         )
 
         self.latest_map: OccupancyGrid | None = None
+        self.decision_map: OccupancyGrid | None = None
         self.active_frontier_xy: tuple[float, float] | None = None
         self.active = False
         self.planning = False
         self.current_candidates: list[FrontierCandidate] = []
-        self.current_candidate_signature: tuple[tuple[int, int], ...] = ()
+        self.current_candidate_signature: tuple = ()
         self.planning_index = 0
-        self.exhausted_signature: tuple[tuple[int, int], ...] | None = None
+        self.exhausted_signature: tuple | None = None
         self.failed_execution_xy: list[tuple[float, float]] = []
 
         self.first_ready_sec: float | None = None
@@ -277,6 +278,11 @@ class MapExNearestROS(Node):
             # MapEx: large_regions = region_sizes > 10.
             if len(region) <= REGION_SIZE_THRESHOLD:
                 continue
+
+            # scipy.ndimage.label + np.argwhere in MapEx yields row-major region
+            # cells. Sorting reproduces np.argwhere's tie-break if two cells are
+            # equally close to the arithmetic mean.
+            region.sort()
             arr = np.asarray(region, dtype=np.float64)
             mean = arr.mean(axis=0)
             distances = np.linalg.norm(arr - mean, axis=1)
@@ -315,6 +321,17 @@ class MapExNearestROS(Node):
         # MapEx nearest: total_cost = Euclidean cost_dist; choose argmin.
         candidates.sort(key=lambda item: item.distance_cells)
         return candidates
+
+    @staticmethod
+    def _signature(msg: OccupancyGrid, candidates: list[FrontierCandidate]) -> tuple:
+        """Include map geometry so SLAM origin/size shifts invalidate exhaustion."""
+        return (
+            int(msg.info.width),
+            int(msg.info.height),
+            round(float(msg.info.origin.position.x), 4),
+            round(float(msg.info.origin.position.y), 4),
+            tuple((c.row, c.col) for c in candidates),
+        )
 
     def _publish_candidate_count(self, count: int) -> None:
         msg = Int32()
@@ -384,13 +401,14 @@ class MapExNearestROS(Node):
         if robot_xy is None:
             return
         candidates = self._compute_candidates(msg, robot_xy)
-        signature = tuple((c.row, c.col) for c in candidates)
+        signature = self._signature(msg, candidates)
         self._publish_candidate_count(len(candidates))
 
         if self.exhausted_signature == signature:
             self._observe_exhausted()
             return
 
+        self.decision_map = msg
         self.current_candidates = candidates
         self.current_candidate_signature = signature
         self.planning_index = 0
@@ -404,7 +422,7 @@ class MapExNearestROS(Node):
         self._plan_next_candidate()
 
     def _plan_next_candidate(self) -> None:
-        if self.latest_map is None:
+        if self.decision_map is None:
             self.planning = False
             return
         if self.planning_index >= len(self.current_candidates):
@@ -419,7 +437,7 @@ class MapExNearestROS(Node):
 
         candidate = self.current_candidates[self.planning_index]
         self.planning_index += 1
-        msg = self.latest_map
+        msg = self.decision_map
         frame = msg.header.frame_id or "map"
         x, y = self._cell_to_world(candidate.row, candidate.col, msg)
 
@@ -503,7 +521,9 @@ class MapExNearestROS(Node):
         # publish the exact MapEx frontier center immediately after it.
         self.path_pub.publish(path)
         point = PointStamped()
-        point.header.frame_id = self.latest_map.header.frame_id or "map"
+        point.header.frame_id = (
+            self.decision_map.header.frame_id if self.decision_map is not None else "map"
+        ) or "map"
         point.header.stamp = self.get_clock().now().to_msg()
         point.point.x = frontier_xy[0]
         point.point.y = frontier_xy[1]
@@ -520,6 +540,7 @@ class MapExNearestROS(Node):
             return
         self.active = False
         self.active_frontier_xy = None
+        self.decision_map = None
         # MapEx recomputes frontier scores after reaching the locked frontier.
         self.failed_execution_xy.clear()
         self.exhausted_signature = None
@@ -535,6 +556,7 @@ class MapExNearestROS(Node):
             )
         self.active = False
         self.active_frontier_xy = None
+        self.decision_map = None
         self.exhausted_signature = None
 
 
