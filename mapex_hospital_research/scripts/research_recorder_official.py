@@ -55,6 +55,8 @@ class OfficialResearchRecorder(SafeResearchRecorder):
             / "scripts/mapex_nearest_ros_hospital_adapted.py",
             "nearest_official_policy": workspace
             / "scripts/mapex_nearest_ros_official.py",
+            "research_navigation_manager": workspace
+            / "scripts/exploration_manager_research.py",
             "official_recorder": workspace / "scripts/research_recorder_official.py",
             "nearest_config": workspace / "config/nearest.yaml",
             "experiment_protocol": workspace / "EXPERIMENT_PROTOCOL.md",
@@ -66,11 +68,16 @@ class OfficialResearchRecorder(SafeResearchRecorder):
             "installed_hospital_flat_stack": share / "launch/hospital_flat_stack.launch.py",
             "installed_hospital_flat_simulation": share
             / "launch/hospital_flat_simulation.launch.py",
+            "installed_tb4_simulation_safe": share / "launch/tb4_simulation_safe.launch.py",
             "installed_hospital_nav2_launch": share / "launch/hospital_nav2.launch.py",
             "installed_frontier_config": share / "config/frontier.yaml",
             "installed_hospital_slam": share / "config/hospital_slam.yaml",
             "installed_hospital_nav2_override": share
             / "config/nav2_hospital_override.yaml",
+            "installed_hospital_robot_urdf": share
+            / "urdf/hospital_turtlebot4.urdf.xacro",
+            "installed_create3_hospital_urdf": share
+            / "urdf/create3_hospital.urdf.xacro",
             "installed_hospital_world": share / "worlds/hospital_aws_flat.sdf",
         }
 
@@ -115,8 +122,8 @@ class OfficialResearchRecorder(SafeResearchRecorder):
 
         self.get_logger().info(
             "Official recorder active: benchmark clock waits for first policy "
-            "decision before computation; installed runtime files, Nav2 base params "
-            "and the effective merged Nav2 YAML are archived/hashed"
+            "decision before computation; policy/manager, robot runtime, Nav2 base "
+            "params and the effective merged Nav2 YAML are archived/hashed"
         )
 
     def _flush_decisions(self) -> None:
