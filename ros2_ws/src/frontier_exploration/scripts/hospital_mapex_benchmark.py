@@ -2,17 +2,17 @@
 """Validated entry point for the Hospital MapEx benchmark.
 
 The full benchmark implementation lives in ``hospital_mapex_benchmark_legacy.py``.
-This wrapper adds Hospital-specific safety checks without changing the upstream
-MapEx exploration/metric pipeline:
+This wrapper fixes Hospital-specific structural-GT details without changing the
+upstream MapEx exploration or metric pipeline:
 
-1. normalize the AWS Hospital COLLADA wall mesh into Gazebo coordinates;
-2. robustly discover the flat-world elevator blockers; and
-3. validate structural GT against the committed final Hospital SLAM snapshot.
-
-Important: ``occ_map.npy`` intentionally stores every cell outside valid-space as
-occupied, as expected by the MapEx KTH loader. That representation must NOT be
-used directly for wall validation. Validation below rebuilds an explicit wall
-raster from the collision mesh and blocker boxes.
+1. normalize the AWS Hospital COLLADA mesh to Gazebo metres / Z-up;
+2. rasterize every raw plane/triangle intersection segment (the report's 934
+   wall segments), instead of only ``Path.discrete`` chains;
+3. robustly include the flat-world elevator blockers; and
+4. validate alignment using the same interpretation as the Hospital report:
+   wall match is measured on GT wall cells inside the observed SLAM region,
+   while free-space conflict is the fraction of observed SLAM free cells that
+   structural GT marks occupied.
 """
 
 from __future__ import annotations
@@ -38,21 +38,18 @@ _spec.loader.exec_module(legacy)
 
 
 # ---------------------------------------------------------------------------
-# AWS Hospital COLLADA normalization
+# AWS Hospital COLLADA normalization + raw section segments
 # ---------------------------------------------------------------------------
 def _local_xml_name(tag: str) -> str:
     return tag.rsplit("}", 1)[-1]
 
 
 def _collada_asset_metadata(mesh_path: Path) -> Tuple[float, str]:
-    """Return COLLADA unit scale (metres/unit) and declared up axis."""
     root = ET.parse(mesh_path).getroot()
     unit_scale = 1.0
     up_axis = "Z_UP"
-
     asset = next(
-        (node for node in root if _local_xml_name(node.tag) == "asset"),
-        None,
+        (node for node in root if _local_xml_name(node.tag) == "asset"), None
     )
     if asset is not None:
         for child in asset:
@@ -61,26 +58,12 @@ def _collada_asset_metadata(mesh_path: Path) -> Tuple[float, str]:
                 unit_scale = float(child.attrib.get("meter", "1.0"))
             elif name == "up_axis" and child.text:
                 up_axis = child.text.strip().upper()
-
     if unit_scale <= 0.0:
-        raise RuntimeError(
-            f"Invalid COLLADA unit scale {unit_scale}: {mesh_path}"
-        )
+        raise RuntimeError(f"Invalid COLLADA unit scale {unit_scale}: {mesh_path}")
     return unit_scale, up_axis
 
 
-def load_wall_section_polylines(mesh_path: Path, z_slice: float):
-    """Load the AWS wall mesh in Gazebo metres and take a horizontal section.
-
-    The source Hospital DAE declares ``unit meter=0.01`` and ``Y_UP``. Depending
-    on the trimesh/pycollada versions, those asset transforms may or may not be
-    applied automatically. We therefore inspect the loaded extents and only
-    apply the missing transforms:
-
-      COLLADA (X,Y,Z) -> Gazebo (X,-Z,Y)
-
-    This is the same coordinate convention already used by hospital_canvas.py.
-    """
+def _normalized_wall_mesh(mesh_path: Path):
     np = legacy.np
     trimesh = legacy.require_import(
         "trimesh", "python3 -m pip install trimesh pycollada"
@@ -105,18 +88,15 @@ def load_wall_section_polylines(mesh_path: Path, z_slice: float):
     if extents.shape != (3,) or not np.all(np.isfinite(extents)):
         raise RuntimeError(f"Invalid Hospital wall mesh extents: {extents}")
 
-    # Some COLLADA loaders honor <unit meter=...>; some return authoring units.
-    # The real Hospital floor is tens of metres wide, not thousands. Apply the
-    # declared unit scale only when the loaded geometry is clearly unscaled.
     applied_scale = False
     if unit_scale != 1.0 and float(np.max(extents)) > 200.0:
         mesh.apply_scale(unit_scale)
         extents = np.asarray(mesh.extents, dtype=np.float64)
         applied_scale = True
 
-    # For this AWS asset, after metric scaling the vertical span is ~3 m and the
-    # second planar span is ~25 m. If Y is still the short/vertical dimension,
-    # trimesh has preserved COLLADA Y_UP and we must rotate into Gazebo Z_UP.
+    # Source DAE is Y_UP. pycollada/trimesh commonly applies the up-axis
+    # transform already. Only rotate ourselves when Y is still clearly the
+    # short/vertical axis.
     applied_axis = False
     if up_axis == "Y_UP" and extents[1] < 0.5 * extents[2]:
         transform = np.array(
@@ -132,44 +112,53 @@ def load_wall_section_polylines(mesh_path: Path, z_slice: float):
         extents = np.asarray(mesh.extents, dtype=np.float64)
         applied_axis = True
     elif up_axis not in ("Y_UP", "Z_UP"):
-        raise RuntimeError(
-            f"Unsupported COLLADA up_axis {up_axis!r}: {mesh_path}"
-        )
+        raise RuntimeError(f"Unsupported COLLADA up_axis {up_axis!r}: {mesh_path}")
 
-    # Sanity check after normalization. A bad units/axis interpretation is much
-    # better caught here than after an expensive benchmark run.
     if float(np.max(extents[:2])) > 100.0 or float(extents[2]) > 10.0:
         raise RuntimeError(
             "Hospital wall mesh normalization produced implausible extents "
             f"{extents.tolist()} m (unit_scale={unit_scale}, up_axis={up_axis})."
         )
 
-    if applied_scale or applied_axis:
-        legacy.log(
-            "Normalized Hospital DAE: "
-            f"unit_scale={'applied' if applied_scale else 'already metric'}, "
-            f"Y_UP->Z_UP={'applied' if applied_axis else 'already applied'}, "
-            f"extents_m={[round(float(v), 3) for v in extents]}"
-        )
-
-    section = mesh.section(
-        plane_origin=np.array([0.0, 0.0, z_slice]),
-        plane_normal=np.array([0.0, 0.0, 1.0]),
+    legacy.log(
+        "Normalized Hospital DAE: "
+        f"unit_scale={'applied' if applied_scale else 'already metric'}, "
+        f"Y_UP->Z_UP={'applied' if applied_axis else 'already applied'}, "
+        f"extents_m={[round(float(v), 3) for v in extents]}"
     )
-    if section is None:
-        raise RuntimeError(f"No wall-mesh section found at z={z_slice:.3f} m.")
+    return mesh, trimesh
 
-    polylines = [
-        np.asarray(p, dtype=np.float64)[:, :2]
-        for p in section.discrete
-        if len(p) >= 2
-    ]
-    segment_count = int(sum(max(0, len(p) - 1) for p in polylines))
-    entity_count = len(section.entities)
+
+def load_wall_section_polylines(mesh_path: Path, z_slice: float):
+    """Return every raw wall-plane intersection as a two-point polyline.
+
+    ``mesh.section(...).discrete`` is unsuitable here: it traverses/merges path
+    entities and can omit open chains. The Hospital report counted and
+    rasterized raw face/plane intersection segments; on the expected asset this
+    is 112 section entities and 934 raw wall segments at z=0.30 m.
+    """
+    np = legacy.np
+    mesh, trimesh = _normalized_wall_mesh(mesh_path)
+    origin = np.array([0.0, 0.0, z_slice], dtype=np.float64)
+    normal = np.array([0.0, 0.0, 1.0], dtype=np.float64)
+
+    raw = trimesh.intersections.mesh_plane(
+        mesh=mesh,
+        plane_normal=normal,
+        plane_origin=origin,
+    )
+    raw = np.asarray(raw, dtype=np.float64)
+    if raw.size == 0:
+        raise RuntimeError(f"No wall-mesh intersections found at z={z_slice:.3f} m.")
+    raw = raw.reshape((-1, 2, 3))
+    polylines = [segment[:, :2].copy() for segment in raw]
+
+    section = mesh.section(plane_origin=origin, plane_normal=normal)
+    entity_count = len(section.entities) if section is not None else 0
+    segment_count = int(len(polylines))
     return polylines, entity_count, segment_count
 
 
-# Replace the legacy loader before either GT building or validation runs.
 legacy.load_wall_section_polylines = load_wall_section_polylines
 
 
@@ -182,7 +171,6 @@ def find_world_model_geometry(
     Tuple[float, float, float],
     List[Tuple[float, float, float, float, float]],
 ]:
-    """Return wall pose and every elevator blocker box from the flat world."""
     root = ET.parse(sdf_path).getroot()
     wall_pose: Optional[Tuple[float, float, float]] = None
 
@@ -192,7 +180,6 @@ def find_world_model_geometry(
             x, y, _z, _r, _p, yaw = legacy.parse_pose(include.findtext("pose"))
             wall_pose = (x, y, yaw)
             break
-
     if wall_pose is None:
         raise RuntimeError(f"Could not find Hospital wall include in {sdf_path}")
 
@@ -206,10 +193,8 @@ def find_world_model_geometry(
         if not size_text:
             continue
         size = [float(v) for v in size_text.split()]
-        if len(size) < 2:
-            continue
-        blockers.append((x, y, yaw, size[0], size[1]))
-
+        if len(size) >= 2:
+            blockers.append((x, y, yaw, size[0], size[1]))
     return wall_pose, blockers
 
 
@@ -237,20 +222,21 @@ def log(msg: str) -> None:
 legacy.log = log
 
 
-FINAL_REFERENCE = (
+# ---------------------------------------------------------------------------
+# Structural-GT validation matching the report interpretation
+# ---------------------------------------------------------------------------
+VALIDATION_DIR = (
     legacy.PROJECT_ROOT
     / "data"
     / "lama_runs"
     / "hospital_flat_lama_01_001"
     / "lama_eval_20"
     / "model_input"
-    / "001415.png"
 )
-
-# Guard rails. The Hospital analysis observed substantially better agreement.
+VALIDATION_FRAMES = ("000014", "000632", "001415")
 MIN_WALL_MATCH = 0.70
 MAX_FREE_CONFLICT = 0.05
-WALL_MATCH_TOLERANCE_PIXELS = 2  # 0.20 m at the 0.10 m validation scale.
+MATCH_TOLERANCE_PIXELS = 1  # ~one 0.10 m cell, as described in the report.
 
 
 def _build_explicit_wall_mask(
@@ -262,10 +248,8 @@ def _build_explicit_wall_mask(
     wall_thickness_cells: int,
     include_flat_blockers: bool,
 ):
-    """Rasterize only physical Hospital walls/blockers on the 0.05 m canvas."""
     np = legacy.np
     cv2 = legacy.require_import("cv2", "python3 -m pip install opencv-python")
-
     mesh_path = (
         aws_root
         / "models"
@@ -288,9 +272,7 @@ def _build_explicit_wall_mask(
     )
     for poly in polylines:
         poly_world = legacy.transform_xy(poly, wall_x, wall_y, wall_yaw)
-        poly_slam = legacy.world_to_slam(
-            poly_world, spawn_x, spawn_y, spawn_yaw
-        )
+        poly_slam = legacy.world_to_slam(poly_world, spawn_x, spawn_y, spawn_yaw)
         rc = legacy.metric_xy_to_raw_rc(poly_slam)
         legacy.rasterize_polyline(obstacle, rc, wall_thickness_cells, cv2)
 
@@ -304,22 +286,17 @@ def _build_explicit_wall_mask(
             polygon = np.stack([rc[:, 1], rc[:, 0]], axis=1).astype(np.int32)
             cv2.fillPoly(obstacle, [polygon], 255)
 
-    # Same crack-closing dilation used by the GT builder.
     kernel = np.ones((3, 3), dtype=np.uint8)
-    obstacle_closed = cv2.dilate(obstacle, kernel, iterations=1)
-    return obstacle_closed > 0
+    return cv2.dilate(obstacle, kernel, iterations=1) > 0
 
 
 def _wall_mask_as_lama_image(wall_raw, target_shape):
-    """Convert 0.05 m wall mask to the final LaMa top-down image geometry."""
     np = legacy.np
     source_h, source_w = wall_raw.shape
     block = int(round(0.10 / legacy.CANVAS_RESOLUTION))
     if block != 2:
         raise RuntimeError(f"Unexpected Hospital downsample factor: {block}")
 
-    # The dataset preprocessor uses ceil-sized 0.10 m cells. For a binary
-    # obstacle mask, any occupied source cell makes the target cell occupied.
     pad_h = (-source_h) % block
     pad_w = (-source_w) % block
     padded = np.pad(
@@ -339,17 +316,53 @@ def _wall_mask_as_lama_image(wall_raw, target_shape):
     target_h, target_w = target_shape
     if top_down.shape[1] > target_w or top_down.shape[0] > target_h:
         raise RuntimeError(
-            f"Structural wall map {top_down.shape} is larger than "
-            f"reference {target_shape}."
+            f"Structural wall map {top_down.shape} is larger than reference {target_shape}."
         )
-
     output = np.zeros((target_h, target_w), dtype=bool)
     pad_top = target_h - top_down.shape[0]
-    output[
-        pad_top : pad_top + top_down.shape[0],
-        : top_down.shape[1],
-    ] = top_down
+    output[pad_top : pad_top + top_down.shape[0], : top_down.shape[1]] = top_down
     return output
+
+
+def _alignment_metrics(structural_occ, reference, cv2):
+    np = legacy.np
+    reference_occ = reference <= 64
+    reference_free = reference >= 192
+    reference_known = reference_occ | reference_free
+
+    kernel = np.ones((3, 3), dtype=np.uint8)
+    occ_near = cv2.dilate(
+        reference_occ.astype(np.uint8),
+        kernel,
+        iterations=MATCH_TOLERANCE_PIXELS,
+    ).astype(bool)
+    known_near = cv2.dilate(
+        reference_known.astype(np.uint8),
+        kernel,
+        iterations=MATCH_TOLERANCE_PIXELS,
+    ).astype(bool)
+
+    # Report interpretation: only GT wall cells that lie in the observed SLAM
+    # region are eligible for wall-match. Unknown/unexplored GT walls are not
+    # counted as misses.
+    observed_gt_wall = structural_occ & known_near
+    observed_gt_count = int(observed_gt_wall.sum())
+    wall_match = (
+        float((observed_gt_wall & occ_near).sum() / observed_gt_count)
+        if observed_gt_count
+        else float("nan")
+    )
+
+    # Fraction of SLAM cells confidently observed FREE that structural GT marks
+    # occupied. This is intentionally normalized by observed free area, not by
+    # the number of GT wall cells.
+    free_count = int(reference_free.sum())
+    free_conflict = (
+        float((structural_occ & reference_free).sum() / free_count)
+        if free_count
+        else float("nan")
+    )
+    return wall_match, free_conflict, observed_gt_count, free_count
 
 
 def validate_structural_gt(
@@ -367,17 +380,15 @@ def validate_structural_gt(
     np = legacy.np
     cv2 = legacy.require_import("cv2", "python3 -m pip install opencv-python")
 
-    if not FINAL_REFERENCE.exists():
-        raise RuntimeError(
-            "Committed Hospital reference snapshot is missing: "
-            f"{FINAL_REFERENCE}. Run from a complete turtlebot4_project checkout."
-        )
-
-    reference = cv2.imread(str(FINAL_REFERENCE), cv2.IMREAD_GRAYSCALE)
-    if reference is None:
-        raise RuntimeError(
-            f"Could not read GT validation reference: {FINAL_REFERENCE}"
-        )
+    references = []
+    for frame in VALIDATION_FRAMES:
+        path = VALIDATION_DIR / f"{frame}.png"
+        if path.exists():
+            image = cv2.imread(str(path), cv2.IMREAD_GRAYSCALE)
+            if image is not None:
+                references.append((frame, path, image))
+    if not references:
+        raise RuntimeError(f"No committed Hospital validation snapshots found in {VALIDATION_DIR}")
 
     wall_raw = _build_explicit_wall_mask(
         aws_root=aws_root,
@@ -388,44 +399,38 @@ def validate_structural_gt(
         wall_thickness_cells=wall_thickness_cells,
         include_flat_blockers=include_flat_blockers,
     )
-    structural_occ = _wall_mask_as_lama_image(wall_raw, reference.shape)
 
-    reference_occ = reference <= 64
-    reference_free = reference >= 192
-
-    occ_count = int(reference_occ.sum())
-    free_count = int(reference_free.sum())
-    structural_count = int(structural_occ.sum())
-    if occ_count == 0 or free_count == 0 or structural_count == 0:
-        raise RuntimeError(
-            "Validation reference/structural wall map contains no usable cells."
+    frame_results = []
+    all_pass = True
+    for frame, path, reference in references:
+        structural_occ = _wall_mask_as_lama_image(wall_raw, reference.shape)
+        wall_match, free_conflict, observed_gt_count, free_count = _alignment_metrics(
+            structural_occ, reference, cv2
+        )
+        frame_pass = bool(
+            np.isfinite(wall_match)
+            and np.isfinite(free_conflict)
+            and wall_match >= MIN_WALL_MATCH
+            and free_conflict <= MAX_FREE_CONFLICT
+        )
+        all_pass = all_pass and frame_pass
+        frame_results.append(
+            {
+                "frame": frame,
+                "wall_match": wall_match,
+                "free_space_conflict": free_conflict,
+                "observed_gt_wall_cells": observed_gt_count,
+                "observed_free_cells": free_count,
+                "passed": frame_pass,
+            }
+        )
+        legacy.log(
+            f"GT validation {frame}: {'PASS' if frame_pass else 'FAIL'} | "
+            f"wall_match={wall_match * 100:.1f}% | "
+            f"free_conflict={free_conflict * 100:.2f}%"
         )
 
-    # SLAM and mesh rasterization need a small spatial tolerance. The metric
-    # remains reference-wall recall: an observed occupied cell is matched when
-    # a structural wall lies within 0.20 m.
-    kernel = np.ones((3, 3), dtype=np.uint8)
-    structural_near = cv2.dilate(
-        structural_occ.astype(np.uint8),
-        kernel,
-        iterations=WALL_MATCH_TOLERANCE_PIXELS,
-    ).astype(bool)
-    reference_near = cv2.dilate(
-        reference_occ.astype(np.uint8),
-        kernel,
-        iterations=WALL_MATCH_TOLERANCE_PIXELS,
-    ).astype(bool)
-
-    wall_match = float((structural_near & reference_occ).sum() / occ_count)
-    wall_precision = float(
-        (structural_occ & reference_near).sum() / structural_count
-    )
-    # Only explicit physical wall cells are tested against observed free space.
-    # Do NOT use MapEx occ_map.npy here: outside-valid is intentionally 0 there.
-    free_conflict = float(
-        (structural_occ & reference_free).sum() / structural_count
-    )
-
+    # In SLAM-start coordinates the initial robot pose is (0,0).
     occ_raw = np.load(map_dir / "occ_map.npy")
     start_rc = legacy.metric_xy_to_raw_rc(
         np.array([[0.0, 0.0]], dtype=np.float64)
@@ -436,57 +441,38 @@ def validate_structural_gt(
         and 0 <= sc < occ_raw.shape[1]
         and occ_raw[sr, sc] > 127
     )
-
-    passed = bool(
-        wall_match >= MIN_WALL_MATCH
-        and free_conflict <= MAX_FREE_CONFLICT
-        and start_is_free
-    )
+    all_pass = bool(all_pass and start_is_free)
 
     validation = {
-        "passed": passed,
-        "reference": str(
-            FINAL_REFERENCE.relative_to(legacy.PROJECT_ROOT)
-        ),
-        "wall_match": wall_match,
-        "wall_precision": wall_precision,
-        "free_space_conflict": free_conflict,
+        "passed": all_pass,
+        "frames": frame_results,
         "start_is_free": start_is_free,
-        "explicit_wall_cells_0p10m": structural_count,
         "thresholds": {
             "min_wall_match": MIN_WALL_MATCH,
             "max_free_space_conflict": MAX_FREE_CONFLICT,
-            "wall_match_tolerance_pixels": WALL_MATCH_TOLERANCE_PIXELS,
+            "match_tolerance_pixels": MATCH_TOLERANCE_PIXELS,
         },
-        "note": (
-            "Validation uses explicit collision-mesh walls plus flat-world "
-            "elevator blockers. Outside-valid cells in MapEx occ_map.npy are "
-            "not treated as physical walls."
+        "metric_definition": (
+            "wall_match = matched GT wall cells / GT wall cells in observed SLAM region; "
+            "free_space_conflict = GT-occupied & SLAM-free / observed SLAM-free cells"
         ),
     }
     metadata["validation"] = validation
-
-    metadata_path = map_dir / "hospital_map_metadata.json"
-    metadata_path.write_text(
+    (map_dir / "hospital_map_metadata.json").write_text(
         json.dumps(metadata, indent=2), encoding="utf-8"
     )
 
-    status = "PASS" if passed else "FAIL"
     legacy.log(
-        f"GT validation: {status} | wall_match={wall_match * 100:.1f}% | "
-        f"wall_precision={wall_precision * 100:.1f}% | "
-        f"free_conflict={free_conflict * 100:.2f}% | "
+        f"GT validation summary: {'PASS' if all_pass else 'FAIL'} | "
         f"start_free={start_is_free}"
     )
-
-    if not passed:
+    if not all_pass:
         raise RuntimeError(
-            "Hospital structural GT failed validation. "
-            f"Need wall_match >= {MIN_WALL_MATCH * 100:.0f}% and "
-            f"free_conflict <= {MAX_FREE_CONFLICT * 100:.0f}%. "
-            "Do not run the benchmark until this is fixed."
+            "Hospital structural GT failed report-style validation. "
+            f"Each committed validation frame needs wall_match >= "
+            f"{MIN_WALL_MATCH * 100:.0f}% and free_conflict <= "
+            f"{MAX_FREE_CONFLICT * 100:.0f}%. Do not run the benchmark yet."
         )
-
     return metadata
 
 
@@ -497,10 +483,7 @@ _build_signature = inspect.signature(_original_build_hospital_map)
 def build_hospital_map(*args, **kwargs):
     bound = _build_signature.bind(*args, **kwargs)
     params = bound.arguments
-
-    map_dir, start_pose, metadata = _original_build_hospital_map(
-        *args, **kwargs
-    )
+    map_dir, start_pose, metadata = _original_build_hospital_map(*args, **kwargs)
     metadata = validate_structural_gt(
         map_dir,
         metadata,
