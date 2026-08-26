@@ -41,6 +41,11 @@ INSTALLED_NAV2_OVERRIDE = (
     REPO_ROOT
     / "ros2_ws/install/frontier_exploration/share/frontier_exploration/config/nav2_hospital_override.yaml"
 )
+SOURCE_SLAM = REPO_ROOT / "ros2_ws/src/frontier_exploration/config/hospital_slam.yaml"
+INSTALLED_SLAM = (
+    REPO_ROOT
+    / "ros2_ws/install/frontier_exploration/share/frontier_exploration/config/hospital_slam.yaml"
+)
 
 
 def sha256(path: Path) -> str:
@@ -49,6 +54,16 @@ def sha256(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _require_text(path: Path, needles: list[str], label: str, errors: list[str]) -> None:
+    if not path.exists():
+        errors.append(f"missing {label}: {path}")
+        return
+    text = path.read_text(encoding="utf-8")
+    missing = [needle for needle in needles if needle not in text]
+    if missing:
+        errors.append(f"{label} is stale/misconfigured; missing: {', '.join(missing)}")
 
 
 def main() -> int:
@@ -70,19 +85,40 @@ def main() -> int:
         if actual != ROI_EXPECTED_SHA256:
             errors.append(f"ROI SHA-256 mismatch: {actual} != {ROI_EXPECTED_SHA256}")
 
-    if not SOURCE_NAV2_OVERRIDE.exists() or "tolerance: 0.0" not in SOURCE_NAV2_OVERRIDE.read_text(
-        encoding="utf-8"
-    ):
-        errors.append("source Hospital Nav2 override is missing GridBased tolerance: 0.0")
+    nav2_needles = [
+        "tolerance: 0.0",
+        "vx_max: 0.45",
+        "max_velocity: [0.45, 0.0, 1.0]",
+    ]
+    slam_needles = [
+        "minimum_travel_distance: 0.10",
+        "minimum_travel_heading: 0.10",
+    ]
+    _require_text(SOURCE_NAV2_OVERRIDE, nav2_needles, "source Hospital Nav2 override", errors)
+    _require_text(SOURCE_SLAM, slam_needles, "source Hospital SLAM profile", errors)
 
     if not INSTALLED_NAV2_OVERRIDE.exists():
         errors.append(
             "installed Hospital Nav2 override is missing; rebuild frontier_exploration"
         )
-    elif "tolerance: 0.0" not in INSTALLED_NAV2_OVERRIDE.read_text(encoding="utf-8"):
+    else:
+        _require_text(
+            INSTALLED_NAV2_OVERRIDE,
+            nav2_needles,
+            "installed Hospital Nav2 override",
+            errors,
+        )
+
+    if not INSTALLED_SLAM.exists():
         errors.append(
-            "installed Hospital Nav2 override is stale (missing tolerance: 0.0); "
-            "run colcon build --symlink-install --packages-select frontier_exploration"
+            "installed Hospital SLAM profile is missing; rebuild frontier_exploration"
+        )
+    else:
+        _require_text(
+            INSTALLED_SLAM,
+            slam_needles,
+            "installed Hospital SLAM profile",
+            errors,
         )
 
     launch = WORKSPACE / "launch" / "hospital_nearest.launch.py"
@@ -97,6 +133,7 @@ def main() -> int:
     checks = [
         (launch, "mapex_nearest_ros_official.py"),
         (launch, "research_recorder_official.py"),
+        (launch, "nearest_pilot_009"),
         (adapted_policy, "Hospital adaptation allowing ranked frontier below 1 m"),
         (adapted_policy, "all_ranked_candidates_failed_nav2_path_validation"),
         (official_policy, "first_policy_decision_before_compute"),
@@ -117,6 +154,9 @@ def main() -> int:
         (protocol, "first policy decision before computation"),
         (protocol, "intentionally uncontrolled"),
         (protocol, "NavigateToPose(exact frontier center)"),
+        (protocol, "0.45 m/s"),
+        (protocol, "0.10 m"),
+        (protocol, "0.10 rad"),
         (schema, "below_1m is diagnostic only"),
         (schema, "planner_endpoint_to_frontier_m"),
         (schema, "goal_source=exact_frontier_center"),
@@ -139,6 +179,8 @@ def main() -> int:
     print("- Hospital below-1m bypass: ACTIVE")
     print("- exact frontier execution goal: ACTIVE")
     print("- installed Nav2 exact-planner tolerance: ACTIVE")
+    print("- installed mapping speed cap 0.45 m/s: ACTIVE")
+    print("- installed SLAM keyframe spacing 0.10 m / 0.10 rad: ACTIVE")
     print("- benchmark t=0 before first policy compute: ACTIVE")
     print("- exact exhausted/no-candidate logging: ACTIVE")
     print("- terminal Nav2 audit logging: ACTIVE")
