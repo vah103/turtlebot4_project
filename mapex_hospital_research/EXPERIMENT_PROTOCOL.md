@@ -4,56 +4,65 @@ Mọi phương pháp so sánh phải dùng cùng protocol, trừ khi thay đổi
 
 ## Protocol identity
 
-- Protocol version: TODO
-- Fixed canvas ID: TODO
-- Evaluation ROI ID: TODO
+- Protocol version: TODO — chỉ gán `hospital_v1` sau khi ROI mask được generate và denominator được freeze.
+- Fixed canvas ID: `hospital_canvas_v1`
+- Evaluation ROI ID: `hospital_connected_free_v1`
 
 ## Environment
 
-- World: `Hospital`
-- Simulator: TODO
+- World: `Hospital flat` (`hospital_aws_flat.sdf`)
+- Simulator: Gazebo / TurtleBot4 simulation stack hiện có trong `frontier_exploration`
 - Robot: TurtleBot4
-- Spawn x: TODO
-- Spawn y: TODO
-- Spawn yaw: TODO
+- Spawn x: `0.0 m`
+- Spawn y: `12.0 m`
+- Spawn yaw: `-1.57 rad`
 
 ## Mapping / SLAM
 
-- SLAM package/config: TODO
-- Map resolution: TODO
-- Map frame: TODO
+- SLAM package/config: `slam_toolbox` với `ros2_ws/src/frontier_exploration/config/hospital_slam.yaml`
+- Map resolution: `0.05 m/cell`
+- Map frame: `map`; mọi snapshot được đưa về fixed SLAM-start canvas để logging/evaluation.
 
 ### Fixed logging canvas
 
-- Resolution: TODO
-- Width: TODO
-- Height: TODO
-- Origin: TODO
-- Alignment rule: TODO
+- ID: `hospital_canvas_v1`
+- Resolution: `0.05 m/cell`
+- Width: `1504 cells`
+- Height: `2123 cells`
+- Origin: `(-25.6, -60.1) m`
+- Alignment rule: reproject mọi SLAM snapshot lên đúng grid này; không crop theo bounding box động.
 
 `known_fraction` được tính trên canvas cố định này. Không crop theo bounding box động và không chuẩn hóa final known fraction của từng run thành 100%.
 
 ### Canonical evaluation ROI
 
-- ROI source/mask: TODO
-- ROI alignment: TODO
-- Valid-cell rule: TODO
-- Excluded cells: TODO
-- Total denominator cells: TODO
+- ROI ID: `hospital_connected_free_v1`
+- ROI specification: `ground_truth/hospital/roi_v1.yaml`
+- ROI alignment: cùng resolution `0.05 m`, origin, kích thước và SLAM-start frame của `hospital_canvas_v1`.
+- Structural source: Hospital wall collision mesh + flat-world elevator blockers; wall slice `z=0.30 m`, wall raster thickness `2 cells`, sau đó dilate `1 cell` để đóng raster cracks.
+- Valid-cell rule: trong fixed Hospital bounds `x=[-0.572445, 24.588833]`, `y=[-35.091079, 21.044604]` ở SLAM-start frame, lấy các free cells thuộc **8-connected component chứa robot start `(0,0)`** sau khi structural obstacles được rasterize.
+- Excluded cells: obstacle cells, disconnected free-space pockets, vùng ngoài Hospital bounds và toàn bộ safety padding của fixed canvas.
+- Total denominator cells: TODO — generate mask đúng một lần trước `nearest_001`, ghi số cell vào `roi_v1.yaml` và file này, sau đó freeze.
 
-`coverage` được tính trên ROI cố định này theo định nghĩa trong `docs/DATA_SCHEMA.md`. ROI phải giống hệt giữa Nearest và MapEx.
+`coverage` được tính:
+
+```text
+coverage(t) = known cells inside hospital_connected_free_v1 / total cells in hospital_connected_free_v1
+```
+
+ROI phải giống hệt giữa Nearest và MapEx. Thay đổi ROI yêu cầu ROI ID mới và chạy lại baseline.
 
 ## Navigation
 
-- Nav2 config: TODO
+- Nav2 config: `hospital_nav2.launch.py` + `nav2_hospital_override.yaml`
 - Goal timeout: TODO
 - Recovery behavior: TODO
 - Goal acceptance radius: TODO
 
 ## Sensor
 
-- LiDAR topic: TODO
-- Max range: TODO
+- LiDAR topic: `/scan`
+- Max range: `20.0 m`
 - Sensor update rate: TODO
 
 ## Exploration
