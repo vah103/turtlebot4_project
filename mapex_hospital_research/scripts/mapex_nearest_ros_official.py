@@ -9,7 +9,8 @@ needed before official runs:
 - save an exact frozen policy state even when the ranked candidate set is empty;
 - assign a stable candidate_id within each policy decision;
 - publish the selected candidate_id so decisions.csv can join candidates.csv
-  without relying on coordinates/rank inference.
+  without relying on coordinates/rank inference;
+- persist explicit Nav2 planner outcome counts and terminal reason.
 """
 
 from __future__ import annotations
@@ -39,7 +40,7 @@ class OfficialHospitalNearestROS(HospitalAdaptedNearestROS):
         self._last_exact_empty_signature: tuple | None = None
         self.get_logger().info(
             "Official-run logging wrapper active: pre-compute t=0, exact empty "
-            "candidate decisions, stable candidate IDs"
+            "candidate decisions, stable candidate IDs, terminal Nav2 audit"
         )
 
     def _publish_start_once(self, msg) -> None:
@@ -86,10 +87,12 @@ class OfficialHospitalNearestROS(HospitalAdaptedNearestROS):
                 self._begin_policy_decision_if_needed()
                 if self._current_policy is not None:
                     self._current_policy["outcome"] = "exhausted_no_ranked_candidate"
+                    self._current_policy["terminal_reason"] = "zero_ranked_candidates"
                     self._current_policy["hospital_1m_rule_enforced"] = False
                     self._current_policy[
                         "mapex_original_cur_pose_dist_threshold_m"
                     ] = 1.0
+                    self._refresh_nav2_audit_fields()
                     self._write_policy_files()
                 self._last_exact_empty_signature = signature
                 self.get_logger().warning(
@@ -100,7 +103,7 @@ class OfficialHospitalNearestROS(HospitalAdaptedNearestROS):
         return candidates
 
     def _write_policy_files(self) -> None:
-        """Write policy tables with explicit candidate IDs and Hospital semantics."""
+        """Write policy tables with IDs, Hospital semantics, and Nav2 audit."""
         if self._current_policy is None:
             return
 
@@ -114,10 +117,12 @@ class OfficialHospitalNearestROS(HospitalAdaptedNearestROS):
             bool(item.get("below_1m")) and not bool(item.get("execution_suppressed"))
             for item in candidates
         )
+        self._current_policy.update(self._nav2_audit_from_rows(candidates))
         self._current_policy.setdefault("hospital_1m_rule_enforced", False)
         self._current_policy.setdefault(
             "mapex_original_cur_pose_dist_threshold_m", 1.0
         )
+        self._current_policy.setdefault("terminal_reason", "")
 
         selected = next((item for item in candidates if item.get("selected")), None)
         self._current_policy["selected_candidate_id"] = (
@@ -167,6 +172,11 @@ class OfficialHospitalNearestROS(HospitalAdaptedNearestROS):
             "candidate_count",
             "below_1m_count",
             "hospital_1m_rule_enforced",
+            "nav2_checked_count",
+            "nav2_path_success_count",
+            "nav2_no_path_count",
+            "nav2_rejected_count",
+            "nav2_error_count",
             "selected_candidate_id",
             "selected_rank",
             "selected_x",
@@ -174,6 +184,7 @@ class OfficialHospitalNearestROS(HospitalAdaptedNearestROS):
             "selected_distance_m",
             "selected_path_length_m",
             "outcome",
+            "terminal_reason",
         ]
         with self.policy_summary_path.open("w", newline="", encoding="utf-8") as handle:
             writer = csv.DictWriter(handle, fieldnames=summary_fields)
@@ -186,7 +197,9 @@ class OfficialHospitalNearestROS(HospitalAdaptedNearestROS):
                     and not bool(row.get("execution_suppressed"))
                     for row in rows
                 )
+                item.update(self._nav2_audit_from_rows(rows))
                 item.setdefault("hospital_1m_rule_enforced", False)
+                item.setdefault("terminal_reason", "")
                 chosen = next((row for row in rows if row.get("selected")), None)
                 item["selected_candidate_id"] = (
                     "" if chosen is None else chosen.get("candidate_id", "")
