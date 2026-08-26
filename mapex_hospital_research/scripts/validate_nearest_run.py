@@ -110,6 +110,14 @@ def main() -> int:
     if "intentionally_uncontrolled_gazebo_default" not in seed_policy:
         errors.append("metadata missing explicit simulator seed policy")
 
+    execution_goal_semantics = str(metadata.get("execution_goal_semantics", ""))
+    if official and execution_goal_semantics != "exact_frontier_center":
+        errors.append("official run metadata must use exact_frontier_center execution goals")
+    elif execution_goal_semantics and execution_goal_semantics != "exact_frontier_center":
+        warnings.append(
+            f"unexpected execution_goal_semantics={execution_goal_semantics!r}"
+        )
+
     dirty = metadata.get("git_dirty_at_recorder_start")
     if official and dirty is not False:
         errors.append("official run must start from a clean git worktree")
@@ -209,6 +217,8 @@ def main() -> int:
         if count > 0 and not candidate_groups.get(pid):
             errors.append(f"{pid}: candidate_count={count} but no candidate rows")
 
+    exact_goal_execution_ok = bool(decisions)
+    legacy_goal_semantics_seen = False
     for row in decisions:
         did = row.get("decision_id", "")
         pid = row.get("policy_decision_id", "")
@@ -235,6 +245,70 @@ def main() -> int:
             errors.append(f"{did}: terminated run still has PENDING result")
         if row.get("result") == "FAILED" and not row.get("failure_reason", ""):
             errors.append(f"{did}: FAILED goal missing failure_reason")
+
+        exact_fields = ["frontier_x", "frontier_y", "goal_x", "goal_y"]
+        if any(row.get(field, "") == "" for field in exact_fields):
+            exact_goal_execution_ok = False
+            if official:
+                errors.append(f"{did}: missing exact frontier execution coordinates")
+            else:
+                legacy_goal_semantics_seen = True
+        else:
+            fx = as_float(row["frontier_x"], f"{did} frontier_x", errors)
+            fy = as_float(row["frontier_y"], f"{did} frontier_y", errors)
+            gx = as_float(row["goal_x"], f"{did} goal_x", errors)
+            gy = as_float(row["goal_y"], f"{did} goal_y", errors)
+            if None not in {fx, fy, gx, gy}:
+                mismatch = math.hypot(gx - fx, gy - fy)
+                if mismatch > 1e-3:
+                    exact_goal_execution_ok = False
+                    message = (
+                        f"{did}: execution goal differs from exact frontier by "
+                        f"{mismatch:.4f} m"
+                    )
+                    if official:
+                        errors.append(message)
+                    else:
+                        legacy_goal_semantics_seen = True
+
+        if row.get("goal_source", "") != "exact_frontier_center":
+            exact_goal_execution_ok = False
+            if official:
+                errors.append(
+                    f"{did}: goal_source={row.get('goal_source', '')!r} != "
+                    "'exact_frontier_center'"
+                )
+            else:
+                legacy_goal_semantics_seen = True
+
+        px_text = row.get("planner_endpoint_x", "")
+        py_text = row.get("planner_endpoint_y", "")
+        offset_text = row.get("planner_endpoint_to_frontier_m", "")
+        if official and (px_text == "" or py_text == "" or offset_text == ""):
+            errors.append(f"{did}: missing planner-endpoint audit fields")
+        elif px_text != "" and py_text != "" and offset_text != "":
+            px = as_float(px_text, f"{did} planner_endpoint_x", errors)
+            py = as_float(py_text, f"{did} planner_endpoint_y", errors)
+            fx = as_float(row.get("frontier_x", ""), f"{did} frontier_x", errors)
+            fy = as_float(row.get("frontier_y", ""), f"{did} frontier_y", errors)
+            reported = as_float(
+                offset_text,
+                f"{did} planner_endpoint_to_frontier_m",
+                errors,
+            )
+            if None not in {px, py, fx, fy, reported}:
+                recomputed = math.hypot(px - fx, py - fy)
+                if abs(recomputed - reported) > 2e-3:
+                    errors.append(
+                        f"{did}: planner endpoint offset audit mismatch: "
+                        f"reported={reported:.4f}, recomputed={recomputed:.4f}"
+                    )
+
+    if legacy_goal_semantics_seen and not official:
+        warnings.append(
+            "pilot contains legacy/path-endpoint execution-goal semantics; do not use "
+            "it as an official benchmark run"
+        )
 
     if not snapshots:
         errors.append("snapshots.csv is empty")
@@ -376,6 +450,8 @@ def main() -> int:
     print("- benchmark t=0: pre-compute")
     print("- Hospital below-1m adaptation: consistent")
     print("- candidate linkage + snapshot integrity: OK")
+    if exact_goal_execution_ok:
+        print("- exact frontier execution goal: OK")
     if terminal_audit_ok:
         print("- terminal Nav2 audit: OK")
     print("- provenance: OK")
