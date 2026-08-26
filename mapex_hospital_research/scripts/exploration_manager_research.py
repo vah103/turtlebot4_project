@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Research execution adapter for Hospital frontier exploration.
 
-The planner path is used only as a reachability certificate.  The actual
-NavigateToPose goal is the exact MapEx frontier center published on
-``/frontier_selected``.  This avoids silently replacing a frontier with the
-last pose of a tolerance-snapped ComputePathToPose result.
+The planner path is used only as a reachability certificate. The actual
+NavigateToPose goal uses the exact MapEx frontier x/y published on
+``/frontier_selected``. MapEx frontier selection has no yaw objective, so the
+execution pose copies the validated planner endpoint orientation only as a
+neutral orientation seed; Hospital Nav2 is configured to ignore final goal yaw.
 
 The wrapper also publishes detailed Nav2 execution outcomes for research logs.
 """
@@ -47,8 +48,9 @@ class ResearchExplorationManager(ExplorationManager):
             f"Research navigation result details enabled on {DETAIL_TOPIC}"
         )
         self.get_logger().warning(
-            "EXACT FRONTIER EXECUTION ACTIVE: ComputePathToPose path is reachability "
-            "evidence only; NavigateToPose uses the exact /frontier_selected center"
+            "EXACT FRONTIER EXECUTION ACTIVE: planner path is reachability evidence; "
+            "NavigateToPose uses exact frontier x/y and final yaw is intentionally "
+            "not a frontier-policy objective"
         )
 
     def _on_path(self, path: Path) -> None:
@@ -117,7 +119,20 @@ class ResearchExplorationManager(ExplorationManager):
         goal.header.stamp.nanosec = 0
         goal.pose.position.x = frontier_x
         goal.pose.position.y = frontier_y
-        goal.pose.orientation.w = 1.0
+
+        # Frontier semantics are position-only. Do not silently force yaw=0.
+        # Reuse the validated planner endpoint quaternion as a neutral seed; the
+        # Hospital goal checker has yaw tolerance pi and GoalAngleCritic disabled,
+        # so this orientation is not an execution requirement.
+        q = endpoint_pose.pose.orientation
+        norm = math.sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
+        if norm > 1e-9:
+            goal.pose.orientation.x = q.x / norm
+            goal.pose.orientation.y = q.y / norm
+            goal.pose.orientation.z = q.z / norm
+            goal.pose.orientation.w = q.w / norm
+        else:
+            goal.pose.orientation.w = 1.0
 
         self._active_planner_endpoint_xy = (endpoint_x, endpoint_y)
         self._active_planner_endpoint_offset_m = endpoint_offset
@@ -127,7 +142,7 @@ class ResearchExplorationManager(ExplorationManager):
         if endpoint_offset > 0.05:
             self.get_logger().warning(
                 "Planner endpoint differs from exact frontier center by "
-                f"{endpoint_offset:.3f} m; executing exact frontier instead: "
+                f"{endpoint_offset:.3f} m; executing exact frontier x/y: "
                 f"frontier=({frontier_x:.2f}, {frontier_y:.2f}), "
                 f"planner_endpoint=({endpoint_x:.2f}, {endpoint_y:.2f})"
             )
@@ -155,6 +170,7 @@ class ResearchExplorationManager(ExplorationManager):
                 "goal_y": float(goal[1]),
                 "frame_id": frame or "map",
                 "goal_source": "exact_frontier_center",
+                "goal_yaw_semantics": "ignored_by_hospital_goal_checker",
                 "succeeded": bool(succeeded),
                 "detail": str(detail),
                 "sim_time_s": float(self._now_sec()),
