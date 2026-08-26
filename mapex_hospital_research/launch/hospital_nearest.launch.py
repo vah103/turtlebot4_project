@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Hospital v1 Nearest-Frontier baseline + research recorder.
+"""Hospital v1 nearest baseline using the official MapEx frontier policy.
 
 Run directly from the repository after sourcing ROS/workspace setup:
 
-    python3 mapex_hospital_research/launch/hospital_nearest.launch.py
+    /usr/bin/python3 mapex_hospital_research/launch/hospital_nearest.launch.py
 
-The default run id is `nearest_pilot_001`. A run directory is never overwritten.
-UI-only arguments may be appended, e.g. `use_rviz:=false headless:=true`.
+The frontier policy comes from castacks/MapEx commit
+53636bd1c79153acc3c74a532837d78c926bae5e.  Only the original grid-simulator
+A* execution layer is replaced by Nav2 for TurtleBot4 Hospital execution.
 """
 
 from __future__ import annotations
@@ -19,21 +20,29 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription, LaunchService
 from launch.actions import (
     DeclareLaunchArgument,
+    EmitEvent,
     ExecuteProcess,
     IncludeLaunchDescription,
+    RegisterEventHandler,
     TimerAction,
 )
+from launch.event_handlers import OnProcessExit
+from launch.events import Shutdown
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
+from launch_ros.parameter_descriptions import ParameterValue
 
 
 WORKSPACE = Path(__file__).resolve().parents[1]
 RECORDER = WORKSPACE / "scripts" / "research_recorder.py"
+MAPEX_NEAREST = WORKSPACE / "scripts" / "mapex_nearest_ros.py"
 EXPLORATION_START_DELAY_S = 30.0
 
 
 def generate_launch_description() -> LaunchDescription:
     package_dir = get_package_share_directory("frontier_exploration")
+    frontier_config = os.path.join(package_dir, "config", "frontier.yaml")
 
     use_rviz = LaunchConfiguration("use_rviz")
     headless = LaunchConfiguration("headless")
@@ -67,15 +76,38 @@ def generate_launch_description() -> LaunchDescription:
         }.items(),
     )
 
-    nearest = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(package_dir, "launch", "frontier_autonomy.launch.py")
-        ),
-        launch_arguments={
-            "enable_navigation": "true",
-            "enable_sim_twist_adapter": "false",
-            "use_sim_time": "true",
-        }.items(),
+    manager = Node(
+        package="frontier_exploration",
+        executable="exploration_manager",
+        name="exploration_manager",
+        output="screen",
+        parameters=[
+            frontier_config,
+            {"use_sim_time": True, "enable_navigation": True},
+        ],
+    )
+
+    mapex_nearest = ExecuteProcess(
+        cmd=[sys.executable, str(MAPEX_NEAREST)],
+        output="screen",
+    )
+
+    shutdown_when_policy_exits = RegisterEventHandler(
+        OnProcessExit(
+            target_action=mapex_nearest,
+            on_exit=[
+                EmitEvent(
+                    event=Shutdown(
+                        reason="MapEx nearest policy completed or stopped"
+                    )
+                )
+            ],
+        )
+    )
+
+    exploration = TimerAction(
+        period=EXPLORATION_START_DELAY_S,
+        actions=[manager, mapex_nearest],
     )
 
     return LaunchDescription(
@@ -85,7 +117,8 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument("headless", default_value="False"),
             recorder,
             stack,
-            TimerAction(period=EXPLORATION_START_DELAY_S, actions=[nearest]),
+            shutdown_when_policy_exits,
+            exploration,
         ]
     )
 
