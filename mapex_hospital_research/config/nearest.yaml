@@ -38,7 +38,11 @@ execution_adapter:
   original_mapex_local_planner: pyastar2d_astar_allow_diagonal_false
   hospital_local_planner: nav2_compute_path_to_pose
   hospital_executor: nav2_navigate_to_pose
+  planner_goal_tolerance_m: 0.0
+  planner_path_semantics: reachability_evidence_only
+  navigate_goal_source: exact_frontier_center
   frontier_goal_is_shifted_or_standoff: false
+  planner_endpoint_is_execution_goal: false
   source_code_quirk: MapEx base.yaml sets unknown_as_occ=true, but sim_utils.get_inflated_planning_maps() hard-codes unknown_as_occ=false. Hospital does not reproduce this simulator-specific planner inconsistency; Nearest and MapEx use the same Nav2 execution adapter.
 
 benchmark_clock:
@@ -59,6 +63,9 @@ logging:
   nav2_path_validation_status: true
   planner_timing_ms: true
   selected_path_length: true
+  planner_endpoint_audit: true
+  planner_endpoint_to_frontier_m: true
+  exact_execution_goal_audit: true
   navigation_result_detail: true
   periodic_map_interval_s: 10.0
   final_map_snapshot: true
@@ -74,6 +81,7 @@ navigation:
   goal_timeout_s: 180.0
   stall_timeout_s: 30.0
   use_same_hospital_nav2_stack: true
+  gridbased_planner_tolerance_m: 0.0
 
 termination:
   rule: no_planner_reachable_mapex_frontier_stable_completion
@@ -84,6 +92,6 @@ termination:
   exact_terminal_policy_state_required: true
 
 runs:
-  pilot_run_id: nearest_pilot_007
+  pilot_run_id: nearest_pilot_008
   target_count: 10
   minimum_for_preliminary_analysis: 5
