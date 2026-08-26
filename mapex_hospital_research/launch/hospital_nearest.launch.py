@@ -111,7 +111,7 @@ def generate_launch_description() -> LaunchDescription:
 
     return LaunchDescription(
         [
-            DeclareLaunchArgument("run_id", default_value="nearest_pilot_003"),
+            DeclareLaunchArgument("run_id", default_value="nearest_pilot_004"),
             DeclareLaunchArgument("use_rviz", default_value="True"),
             DeclareLaunchArgument("headless", default_value="False"),
             recorder,
