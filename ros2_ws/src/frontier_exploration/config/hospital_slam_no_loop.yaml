@@ -1,9 +1,9 @@
-# Diagnostic Hospital slam_toolbox profile for A/B testing map jumps.
+# Diagnostic Hospital slam_toolbox profile for A/B testing map warping.
 #
-# This is intentionally identical to hospital_slam.yaml except that loop
-# closure is disabled and debug logging is enabled. If the large map jump seen
-# between snapshots 000173 and 000174 disappears with this profile, false loop
-# closure becomes the leading root-cause explanation.
+# This profile is intentionally identical to hospital_slam.yaml for mapping and
+# scan-graph parameters except that loop closure is disabled and debug logging is
+# enabled. Therefore an A/B difference isolates loop-closure behavior instead of
+# also changing keyframe spacing.
 slam_toolbox:
   ros__parameters:
     solver_plugin: solver_plugins::CeresSolver
@@ -36,8 +36,8 @@ slam_toolbox:
 
     use_scan_matching: true
     use_scan_barycenter: true
-    minimum_travel_distance: 0.20
-    minimum_travel_heading: 0.20
+    minimum_travel_distance: 0.10
+    minimum_travel_heading: 0.10
     check_min_dist_and_heading_precisely: true
     scan_buffer_size: 20
     scan_buffer_maximum_scan_distance: 8.0
