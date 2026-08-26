@@ -12,6 +12,16 @@
 # warnings on the target machine. The lower speed and smaller MPPI workload keep
 # Nav2 responsive while giving slam_toolbox denser, better-overlapped scans.
 
+planner_server:
+  ros__parameters:
+    GridBased:
+      # Hospital frontier semantics require the exact selected frontier cell.
+      # The upstream TurtleBot4/NavFn profile uses 0.5 m tolerance, which can
+      # return a path ending half a metre short and make a near robot appear to
+      # have reached the frontier. A candidate that cannot be planned exactly is
+      # rejected by the policy and the next ranked candidate is tried instead.
+      tolerance: 0.0
+
 controller_server:
   ros__parameters:
     enable_stamped_cmd_vel: false
