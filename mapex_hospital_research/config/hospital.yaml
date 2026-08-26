@@ -1,0 +1,27 @@
+experiment:
+  world: hospital
+  robot: turtlebot4
+  use_sim_time: true
+  spawn:
+    x: null
+    y: null
+    yaw: null
+  map_resolution_m: null
+  goal_timeout_s: null
+  stopping_condition: null
+  random_seed: null
+
+slam:
+  launch_or_config: null
+
+nav2:
+  launch_or_config: null
+
+sensor:
+  lidar_topic: null
+  max_range_m: null
+
+logging:
+  root_dir: mapex_hospital_research/experiments
+  save_heavy_artifacts: true
+  commit_heavy_artifacts: false
