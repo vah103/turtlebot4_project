@@ -11,9 +11,9 @@ but adapts the execution layer to a live TurtleBot4/Nav2 stack:
 - a stable non-empty frontier set is periodically revalidated instead of treating
   one transient no-path result as permanent evidence;
 - execution failures are suppressed only for a bounded cooldown, not forever;
-- frontier goals have no policy-defined yaw.  The planner request preserves the
-  robot's current yaw as a neutral seed, while the Hospital Nav2 goal checker is
-  configured to ignore final yaw.
+- completion is forbidden while an execution-failure cooldown is still active;
+- frontier goals have no policy-defined yaw. The planner request preserves the
+  robot's current yaw as a neutral seed, while Hospital Nav2 ignores final yaw.
 
 These execution adaptations must be shared by Nearest, full MapEx and any
 proposed Hospital method used in the comparison.
@@ -45,6 +45,7 @@ class HospitalAdaptedNearestROS(ResearchHospitalMapExNearestROS):
     def __init__(self, run_id: str) -> None:
         self._last_planner_revalidation_sec: float | None = None
         self._execution_failure_cooldowns: list[tuple[float, float, float]] = []
+        self._cooldown_wait_notice_shown = False
         super().__init__(run_id)
         self.get_logger().warning(
             "HOSPITAL ADAPTATION ACTIVE: MapEx cur_pose_dist_threshold_m=1.0 is "
@@ -83,16 +84,42 @@ class HospitalAdaptedNearestROS(ResearchHospitalMapExNearestROS):
             self._nav2_audit_from_rows(self._current_policy.get("candidates", []))
         )
 
-    def _is_execution_suppressed(self, x: float, y: float) -> bool:
-        """Suppress a failed execution region only until its cooldown expires."""
+    def _prune_execution_cooldowns(self) -> None:
         now = self._now_sec()
         self._execution_failure_cooldowns = [
             item for item in self._execution_failure_cooldowns if item[2] > now
         ]
+
+    def _active_execution_cooldown_remaining(self) -> float:
+        self._prune_execution_cooldowns()
+        if not self._execution_failure_cooldowns:
+            return 0.0
+        now = self._now_sec()
+        return max(0.0, max(item[2] for item in self._execution_failure_cooldowns) - now)
+
+    def _is_execution_suppressed(self, x: float, y: float) -> bool:
+        """Suppress a failed execution region only until its cooldown expires."""
+        self._prune_execution_cooldowns()
         return any(
             math.hypot(x - fx, y - fy) <= EXECUTION_FAILURE_RADIUS_M
             for fx, fy, _expires in self._execution_failure_cooldowns
         )
+
+    def _observe_exhausted(self) -> None:
+        """Never declare completion while a planner-valid failure is cooling down."""
+        remaining = self._active_execution_cooldown_remaining()
+        if remaining > 0.0:
+            self._reset_idle()
+            if not self._cooldown_wait_notice_shown:
+                self._cooldown_wait_notice_shown = True
+                self.get_logger().warning(
+                    "Exhausted candidate view occurred while an execution-failure "
+                    f"cooldown is active ({remaining:.1f}s remaining); completion "
+                    "is blocked until the frontier can be reconsidered"
+                )
+            return
+        self._cooldown_wait_notice_shown = False
+        super()._observe_exhausted()
 
     def _tick(self) -> None:
         """Revalidate stable non-empty exhausted frontiers at a fixed cadence."""
@@ -118,9 +145,9 @@ class HospitalAdaptedNearestROS(ResearchHospitalMapExNearestROS):
         now = self._now_sec()
 
         if same_exhausted and not candidates:
-            # There is nothing for the planner to revalidate. Candidate generation
-            # itself is rerun every tick, so any map change that creates a frontier
-            # immediately breaks this condition.
+            # Candidate generation itself is rerun every tick; if a cooldown
+            # expires or the map creates a frontier this condition immediately
+            # breaks. _observe_exhausted also blocks completion during cooldowns.
             self._observe_exhausted()
             return
 
@@ -141,6 +168,7 @@ class HospitalAdaptedNearestROS(ResearchHospitalMapExNearestROS):
         elif not same_exhausted:
             self._last_planner_revalidation_sec = None
 
+        previous_exhausted_signature = self.exhausted_signature
         self.decision_map = msg
         self.current_candidates = candidates
         self.current_candidate_signature = signature
@@ -154,6 +182,15 @@ class HospitalAdaptedNearestROS(ResearchHospitalMapExNearestROS):
         if not revalidating_exhaustion:
             self._reset_idle()
             self.first_ready_sec = None
+
+        # A planner sweep is a distinct research decision even when /map has not
+        # republished since the previous sweep. Reset the research map-token gate
+        # whenever we are revalidating or leaving an exhausted state, otherwise
+        # multiple sweeps could overwrite one policy_decision instead of being
+        # auditable as separate completion evidence.
+        if revalidating_exhaustion or previous_exhausted_signature is not None:
+            self._decision_map_token = None
+
         self._plan_next_candidate()
 
     def _plan_next_candidate(self) -> None:
@@ -175,8 +212,6 @@ class HospitalAdaptedNearestROS(ResearchHospitalMapExNearestROS):
             self.exhausted_signature = self.current_candidate_signature
             self._last_planner_revalidation_sec = self._now_sec()
 
-            # Exact terminal state for this planner sweep. Completion is only
-            # allowed after repeated sweeps of an unchanged non-empty set.
             if self._current_policy is not None:
                 self._refresh_nav2_audit_fields()
                 self._current_policy["outcome"] = (
@@ -333,8 +368,6 @@ class HospitalAdaptedNearestROS(ResearchHospitalMapExNearestROS):
         self.active_frontier_xy = frontier_xy
         self._viz_checking_candidate = None
 
-        # The planner path is reachability evidence. Manager pairs it with the
-        # exact frontier center and executes the exact x/y goal.
         self.path_pub.publish(path)
         point = PointStamped()
         point.header.frame_id = (
@@ -359,11 +392,10 @@ class HospitalAdaptedNearestROS(ResearchHospitalMapExNearestROS):
 
     def _on_goal_success(self, msg) -> None:
         super()._on_goal_success(msg)
-        # A successful move changes the local execution context, so old temporary
-        # failures should not bias subsequent frontier selection.
         self._execution_failure_cooldowns.clear()
         self.failed_execution_xy.clear()
         self._last_planner_revalidation_sec = None
+        self._cooldown_wait_notice_shown = False
 
     def _on_goal_failure(self, msg) -> None:
         failed_xy = self.active_frontier_xy
