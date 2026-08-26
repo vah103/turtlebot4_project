@@ -2,9 +2,16 @@
 """Hospital runtime wrapper for the pinned MapEx nearest policy.
 
 The policy itself remains in ``mapex_nearest_ros.py`` and is pinned to the
-published castacks/MapEx nearest semantics.  This wrapper adds only Hospital
+published castacks/MapEx nearest semantics. This wrapper adds only Hospital
 runtime diagnostics and explicit startup-failure semantics so a run with no
 usable frontier is never mislabeled as successful exploration completion.
+
+Important semantic correction:
+MapEx's ``cur_pose_dist_threshold_m`` is used when checking whether an already
+locked frontier remains valid. It is NOT a global minimum-distance filter for
+newly detected frontier candidates. The Hospital adapter therefore keeps all
+new region centers (>10 cells) in the nearest ranking, regardless of whether
+they are initially within 1 m of the robot.
 """
 
 from __future__ import annotations
@@ -20,6 +27,7 @@ from mapex_nearest_ros import (
     COMPLETION_STARTUP_GRACE_S,
     MIN_FRONTIER_DISTANCE_M,
     REGION_SIZE_THRESHOLD,
+    FrontierCandidate,
     MapExNearestROS,
 )
 
@@ -76,6 +84,11 @@ class HospitalMapExNearestROS(MapExNearestROS):
             "Hospital audit wrapper active: startup with no usable MapEx frontier "
             "is recorded as policy failure, not exploration completion"
         )
+        self.get_logger().info(
+            "MapEx semantic correction active: the 1.0 m cur_pose threshold is "
+            "diagnostic/locked-frontier validity only; new candidates are NOT "
+            "filtered by distance"
+        )
 
     def _diagnostics(self, msg, robot_xy) -> dict[str, int | float | None]:
         grid = np.asarray(msg.data, dtype=np.int16).reshape(
@@ -103,7 +116,10 @@ class HospitalMapExNearestROS(MapExNearestROS):
                 size > REGION_SIZE_THRESHOLD for size in sizes
             ),
             "center_count": len(centers),
-            "centers_at_least_1m": sum(
+            # This is informational only. In official MapEx the 1 m threshold
+            # validates an already locked frontier; it does not remove a newly
+            # detected candidate before ranking.
+            "centers_beyond_locked_validity_distance": sum(
                 distance >= MIN_FRONTIER_DISTANCE_M for distance in distances
             ),
             "min_center_distance_m": min(distances) if distances else None,
@@ -111,7 +127,29 @@ class HospitalMapExNearestROS(MapExNearestROS):
         }
 
     def _compute_candidates(self, msg, robot_xy):
-        candidates = super()._compute_candidates(msg, robot_xy)
+        """Rank all MapEx region centers; do not apply 1 m as a new-goal filter."""
+        grid = np.asarray(msg.data, dtype=np.int16).reshape(
+            int(msg.info.height), int(msg.info.width)
+        )
+        centers = self._region_representatives(self._frontier_mask(grid))
+        robot_row, robot_col = self._world_to_grid_float(
+            robot_xy[0], robot_xy[1], msg
+        )
+        res = float(msg.info.resolution)
+        candidates: list[FrontierCandidate] = []
+        for row, col in centers:
+            distance_cells = math.hypot(row - robot_row, col - robot_col)
+            distance_m = distance_cells * res
+            x, y = self._cell_to_world(row, col, msg)
+            if self._is_execution_suppressed(x, y):
+                continue
+            candidates.append(
+                FrontierCandidate(row, col, distance_cells, distance_m)
+            )
+
+        # Official MapEx nearest score: Euclidean distance, ascending.
+        candidates.sort(key=lambda item: item.distance_cells)
+
         diag = self._diagnostics(msg, robot_xy)
         diag["usable_candidate_count"] = len(candidates)
         signature = tuple(diag.items())
@@ -125,7 +163,9 @@ class HospitalMapExNearestROS(MapExNearestROS):
                 f"regions={diag['region_count']}, "
                 f"max_region={diag['max_region_size']}, "
                 f"large_regions(>10)={diag['large_region_count']}, "
-                f"centers>=1m={diag['centers_at_least_1m']}, "
+                f"centers={diag['center_count']}, "
+                f"centers>=1m(lock-validity-only)="
+                f"{diag['centers_beyond_locked_validity_distance']}, "
                 f"usable_candidates={diag['usable_candidate_count']}, "
                 f"min_center_dist={diag['min_center_distance_m']}"
             )
@@ -139,8 +179,6 @@ class HospitalMapExNearestROS(MapExNearestROS):
             return "mapex_nearest_startup_no_frontier_cells"
         if int(diag.get("large_region_count", 0) or 0) == 0:
             return "mapex_nearest_startup_no_region_larger_than_10_cells"
-        if int(diag.get("centers_at_least_1m", 0) or 0) == 0:
-            return "mapex_nearest_startup_all_frontier_centers_within_1m"
         if int(diag.get("usable_candidate_count", 0) or 0) == 0:
             return "mapex_nearest_startup_all_candidates_suppressed"
         return "mapex_nearest_startup_no_nav2_reachable_frontier"
