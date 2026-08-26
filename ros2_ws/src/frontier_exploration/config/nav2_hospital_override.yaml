@@ -7,10 +7,11 @@
 # The active Hospital world uses one continuous flat ground plane, so no
 # keepout / costmap-filter region is required.
 #
-# Long mapping runs favour stable scan matching over maximum driving speed. The
-# previous 1.5 m/s MPPI profile also produced thousands of controller deadline
-# warnings on the target machine. The lower speed and smaller MPPI workload keep
-# Nav2 responsive while giving slam_toolbox denser, better-overlapped scans.
+# Hospital has long, repetitive corridors. pilot_008 showed visible map warping
+# during a long autonomous run at the previous 0.75 m/s cap.  Keep the same Nav2
+# stack and lower the mapping-speed envelope so slam_toolbox receives more
+# overlapping geometry per metre; hospital_slam.yaml simultaneously uses denser
+# 0.10 m / 0.10 rad scan-graph spacing.
 
 planner_server:
   ros__parameters:
@@ -36,16 +37,18 @@ controller_server:
       # during long autonomous mapping runs. Disable it to improve real-time factor.
       visualize: false
 
-      # Conservative mapping speed. The Gazebo drivetrain has a slightly higher
-      # hard cap so Nav2/velocity_smoother, not the physics plugin, is the limiter.
-      vx_max: 0.75
-      vx_min: -0.15
-      vx_std: 0.25
+      # Conservative Hospital mapping speed. 0.45 m/s is deliberately below the
+      # pilot_008 0.75 m/s cap so scan matching sees denser overlap in repetitive
+      # corridors. Angular speed stays at 1.0 rad/s, with SLAM rotational
+      # keyframes tightened separately to 0.10 rad.
+      vx_max: 0.45
+      vx_min: -0.12
+      vx_std: 0.18
       wz_max: 1.0
       wz_std: 0.25
 
-      # Halve the default sampling workload. At 0.75 m/s the ~2.8 s horizon
-      # spans ~2.1 m, so a huge batch and 10 m local costmap are wasteful.
+      # At 0.45 m/s the ~2.8 s horizon spans ~1.26 m. Keep the reduced sampling
+      # workload and local planning footprint used by the stable Hospital stack.
       batch_size: 1000
       prune_distance: 3.0
       GoalCritic:
@@ -56,8 +59,6 @@ controller_server:
 local_costmap:
   local_costmap:
     ros__parameters:
-      # 6 x 6 m still contains the full ~2.1 m MPPI forward horizon with margin,
-      # while substantially reducing rolling-costmap work during long runs.
       width: 6
       height: 6
 
@@ -68,9 +69,9 @@ behavior_server:
 velocity_smoother:
   ros__parameters:
     enable_stamped_cmd_vel: false
-    max_velocity: [0.75, 0.0, 1.0]
-    max_accel: [0.8, 0.0, 1.5]
-    max_decel: [-0.8, 0.0, -1.5]
+    max_velocity: [0.45, 0.0, 1.0]
+    max_accel: [0.6, 0.0, 1.5]
+    max_decel: [-0.6, 0.0, -1.5]
 
 collision_monitor:
   ros__parameters:
