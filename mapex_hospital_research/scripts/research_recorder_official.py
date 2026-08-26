@@ -2,7 +2,7 @@
 """Official Hospital research recorder wrapper.
 
 Adds benchmark-clock synchronization, exact execution-goal audit, and stronger
-provenance to the replay-safe recorder.
+runtime provenance to the replay-safe recorder.
 """
 
 from __future__ import annotations
@@ -14,6 +14,7 @@ import math
 from pathlib import Path
 
 import rclpy
+import yaml
 from ament_index_python.packages import get_package_share_directory
 from std_msgs.msg import String
 
@@ -23,6 +24,16 @@ from research_recorder_safe import SafeResearchRecorder, _sha256_file
 
 START_TOPIC = "/frontier_exploration_start"
 SELECTED_CANDIDATE_TOPIC = "/frontier_policy_selected_candidate"
+
+
+def _deep_merge(base: dict, override: dict) -> dict:
+    merged = dict(base)
+    for key, value in override.items():
+        if isinstance(value, dict) and isinstance(merged.get(key), dict):
+            merged[key] = _deep_merge(merged[key], value)
+        else:
+            merged[key] = value
+    return merged
 
 
 class OfficialResearchRecorder(SafeResearchRecorder):
@@ -62,23 +73,50 @@ class OfficialResearchRecorder(SafeResearchRecorder):
             / "config/nav2_hospital_override.yaml",
             "installed_hospital_world": share / "worlds/hospital_aws_flat.sdf",
         }
+
+        nav2_base = (
+            Path(get_package_share_directory("nav2_bringup"))
+            / "params"
+            / "nav2_params.yaml"
+        )
+        override_path = installed["installed_hospital_nav2_override"]
+        with nav2_base.open("r", encoding="utf-8") as handle:
+            base_params = yaml.safe_load(handle) or {}
+        with override_path.open("r", encoding="utf-8") as handle:
+            override_params = yaml.safe_load(handle) or {}
+        merged_params = _deep_merge(base_params, override_params)
+        merged_snapshot = self.run_dir / "runtime_nav2_merged.yaml"
+        merged_snapshot.write_text(
+            yaml.safe_dump(merged_params, sort_keys=False), encoding="utf-8"
+        )
+
         hashes = dict(self.metadata.get("config_sha256") or {})
         for name, path in {**extra, **installed}.items():
             hashes[name] = _sha256_file(path)
+        hashes["installed_nav2_base_params"] = _sha256_file(nav2_base)
+        hashes["runtime_nav2_merged"] = _sha256_file(merged_snapshot)
+
         self.metadata["config_sha256"] = hashes
         self.metadata["frontier_exploration_package_share"] = str(share)
+        self.metadata["nav2_base_params_file"] = str(nav2_base)
+        self.metadata["runtime_nav2_merged_file"] = merged_snapshot.name
         self.metadata["sim_seed"] = None
         self.metadata["sim_seed_policy"] = (
             "intentionally_uncontrolled_gazebo_default_multiple_run_statistics"
         )
         self.metadata["exploration_start_source"] = None
-        self.metadata["execution_goal_semantics"] = "exact_frontier_center"
+        self.metadata["execution_goal_semantics"] = "exact_frontier_center_xy"
+        self.metadata["goal_yaw_semantics"] = "ignored_by_hospital_goal_checker"
         self.metadata["planner_path_semantics"] = "reachability_evidence_only"
+        self.metadata["selected_path_length_semantics"] = (
+            "planner_validation_path_length_not_executed_trajectory"
+        )
         self._write_metadata()
 
         self.get_logger().info(
             "Official recorder active: benchmark clock waits for first policy "
-            "decision before computation; installed runtime files are hashed"
+            "decision before computation; installed runtime files, Nav2 base params "
+            "and the effective merged Nav2 YAML are archived/hashed"
         )
 
     def _flush_decisions(self) -> None:
@@ -101,6 +139,7 @@ class OfficialResearchRecorder(SafeResearchRecorder):
             "goal_x",
             "goal_y",
             "goal_source",
+            "goal_yaw_semantics",
             "robot_map_x",
             "robot_map_y",
             "robot_map_yaw",
@@ -151,10 +190,11 @@ class OfficialResearchRecorder(SafeResearchRecorder):
         row["planner_endpoint_y"] = row.get("goal_y", "")
         row["planner_endpoint_to_frontier_m"] = ""
         row["goal_source"] = "pending_exact_frontier"
+        row["goal_yaw_semantics"] = "ignored_by_hospital_goal_checker"
         self._flush_decisions()
 
     def _on_selected_frontier(self, msg) -> None:
-        """The exact policy frontier is the actual NavigateToPose goal."""
+        """The exact policy frontier x/y is the actual NavigateToPose position."""
         super()._on_selected_frontier(msg)
         if self.closed or self.active_decision_index is None:
             return
@@ -165,6 +205,7 @@ class OfficialResearchRecorder(SafeResearchRecorder):
         row["goal_x"] = f"{fx:.5f}"
         row["goal_y"] = f"{fy:.5f}"
         row["goal_source"] = "exact_frontier_center"
+        row["goal_yaw_semantics"] = "ignored_by_hospital_goal_checker"
 
         try:
             px = float(row.get("planner_endpoint_x", ""))
@@ -238,6 +279,9 @@ class OfficialResearchRecorder(SafeResearchRecorder):
         match["goal_y"] = f"{gy:.5f}"
         match["goal_source"] = str(
             payload.get("goal_source", "exact_frontier_center")
+        )
+        match["goal_yaw_semantics"] = str(
+            payload.get("goal_yaw_semantics", "ignored_by_hospital_goal_checker")
         )
         if "planner_endpoint_x" in payload:
             match["planner_endpoint_x"] = f"{float(payload['planner_endpoint_x']):.5f}"
