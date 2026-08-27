@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""Hospital v1 Nearest baseline using the MapEx frontier policy.
+"""Hospital v2 Nearest baseline using the MapEx frontier policy.
 
 Run directly after sourcing ROS/workspace setup:
 
     /usr/bin/python3 mapex_hospital_research/launch/hospital_nearest.launch.py
 
-Hospital protocol keeps MapEx frontier generation + Euclidean ranking, uses
-Nav2 for execution, allows ranked frontiers below the original MapEx 1 m
-validity threshold, executes the exact selected frontier x/y with position-only
-goal semantics, revalidates transient planner failures, and uses the Hospital
-mapping-stability profile. Official-run wrappers also synchronize t=0 before
-policy computation and retain exact terminal/revalidation states.
+Hospital v2 uses a 0.10 m/cell runtime SLAM/policy grid while retaining the
+frozen 0.05 m evaluation canvas/ROI. The protocol keeps MapEx frontier
+generation + Euclidean ranking, uses Nav2 for execution, allows ranked frontiers
+below the original MapEx 1 m validity threshold, executes the exact selected
+frontier x/y with position-only goal semantics, revalidates transient planner
+failures, and uses the Hospital mapping-stability profile.
 """
 
 from __future__ import annotations
@@ -123,7 +123,7 @@ def generate_launch_description() -> LaunchDescription:
 
     return LaunchDescription(
         [
-            DeclareLaunchArgument("run_id", default_value="nearest_pilot_010"),
+            DeclareLaunchArgument("run_id", default_value="nearest_pilot_v2_001"),
             DeclareLaunchArgument("use_rviz", default_value="True"),
             DeclareLaunchArgument("headless", default_value="False"),
             recorder,
