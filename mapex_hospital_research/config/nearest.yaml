@@ -1,5 +1,5 @@
 method: nearest_frontier
-protocol_version: hospital_v1
+protocol_version: hospital_v2
 implementation:
   source_repository: castacks/MapEx
   source_commit: 53636bd1c79153acc3c74a532837d78c926bae5e
@@ -16,6 +16,7 @@ implementation:
 
 frontier:
   detector: mapex_official_frontier_rule
+  runtime_resolution_m: 0.10
   free_cell_rule: occupancy_value_equals_0
   unknown_cell_rule: occupancy_value_less_than_0
   adjacency_to_unknown: 8_neighbor
@@ -57,6 +58,8 @@ execution_adapter:
   source_code_quirk: MapEx base.yaml sets unknown_as_occ=true, but sim_utils.get_inflated_planning_maps() hard-codes unknown_as_occ=false. Hospital does not reproduce this simulator-specific planner inconsistency; Nearest and MapEx use the same Nav2 execution adapter.
 
 mapping_profile:
+  runtime_map_resolution_m: 0.10
+  evaluation_canvas_resolution_m: 0.05
   nav2_max_linear_speed_mps: 0.45
   nav2_max_angular_speed_radps: 1.0
   slam_minimum_travel_distance_m: 0.10
@@ -75,6 +78,7 @@ logging:
   exact_decision_map: true
   exact_decision_map_raw_npz: true
   exact_decision_map_fixed_canvas_npz: true
+  fixed_canvas_reprojection: nearest_neighbor_area_preserving_0.10_to_0.05
   exact_exhausted_no_candidate_state: true
   map_frame_robot_pose_per_decision: true
   all_ranked_candidates: true
