@@ -23,6 +23,7 @@ setup(
                 'launch/hospital_nav2.launch.py',
                 'launch/hospital_flat_stack.launch.py',
                 'launch/hospital_nearest_frontier.launch.py',
+                'launch/hospital_planner_only.launch.py',
             ],
         ),
         (
@@ -33,6 +34,7 @@ setup(
                 'config/map_snapshot_hospital.yaml',
                 'config/robot_status_hospital.yaml',
                 'config/nav2_hospital_override.yaml',
+                'config/hospital_planner_only_override.yaml',
                 'config/hospital_slam.yaml',
                 'config/hospital_slam_no_loop.yaml',
             ],
