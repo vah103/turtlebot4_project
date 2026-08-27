@@ -5,7 +5,8 @@ TurtleBot4 MapEx closed-loop exploration policy.
 This file is the Stage-3 "pure MapEx" counterpart of control_tb4.py:
 ROS2 map/pose -> MapEx frontier candidates -> LaMa ensemble -> mean/variance
 -> probabilistic visibility -> information gain -> I / Euclidean distance
--> best frontier -> Nav2 -> repeat after the waypoint is no longer active.
+-> ranked frontiers -> Nav2 reachability validation -> exact frontier goal
+-> repeat after the waypoint is no longer active.
 
 Primary method source:
   Ho et al., "MapEx: Indoor Structure Exploration with Probabilistic
@@ -27,7 +28,16 @@ Paper / official settings reproduced here:
   - accumulated predicted occupancy stopping threshold epsilon = 0.8
   - information gain: sum of ensemble variance inside visible AND unknown cells
   - frontier score: information_gain / Euclidean_distance
-  - choose frontier with maximum score
+  - choose highest-scoring Nav2-reachable frontier
+
+Hospital ROS adapter used here:
+  - ROS OccupancyGrid: value == 0 free, value < 0 unknown, value > 0 occupied
+  - ranked frontiers are checked with ComputePathToPose in score order
+  - a planner candidate is accepted only when action status is SUCCEEDED and
+    the returned path is non-empty
+  - NavigateToPose still receives the exact frontier x/y, never the validation
+    path endpoint
+  - frontier yaw is not a MapEx objective; Hospital Nav2 must ignore final yaw
 
 The paper states that occupancy is accumulated along each ray until epsilon is
 reached. That paper definition is implemented literally here.
@@ -60,7 +70,7 @@ import numpy as np
 import rclpy
 from action_msgs.msg import GoalStatus
 from geometry_msgs.msg import Quaternion
-from nav2_msgs.action import NavigateToPose
+from nav2_msgs.action import ComputePathToPose, NavigateToPose
 from nav_msgs.msg import OccupancyGrid, Path
 from rclpy.action import ActionClient
 from rclpy.node import Node
@@ -97,7 +107,10 @@ def quaternion_to_yaw(q: Quaternion) -> float:
     )
 
 
-def _bresenham(start: tuple[int, int], end: tuple[int, int]) -> Iterable[tuple[int, int]]:
+def _bresenham(
+    start: tuple[int, int],
+    end: tuple[int, int],
+) -> Iterable[tuple[int, int]]:
     """Yield integer (row, col) cells on a line, including both endpoints."""
     r0, c0 = start
     r1, c1 = end
@@ -122,9 +135,10 @@ def _bresenham(start: tuple[int, int], end: tuple[int, int]) -> Iterable[tuple[i
 
 def ros_occupancy_to_mapex(data: np.ndarray) -> np.ndarray:
     """ROS OccupancyGrid -> MapEx labels: 0 free, 0.5 unknown, 1 occupied."""
-    out = np.full(data.shape, 0.5, dtype=np.float32)
+    out = np.ones(data.shape, dtype=np.float32)
     out[data == 0] = 0.0
-    out[data >= 50] = 1.0
+    out[data < 0] = 0.5
+    out[data > 0] = 1.0
     return out
 
 
@@ -198,7 +212,6 @@ def extract_frontier_regions(
 
     frontier_mask = free & adjacent_unknown
     visited = np.zeros_like(frontier_mask, dtype=bool)
-    regions: list[np.ndarray] = []
     representatives: list[np.ndarray] = []
 
     for r, c in np.argwhere(frontier_mask):
@@ -230,8 +243,9 @@ def extract_frontier_regions(
 
         region = np.asarray(cells, dtype=np.int32)
         center = np.mean(region, axis=0)
-        representative = region[np.argmin(np.linalg.norm(region - center, axis=1))]
-        regions.append(region)
+        representative = region[
+            np.argmin(np.linalg.norm(region - center, axis=1))
+        ]
         representatives.append(representative)
 
     return representatives, frontier_mask
@@ -389,7 +403,9 @@ class LamaEnsemble:
                 f"found {len(model_dirs)} under {ensemble_dir}."
             )
 
-        self.models = [self._load_model(path) for path in model_dirs[:ENSEMBLE_SIZE]]
+        self.models = [
+            self._load_model(path) for path in model_dirs[:ENSEMBLE_SIZE]
+        ]
         logger.info(
             "Loaded MapEx ensemble: %s",
             ", ".join(path.name for path in model_dirs[:ENSEMBLE_SIZE]),
@@ -419,12 +435,17 @@ class LamaEnsemble:
         model.eval()
         return model
 
-    def predict_mean_variance(self, observed_map: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    def predict_mean_variance(
+        self,
+        observed_map: np.ndarray,
+    ) -> tuple[np.ndarray, np.ndarray]:
         """Eq. 2-3: Pi,t = Gi(Ot), then pixel-wise variance over 3 predictions."""
         torch = self.torch
         image_np = np.stack([observed_map, observed_map, observed_map], axis=0)
         image = torch.from_numpy(image_np).unsqueeze(0).float().to(self.device)
-        mask_np = np.isclose(observed_map, 0.5).astype(np.float32)[None, None, :, :]
+        mask_np = np.isclose(observed_map, 0.5).astype(np.float32)[
+            None, None, :, :
+        ]
         mask = torch.from_numpy(mask_np).to(self.device)
 
         predictions = []
@@ -437,7 +458,6 @@ class LamaEnsemble:
         prediction_stack = torch.stack(predictions, dim=0)
         variance = torch.var(prediction_stack, dim=0)
         mean = torch.mean(prediction_stack, dim=0)
-
         return mean.float().cpu().numpy(), variance.float().cpu().numpy()
 
 
@@ -452,21 +472,25 @@ class MapExNavigation(Node):
         self.declare_parameter("sensor_range_m", PRED_VIS_RANGE_M)
         self.declare_parameter("num_rays", PRED_VIS_NUM_RAYS)
         self.declare_parameter("epsilon", PROB_RAYCAST_EPSILON)
+        self.declare_parameter("planner_action", "/compute_path_to_pose")
+        self.declare_parameter("navigate_action", "/navigate_to_pose")
 
-        self.mapex_root = Path(
-            self.get_parameter("mapex_root").get_parameter_value().string_value
+        self.mapex_root = Path(str(self.get_parameter("mapex_root").value))
+        self.device = str(self.get_parameter("device").value)
+        self.target_resolution = float(
+            self.get_parameter("mapex_resolution_m").value
         )
-        self.device = self.get_parameter("device").get_parameter_value().string_value
-        self.target_resolution = (
-            self.get_parameter("mapex_resolution_m").get_parameter_value().double_value
-        )
-        self.sensor_range_m = (
-            self.get_parameter("sensor_range_m").get_parameter_value().double_value
-        )
-        self.num_rays = self.get_parameter("num_rays").get_parameter_value().integer_value
-        self.epsilon = self.get_parameter("epsilon").get_parameter_value().double_value
+        self.sensor_range_m = float(self.get_parameter("sensor_range_m").value)
+        self.num_rays = int(self.get_parameter("num_rays").value)
+        self.epsilon = float(self.get_parameter("epsilon").value)
+        planner_action = str(self.get_parameter("planner_action").value)
+        navigate_action = str(self.get_parameter("navigate_action").value)
 
-        if not math.isclose(self.target_resolution, MAPEX_RESOLUTION_M, abs_tol=1e-9):
+        if not math.isclose(
+            self.target_resolution,
+            MAPEX_RESOLUTION_M,
+            abs_tol=1e-9,
+        ):
             self.get_logger().warning(
                 "Paper-faithful MapEx uses 0.1 m/pixel; current parameter is %.3f m/pixel.",
                 self.target_resolution,
@@ -483,18 +507,35 @@ class MapExNavigation(Node):
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
-        self.nav_client = ActionClient(self, NavigateToPose, "navigate_to_pose")
+        self.planner_client = ActionClient(
+            self,
+            ComputePathToPose,
+            planner_action,
+        )
+        self.nav_client = ActionClient(
+            self,
+            NavigateToPose,
+            navigate_action,
+        )
+        self.get_logger().info("Waiting for Nav2 ComputePathToPose...")
+        self.planner_client.wait_for_server()
         self.get_logger().info("Waiting for Nav2 NavigateToPose...")
         self.nav_client.wait_for_server()
 
         self.frontier_marker_pub = self.create_publisher(
-            MarkerArray, "mapex/frontier_markers", 10
+            MarkerArray,
+            "mapex/frontier_markers",
+            10,
         )
         self.selected_marker_pub = self.create_publisher(
-            Marker, "mapex/selected_frontier", 10
+            Marker,
+            "mapex/selected_frontier",
+            10,
         )
         self.selected_path_pub = self.create_publisher(
-            Path, "/frontier_selected_path", 10
+            Path,
+            "/frontier_selected_path",
+            10,
         )
 
         self.latest_map: OccupancyGrid | None = None
@@ -502,6 +543,13 @@ class MapExNavigation(Node):
         self.current_goal_handle = None
         self.last_selected_grid: tuple[int, int] | None = None
         self.decision_id = 0
+
+        self.planning_active = False
+        self.pending_ranked: list[
+            tuple[float, float, float, tuple[int, int], float, float]
+        ] = []
+        self.pending_index = 0
+        self.pending_robot_yaw = 0.0
 
         self.create_timer(1.0, self.exploration_loop)
         self.get_logger().info("MapEx exploration mode active.")
@@ -528,7 +576,8 @@ class MapExNavigation(Node):
         assert self.latest_map is not None
         msg = self.latest_map
         raw = np.asarray(msg.data, dtype=np.int16).reshape(
-            msg.info.height, msg.info.width
+            msg.info.height,
+            msg.info.width,
         )
         labels = ros_occupancy_to_mapex(raw)
         coarse = downsample_to_mapex_resolution(
@@ -581,7 +630,7 @@ class MapExNavigation(Node):
 
         ray_range_cells = int(round(self.sensor_range_m / self.target_resolution))
         robot_rc = np.asarray(robot_grid, dtype=np.float64)
-        scored = []
+        scored: list[tuple[float, float, float, tuple[int, int]]] = []
 
         for representative in representatives:
             r = int(representative[0])
@@ -600,7 +649,9 @@ class MapExNavigation(Node):
             information_gain = float(np.sum(variance_map[visibility]))
 
             distance_cells = float(
-                np.linalg.norm(np.asarray([r, c], dtype=np.float64) - robot_rc)
+                np.linalg.norm(
+                    np.asarray([r, c], dtype=np.float64) - robot_rc
+                )
             )
             score = information_gain / max(distance_cells, 1e-6)
             distance_m = distance_cells * self.target_resolution
@@ -610,8 +661,12 @@ class MapExNavigation(Node):
         return scored
 
     def exploration_loop(self) -> None:
-        # Algorithm 1 only selects a new waypoint when one is not available.
-        if self.current_goal is not None or self.latest_map is None:
+        # MapEx keeps the selected frontier locked until its navigation outcome.
+        if (
+            self.current_goal is not None
+            or self.planning_active
+            or self.latest_map is None
+        ):
             return
 
         robot_pose = self._robot_pose_map()
@@ -646,7 +701,11 @@ class MapExNavigation(Node):
         self.decision_id += 1
         t0 = time.perf_counter()
         try:
-            scored = self._score_frontiers(observed, representatives, robot_grid)
+            scored = self._score_frontiers(
+                observed,
+                representatives,
+                robot_grid,
+            )
         except Exception as exc:
             self.get_logger().exception("MapEx scoring failed: %s", exc)
             return
@@ -655,29 +714,165 @@ class MapExNavigation(Node):
             self.get_logger().info("No scoreable MapEx frontier.")
             return
 
-        best_score, best_ig, best_distance_m, best_grid = scored[0]
-        goal_x, goal_y = self._grid_to_world(
-            best_grid[0], best_grid[1], origin_x, origin_y
-        )
         elapsed = time.perf_counter() - t0
+        self.pending_ranked = []
+        for score, ig, distance_m, grid in scored:
+            goal_x, goal_y = self._grid_to_world(
+                grid[0],
+                grid[1],
+                origin_x,
+                origin_y,
+            )
+            self.pending_ranked.append(
+                (score, ig, distance_m, grid, goal_x, goal_y)
+            )
 
+        best_score, best_ig, best_distance_m, best_grid, _, _ = (
+            self.pending_ranked[0]
+        )
         self.get_logger().info(
-            "MapEx decision %d: frontier=(%d,%d), IG=%.6f, distance=%.2f m, "
-            "score=%.6f, candidates=%d, compute=%.2f s",
+            "MapEx decision %d: top frontier=(%d,%d), IG=%.6f, distance=%.2f m, "
+            "score=%.6f, candidates=%d, score_compute=%.2f s; validating with Nav2",
             self.decision_id,
             best_grid[0],
             best_grid[1],
             best_ig,
             best_distance_m,
             best_score,
-            len(scored),
+            len(self.pending_ranked),
             elapsed,
         )
 
-        self.last_selected_grid = best_grid
+        self.pending_index = 0
+        self.pending_robot_yaw = robot_yaw
+        self.planning_active = True
+        self._validate_next_candidate()
+
+    def _validate_next_candidate(self) -> None:
+        if not self.planning_active:
+            return
+
+        if self.pending_index >= len(self.pending_ranked):
+            self.get_logger().warning(
+                "MapEx decision %d: no Nav2-reachable ranked frontier.",
+                self.decision_id,
+            )
+            self._clear_planning_state()
+            return
+
+        score, ig, distance_m, grid, goal_x, goal_y = self.pending_ranked[
+            self.pending_index
+        ]
+
+        goal = ComputePathToPose.Goal()
+        goal.goal.header.frame_id = "map"
+        goal.goal.header.stamp = self.get_clock().now().to_msg()
+        goal.goal.pose.position.x = goal_x
+        goal.goal.pose.position.y = goal_y
+        goal.goal.pose.position.z = 0.0
+        goal.goal.pose.orientation = yaw_to_quaternion(self.pending_robot_yaw)
+        goal.planner_id = ""
+        goal.use_start = False
+
+        self.get_logger().info(
+            "Validating MapEx rank %d/%d: frontier=(%d,%d), score=%.6f, IG=%.6f, distance=%.2f m",
+            self.pending_index + 1,
+            len(self.pending_ranked),
+            grid[0],
+            grid[1],
+            score,
+            ig,
+            distance_m,
+        )
+
+        future = self.planner_client.send_goal_async(goal)
+        future.add_done_callback(self._plan_goal_response_callback)
+
+    def _plan_goal_response_callback(self, future) -> None:
+        try:
+            handle = future.result()
+        except Exception as exc:
+            self.get_logger().warning(
+                "ComputePathToPose send failed for rank %d: %s",
+                self.pending_index + 1,
+                exc,
+            )
+            self._try_next_candidate()
+            return
+
+        if not handle.accepted:
+            self.get_logger().warning(
+                "ComputePathToPose rejected rank %d.",
+                self.pending_index + 1,
+            )
+            self._try_next_candidate()
+            return
+
+        result_future = handle.get_result_async()
+        result_future.add_done_callback(self._plan_result_callback)
+
+    def _plan_result_callback(self, future) -> None:
+        try:
+            wrapped = future.result()
+            status = int(wrapped.status)
+            path = wrapped.result.path
+            path_ok = (
+                status == GoalStatus.STATUS_SUCCEEDED
+                and bool(path.poses)
+            )
+        except Exception as exc:
+            self.get_logger().warning(
+                "ComputePathToPose result failed for rank %d: %s",
+                self.pending_index + 1,
+                exc,
+            )
+            self._try_next_candidate()
+            return
+
+        if not path_ok:
+            self.get_logger().warning(
+                "MapEx rank %d is not planner-valid: status=%d, poses=%d.",
+                self.pending_index + 1,
+                status,
+                len(path.poses),
+            )
+            self._try_next_candidate()
+            return
+
+        score, ig, distance_m, grid, goal_x, goal_y = self.pending_ranked[
+            self.pending_index
+        ]
+        self.selected_path_pub.publish(path)
+        self.last_selected_grid = grid
         self.current_goal = (goal_x, goal_y)
-        self._publish_selected_marker(goal_x, goal_y, best_score)
-        self._send_goal(goal_x, goal_y, robot_yaw)
+
+        self.get_logger().info(
+            "Selected reachable MapEx frontier rank %d: (%d,%d), score=%.6f, IG=%.6f, distance=%.2f m",
+            self.pending_index + 1,
+            grid[0],
+            grid[1],
+            score,
+            ig,
+            distance_m,
+        )
+        self._publish_selected_marker(goal_x, goal_y, score)
+
+        selected_yaw = self.pending_robot_yaw
+        self._clear_planning_state(clear_current_goal=False)
+        self._send_goal(goal_x, goal_y, selected_yaw)
+
+    def _try_next_candidate(self) -> None:
+        if not self.planning_active:
+            return
+        self.pending_index += 1
+        self._validate_next_candidate()
+
+    def _clear_planning_state(self, clear_current_goal: bool = True) -> None:
+        self.planning_active = False
+        self.pending_ranked = []
+        self.pending_index = 0
+        if clear_current_goal:
+            self.current_goal = None
 
     def _send_goal(self, x: float, y: float, current_yaw: float) -> None:
         goal = NavigateToPose.Goal()
@@ -721,7 +916,8 @@ class MapExNavigation(Node):
                 self.get_logger().info("MapEx frontier goal succeeded.")
             else:
                 self.get_logger().warning(
-                    "MapEx frontier goal ended with Nav2 status %d.", status
+                    "MapEx frontier goal ended with Nav2 status %d.",
+                    status,
                 )
         except Exception as exc:
             self.get_logger().error("NavigateToPose result failed: %s", exc)
@@ -747,7 +943,12 @@ class MapExNavigation(Node):
         msg.markers.append(delete)
 
         for idx, rc in enumerate(representatives):
-            x, y = self._grid_to_world(int(rc[0]), int(rc[1]), origin_x, origin_y)
+            x, y = self._grid_to_world(
+                int(rc[0]),
+                int(rc[1]),
+                origin_x,
+                origin_y,
+            )
             marker = Marker()
             marker.header.frame_id = "map"
             marker.header.stamp = self.get_clock().now().to_msg()
