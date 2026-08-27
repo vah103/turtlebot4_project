@@ -7,17 +7,8 @@ Pipeline:
     -> Nav2 NavigateToPose
 
 RViz visualization uses the Hospital RViz config's existing displays:
-- /frontier/goals_markers : all frontier representatives + selected goal
+- /frontier/goals_markers : frontier representatives + selected goal
 - /frontier_selected_path : current Nav2 global path
-
-This file intentionally keeps the policy simple:
-- free cell: occupancy == 0
-- unknown cell: occupancy < 0
-- frontier cell: free cell adjacent to unknown in the 8-neighborhood
-- frontier regions: 8-connected
-- keep regions with size > 10 cells
-- representative: frontier cell closest to the arithmetic mean of the region
-- ranking: straight-line Euclidean distance from robot to representative
 
 No LaMa, information gain, path-length ranking, recorder, or MapEx prediction.
 """
@@ -51,8 +42,6 @@ class NearestEuclideanFrontier(Node):
         self.create_subscription(OccupancyGrid, "/map", self.map_callback, 10)
         self.create_subscription(Path, "/plan", self.plan_callback, 10)
 
-        # These topics are already enabled automatically by
-        # ros2_ws/src/frontier_exploration/rviz/hospital_exploration.rviz.
         self.goals_pub = self.create_publisher(
             MarkerArray,
             "/frontier/goals_markers",
@@ -71,20 +60,15 @@ class NearestEuclideanFrontier(Node):
         self.timer = self.create_timer(1.0, self.exploration_step)
 
         self.get_logger().info("Nearest Euclidean Frontier started")
-        self.get_logger().info(
-            "RViz auto topics: /frontier/goals_markers, /frontier_selected_path"
-        )
 
     def map_callback(self, msg: OccupancyGrid):
         self.map_msg = msg
 
     def plan_callback(self, msg: Path):
-        """Republish Nav2's current global plan to the RViz frontier path topic."""
         self.path_pub.publish(msg)
 
     @staticmethod
     def frontier_mask(grid: np.ndarray) -> np.ndarray:
-        """Return mask of free cells touching unknown cells in 8-neighborhood."""
         height, width = grid.shape
         mask = np.zeros((height, width), dtype=bool)
 
@@ -100,10 +84,9 @@ class NearestEuclideanFrontier(Node):
 
                         nr = row + dr
                         nc = col + dc
-                        if 0 <= nr < height and 0 <= nc < width:
-                            if grid[nr, nc] < 0:
-                                mask[row, col] = True
-                                break
+                        if 0 <= nr < height and 0 <= nc < width and grid[nr, nc] < 0:
+                            mask[row, col] = True
+                            break
                     if mask[row, col]:
                         break
 
@@ -111,7 +94,6 @@ class NearestEuclideanFrontier(Node):
 
     @staticmethod
     def frontier_regions(mask: np.ndarray):
-        """Group frontier cells with 8-connectivity."""
         height, width = mask.shape
         visited = np.zeros_like(mask, dtype=bool)
         regions = []
@@ -152,7 +134,6 @@ class NearestEuclideanFrontier(Node):
 
     @staticmethod
     def representative(region):
-        """Choose the frontier cell closest to the region arithmetic mean."""
         mean_row = sum(cell[0] for cell in region) / len(region)
         mean_col = sum(cell[1] for cell in region) / len(region)
 
@@ -184,7 +165,7 @@ class NearestEuclideanFrontier(Node):
         )
 
     def publish_goal_markers(self, candidates, selected):
-        """Publish green candidate goals and the selected goal in red."""
+        """Green = candidates, small red = selected. No text labels."""
         markers = MarkerArray()
 
         clear = Marker()
@@ -194,7 +175,7 @@ class NearestEuclideanFrontier(Node):
         now = self.get_clock().now().to_msg()
 
         for index, candidate in enumerate(candidates):
-            distance, x, y, _row, _col, region_size = candidate
+            _distance, x, y, _row, _col, _region_size = candidate
 
             marker = Marker()
             marker.header.frame_id = MAP_FRAME
@@ -205,37 +186,18 @@ class NearestEuclideanFrontier(Node):
             marker.action = Marker.ADD
             marker.pose.position.x = x
             marker.pose.position.y = y
-            marker.pose.position.z = 0.15
+            marker.pose.position.z = 0.10
             marker.pose.orientation.w = 1.0
-            marker.scale.x = 0.28
-            marker.scale.y = 0.28
-            marker.scale.z = 0.28
+            marker.scale.x = 0.18
+            marker.scale.y = 0.18
+            marker.scale.z = 0.18
             marker.color.r = 0.1
             marker.color.g = 1.0
             marker.color.b = 0.1
             marker.color.a = 0.95
             markers.markers.append(marker)
 
-            text = Marker()
-            text.header.frame_id = MAP_FRAME
-            text.header.stamp = now
-            text.ns = "frontier_candidate_labels"
-            text.id = index
-            text.type = Marker.TEXT_VIEW_FACING
-            text.action = Marker.ADD
-            text.pose.position.x = x
-            text.pose.position.y = y
-            text.pose.position.z = 0.55
-            text.pose.orientation.w = 1.0
-            text.scale.z = 0.22
-            text.color.r = 1.0
-            text.color.g = 1.0
-            text.color.b = 1.0
-            text.color.a = 1.0
-            text.text = f"F{index}  d={distance:.2f}m  n={region_size}"
-            markers.markers.append(text)
-
-        distance, x, y, _row, _col, _region_size = selected
+        _distance, x, y, _row, _col, _region_size = selected
 
         chosen = Marker()
         chosen.header.frame_id = MAP_FRAME
@@ -246,35 +208,16 @@ class NearestEuclideanFrontier(Node):
         chosen.action = Marker.ADD
         chosen.pose.position.x = x
         chosen.pose.position.y = y
-        chosen.pose.position.z = 0.20
+        chosen.pose.position.z = 0.12
         chosen.pose.orientation.w = 1.0
-        chosen.scale.x = 0.50
-        chosen.scale.y = 0.50
-        chosen.scale.z = 0.50
+        chosen.scale.x = 0.24
+        chosen.scale.y = 0.24
+        chosen.scale.z = 0.24
         chosen.color.r = 1.0
         chosen.color.g = 0.1
         chosen.color.b = 0.1
         chosen.color.a = 1.0
         markers.markers.append(chosen)
-
-        chosen_text = Marker()
-        chosen_text.header.frame_id = MAP_FRAME
-        chosen_text.header.stamp = now
-        chosen_text.ns = "selected_frontier_label"
-        chosen_text.id = 0
-        chosen_text.type = Marker.TEXT_VIEW_FACING
-        chosen_text.action = Marker.ADD
-        chosen_text.pose.position.x = x
-        chosen_text.pose.position.y = y
-        chosen_text.pose.position.z = 0.85
-        chosen_text.pose.orientation.w = 1.0
-        chosen_text.scale.z = 0.28
-        chosen_text.color.r = 1.0
-        chosen_text.color.g = 0.2
-        chosen_text.color.b = 0.2
-        chosen_text.color.a = 1.0
-        chosen_text.text = f"SELECTED  d={distance:.2f}m"
-        markers.markers.append(chosen_text)
 
         self.goals_pub.publish(markers)
 
@@ -314,9 +257,8 @@ class NearestEuclideanFrontier(Node):
             distance = math.hypot(x - robot_x, y - robot_y)
             candidates.append((distance, x, y, row, col, len(region)))
 
-        # Nearest Frontier = minimum straight-line Euclidean distance.
         selected = min(candidates, key=lambda item: item[0])
-        distance, x, y, row, col, region_size = selected
+        distance, x, y, _row, _col, region_size = selected
 
         self.publish_goal_markers(candidates, selected)
 
@@ -337,8 +279,6 @@ class NearestEuclideanFrontier(Node):
         goal.pose.header.stamp = self.get_clock().now().to_msg()
         goal.pose.pose.position.x = x
         goal.pose.pose.position.y = y
-
-        # Neutral orientation. The frontier policy itself only selects position.
         goal.pose.pose.orientation.w = 1.0
 
         self.goal_active = True
