@@ -45,7 +45,7 @@ from dataclasses import dataclass
 import numpy as np
 import rclpy
 from action_msgs.msg import GoalStatus
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import Point, PoseStamped
 from nav2_msgs.action import ComputePathToPose, FollowPath
 from nav_msgs.msg import OccupancyGrid, Path
 from rclpy.action import ActionClient
@@ -53,6 +53,7 @@ from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
 from scipy.ndimage import convolve, generate_binary_structure, label
 from tf2_ros import Buffer, TransformException, TransformListener
+from visualization_msgs.msg import Marker, MarkerArray
 
 
 MAPEX_REGION_SIZE_THRESHOLD = 10
@@ -87,6 +88,10 @@ class MapExNearestSimple(Node):
         map_qos.durability = DurabilityPolicy.TRANSIENT_LOCAL
 
         self.create_subscription(OccupancyGrid, map_topic, self._on_map, map_qos)
+        self.frontier_marker_pub = self.create_publisher(
+            MarkerArray, "/frontier_markers", 10
+        )
+        self.path_pub = self.create_publisher(Path, "/frontier_selected_path", 10)
 
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
@@ -257,6 +262,49 @@ class MapExNearestSimple(Node):
             )
         return ranked
 
+    def _publish_frontier_markers(
+        self, candidates: list[FrontierCandidate]
+    ) -> None:
+        if self.latest_map is None:
+            return
+
+        marker_array = MarkerArray()
+        clear = Marker()
+        clear.action = Marker.DELETEALL
+        marker_array.markers.append(clear)
+
+        if candidates:
+            msg = self.latest_map
+            res = float(msg.info.resolution)
+
+            cells = Marker()
+            cells.header.frame_id = msg.header.frame_id or "map"
+            cells.header.stamp = self.get_clock().now().to_msg()
+            cells.ns = "mapex_frontier_candidates"
+            cells.id = 0
+            cells.type = Marker.CUBE_LIST
+            cells.action = Marker.ADD
+            cells.pose.orientation.w = 1.0
+            cells.scale.x = res
+            cells.scale.y = res
+            cells.scale.z = max(0.03, res * 0.5)
+            cells.color.r = 0.0
+            cells.color.g = 0.8
+            cells.color.b = 1.0
+            cells.color.a = 1.0
+
+            for candidate in candidates:
+                x, y = self._grid_to_world(candidate.row, candidate.col, msg)
+                point = Point()
+                point.x = x
+                point.y = y
+                point.z = 0.05
+                cells.points.append(point)
+
+            marker_array.markers.append(cells)
+
+        self.frontier_marker_pub.publish(marker_array)
+
     def _tick(self) -> None:
         if self.busy or self.latest_map is None:
             return
@@ -281,6 +329,7 @@ class MapExNearestSimple(Node):
         candidates = self._rank_candidates(msg, robot_x, robot_y)
 
         if not candidates:
+            self._publish_frontier_markers([])
             if not self.no_frontier_notice_shown:
                 self.no_frontier_notice_shown = True
                 self.get_logger().warning(
@@ -292,6 +341,7 @@ class MapExNearestSimple(Node):
         self.current_candidates = candidates
         self.current_candidate_index = 0
         self.using_standoff_fallback = False
+        self._publish_frontier_markers(candidates)
         self.busy = True
 
         nearest = candidates[0]
@@ -407,6 +457,8 @@ class MapExNearestSimple(Node):
         for pose in clean_path.poses:
             pose.header.stamp.sec = 0
             pose.header.stamp.nanosec = 0
+
+        self.path_pub.publish(clean_path)
 
         x, y = self._grid_to_world(candidate.row, candidate.col, self.latest_map)
         distance_m = candidate.distance_cells * float(self.latest_map.info.resolution)
