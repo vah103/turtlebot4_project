@@ -106,13 +106,21 @@ def generate_launch_description() -> LaunchDescription:
 
     return LaunchDescription(
         [
-            DeclareLaunchArgument('use_rviz', default_value='True'),
+            DeclareLaunchArgument(
+                'use_rviz',
+                default_value='False',
+                description='Disabled by default for lower-load Hospital runs.',
+            ),
             DeclareLaunchArgument(
                 'rviz_config_file',
                 default_value=default_rviz_config,
                 description='RViz config used by the Hospital exploration stack.',
             ),
-            DeclareLaunchArgument('headless', default_value='False'),
+            DeclareLaunchArgument(
+                'headless',
+                default_value='True',
+                description='Run Gazebo server without the graphical client.',
+            ),
             DeclareLaunchArgument('use_sim_time', default_value='true'),
             DeclareLaunchArgument(
                 'slam_params_file',
