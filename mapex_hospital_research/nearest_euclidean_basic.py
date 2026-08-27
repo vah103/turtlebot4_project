@@ -6,6 +6,11 @@ Pipeline:
     -> one representative per region -> nearest by Euclidean distance
     -> Nav2 NavigateToPose
 
+RViz visualization:
+- /nearest_frontier/goals       : all frontier representatives + selected goal
+- /nearest_frontier/path        : current Nav2 global path
+- /nearest_frontier/path_marker : same path as a line marker
+
 This file intentionally keeps the policy simple:
 - free cell: occupancy == 0
 - unknown cell: occupancy < 0
@@ -25,10 +30,11 @@ import numpy as np
 import rclpy
 from action_msgs.msg import GoalStatus
 from nav2_msgs.action import NavigateToPose
-from nav_msgs.msg import OccupancyGrid
+from nav_msgs.msg import OccupancyGrid, Path
 from rclpy.action import ActionClient
 from rclpy.node import Node
 from tf2_ros import Buffer, TransformException, TransformListener
+from visualization_msgs.msg import Marker, MarkerArray
 
 
 MIN_REGION_SIZE = 10
@@ -44,6 +50,23 @@ class NearestEuclideanFrontier(Node):
         self.goal_active = False
 
         self.create_subscription(OccupancyGrid, "/map", self.map_callback, 10)
+        self.create_subscription(Path, "/plan", self.plan_callback, 10)
+
+        self.goals_pub = self.create_publisher(
+            MarkerArray,
+            "/nearest_frontier/goals",
+            10,
+        )
+        self.path_pub = self.create_publisher(
+            Path,
+            "/nearest_frontier/path",
+            10,
+        )
+        self.path_marker_pub = self.create_publisher(
+            Marker,
+            "/nearest_frontier/path_marker",
+            10,
+        )
 
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
@@ -52,9 +75,34 @@ class NearestEuclideanFrontier(Node):
         self.timer = self.create_timer(1.0, self.exploration_step)
 
         self.get_logger().info("Nearest Euclidean Frontier started")
+        self.get_logger().info(
+            "RViz topics: /nearest_frontier/goals, "
+            "/nearest_frontier/path, /nearest_frontier/path_marker"
+        )
 
     def map_callback(self, msg: OccupancyGrid):
         self.map_msg = msg
+
+    def plan_callback(self, msg: Path):
+        """Republish Nav2 global path and also expose it as a line marker."""
+        self.path_pub.publish(msg)
+
+        marker = Marker()
+        marker.header = msg.header
+        if not marker.header.frame_id:
+            marker.header.frame_id = MAP_FRAME
+        marker.ns = "nearest_frontier_path"
+        marker.id = 0
+        marker.type = Marker.LINE_STRIP
+        marker.action = Marker.ADD
+        marker.pose.orientation.w = 1.0
+        marker.scale.x = 0.06
+        marker.color.r = 0.1
+        marker.color.g = 0.5
+        marker.color.b = 1.0
+        marker.color.a = 1.0
+        marker.points = [pose.pose.position for pose in msg.poses]
+        self.path_marker_pub.publish(marker)
 
     @staticmethod
     def frontier_mask(grid: np.ndarray) -> np.ndarray:
@@ -157,6 +205,107 @@ class NearestEuclideanFrontier(Node):
             transform.transform.translation.y,
         )
 
+    def publish_goal_markers(self, candidates, selected):
+        markers = MarkerArray()
+
+        clear = Marker()
+        clear.action = Marker.DELETEALL
+        markers.markers.append(clear)
+
+        now = self.get_clock().now().to_msg()
+
+        for index, candidate in enumerate(candidates):
+            distance, x, y, _row, _col, region_size = candidate
+
+            marker = Marker()
+            marker.header.frame_id = MAP_FRAME
+            marker.header.stamp = now
+            marker.ns = "frontier_candidates"
+            marker.id = index
+            marker.type = Marker.SPHERE
+            marker.action = Marker.ADD
+            marker.pose.position.x = x
+            marker.pose.position.y = y
+            marker.pose.position.z = 0.15
+            marker.pose.orientation.w = 1.0
+            marker.scale.x = 0.28
+            marker.scale.y = 0.28
+            marker.scale.z = 0.28
+            marker.color.r = 0.1
+            marker.color.g = 1.0
+            marker.color.b = 0.1
+            marker.color.a = 0.95
+            markers.markers.append(marker)
+
+            text = Marker()
+            text.header.frame_id = MAP_FRAME
+            text.header.stamp = now
+            text.ns = "frontier_candidate_labels"
+            text.id = index
+            text.type = Marker.TEXT_VIEW_FACING
+            text.action = Marker.ADD
+            text.pose.position.x = x
+            text.pose.position.y = y
+            text.pose.position.z = 0.55
+            text.pose.orientation.w = 1.0
+            text.scale.z = 0.22
+            text.color.r = 1.0
+            text.color.g = 1.0
+            text.color.b = 1.0
+            text.color.a = 1.0
+            text.text = f"F{index}  d={distance:.2f}m  n={region_size}"
+            markers.markers.append(text)
+
+        distance, x, y, _row, _col, _region_size = selected
+
+        chosen = Marker()
+        chosen.header.frame_id = MAP_FRAME
+        chosen.header.stamp = now
+        chosen.ns = "selected_frontier"
+        chosen.id = 0
+        chosen.type = Marker.SPHERE
+        chosen.action = Marker.ADD
+        chosen.pose.position.x = x
+        chosen.pose.position.y = y
+        chosen.pose.position.z = 0.20
+        chosen.pose.orientation.w = 1.0
+        chosen.scale.x = 0.50
+        chosen.scale.y = 0.50
+        chosen.scale.z = 0.50
+        chosen.color.r = 1.0
+        chosen.color.g = 0.1
+        chosen.color.b = 0.1
+        chosen.color.a = 1.0
+        markers.markers.append(chosen)
+
+        chosen_text = Marker()
+        chosen_text.header.frame_id = MAP_FRAME
+        chosen_text.header.stamp = now
+        chosen_text.ns = "selected_frontier_label"
+        chosen_text.id = 0
+        chosen_text.type = Marker.TEXT_VIEW_FACING
+        chosen_text.action = Marker.ADD
+        chosen_text.pose.position.x = x
+        chosen_text.pose.position.y = y
+        chosen_text.pose.position.z = 0.85
+        chosen_text.pose.orientation.w = 1.0
+        chosen_text.scale.z = 0.28
+        chosen_text.color.r = 1.0
+        chosen_text.color.g = 0.2
+        chosen_text.color.b = 0.2
+        chosen_text.color.a = 1.0
+        chosen_text.text = f"SELECTED  d={distance:.2f}m"
+        markers.markers.append(chosen_text)
+
+        self.goals_pub.publish(markers)
+
+    def clear_goal_markers(self):
+        markers = MarkerArray()
+        clear = Marker()
+        clear.action = Marker.DELETEALL
+        markers.markers.append(clear)
+        self.goals_pub.publish(markers)
+
     def exploration_step(self):
         if self.map_msg is None or self.goal_active:
             return
@@ -173,6 +322,7 @@ class NearestEuclideanFrontier(Node):
         regions = self.frontier_regions(mask)
 
         if not regions:
+            self.clear_goal_markers()
             self.get_logger().info("No frontier left. Exploration complete.")
             return
 
@@ -186,7 +336,10 @@ class NearestEuclideanFrontier(Node):
             candidates.append((distance, x, y, row, col, len(region)))
 
         # Nearest Frontier = minimum straight-line Euclidean distance.
-        distance, x, y, row, col, region_size = min(candidates, key=lambda item: item[0])
+        selected = min(candidates, key=lambda item: item[0])
+        distance, x, y, row, col, region_size = selected
+
+        self.publish_goal_markers(candidates, selected)
 
         self.get_logger().info(
             f"Selected nearest frontier: x={x:.2f}, y={y:.2f}, "
