@@ -22,6 +22,7 @@ setup(
                 'launch/hospital_flat_simulation.launch.py',
                 'launch/hospital_nav2.launch.py',
                 'launch/hospital_flat_stack.launch.py',
+                'launch/hospital_nearest_frontier.launch.py',
             ],
         ),
         (
