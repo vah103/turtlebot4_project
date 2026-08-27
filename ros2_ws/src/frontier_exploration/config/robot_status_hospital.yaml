@@ -5,6 +5,9 @@ robot_status_monitor:
     scan_topic: /scan
     path_topic: /frontier_selected_path
     selected_frontier_topic: /frontier_selected
+    frontier_cell_count_topic: /frontier_cell_count
+    frontier_group_count_topic: /frontier_group_count
+    frontier_blacklist_count_topic: /frontier_blacklist_count
     failed_goal_topic: /frontier_failed_goal
     completed_goal_topic: /frontier_completed_goal
     completion_topic: /exploration_complete
