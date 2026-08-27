@@ -49,7 +49,11 @@ def generate_launch_description() -> LaunchDescription:
     )
 
     return LaunchDescription([
-        DeclareLaunchArgument('use_rviz', default_value='True'),
+        DeclareLaunchArgument(
+            'use_rviz',
+            default_value='False',
+            description='RViz is off by default for lower-load Hospital runs.',
+        ),
         DeclareLaunchArgument(
             'rviz_config_file',
             default_value=default_rviz_config,
@@ -60,7 +64,11 @@ def generate_launch_description() -> LaunchDescription:
             default_value=default_robot_sdf,
             description='TurtleBot4 xacro used by the flat Hospital simulation.',
         ),
-        DeclareLaunchArgument('headless', default_value='False'),
+        DeclareLaunchArgument(
+            'headless',
+            default_value='True',
+            description='Skip the Gazebo graphical client by default.',
+        ),
         DeclareLaunchArgument('x_pose', default_value='0.0'),
         DeclareLaunchArgument('y_pose', default_value='12.0'),
         DeclareLaunchArgument('yaw', default_value='-1.57'),
