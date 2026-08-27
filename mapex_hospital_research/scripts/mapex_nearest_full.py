@@ -19,6 +19,10 @@ The canonical ROI mask is intentionally gitignored. If the local frozen mask is
 available, exact Hospital coverage is recorded. If it is missing, coverage is
 NaN but maps are still retained so coverage can be recomputed after restoring
 that frozen mask.
+
+Hospital v2 runs the policy/SLAM grid at 0.10 m/cell while retaining the frozen
+0.05 m evaluation canvas. Runtime cells are expanded to the canonical canvas by
+nearest-neighbour area preservation before coverage is computed.
 """
 
 from __future__ import annotations
@@ -422,16 +426,27 @@ class BaselineRecorder(Node):
         return math.atan2(siny_cosp, cosy_cosp)
 
     def _fixed_canvas(self, msg: OccupancyGrid) -> np.ndarray | None:
-        if abs(float(msg.info.resolution) - CANVAS_RESOLUTION_M) > 1e-6:
-            self.get_logger().error("Map resolution differs from hospital_canvas_v1")
-            return None
         if abs(self._origin_yaw(msg)) > 1e-4:
             self.get_logger().error("Rotated OccupancyGrid origin is unsupported for fixed-canvas paste")
+            return None
+
+        source_resolution = float(msg.info.resolution)
+        ratio_f = source_resolution / CANVAS_RESOLUTION_M
+        ratio = int(round(ratio_f))
+        if ratio < 1 or abs(ratio_f - ratio) > 1e-6:
+            self.get_logger().error(
+                "Map resolution %.6f m is not an integer multiple of canonical %.3f m canvas",
+                source_resolution,
+                CANVAS_RESOLUTION_M,
+            )
             return None
 
         raw = np.asarray(msg.data, dtype=np.int16).reshape(
             int(msg.info.height), int(msg.info.width)
         )
+        if ratio > 1:
+            raw = np.repeat(np.repeat(raw, ratio, axis=0), ratio, axis=1)
+
         canvas = np.full((CANVAS_HEIGHT, CANVAS_WIDTH), -1, dtype=np.int16)
         col0 = int(round((float(msg.info.origin.position.x) - CANVAS_ORIGIN_X_M) / CANVAS_RESOLUTION_M))
         row0 = int(round((float(msg.info.origin.position.y) - CANVAS_ORIGIN_Y_M) / CANVAS_RESOLUTION_M))
@@ -551,6 +566,12 @@ class BaselineRecorder(Node):
             "roi_id": "hospital_connected_free_v1",
             "roi_denominator_cells": ROI_DENOMINATOR,
             "fixed_canvas_id": "hospital_canvas_v1",
+            "fixed_canvas_resolution_m": CANVAS_RESOLUTION_M,
+            "runtime_map_resolution_m": (
+                float(self.latest_map.info.resolution)
+                if self.latest_map is not None
+                else None
+            ),
             "map_snapshot_period_s": MAP_SNAPSHOT_PERIOD_S,
         }
         (self.run_dir / "summary.json").write_text(
