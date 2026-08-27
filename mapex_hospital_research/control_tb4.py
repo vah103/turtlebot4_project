@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from nav_msgs.msg import OccupancyGrid, Odometry
+from nav_msgs.msg import OccupancyGrid, Odometry, Path
 from sensor_msgs.msg import LaserScan, PointCloud2
 import sensor_msgs_py.point_cloud2 as pcl2
 import numpy as np
@@ -160,6 +160,7 @@ class navigationControl(Node):
         self.subscription_map = self.create_subscription(OccupancyGrid, '/map', self.map_callback, 10)
         self.subscription_odom = self.create_subscription(Odometry, '/odom', self.odom_callback, 10)
         self.subscription_scan = self.create_subscription(LaserScan, '/scan', self.scan_callback, best_effort_qos)
+        self.subscription_plan = self.create_subscription(Path, '/plan', self.plan_callback, 10)
         logger.info("[INFO] EXPLORATION MODE ACTIVE")
 
         # Timers for regular updates
@@ -177,6 +178,7 @@ class navigationControl(Node):
         self.goal_markers = []
         self.frontier_cloud_publisher = self.create_publisher(PointCloud2, 'frontier/frontier_points', 10)
         self.centroid_marker_publisher = self.create_publisher(MarkerArray, 'frontier/centroid_markers', 10)
+        self.selected_path_publisher = self.create_publisher(Path, '/frontier_selected_path', 10)
 
         # Create an action client for Nav2
         self.nav_to_pose_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
@@ -376,6 +378,10 @@ class navigationControl(Node):
                 self.cancel_current_goal()
                 self.kesif = True  # Proceed to the next goal
                 self.current_goal = None
+
+    def plan_callback(self, msg):
+        # Republish Nav2's current global plan on the topic used by RViz.
+        self.selected_path_publisher.publish(msg)
 
     def scan_callback(self, msg):
         self.scan_data = msg
