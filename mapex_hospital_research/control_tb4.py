@@ -433,6 +433,7 @@ class navigationControl(Node):
             delete_marker.header.frame_id = 'map'
             delete_marker.header.stamp = self.get_clock().now().to_msg()
             delete_marker.ns = 'frontier_centroids'
+            delete_marker.id = 0
             delete_marker.action = Marker.DELETEALL
             centroid_marker_array.markers.append(delete_marker)
 
@@ -441,7 +442,7 @@ class navigationControl(Node):
                 marker.header.frame_id = 'map'
                 marker.header.stamp = self.get_clock().now().to_msg()
                 marker.ns = 'frontier_centroids'
-                marker.id = idx
+                marker.id = idx + 1
                 marker.type = Marker.SPHERE
                 marker.action = Marker.ADD
 
