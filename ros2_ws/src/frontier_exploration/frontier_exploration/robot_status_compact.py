@@ -6,7 +6,7 @@ import time
 import rclpy
 from geometry_msgs.msg import PointStamped, Twist
 from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, Int32
 
 from frontier_exploration.robot_status_core import (
     STATUS_NOT_OK,
@@ -23,6 +23,11 @@ class CompactRobotStatusMonitor(RobotStatusMonitor):
         super().__init__()
         self.declare_parameter('selected_frontier_topic', '/frontier_selected')
         self.declare_parameter('trapped_topic', '/robot_trapped')
+        self.declare_parameter('frontier_cell_count_topic', '/frontier_cell_count')
+        self.declare_parameter('frontier_group_count_topic', '/frontier_group_count')
+        self.declare_parameter(
+            'frontier_blacklist_count_topic', '/frontier_blacklist_count'
+        )
         self.declare_parameter('cmd_vel_nav_topic', '/cmd_vel_nav')
         self.declare_parameter('cmd_vel_smoothed_topic', '/cmd_vel_smoothed')
         self.declare_parameter('cmd_vel_final_topic', '/cmd_vel')
@@ -32,6 +37,10 @@ class CompactRobotStatusMonitor(RobotStatusMonitor):
 
         self._frontier: tuple[float, float] | None = None
         self._frontier_frame = 'map'
+        self._frontier_cells: int | None = None
+        self._frontier_groups: int | None = None
+        self._blacklist_count: int | None = None
+        self._last_dashboard_known_cells: int | None = None
         self._robot_trapped = False
         self._cmd_vel_chain: dict[str, tuple[float, float, float] | None] = {
             'nav': None,
@@ -54,6 +63,24 @@ class CompactRobotStatusMonitor(RobotStatusMonitor):
             Bool,
             str(self.get_parameter('trapped_topic').value),
             self._on_robot_trapped,
+            transient_qos,
+        )
+        self.create_subscription(
+            Int32,
+            str(self.get_parameter('frontier_cell_count_topic').value),
+            lambda msg: self._on_frontier_count('cells', msg),
+            transient_qos,
+        )
+        self.create_subscription(
+            Int32,
+            str(self.get_parameter('frontier_group_count_topic').value),
+            lambda msg: self._on_frontier_count('groups', msg),
+            transient_qos,
+        )
+        self.create_subscription(
+            Int32,
+            str(self.get_parameter('frontier_blacklist_count_topic').value),
+            lambda msg: self._on_frontier_count('blacklist', msg),
             transient_qos,
         )
         self.create_subscription(
@@ -82,6 +109,15 @@ class CompactRobotStatusMonitor(RobotStatusMonitor):
     def _on_robot_trapped(self, msg: Bool) -> None:
         self._robot_trapped = bool(msg.data)
 
+    def _on_frontier_count(self, key: str, msg: Int32) -> None:
+        value = max(0, int(msg.data))
+        if key == 'cells':
+            self._frontier_cells = value
+        elif key == 'groups':
+            self._frontier_groups = value
+        elif key == 'blacklist':
+            self._blacklist_count = value
+
     def _on_cmd_vel(self, key: str, msg: Twist) -> None:
         self._cmd_vel_chain[key] = (
             time.monotonic(),
@@ -103,6 +139,10 @@ class CompactRobotStatusMonitor(RobotStatusMonitor):
         if len(text) <= limit:
             return text
         return text[: max(1, limit - 3)] + '...'
+
+    @staticmethod
+    def _count_text(value: int | None) -> str:
+        return 'N/A' if value is None else str(value)
 
     def _cmd_snapshot(self) -> dict[str, dict | None]:
         now = time.monotonic()
@@ -141,6 +181,8 @@ class CompactRobotStatusMonitor(RobotStatusMonitor):
 
     def _operator_thought(self, state: dict) -> str:
         integrity = state['integrity']
+        stationary = state.get('stationary_sec')
+        stall_threshold = state['thresholds'].navigation_stall_warning_sec
         if getattr(self, '_robot_trapped', False):
             return 'Đã xác nhận robot bị kẹt; không nhận thêm frontier goal mới.'
         if integrity['run_invalid']:
@@ -148,14 +190,21 @@ class CompactRobotStatusMonitor(RobotStatusMonitor):
         if self._exploration_complete:
             return 'Đã hoàn tất exploration.'
         if self._nav_active:
+            if stationary is not None and stationary >= stall_threshold:
+                return (
+                    f'Nav2 vẫn active nhưng robot đã đứng yên {stationary:.1f}s; '
+                    'đang nghi kẹt/recovery.'
+                )
+            if self._frontier is not None and self._path_length_m is not None:
+                return 'Đang đi tới frontier đã chọn; Nav2 đã tạo được global path.'
             if self._frontier is not None:
-                return 'Đang di chuyển tới frontier đã chọn.'
+                return 'Đã chọn frontier; Nav2 đang cố tạo/duy trì đường tới goal.'
             return 'Đang thực thi goal Nav2.'
         if self._consecutive_failures > 0:
-            return 'Goal trước thất bại; đang tìm frontier/đường khác.'
+            return 'Goal trước thất bại; đang bỏ goal đó và tìm frontier khác.'
         if self._frontier is not None or self._goal is not None:
-            return 'Đã chọn frontier; đang chờ/kiểm tra đường đi với Nav2.'
-        return 'Đang quét map và tìm/kiểm tra frontier tiếp theo.'
+            return 'Đã chọn frontier; đang chờ Nav2 nhận goal/tạo path.'
+        return 'Đang quét map, tìm frontier và chọn goal gần nhất tiếp theo.'
 
     def _cmd_obstruction_hint(self, state: dict) -> str | None:
         snapshot = self._cmd_snapshot()
@@ -219,14 +268,14 @@ class CompactRobotStatusMonitor(RobotStatusMonitor):
 
     def _frontier_text(self, state: dict) -> str:
         if self._frontier is None:
-            return 'Chưa có frontier đang active / đang tìm.'
+            return 'Chưa có goal frontier active.'
         x, y = self._frontier
         distance = None
         map_pose = state['map_pose']
         map_frame = str(self.get_parameter('map_frame').value)
         if map_pose is not None and self._frontier_frame == map_frame:
             distance = math.hypot(x - map_pose[0], y - map_pose[1])
-        suffix = '' if distance is None else f' | cách robot {distance:.2f} m'
+        suffix = '' if distance is None else f' | còn {distance:.2f} m'
         return f'({x:.2f}, {y:.2f}){suffix}'
 
     def _speed_text(self, state: dict) -> str:
@@ -241,10 +290,61 @@ class CompactRobotStatusMonitor(RobotStatusMonitor):
     def _navigation_text(self, state: dict) -> str:
         path = self._fmt(self._path_length_m)
         goal_distance = self._fmt(state['goal_distance_m'])
+        path_state = 'có path' if self._path_length_m is not None else 'chưa có path'
         return (
-            f'{self._nav_status} | goal còn {goal_distance} m | '
-            f'path {path} m | last={self._last_nav_result}'
+            f'{self._nav_status} | {path_state} {path} m | '
+            f'goal còn {goal_distance} m | last={self._last_nav_result}'
         )
+
+    def _scan_text(self, state: dict) -> str:
+        rate = state.get('rates_hz', {}).get('scan')
+        rate_text = 'N/A' if rate is None else f'{rate:.2f} Hz'
+        if self._scan is None:
+            return f'{rate_text} | chưa có scan'
+        ranges = [
+            float(value)
+            for value in self._scan.ranges
+            if math.isfinite(float(value))
+            and float(value) >= float(self._scan.range_min)
+            and float(value) <= float(self._scan.range_max)
+        ]
+        nearest = 'N/A' if not ranges else f'{min(ranges):.2f} m'
+        return (
+            f'{rate_text} | {len(self._scan.ranges)} rays | '
+            f'valid {len(ranges)} | gần nhất {nearest}'
+        )
+
+    def _map_progress_text(self, state: dict) -> str:
+        stats = state.get('map') or {}
+        if not stats:
+            return 'N/A'
+        known = int(stats.get('known_cells', 0))
+        if self._last_dashboard_known_cells is None:
+            delta_text = 'mốc đầu'
+        else:
+            delta = known - self._last_dashboard_known_cells
+            sign = '+' if delta >= 0 else ''
+            delta_text = f'{sign}{delta:,} từ báo cáo trước'
+        self._last_dashboard_known_cells = known
+        fraction = float(stats.get('known_fraction', 0.0)) * 100.0
+        map_rate = state.get('rates_hz', {}).get('map')
+        rate_text = 'N/A' if map_rate is None else f'{map_rate:.2f} Hz'
+        return f'known {known:,} ({fraction:.2f}%) | {delta_text} | /map {rate_text}'
+
+    def _stationary_text(self, state: dict) -> str:
+        value = state.get('stationary_sec')
+        if value is None:
+            return 'đang chuyển động'
+        return f'{value:.1f} s'
+
+    def _tf_text(self, state: dict) -> str:
+        items = []
+        for label, value in state.get('tf', {}).items():
+            if value.get('ok'):
+                items.append(f'{label}=OK')
+            else:
+                items.append(f"{label}=MISSING {value.get('missing_sec', 0.0):.1f}s")
+        return ' | '.join(items) if items else 'N/A'
 
     def _dashboard(self, state: dict) -> str:
         health = state['health']
@@ -257,23 +357,42 @@ class CompactRobotStatusMonitor(RobotStatusMonitor):
                 STATUS_NOT_OK: '🔴 KHÔNG ỔN - NÊN DỪNG RUN',
             }[health['status']]
 
+        map_pose = state.get('map_pose')
+        if map_pose is None:
+            pose_text = 'N/A'
+        else:
+            pose_text = (
+                f'x={map_pose[0]:.2f}, y={map_pose[1]:.2f}, '
+                f'yaw={math.degrees(map_pose[2]):.1f}°'
+            )
+
+        frontier_stats = (
+            f'{self._count_text(self._frontier_cells)} cells | '
+            f'{self._count_text(self._frontier_groups)} groups | '
+            f'blacklist {self._count_text(self._blacklist_count)}'
+        )
+
         lines = [
-            '=' * 72,
-            f'ROBOT         : {health_mark}',
-            f'ĐANG LÀM GÌ  : {self._operator_thought(state)}',
-            f'FRONTIER      : {self._frontier_text(state)}',
-            f'TỐC ĐỘ        : {self._speed_text(state)}',
-            f'NAVIGATION    : {self._navigation_text(state)}',
-            f'CẢN TRỞ       : {self._obstruction_text(state)}',
+            '=' * 82,
+            f'ROBOT          : {health_mark}',
+            f'SUY NGHĨ       : {self._operator_thought(state)}',
+            '-' * 82,
+            f'VỊ TRÍ         : {pose_text}',
+            f'TỐC ĐỘ         : {self._speed_text(state)}',
+            f'ĐỨNG YÊN       : {self._stationary_text(state)}',
+            f'FRONTIER       : {frontier_stats}',
+            f'GOAL ĐANG CHỌN : {self._frontier_text(state)}',
+            f'NAV2           : {self._navigation_text(state)}',
             (
-                'MAP / DATA    : '
-                + (
-                    '🔴 INVALID'
-                    if state['integrity']['run_invalid']
-                    else '✅ Bình thường'
-                )
+                'KẾT QUẢ GOAL   : '
+                f'success={self._success_count} | failed={self._failure_count} | '
+                f'fail liên tiếp={self._consecutive_failures}'
             ),
-            '=' * 72,
+            f'ĐANG QUÉT      : {self._scan_text(state)}',
+            f'MAP MỞ RỘNG    : {self._map_progress_text(state)}',
+            f'TF             : {self._tf_text(state)}',
+            f'CẢN TRỞ        : {self._obstruction_text(state)}',
+            '=' * 82,
         ]
         return '\n'.join(lines) + '\n'
 
@@ -281,6 +400,9 @@ class CompactRobotStatusMonitor(RobotStatusMonitor):
         enriched = dict(state)
         enriched['selected_frontier'] = self._frontier
         enriched['selected_frontier_frame'] = self._frontier_frame
+        enriched['frontier_cells'] = self._frontier_cells
+        enriched['frontier_groups'] = self._frontier_groups
+        enriched['frontier_blacklist_count'] = self._blacklist_count
         enriched['robot_trapped'] = getattr(self, '_robot_trapped', False)
         enriched['cmd_vel_chain'] = self._cmd_snapshot()
         super()._write_jsonl(enriched)
