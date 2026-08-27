@@ -1,21 +1,23 @@
 method: mapex
+protocol_version: hospital_v2
 
 prediction:
   model: lama_ensemble
   ensemble_members: 3
-  target_resolution_m: null
+  target_resolution_m: 0.10
   checkpoint_g1: null
   checkpoint_g2: null
   checkpoint_g3: null
 
 frontier:
-  detector: wfd
-  min_frontier_size: null
+  detector: mapex_official_frontier_rule
+  runtime_resolution_m: 0.10
+  min_frontier_size_cells_strictly_greater_than: 10
 
 visibility:
-  ray_length_m: null
-  num_rays: null
-  occupancy_threshold: null
+  ray_length_m: 20.0
+  num_rays: 250
+  occupancy_threshold: 0.8
 
 information_gain:
   source: ensemble_variance
@@ -23,6 +25,10 @@ information_gain:
 selection:
   score: IG_over_distance
   distance_metric: euclidean
+
+logging:
+  evaluation_canvas_resolution_m: 0.05
+  fixed_canvas_reprojection: nearest_neighbor_area_preserving_0.10_to_0.05
 
 runs:
   target_count: 10
