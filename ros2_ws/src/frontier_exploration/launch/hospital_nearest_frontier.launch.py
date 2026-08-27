@@ -1,4 +1,4 @@
-"""Launch Hospital simulation, SLAM, Nav2, then nearest-frontier control_tb4."""
+"""Launch Hospital simulation, SLAM, Nav2, then nearest-frontier controller."""
 
 import os
 
@@ -29,13 +29,13 @@ def generate_launch_description() -> LaunchDescription:
 
     # This repository layout is:
     # turtlebot4_project/ros2_ws/install/frontier_exploration/share/frontier_exploration
-    # Go back to turtlebot4_project so the original control_tb4.py can be run
-    # directly from mapex_hospital_research without duplicating it.
+    # Go back to turtlebot4_project and run the Hospital-safe wrapper. The wrapper
+    # reuses control_tb4.py frontier/selection logic but gets robot pose from TF.
     repo_root = os.path.abspath(
         os.path.join(package_dir, '..', '..', '..', '..', '..')
     )
     control_dir = os.path.join(repo_root, 'mapex_hospital_research')
-    control_script = os.path.join(control_dir, 'control_tb4.py')
+    control_script = os.path.join(control_dir, 'control_tb4_hospital.py')
 
     use_rviz = LaunchConfiguration('use_rviz')
     rviz_config_file = LaunchConfiguration('rviz_config_file')
@@ -135,7 +135,7 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument(
                 'frontier_delay_sec',
                 default_value='30.0',
-                description='Seconds after simulation start before control_tb4.py starts.',
+                description='Seconds after simulation start before control_tb4_hospital.py starts.',
             ),
             simulation,
             map_visualizer,
