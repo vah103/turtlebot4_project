@@ -6,10 +6,9 @@ Pipeline:
     -> one representative per region -> nearest by Euclidean distance
     -> Nav2 NavigateToPose
 
-RViz visualization:
-- /nearest_frontier/goals       : all frontier representatives + selected goal
-- /nearest_frontier/path        : current Nav2 global path
-- /nearest_frontier/path_marker : same path as a line marker
+RViz visualization uses the Hospital RViz config's existing displays:
+- /frontier/goals_markers : all frontier representatives + selected goal
+- /frontier_selected_path : current Nav2 global path
 
 This file intentionally keeps the policy simple:
 - free cell: occupancy == 0
@@ -52,19 +51,16 @@ class NearestEuclideanFrontier(Node):
         self.create_subscription(OccupancyGrid, "/map", self.map_callback, 10)
         self.create_subscription(Path, "/plan", self.plan_callback, 10)
 
+        # These topics are already enabled automatically by
+        # ros2_ws/src/frontier_exploration/rviz/hospital_exploration.rviz.
         self.goals_pub = self.create_publisher(
             MarkerArray,
-            "/nearest_frontier/goals",
+            "/frontier/goals_markers",
             10,
         )
         self.path_pub = self.create_publisher(
             Path,
-            "/nearest_frontier/path",
-            10,
-        )
-        self.path_marker_pub = self.create_publisher(
-            Marker,
-            "/nearest_frontier/path_marker",
+            "/frontier_selected_path",
             10,
         )
 
@@ -76,33 +72,15 @@ class NearestEuclideanFrontier(Node):
 
         self.get_logger().info("Nearest Euclidean Frontier started")
         self.get_logger().info(
-            "RViz topics: /nearest_frontier/goals, "
-            "/nearest_frontier/path, /nearest_frontier/path_marker"
+            "RViz auto topics: /frontier/goals_markers, /frontier_selected_path"
         )
 
     def map_callback(self, msg: OccupancyGrid):
         self.map_msg = msg
 
     def plan_callback(self, msg: Path):
-        """Republish Nav2 global path and also expose it as a line marker."""
+        """Republish Nav2's current global plan to the RViz frontier path topic."""
         self.path_pub.publish(msg)
-
-        marker = Marker()
-        marker.header = msg.header
-        if not marker.header.frame_id:
-            marker.header.frame_id = MAP_FRAME
-        marker.ns = "nearest_frontier_path"
-        marker.id = 0
-        marker.type = Marker.LINE_STRIP
-        marker.action = Marker.ADD
-        marker.pose.orientation.w = 1.0
-        marker.scale.x = 0.06
-        marker.color.r = 0.1
-        marker.color.g = 0.5
-        marker.color.b = 1.0
-        marker.color.a = 1.0
-        marker.points = [pose.pose.position for pose in msg.poses]
-        self.path_marker_pub.publish(marker)
 
     @staticmethod
     def frontier_mask(grid: np.ndarray) -> np.ndarray:
@@ -206,6 +184,7 @@ class NearestEuclideanFrontier(Node):
         )
 
     def publish_goal_markers(self, candidates, selected):
+        """Publish green candidate goals and the selected goal in red."""
         markers = MarkerArray()
 
         clear = Marker()
