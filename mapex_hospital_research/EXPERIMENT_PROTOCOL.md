@@ -4,9 +4,11 @@ Mọi phương pháp so sánh phải dùng cùng protocol, trừ khi thay đổi
 
 ## Protocol identity
 
-- Protocol version: `hospital_v1`
+- Protocol version: `hospital_v2`
 - Fixed canvas ID: `hospital_canvas_v1`
 - Evaluation ROI ID: `hospital_connected_free_v1`
+
+`hospital_v2` thay đổi runtime SLAM grid từ `0.05` sang `0.10 m/cell` để Nearest frontier, MapEx frontier và MapEx prediction cùng làm việc trên grid `0.10 m/cell`. Fixed logging canvas và canonical ROI **không đổi**: evaluation vẫn diễn ra trên `hospital_canvas_v1` ở `0.05 m/cell` để giữ nguyên thước đo coverage đã freeze.
 
 ## Environment
 
@@ -17,7 +19,7 @@ Mọi phương pháp so sánh phải dùng cùng protocol, trừ khi thay đổi
 
 ### Simulator seed policy
 
-Gazebo launch hiện tại không expose một seed cố định. Vì vậy `hospital_v1` chọn rõ policy:
+Gazebo launch hiện tại không expose một seed cố định. Vì vậy `hospital_v2` chọn rõ policy:
 
 - simulator seed: **intentionally uncontrolled** (Gazebo default);
 - không giả vờ rằng các run có cùng random seed;
@@ -29,7 +31,7 @@ Nếu sau này thêm fixed seed thì đó là thay đổi protocol và baseline 
 ## Mapping / SLAM
 
 - SLAM: `slam_toolbox` với `hospital_slam.yaml`
-- Resolution: `0.05 m/cell`
+- Runtime resolution: `0.10 m/cell`
 - Map frame: `map`
 - Mapping speed cap: `0.45 m/s`
 - `minimum_travel_distance = 0.10 m`
@@ -37,7 +39,7 @@ Nếu sau này thêm fixed seed thì đó là thay đổi protocol và baseline 
 - `minimum_time_interval = 0.15 s`
 - LiDAR max range dùng bởi SLAM: `20 m`
 
-`hospital_slam_no_loop.yaml` phải giống active profile về scan/keyframe parameters và chỉ khác ở `do_loop_closing=false` + debug logging, để A/B test loop closure không bị confound bởi keyframe spacing.
+`hospital_slam_no_loop.yaml` phải giống active profile về runtime resolution, scan/keyframe parameters và chỉ khác ở `do_loop_closing=false` + debug logging, để A/B test loop closure không bị confound.
 
 ### Fixed logging canvas
 
@@ -46,6 +48,8 @@ Nếu sau này thêm fixed seed thì đó là thay đổi protocol và baseline 
 - Width: `1504`
 - Height: `2123`
 - Origin: `(-25.6, -60.1) m`
+
+Runtime SLAM resolution và evaluation canvas resolution là hai khái niệm tách biệt. Với `hospital_v2`, mỗi cell axis-aligned `0.10 m` của `/map` được reproject bằng nearest-neighbour area preservation thành khối `2 x 2` cell trên fixed canvas `0.05 m`. Raw OccupancyGrid vẫn được lưu nguyên resolution để replay/audit.
 
 Không crop theo bounding box động và không normalize final known fraction riêng từng run thành 100%.
 
@@ -62,7 +66,7 @@ Không crop theo bounding box động và không normalize final known fraction 
 coverage(t) = known cells inside hospital_connected_free_v1 / 215435
 ```
 
-ROI/canvas không được đổi giữa Nearest, MapEx và proposed method trong `hospital_v1`.
+ROI/canvas không được đổi giữa Nearest, MapEx và proposed method trong `hospital_v2`. Thay đổi runtime SLAM resolution **không** làm thay đổi denominator hoặc SHA của ROI vì ROI được định nghĩa trên fixed evaluation canvas.
 
 ## Navigation
 
@@ -91,6 +95,7 @@ Vì vậy Hospital execution phải đảm bảo:
 
 Frontier generation bám theo `castacks/MapEx` commit `53636bd1c79153acc3c74a532837d78c926bae5e`:
 
+- runtime policy grid: `0.10 m/cell`;
 - free: occupancy `0`;
 - unknown: occupancy `<0`;
 - frontier cell: free cell kề unknown trong 8-neighbourhood;
@@ -267,13 +272,13 @@ Validator phải tách **data/protocol integrity** khỏi **experiment health** 
 - Nearest target: `10` runs
 - MapEx target: `10` runs
 - Minimum preliminary: `5` per method
-- `nearest_pilot_005`: diagnostic 1 m deadlock
-- `nearest_pilot_007`: diagnostic tolerance-snapped execution-goal bug
-- `nearest_pilot_008`: exact-frontier execution check; map warping observed
-- `nearest_pilot_009`: mapping-profile/controller diagnostic; revealed artificial yaw/runtime robustness issues
-- `nearest_pilot_010`: corrected execution/revalidation/provenance validation pilot
+- `nearest_pilot_005`: diagnostic 1 m deadlock (`hospital_v1` history)
+- `nearest_pilot_007`: diagnostic tolerance-snapped execution-goal bug (`hospital_v1` history)
+- `nearest_pilot_008`: exact-frontier execution check; map warping observed (`hospital_v1` history)
+- `nearest_pilot_009`: mapping-profile/controller diagnostic; revealed artificial yaw/runtime robustness issues (`hospital_v1` history)
+- next corrected pilot after the resolution change must record `protocol_version=hospital_v2`
 - Pilot/debug không tính vào official benchmark
 
 ## Fair-comparison rule
 
-Không đổi spawn, sensor, SLAM, Nav2, planner tolerance, timeout, stopping condition, canvas, ROI, frontier-generation semantics, Hospital below-1m adaptation, position-only goal semantics, planner revalidation, execution-failure cooldown, benchmark-clock definition hoặc resource budget giữa Nearest và MapEx mà không ghi rõ lý do và đánh giá lại baseline.
+Không đổi spawn, sensor, SLAM runtime resolution, Nav2, planner tolerance, timeout, stopping condition, canvas, ROI, frontier-generation semantics, Hospital below-1m adaptation, position-only goal semantics, planner revalidation, execution-failure cooldown, benchmark-clock definition hoặc resource budget giữa Nearest và MapEx mà không ghi rõ lý do và đánh giá lại baseline.
