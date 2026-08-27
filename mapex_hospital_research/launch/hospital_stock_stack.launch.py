@@ -1,8 +1,15 @@
-"""Launch the Hospital simulation with stock slam_toolbox and stock Nav2 params.
+"""Launch Hospital simulation with the stock TurtleBot4 SLAM and Nav2 stacks.
 
-This launch intentionally avoids the Hospital-specific SLAM and Nav2 YAML files.
-It is meant as a simple reference/baseline stack for running frontier controllers
-such as control_tb4.py against mostly upstream defaults.
+The Hospital world itself is project-specific, but SLAM and navigation are
+launched from the upstream turtlebot4_navigation package with its default
+configuration files. This launch intentionally does not use:
+
+- frontier_exploration/config/hospital_slam.yaml
+- frontier_exploration/config/hospital_slam_no_loop.yaml
+- frontier_exploration/config/nav2_hospital_override.yaml
+
+It is intended as a simple reference stack for frontier controllers such as
+control_tb4.py.
 """
 
 import os
@@ -16,8 +23,7 @@ from launch.substitutions import LaunchConfiguration
 
 def generate_launch_description() -> LaunchDescription:
     frontier_pkg = get_package_share_directory('frontier_exploration')
-    slam_pkg = get_package_share_directory('slam_toolbox')
-    nav2_pkg = get_package_share_directory('nav2_bringup')
+    tb4_nav_pkg = get_package_share_directory('turtlebot4_navigation')
 
     use_sim_time = LaunchConfiguration('use_sim_time')
     use_rviz = LaunchConfiguration('use_rviz')
@@ -45,26 +51,23 @@ def generate_launch_description() -> LaunchDescription:
         }.items(),
     )
 
-    # Stock slam_toolbox online async launch. No hospital_slam.yaml is passed.
+    # Official TurtleBot4 SLAM launch and its default slam.yaml.
     slam = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(slam_pkg, 'launch', 'online_async_launch.py')
+            os.path.join(tb4_nav_pkg, 'launch', 'slam.launch.py')
         ),
         launch_arguments={
             'use_sim_time': use_sim_time,
         }.items(),
     )
 
-    # Stock Nav2 navigation launch using nav2_bringup's default nav2_params.yaml.
-    # No nav2_hospital_override.yaml is merged or loaded here.
+    # Official TurtleBot4 Nav2 launch and its default nav2.yaml.
     nav2 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(nav2_pkg, 'launch', 'navigation_launch.py')
+            os.path.join(tb4_nav_pkg, 'launch', 'nav2.launch.py')
         ),
         launch_arguments={
             'use_sim_time': use_sim_time,
-            'autostart': 'true',
-            'use_composition': 'false',
         }.items(),
     )
 
