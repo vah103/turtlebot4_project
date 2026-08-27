@@ -1,15 +1,9 @@
-"""Launch Hospital simulation with the stock TurtleBot4 SLAM and Nav2 stacks.
+"""Launch Hospital simulation with stock TurtleBot4 Nav2 and near-stock SLAM.
 
-The Hospital world itself is project-specific, but SLAM and navigation are
-launched from the upstream turtlebot4_navigation package with its default
-configuration files. This launch intentionally does not use:
-
-- frontier_exploration/config/hospital_slam.yaml
-- frontier_exploration/config/hospital_slam_no_loop.yaml
-- frontier_exploration/config/nav2_hospital_override.yaml
-
-It is intended as a simple reference stack for frontier controllers such as
-control_tb4.py.
+The Hospital world is project-specific. Nav2 stays fully stock from
+`turtlebot4_navigation`. SLAM uses `mapex_hospital_research/config/slam.yaml`,
+which follows the TurtleBot4 stock SLAM config except that max_laser_range is
+20 m to match the simulated Hospital LiDAR.
 """
 
 import os
@@ -24,6 +18,8 @@ from launch.substitutions import LaunchConfiguration
 def generate_launch_description() -> LaunchDescription:
     frontier_pkg = get_package_share_directory('frontier_exploration')
     tb4_nav_pkg = get_package_share_directory('turtlebot4_navigation')
+    research_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    slam_params = os.path.join(research_root, 'config', 'slam.yaml')
 
     use_sim_time = LaunchConfiguration('use_sim_time')
     use_rviz = LaunchConfiguration('use_rviz')
@@ -57,6 +53,7 @@ def generate_launch_description() -> LaunchDescription:
         ),
         launch_arguments={
             'use_sim_time': use_sim_time,
+            'params': slam_params,
         }.items(),
     )
 
