@@ -83,6 +83,19 @@
     </include>
 
     <!--
+      Restore the closed curtain from the original AWS Hospital scene.  In the
+      stripped flat world this model was missing, leaving an artificial opening
+      at the west-side patient bay that lidar / SLAM incorrectly treated as a
+      traversable doorway.
+    -->
+    <include>
+      <name>hospital_closed_curtain_left</name>
+      <uri>model://aws_robomaker_hospital_curtain_closed_01</uri>
+      <pose>-11.022 -7.27757 0 0 0 1.57907</pose>
+      <static>true</static>
+    </include>
+
+    <!--
       The stripped structural world does not load the two elevator door models
       used by the original AWS scene, leaving two openings at the north end of
       the corridor.  Close those openings with ordinary physical geometry so
