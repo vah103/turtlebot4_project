@@ -25,8 +25,7 @@ slam_toolbox:
     throttle_scans: 1
     transform_publish_period: 0.02
     map_update_interval: 3.0
-    # Hospital v2 runtime grid matches the 0.10 m/pixel MapEx policy grid.
-    resolution: 0.10
+    resolution: 0.05
     restamp_tf: false
     min_laser_range: 0.0
     max_laser_range: 20.0
