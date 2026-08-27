@@ -45,6 +45,11 @@ Output:
 The frozen Hospital ROI mask is optional at runtime. If it is unavailable, exact
 coverage is recorded as NaN while raw/fixed maps are still retained for offline
 recomputation.
+
+Hospital v2 runs SLAM at 0.10 m/cell while the frozen evaluation canvas remains
+0.05 m/cell. Axis-aligned runtime maps whose resolution is an integer multiple of
+the canvas resolution are expanded by nearest-neighbour area preservation before
+being pasted into the fixed canvas.
 """
 
 from __future__ import annotations
@@ -351,18 +356,30 @@ class ExplorationRecorder(Node):
         return math.atan2(siny_cosp, cosy_cosp)
 
     def _fixed_canvas(self, msg: OccupancyGrid) -> np.ndarray | None:
-        if abs(float(msg.info.resolution) - CANVAS_RESOLUTION_M) > 1e-6:
-            self.get_logger().error("Map resolution differs from hospital_canvas_v1")
-            return None
         if abs(self._origin_yaw(msg)) > 1e-4:
             self.get_logger().error(
                 "Rotated OccupancyGrid origin is unsupported for fixed-canvas paste"
             )
             return None
 
+        source_resolution = float(msg.info.resolution)
+        ratio_f = source_resolution / CANVAS_RESOLUTION_M
+        ratio = int(round(ratio_f))
+        if ratio < 1 or abs(ratio_f - ratio) > 1e-6:
+            self.get_logger().error(
+                "Map resolution %.6f m is not an integer multiple of %s %.3f m",
+                source_resolution,
+                CANVAS_ID,
+                CANVAS_RESOLUTION_M,
+            )
+            return None
+
         raw = np.asarray(msg.data, dtype=np.int16).reshape(
             int(msg.info.height), int(msg.info.width)
         )
+        if ratio > 1:
+            raw = np.repeat(np.repeat(raw, ratio, axis=0), ratio, axis=1)
+
         canvas = np.full((CANVAS_HEIGHT, CANVAS_WIDTH), -1, dtype=np.int16)
         col0 = int(
             round(
@@ -499,6 +516,12 @@ class ExplorationRecorder(Node):
             "roi_id": ROI_ID,
             "roi_denominator_cells": ROI_DENOMINATOR,
             "fixed_canvas_id": CANVAS_ID,
+            "fixed_canvas_resolution_m": CANVAS_RESOLUTION_M,
+            "runtime_map_resolution_m": (
+                float(self.latest_map.info.resolution)
+                if self.latest_map is not None
+                else None
+            ),
             "map_snapshot_period_s": MAP_SNAPSHOT_PERIOD_S,
         }
         (self.run_dir / "summary.json").write_text(
