@@ -7,7 +7,8 @@ control_tb4.py, but fixes Hospital integration issues for SLAM Toolbox + Nav2:
 2. a transient out-of-map pose is not interpreted as exploration completion;
 3. shutdown is performed safely without calling rclpy.shutdown() twice;
 4. failed/rejected Nav2 goals are temporarily blacklisted so the controller
-   does not immediately select the same unreachable frontier again.
+   does not immediately select the same unreachable frontier again;
+5. lightweight diagnostic topics are published for a headless terminal monitor.
 """
 
 import logging
@@ -15,6 +16,9 @@ import math
 import time
 
 import rclpy
+from geometry_msgs.msg import PointStamped
+from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
+from std_msgs.msg import Bool, Int32
 from tf2_ros import Buffer, TransformException, TransformListener
 
 import control_tb4 as base
@@ -42,11 +46,51 @@ class HospitalNavigationControl(base.navigationControl):
 
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
+
+        # Headless Hospital runs do not need the high-rate RViz frontier cloud
+        # or centroid marker timers. Goal/path data remains available through
+        # the lightweight status topics below and /frontier_selected_path.
+        if hasattr(self, 'timer_frontier'):
+            self.timer_frontier.cancel()
+        if hasattr(self, 'timer_centroid_markers'):
+            self.timer_centroid_markers.cancel()
+
+        transient_qos = QoSProfile(
+            depth=1,
+            reliability=ReliabilityPolicy.RELIABLE,
+            durability=DurabilityPolicy.TRANSIENT_LOCAL,
+        )
+        self.selected_frontier_pub = self.create_publisher(
+            PointStamped, '/frontier_selected', transient_qos
+        )
+        self.failed_goal_pub = self.create_publisher(
+            PointStamped, '/frontier_failed_goal', 10
+        )
+        self.completed_goal_pub = self.create_publisher(
+            PointStamped, '/frontier_completed_goal', 10
+        )
+        self.exploration_complete_pub = self.create_publisher(
+            Bool, '/exploration_complete', transient_qos
+        )
+        self.frontier_cell_count_pub = self.create_publisher(
+            Int32, '/frontier_cell_count', transient_qos
+        )
+        self.frontier_group_count_pub = self.create_publisher(
+            Int32, '/frontier_group_count', transient_qos
+        )
+        self.frontier_blacklist_count_pub = self.create_publisher(
+            Int32, '/frontier_blacklist_count', transient_qos
+        )
+
         logger.info("[INFO] Hospital fix active: robot pose uses TF map -> base_link")
         logger.info(
             "[INFO] Failed frontier goals are blacklisted for "
             f"{self.failed_goal_cooldown_s:.0f}s within "
             f"{self.failed_goal_radius_m:.2f}m"
+        )
+        logger.info(
+            "[INFO] Headless diagnostics active; periodic RViz frontier/centroid "
+            "visualization is disabled."
         )
 
     def odom_callback(self, msg):
@@ -76,6 +120,32 @@ class HospitalNavigationControl(base.navigationControl):
 
     def _now_sim_s(self):
         return self.get_clock().now().nanoseconds / 1e9
+
+    def _goal_point(self, goal):
+        if goal is None:
+            return None
+        msg = PointStamped()
+        msg.header.frame_id = 'map'
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.point.x = float(goal[0])
+        msg.point.y = float(goal[1])
+        msg.point.z = 0.0
+        return msg
+
+    def _publish_goal_event(self, publisher, goal):
+        msg = self._goal_point(goal)
+        if msg is not None:
+            publisher.publish(msg)
+
+    def _publish_frontier_stats(self, groups):
+        usable_groups = groups or []
+        cell_count = sum(len(group[1]) for group in usable_groups)
+        self._prune_failed_goals()
+        self.frontier_cell_count_pub.publish(Int32(data=int(cell_count)))
+        self.frontier_group_count_pub.publish(Int32(data=int(len(usable_groups))))
+        self.frontier_blacklist_count_pub.publish(
+            Int32(data=int(len(self.failed_goal_blacklist)))
+        )
 
     def _prune_failed_goals(self):
         now_s = self._now_sim_s()
@@ -141,6 +211,7 @@ class HospitalNavigationControl(base.navigationControl):
             if not goal_handle.accepted:
                 logger.info('Goal rejected by Nav2')
                 self._blacklist_goal(attempted_goal, 'Nav2 rejected goal')
+                self._publish_goal_event(self.failed_goal_pub, attempted_goal)
                 self.kesif = True
                 self.current_goal = None
                 return
@@ -152,30 +223,42 @@ class HospitalNavigationControl(base.navigationControl):
         except Exception as exc:
             logger.error(f'Exception in goal_response_callback: {exc}')
             self._blacklist_goal(attempted_goal, 'goal-response exception')
+            self._publish_goal_event(self.failed_goal_pub, attempted_goal)
             self.kesif = True
             self.current_goal = None
 
     def get_result_callback(self, future):
-        """Blacklist an unreachable Nav2 goal before selecting the next frontier."""
+        """Record the Nav2 result and blacklist an actually failed goal."""
         attempted_goal = self.current_goal
         try:
             status = future.result().status
             if status == base.GoalStatus.STATUS_SUCCEEDED:
                 logger.info('Goal succeeded!')
+                self._publish_goal_event(self.completed_goal_pub, attempted_goal)
             else:
                 logger.info(f'Goal failed with status: {status}')
                 # If feedback_callback already considered the goal reached and
-                # cleared current_goal, attempted_goal is None and we deliberately
-                # do not blacklist the resulting cancellation.
-                self._blacklist_goal(attempted_goal, f'Nav2 status {status}')
+                # cleared current_goal, attempted_goal is None. The resulting
+                # Nav2 cancellation is not a failure and must not be counted.
+                if attempted_goal is not None:
+                    self._blacklist_goal(attempted_goal, f'Nav2 status {status}')
+                    self._publish_goal_event(self.failed_goal_pub, attempted_goal)
 
             self.kesif = True
             self.current_goal = None
         except Exception as exc:
             logger.error(f'Exception in get_result_callback: {exc}')
             self._blacklist_goal(attempted_goal, 'result exception')
+            self._publish_goal_event(self.failed_goal_pub, attempted_goal)
             self.kesif = True
             self.current_goal = None
+
+    def feedback_callback(self, feedback_msg):
+        """Preserve the 0.5 m success rule and expose it to the status monitor."""
+        attempted_goal = self.current_goal
+        super().feedback_callback(feedback_msg)
+        if attempted_goal is not None and self.current_goal is None:
+            self._publish_goal_event(self.completed_goal_pub, attempted_goal)
 
     def finish_exploration(self):
         if self.exploration_finished:
@@ -183,6 +266,7 @@ class HospitalNavigationControl(base.navigationControl):
 
         self.exploration_finished = True
         logger.info("[INFO] EXPLORATION COMPLETED")
+        self.exploration_complete_pub.publish(Bool(data=True))
 
         if self.start_time is not None:
             self.end_time = time.perf_counter()
@@ -252,6 +336,7 @@ class HospitalNavigationControl(base.navigationControl):
 
         self.groups = groups
         self.centroids = [g[2] for g in groups if g[2] is not None]
+        self._publish_frontier_stats(groups)
 
         if len(groups) == 0:
             # If Nav2 is still driving to the current frontier, wait for that
@@ -281,10 +366,11 @@ class HospitalNavigationControl(base.navigationControl):
         goal_y = best_centroid[0] * self.resolution + self.originY
 
         if self.current_goal is None:
+            self.current_goal = (goal_x, goal_y)
+            self._publish_goal_event(self.selected_frontier_pub, self.current_goal)
             self.send_goal(goal_x, goal_y)
             logger.info(f"[INFO] NEW TARGET ASSIGNED at ({goal_x}, {goal_y})")
             self.kesif = False
-            self.current_goal = (goal_x, goal_y)
             self.create_goal_marker(goal_x, goal_y)
             self.publish_goal_markers()
         else:
