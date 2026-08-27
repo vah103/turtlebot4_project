@@ -58,6 +58,7 @@ from tf2_ros import Buffer, TransformException, TransformListener
 MAPEX_REGION_SIZE_THRESHOLD = 10
 RETRY_PERIOD_S = 1.0
 POST_GOAL_SETTLE_S = 1.0
+FALLBACK_STANDOFF_M = 0.30
 
 
 @dataclass(frozen=True)
@@ -98,6 +99,7 @@ class MapExNearestSimple(Node):
         self.current_candidates: list[FrontierCandidate] = []
         self.current_candidate_index = 0
         self.current_candidate: FrontierCandidate | None = None
+        self.using_standoff_fallback = False
         self.execution_failed_cells: set[tuple[int, int]] = set()
         self.next_allowed_time_s = 0.0
         self.no_frontier_notice_shown = False
@@ -289,6 +291,7 @@ class MapExNearestSimple(Node):
         self.no_frontier_notice_shown = False
         self.current_candidates = candidates
         self.current_candidate_index = 0
+        self.using_standoff_fallback = False
         self.busy = True
 
         nearest = candidates[0]
@@ -305,12 +308,20 @@ class MapExNearestSimple(Node):
             return
 
         if self.current_candidate_index >= len(self.current_candidates):
-            self.get_logger().warning(
-                "No ranked MapEx frontier has a Nav2 path right now; retrying later."
-            )
-            self.busy = False
-            self.next_allowed_time_s = self._now_s() + RETRY_PERIOD_S
-            return
+            if not self.using_standoff_fallback:
+                self.using_standoff_fallback = True
+                self.current_candidate_index = 0
+                self.get_logger().warning(
+                    "No exact MapEx frontier has a Nav2 path; retrying ranked "
+                    "frontiers with a 0.30 m inward execution goal."
+                )
+            else:
+                self.get_logger().warning(
+                    "No ranked MapEx frontier has a Nav2 path right now; retrying later."
+                )
+                self.busy = False
+                self.next_allowed_time_s = self._now_s() + RETRY_PERIOD_S
+                return
 
         candidate = self.current_candidates[self.current_candidate_index]
         self.current_candidate = candidate
@@ -323,7 +334,15 @@ class MapExNearestSimple(Node):
             return
 
         x, y = self._grid_to_world(candidate.row, candidate.col, msg)
-        robot_yaw = robot_pose[2]
+        robot_x, robot_y, robot_yaw = robot_pose
+
+        if self.using_standoff_fallback:
+            dx = robot_x - x
+            dy = robot_y - y
+            norm = math.hypot(dx, dy)
+            if norm > FALLBACK_STANDOFF_M:
+                x += FALLBACK_STANDOFF_M * dx / norm
+                y += FALLBACK_STANDOFF_M * dy / norm
 
         pose = PoseStamped()
         pose.header.frame_id = msg.header.frame_id or "map"
@@ -391,10 +410,19 @@ class MapExNearestSimple(Node):
 
         x, y = self._grid_to_world(candidate.row, candidate.col, self.latest_map)
         distance_m = candidate.distance_cells * float(self.latest_map.info.resolution)
-        self.get_logger().warning(
-            f"Executing MapEx nearest reachable frontier: "
-            f"x={x:.2f}, y={y:.2f}, euclidean={distance_m:.2f} m"
-        )
+        if self.using_standoff_fallback:
+            goal_pose = clean_path.poses[-1].pose.position
+            self.get_logger().warning(
+                f"Executing 0.30 m fallback for MapEx frontier: "
+                f"frontier=({x:.2f}, {y:.2f}), "
+                f"goal=({goal_pose.x:.2f}, {goal_pose.y:.2f}), "
+                f"euclidean={distance_m:.2f} m"
+            )
+        else:
+            self.get_logger().warning(
+                f"Executing MapEx nearest reachable frontier: "
+                f"x={x:.2f}, y={y:.2f}, euclidean={distance_m:.2f} m"
+            )
 
         goal = FollowPath.Goal()
         goal.path = clean_path
