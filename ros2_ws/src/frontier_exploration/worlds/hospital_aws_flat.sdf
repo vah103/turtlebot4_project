@@ -103,7 +103,7 @@
       building.  These are real collision walls, not Nav2 keepout regions.
 
       Their x/y positions follow the two elevator-door poses from the original
-      Hospital scene.  The 1.60 m width safely covers the ~1.42 m door collision
+      Hospital scene.  The 1.80 m width safely covers the ~1.42 m door collision
       mesh while the 0.18 m thickness overlaps the surrounding wall enough to
       avoid narrow navigation gaps.
 
@@ -116,10 +116,10 @@
       <pose>-1.51 19.35 1.30 0 0 0</pose>
       <link name="link">
         <collision name="collision">
-          <geometry><box><size>1.60 0.18 2.60</size></box></geometry>
+          <geometry><box><size>1.80 0.18 2.60</size></box></geometry>
         </collision>
         <visual name="visual">
-          <geometry><box><size>1.60 0.18 2.60</size></box></geometry>
+          <geometry><box><size>1.80 0.18 2.60</size></box></geometry>
           <material>
             <ambient>0.86 0.86 0.86 1</ambient>
             <diffuse>0.86 0.86 0.86 1</diffuse>
@@ -133,10 +133,10 @@
       <pose>1.52843 19.3627 1.30 0 0 0</pose>
       <link name="link">
         <collision name="collision">
-          <geometry><box><size>1.60 0.18 2.60</size></box></geometry>
+          <geometry><box><size>1.80 0.18 2.60</size></box></geometry>
         </collision>
         <visual name="visual">
-          <geometry><box><size>1.60 0.18 2.60</size></box></geometry>
+          <geometry><box><size>1.80 0.18 2.60</size></box></geometry>
           <material>
             <ambient>0.86 0.86 0.86 1</ambient>
             <diffuse>0.86 0.86 0.86 1</diffuse>
