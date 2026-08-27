@@ -49,6 +49,7 @@ setup(
             [
                 'urdf/create3_hospital.urdf.xacro',
                 'urdf/hospital_turtlebot4.urdf.xacro',
+                'urdf/rplidar_hospital_low_load.urdf.xacro',
             ],
         ),
         (
