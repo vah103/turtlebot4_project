@@ -94,7 +94,7 @@ def generate_launch_description() -> LaunchDescription:
 
     nearest_frontier = ExecuteProcess(
         cmd=[
-            'python3',
+            '/usr/bin/python3',
             control_script,
             '--ros-args',
             '-p',
