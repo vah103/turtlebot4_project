@@ -28,6 +28,7 @@
 - Preflight parse YAML thực, kiểm source + installed configs thay vì chỉ tìm chuỗi text.
 - Added `launch/stock.launch.py` as a reference/debug stack: project Hospital simulation + stock TurtleBot4 Nav2 + near-stock TurtleBot4 SLAM. Debug SLAM uses `config/slam.yaml`, copied from upstream TurtleBot4 with only `max_laser_range: 20.0` changed to match the simulated Hospital LiDAR; this stack is **not** part of the official `hospital_v2` benchmark protocol.
 - Added `step.py` as a debug-only wrapper around `control_tb4.py`: one frontier goal at a time, waits for the real Nav2 terminal result, prints compact motion/navigation diagnostics, then pauses for ENTER before the next goal. `control_tb4.py` itself remains unchanged by this debug mode.
+- Added `step0.py` as a temporary debug wrapper that sets `min_distance_threshold = 0.0` so the current centroid-selection behavior can be observed without the 0.3 m rejection filter; this is diagnostic only and does not change the benchmark policy.
 - Stage-3 preparation: `control_tb4_mapex.py` dùng `MAPEX_RESOLUTION_M = 0.10`; với Hospital v2 source map `0.10`, bước downsample trở thành factor `1`, nên frontier/prediction cùng grid 0.10.
 
 ## In progress
