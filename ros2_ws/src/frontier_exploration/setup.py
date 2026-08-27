@@ -24,6 +24,7 @@ setup(
                 'launch/hospital_flat_stack.launch.py',
                 'launch/hospital_nearest_frontier.launch.py',
                 'launch/hospital_planner_only.launch.py',
+                'launch/hospital_planner_replay.launch.py',
             ],
         ),
         (
