@@ -27,9 +27,12 @@ experiments/<method>/<run_id>/
 
 ## Canonical grids
 
-- Fixed canvas: `hospital_canvas_v1`, `0.05 m`, `1504 x 2123`, origin `(-25.6,-60.1)`.
+- Runtime SLAM/policy grid for `hospital_v2`: `0.10 m/cell`.
+- Fixed evaluation canvas: `hospital_canvas_v1`, `0.05 m`, `1504 x 2123`, origin `(-25.6,-60.1)`.
 - Evaluation ROI: `hospital_connected_free_v1`, denominator `215435`.
 - ROI SHA-256: `05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1`.
+
+Runtime resolution và evaluation resolution là độc lập. Với map axis-aligned `0.10 m`, mỗi runtime cell được expand nearest-neighbour thành khối `2 x 2` trên fixed canvas `0.05 m` trước khi tính `known_fraction`/`coverage`. Raw map luôn giữ nguyên resolution gốc trong NPZ.
 
 `known_fraction` dùng full fixed canvas. `coverage` dùng frozen ROI. Không crop động và không normalize final state riêng từng run.
 
@@ -65,7 +68,7 @@ frame_id
 source_stamp_s
 ```
 
-Canvas NPZ dùng canonical canvas để evaluation/alignment.
+Canvas NPZ dùng canonical canvas để evaluation/alignment. `observed_map_canvas.npz` không được hiểu là policy input nếu policy đang chạy ở `0.10 m`; nó là bản reproject phục vụ logging/evaluation.
 
 ## Exact exhausted state và planner revalidation
 
@@ -215,6 +218,8 @@ selected_path_length_m,
 execution_result
 ```
 
+`row,col,distance_cells` là trên runtime policy grid `0.10 m` trong `hospital_v2`; `x,y,distance_m` là metric coordinates và là trường dùng để so sánh vật lý giữa methods.
+
 `nav2_action_status` là ROS action status của `ComputePathToPose`. Candidate chỉ được `selected=true` khi:
 
 ```text
@@ -274,8 +279,10 @@ Tối thiểu cho official run:
   "method": "nearest",
   "git_commit": "...",
   "git_dirty_at_recorder_start": false,
-  "protocol_version": "hospital_v1",
+  "protocol_version": "hospital_v2",
+  "runtime_map_resolution_m": 0.10,
   "fixed_canvas_id": "hospital_canvas_v1",
+  "fixed_canvas_resolution_m": 0.05,
   "evaluation_roi_id": "hospital_connected_free_v1",
   "exploration_start_sim_s": 0.0,
   "exploration_start_source": "first_policy_decision_before_compute",
@@ -318,6 +325,7 @@ Final yaw không phải frontier-policy objective.
 `hospital_slam_no_loop.yaml` phải giữ cùng:
 
 ```text
+resolution = 0.10
 minimum_travel_distance = 0.10
 minimum_travel_heading = 0.10
 minimum_time_interval = 0.15
@@ -329,6 +337,8 @@ với active `hospital_slam.yaml`; khác biệt chính dùng cho A/B là `do_loo
 
 Post-run validator kiểm tra **data/protocol integrity + experiment health**:
 
+- protocol là `hospital_v2` và raw runtime map resolution là `0.10 m/cell`;
+- fixed evaluation canvas vẫn là `hospital_canvas_v1` ở `0.05 m/cell`;
 - benchmark clock đúng;
 - metrics time/distance monotonic, coverage bounds đúng;
 - exact decision/snapshot NPZ tồn tại/readable;
