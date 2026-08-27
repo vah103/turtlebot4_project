@@ -238,7 +238,7 @@ class navigationControl(Node):
                 rclpy.shutdown()
             return
 
-        # Select the best frontier based on distance and size
+        # Select the nearest frontier
         best_centroid = self.select_best_frontier(groups, robot_position)
         if best_centroid is None:
             logger.info("[INFO] No suitable frontier found")
@@ -278,14 +278,13 @@ class navigationControl(Node):
         self.goal_handle = None
 
     def select_best_frontier(self, groups, robot_position):
-        best_score = -float('inf')
+        best_distance = float('inf')
         best_centroid = None
         robot_x, robot_y = robot_position
 
         for group_id, group_cells, centroid in groups:
             if centroid is None:
                 continue
-            group_size = len(group_cells)
 
             centroid_x = centroid[1] * self.resolution + self.originX
             centroid_y = centroid[0] * self.resolution + self.originY
@@ -297,13 +296,12 @@ class navigationControl(Node):
                 logger.debug(f"Frontier {group_id} is too close ({distance:.2f} m), skipping.")
                 continue
 
-            # Calculate score (you can adjust the weightings as needed)
-            score = group_size / (distance + 1e-6)  # Add small epsilon to avoid division by zero
+            logger.debug(f"Frontier {group_id}: distance={distance:.2f} m")
 
-            logger.debug(f"Frontier {group_id}: size={group_size}, distance={distance:.2f}, score={score:.4f}")
-
-            if score > best_score:
-                best_score = score
+            # Nearest-frontier baseline: choose the frontier centroid
+            # with the minimum Euclidean distance to the robot.
+            if distance < best_distance:
+                best_distance = distance
                 best_centroid = centroid
 
         return best_centroid
