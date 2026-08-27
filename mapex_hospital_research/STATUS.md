@@ -26,6 +26,7 @@
   - recorder archive/hash cả base Nav2 params và `runtime_nav2_merged.yaml` effective config;
   - validator kiểm effective Nav2 config, action status, terminal revalidation và guard `SUCCEEDED` nhưng odometry gần như không di chuyển.
 - Preflight parse YAML thực, kiểm source + installed configs thay vì chỉ tìm chuỗi text.
+- Added `launch/hospital_stock_stack.launch.py` as a reference/debug stack: project Hospital simulation + stock `turtlebot4_navigation` SLAM/Nav2 launch/config; it intentionally bypasses Hospital-specific SLAM/Nav2 YAML and is **not** part of the official `hospital_v2` benchmark protocol.
 - Stage-3 preparation: `control_tb4_mapex.py` dùng `MAPEX_RESOLUTION_M = 0.10`; với Hospital v2 source map `0.10`, bước downsample trở thành factor `1`, nên frontier/prediction cùng grid 0.10.
 
 ## In progress
