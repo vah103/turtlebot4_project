@@ -2,17 +2,20 @@
 
 ## Current stage
 
-**Stage 2 — MapEx Nearest baseline (corrected execution pilot before official runs)**
+**Stage 2 — MapEx Nearest baseline (Hospital v2 resolution-change validation before official runs)**
 
 ## Done
 
 - Fixed canvas `hospital_canvas_v1`: `0.05 m`, `1504 x 2123`, origin `(-25.6,-60.1)`.
 - Frozen ROI `hospital_connected_free_v1`: denominator `215435`, SHA-256 `05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1`.
+- Hospital runtime protocol advanced to `hospital_v2`: SLAM/policy map is now `0.10 m/cell`, while fixed evaluation canvas/ROI remain frozen at `0.05 m/cell`.
+- Recorder reprojection updated: axis-aligned runtime maps whose resolution is an integer multiple of `0.05 m` are expanded nearest-neighbour onto `hospital_canvas_v1`; a `0.10 m` SLAM cell becomes a `2 x 2` block on the evaluation canvas.
+- `hospital_slam.yaml` and `hospital_slam_no_loop.yaml` both use runtime `resolution: 0.10`; loop-search/correlation resolutions were intentionally not changed because they are matcher parameters, not occupancy-grid resolution.
 - Official MapEx source pinned: `53636bd1c79153acc3c74a532837d78c926bae5e`.
 - Nearest frontier semantics ported: 8-neighbour frontier, 8-connected regions, region `>10`, representative gần arithmetic mean nhất, Euclidean ranking.
 - Hospital bỏ original MapEx `<1 m` rejection vì `nearest_pilot_005` chứng minh startup deadlock; `below_1m` chỉ còn diagnostic.
 - `nearest_pilot_007` phát hiện planner endpoint tolerance-snapped bị dùng sai làm NavigateToPose goal; đã sửa exact frontier x/y execution và `GridBased.tolerance=0.0`.
-- `nearest_pilot_008` xác nhận exact-frontier logging nhưng lộ long-run map warping; mapping profile đổi sang `0.45 m/s` + SLAM `0.10 m / 0.10 rad`.
+- `nearest_pilot_008` xác nhận exact-frontier logging nhưng lộ long-run map warping; mapping profile đổi sang `0.45 m/s` + SLAM keyframe `0.10 m / 0.10 rad`.
 - `nearest_pilot_009` lộ thêm runtime/controller problem: planner replan liên tục nhưng `/cmd_vel_nav`, `/cmd_vel`, `/odom` gần zero.
 - Rà soát code sau pilot_009 phát hiện và đã sửa các vấn đề:
   - frontier policy là position-only nhưng code từng ép quaternion yaw `0`; Hospital giờ bỏ final-yaw objective (`yaw_goal_tolerance=pi`, `GoalAngleCritic=false`);
@@ -22,31 +25,33 @@
   - `selected_path_length_m` được định nghĩa rõ là validation-path length, không phải executed trajectory;
   - recorder archive/hash cả base Nav2 params và `runtime_nav2_merged.yaml` effective config;
   - validator kiểm effective Nav2 config, action status, terminal revalidation và guard `SUCCEEDED` nhưng odometry gần như không di chuyển.
-- `hospital_slam_no_loop.yaml` đã đồng bộ `0.10 m / 0.10 rad` với active SLAM profile để A/B loop-closure không bị confound.
 - Preflight parse YAML thực, kiểm source + installed configs thay vì chỉ tìm chuỗi text.
+- Stage-3 preparation: `control_tb4_mapex.py` dùng `MAPEX_RESOLUTION_M = 0.10`; với Hospital v2 source map `0.10`, bước downsample trở thành factor `1`, nên frontier/prediction cùng grid 0.10.
 
 ## In progress
 
-- `nearest_pilot_010`: corrected execution/revalidation/provenance pilot.
-- Kiểm robot không còn đứng yên do artificial final-yaw requirement.
-- Kiểm map geometry dài hạn; nếu vẫn warp, dùng synchronized `hospital_slam_no_loop.yaml` A/B để kiểm false loop closure.
-- Stage-3 preparation only: đã tạo `control_tb4_mapex.py` bám MapEx paper Sec. IV / Algorithm 1 và source pin; file chưa runtime-validate, chưa phải official MapEx benchmark runner và không thay đổi current stage.
+- Chưa runtime-validate Hospital v2 sau đổi SLAM resolution `0.05 -> 0.10`.
+- Cần kiểm `/map.info.resolution == 0.10`, frontier Nearest hoạt động bình thường, và recorder vẫn tạo fixed canvas `1504 x 2123`/coverage hợp lệ.
+- Cần kiểm map geometry dài hạn ở runtime grid mới; nếu vẫn warp, dùng synchronized `hospital_slam_no_loop.yaml` A/B để kiểm false loop closure.
+- `control_tb4_mapex.py` vẫn là Stage-3 preparation only: chưa runtime-validate, chưa phải official MapEx benchmark runner và không thay đổi current stage.
 
 ## Next actions
 
-1. Dừng pilot_009; không dùng làm benchmark.
-2. Pull repo và rebuild `frontier_exploration`.
-3. Chạy `scripts/preflight_nearest.py`; phải PASS toàn bộ runtime config checks.
-4. Chạy default `hospital_nearest.launch.py` → `nearest_pilot_010`.
-5. Sau vài goal chạy validator `--run-id nearest_pilot_010 --allow-running`.
-6. Kiểm robot thực sự di chuyển và `/cmd_vel_nav` không còn near-zero kéo dài tại một frontier.
-7. Quan sát map dài hạn. Nếu map vẫn warp rõ, chưa chạy official; chạy A/B no-loop để xác định loop-closure.
-8. Chỉ khi pilot_010 runtime + map geometry + validator đều ổn mới khóa code và bắt đầu `nearest_001 ... nearest_005`.
-9. Stage 3 chỉ bắt đầu sau khi Stage 2 ổn định: chuẩn bị official MapEx LaMa runtime + ensemble weights, smoke-test `control_tb4_mapex.py`, rồi mới ghép execution adapter/logging giống Nearest.
+1. Pull repo và rebuild `frontier_exploration` để installed `hospital_slam.yaml` nhận `resolution: 0.10`.
+2. Khởi động Hospital stack và xác nhận `ros2 topic echo /map --once` cho `info.resolution: 0.1`.
+3. Chạy một Nearest pilot mới dưới `protocol_version=hospital_v2`; không tái sử dụng pilot cũ làm evidence cho v2.
+4. Trong pilot, kiểm frontier candidate row/col chạy trực tiếp trên grid `0.10` và exact frontier x/y vẫn được gửi Nav2.
+5. Kiểm recorder raw snapshot giữ `resolution=0.10`, còn `fixed_canvas` vẫn shape `(2123,1504)` và coverage không NaN khi ROI local tồn tại.
+6. Quan sát map geometry dài hạn. Nếu map vẫn warp rõ, chưa chạy official; chạy A/B no-loop ở cùng runtime resolution 0.10.
+7. Chỉ khi Hospital v2 runtime + map geometry + logging đều ổn mới khóa code và bắt đầu official Nearest runs.
+8. Stage 3 chỉ bắt đầu sau khi Stage 2 ổn định: chuẩn bị official MapEx LaMa runtime + ensemble weights, smoke-test `control_tb4_mapex.py`, rồi ghép execution adapter/logging giống Nearest.
 
 ## Important decisions
 
 - Hospital implementation là MapEx frontier/ranking port + ROS/Nav2 execution adapter, không gọi là MapEx nguyên xi.
+- Hospital v2 runtime map/policy resolution = `0.10 m/cell`; Nearest và MapEx phải dùng cùng runtime resolution.
+- Evaluation vẫn dùng frozen `hospital_canvas_v1`/`hospital_connected_free_v1` ở `0.05 m/cell`; runtime 0.10 được reproject 2x trước metric calculation.
+- Đổi runtime resolution là protocol change; mọi official comparison Nearest/MapEx phải dùng `hospital_v2`. Pilot `hospital_v1` chỉ là lịch sử/diagnostic.
 - Nearest, full MapEx và proposed method phải dùng cùng Hospital adaptations.
 - Exact frontier **x/y** là execution position; frontier không có terminal-yaw objective.
 - Validation path chỉ chứng minh planner reachability; NavigateToPose có thể replan nên executed distance lấy từ odometry.
@@ -59,9 +64,9 @@
 
 ## Latest result
 
-`nearest_pilot_005`: diagnostic 1 m deadlock.  
-`nearest_pilot_007`: diagnostic tolerance-snapped execution-goal bug.  
-`nearest_pilot_008`: exact-frontier execution PASS nhưng map warp.  
-`nearest_pilot_009`: phát hiện near-zero controller command và các execution-semantics gaps.  
-`nearest_pilot_010`: pilot kế tiếp sau khi sửa toàn bộ các gap trên.  
+`nearest_pilot_005`: diagnostic 1 m deadlock (`hospital_v1`).  
+`nearest_pilot_007`: diagnostic tolerance-snapped execution-goal bug (`hospital_v1`).  
+`nearest_pilot_008`: exact-frontier execution PASS nhưng map warp (`hospital_v1`).  
+`nearest_pilot_009`: phát hiện near-zero controller command và các execution-semantics gaps (`hospital_v1`).  
+Hospital v2 code/config transition: runtime SLAM/policy grid switched to `0.10 m/cell`; frozen evaluation canvas/ROI retained at `0.05 m/cell`; runtime validation pending.  
 `control_tb4_mapex.py`: Stage-3 policy implementation prepared from paper/source; no runtime result yet.
