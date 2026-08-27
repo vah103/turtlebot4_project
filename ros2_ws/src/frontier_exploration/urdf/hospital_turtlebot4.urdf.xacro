@@ -3,7 +3,7 @@
   <!-- Use the project-local Create3 model so Hospital can raise the Gazebo
        diff-drive hard speed limit without modifying /opt/ros. -->
   <xacro:include filename="$(find frontier_exploration)/urdf/create3_hospital.urdf.xacro" />
-  <xacro:include filename="$(find nav2_minimal_tb4_description)/urdf/sensors/rplidar.urdf.xacro" />
+  <xacro:include filename="$(find frontier_exploration)/urdf/rplidar_hospital_low_load.urdf.xacro" />
   <xacro:include filename="$(find nav2_minimal_tb4_description)/urdf/sensors/oakd.urdf.xacro" />
   <xacro:include filename="$(find nav2_minimal_tb4_description)/urdf/sensors/camera_bracket.urdf.xacro" />
   <xacro:include filename="$(find nav2_minimal_tb4_description)/urdf/standard/tower_standoff.urdf.xacro" />
@@ -129,9 +129,9 @@
   </xacro:tower_sensor_plate>
 
   <!-- TurtleBot4 sensor definitions -->
-  <xacro:rplidar name="rplidar" parent_link="shell_link" gazebo="$(arg gazebo)">
+  <xacro:hospital_rplidar name="rplidar" parent_link="shell_link" gazebo="$(arg gazebo)">
     <origin xyz="${rplidar_x_offset} ${rplidar_y_offset} ${rplidar_z_offset}" rpy="0 0 ${pi/2}"/>
-  </xacro:rplidar>
+  </xacro:hospital_rplidar>
 
   <xacro:camera_bracket name="oakd_camera_bracket">
     <origin xyz="${camera_mount_x_offset} ${camera_mount_y_offset} ${camera_mount_z_offset}"/>
