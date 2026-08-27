@@ -30,6 +30,7 @@
 - `nearest_pilot_010`: corrected execution/revalidation/provenance pilot.
 - Kiểm robot không còn đứng yên do artificial final-yaw requirement.
 - Kiểm map geometry dài hạn; nếu vẫn warp, dùng synchronized `hospital_slam_no_loop.yaml` A/B để kiểm false loop closure.
+- Stage-3 preparation only: đã tạo `control_tb4_mapex.py` bám MapEx paper Sec. IV / Algorithm 1 và source pin; file chưa runtime-validate, chưa phải official MapEx benchmark runner và không thay đổi current stage.
 
 ## Next actions
 
@@ -41,6 +42,7 @@
 6. Kiểm robot thực sự di chuyển và `/cmd_vel_nav` không còn near-zero kéo dài tại một frontier.
 7. Quan sát map dài hạn. Nếu map vẫn warp rõ, chưa chạy official; chạy A/B no-loop để xác định loop-closure.
 8. Chỉ khi pilot_010 runtime + map geometry + validator đều ổn mới khóa code và bắt đầu `nearest_001 ... nearest_005`.
+9. Stage 3 chỉ bắt đầu sau khi Stage 2 ổn định: chuẩn bị official MapEx LaMa runtime + ensemble weights, smoke-test `control_tb4_mapex.py`, rồi mới ghép execution adapter/logging giống Nearest.
 
 ## Important decisions
 
@@ -61,4 +63,5 @@
 `nearest_pilot_007`: diagnostic tolerance-snapped execution-goal bug.  
 `nearest_pilot_008`: exact-frontier execution PASS nhưng map warp.  
 `nearest_pilot_009`: phát hiện near-zero controller command và các execution-semantics gaps.  
-`nearest_pilot_010`: pilot kế tiếp sau khi sửa toàn bộ các gap trên.
+`nearest_pilot_010`: pilot kế tiếp sau khi sửa toàn bộ các gap trên.  
+`control_tb4_mapex.py`: Stage-3 policy implementation prepared from paper/source; no runtime result yet.
