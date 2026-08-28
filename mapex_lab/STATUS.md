@@ -39,11 +39,13 @@
 - Second Cartographer runtime reached `/map`, but `nf_basic.py` immediately accumulated no-frontier completion evidence. Root cause: Cartographer publishes observed occupancy probabilities in `[0,100]`, while MapEx frontier semantics require exact free `0`, unknown `<0`. Added `cartographer_map_bridge.py`; Cartographer now publishes raw probability map as `/cartographer_map`, and the bridge republishes `/map` as `-1/0/100` using a 50% occupancy threshold without changing `nf_basic.py`.
 - Cartographer map-normalization bridge is now sufficient for `nf_basic.py` to start selecting frontiers and move the robot. During this debug run the robot appeared jerky in wall time; measured topic rates were approximately `/cmd_vel=14 Hz`, `/odom=14 Hz`, `/scan=2.6 Hz`.
 - Performance A/B changes did not remove the visible jerk, so they were rolled back: online correlative scan matching is restored to `true` and Cartographer OccupancyGrid publication is restored from `3.0 s` to `1.0 s`. The current working hypothesis is Gazebo/physics real-time performance rather than Cartographer local-matching load.
+- Added a debug-only SLAM Toolbox local-window frontend: `local_scan_window.py`, `config/slam_local_window.yaml`, `launch/toolbox_local_window.launch.py`, and `docs/local_window_slam_debug.md`. It uses raw odometry only as the motion prediction, performs bounded 2-D ICP against a rolling recent-scan window, republishes `/scan_local_window`, and leaves SLAM Toolbox responsible for global scan matching, pose graph, loop closure, and optimization. The frontend has conservative per-scan and accumulated-correction guards and resets its local state instead of becoming a second unconstrained global SLAM estimator.
 - Restored `control_tb4.py` exactly to historical blob `44f262b6ffa904042d1f2633d8f2ced95e645513` from commit `9f404a9`.
 - Stage-3 preparation: `control_tb4_mapex.py` dùng `MAPEX_RESOLUTION_M = 0.10`; với Hospital v2 source map `0.10`, bước downsample trở thành factor `1`, nên frontier/prediction cùng grid 0.10.
 
 ## In progress
 
+- Runtime validation of the debug local-window SLAM Toolbox frontend: compare corridor revisit wall overlap against `stock.launch.py`, inspect ICP acceptance/RMSE/reset diagnostics, and verify the Python frontend does not reduce Gazebo real-time performance enough to negate any mapping gain.
 - Runtime validation of event-driven global replanning in `nf_basic.py`: verify map updates alone do not regenerate `/plan`, and a fresh global path is produced only after planner/controller failure.
 - Diagnose Gazebo/physics real-time performance while keeping the restored accuracy-first Cartographer configuration unchanged.
 - Runtime validation of the debug `stock.launch.py + nf_basic.py` path-guided recovery and completion guard: verify failure-triggered replan first, then temporary path subgoal only if the event-triggered retry still fails, retry of the same frontier, and final 5-sweep completion only after frontiers truly disappear.
@@ -65,6 +67,7 @@
 10. Record whether frontier groups/goals behave like the historical run.
 11. After the regression test, restore `hospital_slam.yaml` to Hospital v2 `resolution: 0.10` before continuing official validation.
 12. Resume Hospital v2 validation only after the diagnostic rollback is removed.
+13. Run `launch/toolbox_local_window.launch.py` on the same debug route as `stock.launch.py`; compare revisit wall overlap and record `/local_window_icp/accepted`, `/local_window_icp/rmse_m`, `/local_window_icp/correction`, reset count from logs, and wall-time topic rates before tuning any parameter.
 
 ## Important decisions
 
@@ -75,6 +78,7 @@
 - Cartographer is currently a **debug mapping alternative**, not silently part of `hospital_v2`. If adopted for official runs, protocol identity/provenance must change and Nearest/MapEx/proposed method must all rerun under the same mapping stack.
 - Cartographer probability output must be normalized to the same discrete occupancy convention expected by the MapEx frontier generator before policy comparison; this normalization is a mapping-adapter concern, not a change to Nearest ranking/frontier code.
 - The temporary Cartographer performance A/B (`online correlative=false`, `/map` every 3 s) did not eliminate the jerk and is no longer active; current Cartographer is back to the accuracy-first matcher and 1 s map publication.
+- The new local-window SLAM Toolbox frontend is **debug-only** and is not part of `hospital_v2`. Its first A/B deliberately keeps the normal `config/slam.yaml` backend parameters unchanged except for the input scan topic so any difference is attributable to the frontend. Adoption into official comparison would require protocol versioning and the same mapping stack for all methods.
 - The `nf_basic.py` debug BT no longer replans globally at fixed 1 Hz. Global replanning is event-driven: keep the current path while FollowPath progresses, do one fresh plan attempt after failure, then allow the existing path-guided fallback if needed. This is debug-only and not part of official `hospital_v2` execution semantics.
 - Nearest, full MapEx và proposed method phải dùng cùng Hospital adaptations.
 - Exact frontier **x/y** là execution position; frontier không có terminal-yaw objective.
@@ -98,5 +102,6 @@
 2026-08-28 Cartographer runtime #1: IMU sensor-frame TF mismatch fixed.  
 2026-08-28 Cartographer runtime #2: Cartographer produced maps, but raw probability-valued OccupancyGrid was incompatible with `nf_basic.py` exact-free (`==0`) frontier semantics; `/cartographer_map -> /map` discrete normalization bridge committed.  
 2026-08-28 Cartographer runtime #3: normalized `/map` allows `nf_basic.py` to select frontiers and move; visible wall-time jerk coincides with approximately `/cmd_vel=14 Hz`, `/odom=14 Hz`, `/scan=2.6 Hz`. Disabling online correlative matching and slowing `/map` publication to 3 s did not remove the jerk, so both changes were reverted. Current hypothesis: Gazebo/physics real-time performance.  
+2026-08-28 local-window SLAM debug: rolling scan-to-local-window ICP frontend + matching SLAM/launch profile implemented with conservative correction bounds; runtime validation pending.  
 Current diagnostic state: restored historical `control_tb4.py` and historical `hospital_slam.yaml` (`0.05 m/cell`) from commit `9f404a9` for regression testing only.  
 `control_tb4_mapex.py`: Stage-3 policy implementation prepared from paper/source; no runtime result yet.
