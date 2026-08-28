@@ -22,12 +22,13 @@
 - Runtime test confirmed the `208 -> abandon selected main frontier` behavior resolves the observed infinite retry loop, and this behavior is retained in the official `nf_basic.py` runner.
 - Added `mapex_lab/stage2_run.py` as a single integrated Stage-2 measurement wrapper. It inherits the canonical `NearestEuclideanFrontier` from `nf_basic.py` rather than copying policy logic, and records coverage/known fraction vs time/distance, odometry trajectory, decision computation time, full eligible candidate sets, main/subgoal attempts/results/error codes, `/plan` endpoint diagnostics, exact decision maps, periodic maps, final map, and `summary.json` under `experiments/nearest/<run_id>/`.
 - `stage2_run.py` leaves `occupied_iou` and `tu` as online `NaN`/`None`; retained raw/fixed-canvas maps are the source for offline computation of those metrics.
+- First runtime smoke-test exposed a Python import-name collision: `pathlib.Path` was overwritten by `nav_msgs.msg.Path`, causing `Path(__file__)` to fail before recording started. `stage2_run.py` now aliases these as `FilePath` and `NavPath`, respectively.
 - Cartographer and local-window SLAM alternatives remain debug-only and are not part of the official Hospital v2 benchmark unless protocol identity is changed and all methods are rerun under the same stack.
 - `control_tb4.py` and historical `hospital_slam.yaml=0.05` remain available only for separate regression diagnostics; they are not the official Nearest runner.
 
 ## In progress
 
-- Smoke-test `stage2_run.py` on a short Hospital run and verify every Stage-2 CSV/NPZ output is populated correctly before starting repeated baseline runs.
+- Re-run the `stage2_run.py` smoke-test after the Path-alias fix and verify every Stage-2 CSV/NPZ output is populated correctly before starting repeated baseline runs.
 - Continue runtime validation of the official `nf_basic.py` over longer Hospital exploration runs.
 - Keep path-guided subgoal recovery for genuine execution failures such as controller error `105` when a valid path reaches the exact frontier.
 - Observe whether a `0.10 m` session suppression radius is sufficient to prevent an unreachable region from reappearing via a slightly shifted representative.
@@ -35,7 +36,7 @@
 
 ## Next actions
 
-1. Pull the latest repo and run one short Stage-2 pilot with `stage2_run.py --run-id nearest_stage2_pilot_001` while the intended Hospital stack is active.
+1. Pull the latest repo and re-run one short Stage-2 pilot with `stage2_run.py --run-id pilot_001` while the intended Hospital stack is active.
 2. Check `metrics.csv`, `trajectory.csv`, `decisions.csv`, `candidates.csv`, `goals.csv`, `plans.csv`, `decision_maps/`, `maps/`, and `summary.json` for consistency.
 3. Confirm coverage is numeric; if it is `NaN`, restore/generate `ground_truth/hospital/generated/hospital_connected_free_v1.npy` before official runs.
 4. After the recorder passes, run the Nearest baseline closed-loop at least 5 times, target 10, and report per-run plus mean ± std.
@@ -60,4 +61,4 @@
 
 2026-08-28: `nf_basic.py` is accepted as the official/canonical Nearest Frontier runner. Exact-planner testing with `GridBased.tolerance=0.0` produced exact frontier endpoints for reachable goals. Controller failure `105` remains handled by path-guided subgoal recovery, while main-goal `208` now abandons/suppresses that selected frontier and allows exploration to continue instead of looping indefinitely.
 
-2026-08-28: integrated Stage-2 data collector `stage2_run.py` added; syntax checked locally before commit. Runtime smoke-test is the next step before repeated official Nearest runs.
+2026-08-28: integrated Stage-2 data collector `stage2_run.py` added. First runtime launch failed immediately because `nav_msgs.msg.Path` shadowed `pathlib.Path`; the recorder now uses explicit `FilePath`/`NavPath` aliases. Re-run the pilot to continue the smoke-test.
