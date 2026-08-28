@@ -1,34 +1,43 @@
 <!--
-  Fast-fail NavigateToPose tree for path-guided intermediate-goal recovery.
+  Event-driven NavigateToPose tree for the nf_basic.py debug runner.
 
-  This keeps the normal 1 Hz global replanning pipeline, but deliberately omits
-  Nav2's stock recovery loop (costmap clears / spin / wait / backup). If planning
-  or FollowPath fails, NavigateToPose returns failure to nf_basic.py immediately.
-  nf_basic.py then chooses a temporary point on the last main-goal global path,
-  navigates to that subgoal, and retries the same frontier from the new pose.
+  The global path is computed once, then FollowPath keeps using that same path
+  while the controller is making progress. Map updates by themselves do NOT
+  trigger periodic global replanning.
+
+  If planning or FollowPath fails (for example because a newly observed wall
+  blocks the current path), RecoveryNode performs a short wait and retries the
+  whole plan-once/follow sequence exactly once. That fresh attempt runs
+  ComputePathToPose again using the latest map. If the retry also fails,
+  NavigateToPose returns failure to nf_basic.py, where the existing path-guided
+  intermediate-goal fallback can take over.
+
+  This preserves local obstacle handling by the controller/costmap and the
+  collision monitor; only the periodic 1 Hz global replanning is removed.
 -->
 <root BTCPP_format="4" main_tree_to_execute="MainTree">
   <BehaviorTree ID="MainTree">
-    <PipelineSequence name="NavigateWithFastFailure">
-      <ControllerSelector
-        selected_controller="{selected_controller}"
-        default_controller="FollowPath"
-        topic_name="controller_selector"/>
-      <PlannerSelector
-        selected_planner="{selected_planner}"
-        default_planner="GridBased"
-        topic_name="planner_selector"/>
-      <RateController hz="1.0">
+    <RecoveryNode number_of_retries="1" name="EventDrivenGlobalReplan">
+      <Sequence name="PlanOnceThenFollow">
+        <ControllerSelector
+          selected_controller="{selected_controller}"
+          default_controller="FollowPath"
+          topic_name="controller_selector"/>
+        <PlannerSelector
+          selected_planner="{selected_planner}"
+          default_planner="GridBased"
+          topic_name="planner_selector"/>
         <ComputePathToPose
           goal="{goal}"
           path="{path}"
           planner_id="{selected_planner}"
           error_code_id="{compute_path_error_code}"/>
-      </RateController>
-      <FollowPath
-        path="{path}"
-        controller_id="{selected_controller}"
-        error_code_id="{follow_path_error_code}"/>
-    </PipelineSequence>
+        <FollowPath
+          path="{path}"
+          controller_id="{selected_controller}"
+          error_code_id="{follow_path_error_code}"/>
+      </Sequence>
+      <Wait wait_duration="0.25"/>
+    </RecoveryNode>
   </BehaviorTree>
 </root>
