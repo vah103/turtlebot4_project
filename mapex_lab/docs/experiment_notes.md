@@ -13,6 +13,17 @@ Ghi ngắn gọn các quyết định hoặc sự cố có thể ảnh hưởng 
 - Observation:
 - Next action:
 
+## 2026-08-28 — Revert Cartographer smoothness tuning after no improvement
+
+- What changed:
+  - Restored `TRAJECTORY_BUILDER_2D.use_online_correlative_scan_matching = true`.
+  - Restored Cartographer OccupancyGrid `publish_period_sec` from `3.0` back to `1.0`.
+- Why: disabling online correlative scan matching and slowing `/map` publication did not remove the visible robot jerk, so those Cartographer changes are no longer justified as performance fixes.
+- Affected runs: Cartographer debug only; no official `hospital_v2` run affected.
+- Does baseline need rerun?: no. Cartographer remains a debug mapping alternative.
+- Observation: final `/cmd_vel` Twist values were changing smoothly, while the robot still appeared jerky. Together with the low wall-time `/scan` and `/odom` rates, the current working hypothesis is Gazebo/physics real-time performance rather than Cartographer local-matching load.
+- Next action: keep the restored accuracy-first Cartographer config fixed and diagnose Gazebo real-time factor / headless rendering separately.
+
 ## 2026-08-28 — Disable online correlative scan matching for smoothness A/B test
 
 - What changed: `TRAJECTORY_BUILDER_2D.use_online_correlative_scan_matching` changed from `true` to `false` in `config/cartographer_hospital_2d.lua`.
