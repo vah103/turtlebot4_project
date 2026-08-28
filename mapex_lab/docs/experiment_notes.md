@@ -13,6 +13,15 @@ Ghi ngắn gọn các quyết định hoặc sự cố có thể ảnh hưởng 
 - Observation:
 - Next action:
 
+## 2026-08-28 — Disable online correlative scan matching for smoothness A/B test
+
+- What changed: `TRAJECTORY_BUILDER_2D.use_online_correlative_scan_matching` changed from `true` to `false` in `config/cartographer_hospital_2d.lua`.
+- Why: the Cartographer debug stack navigates correctly but the simulated robot appears visibly jerky; measured wall-time topic rates were about `/cmd_vel=14 Hz`, `/odom=14 Hz`, `/scan=2.6 Hz`, suggesting the simulator is running well below real time. This A/B isolates the relatively expensive online correlative local matcher without changing frontier logic.
+- Affected runs: Cartographer debug only; no official `hospital_v2` run affected.
+- Does baseline need rerun?: no. Cartographer is still a debug mapping alternative and has not been promoted to the official protocol.
+- Observation: runtime result pending. Wheel odometry, IMU fusion, Ceres scan matching, submaps, pose-graph optimization and loop closure remain enabled.
+- Next action: rerun the same Cartographer + `nf_basic.py` setup, compare visual smoothness and `/scan`/`/odom` wall-time rates, then revisit old corridors to check whether map alignment remains acceptable.
+
 ## 2026-08-28 — Fix Cartographer IMU sensor-frame TF mismatch
 
 - What changed:
