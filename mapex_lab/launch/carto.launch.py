@@ -167,7 +167,7 @@ def generate_launch_description() -> LaunchDescription:
             '-resolution',
             '0.10',
             '-publish_period_sec',
-            '1.0',
+            '3.0',
         ],
         remappings=[('map', '/cartographer_map')],
     )
