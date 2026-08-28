@@ -33,13 +33,14 @@
 - Added `step0.py` as a temporary debug wrapper that sets `min_distance_threshold = 0.0` so the centroid-selection behavior can be observed without the rejection filter; this is diagnostic only.
 - Added debug-only path-guided intermediate-goal recovery to `nf_basic.py` plus `behavior_trees/navigate_to_pose_subgoal.xml`: the selected frontier remains fixed; on a fast-fail Nav2 abort, `nf_basic.py` chooses a temporary point on the latest main-goal `/plan`, navigates there, then retries the same frontier from the new pose. No blacklist or alternate frontier selection is introduced.
 - Added conservative completion verification to debug `nf_basic.py`: COMPLETE is only emitted after zero frontier regions `>10` persist across `5` distinct `/map` updates, sweeps are at least `2 s` apart, navigation has been idle for at least `10 s`, and node age is at least `20 s`. Remaining frontiers inside the debug `0.5 m` filter produce `BLOCKED_BY_MIN_DISTANCE`, not a false COMPLETE. Completion is published latched on `/frontier_exploration_complete` and machine-readable status on `/frontier_exploration_status`; once complete, no further goals are sent.
-- Added a Cartographer 2D debug alternative for long-run SLAM drift diagnosis: `config/cartographer_hospital_2d.lua` + `launch/cartographer.launch.py`. It uses `/scan` + wheel `/odom` + simulated `/imu`, 0.05 m internal submaps, pose-graph loop closure, and publishes `/map` at 0.10 m/cell for compatibility with `nf_basic.py`/Nav2. This is not yet an official `hospital_v2` protocol change.
+- Added a Cartographer 2D debug alternative for long-run SLAM drift diagnosis: `config/cartographer_hospital_2d.lua` + `launch/carto.launch.py`. It uses `/scan` + wheel `/odom` + simulated `/imu`, 0.05 m internal submaps, pose-graph loop closure, and publishes `/map` at 0.10 m/cell for compatibility with `nf_basic.py`/Nav2. This is not yet an official `hospital_v2` protocol change.
+- First Cartographer runtime attempt exposed a Gazebo/ROS IMU frame mismatch: `/imu` is stamped `turtlebot4/imu_link/imu`, while TF contains the physical `imu_link`. `launch/carto.launch.py` now publishes an identity static TF `imu_link -> turtlebot4/imu_link/imu` so Cartographer can retain IMU fusion instead of disabling IMU.
 - Restored `control_tb4.py` exactly to historical blob `44f262b6ffa904042d1f2633d8f2ced95e645513` from commit `9f404a9`.
 - Stage-3 preparation: `control_tb4_mapex.py` dùng `MAPEX_RESOLUTION_M = 0.10`; với Hospital v2 source map `0.10`, bước downsample trở thành factor `1`, nên frontier/prediction cùng grid 0.10.
 
 ## In progress
 
-- Runtime validation of the Cartographer Hospital debug stack: verify `/scan`, `/odom`, `/imu`, TF `map -> odom -> base_link`, `/map.info.resolution=0.10`, then revisit previously mapped corridors and compare wall overlap/warp against the slam_toolbox run.
+- Re-test the Cartographer Hospital debug stack after the IMU sensor-frame TF fix; verify that the previous `source_frame does not exist` warnings disappear and `/map` plus `map -> odom` are produced.
 - Runtime validation of the debug `stock.launch.py + nf_basic.py` path-guided recovery and completion guard: verify fast controller failure return, temporary path subgoal behavior, retry of the same frontier, and final 5-sweep completion only after frontiers truly disappear.
 - Regression test: old `control_tb4.py` + historical `hospital_slam.yaml` (`0.05 m/cell`) to determine whether the new no-frontier startup behavior is caused by runtime-grid changes rather than the controller file itself.
 - Hospital v2 official validation is paused while this diagnostic rollback is active.
@@ -47,9 +48,9 @@
 
 ## Next actions
 
-1. Install ROS 2 Jazzy Cartographer packages, pull the new debug launch/config, and run `launch/cartographer.launch.py` with `nf_basic.py`.
-2. Verify Cartographer input/output and TF: `/scan`, `/odom`, `/imu`, `/map`, `map -> odom -> base_link`; confirm `/map.info.resolution=0.10`.
-3. Continue long enough to return to old corridors; inspect whether wall overlap remains aligned and whether Nav2 avoids the previous immediate `PATIENCE_EXCEEDED` state.
+1. Pull the IMU TF fix and rerun `launch/carto.launch.py`.
+2. Confirm there is no repeated `turtlebot4/imu_link/imu ... source_frame does not exist`, then verify `/map`, `/map.info.resolution=0.10`, and TF `map -> odom -> base_link`.
+3. Run `nf_basic.py`, continue long enough to return to old corridors, and inspect whether wall overlap remains aligned and whether Nav2 avoids the previous immediate `PATIENCE_EXCEEDED` state.
 4. If Cartographer is clearly more stable, decide whether to promote it to the official benchmark stack. Promotion requires a new protocol version and all compared methods must use the same Cartographer stack.
 5. Runtime-test `stock.launch.py + nf_basic.py` and capture one case where the main frontier aborts, the path-guided subgoal is attempted, and the same main frontier is retried.
 6. Continue the same run to terminal exploration state and verify `/frontier_exploration_complete=true` appears only after 5 distinct-map no-frontier sweeps and no new navigation goal follows.
@@ -83,6 +84,6 @@
 `nearest_pilot_008`: exact-frontier execution PASS nhưng map warp (`hospital_v1`).  
 `nearest_pilot_009`: phát hiện near-zero controller command và các execution-semantics gaps (`hospital_v1`).  
 2026-08-28 stock/debug: path-guided intermediate-goal recovery + robust conservative completion guard implemented in `nf_basic.py`; runtime validation pending.  
-2026-08-28 Cartographer debug alternative: Hospital launch/config implemented with odom + IMU + local submaps + pose-graph optimization; runtime validation pending.  
+2026-08-28 Cartographer first runtime: Cartographer itself starts, but `/imu` sensor frame `turtlebot4/imu_link/imu` was missing from TF, preventing map creation; identity sensor-frame TF fix committed, rerun pending.  
 Current diagnostic state: restored historical `control_tb4.py` and historical `hospital_slam.yaml` (`0.05 m/cell`) from commit `9f404a9` for regression testing only.  
 `control_tb4_mapex.py`: Stage-3 policy implementation prepared from paper/source; no runtime result yet.
