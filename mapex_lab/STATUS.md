@@ -7,6 +7,7 @@
 ## Done
 
 - Renamed research folder from `mapex_hospital_research/` to `mapex_lab/`; runtime files remain unchanged apart from path references.
+- Removed obsolete legacy/debug Nearest branches that are no longer part of the active roadmap: `autonomous_exploration/`, `control_tb4_hospital.py`, `launch/hospital_nearest.launch.py`, `launch/nearest_frontier.launch.py`, `launch/nearest_frontier_full.launch.py`, `scripts/mapex_nearest_simple.py`, `scripts/mapex_nearest_full.py`, `scripts/test_nearest_frontier_nav.py`, and `scripts/test_nearest_frontier_run.py`. Active `nf_basic.py`, stock runtime, MapEx preparation, recorders, analysis, GT, protocol, references, and research artifacts are retained.
 - Fixed canvas `hospital_canvas_v1`: `0.05 m`, `1504 x 2123`, origin `(-25.6,-60.1)`.
 - Frozen ROI `hospital_connected_free_v1`: denominator `215435`, SHA-256 `05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1`.
 - Hospital runtime protocol advanced to `hospital_v2`: SLAM/policy map target is `0.10 m/cell`, while fixed evaluation canvas/ROI remain frozen at `0.05 m/cell`.
