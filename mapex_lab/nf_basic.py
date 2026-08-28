@@ -55,6 +55,10 @@ SUBGOAL_MIN_DISTANCE_M = 0.25
 SUBGOAL_FRACTION_OF_REMAINING = 0.50
 SUBGOAL_MAIN_GOAL_CLEARANCE_M = 0.15
 
+# A /plan is usable for path-guided recovery only when it actually reaches
+# the exact main frontier, rather than stopping early because of planner/goal tolerance.
+MAIN_PLAN_ENDPOINT_TOLERANCE_M = 0.10
+
 COMPLETION_REQUIRED_SWEEPS = 5
 COMPLETION_SWEEP_INTERVAL_S = 2.0
 COMPLETION_IDLE_S = 10.0
@@ -158,8 +162,49 @@ class NearestEuclideanFrontier(Node):
         self.path_pub.publish(msg)
 
         # A subgoal plan must not overwrite the last path to the main frontier.
-        if self.goal_active and self.current_goal_mode == "main" and msg.poses:
-            self.latest_main_plan = msg
+        # For main-goal recovery, also verify that the path has enough poses and
+        # that its final pose actually reaches the exact frontier position.
+        if (
+            self.goal_active
+            and self.current_goal_mode == "main"
+            and self.main_goal is not None
+        ):
+            pose_count = len(msg.poses)
+            main_x, main_y = self.main_goal
+
+            if pose_count < 2:
+                self.latest_main_plan = None
+                self.get_logger().warn(
+                    f"Main /plan diagnostic: poses={pose_count}; "
+                    "not usable for path-guided recovery."
+                )
+                return
+
+            endpoint = msg.poses[-1].pose.position
+            endpoint_to_frontier_m = math.hypot(
+                endpoint.x - main_x,
+                endpoint.y - main_y,
+            )
+            endpoint_ok = (
+                endpoint_to_frontier_m <= MAIN_PLAN_ENDPOINT_TOLERANCE_M
+            )
+
+            diagnostic = (
+                f"Main /plan diagnostic: poses={pose_count}, "
+                f"endpoint=({endpoint.x:.2f}, {endpoint.y:.2f}), "
+                f"frontier=({main_x:.2f}, {main_y:.2f}), "
+                f"endpoint_to_frontier={endpoint_to_frontier_m:.3f} m, "
+                f"limit={MAIN_PLAN_ENDPOINT_TOLERANCE_M:.2f} m"
+            )
+
+            if endpoint_ok:
+                self.latest_main_plan = msg
+                self.get_logger().info(diagnostic + " -> usable")
+            else:
+                self.latest_main_plan = None
+                self.get_logger().warn(
+                    diagnostic + " -> rejected for subgoal recovery"
+                )
 
     def publish_status(self, state: str, reason: str, **extra):
         payload = {
