@@ -22,7 +22,11 @@ Navigation recovery:
 Completion policy:
 - NEVER declare complete while a main/subgoal is active
 - NEVER declare complete merely because remaining representatives are < 0.5 m
-- require zero frontier regions (>10 cells) on 5 distinct map updates
+- case 1: require zero frontier regions (>10 cells) on 5 distinct map updates
+- case 2: if frontier regions remain but every eligible representative is currently
+  suppressed after NO_VALID_PATH, revalidate the whole set with ComputePathToPose;
+  require 5 consecutive exhausted planner sweeps at least 2 s apart
+- any planner-reachable frontier resets completion verification and resumes exploration
 - terminal evidence must span at least 10 s of navigation idle time
 - do not declare complete during the first 20 s after node start
 - once complete, publish a latched completion/status message exactly once and
@@ -37,7 +41,7 @@ import os
 import numpy as np
 import rclpy
 from action_msgs.msg import GoalStatus
-from nav2_msgs.action import NavigateToPose
+from nav2_msgs.action import ComputePathToPose, NavigateToPose
 from nav_msgs.msg import OccupancyGrid, Path
 from rclpy.action import ActionClient
 from rclpy.node import Node
@@ -62,8 +66,9 @@ SUBGOAL_MAIN_GOAL_CLEARANCE_M = 0.15
 MAIN_PLAN_ENDPOINT_TOLERANCE_M = 0.10
 
 # NavigateToPose propagates ComputePathToPose NO_VALID_PATH as error code 208.
-# Once a main frontier produces this result, skip the same frontier position
-# for the rest of this nf_basic.py process so it cannot be selected again forever.
+# A main frontier that returns 208 is skipped during normal selection, but it is
+# explicitly rechecked during terminal planner sweeps so the rejection is not
+# treated as permanent reachability evidence.
 NO_VALID_PATH_ERROR_CODE = 208
 NO_VALID_PATH_SKIP_RADIUS_M = 0.10
 
@@ -94,11 +99,12 @@ class NearestEuclideanFrontier(Node):
         self.latest_main_plan = None
         self.recovery_count = 0
 
-        # Main frontier positions that returned NO_VALID_PATH (208). These are
-        # excluded from future nearest-frontier selection for this process.
+        # Main frontier positions that most recently returned NO_VALID_PATH (208).
+        # They are skipped during ordinary nearest selection, but terminal planner
+        # revalidation tests them again instead of treating them as permanently dead.
         self.no_valid_path_goals = []
 
-        # Robust completion state.
+        # Robust completion state shared by both terminal conditions.
         now_s = self.now_s()
         self.start_time_s = now_s
         self.last_navigation_activity_s = now_s
@@ -109,6 +115,15 @@ class NearestEuclideanFrontier(Node):
         self.completion_last_sweep_s = -math.inf
         self.completion_last_map_generation = -1
         self.last_status_state = None
+
+        # Planner-only terminal revalidation state.  A sweep checks every
+        # currently eligible representative with ComputePathToPose.  Five
+        # consecutive exhausted sweeps are required before completion.
+        self.revalidation_active = False
+        self.revalidation_candidates = []
+        self.revalidation_index = 0
+        self.revalidation_signature = None
+        self.revalidation_last_start_s = -math.inf
 
         self.create_subscription(OccupancyGrid, "/map", self.map_callback, 10)
         self.create_subscription(Path, "/plan", self.plan_callback, 10)
@@ -143,6 +158,11 @@ class NearestEuclideanFrontier(Node):
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
         self.nav_client = ActionClient(self, NavigateToPose, "navigate_to_pose")
+        self.planner_client = ActionClient(
+            self,
+            ComputePathToPose,
+            "compute_path_to_pose",
+        )
         self.timer = self.create_timer(1.0, self.exploration_step)
 
         if not os.path.isfile(BT_XML_PATH):
@@ -160,7 +180,7 @@ class NearestEuclideanFrontier(Node):
             "Nearest Euclidean Frontier started "
             f"(min distance={MIN_DISTANCE_THRESHOLD:.2f} m, "
             f"path-subgoal recovery={SUBGOAL_MAX_DISTANCE_M:.2f} m max, "
-            f"completion={COMPLETION_REQUIRED_SWEEPS} stable map sweeps)"
+            f"completion={COMPLETION_REQUIRED_SWEEPS} stable sweeps)"
         )
 
     def now_s(self):
@@ -271,6 +291,7 @@ class NearestEuclideanFrontier(Node):
 
         self.completion_last_map_generation = self.map_generation
         self.completion_last_sweep_s = now_s
+        self.revalidation_signature = None
 
         if self.completion_reason != "no_frontier_region_gt_10":
             self.completion_reason = "no_frontier_region_gt_10"
@@ -310,7 +331,9 @@ class NearestEuclideanFrontier(Node):
         if self.completed:
             return
 
+        reason = self.completion_reason or "no_frontier_region_gt_10"
         self.completed = True
+        self.revalidation_active = False
         self.clear_goal_markers()
 
         empty_path = Path()
@@ -324,16 +347,24 @@ class NearestEuclideanFrontier(Node):
 
         self.publish_status(
             "COMPLETE",
-            reason="no_frontier_region_gt_10",
+            reason=reason,
             stable_sweeps=self.completion_streak,
             required_sweeps=COMPLETION_REQUIRED_SWEEPS,
             idle_s=round(self.now_s() - self.last_navigation_activity_s, 3),
         )
 
+        if reason == "no_planner_reachable_frontier":
+            reason_text = (
+                "frontier regions remain, but no eligible frontier was planner-"
+                "reachable across repeated ComputePathToPose sweeps"
+            )
+        else:
+            reason_text = "no frontier region > 10 cells remained stably"
+
         self.get_logger().warn(
             "================ EXPLORATION COMPLETE ================\n"
-            "Reason: no frontier region > 10 cells remained stably.\n"
-            f"Evidence: {self.completion_streak} distinct-map sweeps, "
+            f"Reason: {reason_text}.\n"
+            f"Evidence: {self.completion_streak} stable sweeps, "
             f"idle >= {COMPLETION_IDLE_S:.0f} s.\n"
             "No further navigation goals will be issued.\n"
             "======================================================"
@@ -449,17 +480,27 @@ class NearestEuclideanFrontier(Node):
             for rejected_x, rejected_y in self.no_valid_path_goals
         )
 
+    def clear_no_valid_path_suppression_near(self, x: float, y: float):
+        self.no_valid_path_goals = [
+            (rejected_x, rejected_y)
+            for rejected_x, rejected_y in self.no_valid_path_goals
+            if math.hypot(x - rejected_x, y - rejected_y)
+            > NO_VALID_PATH_SKIP_RADIUS_M
+        ]
+
     def abandon_main_goal_no_valid_path(self):
         if self.main_goal is None:
             return
 
         x, y = self.main_goal
-        self.no_valid_path_goals.append((x, y))
+        if not self.is_no_valid_path_suppressed(x, y):
+            self.no_valid_path_goals.append((x, y))
 
         self.get_logger().warn(
             "Main frontier abandoned after NO_VALID_PATH (208): "
-            f"x={x:.2f}, y={y:.2f}; future candidates within "
-            f"{NO_VALID_PATH_SKIP_RADIUS_M:.2f} m will be skipped."
+            f"x={x:.2f}, y={y:.2f}; candidates within "
+            f"{NO_VALID_PATH_SKIP_RADIUS_M:.2f} m are skipped during normal "
+            "selection but will be checked again by terminal planner revalidation."
         )
 
         self.main_goal = None
@@ -473,6 +514,206 @@ class NearestEuclideanFrontier(Node):
             skip_radius_m=NO_VALID_PATH_SKIP_RADIUS_M,
             abandoned_count=len(self.no_valid_path_goals),
         )
+
+    @staticmethod
+    def candidate_signature(candidates):
+        return tuple(
+            sorted(
+                (
+                    round(candidate[1], 2),
+                    round(candidate[2], 2),
+                    int(candidate[3]),
+                    int(candidate[4]),
+                    int(candidate[5]),
+                )
+                for candidate in candidates
+            )
+        )
+
+    def maybe_start_planner_revalidation(self, candidates):
+        if self.completed or self.goal_active or self.revalidation_active:
+            return
+
+        now_s = self.now_s()
+        if now_s - self.revalidation_last_start_s < COMPLETION_SWEEP_INTERVAL_S:
+            return
+
+        if not self.planner_client.server_is_ready():
+            self.get_logger().warn(
+                "ComputePathToPose action server is not ready for terminal "
+                "planner revalidation."
+            )
+            return
+
+        signature = self.candidate_signature(candidates)
+        if signature != self.revalidation_signature:
+            self.reset_completion_verification(
+                "planner_revalidation_candidate_set_changed"
+            )
+            self.revalidation_signature = signature
+
+        self.revalidation_active = True
+        self.revalidation_candidates = sorted(candidates, key=lambda item: item[0])
+        self.revalidation_index = 0
+        self.revalidation_last_start_s = now_s
+
+        self.publish_status(
+            "VERIFYING_COMPLETE",
+            reason="planner_revalidation_sweep",
+            candidate_count=len(self.revalidation_candidates),
+            stable_sweeps=self.completion_streak,
+            required_sweeps=COMPLETION_REQUIRED_SWEEPS,
+        )
+        self.get_logger().warn(
+            "No normally selectable frontier remains; starting planner "
+            f"revalidation sweep over {len(self.revalidation_candidates)} candidates."
+        )
+        self.send_next_planner_revalidation_goal()
+
+    def send_next_planner_revalidation_goal(self):
+        if not self.revalidation_active or self.completed:
+            return
+
+        if self.revalidation_index >= len(self.revalidation_candidates):
+            self.finish_exhausted_planner_revalidation_sweep()
+            return
+
+        candidate = self.revalidation_candidates[self.revalidation_index]
+        _distance, x, y, _row, _col, _region_size = candidate
+
+        goal = ComputePathToPose.Goal()
+        goal.goal.header.frame_id = MAP_FRAME
+        goal.goal.header.stamp = self.get_clock().now().to_msg()
+        goal.goal.pose.position.x = x
+        goal.goal.pose.position.y = y
+        goal.goal.pose.orientation.w = 1.0
+        goal.planner_id = "GridBased"
+        goal.use_start = False
+
+        future = self.planner_client.send_goal_async(goal)
+        future.add_done_callback(
+            lambda done_future, checked_candidate=candidate: (
+                self.planner_revalidation_goal_response(
+                    done_future,
+                    checked_candidate,
+                )
+            )
+        )
+
+    def planner_revalidation_goal_response(self, future, candidate):
+        if not self.revalidation_active or self.completed:
+            return
+
+        try:
+            goal_handle = future.result()
+        except Exception as exc:  # noqa: BLE001
+            self.get_logger().warn(
+                f"Planner revalidation request failed: {exc}"
+            )
+            self.revalidation_index += 1
+            self.send_next_planner_revalidation_goal()
+            return
+
+        if not goal_handle.accepted:
+            self.get_logger().warn("Planner revalidation goal rejected")
+            self.revalidation_index += 1
+            self.send_next_planner_revalidation_goal()
+            return
+
+        result_future = goal_handle.get_result_async()
+        result_future.add_done_callback(
+            lambda done_future, checked_candidate=candidate: (
+                self.planner_revalidation_result_callback(
+                    done_future,
+                    checked_candidate,
+                )
+            )
+        )
+
+    def planner_revalidation_result_callback(self, future, candidate):
+        if not self.revalidation_active or self.completed:
+            return
+
+        try:
+            wrapped_result = future.result()
+            status = wrapped_result.status
+            result = wrapped_result.result
+            path = getattr(result, "path", None)
+            path_nonempty = path is not None and len(path.poses) > 0
+        except Exception as exc:  # noqa: BLE001
+            self.get_logger().warn(
+                f"Planner revalidation result failed: {exc}"
+            )
+            status = None
+            path_nonempty = False
+
+        _distance, x, y, _row, _col, _region_size = candidate
+        reachable = status == GoalStatus.STATUS_SUCCEEDED and path_nonempty
+
+        if reachable:
+            self.get_logger().warn(
+                "Planner revalidation found a reachable frontier again: "
+                f"x={x:.2f}, y={y:.2f}. Resuming exploration."
+            )
+            self.clear_no_valid_path_suppression_near(x, y)
+            self.revalidation_active = False
+            self.revalidation_candidates = []
+            self.revalidation_index = 0
+            self.revalidation_signature = None
+            self.reset_completion_verification(
+                "planner_revalidation_found_reachable_frontier"
+            )
+            return
+
+        self.revalidation_index += 1
+        self.send_next_planner_revalidation_goal()
+
+    def finish_exhausted_planner_revalidation_sweep(self):
+        if not self.revalidation_active or self.completed:
+            return
+
+        self.revalidation_active = False
+        candidate_count = len(self.revalidation_candidates)
+        self.revalidation_candidates = []
+        self.revalidation_index = 0
+
+        now_s = self.now_s()
+        self.completion_last_sweep_s = now_s
+        if self.completion_reason != "no_planner_reachable_frontier":
+            self.completion_reason = "no_planner_reachable_frontier"
+            self.completion_streak = 1
+            self.completion_first_evidence_s = now_s
+        else:
+            self.completion_streak += 1
+
+        idle_s = now_s - self.last_navigation_activity_s
+        age_s = now_s - self.start_time_s
+
+        self.publish_status(
+            "VERIFYING_COMPLETE",
+            reason=self.completion_reason,
+            stable_sweeps=self.completion_streak,
+            required_sweeps=COMPLETION_REQUIRED_SWEEPS,
+            candidate_count=candidate_count,
+            idle_s=round(idle_s, 3),
+            required_idle_s=COMPLETION_IDLE_S,
+            age_s=round(age_s, 3),
+            startup_grace_s=COMPLETION_STARTUP_GRACE_S,
+        )
+
+        self.get_logger().warn(
+            "Planner-reachability completion verification: "
+            f"{self.completion_streak}/{COMPLETION_REQUIRED_SWEEPS} exhausted "
+            f"sweeps across {candidate_count} candidates, idle={idle_s:.1f}s, "
+            f"age={age_s:.1f}s"
+        )
+
+        if (
+            self.completion_streak >= COMPLETION_REQUIRED_SWEEPS
+            and idle_s >= COMPLETION_IDLE_S
+            and age_s >= COMPLETION_STARTUP_GRACE_S
+        ):
+            self.mark_exploration_complete()
 
     def publish_goal_markers(self, candidates, selected):
         """Green = eligible candidates, small red = selected. No text labels."""
@@ -542,7 +783,7 @@ class NearestEuclideanFrontier(Node):
         if self.completed:
             return
 
-        if self.map_msg is None or self.goal_active:
+        if self.map_msg is None or self.goal_active or self.revalidation_active:
             return
 
         # Execution failures keep the selected frontier pending so path-guided
@@ -551,6 +792,7 @@ class NearestEuclideanFrontier(Node):
         # this retry branch.
         if self.main_goal is not None:
             self.reset_completion_verification("main_frontier_still_pending")
+            self.revalidation_signature = None
             x, y = self.main_goal
             self.get_logger().info(
                 f"Retrying main frontier after recovery: x={x:.2f}, y={y:.2f}"
@@ -572,18 +814,16 @@ class NearestEuclideanFrontier(Node):
         mask = self.frontier_mask(grid)
         regions = self.frontier_regions(mask)
 
-        # Conservative completion: only zero large frontier regions counts.
-        # A transient empty map must survive the stable verification window.
+        # Case 1: no large frontier regions. A transient empty map must survive
+        # the stable verification window.
         if not regions:
             self.clear_goal_markers()
+            self.revalidation_signature = None
             self.observe_no_frontier_terminal_state()
             return
 
-        # Any real large frontier region immediately invalidates completion
-        # evidence, even if its representative is inside the 0.5 m filter.
-        self.reset_completion_verification("frontier_region_present")
-
         robot_x, robot_y = robot
+        all_candidates = []
         candidates = []
         suppressed_no_path = 0
 
@@ -595,42 +835,47 @@ class NearestEuclideanFrontier(Node):
             if distance < MIN_DISTANCE_THRESHOLD:
                 continue
 
+            candidate = (distance, x, y, row, col, len(region))
+            all_candidates.append(candidate)
+
             if self.is_no_valid_path_suppressed(x, y):
                 suppressed_no_path += 1
                 continue
 
-            candidates.append((distance, x, y, row, col, len(region)))
+            candidates.append(candidate)
 
         if not candidates:
             self.clear_goal_markers()
 
-            if suppressed_no_path > 0:
-                self.publish_status(
-                    "NO_ELIGIBLE_FRONTIER",
-                    reason="remaining_frontiers_suppressed_after_no_valid_path",
-                    frontier_regions=len(regions),
-                    suppressed_no_path=suppressed_no_path,
-                    abandoned_count=len(self.no_valid_path_goals),
-                )
-                self.get_logger().warn(
-                    "Frontier regions still exist, but no eligible candidate "
-                    "remains after NO_VALID_PATH suppression/min-distance filtering. "
-                    "NOT declaring exploration complete."
-                )
+            # Case 2: there are eligible frontier representatives, but every one
+            # has previously returned NO_VALID_PATH. Do not remain blocked forever;
+            # re-run ComputePathToPose over the full set every >=2 s. Five
+            # consecutive fully exhausted sweeps are terminal evidence.
+            if all_candidates and suppressed_no_path == len(all_candidates):
+                self.maybe_start_planner_revalidation(all_candidates)
                 return
 
+            # Representatives hidden only by the short-distance guard are not
+            # sufficient evidence of exploration completion.
+            self.revalidation_signature = None
+            self.reset_completion_verification("frontier_region_present")
             self.publish_status(
                 "BLOCKED_BY_MIN_DISTANCE",
                 reason="frontier_regions_exist_but_all_representatives_too_close",
                 frontier_regions=len(regions),
                 min_distance_m=MIN_DISTANCE_THRESHOLD,
+                suppressed_no_path=suppressed_no_path,
             )
             self.get_logger().warn(
-                "Frontier regions still exist, but every representative is "
-                f"closer than {MIN_DISTANCE_THRESHOLD:.2f} m. "
-                "NOT declaring exploration complete."
+                "Frontier regions still exist, but no eligible representative "
+                f"remains outside the {MIN_DISTANCE_THRESHOLD:.2f} m distance "
+                "guard. NOT declaring exploration complete."
             )
             return
+
+        # A normally selectable frontier invalidates all terminal evidence.
+        self.revalidation_signature = None
+        self.reset_completion_verification("planner_candidate_available")
 
         selected = min(candidates, key=lambda item: item[0])
         distance, x, y, _row, _col, region_size = selected
@@ -754,6 +999,7 @@ class NearestEuclideanFrontier(Node):
             self.main_goal = None
             self.latest_main_plan = None
             self.recovery_count = 0
+            self.revalidation_signature = None
             self.publish_status("EXPLORING", reason="main_goal_reached")
             return
 
@@ -766,7 +1012,8 @@ class NearestEuclideanFrontier(Node):
         self.get_logger().warn(f"{mode.capitalize()} goal failed ({detail})")
 
         # A main-goal NO_VALID_PATH is a planning failure, not an execution
-        # failure. Do not use path-guided recovery and do not retry forever.
+        # failure. Do not use path-guided recovery and do not retry it immediately.
+        # It will still be checked again if terminal planner revalidation starts.
         if mode == "main" and error_code == NO_VALID_PATH_ERROR_CODE:
             self.abandon_main_goal_no_valid_path()
             return
