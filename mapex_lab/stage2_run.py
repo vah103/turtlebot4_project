@@ -180,7 +180,7 @@ class Stage2Run(NearestEuclideanFrontier):
         if self.t0 is None or self.finalized:return
         self.known,self.coverage=self.map_metrics(); ma=self.count['main_attempts']; ms=self.count['main_succeeded']; rate=ms/ma if ma else math.nan
         self.wm.writerow({'time_s':self.fmt(self.elapsed()),'distance_m':self.fmt(self.distance),'known_fraction':self.fmt(self.known),'coverage':self.fmt(self.coverage),'occupied_iou':'nan','tu':'nan','frontiers_selected':self.count['frontiers_selected'],'main_attempts':ma,'main_succeeded':ms,'main_failed':self.count['main_failed'],'main_interrupted':self.count['main_interrupted'],'abandoned_208':self.count['abandoned_208'],'main_success_rate':self.fmt(rate),'subgoal_attempts':self.count['subgoal_attempts'],'subgoal_succeeded':self.count['subgoal_succeeded'],'subgoal_failed':self.count['subgoal_failed'],'subgoal_interrupted':self.count['subgoal_interrupted']}); self.fm.flush()
-        if self.elapsed()-self.last_snap>=10:self.save_map_pair(self.run/'maps'/f'snapshot_{int(self.elapsed()):06d}'); self.last_snap=self.elapsed()
+        if self.elapsed()-self.last_snap>=10:self.save_canvas(self.run/'maps'/f'snapshot_{int(self.elapsed()):06d}'); self.last_snap=self.elapsed()
 
     def fixed_canvas(self,msg):
         ratio=round(msg.info.resolution/CANVAS_RES)
@@ -199,6 +199,14 @@ class Stage2Run(NearestEuclideanFrontier):
         if c is None:return math.nan,math.nan
         known=c>=0; k=np.count_nonzero(known)/known.size; cov=np.count_nonzero(known & self.roi)/ROI_N if self.roi is not None else math.nan
         return float(k),float(cov)
+
+    def save_canvas(self,prefix:FilePath):
+        if self.map_msg is None:return ''
+        canvas=self.fixed_canvas(self.map_msg)
+        if canvas is None:return ''
+        cp=prefix.with_name(prefix.name+'_canvas.npz')
+        np.savez_compressed(cp,data=canvas,resolution=CANVAS_RES,width=CANVAS_W,height=CANVAS_H,origin_x=CANVAS_X,origin_y=CANVAS_Y)
+        return str(cp.relative_to(self.run))
 
     def save_map_pair(self,prefix:FilePath):
         if self.map_msg is None:return '',''
