@@ -1,29 +1,34 @@
 #!/usr/bin/env python3
-"""Minimal nearest-frontier exploration using Euclidean distance.
+"""Nearest-frontier exploration with path-guided recovery and robust completion.
 
-Pipeline:
-    /map -> frontier cells -> 8-connected frontier regions
-    -> one representative per region -> reject representatives < 0.5 m
-    -> nearest remaining representative by Euclidean distance
-    -> Nav2 NavigateToPose
+Frontier policy:
+- free cell: occupancy == 0
+- unknown cell: occupancy < 0
+- frontier: free cell adjacent to unknown in the 8-neighbourhood
+- frontier regions: 8-connected
+- keep region only when size > 10 cells
+- representative: actual frontier cell nearest the arithmetic mean
+- ranking: Euclidean robot -> representative
+- representatives closer than 0.5 m are not eligible
 
 Navigation recovery:
-- Frontier ranking is unchanged.
-- The selected frontier remains the main exploration goal until it is reached.
-- A lightweight Behavior Tree returns controller/planner failure directly instead
-  of running the stock recovery loop many times.
-- If the main goal aborts and a valid recent global path exists, choose a temporary
-  subgoal on that path near the robot, reach it, then retry the same main frontier
-  so Nav2 replans from the new pose.
+- the selected frontier remains the main exploration goal until reached
+- a lightweight Nav2 BT returns planner/controller failure quickly
+- on main-goal failure, choose a temporary subgoal on the last global path
+- after reaching the subgoal, retry the exact same main frontier
 
-RViz visualization uses the Hospital RViz config's existing displays:
-- /frontier/goals_markers : eligible frontier representatives + selected goal
-- /frontier_selected_path : current Nav2 global path
-
-No LaMa, information gain, path-length ranking, recorder, or MapEx prediction.
+Completion policy:
+- NEVER declare complete while a main/subgoal is active
+- NEVER declare complete merely because remaining representatives are < 0.5 m
+- require zero frontier regions (>10 cells) on 5 distinct map updates
+- terminal evidence must span at least 10 s of navigation idle time
+- do not declare complete during the first 20 s after node start
+- once complete, publish a latched completion/status message exactly once and
+  permanently stop issuing new navigation goals
 """
 
 from collections import deque
+import json
 import math
 import os
 
@@ -34,6 +39,8 @@ from nav2_msgs.action import NavigateToPose
 from nav_msgs.msg import OccupancyGrid, Path
 from rclpy.action import ActionClient
 from rclpy.node import Node
+from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
+from std_msgs.msg import Bool, String
 from tf2_ros import Buffer, TransformException, TransformListener
 from visualization_msgs.msg import Marker, MarkerArray
 
@@ -48,6 +55,11 @@ SUBGOAL_MIN_DISTANCE_M = 0.25
 SUBGOAL_FRACTION_OF_REMAINING = 0.50
 SUBGOAL_MAIN_GOAL_CLEARANCE_M = 0.15
 
+COMPLETION_REQUIRED_SWEEPS = 5
+COMPLETION_SWEEP_INTERVAL_S = 2.0
+COMPLETION_IDLE_S = 10.0
+COMPLETION_STARTUP_GRACE_S = 20.0
+
 BT_XML_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     "behavior_trees",
@@ -60,13 +72,27 @@ class NearestEuclideanFrontier(Node):
         super().__init__("nearest_euclidean_frontier")
 
         self.map_msg = None
+        self.map_generation = 0
+
         self.goal_active = False
         self.current_goal_mode = None
 
-        # The selected frontier stays fixed through temporary subgoal recovery.
+        # The chosen frontier remains fixed during path-guided recovery.
         self.main_goal = None
         self.latest_main_plan = None
         self.recovery_count = 0
+
+        # Robust completion state.
+        now_s = self.now_s()
+        self.start_time_s = now_s
+        self.last_navigation_activity_s = now_s
+        self.completed = False
+        self.completion_reason = None
+        self.completion_streak = 0
+        self.completion_first_evidence_s = None
+        self.completion_last_sweep_s = -math.inf
+        self.completion_last_map_generation = -1
+        self.last_status_state = None
 
         self.create_subscription(OccupancyGrid, "/map", self.map_callback, 10)
         self.create_subscription(Path, "/plan", self.plan_callback, 10)
@@ -82,6 +108,21 @@ class NearestEuclideanFrontier(Node):
             10,
         )
 
+        terminal_qos = QoSProfile(depth=1)
+        terminal_qos.reliability = ReliabilityPolicy.RELIABLE
+        terminal_qos.durability = DurabilityPolicy.TRANSIENT_LOCAL
+
+        self.completion_pub = self.create_publisher(
+            Bool,
+            "/frontier_exploration_complete",
+            terminal_qos,
+        )
+        self.status_pub = self.create_publisher(
+            String,
+            "/frontier_exploration_status",
+            terminal_qos,
+        )
+
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
@@ -94,21 +135,152 @@ class NearestEuclideanFrontier(Node):
                 "NavigateToPose goals will use the Nav2 default BT."
             )
 
+        initial_complete = Bool()
+        initial_complete.data = False
+        self.completion_pub.publish(initial_complete)
+        self.publish_status("EXPLORING", reason="startup")
+
         self.get_logger().info(
-            f"Nearest Euclidean Frontier started "
+            "Nearest Euclidean Frontier started "
             f"(min distance={MIN_DISTANCE_THRESHOLD:.2f} m, "
-            f"path-subgoal recovery={SUBGOAL_MAX_DISTANCE_M:.2f} m max)"
+            f"path-subgoal recovery={SUBGOAL_MAX_DISTANCE_M:.2f} m max, "
+            f"completion={COMPLETION_REQUIRED_SWEEPS} stable map sweeps)"
         )
+
+    def now_s(self):
+        return self.get_clock().now().nanoseconds / 1e9
 
     def map_callback(self, msg: OccupancyGrid):
         self.map_msg = msg
+        self.map_generation += 1
 
     def plan_callback(self, msg: Path):
         self.path_pub.publish(msg)
 
-        # Subgoal plans must not overwrite the last path toward the main frontier.
+        # A subgoal plan must not overwrite the last path to the main frontier.
         if self.goal_active and self.current_goal_mode == "main" and msg.poses:
             self.latest_main_plan = msg
+
+    def publish_status(self, state: str, reason: str, **extra):
+        payload = {
+            "state": state,
+            "reason": reason,
+            "time_s": self.now_s(),
+            "goal_active": bool(self.goal_active),
+            "goal_mode": self.current_goal_mode,
+            "main_goal": (
+                None
+                if self.main_goal is None
+                else {"x": self.main_goal[0], "y": self.main_goal[1]}
+            ),
+            "map_generation": self.map_generation,
+            **extra,
+        }
+
+        msg = String()
+        msg.data = json.dumps(payload, separators=(",", ":"))
+        self.status_pub.publish(msg)
+        self.last_status_state = state
+
+    def reset_completion_verification(self, reason: str):
+        had_evidence = self.completion_streak > 0
+        self.completion_reason = None
+        self.completion_streak = 0
+        self.completion_first_evidence_s = None
+        self.completion_last_sweep_s = -math.inf
+        self.completion_last_map_generation = -1
+
+        if had_evidence:
+            self.get_logger().info(
+                f"Completion verification reset: {reason}"
+            )
+        if not self.completed and self.last_status_state != "EXPLORING":
+            self.publish_status("EXPLORING", reason=reason)
+
+    def observe_no_frontier_terminal_state(self):
+        """Accumulate conservative completion evidence on distinct map updates."""
+        if self.completed:
+            return
+
+        now_s = self.now_s()
+
+        # Do not count the same OccupancyGrid repeatedly.
+        if self.map_generation == self.completion_last_map_generation:
+            return
+
+        # Keep terminal sweeps spaced in time even if /map updates very quickly.
+        if now_s - self.completion_last_sweep_s < COMPLETION_SWEEP_INTERVAL_S:
+            return
+
+        self.completion_last_map_generation = self.map_generation
+        self.completion_last_sweep_s = now_s
+
+        if self.completion_reason != "no_frontier_region_gt_10":
+            self.completion_reason = "no_frontier_region_gt_10"
+            self.completion_streak = 1
+            self.completion_first_evidence_s = now_s
+        else:
+            self.completion_streak += 1
+
+        idle_s = now_s - self.last_navigation_activity_s
+        age_s = now_s - self.start_time_s
+
+        self.publish_status(
+            "VERIFYING_COMPLETE",
+            reason=self.completion_reason,
+            stable_sweeps=self.completion_streak,
+            required_sweeps=COMPLETION_REQUIRED_SWEEPS,
+            idle_s=round(idle_s, 3),
+            required_idle_s=COMPLETION_IDLE_S,
+            age_s=round(age_s, 3),
+            startup_grace_s=COMPLETION_STARTUP_GRACE_S,
+        )
+
+        self.get_logger().info(
+            "Completion verification: "
+            f"{self.completion_streak}/{COMPLETION_REQUIRED_SWEEPS} "
+            f"stable no-frontier sweeps, idle={idle_s:.1f}s, age={age_s:.1f}s"
+        )
+
+        if (
+            self.completion_streak >= COMPLETION_REQUIRED_SWEEPS
+            and idle_s >= COMPLETION_IDLE_S
+            and age_s >= COMPLETION_STARTUP_GRACE_S
+        ):
+            self.mark_exploration_complete()
+
+    def mark_exploration_complete(self):
+        if self.completed:
+            return
+
+        self.completed = True
+        self.clear_goal_markers()
+
+        empty_path = Path()
+        empty_path.header.frame_id = MAP_FRAME
+        empty_path.header.stamp = self.get_clock().now().to_msg()
+        self.path_pub.publish(empty_path)
+
+        complete = Bool()
+        complete.data = True
+        self.completion_pub.publish(complete)
+
+        self.publish_status(
+            "COMPLETE",
+            reason="no_frontier_region_gt_10",
+            stable_sweeps=self.completion_streak,
+            required_sweeps=COMPLETION_REQUIRED_SWEEPS,
+            idle_s=round(self.now_s() - self.last_navigation_activity_s, 3),
+        )
+
+        self.get_logger().warn(
+            "================ EXPLORATION COMPLETE ================\n"
+            "Reason: no frontier region > 10 cells remained stably.\n"
+            f"Evidence: {self.completion_streak} distinct-map sweeps, "
+            f"idle >= {COMPLETION_IDLE_S:.0f} s.\n"
+            "No further navigation goals will be issued.\n"
+            "======================================================"
+        )
 
     @staticmethod
     def frontier_mask(grid: np.ndarray) -> np.ndarray:
@@ -127,7 +299,11 @@ class NearestEuclideanFrontier(Node):
 
                         nr = row + dr
                         nc = col + dc
-                        if 0 <= nr < height and 0 <= nc < width and grid[nr, nc] < 0:
+                        if (
+                            0 <= nr < height
+                            and 0 <= nc < width
+                            and grid[nr, nc] < 0
+                        ):
                             mask[row, col] = True
                             break
                     if mask[row, col]:
@@ -182,7 +358,9 @@ class NearestEuclideanFrontier(Node):
 
         return min(
             region,
-            key=lambda cell: (cell[0] - mean_row) ** 2 + (cell[1] - mean_col) ** 2,
+            key=lambda cell: (
+                (cell[0] - mean_row) ** 2 + (cell[1] - mean_col) ** 2
+            ),
         )
 
     def cell_to_world(self, row: int, col: int):
@@ -272,12 +450,17 @@ class NearestEuclideanFrontier(Node):
         self.goals_pub.publish(markers)
 
     def exploration_step(self):
+        if self.completed:
+            return
+
         if self.map_msg is None or self.goal_active:
             return
 
-        # A failed selected frontier remains the main goal. Retry it rather than
-        # re-running frontier ranking or choosing a different frontier.
+        # Never declare completion while a selected frontier is still unresolved.
+        # A failed selected frontier remains the main goal rather than being
+        # blacklisted or replaced by another frontier.
         if self.main_goal is not None:
+            self.reset_completion_verification("main_frontier_still_pending")
             x, y = self.main_goal
             self.get_logger().info(
                 f"Retrying main frontier after recovery: x={x:.2f}, y={y:.2f}"
@@ -291,15 +474,24 @@ class NearestEuclideanFrontier(Node):
 
         width = self.map_msg.info.width
         height = self.map_msg.info.height
-        grid = np.asarray(self.map_msg.data, dtype=np.int16).reshape(height, width)
+        grid = np.asarray(
+            self.map_msg.data,
+            dtype=np.int16,
+        ).reshape(height, width)
 
         mask = self.frontier_mask(grid)
         regions = self.frontier_regions(mask)
 
+        # Conservative completion: only zero large frontier regions counts.
+        # A transient empty map must survive the stable verification window.
         if not regions:
             self.clear_goal_markers()
-            self.get_logger().info("No frontier left. Exploration complete.")
+            self.observe_no_frontier_terminal_state()
             return
+
+        # Any real large frontier region immediately invalidates completion
+        # evidence, even if its representative is inside the 0.5 m filter.
+        self.reset_completion_verification("frontier_region_present")
 
         robot_x, robot_y = robot
         candidates = []
@@ -316,8 +508,16 @@ class NearestEuclideanFrontier(Node):
 
         if not candidates:
             self.clear_goal_markers()
-            self.get_logger().info(
-                f"No frontier at least {MIN_DISTANCE_THRESHOLD:.2f} m from robot."
+            self.publish_status(
+                "BLOCKED_BY_MIN_DISTANCE",
+                reason="frontier_regions_exist_but_all_representatives_too_close",
+                frontier_regions=len(regions),
+                min_distance_m=MIN_DISTANCE_THRESHOLD,
+            )
+            self.get_logger().warn(
+                "Frontier regions still exist, but every representative is "
+                f"closer than {MIN_DISTANCE_THRESHOLD:.2f} m. "
+                "NOT declaring exploration complete."
             )
             return
 
@@ -337,6 +537,9 @@ class NearestEuclideanFrontier(Node):
         self.send_navigation_goal(x, y, mode="main")
 
     def send_navigation_goal(self, x: float, y: float, mode: str):
+        if self.completed:
+            return
+
         if not self.nav_client.server_is_ready():
             self.get_logger().warn("NavigateToPose action server is not ready")
             return
@@ -357,6 +560,16 @@ class NearestEuclideanFrontier(Node):
 
         self.goal_active = True
         self.current_goal_mode = mode
+        self.last_navigation_activity_s = self.now_s()
+        self.reset_completion_verification(f"{mode}_goal_started")
+
+        self.publish_status(
+            "NAVIGATING",
+            reason=f"{mode}_goal",
+            target_x=round(x, 4),
+            target_y=round(y, 4),
+            recovery_count=self.recovery_count,
+        )
 
         future = self.nav_client.send_goal_async(goal)
         future.add_done_callback(
@@ -367,12 +580,22 @@ class NearestEuclideanFrontier(Node):
         )
 
     def goal_response_callback(self, future, mode: str):
-        goal_handle = future.result()
+        try:
+            goal_handle = future.result()
+        except Exception as exc:  # noqa: BLE001
+            self.get_logger().warn(
+                f"{mode.capitalize()} goal request failed: {exc}"
+            )
+            self.goal_active = False
+            self.current_goal_mode = None
+            self.last_navigation_activity_s = self.now_s()
+            return
 
         if not goal_handle.accepted:
             self.get_logger().warn(f"{mode.capitalize()} goal rejected")
             self.goal_active = False
             self.current_goal_mode = None
+            self.last_navigation_activity_s = self.now_s()
             return
 
         self.get_logger().info(f"{mode.capitalize()} goal accepted")
@@ -385,7 +608,17 @@ class NearestEuclideanFrontier(Node):
         )
 
     def goal_result_callback(self, future, mode: str):
-        wrapped_result = future.result()
+        try:
+            wrapped_result = future.result()
+        except Exception as exc:  # noqa: BLE001
+            self.get_logger().warn(
+                f"{mode.capitalize()} goal result failed: {exc}"
+            )
+            self.goal_active = False
+            self.current_goal_mode = None
+            self.last_navigation_activity_s = self.now_s()
+            return
+
         status = wrapped_result.status
         result = wrapped_result.result
 
@@ -394,6 +627,7 @@ class NearestEuclideanFrontier(Node):
 
         self.goal_active = False
         self.current_goal_mode = None
+        self.last_navigation_activity_s = self.now_s()
 
         if status == GoalStatus.STATUS_SUCCEEDED:
             if mode == "subgoal":
@@ -409,6 +643,7 @@ class NearestEuclideanFrontier(Node):
             self.main_goal = None
             self.latest_main_plan = None
             self.recovery_count = 0
+            self.publish_status("EXPLORING", reason="main_goal_reached")
             return
 
         detail = f"status={status}"
@@ -422,15 +657,14 @@ class NearestEuclideanFrontier(Node):
         if mode == "main":
             self.try_path_guided_subgoal()
         else:
-            # Do not blacklist or switch frontier. The timer will retry the same
-            # main goal, obtain a fresh global path, and recovery can be attempted
-            # again from the current pose.
+            # Do not blacklist or switch frontier. The timer retries the same
+            # main frontier from the current pose.
             self.get_logger().warn(
                 "Recovery subgoal also failed; keeping the same main frontier."
             )
 
     def try_path_guided_subgoal(self):
-        if self.main_goal is None:
+        if self.main_goal is None or self.completed:
             return
 
         plan = self.latest_main_plan
@@ -484,7 +718,10 @@ class NearestEuclideanFrontier(Node):
             current = poses[index].pose.position
             cumulative.append(
                 cumulative[-1]
-                + math.hypot(current.x - previous.x, current.y - previous.y)
+                + math.hypot(
+                    current.x - previous.x,
+                    current.y - previous.y,
+                )
             )
 
         remaining_path_m = cumulative[-1]
@@ -500,7 +737,7 @@ class NearestEuclideanFrontier(Node):
         )
 
         # Keep the temporary goal distinct from the main frontier whenever the
-        # remaining path is long enough to do so.
+        # remaining path is long enough.
         if remaining_path_m > SUBGOAL_MAIN_GOAL_CLEARANCE_M:
             desired_distance_m = min(
                 desired_distance_m,
