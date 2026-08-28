@@ -109,6 +109,27 @@ def generate_launch_description() -> LaunchDescription:
         }.items(),
     )
 
+    # The Gazebo IMU bridge currently stamps /imu with the scoped sensor frame
+    # "turtlebot4/imu_link/imu" while robot_state_publisher exposes the physical
+    # link as "imu_link". The sensor itself has zero pose relative to imu_link,
+    # so publish the missing identity transform instead of discarding IMU data.
+    imu_sensor_frame_tf = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='cartographer_imu_sensor_frame_tf',
+        output='screen',
+        arguments=[
+            '--x', '0',
+            '--y', '0',
+            '--z', '0',
+            '--roll', '0',
+            '--pitch', '0',
+            '--yaw', '0',
+            '--frame-id', 'imu_link',
+            '--child-frame-id', 'turtlebot4/imu_link/imu',
+        ],
+    )
+
     cartographer_node = Node(
         package='cartographer_ros',
         executable='cartographer_node',
@@ -174,6 +195,7 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument('nav2_delay_sec', default_value='20.0'),
             cleanup,
             simulation,
+            imu_sensor_frame_tf,
             TimerAction(
                 period=cartographer_delay_sec,
                 actions=[cartographer_node, occupancy_grid_node],
