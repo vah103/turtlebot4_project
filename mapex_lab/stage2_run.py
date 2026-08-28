@@ -20,6 +20,7 @@ from nf_basic import MAIN_PLAN_ENDPOINT_TOLERANCE_M, NearestEuclideanFrontier
 
 CANVAS_RES=0.05; CANVAS_W=1504; CANVAS_H=2123
 CANVAS_X=-25.6; CANVAS_Y=-60.1; ROI_N=215435
+NAV2_READY_STABLE_S=3.0
 
 
 class Stage2Run(NearestEuclideanFrontier):
@@ -38,6 +39,7 @@ class Stage2Run(NearestEuclideanFrontier):
         self.decision_id=0; self.active_decision=None; self.compute_t0=None; self.compute_sim_t0=None
         self.goal_id=0; self.active_goal=None; self.count=Counter(); self.errors=Counter(); self.comp=[]
         self.known=math.nan; self.coverage=math.nan; self.finalized=False
+        self.nav_ready_since=None; self.startup_gate_open=False; self.startup_wait_logged=False
 
         q=QoSProfile(depth=100); q.reliability=ReliabilityPolicy.BEST_EFFORT
         self.create_subscription(Odometry, odom_topic, self.odom_cb, q)
@@ -48,7 +50,7 @@ class Stage2Run(NearestEuclideanFrontier):
     def _open(self,name,cols):
         f=(self.run/name).open('w',newline='',encoding='utf-8'); w=csv.DictWriter(f,fieldnames=cols); w.writeheader(); f.flush(); return f,w
     def _open_files(self):
-        self.fm,self.wm=self._open('metrics.csv',['time_s','distance_m','known_fraction','coverage','occupied_iou','tu','frontiers_selected','main_attempts','main_succeeded','main_failed','abandoned_208','main_success_rate','subgoal_attempts','subgoal_succeeded','subgoal_failed'])
+        self.fm,self.wm=self._open('metrics.csv',['time_s','distance_m','known_fraction','coverage','occupied_iou','tu','frontiers_selected','main_attempts','main_succeeded','main_failed','main_interrupted','abandoned_208','main_success_rate','subgoal_attempts','subgoal_succeeded','subgoal_failed','subgoal_interrupted'])
         self.ft,self.wt=self._open('trajectory.csv',['time_s','x','y','yaw','cumulative_distance_m'])
         self.fd,self.wd=self._open('decisions.csv',['decision_id','time_s','map_generation','candidate_count','computation_ms','selected_x','selected_y','selected_distance_m','region_size','outcome','raw_map','canvas_map'])
         self.fc,self.wc=self._open('candidates.csv',['decision_id','rank','row','col','x','y','distance_m','region_size','below_1m','selected'])
@@ -68,7 +70,30 @@ class Stage2Run(NearestEuclideanFrontier):
         return f'{x:.9f}' if math.isfinite(x) else 'nan'
 
     # ----- candidate computation -----
+    def startup_ready(self):
+        if self.startup_gate_open:return True
+        if not self.nav_client.server_is_ready():
+            self.nav_ready_since=None
+            if not self.startup_wait_logged:
+                self.get_logger().info('Stage-2 waiting for NavigateToPose action server before benchmark start')
+                self.startup_wait_logged=True
+            return False
+        now=self.now_s()
+        if self.nav_ready_since is None:
+            self.nav_ready_since=now
+            return False
+        if now-self.nav_ready_since<NAV2_READY_STABLE_S:return False
+        if self.map_msg is None:return False
+        if self.robot_position() is None:return False
+        self.startup_gate_open=True
+        self.get_logger().warn(f'STAGE2 READY: Nav2 stable for >= {NAV2_READY_STABLE_S:.1f}s; benchmark clock will start at first frontier decision')
+        return True
+
     def exploration_step(self):
+        if not self.startup_ready():return
+        # Do not let a transient readiness drop contaminate t=0 before the first
+        # actual benchmark decision. After t=0, nf_basic owns normal runtime behavior.
+        if self.t0 is None and not self.nav_client.server_is_ready():return
         ready=(not self.completed and self.map_msg is not None and not self.goal_active and self.main_goal is None and self.nav_client.server_is_ready())
         if ready and self.robot_position() is not None:
             self.decision_id+=1; self.active_decision=self.decision_id
@@ -134,7 +159,10 @@ class Stage2Run(NearestEuclideanFrontier):
     def finish_goal(self,result,status,code,msg):
         g=self.active_goal
         if g is None:return
-        mode=g['mode']; self.count[f'{mode}_succeeded' if result=='succeeded' else f'{mode}_failed']+=1
+        mode=g['mode']
+        if result=='succeeded':self.count[f'{mode}_succeeded']+=1
+        elif result=='interrupted':self.count[f'{mode}_interrupted']+=1
+        else:self.count[f'{mode}_failed']+=1
         if code not in ('',None,0):self.errors[str(code)]+=1
         self.wg.writerow({'goal_id':g['goal_id'],'decision_id':g['decision_id'] or '','mode':mode,'start_time_s':self.fmt(g['start']),'end_time_s':self.fmt(self.elapsed()),'target_x':self.fmt(g['x']),'target_y':self.fmt(g['y']),'result':result,'status':status,'error_code':code,'error_msg':msg}); self.fg.flush(); self.active_goal=None
 
@@ -151,7 +179,7 @@ class Stage2Run(NearestEuclideanFrontier):
     def metric_tick(self):
         if self.t0 is None or self.finalized:return
         self.known,self.coverage=self.map_metrics(); ma=self.count['main_attempts']; ms=self.count['main_succeeded']; rate=ms/ma if ma else math.nan
-        self.wm.writerow({'time_s':self.fmt(self.elapsed()),'distance_m':self.fmt(self.distance),'known_fraction':self.fmt(self.known),'coverage':self.fmt(self.coverage),'occupied_iou':'nan','tu':'nan','frontiers_selected':self.count['frontiers_selected'],'main_attempts':ma,'main_succeeded':ms,'main_failed':self.count['main_failed'],'abandoned_208':self.count['abandoned_208'],'main_success_rate':self.fmt(rate),'subgoal_attempts':self.count['subgoal_attempts'],'subgoal_succeeded':self.count['subgoal_succeeded'],'subgoal_failed':self.count['subgoal_failed']}); self.fm.flush()
+        self.wm.writerow({'time_s':self.fmt(self.elapsed()),'distance_m':self.fmt(self.distance),'known_fraction':self.fmt(self.known),'coverage':self.fmt(self.coverage),'occupied_iou':'nan','tu':'nan','frontiers_selected':self.count['frontiers_selected'],'main_attempts':ma,'main_succeeded':ms,'main_failed':self.count['main_failed'],'main_interrupted':self.count['main_interrupted'],'abandoned_208':self.count['abandoned_208'],'main_success_rate':self.fmt(rate),'subgoal_attempts':self.count['subgoal_attempts'],'subgoal_succeeded':self.count['subgoal_succeeded'],'subgoal_failed':self.count['subgoal_failed'],'subgoal_interrupted':self.count['subgoal_interrupted']}); self.fm.flush()
         if self.elapsed()-self.last_snap>=10:self.save_map_pair(self.run/'maps'/f'snapshot_{int(self.elapsed()):06d}'); self.last_snap=self.elapsed()
 
     def fixed_canvas(self,msg):
@@ -188,9 +216,10 @@ class Stage2Run(NearestEuclideanFrontier):
 
     def finalize(self,reason):
         if self.finalized:return
+        if self.active_goal is not None:self.finish_goal('interrupted','','','run_interrupted')
         self.finalized=True; self.known,self.coverage=self.map_metrics(); self.save_map_pair(self.run/'maps'/'final')
         ma=self.count['main_attempts']; ms=self.count['main_succeeded']
-        summary={'run_id':self.run.name,'final_coverage':self.coverage,'final_known_fraction':self.known,'total_distance_m':self.distance,'total_time_s':None if self.t0 is None else self.elapsed(),'frontiers_selected':self.count['frontiers_selected'],'main_attempts':ma,'main_succeeded':ms,'main_failed':self.count['main_failed'],'abandoned_208':self.count['abandoned_208'],'main_success_rate':ms/ma if ma else math.nan,'subgoal_attempts':self.count['subgoal_attempts'],'subgoal_succeeded':self.count['subgoal_succeeded'],'subgoal_failed':self.count['subgoal_failed'],'error_code_counts':dict(self.errors),'decision_computation_ms_mean':statistics.fmean(self.comp) if self.comp else math.nan,'decision_computation_ms_std':statistics.pstdev(self.comp) if len(self.comp)>1 else 0.0,'termination_reason':reason,'occupied_iou_online':None,'tu_online':None}
+        summary={'run_id':self.run.name,'final_coverage':self.coverage,'final_known_fraction':self.known,'total_distance_m':self.distance,'total_time_s':None if self.t0 is None else self.elapsed(),'frontiers_selected':self.count['frontiers_selected'],'main_attempts':ma,'main_succeeded':ms,'main_failed':self.count['main_failed'],'main_interrupted':self.count['main_interrupted'],'abandoned_208':self.count['abandoned_208'],'main_success_rate':ms/ma if ma else math.nan,'subgoal_attempts':self.count['subgoal_attempts'],'subgoal_succeeded':self.count['subgoal_succeeded'],'subgoal_failed':self.count['subgoal_failed'],'subgoal_interrupted':self.count['subgoal_interrupted'],'error_code_counts':dict(self.errors),'decision_computation_ms_mean':statistics.fmean(self.comp) if self.comp else math.nan,'decision_computation_ms_std':statistics.pstdev(self.comp) if len(self.comp)>1 else 0.0,'termination_reason':reason,'nav2_startup_stable_s':NAV2_READY_STABLE_S,'occupied_iou_online':None,'tu_online':None}
         (self.run/'summary.json').write_text(json.dumps(summary,indent=2,allow_nan=True),encoding='utf-8')
         self.get_logger().warn(f"STAGE2 SAVED: coverage={self.fmt(self.coverage)}, distance={self.distance:.2f}m, output={self.run}")
 
