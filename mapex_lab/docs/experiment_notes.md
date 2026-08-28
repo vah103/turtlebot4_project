@@ -13,10 +13,21 @@ Ghi ngắn gọn các quyết định hoặc sự cố có thể ảnh hưởng 
 - Observation:
 - Next action:
 
+## 2026-08-28 — Fix Cartographer IMU sensor-frame TF mismatch
+
+- What changed:
+  - First `carto.launch.py` runtime showed Cartographer repeatedly failing to transform IMU messages because `/imu.header.frame_id` is `turtlebot4/imu_link/imu`, while robot TF exposes the physical sensor link as `imu_link`.
+  - Added an identity static transform `imu_link -> turtlebot4/imu_link/imu` in `launch/carto.launch.py`. The IMU sensor has zero extra pose relative to `imu_link`, so this reconnects the Gazebo sensor-scoped message frame to the real robot TF tree without disabling IMU fusion.
+- Why: Cartographer started and loaded its trajectory successfully, but the missing IMU source frame prevented normal sensor processing, so `map` was never created and Nav2 subsequently timed out waiting for `map -> base_link`.
+- Affected runs: Cartographer debug only; no official `hospital_v2` run affected.
+- Does baseline need rerun?: no official baseline. The failed Cartographer launch is diagnostic only.
+- Observation: runtime error was a TF integration problem, not Cartographer package/config loading failure.
+- Next action: pull and rerun `carto.launch.py`; verify the IMU TF warning disappears, `/map` is published at 0.10 m/cell, and `map -> odom -> base_link` is available before running `nf_basic.py`.
+
 ## 2026-08-28 — Add Cartographer 2D debug mapping alternative
 
 - What changed:
-  - Added `config/cartographer_hospital_2d.lua` and `launch/cartographer.launch.py` as a replacement mapping stack for debug validation while retaining the same Hospital simulation and stock-style Nav2 debug profile.
+  - Added `config/cartographer_hospital_2d.lua` and `launch/carto.launch.py` as a replacement mapping stack for debug validation while retaining the same Hospital simulation and stock-style Nav2 debug profile.
   - Cartographer consumes `/scan`, `/odom`, and `/imu`; tracking frame is `imu_link`, Gazebo keeps publishing `odom -> base_link`, and Cartographer publishes the loop-closed `map -> odom` relation.
   - Local Cartographer submaps use `0.05 m/cell`; the ROS `/map` OccupancyGrid exposed to Nav2 and `nf_basic.py` remains `0.10 m/cell`.
   - Loop closure remains enabled through Cartographer's pose graph. Online correlative scan matching is enabled and pose-graph optimization is requested every 60 nodes for an accuracy-first first test.
@@ -25,7 +36,7 @@ Ghi ngắn gọn các quyết định hoặc sự cố có thể ảnh hưởng 
 - Affected runs: debug Cartographer runs only. `hospital_v2` official protocol still names `slam_toolbox` until Cartographer is runtime-validated and deliberately adopted as a new protocol version.
 - Does baseline need rerun?: not yet because no official Cartographer protocol has been adopted. If Cartographer becomes the official mapping stack, Nearest/MapEx/proposed-method official runs must all use it and the protocol version must change.
 - Observation: code/config implemented; runtime validation is still pending.
-- Next action: install Jazzy Cartographer packages, run `cartographer.launch.py + nf_basic.py`, verify `/map`, `map -> odom`, `/imu`, and `/odom`, then drive/explore far enough to revisit old corridors and compare map overlap against the slam_toolbox run.
+- Next action: install Jazzy Cartographer packages, run `carto.launch.py + nf_basic.py`, verify `/map`, `map -> odom`, `/imu`, and `/odom`, then drive/explore far enough to revisit old corridors and compare map overlap against the slam_toolbox run.
 
 ## 2026-08-28 — Robust conservative completion guard for `nf_basic.py`
 
@@ -88,7 +99,7 @@ Ghi ngắn gọn các quyết định hoặc sự cố có thể ảnh hưởng 
 ## 2026-08-26 — Disable MapEx 1 m rejection for Hospital
 
 - What changed: thêm `scripts/mapex_nearest_ros_hospital_adapted.py` và chuyển Hospital runtime sang semantics này. Hospital vẫn detect/cluster/represent/rank frontier theo MapEx, nhưng candidate `<1 m` không còn bị reject chỉ vì khoảng cách; nó được gửi sang Nav2 `ComputePathToPose` như candidate bình thường.
-- Why: `nearest_pilot_005` chứng minh startup deadlock do rule gốc: `534` frontier cells, `24` regions, chỉ `1` large region `>10`, chỉ `1` representative, distance `0.469 m`; `>=1m_valid=0`; candidate duy nhất bị reject trước Nav2 và robot không thể bắt đầu exploration.
+- Why: `nearest_pilot_005` chứng minh startup deadlock do rule gốc: `534` frontier cells, `24` regions, chỉ `1` large region `>10`, chỉ `1` representative ở `0.469 m`, candidate duy nhất bị reject trước Nav2.
 - Affected runs: `nearest_pilot_005` invalid cho benchmark; dùng làm evidence cho protocol adaptation.
 - Does baseline need rerun?: chưa có official run nên chưa mất benchmark nào. Tất cả official Nearest và full MapEx Hospital sau này phải dùng cùng below-1m adaptation để đảm bảo fairness.
 - Observation: vấn đề nằm trước Nav2; candidate 0.469 m chưa từng được gửi planner trong pilot_005.
