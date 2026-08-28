@@ -5,9 +5,12 @@ It keeps the same Hospital simulation and stock-style Nav2 debug setup, but
 replaces slam_toolbox with Cartographer 2D using wheel odometry, IMU, local
 submaps, and pose-graph optimization.
 
-The published /map resolution remains 0.10 m/cell so nf_basic.py can be used
-without changing its frontier semantics. Cartographer's internal submaps stay at
-0.05 m/cell for more precise scan matching.
+Cartographer publishes a probabilistic OccupancyGrid on /cartographer_map. A
+small compatibility bridge thresholds that grid to the discrete MapEx/Nearest
+convention on /map: unknown=-1, free=0, occupied=100. The published /map
+resolution remains 0.10 m/cell so nf_basic.py can be used without changing its
+frontier semantics. Cartographer's internal submaps stay at 0.05 m/cell for more
+precise scan matching.
 """
 
 import os
@@ -18,6 +21,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument,
+    ExecuteProcess,
     IncludeLaunchDescription,
     OpaqueFunction,
     RegisterEventHandler,
@@ -55,6 +59,10 @@ def generate_launch_description() -> LaunchDescription:
 
     cartographer_config_dir = os.path.join(research_root, 'config')
     cartographer_config_basename = 'cartographer_hospital_2d.lua'
+    cartographer_map_bridge = os.path.join(
+        research_root,
+        'cartographer_map_bridge.py',
+    )
 
     # Keep the same stock-style Nav2 debug profile used by stock.launch.py.
     stock_nav2_params = os.path.join(tb4_nav_pkg, 'config', 'nav2.yaml')
@@ -161,6 +169,12 @@ def generate_launch_description() -> LaunchDescription:
             '-publish_period_sec',
             '1.0',
         ],
+        remappings=[('map', '/cartographer_map')],
+    )
+
+    map_bridge = ExecuteProcess(
+        cmd=['/usr/bin/python3', cartographer_map_bridge],
+        output='screen',
     )
 
     nav2 = IncludeLaunchDescription(
@@ -198,7 +212,7 @@ def generate_launch_description() -> LaunchDescription:
             imu_sensor_frame_tf,
             TimerAction(
                 period=cartographer_delay_sec,
-                actions=[cartographer_node, occupancy_grid_node],
+                actions=[cartographer_node, occupancy_grid_node, map_bridge],
             ),
             TimerAction(period=nav2_delay_sec, actions=[nav2]),
         ]
