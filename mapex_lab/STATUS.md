@@ -6,6 +6,7 @@
 
 ## Done
 
+- Renamed research folder from `mapex_hospital_research/` to `mapex_lab/`; runtime files remain unchanged apart from path references.
 - Fixed canvas `hospital_canvas_v1`: `0.05 m`, `1504 x 2123`, origin `(-25.6,-60.1)`.
 - Frozen ROI `hospital_connected_free_v1`: denominator `215435`, SHA-256 `05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1`.
 - Hospital runtime protocol advanced to `hospital_v2`: SLAM/policy map target is `0.10 m/cell`, while fixed evaluation canvas/ROI remain frozen at `0.05 m/cell`.
