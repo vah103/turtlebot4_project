@@ -8,11 +8,11 @@ from __future__ import annotations
 
 import argparse, csv, json, math, statistics, time
 from collections import Counter
-from pathlib import Path
+from pathlib import Path as FilePath
 
 import numpy as np
 import rclpy
-from nav_msgs.msg import Odometry, Path
+from nav_msgs.msg import Odometry, Path as NavPath
 from rclpy.executors import ExternalShutdownException
 from rclpy.qos import QoSProfile, ReliabilityPolicy
 
@@ -25,7 +25,7 @@ CANVAS_X=-25.6; CANVAS_Y=-60.1; ROI_N=215435
 class Stage2Run(NearestEuclideanFrontier):
     def __init__(self, run_id:str, odom_topic:str):
         super().__init__()
-        self.root=Path(__file__).resolve().parent
+        self.root=FilePath(__file__).resolve().parent
         self.run=self.root/'experiments'/'nearest'/run_id
         if self.run.exists(): raise RuntimeError(f'Run exists: {self.run}')
         (self.run/'maps').mkdir(parents=True)
@@ -95,7 +95,7 @@ class Stage2Run(NearestEuclideanFrontier):
         if selected is None:self.active_decision=None
 
     # ----- plans / goals -----
-    def plan_callback(self,msg:Path):
+    def plan_callback(self,msg:NavPath):
         mode=self.current_goal_mode; frontier=self.main_goal; gid=self.active_goal['goal_id'] if self.active_goal else ''
         super().plan_callback(msg)
         if mode!='main' or frontier is None:return
@@ -172,7 +172,7 @@ class Stage2Run(NearestEuclideanFrontier):
         known=c>=0; k=np.count_nonzero(known)/known.size; cov=np.count_nonzero(known & self.roi)/ROI_N if self.roi is not None else math.nan
         return float(k),float(cov)
 
-    def save_map_pair(self,prefix:Path):
+    def save_map_pair(self,prefix:FilePath):
         if self.map_msg is None:return '',''
         m=self.map_msg; raw=np.asarray(m.data,dtype=np.int16).reshape(m.info.height,m.info.width); canvas=self.fixed_canvas(m)
         rp=prefix.with_name(prefix.name+'_raw.npz'); cp=prefix.with_name(prefix.name+'_canvas.npz')
