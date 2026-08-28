@@ -12,14 +12,16 @@
 - Hospital keeps exact frontier `x/y` as the execution target and ignores terminal yaw.
 - **`mapex_lab/nf_basic.py` is now the canonical/official execution file for the Nearest Frontier baseline.** Older Nearest/debug controller files are not the main runner unless explicitly selected for a separate diagnostic.
 - Official `nf_basic.py` uses path-guided recovery: a failed main goal may use a temporary subgoal on the latest valid main-goal `/plan`, then retry the same frontier.
-- Official `nf_basic.py` uses the event-driven BT and conservative completion verification (5 distinct no-frontier map sweeps, >=2 s apart, >=10 s idle, >=20 s node age).
+- Official `nf_basic.py` now has two conservative completion conditions:
+  1. zero frontier regions `>10` across 5 distinct map sweeps, >=2 s apart;
+  2. frontier regions remain, but the full eligible representative set is revalidated with Nav2 `ComputePathToPose` and 5 consecutive planner sweeps find no reachable frontier.
+- Both completion conditions still require >=10 s navigation idle and >=20 s node age. Any planner-reachable frontier resets terminal verification and exploration resumes.
 - Main-plan diagnostics require at least 2 poses and the final `/plan` pose to be within `0.10 m` of the exact frontier before that path may be used for subgoal recovery.
 - Closed-curtain runtime test showed a repeatable tolerance-snapped path: frontier `(19.48,-11.66)`, `/plan` endpoint `(19.88,-11.66)`, 7 poses, endpoint error `0.400 m`; this path is correctly rejected for subgoal recovery.
-- Nav2 controller `xy_goal_tolerance` was reduced from `0.4 m` to `0.3 m`; the curtain `/plan` endpoint still remained exactly `0.400 m` from the frontier, so controller tolerance was not the cause of the planner endpoint offset.
+- Nav2 controller `xy_goal_tolerance` is currently `0.4 m`; this is controller success tolerance and is distinct from planner `GridBased.tolerance`.
 - `config/nav2_stock_xy_only.yaml` explicitly overrides `planner_server.ros__parameters.GridBased.tolerance: 0.0`.
 - With planner tolerance `0.0`, reachable goals produced exact-frontier paths (`endpoint_to_frontier=0.000 m`). For main frontier `(6.58,0.95)`, Nav2 first produced valid exact paths, then controller failure `105`, path-guided recovery, and after the robot pose changed the same main frontier began returning planner error `208` (`NO_VALID_PATH`) with no usable `/plan`.
-- Official `nf_basic.py` treats a **main-goal** error `208` as terminal for that selected frontier: it clears the pending main goal, records the rejected position, and suppresses future frontier representatives within `0.10 m` for the rest of that `nf_basic.py` process so exploration can continue to another candidate. A subgoal error `208` does **not** blacklist the main frontier by itself.
-- Runtime test confirmed the `208 -> abandon selected main frontier` behavior resolves the observed infinite retry loop, and this behavior is retained in the official `nf_basic.py` runner.
+- A main-goal `208` is still abandoned immediately so exploration can move to another candidate, but its position is no longer treated as permanent terminal reachability evidence. If all ordinary candidates become suppressed, terminal planner revalidation explicitly checks those representatives again.
 - Added `mapex_lab/stage2_run.py` as a single integrated Stage-2 measurement wrapper. It inherits the canonical `NearestEuclideanFrontier` from `nf_basic.py` rather than copying policy logic, and records coverage/known fraction vs time/distance, odometry trajectory, decision computation time, full eligible candidate sets, main/subgoal attempts/results/error codes, `/plan` endpoint diagnostics, exact decision maps, periodic maps, final map, and `summary.json` under `experiments/nearest/<run_id>/`.
 - `stage2_run.py` leaves `occupied_iou` and `tu` as online `NaN`/`None`; retained raw/fixed-canvas maps are the source for offline computation of those metrics.
 - First runtime smoke-test exposed a Python import-name collision: `pathlib.Path` was overwritten by `nav_msgs.msg.Path`, causing `Path(__file__)` to fail before recording started. `stage2_run.py` now aliases these as `FilePath` and `NavPath`, respectively.
@@ -29,25 +31,27 @@
 - `stage2_run.py` now writes an active main/subgoal as `result=interrupted` during finalize/Ctrl+C instead of silently dropping it, and tracks `main_interrupted` / `subgoal_interrupted` separately from navigation failures.
 - Pilot `pilot_003` passed the recorder smoke-test: `STAGE2 READY` occurred before the first frontier decision, coverage was numeric (`0.446064938` at manual stop), and Ctrl+C during main goal 4 produced `result=interrupted` with `main_interrupted=1` in `summary.json`.
 - To reduce disk use without losing the fixed evaluation representation, periodic `maps/snapshot_*` files now save **fixed-canvas NPZ only**. Exact decision maps still save both raw + fixed-canvas, and the final map still saves both raw + fixed-canvas.
+- A long `local.launch.py` diagnostic run exposed the old terminal deadlock: coverage reached `0.996184464`, the remaining large frontier representatives all returned `208`, then the process repeated `no eligible candidate ... NOT declaring exploration complete` indefinitely until manual Ctrl+C.
+- That diagnostic directly motivated the new case-2 planner-reachability completion verification. `local.launch.py` remains debug-only and the manually stopped run is not an official Hospital-v2 benchmark result.
 - Cartographer and local-window SLAM alternatives remain debug-only and are not part of the official Hospital v2 benchmark unless protocol identity is changed and all methods are rerun under the same stack.
 - `control_tb4.py` and historical `hospital_slam.yaml=0.05` remain available only for separate regression diagnostics; they are not the official Nearest runner.
 
 ## In progress
 
-- Begin official repeated Nearest Stage-2 runs with `stage2_run.py` and preserve the validated recorder/runtime behavior.
-- Continue runtime validation of the official `nf_basic.py` over longer Hospital exploration runs.
-- Keep path-guided subgoal recovery for genuine execution failures such as controller error `105` when a valid path reaches the exact frontier.
-- Observe whether a `0.10 m` session suppression radius is sufficient to prevent an unreachable region from reappearing via a slightly shifted representative.
+- Runtime-validate the new `no_planner_reachable_frontier` completion path in `nf_basic.py`.
+- Confirm the expected end-of-run sequence: all normal candidates suppressed after `208` -> planner revalidation every >=2 s -> 5 exhausted sweeps -> one `COMPLETE`.
+- Confirm that if any revalidation sweep finds a non-empty successful `ComputePathToPose`, the corresponding suppression is removed, completion streak resets, and normal nearest-frontier exploration resumes.
+- Continue runtime validation of path-guided recovery for controller error `105`.
 - Continue local-window SLAM and Cartographer diagnostics separately; neither is yet an official benchmark change.
 
 ## Next actions
 
-1. Pull the latest repo and start official Nearest runs as `nearest_001`, `nearest_002`, ... using `stage2_run.py` with the intended Hospital stack active.
-2. After `nearest_001`, verify `metrics.csv`, `trajectory.csv`, `decisions.csv`, `candidates.csv`, `goals.csv`, `plans.csv`, `decision_maps/`, `maps/`, and `summary.json` for consistency before continuing the batch.
-3. Confirm periodic `maps/snapshot_*` contains canvas-only NPZ files, while `decision_maps/decision_*` and `maps/final_*` retain raw + canvas pairs.
-4. Run the Nearest baseline closed-loop at least 5 times, target 10, and report per-run plus mean ± std.
-5. Continue a full Hospital exploration run and verify `105 -> path-guided recovery` and `208 -> abandon main frontier` remain stable without infinite retries.
-6. If the same unreachable region reappears shifted by more than `0.10 m`, decide whether region-aware suppression is needed.
+1. Pull the latest repo and run a fresh terminal-validation test before accepting a new official `nearest_001`.
+2. At the end of exploration, verify logs show `Planner-reachability completion verification: 1/5 ... 5/5` followed by `EXPLORATION COMPLETE` with reason `no_planner_reachable_frontier` when only unreachable frontiers remain.
+3. Also verify a deliberately/recurrently reachable candidate discovered during revalidation resets the streak and resumes navigation instead of false-completing.
+4. After the completion path passes, run official Nearest runs as `nearest_001`, `nearest_002`, ... using `stage2_run.py` with the intended Hospital-v2 stack.
+5. After `nearest_001`, verify `metrics.csv`, `trajectory.csv`, `decisions.csv`, `candidates.csv`, `goals.csv`, `plans.csv`, `decision_maps/`, `maps/`, and `summary.json` for consistency before continuing the batch.
+6. Run the Nearest baseline closed-loop at least 5 times, target 10, and report per-run plus mean ± std.
 7. Before collecting/finalizing official benchmark data, ensure the active SLAM/Nav2 runtime matches the intended Hospital v2 configuration and archive effective runtime provenance.
 
 ## Important decisions
@@ -58,7 +62,8 @@
 - Exact frontier `x/y` is the exploration target; planner endpoint is diagnostic/reachability evidence only.
 - A path that stops materially short of the frontier must not be used to generate a recovery subgoal.
 - Genuine controller/execution failure after a path reaches the exact frontier remains eligible for temporary path-guided subgoal recovery.
-- A selected **main frontier** returning `NO_VALID_PATH (208)` is abandoned and session-suppressed within `0.10 m` to prevent infinite retries.
+- A selected main frontier returning `NO_VALID_PATH (208)` is abandoned for ordinary selection so the node can move on, but `208` is not permanent proof that the frontier can never become reachable.
+- When every eligible representative has been suppressed after `208`, `nf_basic.py` must re-run actual Nav2 `ComputePathToPose` checks over the full set. Five consecutive fully exhausted sweeps are required for `no_planner_reachable_frontier` completion.
 - A failed temporary subgoal, including subgoal error `208`, does not alone prove the main frontier unreachable and therefore does not blacklist the main frontier.
 - Official Nearest, MapEx, and proposed method comparisons must use the same Hospital adaptations and effective Nav2/SLAM configuration.
 - Pilot/debug launch alternatives do not count as official benchmark runs.
@@ -66,6 +71,4 @@
 
 ## Latest result
 
-2026-08-28: `nf_basic.py` is accepted as the official/canonical Nearest Frontier runner. Exact-planner testing with `GridBased.tolerance=0.0` produced exact frontier endpoints for reachable goals. Controller failure `105` remains handled by path-guided subgoal recovery, while main-goal `208` now abandons/suppresses that selected frontier and allows exploration to continue instead of looping indefinitely.
-
-2026-08-28: `pilot_003` passed the integrated Stage-2 recorder smoke-test. Startup gating, numeric ROI coverage, interruption logging, trajectory/distance, decisions/candidates/plans, and map saving are working. Periodic snapshots now retain fixed-canvas NPZ only to reduce disk use; decision and final maps retain raw + canvas pairs.
+2026-08-29: long local-window diagnostic reached coverage `0.996184464` but exposed a completion deadlock after the final reachable frontier: remaining frontier representatives repeatedly returned `NO_VALID_PATH (208)`, became suppressed, and the old code refused to complete because large frontier regions still existed. `nf_basic.py` now implements a second terminal condition consistent with the protocol: when all eligible representatives are suppressed, it performs repeated full-set `ComputePathToPose` revalidation; 5 consecutive exhausted sweeps, >=2 s apart and satisfying idle/startup guards, produce `COMPLETE` with reason `no_planner_reachable_frontier`. If any candidate becomes planner-reachable again, its suppression is cleared and exploration resumes.
