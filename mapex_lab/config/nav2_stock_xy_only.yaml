@@ -24,8 +24,8 @@ controller_server:
     controller_frequency: 15.0
 
     general_goal_checker:
-      # Accept frontier goals once the robot is within 0.3 m; terminal yaw is irrelevant.
-      xy_goal_tolerance: 0.3
+      # Accept frontier goals once the robot is within 0.4 m; terminal yaw is irrelevant.
+      xy_goal_tolerance: 0.4
       yaw_goal_tolerance: 3.141592653589793
 
     FollowPath:
