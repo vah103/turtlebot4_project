@@ -1,6 +1,6 @@
 # Agent / ChatGPT Instructions
 
-Khi được yêu cầu làm việc trong `mapex_hospital_research/`, hãy coi folder này là nguồn context chính.
+Khi được yêu cầu làm việc trong `mapex_lab/`, hãy coi folder này là nguồn context chính.
 
 ## Đọc trước khi làm
 
