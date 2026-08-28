@@ -33,14 +33,15 @@
 - Added `step0.py` as a temporary debug wrapper that sets `min_distance_threshold = 0.0` so the centroid-selection behavior can be observed without the rejection filter; this is diagnostic only.
 - Added debug-only path-guided intermediate-goal recovery to `nf_basic.py` plus `behavior_trees/navigate_to_pose_subgoal.xml`: the selected frontier remains fixed; on a fast-fail Nav2 abort, `nf_basic.py` chooses a temporary point on the latest main-goal `/plan`, navigates there, then retries the same frontier from the new pose. No blacklist or alternate frontier selection is introduced.
 - Added conservative completion verification to debug `nf_basic.py`: COMPLETE is only emitted after zero frontier regions `>10` persist across `5` distinct `/map` updates, sweeps are at least `2 s` apart, navigation has been idle for at least `10 s`, and node age is at least `20 s`. Remaining frontiers inside the debug `0.5 m` filter produce `BLOCKED_BY_MIN_DISTANCE`, not a false COMPLETE. Completion is published latched on `/frontier_exploration_complete` and machine-readable status on `/frontier_exploration_status`; once complete, no further goals are sent.
-- Added a Cartographer 2D debug alternative for long-run SLAM drift diagnosis: `config/cartographer_hospital_2d.lua` + `launch/carto.launch.py`. It uses `/scan` + wheel `/odom` + simulated `/imu`, 0.05 m internal submaps, pose-graph loop closure, and publishes `/map` at 0.10 m/cell for compatibility with `nf_basic.py`/Nav2. This is not yet an official `hospital_v2` protocol change.
+- Added a Cartographer 2D debug alternative for long-run SLAM drift diagnosis: `config/cartographer_hospital_2d.lua` + `launch/carto.launch.py`. It uses `/scan` + wheel `/odom` + simulated `/imu`, 0.05 m internal submaps, pose-graph loop closure, and publishes a 0.10 m/cell ROS map for compatibility with `nf_basic.py`/Nav2. This is not yet an official `hospital_v2` protocol change.
 - First Cartographer runtime attempt exposed a Gazebo/ROS IMU frame mismatch: `/imu` is stamped `turtlebot4/imu_link/imu`, while TF contains the physical `imu_link`. `launch/carto.launch.py` now publishes an identity static TF `imu_link -> turtlebot4/imu_link/imu` so Cartographer can retain IMU fusion instead of disabling IMU.
+- Second Cartographer runtime reached `/map`, but `nf_basic.py` immediately accumulated no-frontier completion evidence. Root cause: Cartographer publishes observed occupancy probabilities in `[0,100]`, while MapEx frontier semantics require exact free `0`, unknown `<0`. Added `cartographer_map_bridge.py`; Cartographer now publishes raw probability map as `/cartographer_map`, and the bridge republishes `/map` as `-1/0/100` using a 50% occupancy threshold without changing `nf_basic.py`.
 - Restored `control_tb4.py` exactly to historical blob `44f262b6ffa904042d1f2633d8f2ced95e645513` from commit `9f404a9`.
 - Stage-3 preparation: `control_tb4_mapex.py` dùng `MAPEX_RESOLUTION_M = 0.10`; với Hospital v2 source map `0.10`, bước downsample trở thành factor `1`, nên frontier/prediction cùng grid 0.10.
 
 ## In progress
 
-- Re-test the Cartographer Hospital debug stack after the IMU sensor-frame TF fix; verify that the previous `source_frame does not exist` warnings disappear and `/map` plus `map -> odom` are produced.
+- Re-test the Cartographer Hospital debug stack after the map-normalization bridge; verify `/cartographer_map` carries probability values, `/map` contains only `-1/0/100`, and `nf_basic.py` selects a real frontier instead of falsely completing.
 - Runtime validation of the debug `stock.launch.py + nf_basic.py` path-guided recovery and completion guard: verify fast controller failure return, temporary path subgoal behavior, retry of the same frontier, and final 5-sweep completion only after frontiers truly disappear.
 - Regression test: old `control_tb4.py` + historical `hospital_slam.yaml` (`0.05 m/cell`) to determine whether the new no-frontier startup behavior is caused by runtime-grid changes rather than the controller file itself.
 - Hospital v2 official validation is paused while this diagnostic rollback is active.
@@ -48,16 +49,17 @@
 
 ## Next actions
 
-1. Pull the IMU TF fix and rerun `launch/carto.launch.py`.
-2. Confirm there is no repeated `turtlebot4/imu_link/imu ... source_frame does not exist`, then verify `/map`, `/map.info.resolution=0.10`, and TF `map -> odom -> base_link`.
-3. Run `nf_basic.py`, continue long enough to return to old corridors, and inspect whether wall overlap remains aligned and whether Nav2 avoids the previous immediate `PATIENCE_EXCEEDED` state.
-4. If Cartographer is clearly more stable, decide whether to promote it to the official benchmark stack. Promotion requires a new protocol version and all compared methods must use the same Cartographer stack.
-5. Runtime-test `stock.launch.py + nf_basic.py` and capture one case where the main frontier aborts, the path-guided subgoal is attempted, and the same main frontier is retried.
-6. Continue the same run to terminal exploration state and verify `/frontier_exploration_complete=true` appears only after 5 distinct-map no-frontier sweeps and no new navigation goal follows.
-7. Pull/rebuild `frontier_exploration`, run `hospital_flat_stack.launch.py`, then run restored `control_tb4.py` and check whether startup exploration works again at `0.05 m/cell`.
-8. Record whether frontier groups/goals behave like the historical run.
-9. After the regression test, restore `hospital_slam.yaml` to Hospital v2 `resolution: 0.10` before continuing official validation.
-10. Resume Hospital v2 validation only after the diagnostic rollback is removed.
+1. Pull and rerun `launch/carto.launch.py`.
+2. Confirm the bridge prints a first normalized map with nonzero free/unknown counts; verify `/map` contains only `-1`, `0`, `100` and resolution `0.10`.
+3. Run `nf_basic.py`; verify it selects a frontier and starts navigation instead of entering `VERIFYING_COMPLETE` at startup.
+4. Continue long enough to return to old corridors and inspect whether wall overlap remains aligned and whether Nav2 avoids the previous immediate `PATIENCE_EXCEEDED` state.
+5. If Cartographer is clearly more stable, decide whether to promote it to the official benchmark stack. Promotion requires a new protocol version and all compared methods must use the same Cartographer stack.
+6. Runtime-test `stock.launch.py + nf_basic.py` and capture one case where the main frontier aborts, the path-guided subgoal is attempted, and the same main frontier is retried.
+7. Continue the same run to terminal exploration state and verify `/frontier_exploration_complete=true` appears only after 5 distinct-map no-frontier sweeps and no new navigation goal follows.
+8. Pull/rebuild `frontier_exploration`, run `hospital_flat_stack.launch.py`, then run restored `control_tb4.py` and check whether startup exploration works again at `0.05 m/cell`.
+9. Record whether frontier groups/goals behave like the historical run.
+10. After the regression test, restore `hospital_slam.yaml` to Hospital v2 `resolution: 0.10` before continuing official validation.
+11. Resume Hospital v2 validation only after the diagnostic rollback is removed.
 
 ## Important decisions
 
@@ -66,6 +68,7 @@
 - Evaluation vẫn dùng frozen `hospital_canvas_v1`/`hospital_connected_free_v1` ở `0.05 m/cell`; runtime 0.10 được reproject 2x trước metric calculation.
 - Đổi runtime resolution là protocol change; mọi official comparison Nearest/MapEx phải dùng `hospital_v2`.
 - Cartographer is currently a **debug mapping alternative**, not silently part of `hospital_v2`. If adopted for official runs, protocol identity/provenance must change and Nearest/MapEx/proposed method must all rerun under the same mapping stack.
+- Cartographer probability output must be normalized to the same discrete occupancy convention expected by the MapEx frontier generator before policy comparison; this normalization is a mapping-adapter concern, not a change to Nearest ranking/frontier code.
 - Nearest, full MapEx và proposed method phải dùng cùng Hospital adaptations.
 - Exact frontier **x/y** là execution position; frontier không có terminal-yaw objective.
 - Validation path chỉ chứng minh planner reachability; NavigateToPose có thể replan nên executed distance lấy từ odometry.
@@ -84,6 +87,7 @@
 `nearest_pilot_008`: exact-frontier execution PASS nhưng map warp (`hospital_v1`).  
 `nearest_pilot_009`: phát hiện near-zero controller command và các execution-semantics gaps (`hospital_v1`).  
 2026-08-28 stock/debug: path-guided intermediate-goal recovery + robust conservative completion guard implemented in `nf_basic.py`; runtime validation pending.  
-2026-08-28 Cartographer first runtime: Cartographer itself starts, but `/imu` sensor frame `turtlebot4/imu_link/imu` was missing from TF, preventing map creation; identity sensor-frame TF fix committed, rerun pending.  
+2026-08-28 Cartographer runtime #1: IMU sensor-frame TF mismatch fixed.  
+2026-08-28 Cartographer runtime #2: Cartographer produced maps, but raw probability-valued OccupancyGrid was incompatible with `nf_basic.py` exact-free (`==0`) frontier semantics; `/cartographer_map -> /map` discrete normalization bridge committed, rerun pending.  
 Current diagnostic state: restored historical `control_tb4.py` and historical `hospital_slam.yaml` (`0.05 m/cell`) from commit `9f404a9` for regression testing only.  
 `control_tb4_mapex.py`: Stage-3 policy implementation prepared from paper/source; no runtime result yet.
