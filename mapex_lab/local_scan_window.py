@@ -6,6 +6,10 @@ raw odom->laser TF as a motion prediction, aligns each new scan to a rolling
 window of recent registered scans with bounded 2-D ICP, then republishes the
 small accepted correction as a corrected LaserScan. Global loop closure and
 pose-graph optimization remain SLAM Toolbox responsibilities.
+
+To keep this a *local* stabilizer rather than a second global SLAM system, the
+rolling state is reset if the accumulated correction grows beyond a conservative
+translation/yaw bound.
 """
 
 from collections import deque
@@ -74,6 +78,8 @@ class LocalScanWindow(Node):
         self.declare_parameter("max_rotation_correction_rad", math.radians(8.0))
         self.declare_parameter("max_iteration_translation_m", 0.08)
         self.declare_parameter("max_iteration_rotation_rad", math.radians(3.0))
+        self.declare_parameter("max_total_translation_correction_m", 0.50)
+        self.declare_parameter("max_total_rotation_correction_rad", math.radians(15.0))
         self.declare_parameter("tf_timeout_s", 0.10)
 
         self.input_scan_topic = str(self.get_parameter("input_scan_topic").value)
@@ -101,6 +107,12 @@ class LocalScanWindow(Node):
         )
         self.max_iteration_rotation = float(
             self.get_parameter("max_iteration_rotation_rad").value
+        )
+        self.max_total_translation_correction = float(
+            self.get_parameter("max_total_translation_correction_m").value
+        )
+        self.max_total_rotation_correction = float(
+            self.get_parameter("max_total_rotation_correction_rad").value
         )
         self.tf_timeout = float(self.get_parameter("tf_timeout_s").value)
 
@@ -134,6 +146,7 @@ class LocalScanWindow(Node):
         self.scan_count = 0
         self.accepted_count = 0
         self.tf_failure_count = 0
+        self.reset_count = 0
 
         self.get_logger().info(
             "Local-window SLAM frontend active: "
@@ -186,6 +199,13 @@ class LocalScanWindow(Node):
                 selected_ranges * np.sin(selected_angles),
             )
         )
+
+    def _reset_window(self, raw_pose: np.ndarray, sampled: np.ndarray) -> None:
+        self.raw_origin_pose = raw_pose.copy()
+        self.last_raw_pose = raw_pose.copy()
+        self.last_corrected_pose = np.eye(3, dtype=np.float64)
+        self.registered_scans.clear()
+        self.registered_scans.append(sampled.copy())
 
     def _local_map(self) -> np.ndarray:
         if not self.registered_scans:
@@ -401,16 +421,14 @@ class LocalScanWindow(Node):
         sampled = points[:: self.scan_stride]
 
         if self.raw_origin_pose is None:
-            self.raw_origin_pose = raw_pose.copy()
-            self.last_raw_pose = raw_pose.copy()
-            self.last_corrected_pose = np.eye(3, dtype=np.float64)
-            self.registered_scans.append(sampled.copy())
+            self._reset_window(raw_pose, sampled)
             self.scan_pub.publish(scan)
             self._publish_diagnostics(scan, False, math.inf, np.eye(3, dtype=np.float64))
             return
 
         assert self.last_raw_pose is not None
         assert self.last_corrected_pose is not None
+        assert self.raw_origin_pose is not None
 
         odom_increment = np.linalg.inv(self.last_raw_pose) @ raw_pose
         predicted_pose = self.last_corrected_pose @ odom_increment
@@ -421,10 +439,27 @@ class LocalScanWindow(Node):
         if accepted:
             self.accepted_count += 1
 
-        self.registered_scans.append(_transform_points(corrected_pose, sampled))
         raw_relative_pose = np.linalg.inv(self.raw_origin_pose) @ raw_pose
         warp = np.linalg.inv(raw_relative_pose) @ corrected_pose
+        total_translation = float(np.linalg.norm(warp[:2, 2]))
+        total_rotation = abs(_matrix_yaw(warp))
 
+        if (
+            total_translation > self.max_total_translation_correction
+            or total_rotation > self.max_total_rotation_correction
+        ):
+            self.reset_count += 1
+            self.get_logger().warning(
+                "Local-window accumulated correction exceeded safety bound; "
+                f"resetting window (translation={total_translation:.3f} m, "
+                f"yaw={math.degrees(total_rotation):.2f} deg)"
+            )
+            self._reset_window(raw_pose, sampled)
+            self.scan_pub.publish(scan)
+            self._publish_diagnostics(scan, False, rmse, np.eye(3, dtype=np.float64))
+            return
+
+        self.registered_scans.append(_transform_points(corrected_pose, sampled))
         self.last_raw_pose = raw_pose
         self.last_corrected_pose = corrected_pose
 
@@ -433,14 +468,12 @@ class LocalScanWindow(Node):
 
         if self.scan_count % 50 == 0:
             acceptance_rate = self.accepted_count / max(1, self.scan_count - 1)
-            correction_translation = float(np.linalg.norm(warp[:2, 2]))
-            correction_yaw_deg = math.degrees(_matrix_yaw(warp))
             self.get_logger().info(
                 "Local-window ICP: "
                 f"accepted={accepted} matches={match_count} rmse={rmse:.3f} m "
-                f"rate={acceptance_rate:.2f} "
-                f"current_correction={correction_translation:.3f} m/"
-                f"{correction_yaw_deg:.2f} deg"
+                f"rate={acceptance_rate:.2f} resets={self.reset_count} "
+                f"current_correction={total_translation:.3f} m/"
+                f"{math.degrees(_matrix_yaw(warp)):.2f} deg"
             )
 
 
