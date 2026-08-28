@@ -36,13 +36,14 @@
 - Added a Cartographer 2D debug alternative for long-run SLAM drift diagnosis: `config/cartographer_hospital_2d.lua` + `launch/carto.launch.py`. It uses `/scan` + wheel `/odom` + simulated `/imu`, 0.05 m internal submaps, pose-graph loop closure, and publishes a 0.10 m/cell ROS map for compatibility with `nf_basic.py`/Nav2. This is not yet an official `hospital_v2` protocol change.
 - First Cartographer runtime attempt exposed a Gazebo/ROS IMU frame mismatch: `/imu` is stamped `turtlebot4/imu_link/imu`, while TF contains the physical `imu_link`. `launch/carto.launch.py` now publishes an identity static TF `imu_link -> turtlebot4/imu_link/imu` so Cartographer can retain IMU fusion instead of disabling IMU.
 - Second Cartographer runtime reached `/map`, but `nf_basic.py` immediately accumulated no-frontier completion evidence. Root cause: Cartographer publishes observed occupancy probabilities in `[0,100]`, while MapEx frontier semantics require exact free `0`, unknown `<0`. Added `cartographer_map_bridge.py`; Cartographer now publishes raw probability map as `/cartographer_map`, and the bridge republishes `/map` as `-1/0/100` using a 50% occupancy threshold without changing `nf_basic.py`.
-- Cartographer map-normalization bridge is now sufficient for `nf_basic.py` to start selecting frontiers and move the robot. During this debug run the robot appeared jerky in wall time; measured topic rates were approximately `/cmd_vel=14 Hz`, `/odom=14 Hz`, `/scan=2.6 Hz`. For an A/B smoothness test, `TRAJECTORY_BUILDER_2D.use_online_correlative_scan_matching` is now disabled while odom, IMU, Ceres scan matching, submaps and pose-graph loop closure remain enabled.
+- Cartographer map-normalization bridge is now sufficient for `nf_basic.py` to start selecting frontiers and move the robot. During this debug run the robot appeared jerky in wall time; measured topic rates were approximately `/cmd_vel=14 Hz`, `/odom=14 Hz`, `/scan=2.6 Hz`.
+- Performance A/B changes did not remove the visible jerk, so they were rolled back: online correlative scan matching is restored to `true` and Cartographer OccupancyGrid publication is restored from `3.0 s` to `1.0 s`. The current working hypothesis is Gazebo/physics real-time performance rather than Cartographer local-matching load.
 - Restored `control_tb4.py` exactly to historical blob `44f262b6ffa904042d1f2633d8f2ced95e645513` from commit `9f404a9`.
 - Stage-3 preparation: `control_tb4_mapex.py` dùng `MAPEX_RESOLUTION_M = 0.10`; với Hospital v2 source map `0.10`, bước downsample trở thành factor `1`, nên frontier/prediction cùng grid 0.10.
 
 ## In progress
 
-- A/B smoothness validation of the Cartographer Hospital debug stack with online correlative scan matching disabled: compare visual motion and wall-time `/scan`/`/odom` rates against the previous `true` run, then verify old-corridor map alignment is not materially worse.
+- Diagnose Gazebo/physics real-time performance while keeping the restored accuracy-first Cartographer configuration unchanged.
 - Runtime validation of the debug `stock.launch.py + nf_basic.py` path-guided recovery and completion guard: verify fast controller failure return, temporary path subgoal behavior, retry of the same frontier, and final 5-sweep completion only after frontiers truly disappear.
 - Regression test: old `control_tb4.py` + historical `hospital_slam.yaml` (`0.05 m/cell`) to determine whether the new no-frontier startup behavior is caused by runtime-grid changes rather than the controller file itself.
 - Hospital v2 official validation is paused while this diagnostic rollback is active.
@@ -50,18 +51,17 @@
 
 ## Next actions
 
-1. Pull and rerun `launch/carto.launch.py` with the new `use_online_correlative_scan_matching=false` debug config.
-2. Run `nf_basic.py` and confirm frontier selection/navigation still works.
-3. While moving, measure `ros2 topic hz /cmd_vel`, `/odom`, and `/scan`; compare against the previous approximately `14/14/2.6 Hz` wall-time values.
-4. Continue long enough to return to old corridors and compare wall overlap/map alignment against the earlier Cartographer run and the problematic slam_toolbox run.
-5. If smoothness improves without meaningful mapping degradation, keep the lighter Cartographer local matcher for further debug validation; otherwise restore online correlative matching.
-6. If Cartographer is clearly more stable overall, decide whether to promote it to the official benchmark stack. Promotion requires a new protocol version and all compared methods must use the same Cartographer stack.
-7. Runtime-test `stock.launch.py + nf_basic.py` and capture one case where the main frontier aborts, the path-guided subgoal is attempted, and the same main frontier is retried.
-8. Continue the same run to terminal exploration state and verify `/frontier_exploration_complete=true` appears only after 5 distinct-map no-frontier sweeps and no new navigation goal follows.
-9. Pull/rebuild `frontier_exploration`, run `hospital_flat_stack.launch.py`, then run restored `control_tb4.py` and check whether startup exploration works again at `0.05 m/cell`.
-10. Record whether frontier groups/goals behave like the historical run.
-11. After the regression test, restore `hospital_slam.yaml` to Hospital v2 `resolution: 0.10` before continuing official validation.
-12. Resume Hospital v2 validation only after the diagnostic rollback is removed.
+1. Pull and rerun the restored `launch/carto.launch.py` / `config/cartographer_hospital_2d.lua` pair.
+2. Keep Cartographer accuracy settings fixed while checking Gazebo real-time factor and comparing headless-Gazebo + RViz against the normal GUI run.
+3. While moving, measure `/cmd_vel`, `/odom`, and `/scan` rates and verify final Twist commands remain smooth while the simulated motion jerks.
+4. Continue long enough to return to old corridors and inspect Cartographer wall overlap/map alignment under the restored accuracy-first configuration.
+5. If Cartographer is clearly more stable overall, decide whether to promote it to the official benchmark stack. Promotion requires a new protocol version and all compared methods must use the same Cartographer stack.
+6. Runtime-test `stock.launch.py + nf_basic.py` and capture one case where the main frontier aborts, the path-guided subgoal is attempted, and the same main frontier is retried.
+7. Continue the same run to terminal exploration state and verify `/frontier_exploration_complete=true` appears only after 5 distinct-map no-frontier sweeps and no new navigation goal follows.
+8. Pull/rebuild `frontier_exploration`, run `hospital_flat_stack.launch.py`, then run restored `control_tb4.py` and check whether startup exploration works again at `0.05 m/cell`.
+9. Record whether frontier groups/goals behave like the historical run.
+10. After the regression test, restore `hospital_slam.yaml` to Hospital v2 `resolution: 0.10` before continuing official validation.
+11. Resume Hospital v2 validation only after the diagnostic rollback is removed.
 
 ## Important decisions
 
@@ -71,7 +71,7 @@
 - Đổi runtime resolution là protocol change; mọi official comparison Nearest/MapEx phải dùng `hospital_v2`.
 - Cartographer is currently a **debug mapping alternative**, not silently part of `hospital_v2`. If adopted for official runs, protocol identity/provenance must change and Nearest/MapEx/proposed method must all rerun under the same mapping stack.
 - Cartographer probability output must be normalized to the same discrete occupancy convention expected by the MapEx frontier generator before policy comparison; this normalization is a mapping-adapter concern, not a change to Nearest ranking/frontier code.
-- The online-correlative-matcher toggle is currently a Cartographer debug A/B performance variable, not an official benchmark/protocol change.
+- The temporary Cartographer performance A/B (`online correlative=false`, `/map` every 3 s) did not eliminate the jerk and is no longer active; current Cartographer is back to the accuracy-first matcher and 1 s map publication.
 - Nearest, full MapEx và proposed method phải dùng cùng Hospital adaptations.
 - Exact frontier **x/y** là execution position; frontier không có terminal-yaw objective.
 - Validation path chỉ chứng minh planner reachability; NavigateToPose có thể replan nên executed distance lấy từ odometry.
@@ -92,6 +92,6 @@
 2026-08-28 stock/debug: path-guided intermediate-goal recovery + robust conservative completion guard implemented in `nf_basic.py`; runtime validation pending.  
 2026-08-28 Cartographer runtime #1: IMU sensor-frame TF mismatch fixed.  
 2026-08-28 Cartographer runtime #2: Cartographer produced maps, but raw probability-valued OccupancyGrid was incompatible with `nf_basic.py` exact-free (`==0`) frontier semantics; `/cartographer_map -> /map` discrete normalization bridge committed.  
-2026-08-28 Cartographer runtime #3: normalized `/map` allows `nf_basic.py` to select frontiers and move; visible wall-time jerk coincides with approximately `/cmd_vel=14 Hz`, `/odom=14 Hz`, `/scan=2.6 Hz`. Online correlative scan matching disabled for the next A/B run; runtime result pending.  
+2026-08-28 Cartographer runtime #3: normalized `/map` allows `nf_basic.py` to select frontiers and move; visible wall-time jerk coincides with approximately `/cmd_vel=14 Hz`, `/odom=14 Hz`, `/scan=2.6 Hz`. Disabling online correlative matching and slowing `/map` publication to 3 s did not remove the jerk, so both changes were reverted. Current hypothesis: Gazebo/physics real-time performance.  
 Current diagnostic state: restored historical `control_tb4.py` and historical `hospital_slam.yaml` (`0.05 m/cell`) from commit `9f404a9` for regression testing only.  
 `control_tb4_mapex.py`: Stage-3 policy implementation prepared from paper/source; no runtime result yet.
