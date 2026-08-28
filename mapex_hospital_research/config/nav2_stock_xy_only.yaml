@@ -1,0 +1,16 @@
+# Minimal Nav2 override for frontier exploration with stock TurtleBot4 Nav2.
+#
+# Frontier policies choose only an (x, y) target. They do not define a terminal
+# robot heading, so reaching the frontier position must not require yaw = 0.
+# Everything else remains exactly as configured by turtlebot4_navigation/nav2.yaml.
+
+controller_server:
+  ros__parameters:
+    general_goal_checker:
+      # Keep the stock XY goal tolerance, but make terminal yaw irrelevant.
+      yaw_goal_tolerance: 3.141592653589793
+
+    FollowPath:
+      # MPPI should not optimize toward the goal pose's arbitrary yaw value.
+      GoalAngleCritic:
+        enabled: false
