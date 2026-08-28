@@ -4,12 +4,14 @@
 Pipeline:
     /map -> frontier cells -> 8-connected frontier regions
     -> one representative per region -> reject representatives < 0.5 m
-    -> nearest remaining representative by Euclidean distance
-    -> Nav2 NavigateToPose
+    -> sort remaining representatives by Euclidean distance
+    -> Nav2 ComputePathToPose in nearest-first order
+    -> skip candidates with no valid path
+    -> Nav2 NavigateToPose to the nearest planner-reachable frontier
 
 RViz visualization uses the Hospital RViz config's existing displays:
 - /frontier/goals_markers : eligible frontier representatives + selected goal
-- /frontier_selected_path : current Nav2 global path
+- /frontier_selected_path : selected Nav2 validation/global path
 
 No LaMa, information gain, path-length ranking, recorder, or MapEx prediction.
 """
@@ -20,7 +22,7 @@ import math
 import numpy as np
 import rclpy
 from action_msgs.msg import GoalStatus
-from nav2_msgs.action import NavigateToPose
+from nav2_msgs.action import ComputePathToPose, NavigateToPose
 from nav_msgs.msg import OccupancyGrid, Path
 from rclpy.action import ActionClient
 from rclpy.node import Node
@@ -40,6 +42,9 @@ class NearestEuclideanFrontier(Node):
 
         self.map_msg = None
         self.goal_active = False
+        self.planning_active = False
+        self.pending_candidates = []
+        self.pending_index = 0
 
         self.create_subscription(OccupancyGrid, "/map", self.map_callback, 10)
         self.create_subscription(Path, "/plan", self.plan_callback, 10)
@@ -58,11 +63,18 @@ class NearestEuclideanFrontier(Node):
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
+        self.planner_client = ActionClient(
+            self,
+            ComputePathToPose,
+            "compute_path_to_pose",
+        )
         self.nav_client = ActionClient(self, NavigateToPose, "navigate_to_pose")
         self.timer = self.create_timer(1.0, self.exploration_step)
 
         self.get_logger().info(
-            f"Nearest Euclidean Frontier started (min distance={MIN_DISTANCE_THRESHOLD:.2f} m)"
+            "Nearest Euclidean Frontier started "
+            f"(min distance={MIN_DISTANCE_THRESHOLD:.2f} m, "
+            "planner reachability check=enabled)"
         )
 
     def map_callback(self, msg: OccupancyGrid):
@@ -168,8 +180,8 @@ class NearestEuclideanFrontier(Node):
             transform.transform.translation.y,
         )
 
-    def publish_goal_markers(self, candidates, selected):
-        """Green = eligible candidates, small red = selected. No text labels."""
+    def publish_goal_markers(self, candidates, selected=None):
+        """Green = eligible candidates, small red = planner-reachable selected."""
         markers = MarkerArray()
 
         clear = Marker()
@@ -201,27 +213,28 @@ class NearestEuclideanFrontier(Node):
             marker.color.a = 0.95
             markers.markers.append(marker)
 
-        _distance, x, y, _row, _col, _region_size = selected
+        if selected is not None:
+            _distance, x, y, _row, _col, _region_size = selected
 
-        chosen = Marker()
-        chosen.header.frame_id = MAP_FRAME
-        chosen.header.stamp = now
-        chosen.ns = "selected_frontier"
-        chosen.id = 0
-        chosen.type = Marker.SPHERE
-        chosen.action = Marker.ADD
-        chosen.pose.position.x = x
-        chosen.pose.position.y = y
-        chosen.pose.position.z = 0.12
-        chosen.pose.orientation.w = 1.0
-        chosen.scale.x = 0.24
-        chosen.scale.y = 0.24
-        chosen.scale.z = 0.24
-        chosen.color.r = 1.0
-        chosen.color.g = 0.1
-        chosen.color.b = 0.1
-        chosen.color.a = 1.0
-        markers.markers.append(chosen)
+            chosen = Marker()
+            chosen.header.frame_id = MAP_FRAME
+            chosen.header.stamp = now
+            chosen.ns = "selected_frontier"
+            chosen.id = 0
+            chosen.type = Marker.SPHERE
+            chosen.action = Marker.ADD
+            chosen.pose.position.x = x
+            chosen.pose.position.y = y
+            chosen.pose.position.z = 0.12
+            chosen.pose.orientation.w = 1.0
+            chosen.scale.x = 0.24
+            chosen.scale.y = 0.24
+            chosen.scale.z = 0.24
+            chosen.color.r = 1.0
+            chosen.color.g = 0.1
+            chosen.color.b = 0.1
+            chosen.color.a = 1.0
+            markers.markers.append(chosen)
 
         self.goals_pub.publish(markers)
 
@@ -233,7 +246,7 @@ class NearestEuclideanFrontier(Node):
         self.goals_pub.publish(markers)
 
     def exploration_step(self):
-        if self.map_msg is None or self.goal_active:
+        if self.map_msg is None or self.goal_active or self.planning_active:
             return
 
         robot = self.robot_position()
@@ -272,17 +285,117 @@ class NearestEuclideanFrontier(Node):
             )
             return
 
-        selected = min(candidates, key=lambda item: item[0])
-        distance, x, y, _row, _col, region_size = selected
+        candidates.sort(key=lambda item: item[0])
+        self.publish_goal_markers(candidates)
 
-        self.publish_goal_markers(candidates, selected)
+        self.pending_candidates = candidates
+        self.pending_index = 0
+        self.planning_active = True
+        self.validate_next_candidate()
+
+    def validate_next_candidate(self):
+        if not self.planning_active:
+            return
+
+        if self.pending_index >= len(self.pending_candidates):
+            self.get_logger().warn(
+                "No Nav2-reachable frontier in the current candidate sweep."
+            )
+            self.clear_planning_state()
+            return
+
+        if not self.planner_client.server_is_ready():
+            self.get_logger().warn("ComputePathToPose action server is not ready")
+            self.clear_planning_state()
+            return
+
+        distance, x, y, _row, _col, region_size = self.pending_candidates[
+            self.pending_index
+        ]
 
         self.get_logger().info(
-            f"Selected nearest frontier: x={x:.2f}, y={y:.2f}, "
+            f"Checking frontier {self.pending_index + 1}/{len(self.pending_candidates)}: "
+            f"x={x:.2f}, y={y:.2f}, distance={distance:.2f} m, "
+            f"region={region_size} cells"
+        )
+
+        goal = ComputePathToPose.Goal()
+        goal.goal.header.frame_id = MAP_FRAME
+        goal.goal.header.stamp = self.get_clock().now().to_msg()
+        goal.goal.pose.position.x = x
+        goal.goal.pose.position.y = y
+        goal.goal.pose.orientation.w = 1.0
+        goal.planner_id = ""
+        goal.use_start = False
+
+        future = self.planner_client.send_goal_async(goal)
+        future.add_done_callback(self.plan_goal_response_callback)
+
+    def plan_goal_response_callback(self, future):
+        try:
+            goal_handle = future.result()
+        except Exception as exc:
+            self.get_logger().warn(f"ComputePathToPose send failed: {exc}")
+            self.try_next_candidate()
+            return
+
+        if not goal_handle.accepted:
+            self.get_logger().warn(
+                f"Planner rejected frontier rank {self.pending_index + 1}; skipping it."
+            )
+            self.try_next_candidate()
+            return
+
+        result_future = goal_handle.get_result_async()
+        result_future.add_done_callback(self.plan_result_callback)
+
+    def plan_result_callback(self, future):
+        try:
+            wrapped = future.result()
+            status = int(wrapped.status)
+            result = wrapped.result
+            path = result.path
+            path_ok = status == GoalStatus.STATUS_SUCCEEDED and bool(path.poses)
+        except Exception as exc:
+            self.get_logger().warn(f"ComputePathToPose result failed: {exc}")
+            self.try_next_candidate()
+            return
+
+        candidate = self.pending_candidates[self.pending_index]
+        distance, x, y, _row, _col, region_size = candidate
+
+        if not path_ok:
+            error_code = getattr(result, "error_code", None)
+            detail = f"status={status}, poses={len(path.poses)}"
+            if error_code is not None:
+                detail += f", error_code={error_code}"
+            self.get_logger().warn(
+                f"No valid path to frontier x={x:.2f}, y={y:.2f} "
+                f"({detail}); dropping this goal and checking the next frontier."
+            )
+            self.try_next_candidate()
+            return
+
+        self.path_pub.publish(path)
+        self.publish_goal_markers(self.pending_candidates, candidate)
+        self.get_logger().info(
+            f"Selected nearest reachable frontier: x={x:.2f}, y={y:.2f}, "
             f"distance={distance:.2f} m, region={region_size} cells"
         )
 
+        self.clear_planning_state()
         self.send_goal(x, y)
+
+    def try_next_candidate(self):
+        if not self.planning_active:
+            return
+        self.pending_index += 1
+        self.validate_next_candidate()
+
+    def clear_planning_state(self):
+        self.planning_active = False
+        self.pending_candidates = []
+        self.pending_index = 0
 
     def send_goal(self, x: float, y: float):
         if not self.nav_client.server_is_ready():
@@ -301,7 +414,12 @@ class NearestEuclideanFrontier(Node):
         future.add_done_callback(self.goal_response_callback)
 
     def goal_response_callback(self, future):
-        goal_handle = future.result()
+        try:
+            goal_handle = future.result()
+        except Exception as exc:
+            self.get_logger().warn(f"NavigateToPose send failed: {exc}")
+            self.goal_active = False
+            return
 
         if not goal_handle.accepted:
             self.get_logger().warn("Goal rejected")
@@ -313,12 +431,23 @@ class NearestEuclideanFrontier(Node):
         result_future.add_done_callback(self.goal_result_callback)
 
     def goal_result_callback(self, future):
-        status = future.result().status
+        try:
+            wrapped = future.result()
+            status = int(wrapped.status)
+            result = wrapped.result
+            error_code = getattr(result, "error_code", None)
+        except Exception as exc:
+            self.get_logger().warn(f"NavigateToPose result failed: {exc}")
+            self.goal_active = False
+            return
 
         if status == GoalStatus.STATUS_SUCCEEDED:
             self.get_logger().info("Goal reached")
         else:
-            self.get_logger().warn(f"Goal finished with status={status}")
+            detail = f"status={status}"
+            if error_code is not None:
+                detail += f", error_code={error_code}"
+            self.get_logger().warn(f"Goal finished with {detail}")
 
         self.goal_active = False
 
@@ -333,7 +462,8 @@ def main(args=None):
         pass
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == "__main__":
