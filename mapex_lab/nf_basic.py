@@ -14,8 +14,10 @@ Frontier policy:
 Navigation recovery:
 - the selected frontier remains the main exploration goal until reached
 - a lightweight Nav2 BT returns planner/controller failure quickly
-- on main-goal failure, choose a temporary subgoal on the last global path
+- on main-goal execution failure, choose a temporary subgoal on the last global path
 - after reaching the subgoal, retry the exact same main frontier
+- if a main goal returns Nav2 error 208 (NO_VALID_PATH), abandon that frontier
+  and continue with another candidate instead of retrying it forever
 
 Completion policy:
 - NEVER declare complete while a main/subgoal is active
@@ -59,6 +61,12 @@ SUBGOAL_MAIN_GOAL_CLEARANCE_M = 0.15
 # the exact main frontier, rather than stopping early because of planner/goal tolerance.
 MAIN_PLAN_ENDPOINT_TOLERANCE_M = 0.10
 
+# NavigateToPose propagates ComputePathToPose NO_VALID_PATH as error code 208.
+# Once a main frontier produces this result, skip the same frontier position
+# for the rest of this nf_basic.py process so it cannot be selected again forever.
+NO_VALID_PATH_ERROR_CODE = 208
+NO_VALID_PATH_SKIP_RADIUS_M = 0.10
+
 COMPLETION_REQUIRED_SWEEPS = 5
 COMPLETION_SWEEP_INTERVAL_S = 2.0
 COMPLETION_IDLE_S = 10.0
@@ -85,6 +93,10 @@ class NearestEuclideanFrontier(Node):
         self.main_goal = None
         self.latest_main_plan = None
         self.recovery_count = 0
+
+        # Main frontier positions that returned NO_VALID_PATH (208). These are
+        # excluded from future nearest-frontier selection for this process.
+        self.no_valid_path_goals = []
 
         # Robust completion state.
         now_s = self.now_s()
@@ -430,6 +442,38 @@ class NearestEuclideanFrontier(Node):
             transform.transform.translation.y,
         )
 
+    def is_no_valid_path_suppressed(self, x: float, y: float) -> bool:
+        return any(
+            math.hypot(x - rejected_x, y - rejected_y)
+            <= NO_VALID_PATH_SKIP_RADIUS_M
+            for rejected_x, rejected_y in self.no_valid_path_goals
+        )
+
+    def abandon_main_goal_no_valid_path(self):
+        if self.main_goal is None:
+            return
+
+        x, y = self.main_goal
+        self.no_valid_path_goals.append((x, y))
+
+        self.get_logger().warn(
+            "Main frontier abandoned after NO_VALID_PATH (208): "
+            f"x={x:.2f}, y={y:.2f}; future candidates within "
+            f"{NO_VALID_PATH_SKIP_RADIUS_M:.2f} m will be skipped."
+        )
+
+        self.main_goal = None
+        self.latest_main_plan = None
+        self.recovery_count = 0
+        self.publish_status(
+            "EXPLORING",
+            reason="main_goal_abandoned_no_valid_path",
+            abandoned_x=round(x, 4),
+            abandoned_y=round(y, 4),
+            skip_radius_m=NO_VALID_PATH_SKIP_RADIUS_M,
+            abandoned_count=len(self.no_valid_path_goals),
+        )
+
     def publish_goal_markers(self, candidates, selected):
         """Green = eligible candidates, small red = selected. No text labels."""
         markers = MarkerArray()
@@ -501,9 +545,10 @@ class NearestEuclideanFrontier(Node):
         if self.map_msg is None or self.goal_active:
             return
 
-        # Never declare completion while a selected frontier is still unresolved.
-        # A failed selected frontier remains the main goal rather than being
-        # blacklisted or replaced by another frontier.
+        # Execution failures keep the selected frontier pending so path-guided
+        # recovery can retry it. A NO_VALID_PATH (208) main goal is different:
+        # it is abandoned in goal_result_callback and therefore never reaches
+        # this retry branch.
         if self.main_goal is not None:
             self.reset_completion_verification("main_frontier_still_pending")
             x, y = self.main_goal
@@ -540,6 +585,7 @@ class NearestEuclideanFrontier(Node):
 
         robot_x, robot_y = robot
         candidates = []
+        suppressed_no_path = 0
 
         for region in regions:
             row, col = self.representative(region)
@@ -549,10 +595,30 @@ class NearestEuclideanFrontier(Node):
             if distance < MIN_DISTANCE_THRESHOLD:
                 continue
 
+            if self.is_no_valid_path_suppressed(x, y):
+                suppressed_no_path += 1
+                continue
+
             candidates.append((distance, x, y, row, col, len(region)))
 
         if not candidates:
             self.clear_goal_markers()
+
+            if suppressed_no_path > 0:
+                self.publish_status(
+                    "NO_ELIGIBLE_FRONTIER",
+                    reason="remaining_frontiers_suppressed_after_no_valid_path",
+                    frontier_regions=len(regions),
+                    suppressed_no_path=suppressed_no_path,
+                    abandoned_count=len(self.no_valid_path_goals),
+                )
+                self.get_logger().warn(
+                    "Frontier regions still exist, but no eligible candidate "
+                    "remains after NO_VALID_PATH suppression/min-distance filtering. "
+                    "NOT declaring exploration complete."
+                )
+                return
+
             self.publish_status(
                 "BLOCKED_BY_MIN_DISTANCE",
                 reason="frontier_regions_exist_but_all_representatives_too_close",
@@ -699,11 +765,17 @@ class NearestEuclideanFrontier(Node):
 
         self.get_logger().warn(f"{mode.capitalize()} goal failed ({detail})")
 
+        # A main-goal NO_VALID_PATH is a planning failure, not an execution
+        # failure. Do not use path-guided recovery and do not retry forever.
+        if mode == "main" and error_code == NO_VALID_PATH_ERROR_CODE:
+            self.abandon_main_goal_no_valid_path()
+            return
+
         if mode == "main":
             self.try_path_guided_subgoal()
         else:
-            # Do not blacklist or switch frontier. The timer retries the same
-            # main frontier from the current pose.
+            # A failed temporary subgoal does not by itself prove the main
+            # frontier is unreachable. Keep the main frontier and retry it.
             self.get_logger().warn(
                 "Recovery subgoal also failed; keeping the same main frontier."
             )
