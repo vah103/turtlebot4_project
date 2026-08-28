@@ -3,7 +3,7 @@
 The Hospital world is project-specific. Nav2 starts from the installed
 `turtlebot4_navigation/config/nav2.yaml` and applies only the tiny
 `config/nav2_stock_xy_only.yaml` override so frontier goals are position-only.
-SLAM uses `mapex_hospital_research/config/slam.yaml`, which follows the
+SLAM uses `mapex_lab/config/slam.yaml`, which follows the
 TurtleBot4 stock SLAM config except that max_laser_range is 20 m to match the
 simulated Hospital LiDAR.
 """
