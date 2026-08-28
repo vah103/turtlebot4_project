@@ -7,6 +7,15 @@ Pipeline:
     -> nearest remaining representative by Euclidean distance
     -> Nav2 NavigateToPose
 
+Navigation recovery:
+- Frontier ranking is unchanged.
+- The selected frontier remains the main exploration goal until it is reached.
+- A lightweight Behavior Tree returns controller/planner failure directly instead
+  of running the stock recovery loop many times.
+- If the main goal aborts and a valid recent global path exists, choose a temporary
+  subgoal on that path near the robot, reach it, then retry the same main frontier
+  so Nav2 replans from the new pose.
+
 RViz visualization uses the Hospital RViz config's existing displays:
 - /frontier/goals_markers : eligible frontier representatives + selected goal
 - /frontier_selected_path : current Nav2 global path
@@ -16,6 +25,7 @@ No LaMa, information gain, path-length ranking, recorder, or MapEx prediction.
 
 from collections import deque
 import math
+import os
 
 import numpy as np
 import rclpy
@@ -33,6 +43,17 @@ MIN_DISTANCE_THRESHOLD = 0.5
 MAP_FRAME = "map"
 ROBOT_FRAME = "base_link"
 
+SUBGOAL_MAX_DISTANCE_M = 0.70
+SUBGOAL_MIN_DISTANCE_M = 0.25
+SUBGOAL_FRACTION_OF_REMAINING = 0.50
+SUBGOAL_MAIN_GOAL_CLEARANCE_M = 0.15
+
+BT_XML_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "behavior_trees",
+    "navigate_to_pose_subgoal.xml",
+)
+
 
 class NearestEuclideanFrontier(Node):
     def __init__(self):
@@ -40,6 +61,12 @@ class NearestEuclideanFrontier(Node):
 
         self.map_msg = None
         self.goal_active = False
+        self.current_goal_mode = None
+
+        # The selected frontier stays fixed through temporary subgoal recovery.
+        self.main_goal = None
+        self.latest_main_plan = None
+        self.recovery_count = 0
 
         self.create_subscription(OccupancyGrid, "/map", self.map_callback, 10)
         self.create_subscription(Path, "/plan", self.plan_callback, 10)
@@ -61,8 +88,16 @@ class NearestEuclideanFrontier(Node):
         self.nav_client = ActionClient(self, NavigateToPose, "navigate_to_pose")
         self.timer = self.create_timer(1.0, self.exploration_step)
 
+        if not os.path.isfile(BT_XML_PATH):
+            self.get_logger().warn(
+                f"Fast-fail recovery BT not found at {BT_XML_PATH}; "
+                "NavigateToPose goals will use the Nav2 default BT."
+            )
+
         self.get_logger().info(
-            f"Nearest Euclidean Frontier started (min distance={MIN_DISTANCE_THRESHOLD:.2f} m)"
+            f"Nearest Euclidean Frontier started "
+            f"(min distance={MIN_DISTANCE_THRESHOLD:.2f} m, "
+            f"path-subgoal recovery={SUBGOAL_MAX_DISTANCE_M:.2f} m max)"
         )
 
     def map_callback(self, msg: OccupancyGrid):
@@ -70,6 +105,10 @@ class NearestEuclideanFrontier(Node):
 
     def plan_callback(self, msg: Path):
         self.path_pub.publish(msg)
+
+        # Subgoal plans must not overwrite the last path toward the main frontier.
+        if self.goal_active and self.current_goal_mode == "main" and msg.poses:
+            self.latest_main_plan = msg
 
     @staticmethod
     def frontier_mask(grid: np.ndarray) -> np.ndarray:
@@ -236,6 +275,16 @@ class NearestEuclideanFrontier(Node):
         if self.map_msg is None or self.goal_active:
             return
 
+        # A failed selected frontier remains the main goal. Retry it rather than
+        # re-running frontier ranking or choosing a different frontier.
+        if self.main_goal is not None:
+            x, y = self.main_goal
+            self.get_logger().info(
+                f"Retrying main frontier after recovery: x={x:.2f}, y={y:.2f}"
+            )
+            self.send_navigation_goal(x, y, mode="main")
+            return
+
         robot = self.robot_position()
         if robot is None:
             return
@@ -282,9 +331,12 @@ class NearestEuclideanFrontier(Node):
             f"distance={distance:.2f} m, region={region_size} cells"
         )
 
-        self.send_goal(x, y)
+        self.main_goal = (x, y)
+        self.latest_main_plan = None
+        self.recovery_count = 0
+        self.send_navigation_goal(x, y, mode="main")
 
-    def send_goal(self, x: float, y: float):
+    def send_navigation_goal(self, x: float, y: float, mode: str):
         if not self.nav_client.server_is_ready():
             self.get_logger().warn("NavigateToPose action server is not ready")
             return
@@ -296,31 +348,191 @@ class NearestEuclideanFrontier(Node):
         goal.pose.pose.position.y = y
         goal.pose.pose.orientation.w = 1.0
 
-        self.goal_active = True
-        future = self.nav_client.send_goal_async(goal)
-        future.add_done_callback(self.goal_response_callback)
+        if os.path.isfile(BT_XML_PATH):
+            goal.behavior_tree = BT_XML_PATH
 
-    def goal_response_callback(self, future):
+        if mode == "main":
+            # Require a fresh /plan for each main-goal attempt.
+            self.latest_main_plan = None
+
+        self.goal_active = True
+        self.current_goal_mode = mode
+
+        future = self.nav_client.send_goal_async(goal)
+        future.add_done_callback(
+            lambda done_future, sent_mode=mode: self.goal_response_callback(
+                done_future,
+                sent_mode,
+            )
+        )
+
+    def goal_response_callback(self, future, mode: str):
         goal_handle = future.result()
 
         if not goal_handle.accepted:
-            self.get_logger().warn("Goal rejected")
+            self.get_logger().warn(f"{mode.capitalize()} goal rejected")
             self.goal_active = False
+            self.current_goal_mode = None
             return
 
-        self.get_logger().info("Goal accepted")
+        self.get_logger().info(f"{mode.capitalize()} goal accepted")
         result_future = goal_handle.get_result_async()
-        result_future.add_done_callback(self.goal_result_callback)
+        result_future.add_done_callback(
+            lambda done_future, sent_mode=mode: self.goal_result_callback(
+                done_future,
+                sent_mode,
+            )
+        )
 
-    def goal_result_callback(self, future):
-        status = future.result().status
+    def goal_result_callback(self, future, mode: str):
+        wrapped_result = future.result()
+        status = wrapped_result.status
+        result = wrapped_result.result
 
-        if status == GoalStatus.STATUS_SUCCEEDED:
-            self.get_logger().info("Goal reached")
-        else:
-            self.get_logger().warn(f"Goal finished with status={status}")
+        error_code = getattr(result, "error_code", None)
+        error_msg = getattr(result, "error_msg", "")
 
         self.goal_active = False
+        self.current_goal_mode = None
+
+        if status == GoalStatus.STATUS_SUCCEEDED:
+            if mode == "subgoal":
+                self.get_logger().info(
+                    "Recovery subgoal reached; retrying the same main frontier."
+                )
+                if self.main_goal is not None:
+                    x, y = self.main_goal
+                    self.send_navigation_goal(x, y, mode="main")
+                return
+
+            self.get_logger().info("Goal reached")
+            self.main_goal = None
+            self.latest_main_plan = None
+            self.recovery_count = 0
+            return
+
+        detail = f"status={status}"
+        if error_code is not None:
+            detail += f", error_code={error_code}"
+        if error_msg:
+            detail += f", error_msg={error_msg}"
+
+        self.get_logger().warn(f"{mode.capitalize()} goal failed ({detail})")
+
+        if mode == "main":
+            self.try_path_guided_subgoal()
+        else:
+            # Do not blacklist or switch frontier. The timer will retry the same
+            # main goal, obtain a fresh global path, and recovery can be attempted
+            # again from the current pose.
+            self.get_logger().warn(
+                "Recovery subgoal also failed; keeping the same main frontier."
+            )
+
+    def try_path_guided_subgoal(self):
+        if self.main_goal is None:
+            return
+
+        plan = self.latest_main_plan
+        if plan is None or len(plan.poses) < 2:
+            self.get_logger().warn(
+                "Main goal failed but no usable main-goal /plan is available; "
+                "the same main frontier will be retried."
+            )
+            return
+
+        subgoal = self.select_subgoal_on_path(plan)
+        if subgoal is None:
+            self.get_logger().warn(
+                "Could not choose a useful intermediate point on the main path; "
+                "the same main frontier will be retried."
+            )
+            return
+
+        x, y, along_path_m, remaining_path_m = subgoal
+        self.recovery_count += 1
+
+        self.get_logger().warn(
+            f"Path-guided recovery #{self.recovery_count}: "
+            f"temporary subgoal x={x:.2f}, y={y:.2f}, "
+            f"{along_path_m:.2f} m ahead on main path "
+            f"(remaining main path={remaining_path_m:.2f} m)"
+        )
+        self.send_navigation_goal(x, y, mode="subgoal")
+
+    def select_subgoal_on_path(self, plan: Path):
+        robot = self.robot_position()
+        if robot is None:
+            return None
+
+        robot_x, robot_y = robot
+        poses = plan.poses
+        if len(poses) < 2:
+            return None
+
+        closest_index = min(
+            range(len(poses)),
+            key=lambda index: (
+                (poses[index].pose.position.x - robot_x) ** 2
+                + (poses[index].pose.position.y - robot_y) ** 2
+            ),
+        )
+
+        cumulative = [0.0]
+        for index in range(closest_index + 1, len(poses)):
+            previous = poses[index - 1].pose.position
+            current = poses[index].pose.position
+            cumulative.append(
+                cumulative[-1]
+                + math.hypot(current.x - previous.x, current.y - previous.y)
+            )
+
+        remaining_path_m = cumulative[-1]
+        if remaining_path_m <= SUBGOAL_MIN_DISTANCE_M:
+            return None
+
+        desired_distance_m = min(
+            SUBGOAL_MAX_DISTANCE_M,
+            max(
+                SUBGOAL_MIN_DISTANCE_M,
+                remaining_path_m * SUBGOAL_FRACTION_OF_REMAINING,
+            ),
+        )
+
+        # Keep the temporary goal distinct from the main frontier whenever the
+        # remaining path is long enough to do so.
+        if remaining_path_m > SUBGOAL_MAIN_GOAL_CLEARANCE_M:
+            desired_distance_m = min(
+                desired_distance_m,
+                remaining_path_m - SUBGOAL_MAIN_GOAL_CLEARANCE_M,
+            )
+
+        if desired_distance_m <= 0.0:
+            return None
+
+        selected_offset = len(cumulative) - 1
+        for offset, distance_m in enumerate(cumulative):
+            if distance_m >= desired_distance_m:
+                selected_offset = offset
+                break
+
+        selected_pose = poses[closest_index + selected_offset].pose.position
+        actual_distance_m = cumulative[selected_offset]
+
+        # If discretization leaves the selected pose effectively on top of the
+        # robot, there is no useful recovery motion to command.
+        if math.hypot(
+            selected_pose.x - robot_x,
+            selected_pose.y - robot_y,
+        ) < 0.10:
+            return None
+
+        return (
+            selected_pose.x,
+            selected_pose.y,
+            actual_distance_m,
+            remaining_path_m,
+        )
 
 
 def main(args=None):
@@ -333,7 +545,8 @@ def main(args=None):
         pass
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == "__main__":
