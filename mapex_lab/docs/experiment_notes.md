@@ -13,6 +13,20 @@ Ghi ngắn gọn các quyết định hoặc sự cố có thể ảnh hưởng 
 - Observation:
 - Next action:
 
+## 2026-08-28 — Debug path-guided intermediate-goal recovery for `nf_basic.py`
+
+- What changed:
+  - Added `behavior_trees/navigate_to_pose_subgoal.xml`, a lightweight NavigateToPose tree that keeps 1 Hz global replanning but omits the stock Nav2 recovery loop so planner/controller failure returns to `nf_basic.py` quickly.
+  - `nf_basic.py` now keeps the selected frontier as a persistent **main goal**, stores only the latest `/plan` produced while navigating to that main goal, and does not blacklist or switch frontier after execution failure.
+  - When the main NavigateToPose fails and a usable main-goal path exists, `nf_basic.py` picks a temporary subgoal on that path. Target distance is half the remaining path, capped at `0.70 m`, normally at least `0.25 m`, while trying to keep `0.15 m` separation from the main frontier.
+  - If the temporary subgoal succeeds, the exact same frontier is sent again as the main goal so Nav2 replans from the new robot pose. If the subgoal also fails, the same main frontier remains selected and is retried; no alternate frontier/blacklist is introduced.
+  - Ctrl-C shutdown now checks `rclpy.ok()` before calling `rclpy.shutdown()` to avoid the previous double-shutdown RCLError.
+- Why: the stock BT was observed to report `Failed to make progress` repeatedly while internally cycling through recovery actions for a long time. The test hypothesis is that a short path-aligned motion can move the robot out of a local controller deadlock without changing Nearest Frontier ranking.
+- Affected runs: debug `stock.launch.py + nf_basic.py` only. This is not yet `hospital_v2` official benchmark execution semantics.
+- Does baseline need rerun?: no official run exists under this debug recovery. If this recovery is adopted for the benchmark, it must become a protocol-versioned shared execution adapter and be applied to Nearest, MapEx and the proposed method before official comparisons.
+- Observation: implementation is committed but not yet runtime-validated.
+- Next action: reproduce the previously stuck frontier, verify log sequence `Main goal failed -> Path-guided recovery -> Subgoal reached -> retry same main frontier`, and check that the robot actually changes pose before replanning.
+
 ## 2026-08-27 — Switch Hospital runtime map/policy grid to 0.10 m while preserving evaluation grid
 
 - What changed:
@@ -86,7 +100,7 @@ Ghi ngắn gọn các quyết định hoặc sự cố có thể ảnh hưởng 
 - Why: coverage cần denominator cố định, không phụ thuộc crop/map extent của từng run.
 - Affected runs: toàn bộ Nearest/MapEx run mới trong lộ trình `mapex_hospital_research`.
 - Does baseline need rerun?: chưa; benchmark mới chưa bắt đầu.
-- Observation: full Hospital stack đã được xác nhận chạy bình thường; fixed canvas là 0.05 m, 1504 x 2123, origin (-25.6, -60.1).
+- Observation: full Hospital stack đã được xác nhận chạy bình thường; fixed canvas là 0.05 m, 1504 x 2123, origin (-25.6,-60.1).
 
 ## Initial note
 
