@@ -13,6 +13,20 @@ Ghi ngắn gọn các quyết định hoặc sự cố có thể ảnh hưởng 
 - Observation:
 - Next action:
 
+## 2026-08-28 — Add Cartographer 2D debug mapping alternative
+
+- What changed:
+  - Added `config/cartographer_hospital_2d.lua` and `launch/cartographer.launch.py` as a replacement mapping stack for debug validation while retaining the same Hospital simulation and stock-style Nav2 debug profile.
+  - Cartographer consumes `/scan`, `/odom`, and `/imu`; tracking frame is `imu_link`, Gazebo keeps publishing `odom -> base_link`, and Cartographer publishes the loop-closed `map -> odom` relation.
+  - Local Cartographer submaps use `0.05 m/cell`; the ROS `/map` OccupancyGrid exposed to Nav2 and `nf_basic.py` remains `0.10 m/cell`.
+  - Loop closure remains enabled through Cartographer's pose graph. Online correlative scan matching is enabled and pose-graph optimization is requested every 60 nodes for an accuracy-first first test.
+  - LiDAR used by Cartographer is limited to `12 m` rather than the full simulated 20 m to reduce long-range ambiguous corridor structure during scan matching.
+- Why: the latest long exploration run returned to previously mapped space with visible map misalignment, after which MPPI repeatedly failed with `PATIENCE_EXCEEDED`; the working hypothesis is accumulated SLAM drift/map inconsistency rather than a frontier-ranking failure.
+- Affected runs: debug Cartographer runs only. `hospital_v2` official protocol still names `slam_toolbox` until Cartographer is runtime-validated and deliberately adopted as a new protocol version.
+- Does baseline need rerun?: not yet because no official Cartographer protocol has been adopted. If Cartographer becomes the official mapping stack, Nearest/MapEx/proposed-method official runs must all use it and the protocol version must change.
+- Observation: code/config implemented; runtime validation is still pending.
+- Next action: install Jazzy Cartographer packages, run `cartographer.launch.py + nf_basic.py`, verify `/map`, `map -> odom`, `/imu`, and `/odom`, then drive/explore far enough to revisit old corridors and compare map overlap against the slam_toolbox run.
+
 ## 2026-08-28 — Robust conservative completion guard for `nf_basic.py`
 
 - What changed:
