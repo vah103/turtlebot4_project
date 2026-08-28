@@ -60,11 +60,10 @@ TRAJECTORY_BUILDER_2D.max_range = 12.
 TRAJECTORY_BUILDER_2D.missing_data_ray_length = 12.
 TRAJECTORY_BUILDER_2D.num_accumulated_range_data = 1
 
--- A/B smoothness test: rely on wheel odometry + IMU prediction followed by
--- Ceres scan matching, while keeping submaps and pose-graph loop closure.
--- Disabling online correlative scan matching reduces local-SLAM CPU load and
--- should improve Gazebo real-time factor if this stage is the main bottleneck.
-TRAJECTORY_BUILDER_2D.use_online_correlative_scan_matching = false
+-- Accuracy-first local matching. Online correlative matching costs more CPU but
+-- is intentionally enabled here to make scan matching more robust after long
+-- traversals and when re-entering previously mapped corridors.
+TRAJECTORY_BUILDER_2D.use_online_correlative_scan_matching = true
 
 -- Insert poses more densely than Cartographer defaults so each submap has less
 -- uncorrected motion between constraints.
