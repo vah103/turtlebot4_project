@@ -189,7 +189,7 @@ class navigationControl(Node):
         self.current_goal = None
 
         # Define minimum distance threshold
-        self.min_distance_threshold = 0.3  # Meters
+        self.min_distance_threshold = 0.5  # Meters
 
         # Define goal tolerance
         self.goal_tolerance = 0.5  # Acceptable distance to consider goal reached
