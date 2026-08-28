@@ -1,10 +1,10 @@
 # Hospital-specific slam_toolbox profile for long autonomous mapping runs.
 #
-# Hospital has long, repetitive corridors, so mapping stability is more important
-# than maximum exploration speed.  pilot_008 showed visible long-run map warping
-# even though the TF chain was internally consistent while stationary.  Keep the
-# standard matcher / loop-closure gates and reduce only the two most direct drift
-# drivers: robot speed (in nav2_hospital_override.yaml) and scan-graph spacing.
+# The stock online_async profile only adds a scan after roughly 0.5 m / 0.5 rad
+# of motion. Hospital exploration previously drove much faster than the stock
+# TurtleBot4 mapping assumptions, which made scan matching sparse in long,
+# repetitive corridors. This profile keeps the standard slam_toolbox matcher
+# and loop-closure thresholds but feeds it denser motion samples.
 slam_toolbox:
   ros__parameters:
     solver_plugin: solver_plugins::CeresSolver
@@ -35,24 +35,21 @@ slam_toolbox:
     stack_size_to_use: 40000000
     enable_interactive_mode: true
 
-    # pilot_008 used 0.20 m / 0.20 rad.  In long Hospital corridors that still
-    # allowed enough pose error to accumulate into visibly warped walls.  At the
-    # 0.45 m/s Hospital mapping cap, 0.10 m produces roughly 4-5 translational
-    # keyframes per second while remaining above the 0.15 s time gate.
+    # Denser scan graph for a slower mapping run. At the Hospital navigation
+    # speed cap this records useful geometry several times per metre instead of
+    # allowing large motion gaps between linked scans.
     use_scan_matching: true
     use_scan_barycenter: true
-    minimum_travel_distance: 0.10
-    minimum_travel_heading: 0.10
+    minimum_travel_distance: 0.20
+    minimum_travel_heading: 0.20
     check_min_dist_and_heading_precisely: true
     scan_buffer_size: 20
     scan_buffer_maximum_scan_distance: 8.0
     link_match_minimum_response_fine: 0.1
     link_scan_maximum_distance: 1.0
 
-    # Keep the upstream-style loop-closing gates conservative.  We are not
-    # loosening loop closures to hide drift; the stability change is denser scan
-    # registration plus slower motion so false corridor correspondences are not
-    # made easier to accept.
+    # Keep the well-tested upstream loop-closing gates conservative; the fix for
+    # Hospital drift is denser scans + lower robot speed, not looser closures.
     loop_search_maximum_distance: 3.0
     do_loop_closing: true
     loop_match_minimum_chain_size: 10
