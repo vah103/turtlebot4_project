@@ -192,7 +192,7 @@ class navigationControl(Node):
         self.min_distance_threshold = 0.5  # Meters
 
         # Define goal tolerance
-        self.goal_tolerance = 0.5  # Acceptable distance to consider goal reached
+        self.goal_tolerance = 0.1  # Acceptable distance to consider goal reached
 
         # Initialize the GoalTimer
         self.goal_timer = GoalTimer(self, csv_filename='gdae_goal_times.csv')
