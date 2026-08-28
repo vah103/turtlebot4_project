@@ -31,12 +31,13 @@
 - Added `step.py` as a debug-only wrapper around `control_tb4.py`: one frontier goal at a time, waits for the real Nav2 terminal result, prints compact motion/navigation diagnostics, then pauses for ENTER before the next goal.
 - Added `step0.py` as a temporary debug wrapper that sets `min_distance_threshold = 0.0` so the centroid-selection behavior can be observed without the rejection filter; this is diagnostic only.
 - Added debug-only path-guided intermediate-goal recovery to `nf_basic.py` plus `behavior_trees/navigate_to_pose_subgoal.xml`: the selected frontier remains fixed; on a fast-fail Nav2 abort, `nf_basic.py` chooses a temporary point on the latest main-goal `/plan`, navigates there, then retries the same frontier from the new pose. No blacklist or alternate frontier selection is introduced.
+- Added conservative completion verification to debug `nf_basic.py`: COMPLETE is only emitted after zero frontier regions `>10` persist across `5` distinct `/map` updates, sweeps are at least `2 s` apart, navigation has been idle for at least `10 s`, and node age is at least `20 s`. Remaining frontiers inside the debug `0.5 m` filter produce `BLOCKED_BY_MIN_DISTANCE`, not a false COMPLETE. Completion is published latched on `/frontier_exploration_complete` and machine-readable status on `/frontier_exploration_status`; once complete, no further goals are sent.
 - Restored `control_tb4.py` exactly to historical blob `44f262b6ffa904042d1f2633d8f2ced95e645513` from commit `9f404a9`.
 - Stage-3 preparation: `control_tb4_mapex.py` dùng `MAPEX_RESOLUTION_M = 0.10`; với Hospital v2 source map `0.10`, bước downsample trở thành factor `1`, nên frontier/prediction cùng grid 0.10.
 
 ## In progress
 
-- Runtime validation of the debug `stock.launch.py + nf_basic.py` path-guided recovery, especially whether a controller `Failed to make progress` now returns quickly, reaches the temporary path subgoal, and then reaches the same main frontier after replanning.
+- Runtime validation of the debug `stock.launch.py + nf_basic.py` path-guided recovery and completion guard: verify fast controller failure return, temporary path subgoal behavior, retry of the same frontier, and final 5-sweep completion only after frontiers truly disappear.
 - Regression test: old `control_tb4.py` + historical `hospital_slam.yaml` (`0.05 m/cell`) to determine whether the new no-frontier startup behavior is caused by runtime-grid changes rather than the controller file itself.
 - Hospital v2 official validation is paused while this diagnostic rollback is active.
 - `control_tb4_mapex.py` vẫn là Stage-3 preparation only: chưa runtime-validate, chưa phải official MapEx benchmark runner và không thay đổi current stage.
@@ -44,10 +45,11 @@
 ## Next actions
 
 1. Runtime-test `stock.launch.py + nf_basic.py` and capture one case where the main frontier aborts, the path-guided subgoal is attempted, and the same main frontier is retried.
-2. Pull/rebuild `frontier_exploration`, run `hospital_flat_stack.launch.py`, then run restored `control_tb4.py` and check whether startup exploration works again at `0.05 m/cell`.
-3. Record whether frontier groups/goals behave like the historical run.
-4. After the regression test, restore `hospital_slam.yaml` to Hospital v2 `resolution: 0.10` before continuing official validation.
-5. Resume Hospital v2 validation only after the diagnostic rollback is removed.
+2. Continue the same run to terminal exploration state and verify `/frontier_exploration_complete=true` appears only after 5 distinct-map no-frontier sweeps and no new navigation goal follows.
+3. Pull/rebuild `frontier_exploration`, run `hospital_flat_stack.launch.py`, then run restored `control_tb4.py` and check whether startup exploration works again at `0.05 m/cell`.
+4. Record whether frontier groups/goals behave like the historical run.
+5. After the regression test, restore `hospital_slam.yaml` to Hospital v2 `resolution: 0.10` before continuing official validation.
+6. Resume Hospital v2 validation only after the diagnostic rollback is removed.
 
 ## Important decisions
 
@@ -60,7 +62,8 @@
 - Validation path chỉ chứng minh planner reachability; NavigateToPose có thể replan nên executed distance lấy từ odometry.
 - Planner no-path trong ROS online là transient evidence và phải được revalidate trước completion.
 - Controller execution failure không được biến planner-reachable frontier thành permanent unreachable.
-- `nf_basic.py` path-guided subgoal recovery hiện là **debug execution experiment only**, không phải `hospital_v2` official baseline semantics. Nếu sau này dùng trong benchmark chính thức thì execution adapter phải được protocol-versioned và áp dụng công bằng cho Nearest/MapEx/proposed method.
+- `nf_basic.py` path-guided subgoal recovery và conservative completion guard hiện là **debug execution experiment only**, không phải `hospital_v2` official baseline semantics. Nếu sau này dùng trong benchmark chính thức thì execution adapter/completion policy phải được protocol-versioned và áp dụng công bằng cho Nearest/MapEx/proposed method.
+- Debug completion intentionally prefers false-negative/non-termination over false-positive completion: a pending main frontier or any large frontier region prevents COMPLETE.
 - Official run phải clean git và lưu effective runtime provenance.
 - Simulator seed intentionally uncontrolled; repeated runs xử lý variability.
 - Pilot/debug không tính vào official benchmark.
@@ -71,6 +74,6 @@
 `nearest_pilot_007`: diagnostic tolerance-snapped execution-goal bug (`hospital_v1`).  
 `nearest_pilot_008`: exact-frontier execution PASS nhưng map warp (`hospital_v1`).  
 `nearest_pilot_009`: phát hiện near-zero controller command và các execution-semantics gaps (`hospital_v1`).  
-2026-08-28 stock/debug: path-guided intermediate-goal recovery implemented in `nf_basic.py`; runtime validation pending.  
+2026-08-28 stock/debug: path-guided intermediate-goal recovery + robust conservative completion guard implemented in `nf_basic.py`; runtime validation pending.  
 Current diagnostic state: restored historical `control_tb4.py` and historical `hospital_slam.yaml` (`0.05 m/cell`) from commit `9f404a9` for regression testing only.  
 `control_tb4_mapex.py`: Stage-3 policy implementation prepared from paper/source; no runtime result yet.
