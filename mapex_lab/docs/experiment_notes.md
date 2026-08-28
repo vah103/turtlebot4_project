@@ -13,6 +13,22 @@ Ghi ngắn gọn các quyết định hoặc sự cố có thể ảnh hưởng 
 - Observation:
 - Next action:
 
+## 2026-08-28 — Robust conservative completion guard for `nf_basic.py`
+
+- What changed:
+  - `nf_basic.py` no longer prints completion after a single empty frontier scan.
+  - COMPLETE now requires zero frontier regions larger than 10 cells across `5` distinct `/map` generations, with terminal sweeps spaced by at least `2 s`, navigation idle for at least `10 s`, and node age at least `20 s`.
+  - Any reappearance of a large frontier resets terminal verification immediately.
+  - If large frontier regions still exist but every representative is inside the debug `MIN_DISTANCE_THRESHOLD=0.5 m`, the node publishes `BLOCKED_BY_MIN_DISTANCE` and explicitly does **not** claim exploration completion.
+  - A pending main frontier or recovery subgoal also prevents completion; this keeps the no-blacklist/same-main-goal recovery semantics conservative.
+  - Added transient-local `/frontier_exploration_complete` (`std_msgs/Bool`) and `/frontier_exploration_status` (`std_msgs/String` JSON) so terminal state is machine-readable and visible to late subscribers while the node remains alive.
+  - After COMPLETE, markers/path are cleared and the node permanently stops issuing new navigation goals.
+- Why: a single transient SLAM map with no detected frontier can create a false completion, while the debug 0.5 m filter can hide still-existing frontier regions. The completion signal should prefer non-termination over falsely declaring the map explored.
+- Affected runs: debug `stock.launch.py + nf_basic.py` only; not current `hospital_v2` official baseline semantics.
+- Does baseline need rerun?: no official benchmark uses this debug file. If adopted later, completion semantics must be protocol-versioned and shared across compared methods.
+- Observation: implementation committed; runtime terminal validation pending.
+- Next action: run until the end, verify `VERIFYING_COMPLETE` progresses across fresh map updates, then confirm exactly one `COMPLETE` and `/frontier_exploration_complete: true`, with no later goal dispatch.
+
 ## 2026-08-28 — Debug path-guided intermediate-goal recovery for `nf_basic.py`
 
 - What changed:
@@ -100,7 +116,7 @@ Ghi ngắn gọn các quyết định hoặc sự cố có thể ảnh hưởng 
 - Why: coverage cần denominator cố định, không phụ thuộc crop/map extent của từng run.
 - Affected runs: toàn bộ Nearest/MapEx run mới trong lộ trình `mapex_hospital_research`.
 - Does baseline need rerun?: chưa; benchmark mới chưa bắt đầu.
-- Observation: full Hospital stack đã được xác nhận chạy bình thường; fixed canvas là 0.05 m, 1504 x 2123, origin (-25.6,-60.1).
+- Observation: full Hospital stack đã được xác nhận chạy bình thường; fixed canvas là 0.05 m, 1504 x 2123, origin (-25.6, -60.1).
 
 ## Initial note
 
