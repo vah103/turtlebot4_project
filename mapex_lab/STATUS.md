@@ -31,43 +31,41 @@
 - Added `launch/stock.launch.py` as a reference/debug stack: project Hospital simulation + stock TurtleBot4 Nav2 + near-stock TurtleBot4 SLAM. Debug SLAM uses `config/slam.yaml`; this stack is **not** part of the official `hospital_v2` benchmark protocol.
 - Added `step.py` as a debug-only wrapper around `control_tb4.py`: one frontier goal at a time, waits for the real Nav2 terminal result, prints compact motion/navigation diagnostics, then pauses for ENTER before the next goal.
 - Added `step0.py` as a temporary debug wrapper that sets `min_distance_threshold = 0.0` so the centroid-selection behavior can be observed without the rejection filter; this is diagnostic only.
-- Added debug-only path-guided intermediate-goal recovery to `nf_basic.py` plus `behavior_trees/navigate_to_pose_subgoal.xml`: the selected frontier remains fixed; on a Nav2 abort, `nf_basic.py` can choose a temporary point on the latest main-goal `/plan`, navigate there, then retry the same frontier. No blacklist or alternate frontier selection is introduced.
-- Updated the same debug BT to **event-driven global replanning**: each NavigateToPose attempt computes one global path and follows it without periodic 1 Hz replanning; if planning/FollowPath fails, the BT waits `0.25 s` and retries the whole plan/follow sequence once with the latest map, then falls back to the existing `nf_basic.py` path-guided recovery if that retry also fails.
-- Added conservative completion verification to debug `nf_basic.py`: COMPLETE is only emitted after zero frontier regions `>10` persist across `5` distinct `/map` updates, sweeps are at least `2 s` apart, navigation has been idle for at least `10 s`, and node age is at least `20 s`. Remaining frontiers inside the debug `0.5 m` filter produce `BLOCKED_BY_MIN_DISTANCE`, not a false COMPLETE. Completion is published latched on `/frontier_exploration_complete` and machine-readable status on `/frontier_exploration_status`; once complete, no further goals are sent.
+- Previously added debug-only path-guided intermediate-goal recovery to `nf_basic.py` plus `behavior_trees/navigate_to_pose_subgoal.xml`; this experiment was later rolled back from the active `nf_basic.py`.
+- Previously tested event-driven global replanning and conservative 5-sweep completion in debug `nf_basic.py`; both were later rolled back from the active minimal `nf_basic.py`.
+- Active debug `nf_basic.py` is now the minimal nearest-Euclidean version plus **planner reachability validation only**: candidates are sorted by Euclidean distance, checked by `ComputePathToPose` nearest-first, a candidate with failed/empty path is dropped for that candidate sweep, and `NavigateToPose` is sent only to the first planner-valid exact frontier x/y. No permanent blacklist is used, so no-path candidates can be revalidated on later sweeps.
 - Added a Cartographer 2D debug alternative for long-run SLAM drift diagnosis: `config/cartographer_hospital_2d.lua` + `launch/carto.launch.py`. It uses `/scan` + wheel `/odom` + simulated `/imu`, 0.05 m internal submaps, pose-graph loop closure, and publishes a 0.10 m/cell ROS map for compatibility with `nf_basic.py`/Nav2. This is not yet an official `hospital_v2` protocol change.
 - First Cartographer runtime attempt exposed a Gazebo/ROS IMU frame mismatch: `/imu` is stamped `turtlebot4/imu_link/imu`, while TF contains the physical `imu_link`. `launch/carto.launch.py` now publishes an identity static TF `imu_link -> turtlebot4/imu_link/imu` so Cartographer can retain IMU fusion instead of disabling IMU.
 - Second Cartographer runtime reached `/map`, but `nf_basic.py` immediately accumulated no-frontier completion evidence. Root cause: Cartographer publishes observed occupancy probabilities in `[0,100]`, while MapEx frontier semantics require exact free `0`, unknown `<0`. Added `cartographer_map_bridge.py`; Cartographer now publishes raw probability map as `/cartographer_map`, and the bridge republishes `/map` as `-1/0/100` using a 50% occupancy threshold without changing `nf_basic.py`.
 - Cartographer map-normalization bridge is now sufficient for `nf_basic.py` to start selecting frontiers and move the robot. During this debug run the robot appeared jerky in wall time; measured topic rates were approximately `/cmd_vel=14 Hz`, `/odom=14 Hz`, `/scan=2.6 Hz`.
 - Performance A/B changes did not remove the visible jerk, so they were rolled back: online correlative scan matching is restored to `true` and Cartographer OccupancyGrid publication is restored from `3.0 s` to `1.0 s`. The current working hypothesis is Gazebo/physics real-time performance rather than Cartographer local-matching load.
-- Added a debug-only SLAM Toolbox local-window frontend: `local_scan_window.py`, `config/slam_local_window.yaml`, `launch/toolbox_local_window.launch.py`, and `docs/local_window_slam_debug.md`. It uses raw odometry only as the motion prediction, performs bounded 2-D ICP against a rolling recent-scan window, republishes `/scan_local_window`, and leaves SLAM Toolbox responsible for global scan matching, pose graph, loop closure, and optimization. The frontend has conservative per-scan and accumulated-correction guards and resets its local state instead of becoming a second unconstrained global SLAM estimator.
+- Added a debug-only SLAM Toolbox local-window frontend: `local_scan_window.py`, `config/slam_local_window.yaml`, `launch/local.launch.py`, and `docs/local_window_slam_debug.md`. It uses raw odometry only as the motion prediction, performs bounded 2-D ICP against a rolling recent-scan window, republishes `/scan_local_window`, and leaves SLAM Toolbox responsible for global scan matching, pose graph, loop closure, and optimization. The frontend has conservative per-scan and accumulated-correction guards and resets its local state instead of becoming a second unconstrained global SLAM estimator.
 - Restored `control_tb4.py` exactly to historical blob `44f262b6ffa904042d1f2633d8f2ced95e645513` from commit `9f404a9`.
 - Stage-3 preparation: `control_tb4_mapex.py` dùng `MAPEX_RESOLUTION_M = 0.10`; với Hospital v2 source map `0.10`, bước downsample trở thành factor `1`, nên frontier/prediction cùng grid 0.10.
 
 ## In progress
 
 - Runtime validation of the debug local-window SLAM Toolbox frontend: compare corridor revisit wall overlap against `stock.launch.py`, inspect ICP acceptance/RMSE/reset diagnostics, and verify the Python frontend does not reduce Gazebo real-time performance enough to negate any mapping gain.
-- Runtime validation of event-driven global replanning in `nf_basic.py`: verify map updates alone do not regenerate `/plan`, and a fresh global path is produced only after planner/controller failure.
+- Runtime validation of active minimal `nf_basic.py` reachability behavior: reproduce the closed-curtain/no-path case and confirm the nearest blocked frontier is skipped immediately and the next planner-reachable frontier is selected without a retry loop.
 - Diagnose Gazebo/physics real-time performance while keeping the restored accuracy-first Cartographer configuration unchanged.
-- Runtime validation of the debug `stock.launch.py + nf_basic.py` path-guided recovery and completion guard: verify failure-triggered replan first, then temporary path subgoal only if the event-triggered retry still fails, retry of the same frontier, and final 5-sweep completion only after frontiers truly disappear.
 - Regression test: old `control_tb4.py` + historical `hospital_slam.yaml` (`0.05 m/cell`) to determine whether the new no-frontier startup behavior is caused by runtime-grid changes rather than the controller file itself.
 - Hospital v2 official validation is paused while this diagnostic rollback is active.
 - `control_tb4_mapex.py` vẫn là Stage-3 preparation only: chưa runtime-validate, chưa phải official MapEx benchmark runner và không thay đổi current stage.
 
 ## Next actions
 
-1. Pull and rerun the restored `launch/carto.launch.py` / `config/cartographer_hospital_2d.lua` pair plus the new event-driven debug BT.
-2. Run `nf_basic.py` and watch `/plan`/`/frontier_selected_path`; confirm one global path is normally kept for the full successful NavigateToPose attempt even while `/map` updates.
-3. Reproduce a case where a newly observed obstacle blocks the current path; confirm `FollowPath`/planning failure causes exactly one fresh ComputePathToPose attempt using the latest map before `nf_basic.py` falls back to the path-guided subgoal logic.
+1. Pull and run active `nf_basic.py` in the closed-curtain area; confirm a `ComputePathToPose` no-path result logs that the frontier is dropped for the current sweep.
+2. Confirm `nf_basic.py` immediately checks the next Euclidean-ranked candidate and only sends `NavigateToPose` after a non-empty planner-valid path is returned.
+3. Watch `/frontier_selected_path` and RViz markers: green candidates may include unreachable frontiers, but the red selected goal must be the first planner-reachable candidate.
 4. Keep Cartographer accuracy settings fixed while checking Gazebo real-time factor and comparing headless-Gazebo + RViz against the normal GUI run.
 5. While moving, measure `/cmd_vel`, `/odom`, and `/scan` rates and verify final Twist commands remain smooth while the simulated motion jerks.
 6. Continue long enough to return to old corridors and inspect Cartographer wall overlap/map alignment under the restored accuracy-first configuration.
 7. If Cartographer is clearly more stable overall, decide whether to promote it to the official benchmark stack. Promotion requires a new protocol version and all compared methods must use the same Cartographer stack.
-8. Continue the same run to terminal exploration state and verify `/frontier_exploration_complete=true` appears only after 5 distinct-map no-frontier sweeps and no new navigation goal follows.
-9. Pull/rebuild `frontier_exploration`, run `hospital_flat_stack.launch.py`, then run restored `control_tb4.py` and check whether startup exploration works again at `0.05 m/cell`.
-10. Record whether frontier groups/goals behave like the historical run.
-11. After the regression test, restore `hospital_slam.yaml` to Hospital v2 `resolution: 0.10` before continuing official validation.
-12. Resume Hospital v2 validation only after the diagnostic rollback is removed.
-13. Run `launch/toolbox_local_window.launch.py` on the same debug route as `stock.launch.py`; compare revisit wall overlap and record `/local_window_icp/accepted`, `/local_window_icp/rmse_m`, `/local_window_icp/correction`, reset count from logs, and wall-time topic rates before tuning any parameter.
+8. Pull/rebuild `frontier_exploration`, run `hospital_flat_stack.launch.py`, then run restored `control_tb4.py` and check whether startup exploration works again at `0.05 m/cell`.
+9. Record whether frontier groups/goals behave like the historical run.
+10. After the regression test, restore `hospital_slam.yaml` to Hospital v2 `resolution: 0.10` before continuing official validation.
+11. Resume Hospital v2 validation only after the diagnostic rollback is removed.
+12. Run `launch/local.launch.py` on the same debug route as `stock.launch.py`; compare revisit wall overlap and record `/local_window_icp/accepted`, `/local_window_icp/rmse_m`, `/local_window_icp/correction`, reset count from logs, and wall-time topic rates before tuning any parameter.
 
 ## Important decisions
 
@@ -79,14 +77,13 @@
 - Cartographer probability output must be normalized to the same discrete occupancy convention expected by the MapEx frontier generator before policy comparison; this normalization is a mapping-adapter concern, not a change to Nearest ranking/frontier code.
 - The temporary Cartographer performance A/B (`online correlative=false`, `/map` every 3 s) did not eliminate the jerk and is no longer active; current Cartographer is back to the accuracy-first matcher and 1 s map publication.
 - The new local-window SLAM Toolbox frontend is **debug-only** and is not part of `hospital_v2`. Its first A/B deliberately keeps the normal `config/slam.yaml` backend parameters unchanged except for the input scan topic so any difference is attributable to the frontend. Adoption into official comparison would require protocol versioning and the same mapping stack for all methods.
-- The `nf_basic.py` debug BT no longer replans globally at fixed 1 Hz. Global replanning is event-driven: keep the current path while FollowPath progresses, do one fresh plan attempt after failure, then allow the existing path-guided fallback if needed. This is debug-only and not part of official `hospital_v2` execution semantics.
+- Active `nf_basic.py` does not use path-guided recovery or event-driven BT replanning. It performs nearest-Euclidean ranking, validates candidates with `ComputePathToPose` nearest-first, drops no-path candidates for the current sweep, and sends `NavigateToPose` only to a planner-valid exact frontier x/y.
+- No-path evidence is not permanently blacklisted: ROS online maps can change, so the same frontier may be revalidated on a later sweep. This matches the protocol rule that planner no-path is transient evidence rather than permanent unreachable state.
 - Nearest, full MapEx và proposed method phải dùng cùng Hospital adaptations.
 - Exact frontier **x/y** là execution position; frontier không có terminal-yaw objective.
 - Validation path chỉ chứng minh planner reachability; NavigateToPose có thể replan nên executed distance lấy từ odometry.
-- Planner no-path trong ROS online là transient evidence và phải được revalidate trước completion.
 - Controller execution failure không được biến planner-reachable frontier thành permanent unreachable.
-- `nf_basic.py` path-guided subgoal recovery, event-driven replanning and conservative completion guard hiện là **debug execution experiments only**, không phải `hospital_v2` official baseline semantics. Nếu sau này dùng trong benchmark chính thức thì execution adapter/completion policy phải được protocol-versioned và áp dụng công bằng cho Nearest/MapEx/proposed method.
-- Debug completion intentionally prefers false-negative/non-termination over false-positive completion: a pending main frontier or any large frontier region prevents COMPLETE.
+- Official `hospital_v2` termination/revalidation rules remain defined by `EXPERIMENT_PROTOCOL.md`; active `nf_basic.py` is still a debug runner and does not implement the full official completion guard/recorder semantics.
 - Official run phải clean git và lưu effective runtime provenance.
 - Simulator seed intentionally uncontrolled; repeated runs xử lý variability.
 - Pilot/debug không tính vào official benchmark.
@@ -97,8 +94,8 @@
 `nearest_pilot_007`: diagnostic tolerance-snapped execution-goal bug (`hospital_v1`).  
 `nearest_pilot_008`: exact-frontier execution PASS nhưng map warp (`hospital_v1`).  
 `nearest_pilot_009`: phát hiện near-zero controller command và các execution-semantics gaps (`hospital_v1`).  
-2026-08-28 stock/debug: path-guided intermediate-goal recovery + robust conservative completion guard implemented in `nf_basic.py`; runtime validation pending.  
-2026-08-28 navigation debug: periodic 1 Hz global replanning replaced by plan-once FollowPath with one failure-triggered fresh replan; runtime validation pending.  
+2026-08-28 historical debug experiments: path-guided recovery, event-driven replanning and robust completion were implemented and later rolled back from active `nf_basic.py`.  
+2026-08-28 active `nf_basic.py`: minimal Nearest Frontier restored, then nearest-first `ComputePathToPose` reachability validation added so blocked/no-path frontiers are dropped for the current sweep instead of being repeatedly sent to `NavigateToPose`; runtime curtain-case validation pending.  
 2026-08-28 Cartographer runtime #1: IMU sensor-frame TF mismatch fixed.  
 2026-08-28 Cartographer runtime #2: Cartographer produced maps, but raw probability-valued OccupancyGrid was incompatible with `nf_basic.py` exact-free (`==0`) frontier semantics; `/cartographer_map -> /map` discrete normalization bridge committed.  
 2026-08-28 Cartographer runtime #3: normalized `/map` allows `nf_basic.py` to select frontiers and move; visible wall-time jerk coincides with approximately `/cmd_vel=14 Hz`, `/odom=14 Hz`, `/scan=2.6 Hz`. Disabling online correlative matching and slowing `/map` publication to 3 s did not remove the jerk, so both changes were reverted. Current hypothesis: Gazebo/physics real-time performance.  
