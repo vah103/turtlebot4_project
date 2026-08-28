@@ -27,12 +27,14 @@
 - Pilot `pilot_002` also exposed startup contamination from a transient NavigateToPose lifecycle state and an unclosed goal row when Ctrl+C occurred during an active goal.
 - `stage2_run.py` now gates the benchmark start until NavigateToPose has remained ready for at least `3.0 s` with map and TF available. The benchmark clock still starts at the first actual frontier decision after that gate opens.
 - `stage2_run.py` now writes an active main/subgoal as `result=interrupted` during finalize/Ctrl+C instead of silently dropping it, and tracks `main_interrupted` / `subgoal_interrupted` separately from navigation failures.
+- Pilot `pilot_003` passed the recorder smoke-test: `STAGE2 READY` occurred before the first frontier decision, coverage was numeric (`0.446064938` at manual stop), and Ctrl+C during main goal 4 produced `result=interrupted` with `main_interrupted=1` in `summary.json`.
+- To reduce disk use without losing the fixed evaluation representation, periodic `maps/snapshot_*` files now save **fixed-canvas NPZ only**. Exact decision maps still save both raw + fixed-canvas, and the final map still saves both raw + fixed-canvas.
 - Cartographer and local-window SLAM alternatives remain debug-only and are not part of the official Hospital v2 benchmark unless protocol identity is changed and all methods are rerun under the same stack.
 - `control_tb4.py` and historical `hospital_slam.yaml=0.05` remain available only for separate regression diagnostics; they are not the official Nearest runner.
 
 ## In progress
 
-- Re-run one short `stage2_run.py` pilot after startup-gating/interruption fixes and verify the first frontier is issued only after `STAGE2 READY` and Ctrl+C produces an `interrupted` row for any active goal.
+- Begin official repeated Nearest Stage-2 runs with `stage2_run.py` and preserve the validated recorder/runtime behavior.
 - Continue runtime validation of the official `nf_basic.py` over longer Hospital exploration runs.
 - Keep path-guided subgoal recovery for genuine execution failures such as controller error `105` when a valid path reaches the exact frontier.
 - Observe whether a `0.10 m` session suppression radius is sufficient to prevent an unreachable region from reappearing via a slightly shifted representative.
@@ -40,14 +42,13 @@
 
 ## Next actions
 
-1. Pull the latest repo and run a short `stage2_run.py --run-id pilot_003` with the intended Hospital stack active.
-2. Confirm log order contains `STAGE2 READY` before the first `Selected nearest frontier` and no pre-benchmark NavigateToPose retry loop.
-3. Ctrl+C during an active goal once and verify `goals.csv` contains exactly one `result=interrupted` row for that goal and summary increments `main_interrupted` or `subgoal_interrupted`.
-4. Check `metrics.csv`, `trajectory.csv`, `decisions.csv`, `candidates.csv`, `goals.csv`, `plans.csv`, `decision_maps/`, `maps/`, and `summary.json` for consistency.
-5. After the recorder passes, run the Nearest baseline closed-loop at least 5 times, target 10, and report per-run plus mean ± std.
-6. Continue a full Hospital exploration run and verify `105 -> path-guided recovery` and `208 -> abandon main frontier` remain stable without infinite retries.
-7. If the same unreachable region reappears shifted by more than `0.10 m`, decide whether region-aware suppression is needed.
-8. Before collecting official benchmark data, ensure the active SLAM/Nav2 runtime matches the intended Hospital v2 configuration and archive effective runtime provenance.
+1. Pull the latest repo and start official Nearest runs as `nearest_001`, `nearest_002`, ... using `stage2_run.py` with the intended Hospital stack active.
+2. After `nearest_001`, verify `metrics.csv`, `trajectory.csv`, `decisions.csv`, `candidates.csv`, `goals.csv`, `plans.csv`, `decision_maps/`, `maps/`, and `summary.json` for consistency before continuing the batch.
+3. Confirm periodic `maps/snapshot_*` contains canvas-only NPZ files, while `decision_maps/decision_*` and `maps/final_*` retain raw + canvas pairs.
+4. Run the Nearest baseline closed-loop at least 5 times, target 10, and report per-run plus mean ± std.
+5. Continue a full Hospital exploration run and verify `105 -> path-guided recovery` and `208 -> abandon main frontier` remain stable without infinite retries.
+6. If the same unreachable region reappears shifted by more than `0.10 m`, decide whether region-aware suppression is needed.
+7. Before collecting/finalizing official benchmark data, ensure the active SLAM/Nav2 runtime matches the intended Hospital v2 configuration and archive effective runtime provenance.
 
 ## Important decisions
 
@@ -61,9 +62,10 @@
 - A failed temporary subgoal, including subgoal error `208`, does not alone prove the main frontier unreachable and therefore does not blacklist the main frontier.
 - Official Nearest, MapEx, and proposed method comparisons must use the same Hospital adaptations and effective Nav2/SLAM configuration.
 - Pilot/debug launch alternatives do not count as official benchmark runs.
+- Storage policy: periodic Stage-2 snapshots keep the fixed canvas only; decision-time maps and final maps keep both raw and fixed-canvas forms.
 
 ## Latest result
 
 2026-08-28: `nf_basic.py` is accepted as the official/canonical Nearest Frontier runner. Exact-planner testing with `GridBased.tolerance=0.0` produced exact frontier endpoints for reachable goals. Controller failure `105` remains handled by path-guided subgoal recovery, while main-goal `208` now abandons/suppresses that selected frontier and allows exploration to continue instead of looping indefinitely.
 
-2026-08-28: `pilot_002` verified numeric coverage, distance/trajectory logging, decision/plan/map recording, and `105` recovery behavior. Recorder startup is now gated on 3 s of stable NavigateToPose readiness, and finalize now records any active goal explicitly as `interrupted` instead of dropping it.
+2026-08-28: `pilot_003` passed the integrated Stage-2 recorder smoke-test. Startup gating, numeric ROI coverage, interruption logging, trajectory/distance, decisions/candidates/plans, and map saving are working. Periodic snapshots now retain fixed-canvas NPZ only to reduce disk use; decision and final maps retain raw + canvas pairs.
