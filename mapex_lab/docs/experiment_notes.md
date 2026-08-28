@@ -13,6 +13,19 @@ Ghi ngắn gọn các quyết định hoặc sự cố có thể ảnh hưởng 
 - Observation:
 - Next action:
 
+## 2026-08-28 — Event-driven global replanning for `nf_basic.py`
+
+- What changed:
+  - Replaced the debug BT's periodic `RateController hz=1.0` global replanning with a plan-once-then-follow sequence.
+  - `ComputePathToPose` now runs once when a NavigateToPose attempt starts; map updates alone no longer regenerate the global path while `FollowPath` is progressing.
+  - If `ComputePathToPose` or `FollowPath` fails, a `RecoveryNode` waits `0.25 s` and retries the whole plan/follow sequence once, which triggers one fresh global plan using the latest map.
+  - If that event-triggered retry also fails, NavigateToPose returns failure to `nf_basic.py`, so the existing path-guided intermediate-goal fallback remains available.
+- Why: Cartographer map updates can change the global costmap frequently; periodic 1 Hz replanning makes the displayed/global path jump even when the current path is still usable. The new BT replans only when execution actually fails.
+- Affected runs: debug `nf_basic.py` execution only; no official `hospital_v2` run affected.
+- Does baseline need rerun?: no official baseline. If this execution policy is later adopted for benchmark runs, it must be protocol-versioned and shared across Nearest/MapEx/proposed methods.
+- Observation: implementation committed; runtime behavior still needs validation.
+- Next action: run `carto.launch.py + nf_basic.py`, verify `/plan` is normally published once per navigation attempt, then place/observe a newly discovered obstacle on the path and confirm a fresh plan appears only after planner/controller failure.
+
 ## 2026-08-28 — Revert Cartographer smoothness tuning after no improvement
 
 - What changed:
@@ -149,7 +162,7 @@ Ghi ngắn gọn các quyết định hoặc sự cố có thể ảnh hưởng 
 
 - What changed: generate và freeze `hospital_connected_free_v1`.
 - Denominator: `215435` cells.
-- Mask SHA-256: `05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1`.
+- Mask SHA-256: `05d45b7aba66dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1`.
 - Structural audit: `1040` unique wall segments, `2` elevator blockers.
 - Why: coverage cần một denominator cố định giống hệt giữa Nearest và MapEx.
 - Affected runs: toàn bộ run dùng protocol `hospital_v1`.
