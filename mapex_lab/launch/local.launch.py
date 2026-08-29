@@ -87,7 +87,7 @@ def generate_launch_description() -> LaunchDescription:
     tb4_nav_pkg = get_package_share_directory('turtlebot4_navigation')
     research_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    slam_params = os.path.join(research_root, 'config', 'slam_local_window.yaml')
+    slam_params = os.path.join(research_root, 'config', 'slam_local.yaml')
     frontend_script = os.path.join(research_root, 'local_scan_window.py')
 
     # Same stock Nav2 + project override path as stock.launch.py.
@@ -95,7 +95,7 @@ def generate_launch_description() -> LaunchDescription:
     xy_only_override = os.path.join(
         research_root,
         'config',
-        'nav2_stock_xy_only.yaml',
+        'nav2.yaml',
     )
 
     with open(stock_nav2_params, 'r', encoding='utf-8') as stream:
