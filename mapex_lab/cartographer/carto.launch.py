@@ -70,7 +70,7 @@ def generate_launch_description() -> LaunchDescription:
     xy_only_override = os.path.join(
         research_root,
         'config',
-        'nav2_stock_xy_only.yaml',
+        'nav2.yaml',
     )
 
     with open(stock_nav2_params, 'r', encoding='utf-8') as stream:
