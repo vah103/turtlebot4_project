@@ -46,8 +46,12 @@
 - Historical controller/launch variants remain available only for separate regression diagnostics; they are not the official Nearest runner.
 - **`mapex_lab/scripts/mapex.py` is now the canonical Stage-3 MapEx policy implementation.** It subclasses `NearestEuclideanFrontier` so ROS2/Nav2 goal execution, exact-frontier semantics, path-guided recovery, `206/208` suppression, planner revalidation, completion, RViz markers/path, and status publishing stay shared with the Nearest baseline instead of being copied into a second controller.
 - `scripts/mapex.py` replaces only the decision policy with the MapEx pipeline: shared MapEx frontier geometry -> 3-member LaMa ensemble -> ensemble mean/variance -> probabilistic visibility -> `IG=sum(variance)` over visible currently-unknown cells -> `score=IG/EuclideanDistance` -> highest-score unsuppressed frontier.
-- `scripts/mapex.py` uses the paper settings `0.10 m/cell`, 3 ensemble members, 20 m predicted visibility range, 250 rays, and epsilon `0.8`; it does not apply the original MapEx `<1 m` rejection or the Nearest-only `<0.5 m` guard under the Hospital adaptation.
+- `config/mapex.yaml` is now the source of truth for Stage-3 policy settings and explicitly records the 3-member ensemble, `0.10 m/cell`, `default_map_eval`, frontier threshold `>10`, no Hospital close-frontier rejection, 20 m / 250-ray probabilistic visibility, epsilon `0.8`, variance IG domain, Euclidean `IG/distance`, and shared `nf_basic.py` execution.
+- `scripts/mapex.py` now uses the official MapEx `lama_pred_utils.get_lama_transform()` and `convert_obsimg_to_model_input()` preprocessing path instead of locally recreating the LaMa input tensor/mask.
+- `scripts/mapex.py` now follows the reference visibility boundary construction: ordered probabilistic hit points -> Shapely `Polygon` -> `buffer(1)` -> Bresenham boundary -> 4-neighbour flood fill -> intersection with currently unknown cells.
 - The probabilistic raycast in `scripts/mapex.py` follows Sec. IV-C literally: accumulated occupancy Delta is initialized once per ray and increases along pixels until epsilon. This intentionally follows the paper definition rather than reproducing the upstream helper bug where the accumulator is reset inside the per-pixel loop.
+- `scripts/mapex.py` has been updated to the current shared planner-blocking API (`is_planner_blocked_suppressed`) so the Stage-3 policy inherits both `206 GOAL_OCCUPIED` and `208 NO_VALID_PATH` handling correctly.
+- Direct execution of `scripts/mapex.py` forces ROS node name `mapex_explorer` and suppresses the Nearest-specific parent startup line; Nearest keeps its original node name/log because `nf_basic.py` itself was not changed.
 
 ## In progress
 
@@ -55,7 +59,7 @@
 - Continue runtime validation of the `no_planner_reachable_frontier` completion path and distinguish genuine terminal exhaustion from planner/global-costmap failure.
 - Continue runtime validation of path-guided recovery for controller error `105`.
 - Continue local-window SLAM diagnostics separately; the current local-window workflow remains a debug runtime profile relative to formal `hospital_v2`.
-- Runtime-smoke-test `scripts/mapex.py`: confirm the intended three LaMa models load in the ROS environment, `/map` is exactly `0.10 m/cell`, the first MapEx decision produces finite mean/variance/IG/score values, and the selected frontier then follows the same Nav2/recovery/completion behavior as `nf_basic.py`.
+- Runtime-smoke-test `scripts/mapex.py`: confirm official preprocessing imports in the ROS/LaMa environment, the intended three models load, `/map` is exactly `0.10 m/cell`, first mean/variance/visibility/IG/score values are finite, ROS node name is `mapex_explorer`, and the selected frontier follows the same Nav2/recovery/completion behavior as `nf_basic.py`.
 
 ## Next actions
 
@@ -64,14 +68,16 @@
 3. During the rerun, if a main goal returns `206`, verify the next log is `Main frontier abandoned after GOAL_OCCUPIED (206)` followed by selection of another frontier, not repeated retries of the same `(x,y)`.
 4. Keep `nearest_001` with its manual-termination caveat; keep `nearest_002` and `nearest_003` as completed local-window runs.
 5. Continue the Nearest batch to at least 5 completed runs, target 10, after the `206` runtime check passes.
-6. Smoke-test `scripts/mapex.py` separately before long Stage-3 runs: verify model loading, first prediction, first candidate ranking, and first exact-frontier Nav2 goal.
+6. Smoke-test `scripts/mapex.py` separately before long Stage-3 runs: verify model loading, official preprocessing, first prediction, first visibility/IG ranking, `mapex_explorer` node identity, and first exact-frontier Nav2 goal.
 7. Before treating either batch as formal `hospital_v2` benchmark data, resolve the current `local.launch.py` debug-profile vs official-protocol mismatch and ensure Nearest/MapEx/proposed method all use the same effective SLAM/Nav2 stack.
 
 ## Important decisions
 
 - **Official Nearest Frontier policy/runner source: `mapex_lab/scripts/nf_basic.py`.** This is the canonical algorithm file to maintain going forward.
 - **Official Stage-3 MapEx policy source: `mapex_lab/scripts/mapex.py`.** It must reuse `NearestEuclideanFrontier` for non-policy ROS/Nav2/recovery/completion logic so fixes to the shared execution layer apply consistently to Nearest and MapEx.
-- `scripts/nf_run.py` is an instrumentation wrapper around that canonical class for Nearest data collection; it must not become a divergent copy of the exploration policy.
+- **Official Stage-3 policy parameter source: `mapex_lab/config/mapex.yaml`.** Code should validate and consume this config rather than duplicate paper parameters as independent hard-coded values.
+- For MapEx probabilistic visibility, reproduce the official buffered polygon/flood-fill boundary construction while keeping the paper-defined per-ray accumulated occupancy Delta instead of copying the upstream accumulator-reset bug.
+- `scripts/nf_run.py` is an instrumentation wrapper around the canonical Nearest class; it must not become a divergent copy of the exploration policy.
 - Hospital implementation is MapEx frontier/ranking semantics plus a ROS/Nav2 execution adapter; it is not claimed to be the original simulator implementation unchanged.
 - Exact frontier `x/y` is the exploration target; planner endpoint is diagnostic/reachability evidence only.
 - A path that stops materially short of the frontier must not be used to generate a recovery subgoal.
@@ -81,9 +87,9 @@
 - A failed temporary subgoal, including subgoal planner errors, does not alone prove the main frontier unreachable and therefore does not blacklist the main frontier.
 - Official Nearest, MapEx, and proposed method comparisons must use the same Hospital adaptations and effective Nav2/SLAM configuration.
 - Pilot/debug launch alternatives do not count as official benchmark runs unless the protocol is deliberately changed for every compared method.
-- Storage policy: periodic snapshots keep the fixed canvas only; decision-time maps and final maps keep both raw and fixed-canvas forms.
+- Storage policy: periodic snapshots keep the fixed canvas only; decision-time maps and final maps keep both raw + fixed-canvas forms.
 - Per-run provenance is mandatory: every new `scripts/nf_run.py` run should contain `metadata.json` and `runtime_nav2_merged.yaml` from startup onward.
 
 ## Latest result
 
-2026-08-29: `nearest_003` completed automatically at coverage `0.992034720` (99.2035%), distance `479.20 m`, benchmark time `5663.42 s` (~1 h 34 min 23 s). It selected 56 frontiers; 42 of 58 main navigation attempts succeeded (`72.41%`). Error counts were `208:15`, `105:2`, `206:1`; 14 frontiers were abandoned after `208`. Completion used the second terminal rule after repeated `ComputePathToPose` sweeps found no planner-reachable eligible frontier. A subsequent `nearest_004` attempt was interrupted at coverage `0.854499037`, distance `159.13 m` after repeated `206 GOAL_OCCUPIED` retries; commit `6c81982` changes main-goal `206` handling to the same suppress-and-terminal-revalidate policy as `208`, so `nearest_004` must be rerun from scratch. Stage-3 policy code is now present as `scripts/mapex.py` and is ready for a model-loading/first-decision smoke test before any long MapEx run.
+2026-08-29: `nearest_003` completed automatically at coverage `0.992034720` (99.2035%), distance `479.20 m`, benchmark time `5663.42 s` (~1 h 34 min 23 s). It selected 56 frontiers; 42 of 58 main navigation attempts succeeded (`72.41%`). Error counts were `208:15`, `105:2`, `206:1`; 14 frontiers were abandoned after `208`. Completion used the second terminal rule after repeated `ComputePathToPose` sweeps found no planner-reachable eligible frontier. A subsequent `nearest_004` attempt was interrupted at coverage `0.854499037`, distance `159.13 m` after repeated `206 GOAL_OCCUPIED` retries; commit `6c81982` changes main-goal `206` handling to the same suppress-and-terminal-revalidate policy as `208`, so `nearest_004` must be rerun from scratch. Stage-3 `scripts/mapex.py` has now been aligned with the official MapEx preprocessing and visibility-boundary implementation while retaining the paper-defined accumulated probabilistic raycast, YAML-source policy settings, shared current `206/208` API, and MapEx-specific node identity; runtime smoke validation is the next gate before any long MapEx run.
