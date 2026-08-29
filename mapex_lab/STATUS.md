@@ -33,6 +33,7 @@
 - To reduce disk use without losing the fixed evaluation representation, periodic `maps/snapshot_*` files now save **fixed-canvas NPZ only**. Exact decision maps still save both raw + fixed-canvas, and the final map still saves both raw + fixed-canvas.
 - A long `local.launch.py` diagnostic run exposed the old terminal deadlock: coverage reached `0.996184464`, the remaining large frontier representatives all returned `208`, then the process repeated `no eligible candidate ... NOT declaring exploration complete` indefinitely until manual Ctrl+C.
 - That diagnostic directly motivated the new case-2 planner-reachability completion verification. `local.launch.py` remains debug-only and the manually stopped run is not an official Hospital-v2 benchmark result.
+- Restored `config/slam.yaml` `minimum_time_interval` from `0.15` to `0.5 s`. `local.launch.py` uses `config/slam_local_window.yaml`, which was already at `0.5 s`, so the local-window runs were not using the temporary `0.15 s` value.
 - Cartographer and local-window SLAM alternatives remain debug-only and are not part of the official Hospital v2 benchmark unless protocol identity is changed and all methods are rerun under the same stack.
 - `control_tb4.py` and historical `hospital_slam.yaml=0.05` remain available only for separate regression diagnostics; they are not the official Nearest runner.
 
