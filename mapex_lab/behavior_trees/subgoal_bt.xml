@@ -1,0 +1,44 @@
+<!--
+  Periodic-replanning NavigateToPose tree for the nf_basic.py frontier runner.
+
+  While a main/subgoal is active, ComputePathToPose runs at 1 Hz and updates the
+  shared path consumed by FollowPath. This keeps navigation responsive to the
+  continuously changing SLAM map instead of following one stale global path.
+
+  The tree intentionally keeps recovery lightweight: if planning or FollowPath
+  fails, wait briefly and retry the whole navigation pipeline once. If that
+  retry also fails, NavigateToPose returns failure to nf_basic.py so the existing
+  path-guided intermediate-subgoal recovery can take over.
+
+  This preserves the current Nearest Frontier selection, MPPI controller,
+  completion logic, and subgoal fallback; only global-path replanning changes
+  from event-driven to periodic 1 Hz.
+-->
+<root BTCPP_format="4" main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <RecoveryNode number_of_retries="1" name="PeriodicGlobalReplan">
+      <PipelineSequence name="NavigateWithReplanning">
+        <ControllerSelector
+          selected_controller="{selected_controller}"
+          default_controller="FollowPath"
+          topic_name="controller_selector"/>
+        <PlannerSelector
+          selected_planner="{selected_planner}"
+          default_planner="GridBased"
+          topic_name="planner_selector"/>
+        <RateController hz="1.0">
+          <ComputePathToPose
+            goal="{goal}"
+            path="{path}"
+            planner_id="{selected_planner}"
+            error_code_id="{compute_path_error_code}"/>
+        </RateController>
+        <FollowPath
+          path="{path}"
+          controller_id="{selected_controller}"
+          error_code_id="{follow_path_error_code}"/>
+      </PipelineSequence>
+      <Wait wait_duration="0.25"/>
+    </RecoveryNode>
+  </BehaviorTree>
+</root>
