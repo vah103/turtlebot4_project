@@ -13,6 +13,19 @@ Ghi ngắn gọn các quyết định hoặc sự cố có thể ảnh hưởng 
 - Observation:
 - Next action:
 
+## 2026-08-29 — Treat GOAL_OCCUPIED (206) like NO_VALID_PATH (208)
+
+- What changed:
+  - `scripts/nf_basic.py` now classifies main-goal `206 = GOAL_OCCUPIED` and `208 = NO_VALID_PATH` as planner-blocking failures.
+  - Either code clears the current main frontier, suppresses candidates within `0.10 m` during ordinary selection, and lets exploration choose another frontier instead of retrying the same `(x,y)` forever.
+  - Suppression remains reversible: when ordinary candidates are exhausted, terminal `ComputePathToPose` revalidation checks the full eligible set again and can restore a reachable frontier.
+  - Controller/execution failures such as `105 FAILED_TO_MAKE_PROGRESS` still use the existing path-guided recovery path when a usable main `/plan` exists.
+- Why: `nearest_004` reached frontier `(11.38,7.82)`, then `NavigateToPose` repeatedly returned `206` with no usable `/plan`. The previous generic failure branch kept the same main frontier pending, so the 1 Hz exploration loop resent it indefinitely until manual Ctrl+C.
+- Affected runs: `nearest_004` attempt stopped at coverage `0.854499037`, distance `159.13 m` is invalid/incomplete and should be replaced. `nearest_001`–`nearest_003` predate this bugfix; `nearest_003` recorded one `206` but still completed.
+- Does baseline need rerun?: `nearest_004` yes, from scratch. For a strictly identical-code formal batch, earlier runs should be treated as pre-fix provenance; current local-window runs are still debug-profile data relative to formal `hospital_v2`.
+- Observation: code fix committed as `6c81982`; runtime validation is pending.
+- Next action: rerun `nearest_004`; if `206` occurs, verify the immediate sequence is `Main frontier abandoned after GOAL_OCCUPIED (206)` followed by selection of another frontier, with no repeated same-goal loop.
+
 ## 2026-08-28 — Event-driven global replanning for `nf_basic.py`
 
 - What changed:
@@ -162,7 +175,7 @@ Ghi ngắn gọn các quyết định hoặc sự cố có thể ảnh hưởng 
 
 - What changed: generate và freeze `hospital_connected_free_v1`.
 - Denominator: `215435` cells.
-- Mask SHA-256: `05d45b7aba66dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1`.
+- Mask SHA-256: `05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1`.
 - Structural audit: `1040` unique wall segments, `2` elevator blockers.
 - Why: coverage cần một denominator cố định giống hệt giữa Nearest và MapEx.
 - Affected runs: toàn bộ run dùng protocol `hospital_v1`.
