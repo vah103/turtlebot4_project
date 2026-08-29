@@ -88,7 +88,7 @@ def generate_launch_description() -> LaunchDescription:
     research_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     slam_params = os.path.join(research_root, 'config', 'slam_local.yaml')
-    frontend_script = os.path.join(research_root, 'local_scan.py')
+    frontend_script = os.path.join(research_root, 'scripts', 'local_scan.py')
 
     # Same stock Nav2 + project override path as stock.launch.py.
     stock_nav2_params = os.path.join(tb4_nav_pkg, 'config', 'nav2.yaml')
