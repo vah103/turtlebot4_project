@@ -1,0 +1,809 @@
+#!/usr/bin/env python3
+"""Run canonical MapEx policy with integrated Stage-3 measurement.
+
+The exploration policy remains in mapex.py.  This wrapper reuses Stage2Run's
+measurement hooks and nf_basic.py's shared execution layer, while adding
+MapEx-specific candidate metrics, prediction/scoring timing, prediction maps,
+and provenance for the ROS<->legacy-LaMa bridge.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import math
+import os
+from pathlib import Path as FilePath
+import statistics
+import subprocess
+import sys
+import time
+from collections import Counter
+
+import numpy as np
+import rclpy
+import yaml
+from ament_index_python.packages import get_package_share_directory
+from nav_msgs.msg import Odometry
+from rclpy.executors import ExternalShutdownException
+from rclpy.qos import QoSProfile, ReliabilityPolicy
+
+import mapex
+from mapex_lama_bridge import LamaEnsembleBridge
+from nf_run import (
+    CANVAS_RES,
+    EVALUATION_ROI_ID,
+    FIXED_CANVAS_ID,
+    NAV2_READY_STABLE_S,
+    PROTOCOL_VERSION,
+    ROI_N,
+    SIM_SEED_POLICY,
+    Stage2Run,
+    _deep_merge,
+    _git_value,
+    _sha256_file,
+)
+
+
+# Keep the canonical MapEx policy untouched; isolate only legacy LaMa inference.
+mapex.LamaEnsemble = LamaEnsembleBridge
+
+
+class MapExRun(Stage2Run, mapex.MapExExplorer):
+    """MapExExplorer plus the same run recorder used by the Nearest baseline."""
+
+    def __init__(self, run_id: str, odom_topic: str, save_predictions: bool):
+        root = FilePath(__file__).resolve().parents[1]
+        run = root / "experiments" / "mapex" / run_id
+        if run.exists():
+            raise RuntimeError(f"Run exists: {run}")
+
+        # Deliberately skip Stage2Run.__init__: it hard-codes experiments/nearest.
+        # MapExExplorer still initializes through the exact canonical policy class.
+        mapex.MapExExplorer.__init__(self)
+
+        self.root = root
+        self.repo_root = self.root.parent
+        self.run = run
+        self.save_predictions = bool(save_predictions)
+        (self.run / "maps").mkdir(parents=True)
+        (self.run / "decision_maps").mkdir()
+        if self.save_predictions:
+            (self.run / "predictions").mkdir()
+
+        self.metadata = self._write_initial_provenance(run_id)
+
+        roi = (
+            self.root
+            / "ground_truth"
+            / "hospital"
+            / "generated"
+            / "hospital_connected_free_v1.npy"
+        )
+        self.roi = np.load(roi).astype(bool) if roi.exists() else None
+        if self.roi is None:
+            self.get_logger().warn("ROI missing: coverage will be NaN")
+
+        # Common Stage2 recorder state.
+        self.t0 = None
+        self.last_xy = None
+        self.distance = 0.0
+        self.last_traj = -1e9
+        self.last_snap = -1e9
+        self.decision_id = 0
+        self.active_decision = None
+        self.compute_t0 = None
+        self.compute_sim_t0 = None
+        self.goal_id = 0
+        self.active_goal = None
+        self.count = Counter()
+        self.errors = Counter()
+        self.comp = []
+        self.known = math.nan
+        self.coverage = math.nan
+        self.finalized = False
+        self.nav_ready_since = None
+        self.startup_gate_open = False
+        self.startup_wait_logged = False
+
+        # MapEx-specific statistics.
+        self.prediction_ms = []
+        self.frontier_scoring_ms = []
+        self.selected_ig = []
+        self.selected_score = []
+        self.selected_distance = []
+        self.selection_verification_failures = 0
+
+        q = QoSProfile(depth=100)
+        q.reliability = ReliabilityPolicy.BEST_EFFORT
+        self.create_subscription(Odometry, odom_topic, self.odom_cb, q)
+        self._open_files()
+        self.create_timer(1.0, self.metric_tick)
+
+        self.get_logger().warn(f"MAPEX RECORDING: {self.run}")
+        self.get_logger().info(
+            "MapEx provenance saved: metadata.json + runtime_nav2_merged.yaml "
+            "+ runtime_mapex.yaml"
+        )
+
+    # ----- provenance -----
+    def _write_initial_provenance(self, run_id: str) -> dict:
+        tb4_nav_pkg = FilePath(get_package_share_directory("turtlebot4_navigation"))
+        nav2_base = tb4_nav_pkg / "config" / "nav2.yaml"
+        nav2_override = self.root / "config" / "nav2.yaml"
+        mapex_config = self.root / "config" / "mapex.yaml"
+
+        with nav2_base.open("r", encoding="utf-8") as stream:
+            base_cfg = yaml.safe_load(stream) or {}
+        with nav2_override.open("r", encoding="utf-8") as stream:
+            override_cfg = yaml.safe_load(stream) or {}
+
+        merged_cfg = _deep_merge(base_cfg, override_cfg)
+        merged_path = self.run / "runtime_nav2_merged.yaml"
+        with merged_path.open("w", encoding="utf-8") as stream:
+            yaml.safe_dump(merged_cfg, stream, sort_keys=False)
+
+        runtime_mapex = self.run / "runtime_mapex.yaml"
+        with runtime_mapex.open("w", encoding="utf-8") as stream:
+            yaml.safe_dump(self.config, stream, sort_keys=False)
+
+        git_commit = _git_value(self.repo_root, "rev-parse", "HEAD")
+        git_status = _git_value(self.repo_root, "status", "--porcelain")
+        mapex_reference_checkout = _git_value(
+            self.mapex_root.expanduser().resolve(), "rev-parse", "HEAD"
+        )
+        mapex_reference_status = _git_value(
+            self.mapex_root.expanduser().resolve(), "status", "--porcelain"
+        )
+
+        worker_python = FilePath(
+            os.environ.get(
+                "MAPEX_LAMA_PYTHON",
+                str(
+                    FilePath.home()
+                    / "miniforge3"
+                    / "envs"
+                    / "lama"
+                    / "bin"
+                    / "python"
+                ),
+            )
+        ).expanduser()
+        worker_python_version = None
+        if worker_python.is_file():
+            try:
+                proc = subprocess.run(
+                    [str(worker_python), "--version"],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+                worker_python_version = (proc.stdout or proc.stderr).strip()
+            except (OSError, subprocess.CalledProcessError):
+                pass
+
+        hash_paths = {
+            "mapex_run": self.root / "scripts" / "mapex_run.py",
+            "mapex_policy": self.root / "scripts" / "mapex.py",
+            "mapex_ros_launcher": self.root / "scripts" / "mapex_ros.py",
+            "mapex_lama_bridge": self.root / "scripts" / "mapex_lama_bridge.py",
+            "mapex_lama_worker": self.root / "scripts" / "mapex_lama_worker.py",
+            "nf_run_recorder_base": self.root / "scripts" / "nf_run.py",
+            "nf_basic_shared_execution": self.root / "scripts" / "nf_basic.py",
+            "mapex_config": mapex_config,
+            "runtime_mapex": runtime_mapex,
+            "nav2_override": nav2_override,
+            "slam": self.root / "config" / "slam.yaml",
+            "slam_local": self.root / "config" / "slam_local.yaml",
+            "installed_nav2_base_params": nav2_base,
+            "runtime_nav2_merged": merged_path,
+        }
+        config_sha256 = {
+            name: _sha256_file(path)
+            for name, path in hash_paths.items()
+            if path.is_file()
+        }
+
+        checkpoints = []
+        for index, source in enumerate(self.ensemble.source_names, start=1):
+            path = FilePath(source).expanduser()
+            item = {
+                "member": f"G{index}",
+                "path": str(path),
+                "size_bytes": path.stat().st_size if path.is_file() else None,
+                "sha256": _sha256_file(path) if path.is_file() else None,
+            }
+            checkpoints.append(item)
+
+        metadata = {
+            "run_id": run_id,
+            "method": "mapex",
+            "recorder": "mapex_run.py",
+            "canonical_policy": "mapex.py",
+            "runtime_launcher_equivalent": "mapex_ros.py bridge backend",
+            "shared_execution": "nf_basic.py",
+            "git_commit": git_commit,
+            "git_dirty_at_recorder_start": (
+                None if git_status is None else bool(git_status)
+            ),
+            "protocol_version": PROTOCOL_VERSION,
+            "runtime_profile": "not_auto_detected",
+            "runtime_profile_note": (
+                "Recorder archives the same TurtleBot4 stock Nav2 + "
+                "mapex_lab/config/nav2.yaml merge used by the current "
+                "stock/local debug launchers; the launch file itself is not auto-detected."
+            ),
+            "runtime_map_resolution_m": None,
+            "fixed_canvas_id": FIXED_CANVAS_ID,
+            "fixed_canvas_resolution_m": CANVAS_RES,
+            "evaluation_roi_id": EVALUATION_ROI_ID,
+            "evaluation_roi_denominator": ROI_N,
+            "exploration_start_sim_s": None,
+            "exploration_start_source": "first_policy_decision_before_compute",
+            "execution_goal_semantics": "exact_frontier_center_xy",
+            "goal_yaw_semantics": "ignored_by_hospital_goal_checker",
+            "planner_path_semantics": "reachability_evidence_only",
+            "selected_path_length_semantics": (
+                "planner_validation_path_length_not_executed_trajectory"
+            ),
+            "runtime_nav2_merged_file": merged_path.name,
+            "runtime_mapex_file": runtime_mapex.name,
+            "nav2_base_params_file": str(nav2_base),
+            "nav2_override_file": str(nav2_override),
+            "mapex_config_file": str(mapex_config),
+            "mapex_reference_commit_expected": mapex.MAPEX_REFERENCE_COMMIT,
+            "mapex_reference_checkout_commit": mapex_reference_checkout,
+            "mapex_reference_checkout_dirty": (
+                None if mapex_reference_status is None else bool(mapex_reference_status)
+            ),
+            "mapex_root": str(self.mapex_root.expanduser().resolve()),
+            "mapex_device": self.mapex_device,
+            "ros_python_executable": sys.executable,
+            "ros_python_version": sys.version.split()[0],
+            "lama_worker_python": str(worker_python),
+            "lama_worker_python_version": worker_python_version,
+            "ensemble_checkpoints": checkpoints,
+            "save_prediction_maps": self.save_predictions,
+            "sim_seed": None,
+            "sim_seed_policy": SIM_SEED_POLICY,
+            "config_sha256": config_sha256,
+            "termination_reason": None,
+        }
+        self._write_metadata(metadata)
+        return metadata
+
+    # ----- CSV setup -----
+    def _open_files(self):
+        self.fm, self.wm = self._open(
+            "metrics.csv",
+            [
+                "time_s",
+                "distance_m",
+                "known_fraction",
+                "coverage",
+                "occupied_iou",
+                "tu",
+                "frontiers_selected",
+                "main_attempts",
+                "main_succeeded",
+                "main_failed",
+                "main_interrupted",
+                "abandoned_206",
+                "abandoned_208",
+                "planner_blocked_abandoned_total",
+                "main_success_rate",
+                "subgoal_attempts",
+                "subgoal_succeeded",
+                "subgoal_failed",
+                "subgoal_interrupted",
+            ],
+        )
+        self.ft, self.wt = self._open(
+            "trajectory.csv",
+            ["time_s", "x", "y", "yaw", "cumulative_distance_m"],
+        )
+        self.fd, self.wd = self._open(
+            "decisions.csv",
+            [
+                "decision_id",
+                "mapex_policy_decision_id",
+                "time_s",
+                "map_generation",
+                "candidate_total",
+                "candidate_selectable",
+                "candidate_suppressed",
+                "ensemble_prediction_ms",
+                "all_frontier_scoring_ms",
+                "total_computation_ms",
+                "selected_x",
+                "selected_y",
+                "selected_distance_m",
+                "selected_information_gain",
+                "selected_score",
+                "selected_visible_unknown_cells",
+                "selected_region_size",
+                "selection_verified_max_score",
+                "outcome",
+                "raw_map",
+                "canvas_map",
+                "mean_map",
+                "variance_map",
+            ],
+        )
+        self.fc, self.wc = self._open(
+            "candidates.csv",
+            [
+                "decision_id",
+                "rank_all",
+                "rank_selectable",
+                "candidate_id",
+                "row",
+                "col",
+                "x",
+                "y",
+                "distance_m",
+                "region_size",
+                "information_gain",
+                "score",
+                "visible_unknown_cells",
+                "selectable",
+                "suppressed_planner_blocked",
+                "selected",
+            ],
+        )
+        self.fg, self.wg = self._open(
+            "goals.csv",
+            [
+                "goal_id",
+                "decision_id",
+                "mode",
+                "start_time_s",
+                "end_time_s",
+                "target_x",
+                "target_y",
+                "result",
+                "status",
+                "error_code",
+                "error_msg",
+            ],
+        )
+        self.fp, self.wp = self._open(
+            "plans.csv",
+            [
+                "time_s",
+                "goal_id",
+                "decision_id",
+                "poses",
+                "path_length_m",
+                "endpoint_x",
+                "endpoint_y",
+                "frontier_x",
+                "frontier_y",
+                "endpoint_error_m",
+                "usable",
+            ],
+        )
+
+    # ----- benchmark gate / policy decision instrumentation -----
+    def startup_ready(self):
+        if self.startup_gate_open:
+            return True
+        if not self.nav_client.server_is_ready():
+            self.nav_ready_since = None
+            if not self.startup_wait_logged:
+                self.get_logger().info(
+                    "MapEx run waiting for NavigateToPose action server "
+                    "before benchmark start"
+                )
+                self.startup_wait_logged = True
+            return False
+        now = self.now_s()
+        if self.nav_ready_since is None:
+            self.nav_ready_since = now
+            return False
+        if now - self.nav_ready_since < NAV2_READY_STABLE_S:
+            return False
+        if self.map_msg is None:
+            return False
+        if self.robot_position() is None:
+            return False
+        self.startup_gate_open = True
+        self.get_logger().warn(
+            f"MAPEX READY: Nav2 stable for >= {NAV2_READY_STABLE_S:.1f}s; "
+            "benchmark clock will start at first frontier decision"
+        )
+        return True
+
+    def exploration_step(self):
+        if not self.startup_ready():
+            return
+        if self.t0 is None and not self.nav_client.server_is_ready():
+            return
+
+        ready = (
+            not self.completed
+            and self.map_msg is not None
+            and not self.goal_active
+            and self.main_goal is None
+            and not self.revalidation_active
+            and self.nav_client.server_is_ready()
+        )
+        if ready and self.robot_position() is not None:
+            self.decision_id += 1
+            self.active_decision = self.decision_id
+            self.compute_sim_t0 = self.now_s()
+            self.compute_t0 = time.perf_counter()
+
+            # Prevent a failed/no-frontier decision from inheriting prior diagnostics.
+            self.last_candidate_metrics = []
+            self.last_mean_map = None
+            self.last_variance_map = None
+
+            if self.t0 is None:
+                self.t0 = self.compute_sim_t0
+                self._update_metadata(
+                    exploration_start_sim_s=self.t0,
+                    runtime_map_resolution_m=(
+                        None
+                        if self.map_msg is None
+                        else float(self.map_msg.info.resolution)
+                    ),
+                )
+
+        # Call the canonical MapEx policy directly. Its publish_goal_markers()
+        # resolves to Stage2Run.publish_goal_markers through this class MRO, so
+        # successful selections are recorded without changing the policy.
+        mapex.MapExExplorer.exploration_step(self)
+
+        if self.compute_t0 is not None:
+            self.record_decision([], None, "NO_SELECTION")
+
+    def _save_prediction_maps(self, decision_id: int) -> tuple[str, str]:
+        if (
+            not self.save_predictions
+            or self.last_mean_map is None
+            or self.last_variance_map is None
+            or self.map_msg is None
+        ):
+            return "", ""
+
+        mean = np.asarray(self.last_mean_map, dtype=np.float32)
+        variance = np.asarray(self.last_variance_map, dtype=np.float32)
+        source_h = int(self.map_msg.info.height)
+        source_w = int(self.map_msg.info.width)
+        pad_top = max(0, (mean.shape[0] - source_h) // 2)
+        pad_left = max(0, (mean.shape[1] - source_w) // 2)
+
+        mean_path = self.run / "predictions" / f"decision_{decision_id:06d}_mean.npz"
+        var_path = (
+            self.run
+            / "predictions"
+            / f"decision_{decision_id:06d}_variance.npz"
+        )
+
+        common = {
+            "resolution": float(self.map_msg.info.resolution),
+            "source_height": source_h,
+            "source_width": source_w,
+            "pad_top": pad_top,
+            "pad_left": pad_left,
+        }
+        np.savez_compressed(mean_path, data=mean, **common)
+        np.savez_compressed(var_path, data=variance, **common)
+        return (
+            str(mean_path.relative_to(self.run)),
+            str(var_path.relative_to(self.run)),
+        )
+
+    def record_decision(self, candidates, selected, outcome):
+        ms = (time.perf_counter() - self.compute_t0) * 1000.0
+        self.comp.append(ms)
+        did = self.active_decision
+
+        raw, canvas = self.save_map_pair(
+            self.run / "decision_maps" / f"decision_{did:06d}"
+        )
+        mean_path, var_path = self._save_prediction_maps(did)
+
+        metrics = list(self.last_candidate_metrics or [])
+        metric_by_grid = {(m["row"], m["col"]): m for m in metrics}
+        selectable_keys = {(c[3], c[4]) for c in candidates}
+        selected_key = None if selected is None else (selected[3], selected[4])
+
+        prediction_ms = math.nan
+        scoring_ms = math.nan
+        if metrics:
+            prediction_ms = float(metrics[0]["ensemble_prediction_s"]) * 1000.0
+            scoring_ms = float(metrics[0]["all_frontier_scoring_s"]) * 1000.0
+            self.prediction_ms.append(prediction_ms)
+            self.frontier_scoring_ms.append(scoring_ms)
+
+        selected_metric = (
+            None if selected_key is None else metric_by_grid.get(selected_key)
+        )
+        if selected_metric is None:
+            sx = sy = sd = sig = ss = sv = sr = math.nan
+            verified = ""
+        else:
+            sx = float(selected_metric["x"])
+            sy = float(selected_metric["y"])
+            sd = float(selected_metric["distance_m"])
+            sig = float(selected_metric["information_gain"])
+            ss = float(selected_metric["score"])
+            sv = int(selected_metric["visible_unknown_cells"])
+            sr = int(selected_metric["region_size"])
+
+            selectable_scores = [
+                float(m["score"])
+                for m in metrics
+                if (m["row"], m["col"]) in selectable_keys
+            ]
+            best_score = max(selectable_scores) if selectable_scores else math.nan
+            verified_bool = (
+                math.isfinite(best_score)
+                and math.isclose(ss, best_score, rel_tol=1e-12, abs_tol=1e-12)
+            )
+            verified = int(verified_bool)
+            if not verified_bool:
+                self.selection_verification_failures += 1
+
+            self.selected_ig.append(sig)
+            self.selected_score.append(ss)
+            self.selected_distance.append(sd)
+
+        self.wd.writerow(
+            {
+                "decision_id": did,
+                "mapex_policy_decision_id": (
+                    self.mapex_decision_id if metrics else ""
+                ),
+                "time_s": self.fmt(self.elapsed(self.compute_sim_t0)),
+                "map_generation": self.map_generation,
+                "candidate_total": len(metrics),
+                "candidate_selectable": len(selectable_keys),
+                "candidate_suppressed": max(0, len(metrics) - len(selectable_keys)),
+                "ensemble_prediction_ms": self.fmt(prediction_ms),
+                "all_frontier_scoring_ms": self.fmt(scoring_ms),
+                "total_computation_ms": self.fmt(ms),
+                "selected_x": self.fmt(sx),
+                "selected_y": self.fmt(sy),
+                "selected_distance_m": self.fmt(sd),
+                "selected_information_gain": self.fmt(sig),
+                "selected_score": self.fmt(ss),
+                "selected_visible_unknown_cells": self.fmt(sv),
+                "selected_region_size": self.fmt(sr),
+                "selection_verified_max_score": verified,
+                "outcome": outcome,
+                "raw_map": raw,
+                "canvas_map": canvas,
+                "mean_map": mean_path,
+                "variance_map": var_path,
+            }
+        )
+        self.fd.flush()
+
+        if selected is not None:
+            self.count["frontiers_selected"] += 1
+
+        selectable_rank = 0
+        ordered = sorted(metrics, key=lambda m: float(m["score"]), reverse=True)
+        for rank_all, metric in enumerate(ordered, 1):
+            key = (metric["row"], metric["col"])
+            selectable = key in selectable_keys
+            if selectable:
+                selectable_rank += 1
+                rank_selectable = selectable_rank
+            else:
+                rank_selectable = ""
+
+            self.wc.writerow(
+                {
+                    "decision_id": did,
+                    "rank_all": rank_all,
+                    "rank_selectable": rank_selectable,
+                    "candidate_id": metric["candidate_id"],
+                    "row": metric["row"],
+                    "col": metric["col"],
+                    "x": self.fmt(metric["x"]),
+                    "y": self.fmt(metric["y"]),
+                    "distance_m": self.fmt(metric["distance_m"]),
+                    "region_size": metric["region_size"],
+                    "information_gain": self.fmt(metric["information_gain"]),
+                    "score": self.fmt(metric["score"]),
+                    "visible_unknown_cells": metric["visible_unknown_cells"],
+                    "selectable": int(selectable),
+                    "suppressed_planner_blocked": int(not selectable),
+                    "selected": int(
+                        selected_key is not None and key == selected_key
+                    ),
+                }
+            )
+        self.fc.flush()
+
+        self.compute_t0 = None
+        self.compute_sim_t0 = None
+        if selected is None:
+            self.active_decision = None
+
+    # ----- shared goal handling with explicit 206 accounting -----
+    def goal_result_callback(self, future, mode):
+        code = None
+        try:
+            wrapped = future.result()
+            code = getattr(wrapped.result, "error_code", None)
+        except Exception:
+            pass
+
+        super().goal_result_callback(future, mode)
+
+        if mode == "main" and code == 206:
+            self.count["abandoned_206"] += 1
+            self.active_decision = None
+
+    # ----- online metrics -----
+    def metric_tick(self):
+        if self.t0 is None or self.finalized:
+            return
+        self.known, self.coverage = self.map_metrics()
+        ma = self.count["main_attempts"]
+        ms = self.count["main_succeeded"]
+        rate = ms / ma if ma else math.nan
+        blocked_total = self.count["abandoned_206"] + self.count["abandoned_208"]
+
+        self.wm.writerow(
+            {
+                "time_s": self.fmt(self.elapsed()),
+                "distance_m": self.fmt(self.distance),
+                "known_fraction": self.fmt(self.known),
+                "coverage": self.fmt(self.coverage),
+                "occupied_iou": "nan",
+                "tu": "nan",
+                "frontiers_selected": self.count["frontiers_selected"],
+                "main_attempts": ma,
+                "main_succeeded": ms,
+                "main_failed": self.count["main_failed"],
+                "main_interrupted": self.count["main_interrupted"],
+                "abandoned_206": self.count["abandoned_206"],
+                "abandoned_208": self.count["abandoned_208"],
+                "planner_blocked_abandoned_total": blocked_total,
+                "main_success_rate": self.fmt(rate),
+                "subgoal_attempts": self.count["subgoal_attempts"],
+                "subgoal_succeeded": self.count["subgoal_succeeded"],
+                "subgoal_failed": self.count["subgoal_failed"],
+                "subgoal_interrupted": self.count["subgoal_interrupted"],
+            }
+        )
+        self.fm.flush()
+
+        if self.elapsed() - self.last_snap >= 10:
+            self.save_canvas(
+                self.run / "maps" / f"snapshot_{int(self.elapsed()):06d}"
+            )
+            self.last_snap = self.elapsed()
+
+    @staticmethod
+    def _mean(values):
+        return statistics.fmean(values) if values else math.nan
+
+    @staticmethod
+    def _std(values):
+        return (
+            statistics.pstdev(values)
+            if len(values) > 1
+            else (0.0 if values else math.nan)
+        )
+
+    # ----- finish -----
+    def finalize(self, reason):
+        if self.finalized:
+            return
+        if self.active_goal is not None:
+            self.finish_goal("interrupted", "", "", "run_interrupted")
+
+        self.finalized = True
+        self.known, self.coverage = self.map_metrics()
+        self.save_map_pair(self.run / "maps" / "final")
+
+        ma = self.count["main_attempts"]
+        ms = self.count["main_succeeded"]
+        total_time = None if self.t0 is None else self.elapsed()
+        blocked_total = self.count["abandoned_206"] + self.count["abandoned_208"]
+
+        summary = {
+            "run_id": self.run.name,
+            "method": "mapex",
+            "final_coverage": self.coverage,
+            "final_known_fraction": self.known,
+            "total_distance_m": self.distance,
+            "total_time_s": total_time,
+            "frontiers_selected": self.count["frontiers_selected"],
+            "main_attempts": ma,
+            "main_succeeded": ms,
+            "main_failed": self.count["main_failed"],
+            "main_interrupted": self.count["main_interrupted"],
+            "abandoned_206": self.count["abandoned_206"],
+            "abandoned_208": self.count["abandoned_208"],
+            "planner_blocked_abandoned_total": blocked_total,
+            "main_success_rate": ms / ma if ma else math.nan,
+            "subgoal_attempts": self.count["subgoal_attempts"],
+            "subgoal_succeeded": self.count["subgoal_succeeded"],
+            "subgoal_failed": self.count["subgoal_failed"],
+            "subgoal_interrupted": self.count["subgoal_interrupted"],
+            "error_code_counts": dict(self.errors),
+            "decision_computation_ms_mean": self._mean(self.comp),
+            "decision_computation_ms_std": self._std(self.comp),
+            "ensemble_prediction_ms_mean": self._mean(self.prediction_ms),
+            "ensemble_prediction_ms_std": self._std(self.prediction_ms),
+            "all_frontier_scoring_ms_mean": self._mean(self.frontier_scoring_ms),
+            "all_frontier_scoring_ms_std": self._std(self.frontier_scoring_ms),
+            "selected_information_gain_mean": self._mean(self.selected_ig),
+            "selected_score_mean": self._mean(self.selected_score),
+            "selected_distance_m_mean": self._mean(self.selected_distance),
+            "selection_verification_failures": self.selection_verification_failures,
+            "selection_verification_passed": (
+                self.selection_verification_failures == 0
+            ),
+            "termination_reason": reason,
+            "nav2_startup_stable_s": NAV2_READY_STABLE_S,
+            "occupied_iou_online": None,
+            "tu_online": None,
+            "prediction_maps_saved": self.save_predictions,
+        }
+        (self.run / "summary.json").write_text(
+            json.dumps(summary, indent=2, allow_nan=True),
+            encoding="utf-8",
+        )
+
+        self._update_metadata(
+            termination_reason=reason,
+            runtime_map_resolution_m=(
+                None if self.map_msg is None else float(self.map_msg.info.resolution)
+            ),
+            final_coverage=self.coverage,
+            final_known_fraction=self.known,
+            total_distance_m=self.distance,
+            total_time_s=total_time,
+            selection_verification_failures=self.selection_verification_failures,
+        )
+
+        self.get_logger().warn(
+            f"MAPEX SAVED: coverage={self.fmt(self.coverage)}, "
+            f"distance={self.distance:.2f}m, output={self.run}"
+        )
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--run-id", required=True)
+    parser.add_argument("--odom-topic", default="/odom")
+    parser.add_argument(
+        "--save-predictions",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help=(
+            "Save per-decision LaMa ensemble mean/variance NPZ files "
+            "(disable with --no-save-predictions to reduce disk use)."
+        ),
+    )
+    args, ros_args = parser.parse_known_args()
+
+    rclpy.init(args=mapex._mapex_init_args(ros_args))
+    node = None
+    try:
+        node = MapExRun(args.run_id, args.odom_topic, args.save_predictions)
+        rclpy.spin(node)
+    except (KeyboardInterrupt, ExternalShutdownException):
+        pass
+    finally:
+        if node is not None:
+            if not node.finalized:
+                node.finalize("keyboard_interrupt")
+            ensemble = getattr(node, "ensemble", None)
+            if ensemble is not None and hasattr(ensemble, "close"):
+                ensemble.close()
+            node.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()
+
+
+if __name__ == "__main__":
+    main()
