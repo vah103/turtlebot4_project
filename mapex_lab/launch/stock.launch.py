@@ -2,7 +2,7 @@
 
 The Hospital world is project-specific. Nav2 starts from the installed
 `turtlebot4_navigation/config/nav2.yaml` and applies only the tiny
-`config/nav2_stock_xy_only.yaml` override so frontier goals are position-only.
+`config/nav2.yaml` override so frontier goals are position-only.
 SLAM uses `mapex_lab/config/slam.yaml`, which follows the
 TurtleBot4 stock SLAM config except that max_laser_range is 20 m to match the
 simulated Hospital LiDAR.
@@ -57,7 +57,7 @@ def generate_launch_description() -> LaunchDescription:
     xy_only_override = os.path.join(
         research_root,
         'config',
-        'nav2_stock_xy_only.yaml',
+        'nav2.yaml',
     )
 
     with open(stock_nav2_params, 'r', encoding='utf-8') as stream:
