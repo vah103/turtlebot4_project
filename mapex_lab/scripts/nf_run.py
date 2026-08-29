@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run canonical nf_basic.py with one integrated Stage-2 recorder.
+"""Run canonical nf_basic.py with one integrated Nearest-Frontier recorder.
 
 The exploration policy is inherited unchanged from nf_basic.NearestEuclideanFrontier.
 This wrapper only adds measurement/logging around the existing callbacks.
@@ -75,7 +75,7 @@ def _git_value(repo_root: FilePath, *args: str) -> str | None:
 class Stage2Run(NearestEuclideanFrontier):
     def __init__(self, run_id: str, odom_topic: str):
         super().__init__()
-        self.root = FilePath(__file__).resolve().parent
+        self.root = FilePath(__file__).resolve().parents[1]
         self.repo_root = self.root.parent
         self.run = self.root / "experiments" / "nearest" / run_id
         if self.run.exists():
@@ -116,16 +116,16 @@ class Stage2Run(NearestEuclideanFrontier):
         self.create_subscription(Odometry, odom_topic, self.odom_cb, q)
         self._open_files()
         self.create_timer(1.0, self.metric_tick)
-        self.get_logger().warn(f"STAGE2 RECORDING: {self.run}")
+        self.get_logger().warn(f"NEAREST RECORDING: {self.run}")
         self.get_logger().info(
-            "Stage-2 provenance saved: metadata.json + runtime_nav2_merged.yaml"
+            "Nearest provenance saved: metadata.json + runtime_nav2_merged.yaml"
         )
 
     # ----- provenance -----
     def _write_initial_provenance(self, run_id: str) -> dict:
         tb4_nav_pkg = FilePath(get_package_share_directory("turtlebot4_navigation"))
         nav2_base = tb4_nav_pkg / "config" / "nav2.yaml"
-        nav2_override = self.root / "config" / "nav2_stock_xy_only.yaml"
+        nav2_override = self.root / "config" / "nav2.yaml"
 
         with nav2_base.open("r", encoding="utf-8") as stream:
             base_cfg = yaml.safe_load(stream) or {}
@@ -141,11 +141,11 @@ class Stage2Run(NearestEuclideanFrontier):
         git_status = _git_value(self.repo_root, "status", "--porcelain")
 
         hash_paths = {
-            "stage2_run": self.root / "stage2_run.py",
-            "nf_basic": self.root / "nf_basic.py",
+            "nf_run": self.root / "scripts" / "nf_run.py",
+            "nf_basic": self.root / "scripts" / "nf_basic.py",
             "nav2_override": nav2_override,
             "slam": self.root / "config" / "slam.yaml",
-            "slam_local_window": self.root / "config" / "slam_local_window.yaml",
+            "slam_local": self.root / "config" / "slam_local.yaml",
             "installed_nav2_base_params": nav2_base,
             "runtime_nav2_merged": merged_path,
         }
@@ -158,14 +158,14 @@ class Stage2Run(NearestEuclideanFrontier):
         metadata = {
             "run_id": run_id,
             "method": "nearest",
-            "recorder": "stage2_run.py",
+            "recorder": "nf_run.py",
             "git_commit": git_commit,
             "git_dirty_at_recorder_start": None if git_status is None else bool(git_status),
             "protocol_version": PROTOCOL_VERSION,
             "runtime_profile": "not_auto_detected",
             "runtime_profile_note": (
                 "Recorder archives the same TurtleBot4 stock Nav2 + "
-                "mapex_lab/config/nav2_stock_xy_only.yaml merge used by the current "
+                "mapex_lab/config/nav2.yaml merge used by the current "
                 "stock/local debug launchers; the launch file itself is not auto-detected."
             ),
             "runtime_map_resolution_m": None,
@@ -277,7 +277,7 @@ class Stage2Run(NearestEuclideanFrontier):
             self.nav_ready_since = None
             if not self.startup_wait_logged:
                 self.get_logger().info(
-                    "Stage-2 waiting for NavigateToPose action server before benchmark start"
+                    "Nearest run waiting for NavigateToPose action server before benchmark start"
                 )
                 self.startup_wait_logged = True
             return False
@@ -293,7 +293,7 @@ class Stage2Run(NearestEuclideanFrontier):
             return False
         self.startup_gate_open = True
         self.get_logger().warn(
-            f"STAGE2 READY: Nav2 stable for >= {NAV2_READY_STABLE_S:.1f}s; "
+            f"NEAREST READY: Nav2 stable for >= {NAV2_READY_STABLE_S:.1f}s; "
             "benchmark clock will start at first frontier decision"
         )
         return True
@@ -301,8 +301,6 @@ class Stage2Run(NearestEuclideanFrontier):
     def exploration_step(self):
         if not self.startup_ready():
             return
-        # Do not let a transient readiness drop contaminate t=0 before the first
-        # actual benchmark decision. After t=0, nf_basic owns normal runtime behavior.
         if self.t0 is None and not self.nav_client.server_is_ready():
             return
         ready = (
@@ -700,7 +698,7 @@ class Stage2Run(NearestEuclideanFrontier):
             total_time_s=total_time,
         )
         self.get_logger().warn(
-            f"STAGE2 SAVED: coverage={self.fmt(self.coverage)}, "
+            f"NEAREST SAVED: coverage={self.fmt(self.coverage)}, "
             f"distance={self.distance:.2f}m, output={self.run}"
         )
 
