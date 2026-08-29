@@ -80,7 +80,7 @@ COMPLETION_STARTUP_GRACE_S = 20.0
 BT_XML_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     "behavior_trees",
-    "navigate_to_pose_subgoal.xml",
+    "subgoal_bt.xml",
 )
 
 
