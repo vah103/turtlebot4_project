@@ -90,13 +90,8 @@ def generate_launch_description() -> LaunchDescription:
     slam_params = os.path.join(research_root, 'config', 'slam_local.yaml')
     frontend_script = os.path.join(research_root, 'scripts', 'local_scan.py')
 
-    # Same stock Nav2 + project override path as stock.launch.py.
     stock_nav2_params = os.path.join(tb4_nav_pkg, 'config', 'nav2.yaml')
-    xy_only_override = os.path.join(
-        research_root,
-        'config',
-        'nav2.yaml',
-    )
+    xy_only_override = os.path.join(research_root, 'config', 'nav2.yaml')
 
     with open(stock_nav2_params, 'r', encoding='utf-8') as stream:
         nav2_base = yaml.safe_load(stream) or {}
@@ -128,11 +123,7 @@ def generate_launch_description() -> LaunchDescription:
 
     simulation = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(
-                frontier_pkg,
-                'launch',
-                'hospital_flat_simulation.launch.py',
-            )
+            os.path.join(frontier_pkg, 'launch', 'hospital_flat_simulation.launch.py')
         ),
         launch_arguments={
             'use_rviz': use_rviz,
@@ -147,20 +138,14 @@ def generate_launch_description() -> LaunchDescription:
         PythonLaunchDescriptionSource(
             os.path.join(tb4_nav_pkg, 'launch', 'slam.launch.py')
         ),
-        launch_arguments={
-            'use_sim_time': use_sim_time,
-            'params': slam_params,
-        }.items(),
+        launch_arguments={'use_sim_time': use_sim_time, 'params': slam_params}.items(),
     )
 
     nav2 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(tb4_nav_pkg, 'launch', 'nav2.launch.py')
         ),
-        launch_arguments={
-            'use_sim_time': use_sim_time,
-            'params_file': nav2_params,
-        }.items(),
+        launch_arguments={'use_sim_time': use_sim_time, 'params_file': nav2_params}.items(),
     )
 
     cleanup = RegisterEventHandler(
@@ -186,16 +171,10 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument('window_scans', default_value='20'),
             DeclareLaunchArgument('scan_stride', default_value='3'),
             DeclareLaunchArgument('voxel_size_m', default_value='0.07'),
-            DeclareLaunchArgument(
-                'max_correspondence_distance_m', default_value='0.25'
-            ),
+            DeclareLaunchArgument('max_correspondence_distance_m', default_value='0.25'),
             DeclareLaunchArgument('max_rmse_m', default_value='0.12'),
-            DeclareLaunchArgument(
-                'max_translation_correction_m', default_value='0.20'
-            ),
-            DeclareLaunchArgument(
-                'max_rotation_correction_rad', default_value='0.13962634'
-            ),
+            DeclareLaunchArgument('max_translation_correction_m', default_value='0.20'),
+            DeclareLaunchArgument('max_rotation_correction_rad', default_value='0.13962634'),
             cleanup,
             simulation,
             OpaqueFunction(
