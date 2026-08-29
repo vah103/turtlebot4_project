@@ -2,7 +2,7 @@
 
 This is a debug A/B alternative to stock.launch.py. The SLAM Toolbox backend
 remains unchanged; only its LaserScan input is replaced by /scan_local_window,
-produced by local_scan_window.py from recent scan-to-local-window registration.
+produced by local_scan.py from recent scan-to-local-window registration.
 
 The experiment is intentionally not part of the official hospital_v2 protocol.
 """
@@ -88,7 +88,7 @@ def generate_launch_description() -> LaunchDescription:
     research_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     slam_params = os.path.join(research_root, 'config', 'slam_local.yaml')
-    frontend_script = os.path.join(research_root, 'local_scan_window.py')
+    frontend_script = os.path.join(research_root, 'local_scan.py')
 
     # Same stock Nav2 + project override path as stock.launch.py.
     stock_nav2_params = os.path.join(tb4_nav_pkg, 'config', 'nav2.yaml')
