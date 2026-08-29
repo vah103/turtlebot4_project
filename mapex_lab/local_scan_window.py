@@ -8,8 +8,11 @@ small accepted correction as a corrected LaserScan. Global loop closure and
 pose-graph optimization remain SLAM Toolbox responsibilities.
 
 To keep this a *local* stabilizer rather than a second global SLAM system, the
-rolling state is reset if the accumulated correction grows beyond a conservative
-translation/yaw bound.
+rolling ICP state is re-anchored if the correction accumulated since the current
+anchor grows beyond a conservative translation/yaw bound. Re-anchoring keeps
+the correction already visible at the output instead of snapping back to a raw
+scan. If TF is temporarily unavailable, that scan is dropped rather than mixing
+an uncorrected raw scan into the corrected output stream.
 """
 
 from collections import deque
@@ -143,15 +146,23 @@ class LocalScanWindow(Node):
         self.raw_origin_pose: Optional[np.ndarray] = None
         self.last_raw_pose: Optional[np.ndarray] = None
         self.last_corrected_pose: Optional[np.ndarray] = None
+
+        # Correction already exposed to SLAM before the current local window.
+        # The local ICP starts from identity after every re-anchor, while this
+        # handoff transform preserves output continuity across that re-anchor.
+        self.output_anchor_warp = np.eye(3, dtype=np.float64)
+
         self.scan_count = 0
         self.accepted_count = 0
         self.tf_failure_count = 0
-        self.reset_count = 0
+        self.invalid_scan_drop_count = 0
+        self.reset_count = 0  # Kept for log compatibility; now counts re-anchors.
 
         self.get_logger().info(
             "Local-window SLAM frontend active: "
             f"{self.input_scan_topic} -> {self.output_scan_topic}, "
-            f"window={self.window_scans} scans, stride={self.scan_stride}"
+            f"window={self.window_scans} scans, stride={self.scan_stride}, "
+            "continuous_reanchor=True"
         )
 
     def _lookup_raw_pose(self, scan: LaserScan) -> Optional[np.ndarray]:
@@ -166,7 +177,8 @@ class LocalScanWindow(Node):
             self.tf_failure_count += 1
             if self.tf_failure_count <= 3 or self.tf_failure_count % 50 == 0:
                 self.get_logger().warning(
-                    "TF unavailable for local-window frontend; publishing raw scan "
+                    "TF unavailable for local-window frontend; dropping scan to "
+                    "preserve corrected-scan continuity "
                     f"({exc})"
                 )
             return None
@@ -200,7 +212,14 @@ class LocalScanWindow(Node):
             )
         )
 
-    def _reset_window(self, raw_pose: np.ndarray, sampled: np.ndarray) -> None:
+    def _reset_window(
+        self,
+        raw_pose: np.ndarray,
+        sampled: np.ndarray,
+        output_anchor_warp: Optional[np.ndarray] = None,
+    ) -> None:
+        if output_anchor_warp is not None:
+            self.output_anchor_warp = output_anchor_warp.copy()
         self.raw_origin_pose = raw_pose.copy()
         self.last_raw_pose = raw_pose.copy()
         self.last_corrected_pose = np.eye(3, dtype=np.float64)
@@ -358,7 +377,6 @@ class LocalScanWindow(Node):
     def _publish_corrected_scan(self, scan: LaserScan, warp: np.ndarray) -> None:
         points = self._scan_points(scan)
         if points.size == 0 or len(scan.ranges) == 0 or scan.angle_increment == 0.0:
-            self.scan_pub.publish(scan)
             return
 
         corrected_points = _transform_points(warp, points)
@@ -411,19 +429,27 @@ class LocalScanWindow(Node):
         self.scan_count += 1
         raw_pose = self._lookup_raw_pose(scan)
         if raw_pose is None:
-            self.scan_pub.publish(scan)
+            # Do not insert an uncorrected scan in the middle of a corrected
+            # stream. A single missing scan is safer than a discontinuity.
             return
 
         points = self._scan_points(scan)
         if points.shape[0] < self.min_correspondences:
-            self.scan_pub.publish(scan)
+            self.invalid_scan_drop_count += 1
+            if self.raw_origin_pose is None:
+                # Before the frontend has an anchor there is no corrected
+                # stream to preserve, so passing the raw scan is harmless.
+                self.scan_pub.publish(scan)
             return
         sampled = points[:: self.scan_stride]
 
         if self.raw_origin_pose is None:
+            self.output_anchor_warp = np.eye(3, dtype=np.float64)
             self._reset_window(raw_pose, sampled)
             self.scan_pub.publish(scan)
-            self._publish_diagnostics(scan, False, math.inf, np.eye(3, dtype=np.float64))
+            self._publish_diagnostics(
+                scan, False, math.inf, np.eye(3, dtype=np.float64)
+            )
             return
 
         assert self.last_raw_pose is not None
@@ -440,40 +466,60 @@ class LocalScanWindow(Node):
             self.accepted_count += 1
 
         raw_relative_pose = np.linalg.inv(self.raw_origin_pose) @ raw_pose
-        warp = np.linalg.inv(raw_relative_pose) @ corrected_pose
-        total_translation = float(np.linalg.norm(warp[:2, 2]))
-        total_rotation = abs(_matrix_yaw(warp))
+        local_warp = np.linalg.inv(raw_relative_pose) @ corrected_pose
+        local_translation = float(np.linalg.norm(local_warp[:2, 2]))
+        local_rotation = abs(_matrix_yaw(local_warp))
+
+        # Apply the correction accumulated in previous windows first, then the
+        # small correction produced by the current local window. At re-anchor
+        # this exact output transform becomes the new handoff transform, so the
+        # scan stream does not jump back to identity/raw.
+        output_warp = self.output_anchor_warp @ local_warp
+        output_translation = float(np.linalg.norm(output_warp[:2, 2]))
+        output_rotation = _matrix_yaw(output_warp)
 
         if (
-            total_translation > self.max_total_translation_correction
-            or total_rotation > self.max_total_rotation_correction
+            local_translation > self.max_total_translation_correction
+            or local_rotation > self.max_total_rotation_correction
         ):
             self.reset_count += 1
             self.get_logger().warning(
-                "Local-window accumulated correction exceeded safety bound; "
-                f"resetting window (translation={total_translation:.3f} m, "
-                f"yaw={math.degrees(total_rotation):.2f} deg)"
+                "Local-window correction exceeded safety bound; re-anchoring "
+                "without raw-scan jump "
+                f"(local={local_translation:.3f} m/"
+                f"{math.degrees(_matrix_yaw(local_warp)):.2f} deg, "
+                f"output={output_translation:.3f} m/"
+                f"{math.degrees(output_rotation):.2f} deg, "
+                f"reanchors={self.reset_count})"
             )
-            self._reset_window(raw_pose, sampled)
-            self.scan_pub.publish(scan)
-            self._publish_diagnostics(scan, False, rmse, np.eye(3, dtype=np.float64))
+
+            # Preserve the transform already visible to SLAM, but reset only
+            # the *local* ICP coordinate system. The triggering scan is still
+            # published with output_warp, so there is no identity/raw spike.
+            self._reset_window(raw_pose, sampled, output_anchor_warp=output_warp)
+            self._publish_corrected_scan(scan, output_warp)
+            self._publish_diagnostics(scan, accepted, rmse, output_warp)
             return
 
         self.registered_scans.append(_transform_points(corrected_pose, sampled))
         self.last_raw_pose = raw_pose
         self.last_corrected_pose = corrected_pose
 
-        self._publish_corrected_scan(scan, warp)
-        self._publish_diagnostics(scan, accepted, rmse, warp)
+        self._publish_corrected_scan(scan, output_warp)
+        self._publish_diagnostics(scan, accepted, rmse, output_warp)
 
         if self.scan_count % 50 == 0:
             acceptance_rate = self.accepted_count / max(1, self.scan_count - 1)
             self.get_logger().info(
                 "Local-window ICP: "
                 f"accepted={accepted} matches={match_count} rmse={rmse:.3f} m "
-                f"rate={acceptance_rate:.2f} resets={self.reset_count} "
-                f"current_correction={total_translation:.3f} m/"
-                f"{math.degrees(_matrix_yaw(warp)):.2f} deg"
+                f"rate={acceptance_rate:.2f} reanchors={self.reset_count} "
+                f"local_correction={local_translation:.3f} m/"
+                f"{math.degrees(_matrix_yaw(local_warp)):.2f} deg "
+                f"output_correction={output_translation:.3f} m/"
+                f"{math.degrees(output_rotation):.2f} deg "
+                f"tf_drops={self.tf_failure_count} "
+                f"invalid_drops={self.invalid_scan_drop_count}"
             )
 
 
@@ -486,7 +532,8 @@ def main() -> None:
         pass
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == "__main__":
