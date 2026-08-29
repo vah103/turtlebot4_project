@@ -5,6 +5,7 @@ prediction:
   model: lama_ensemble
   ensemble_members: 3
   target_resolution_m: 0.10
+  transform_variant: default_map_eval
   checkpoint_g1: null
   checkpoint_g2: null
   checkpoint_g3: null
@@ -13,18 +14,28 @@ frontier:
   detector: mapex_official_frontier_rule
   runtime_resolution_m: 0.10
   min_frontier_size_cells_strictly_greater_than: 10
+  reject_below_distance_m: null
 
 visibility:
+  method: mapex_probabilistic_raycast
   ray_length_m: 20.0
   num_rays: 250
   occupancy_threshold: 0.8
+  boundary_method: buffered_polygon_flood_fill
 
 information_gain:
   source: ensemble_variance
+  domain: predicted_visible_and_currently_unknown
 
 selection:
   score: IG_over_distance
   distance_metric: euclidean
+  objective: maximize
+
+execution:
+  shared_controller: nf_basic.py
+  exact_frontier_xy: true
+  terminal_yaw_objective: false
 
 logging:
   evaluation_canvas_resolution_m: 0.05
