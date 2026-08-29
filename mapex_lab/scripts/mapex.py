@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Paper-faithful MapEx policy on the shared nf_basic ROS/Nav2 execution layer.
+"""MapEx exploration policy on the shared nf_basic ROS/Nav2 execution layer.
 
-This node intentionally reuses ``NearestEuclideanFrontier`` for everything that
-is not MapEx's frontier utility policy:
+Only MapEx's policy is implemented here. Everything outside frontier scoring is
+inherited from ``NearestEuclideanFrontier`` in ``nf_basic.py``:
 
 - ROS2 /map + TF plumbing
 - exact frontier x/y NavigateToPose goals
@@ -11,51 +11,46 @@ is not MapEx's frontier utility policy:
 - repeated ComputePathToPose terminal revalidation
 - completion/status/marker behavior
 
-Only the policy decision is replaced:
+Policy pipeline (Ho et al., MapEx, ICRA 2025 / arXiv:2409.15590):
 
-    observed map
-      -> official MapEx frontier geometry
-      -> 3-member LaMa ensemble
-      -> mean + pixel-wise variance
-      -> probabilistic visibility from every frontier
-      -> IG = sum(variance over visible AND currently-unknown cells)
+    observed occupancy map
+      -> shared official MapEx frontier geometry
+      -> three independent LaMa predictions
+      -> ensemble mean + pixel-wise variance
+      -> probabilistic visibility at every frontier
+      -> IG = sum(variance on visible AND currently-unknown cells)
       -> score = IG / Euclidean distance
       -> highest-score selectable frontier
-
-Method source:
-    Ho et al., "MapEx: Indoor Structure Exploration with Probabilistic
-    Information Gain from Global Map Predictions", ICRA 2025 / arXiv:2409.15590.
 
 Pinned reference implementation:
     castacks/MapEx @ 53636bd1c79153acc3c74a532837d78c926bae5e
 
 Hospital adaptation shared with Nearest:
-    The original MapEx <1 m waypoint rejection is NOT applied. Hospital keeps
-    close frontiers and lets the common ROS/Nav2 execution layer determine
-    reachability. No separate 0.5 m guard from nf_basic is applied here.
+    The original MapEx <1 m waypoint rejection is NOT applied. Close frontiers
+    remain candidates and the common ROS/Nav2 execution layer decides whether
+    they are reachable. The 0.5 m Nearest-only guard is also not applied here.
 
-Important implementation choice:
-    Sec. IV-C of the paper states that occupancy is accumulated along each ray
-    until epsilon is reached. This file implements that definition literally:
-    ``delta`` is initialized once per ray, not once per pixel.
+Paper-faithful raycast detail:
+    Sec. IV-C says Delta starts at zero once per ray and accumulates predicted
+    occupancy along that ray until epsilon is reached. This file follows that
+    definition literally.
 
 Model loading:
-    Preferred: official MapEx layout under MAPEX_ROOT (default ~/MapEx):
+    Preferred official layout under MAPEX_ROOT (default ~/MapEx):
       pretrained_models/weights/lama_ensemble/<member>/config.yaml
       pretrained_models/weights/lama_ensemble/<member>/models/best.ckpt
 
-    Optional: MAPEX_MODEL_FILES may contain three comma-separated torch files.
-    This works only when each file serializes a complete torch.nn.Module (or a
-    dict containing one under ``model``). A bare state_dict cannot be restored
-    without its architecture/config and is rejected explicitly.
+    Optional MAPEX_MODEL_FILES may contain three comma-separated torch files.
+    Each must serialize a complete torch.nn.Module (or a dict with ``model``).
+    Bare state_dict files are rejected because their architecture/config is not
+    recoverable from the weights alone.
 
-The LaMa input is the Hospital global occupancy map at 0.10 m/cell, center-
-padded to a multiple of 16 without resizing so world geometry is preserved.
+Hospital /map must be 0.10 m/cell. LaMa input is center-padded to a multiple of
+16 without resizing so metric geometry is preserved.
 """
 
 from __future__ import annotations
 
-from collections import deque
 import math
 import os
 from pathlib import Path
@@ -79,10 +74,7 @@ PROB_RAYCAST_EPSILON = 0.8
 MODEL_DIVISOR = 16
 
 
-def _bresenham(
-    start: tuple[int, int],
-    end: tuple[int, int],
-) -> Iterable[tuple[int, int]]:
+def _bresenham(start: tuple[int, int], end: tuple[int, int]) -> Iterable[tuple[int, int]]:
     """Yield integer (row, col) cells on a line, including both endpoints."""
     r0, c0 = start
     r1, c1 = end
@@ -106,7 +98,7 @@ def _bresenham(
 
 
 def ros_occupancy_to_mapex(grid: np.ndarray) -> np.ndarray:
-    """ROS OccupancyGrid labels -> MapEx labels: free=0, unknown=0.5, occupied=1."""
+    """ROS labels -> MapEx labels: free=0, unknown=0.5, occupied=1."""
     observed = np.ones(grid.shape, dtype=np.float32)
     observed[grid == 0] = 0.0
     observed[grid < 0] = 0.5
@@ -118,7 +110,7 @@ def pad_to_divisor(
     observed_map: np.ndarray,
     divisor: int = MODEL_DIVISOR,
 ) -> tuple[np.ndarray, int, int]:
-    """Center-pad without resize and return (padded, top_offset, left_offset)."""
+    """Center-pad without resize and return padded map + top/left offsets."""
     height, width = observed_map.shape
     target_h = int(math.ceil(height / divisor) * divisor)
     target_w = int(math.ceil(width / divisor) * divisor)
@@ -148,11 +140,9 @@ def probabilistic_visibility_mask(
 ) -> np.ndarray:
     """MapEx Sec. IV-C probabilistic visibility mask.
 
-    For every hypothetical ray, predicted occupancy from the ensemble mean is
-    accumulated along the ray. The ray stops when accumulated occupancy reaches
-    epsilon or the map/range boundary. Ordered ray endpoints form the sensor
-    boundary; flood fill gives the coverage region; already-observed cells are
-    then removed, leaving the currently-unknown visibility mask used by Eq. 4.
+    Each ray accumulates occupancy from the ensemble mean and stops when the
+    accumulated value reaches epsilon. Ordered ray endpoints form a sensor
+    boundary. Flood fill recovers coverage, then known cells are masked out.
     """
     height, width = mean_map.shape
     vr, vc = viewpoint
@@ -160,28 +150,19 @@ def probabilistic_visibility_mask(
         return np.zeros_like(mean_map, dtype=bool)
 
     endpoints: list[tuple[int, int]] = []
-    for angle in np.linspace(
-        0.0,
-        2.0 * math.pi,
-        num_rays,
-        endpoint=False,
-    ):
+    for angle in np.linspace(0.0, 2.0 * math.pi, num_rays, endpoint=False):
         end_r = int(round(vr + ray_range_cells * math.sin(angle)))
         end_c = int(round(vc + ray_range_cells * math.cos(angle)))
 
-        # Paper definition: Delta starts once per ray and accumulates pixel
-        # occupancy until it reaches epsilon.
         delta = 0.0
         last_valid = (vr, vc)
         first_cell = True
         for row, col in _bresenham((vr, vc), (end_r, end_c)):
             if row < 0 or row >= height or col < 0 or col >= width:
                 break
-
             last_valid = (row, col)
 
-            # Do not let the frontier/viewpoint cell itself terminate a ray.
-            # It is a known free frontier cell under the shared MapEx geometry.
+            # The frontier/viewpoint is a known free cell; skip it explicitly.
             if first_cell:
                 first_cell = False
                 continue
@@ -203,14 +184,8 @@ def probabilistic_visibility_mask(
     if boundary[seed_r, seed_c] != 0:
         found = False
         for radius in range(1, 4):
-            for row in range(
-                max(0, vr - radius),
-                min(height, vr + radius + 1),
-            ):
-                for col in range(
-                    max(0, vc - radius),
-                    min(width, vc + radius + 1),
-                ):
+            for row in range(max(0, vr - radius), min(height, vr + radius + 1)):
+                for col in range(max(0, vc - radius), min(width, vc + radius + 1)):
                     if boundary[row, col] == 0:
                         seed_r, seed_c = row, col
                         found = True
@@ -219,7 +194,6 @@ def probabilistic_visibility_mask(
                     break
             if found:
                 break
-
         if not found:
             return np.zeros_like(mean_map, dtype=bool)
 
@@ -232,13 +206,12 @@ def probabilistic_visibility_mask(
         newVal=2,
         flags=4,
     )
-
     sensor_coverage = flood_canvas == 2
     return sensor_coverage & np.isclose(observed_map, 0.5)
 
 
 class LamaEnsemble:
-    """Loader/inference wrapper for the three independent MapEx LaMa Gi models."""
+    """Load and run the three independent MapEx LaMa Gi models."""
 
     def __init__(
         self,
@@ -252,17 +225,12 @@ class LamaEnsemble:
         try:
             import torch
         except Exception as exc:  # noqa: BLE001
-            raise RuntimeError(
-                "PyTorch is required for MapEx LaMa inference."
-            ) from exc
+            raise RuntimeError("PyTorch is required for MapEx LaMa inference.") from exc
 
         if device.startswith("cuda") and not torch.cuda.is_available():
-            raise RuntimeError(
-                f"Requested MapEx device '{device}', but CUDA is unavailable."
-            )
+            raise RuntimeError(f"Requested MapEx device '{device}', but CUDA is unavailable.")
 
         self.torch = torch
-
         if model_files:
             if len(model_files) != ENSEMBLE_SIZE:
                 raise RuntimeError(
@@ -270,7 +238,7 @@ class LamaEnsemble:
                     f"received {len(model_files)}."
                 )
             self.models = [self._load_serialized_model(path) for path in model_files]
-            self.source_names = [str(path) for path in model_files]
+            self.source_names = [str(path.expanduser()) for path in model_files]
         else:
             self.models, self.source_names = self._load_official_model_dirs()
 
@@ -281,11 +249,7 @@ class LamaEnsemble:
 
         torch = self.torch
         try:
-            loaded = torch.load(
-                str(path),
-                map_location=self.device,
-                weights_only=False,
-            )
+            loaded = torch.load(str(path), map_location=self.device, weights_only=False)
         except TypeError:
             loaded = torch.load(str(path), map_location=self.device)
 
@@ -298,9 +262,8 @@ class LamaEnsemble:
         if not isinstance(model, torch.nn.Module):
             raise RuntimeError(
                 f"{path} does not contain a complete torch.nn.Module. "
-                "A bare state_dict is insufficient; use the official MapEx "
-                "model directory (config.yaml + models/best.ckpt) or provide "
-                "a serialized complete model."
+                "Use official MapEx model directories or serialized complete models; "
+                "a bare state_dict is insufficient."
             )
 
         model = model.to(self.device)
@@ -316,7 +279,6 @@ class LamaEnsemble:
                 f"MapEx LaMa submodule not found: {lama_root}. "
                 "Set MAPEX_ROOT to a castacks/MapEx clone with submodules."
             )
-
         if str(lama_root) not in sys.path:
             sys.path.insert(0, str(lama_root))
 
@@ -326,26 +288,18 @@ class LamaEnsemble:
             from saicinpainting.training.trainers import load_checkpoint
         except Exception as exc:  # noqa: BLE001
             raise RuntimeError(
-                "Cannot import the official MapEx/LaMa runtime. Activate the "
-                "LaMa environment used by the MapEx repository."
+                "Cannot import official MapEx/LaMa runtime. Activate the LaMa "
+                "environment used by the MapEx repository."
             ) from exc
 
         ensemble_dir = Path(
             os.environ.get(
                 "MAPEX_ENSEMBLE_DIR",
-                str(
-                    self.mapex_root
-                    / "pretrained_models"
-                    / "weights"
-                    / "lama_ensemble"
-                ),
+                str(self.mapex_root / "pretrained_models" / "weights" / "lama_ensemble"),
             )
         ).expanduser().resolve()
-
         if not ensemble_dir.is_dir():
-            raise RuntimeError(
-                f"MapEx ensemble directory not found: {ensemble_dir}."
-            )
+            raise RuntimeError(f"MapEx ensemble directory not found: {ensemble_dir}")
 
         model_dirs = sorted(path for path in ensemble_dir.iterdir() if path.is_dir())
         if len(model_dirs) < ENSEMBLE_SIZE:
@@ -355,7 +309,7 @@ class LamaEnsemble:
             )
 
         models = []
-        source_names = []
+        names = []
         for model_dir in model_dirs[:ENSEMBLE_SIZE]:
             config_path = model_dir / "config.yaml"
             checkpoint_path = model_dir / "models" / "best.ckpt"
@@ -369,7 +323,6 @@ class LamaEnsemble:
                 train_config = OmegaConf.create(yaml.safe_load(stream))
             train_config.training_model.predict_only = True
             train_config.visualizer.kind = "noop"
-
             model = load_checkpoint(
                 train_config,
                 str(checkpoint_path),
@@ -380,79 +333,52 @@ class LamaEnsemble:
                 model.freeze()
             model.eval()
             models.append(model)
-            source_names.append(str(model_dir))
+            names.append(str(model_dir))
 
-        return models, source_names
+        return models, names
 
     def predict_mean_variance(
         self,
         observed_map: np.ndarray,
     ) -> tuple[np.ndarray, np.ndarray]:
-        """Eq. 2-3: Pi,t = Gi(Ot), followed by pixel-wise ensemble variance."""
+        """Eq. 2-3: Pi,t = Gi(Ot), then pixel-wise variance across three Pi,t."""
         torch = self.torch
-
-        image_np = np.stack(
-            [observed_map, observed_map, observed_map],
-            axis=0,
-        )
+        image_np = np.stack([observed_map, observed_map, observed_map], axis=0)
         image = torch.from_numpy(image_np).unsqueeze(0).float().to(self.device)
-        mask_np = np.isclose(observed_map, 0.5).astype(np.float32)[
-            None,
-            None,
-            :,
-            :,
-        ]
+        mask_np = np.isclose(observed_map, 0.5).astype(np.float32)[None, None, :, :]
         mask = torch.from_numpy(mask_np).to(self.device)
 
         predictions = []
         with torch.no_grad():
             for model in self.models:
-                batch = {
-                    "image": image.clone(),
-                    "mask": mask.clone(),
-                }
-                output = model(batch)
-
+                output = model({"image": image.clone(), "mask": mask.clone()})
                 if isinstance(output, dict) and "inpainted" in output:
                     prediction = output["inpainted"][0, 0]
                 elif torch.is_tensor(output):
-                    tensor = output
-                    if tensor.ndim == 4:
-                        prediction = tensor[0, 0]
-                    elif tensor.ndim == 3:
-                        prediction = tensor[0]
+                    if output.ndim == 4:
+                        prediction = output[0, 0]
+                    elif output.ndim == 3:
+                        prediction = output[0]
                     else:
                         raise RuntimeError(
-                            f"Unsupported LaMa tensor output shape: {tuple(tensor.shape)}"
+                            f"Unsupported LaMa tensor output shape: {tuple(output.shape)}"
                         )
                 else:
                     raise RuntimeError(
-                        "Unsupported LaMa model output; expected dict['inpainted'] "
-                        "or a tensor."
+                        "Unsupported LaMa output; expected dict['inpainted'] or tensor."
                     )
-
                 predictions.append(prediction.detach())
 
-        prediction_stack = torch.stack(predictions, dim=0)
-        mean = torch.mean(prediction_stack, dim=0)
-        variance = torch.var(prediction_stack, dim=0)
+        stack = torch.stack(predictions, dim=0)
+        mean_np = torch.mean(stack, dim=0).float().cpu().numpy()
+        variance_np = torch.var(stack, dim=0).float().cpu().numpy()
 
-        mean_np = np.nan_to_num(
-            mean.float().cpu().numpy(),
-            nan=0.5,
-            posinf=1.0,
-            neginf=0.0,
-        )
-        variance_np = np.nan_to_num(
-            variance.float().cpu().numpy(),
-            nan=0.0,
-            posinf=0.0,
-            neginf=0.0,
-        )
+        mean_np = np.nan_to_num(mean_np, nan=0.5, posinf=1.0, neginf=0.0)
+        variance_np = np.nan_to_num(variance_np, nan=0.0, posinf=0.0, neginf=0.0)
         mean_np = np.clip(mean_np, 0.0, 1.0).astype(np.float32, copy=False)
         variance_np = np.maximum(variance_np, 0.0).astype(np.float32, copy=False)
 
-        # Known occupancy cells are observations, not uncertain predictions.
+        # Known occupancy comes from SLAM, not prediction uncertainty.
         known = ~np.isclose(observed_map, 0.5)
         mean_np[known] = observed_map[known]
         variance_np[known] = 0.0
@@ -460,21 +386,25 @@ class LamaEnsemble:
 
 
 class MapExExplorer(NearestEuclideanFrontier):
-    """MapEx frontier scoring with nf_basic navigation/recovery/completion."""
+    """MapEx scoring with nf_basic navigation, recovery and completion."""
 
     def __init__(self) -> None:
-        # The parent creates all shared ROS/Nav2 execution state and its timer.
-        # Python method dispatch makes that timer call this class's
-        # exploration_step(), while every navigation callback remains inherited.
+        # Parent timer resolves self.exploration_step dynamically, therefore it
+        # calls the MapEx override below while all navigation callbacks remain shared.
         super().__init__()
 
-        default_root = os.environ.get("MAPEX_ROOT", str(Path.home() / "MapEx"))
-        default_device = os.environ.get("MAPEX_DEVICE", "cuda:0")
-        default_model_files = os.environ.get("MAPEX_MODEL_FILES", "")
-
-        self.declare_parameter("mapex_root", default_root)
-        self.declare_parameter("mapex_device", default_device)
-        self.declare_parameter("mapex_model_files", default_model_files)
+        self.declare_parameter(
+            "mapex_root",
+            os.environ.get("MAPEX_ROOT", str(Path.home() / "MapEx")),
+        )
+        self.declare_parameter(
+            "mapex_device",
+            os.environ.get("MAPEX_DEVICE", "cuda:0"),
+        )
+        self.declare_parameter(
+            "mapex_model_files",
+            os.environ.get("MAPEX_MODEL_FILES", ""),
+        )
         self.declare_parameter("mapex_resolution_m", MAPEX_RESOLUTION_M)
         self.declare_parameter("mapex_sensor_range_m", PRED_VIS_RANGE_M)
         self.declare_parameter("mapex_num_rays", PRED_VIS_NUM_RAYS)
@@ -482,23 +412,17 @@ class MapExExplorer(NearestEuclideanFrontier):
 
         self.mapex_root = Path(str(self.get_parameter("mapex_root").value))
         self.mapex_device = str(self.get_parameter("mapex_device").value)
-        self.mapex_resolution_m = float(
-            self.get_parameter("mapex_resolution_m").value
-        )
+        self.mapex_resolution_m = float(self.get_parameter("mapex_resolution_m").value)
         self.mapex_sensor_range_m = float(
             self.get_parameter("mapex_sensor_range_m").value
         )
         self.mapex_num_rays = int(self.get_parameter("mapex_num_rays").value)
         self.mapex_epsilon = float(self.get_parameter("mapex_epsilon").value)
 
-        model_file_text = str(self.get_parameter("mapex_model_files").value).strip()
+        model_text = str(self.get_parameter("mapex_model_files").value).strip()
         model_files = None
-        if model_file_text:
-            model_files = [
-                Path(item.strip())
-                for item in model_file_text.split(",")
-                if item.strip()
-            ]
+        if model_text:
+            model_files = [Path(item.strip()) for item in model_text.split(",") if item.strip()]
 
         if not math.isclose(
             self.mapex_resolution_m,
@@ -507,13 +431,11 @@ class MapExExplorer(NearestEuclideanFrontier):
             abs_tol=1e-9,
         ):
             raise RuntimeError(
-                "Paper-faithful MapEx requires 0.10 m/cell policy grid; "
-                f"configured {self.mapex_resolution_m:.6f} m/cell."
+                "Paper-faithful MapEx requires 0.10 m/cell; configured "
+                f"{self.mapex_resolution_m:.6f} m/cell."
             )
 
-        self.get_logger().info(
-            "Loading MapEx LaMa ensemble; this may take a while..."
-        )
+        self.get_logger().info("Loading MapEx LaMa ensemble; this may take a while...")
         self.ensemble = LamaEnsemble(
             self.mapex_root,
             self.mapex_device,
@@ -526,17 +448,14 @@ class MapExExplorer(NearestEuclideanFrontier):
         self.last_candidate_metrics: list[dict] = []
 
         self.get_logger().info(
-            "MapEx policy ready: commit=%s, ensemble=%d, grid=%.2f m, "
-            "visibility=%.1f m/%d rays, epsilon=%.2f, shared execution=nf_basic",
-            MAPEX_REFERENCE_COMMIT,
-            ENSEMBLE_SIZE,
-            self.mapex_resolution_m,
-            self.mapex_sensor_range_m,
-            self.mapex_num_rays,
-            self.mapex_epsilon,
+            "MapEx policy ready: "
+            f"commit={MAPEX_REFERENCE_COMMIT}, ensemble={ENSEMBLE_SIZE}, "
+            f"grid={self.mapex_resolution_m:.2f} m, "
+            f"visibility={self.mapex_sensor_range_m:.1f} m/{self.mapex_num_rays} rays, "
+            f"epsilon={self.mapex_epsilon:.2f}, shared execution=nf_basic"
         )
         for index, source in enumerate(self.ensemble.source_names, start=1):
-            self.get_logger().info("MapEx G%d: %s", index, source)
+            self.get_logger().info(f"MapEx G{index}: {source}")
 
     def _score_mapex_candidates(
         self,
@@ -551,35 +470,28 @@ class MapExExplorer(NearestEuclideanFrontier):
         prediction_start = time.perf_counter()
         mean_map, variance_map = self.ensemble.predict_mean_variance(padded_obs)
         prediction_s = time.perf_counter() - prediction_start
-
         if mean_map.shape != padded_obs.shape or variance_map.shape != padded_obs.shape:
             raise RuntimeError(
-                "LaMa output shape mismatch: "
-                f"obs={padded_obs.shape}, mean={mean_map.shape}, "
-                f"variance={variance_map.shape}"
+                f"LaMa output shape mismatch: obs={padded_obs.shape}, "
+                f"mean={mean_map.shape}, variance={variance_map.shape}"
             )
 
         self.last_mean_map = mean_map
         self.last_variance_map = variance_map
+        ray_range_cells = int(round(self.mapex_sensor_range_m / self.mapex_resolution_m))
 
-        ray_range_cells = int(
-            round(self.mapex_sensor_range_m / self.mapex_resolution_m)
-        )
         candidates = []
         metrics = []
-
         scoring_start = time.perf_counter()
         for candidate_id, region in enumerate(regions):
             row, col = self.representative(region)
             x, y = self.cell_to_world(row, col)
             distance_m = math.hypot(x - robot_x, y - robot_y)
 
-            padded_row = row + pad_top
-            padded_col = col + pad_left
             visibility = probabilistic_visibility_mask(
                 mean_map,
                 padded_obs,
-                (padded_row, padded_col),
+                (row + pad_top, col + pad_left),
                 ray_range_cells=ray_range_cells,
                 num_rays=self.mapex_num_rays,
                 epsilon=self.mapex_epsilon,
@@ -587,18 +499,9 @@ class MapExExplorer(NearestEuclideanFrontier):
             information_gain = float(np.sum(variance_map[visibility]))
             score = information_gain / max(distance_m, 1e-6)
 
-            # nf_basic expects a six-field tuple whose first field is minimized.
-            # Store -score there so every inherited sorting/revalidation helper
-            # remains structurally compatible while MapEx maximizes score.
-            candidate = (
-                -score,
-                x,
-                y,
-                row,
-                col,
-                len(region),
-            )
-            candidates.append(candidate)
+            # nf_basic minimizes tuple[0]. Negating MapEx score lets inherited
+            # sorting/revalidation helpers stay unchanged while MapEx maximizes score.
+            candidates.append((-score, x, y, row, col, len(region)))
             metrics.append(
                 {
                     "candidate_id": candidate_id,
@@ -618,18 +521,16 @@ class MapExExplorer(NearestEuclideanFrontier):
         for metric in metrics:
             metric["ensemble_prediction_s"] = prediction_s
             metric["all_frontier_scoring_s"] = scoring_s
-
         return candidates, metrics
 
     def exploration_step(self):
-        """MapEx policy decision; all goal execution after selection is inherited."""
+        """Run one MapEx decision; selected-goal execution stays in nf_basic."""
         if self.completed:
             return
-
         if self.map_msg is None or self.goal_active or self.revalidation_active:
             return
 
-        # Preserve the parent's selected-frontier locking and recovery semantics.
+        # Preserve nf_basic's locked main frontier during path-guided recovery.
         if self.main_goal is not None:
             self.reset_completion_verification("main_frontier_still_pending")
             self.revalidation_signature = None
@@ -660,26 +561,19 @@ class MapExExplorer(NearestEuclideanFrontier):
                 required_resolution_m=self.mapex_resolution_m,
             )
             self.get_logger().error(
-                "MapEx requires the hospital_v2 0.10 m/cell /map; got %.6f m/cell. "
-                "Not issuing a goal.",
-                resolution,
+                f"MapEx requires hospital_v2 /map at 0.10 m/cell; got "
+                f"{resolution:.6f} m/cell. Not issuing a goal."
             )
             return
 
         width = self.map_msg.info.width
         height = self.map_msg.info.height
-        grid = np.asarray(
-            self.map_msg.data,
-            dtype=np.int16,
-        ).reshape(height, width)
+        grid = np.asarray(self.map_msg.data, dtype=np.int16).reshape(height, width)
 
-        # Frontier geometry is deliberately inherited from nf_basic because that
-        # implementation already matches the pinned MapEx rule used by Nearest:
+        # Shared frontier semantics already match the pinned MapEx implementation:
         # free==0, unknown<0, 8-neighbour frontier, 8-connected region, size>10,
         # representative = actual frontier cell nearest arithmetic mean.
-        mask = self.frontier_mask(grid)
-        regions = self.frontier_regions(mask)
-
+        regions = self.frontier_regions(self.frontier_mask(grid))
         if not regions:
             self.clear_goal_markers()
             self.revalidation_signature = None
@@ -689,7 +583,6 @@ class MapExExplorer(NearestEuclideanFrontier):
         robot_x, robot_y = robot
         self.mapex_decision_id += 1
         decision_start = time.perf_counter()
-
         try:
             all_candidates, metrics = self._score_mapex_candidates(
                 grid,
@@ -706,17 +599,13 @@ class MapExExplorer(NearestEuclideanFrontier):
                 decision_id=self.mapex_decision_id,
                 error=str(exc),
             )
-            self.get_logger().exception(
-                "MapEx decision %d failed: %s",
-                self.mapex_decision_id,
-                exc,
+            self.get_logger().error(
+                f"MapEx decision {self.mapex_decision_id} failed: {exc}"
             )
             return
 
         self.last_candidate_metrics = metrics
         if not all_candidates:
-            # Regions were non-empty, so this means an internal scoring failure,
-            # not exploration completion.
             self.clear_goal_markers()
             self.reset_completion_verification("mapex_no_scoreable_candidate")
             self.publish_status(
@@ -727,25 +616,21 @@ class MapExExplorer(NearestEuclideanFrontier):
             )
             return
 
-        metric_by_grid = {
-            (metric["row"], metric["col"]): metric for metric in metrics
-        }
-
+        metric_by_grid = {(m["row"], m["col"]): m for m in metrics}
         candidates = []
         suppressed_no_path = 0
         for candidate in all_candidates:
             _negative_score, x, y, _row, _col, _region_size = candidate
             if self.is_no_valid_path_suppressed(x, y):
                 suppressed_no_path += 1
-                continue
-            candidates.append(candidate)
+            else:
+                candidates.append(candidate)
 
         if not candidates:
             self.clear_goal_markers()
             if suppressed_no_path == len(all_candidates):
                 self.maybe_start_planner_revalidation(all_candidates)
                 return
-
             self.revalidation_signature = None
             self.reset_completion_verification("mapex_frontier_region_present")
             return
@@ -756,25 +641,16 @@ class MapExExplorer(NearestEuclideanFrontier):
         selected = min(candidates, key=lambda item: item[0])
         negative_score, x, y, row, col, region_size = selected
         selected_metric = metric_by_grid[(row, col)]
-
         self.publish_goal_markers(candidates, selected)
 
         decision_s = time.perf_counter() - decision_start
         self.get_logger().info(
-            "MapEx decision %d: selected frontier x=%.2f, y=%.2f, "
-            "IG=%.6f, distance=%.2f m, score=%.6f, region=%d, "
-            "candidates=%d, compute=%.2f s",
-            self.mapex_decision_id,
-            x,
-            y,
-            selected_metric["information_gain"],
-            selected_metric["distance_m"],
-            -negative_score,
-            region_size,
-            len(candidates),
-            decision_s,
+            f"MapEx decision {self.mapex_decision_id}: selected x={x:.2f}, y={y:.2f}, "
+            f"IG={selected_metric['information_gain']:.6f}, "
+            f"distance={selected_metric['distance_m']:.2f} m, "
+            f"score={-negative_score:.6f}, region={region_size}, "
+            f"candidates={len(candidates)}, compute={decision_s:.2f} s"
         )
-
         self.publish_status(
             "MAPEX_SELECTED",
             reason="highest_information_gain_over_euclidean_distance",
