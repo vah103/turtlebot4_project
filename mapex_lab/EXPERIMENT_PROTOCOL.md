@@ -158,16 +158,16 @@ goal_yaw_semantics                 = ignored_by_hospital_goal_checker
 
 `selected_path_length_m` là **planner validation path length**, không phải quãng đường robot thực thi thực tế. Quãng đường thực tế lấy từ odometry/trajectory.
 
-## Planner revalidation and execution failures
+## Planner revalidation and navigation failures
 
-Một lần `ComputePathToPose` no-path/rejected/error không được coi là bằng chứng vĩnh viễn trong hệ ROS online.
+Một lần planner no-path/rejected/error không được coi là bằng chứng vĩnh viễn trong hệ ROS online.
 
-- stable non-empty ranked candidate set phải chạy **planner revalidation** mỗi `2 s` trước khi tăng completion streak;
-- completion cần `5` validated exhausted sweeps trên stable set;
-- nếu map/frontier set thay đổi, completion window reset;
-- planner-valid frontier nhưng `NavigateToPose` execution fail chỉ bị suppress tạm thời trong bán kính `0.25 m` trong `30 s`;
-- execution failure không được biến planner-reachable frontier thành permanent unreachable;
-- một navigation success xóa các temporary execution-failure cooldown cũ.
+- `NavigateToPose` main-goal error `206 = GOAL_OCCUPIED` và `208 = NO_VALID_PATH` được coi là **planner-blocking failures**. Frontier đó và candidate trong bán kính `0.10 m` bị suppress khỏi ordinary selection để node chuyển sang frontier khác thay vì retry vô hạn.
+- Suppression `206/208` không phải blacklist vĩnh viễn. Khi không còn normally selectable candidate, full eligible representative set phải được `ComputePathToPose` revalidate lại; candidate reachable trở lại phải được bỏ suppression và exploration tiếp tục.
+- Stable non-empty ranked candidate set phải chạy **planner revalidation** mỗi `2 s` trước khi tăng completion streak; completion cần `5` validated exhausted sweeps trên stable set.
+- Nếu map/frontier set thay đổi, completion window reset.
+- Các failure khác của main goal (ví dụ controller `105 FAILED_TO_MAKE_PROGRESS`) vẫn đi qua path-guided recovery nếu có main-goal `/plan` hợp lệ; chúng không tự động trở thành permanent planner-unreachable evidence.
+- Một failed temporary subgoal không tự blacklist main frontier.
 
 ## Benchmark clock
 
@@ -281,4 +281,4 @@ Validator phải tách **data/protocol integrity** khỏi **experiment health** 
 
 ## Fair-comparison rule
 
-Không đổi spawn, sensor, SLAM runtime resolution, Nav2, planner tolerance, timeout, stopping condition, canvas, ROI, frontier-generation semantics, Hospital below-1m adaptation, position-only goal semantics, planner revalidation, execution-failure cooldown, benchmark-clock definition hoặc resource budget giữa Nearest và MapEx mà không ghi rõ lý do và đánh giá lại baseline.
+Không đổi spawn, sensor, SLAM runtime resolution, Nav2, planner tolerance, timeout, stopping condition, canvas, ROI, frontier-generation semantics, Hospital below-1m adaptation, position-only goal semantics, planner-blocking `206/208` suppression/revalidation, benchmark-clock definition hoặc resource budget giữa Nearest và MapEx mà không ghi rõ lý do và đánh giá lại baseline.
