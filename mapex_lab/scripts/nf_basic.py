@@ -16,16 +16,16 @@ Navigation recovery:
 - a lightweight Nav2 BT returns planner/controller failure quickly
 - on main-goal execution failure, choose a temporary subgoal on the last global path
 - after reaching the subgoal, retry the exact same main frontier
-- if a main goal returns Nav2 error 208 (NO_VALID_PATH), abandon that frontier
-  and continue with another candidate instead of retrying it forever
+- if a main goal returns Nav2 error 206 (GOAL_OCCUPIED) or 208 (NO_VALID_PATH),
+  abandon that frontier for ordinary selection instead of retrying it forever
 
 Completion policy:
 - NEVER declare complete while a main/subgoal is active
 - NEVER declare complete merely because remaining representatives are < 0.5 m
 - case 1: require zero frontier regions (>10 cells) on 5 distinct map updates
 - case 2: if frontier regions remain but every eligible representative is currently
-  suppressed after NO_VALID_PATH, revalidate the whole set with ComputePathToPose;
-  require 5 consecutive exhausted planner sweeps at least 2 s apart
+  suppressed after planner-blocking 206/208 failures, revalidate the whole set with
+  ComputePathToPose; require 5 consecutive exhausted planner sweeps at least 2 s apart
 - any planner-reachable frontier resets completion verification and resumes exploration
 - terminal evidence must span at least 10 s of navigation idle time
 - do not declare complete during the first 20 s after node start
@@ -65,12 +65,17 @@ SUBGOAL_MAIN_GOAL_CLEARANCE_M = 0.15
 # the exact main frontier, rather than stopping early because of planner/goal tolerance.
 MAIN_PLAN_ENDPOINT_TOLERANCE_M = 0.10
 
-# NavigateToPose propagates ComputePathToPose NO_VALID_PATH as error code 208.
-# A main frontier that returns 208 is skipped during normal selection, but it is
-# explicitly rechecked during terminal planner sweeps so the rejection is not
-# treated as permanent reachability evidence.
+# NavigateToPose propagates planner failures from ComputePathToPose.  GOAL_OCCUPIED
+# (206) and NO_VALID_PATH (208) are both treated as planner-blocking failures for
+# ordinary frontier selection: skip the affected frontier temporarily, then explicitly
+# recheck it during terminal planner sweeps rather than treating it as permanently dead.
+GOAL_OCCUPIED_ERROR_CODE = 206
 NO_VALID_PATH_ERROR_CODE = 208
-NO_VALID_PATH_SKIP_RADIUS_M = 0.10
+PLANNER_BLOCKING_ERROR_CODES = {
+    GOAL_OCCUPIED_ERROR_CODE,
+    NO_VALID_PATH_ERROR_CODE,
+}
+PLANNER_BLOCKED_SKIP_RADIUS_M = 0.10
 
 COMPLETION_REQUIRED_SWEEPS = 5
 COMPLETION_SWEEP_INTERVAL_S = 2.0
@@ -99,10 +104,10 @@ class NearestEuclideanFrontier(Node):
         self.latest_main_plan = None
         self.recovery_count = 0
 
-        # Main frontier positions that most recently returned NO_VALID_PATH (208).
-        # They are skipped during ordinary nearest selection, but terminal planner
-        # revalidation tests them again instead of treating them as permanently dead.
-        self.no_valid_path_goals = []
+        # Main frontier positions that most recently returned planner-blocking
+        # GOAL_OCCUPIED (206) or NO_VALID_PATH (208). They are skipped during
+        # ordinary nearest selection, but terminal revalidation tests them again.
+        self.planner_blocked_goals = []
 
         # Robust completion state shared by both terminal conditions.
         now_s = self.now_s()
@@ -473,33 +478,40 @@ class NearestEuclideanFrontier(Node):
             transform.transform.translation.y,
         )
 
-    def is_no_valid_path_suppressed(self, x: float, y: float) -> bool:
+    def is_planner_blocked_suppressed(self, x: float, y: float) -> bool:
         return any(
             math.hypot(x - rejected_x, y - rejected_y)
-            <= NO_VALID_PATH_SKIP_RADIUS_M
-            for rejected_x, rejected_y in self.no_valid_path_goals
+            <= PLANNER_BLOCKED_SKIP_RADIUS_M
+            for rejected_x, rejected_y in self.planner_blocked_goals
         )
 
-    def clear_no_valid_path_suppression_near(self, x: float, y: float):
-        self.no_valid_path_goals = [
+    def clear_planner_blocked_suppression_near(self, x: float, y: float):
+        self.planner_blocked_goals = [
             (rejected_x, rejected_y)
-            for rejected_x, rejected_y in self.no_valid_path_goals
+            for rejected_x, rejected_y in self.planner_blocked_goals
             if math.hypot(x - rejected_x, y - rejected_y)
-            > NO_VALID_PATH_SKIP_RADIUS_M
+            > PLANNER_BLOCKED_SKIP_RADIUS_M
         ]
 
-    def abandon_main_goal_no_valid_path(self):
+    def abandon_main_goal_planner_blocked(self, error_code: int):
         if self.main_goal is None:
             return
 
         x, y = self.main_goal
-        if not self.is_no_valid_path_suppressed(x, y):
-            self.no_valid_path_goals.append((x, y))
+        if not self.is_planner_blocked_suppressed(x, y):
+            self.planner_blocked_goals.append((x, y))
+
+        if error_code == GOAL_OCCUPIED_ERROR_CODE:
+            error_name = "GOAL_OCCUPIED"
+            status_reason = "main_goal_abandoned_goal_occupied"
+        else:
+            error_name = "NO_VALID_PATH"
+            status_reason = "main_goal_abandoned_no_valid_path"
 
         self.get_logger().warn(
-            "Main frontier abandoned after NO_VALID_PATH (208): "
+            f"Main frontier abandoned after {error_name} ({error_code}): "
             f"x={x:.2f}, y={y:.2f}; candidates within "
-            f"{NO_VALID_PATH_SKIP_RADIUS_M:.2f} m are skipped during normal "
+            f"{PLANNER_BLOCKED_SKIP_RADIUS_M:.2f} m are skipped during normal "
             "selection but will be checked again by terminal planner revalidation."
         )
 
@@ -508,11 +520,12 @@ class NearestEuclideanFrontier(Node):
         self.recovery_count = 0
         self.publish_status(
             "EXPLORING",
-            reason="main_goal_abandoned_no_valid_path",
+            reason=status_reason,
             abandoned_x=round(x, 4),
             abandoned_y=round(y, 4),
-            skip_radius_m=NO_VALID_PATH_SKIP_RADIUS_M,
-            abandoned_count=len(self.no_valid_path_goals),
+            error_code=error_code,
+            skip_radius_m=PLANNER_BLOCKED_SKIP_RADIUS_M,
+            abandoned_count=len(self.planner_blocked_goals),
         )
 
     @staticmethod
@@ -655,7 +668,7 @@ class NearestEuclideanFrontier(Node):
                 "Planner revalidation found a reachable frontier again: "
                 f"x={x:.2f}, y={y:.2f}. Resuming exploration."
             )
-            self.clear_no_valid_path_suppression_near(x, y)
+            self.clear_planner_blocked_suppression_near(x, y)
             self.revalidation_active = False
             self.revalidation_candidates = []
             self.revalidation_index = 0
@@ -787,9 +800,8 @@ class NearestEuclideanFrontier(Node):
             return
 
         # Execution failures keep the selected frontier pending so path-guided
-        # recovery can retry it. A NO_VALID_PATH (208) main goal is different:
-        # it is abandoned in goal_result_callback and therefore never reaches
-        # this retry branch.
+        # recovery can retry it. Planner-blocking main errors 206/208 are different:
+        # they are abandoned in goal_result_callback and never reach this retry branch.
         if self.main_goal is not None:
             self.reset_completion_verification("main_frontier_still_pending")
             self.revalidation_signature = None
@@ -825,7 +837,7 @@ class NearestEuclideanFrontier(Node):
         robot_x, robot_y = robot
         all_candidates = []
         candidates = []
-        suppressed_no_path = 0
+        suppressed_planner_blocked = 0
 
         for region in regions:
             row, col = self.representative(region)
@@ -838,8 +850,8 @@ class NearestEuclideanFrontier(Node):
             candidate = (distance, x, y, row, col, len(region))
             all_candidates.append(candidate)
 
-            if self.is_no_valid_path_suppressed(x, y):
-                suppressed_no_path += 1
+            if self.is_planner_blocked_suppressed(x, y):
+                suppressed_planner_blocked += 1
                 continue
 
             candidates.append(candidate)
@@ -848,10 +860,13 @@ class NearestEuclideanFrontier(Node):
             self.clear_goal_markers()
 
             # Case 2: there are eligible frontier representatives, but every one
-            # has previously returned NO_VALID_PATH. Do not remain blocked forever;
-            # re-run ComputePathToPose over the full set every >=2 s. Five
-            # consecutive fully exhausted sweeps are terminal evidence.
-            if all_candidates and suppressed_no_path == len(all_candidates):
+            # has previously returned a planner-blocking 206/208 result. Do not
+            # remain blocked forever; re-run ComputePathToPose over the full set
+            # every >=2 s. Five consecutive exhausted sweeps are terminal evidence.
+            if (
+                all_candidates
+                and suppressed_planner_blocked == len(all_candidates)
+            ):
                 self.maybe_start_planner_revalidation(all_candidates)
                 return
 
@@ -864,7 +879,7 @@ class NearestEuclideanFrontier(Node):
                 reason="frontier_regions_exist_but_all_representatives_too_close",
                 frontier_regions=len(regions),
                 min_distance_m=MIN_DISTANCE_THRESHOLD,
-                suppressed_no_path=suppressed_no_path,
+                suppressed_planner_blocked=suppressed_planner_blocked,
             )
             self.get_logger().warn(
                 "Frontier regions still exist, but no eligible representative "
@@ -1011,11 +1026,11 @@ class NearestEuclideanFrontier(Node):
 
         self.get_logger().warn(f"{mode.capitalize()} goal failed ({detail})")
 
-        # A main-goal NO_VALID_PATH is a planning failure, not an execution
-        # failure. Do not use path-guided recovery and do not retry it immediately.
-        # It will still be checked again if terminal planner revalidation starts.
-        if mode == "main" and error_code == NO_VALID_PATH_ERROR_CODE:
-            self.abandon_main_goal_no_valid_path()
+        # GOAL_OCCUPIED (206) and NO_VALID_PATH (208) are planner-blocking
+        # failures. Do not use path-guided recovery and do not retry the same
+        # exact frontier immediately. Terminal revalidation can still revive it.
+        if mode == "main" and error_code in PLANNER_BLOCKING_ERROR_CODES:
+            self.abandon_main_goal_planner_blocked(error_code)
             return
 
         if mode == "main":
