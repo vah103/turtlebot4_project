@@ -5,7 +5,10 @@
 # 2) the Hospital Gazebo TB4 command path expects geometry_msgs/msg/Twist,
 #    so Nav2 must keep cmd_vel unstamped end-to-end;
 # 3) reduce MPPI compute load to avoid controller loop overruns while preserving
-#    approximately the same 2.8 s rollout horizon as stock.
+#    approximately the same 2.8 s rollout horizon as stock;
+# 4) keep MPPI committed to the global path until the robot is genuinely at the
+#    end of the path, rather than handing off early just because the goal is
+#    Euclidean-close through a wall or around a long detour.
 #
 # The velocity smoother is raised to the stock MPPI limits requested for this
 # experiment: 0.5 m/s linear and 1.9 rad/s angular.
@@ -36,6 +39,29 @@ controller_server:
       # Halve sampled trajectories and disable expensive trajectory visualization.
       batch_size: 1000
       visualize: false
+
+      # Do not let Euclidean closeness to the goal switch MPPI away from the
+      # global path while a wall forces a long remaining path. The hand-off is
+      # delayed until 0.45 m, only slightly outside the 0.4 m goal tolerance.
+      GoalCritic:
+        enabled: true
+        cost_weight: 5.0
+        threshold_to_consider: 0.45
+
+      PathFollowCritic:
+        enabled: true
+        cost_weight: 10.0
+        threshold_to_consider: 0.45
+
+      PathAlignCritic:
+        enabled: true
+        cost_weight: 20.0
+        threshold_to_consider: 0.45
+
+      PathAngleCritic:
+        enabled: true
+        cost_weight: 4.0
+        threshold_to_consider: 0.45
 
       # MPPI should not optimize toward the goal pose's arbitrary yaw value.
       GoalAngleCritic:
