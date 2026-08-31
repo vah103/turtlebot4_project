@@ -24,7 +24,7 @@ GENERATED_ROOT = MAP_ROOT / "generated"
 
 # Single source of truth for Hospital geometry scale.
 # 1.0 = original size, 0.7 = 70% linear size, etc.
-HOSPITAL_SCALE = 1.0
+HOSPITAL_SCALE = 0.5
 
 ORIGINAL_SPAWN_X = 0.0
 ORIGINAL_SPAWN_Y = 12.0
@@ -188,7 +188,6 @@ def prepare_scaled_hospital(scale: float = HOSPITAL_SCALE) -> ScaledHospital:
     spawn_x = ORIGINAL_SPAWN_X * scale
     spawn_y = ORIGINAL_SPAWN_Y * scale
 
-    # At 1.0 use the canonical mapex_lab world and source models directly.
     if abs(scale - 1.0) < 1e-12:
         return ScaledHospital(
             scale=scale,
