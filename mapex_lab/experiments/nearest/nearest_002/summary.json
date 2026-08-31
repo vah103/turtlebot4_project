@@ -1,0 +1,28 @@
+{
+  "run_id": "nearest_002",
+  "final_coverage": 0.9939656973100935,
+  "final_known_fraction": 0.17066500636393703,
+  "total_distance_m": 525.8503462479653,
+  "total_time_s": 5897.066301584244,
+  "frontiers_selected": 59,
+  "main_attempts": 62,
+  "main_succeeded": 50,
+  "main_failed": 12,
+  "main_interrupted": 0,
+  "abandoned_208": 9,
+  "main_success_rate": 0.8064516129032258,
+  "subgoal_attempts": 3,
+  "subgoal_succeeded": 2,
+  "subgoal_failed": 1,
+  "subgoal_interrupted": 0,
+  "error_code_counts": {
+    "208": 10,
+    "105": 3
+  },
+  "decision_computation_ms_mean": 4815.683935385563,
+  "decision_computation_ms_std": 2497.497341826242,
+  "termination_reason": "complete",
+  "nav2_startup_stable_s": 3.0,
+  "occupied_iou_online": null,
+  "tu_online": null
+}
