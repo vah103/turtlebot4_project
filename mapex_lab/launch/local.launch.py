@@ -5,6 +5,8 @@ remains unchanged; only its LaserScan input is replaced by /scan_local_window,
 produced by local_scan.py from recent scan-to-local-window registration.
 
 The experiment is intentionally not part of the official hospital_v2 protocol.
+Hospital world geometry and default spawn are inherited from the scale-aware
+hospital_flat_simulation.launch.py.
 """
 
 import os
@@ -115,9 +117,6 @@ def generate_launch_description() -> LaunchDescription:
     use_sim_time = LaunchConfiguration('use_sim_time')
     use_rviz = LaunchConfiguration('use_rviz')
     headless = LaunchConfiguration('headless')
-    x_pose = LaunchConfiguration('x_pose')
-    y_pose = LaunchConfiguration('y_pose')
-    yaw = LaunchConfiguration('yaw')
     slam_delay_sec = LaunchConfiguration('slam_delay_sec')
     nav2_delay_sec = LaunchConfiguration('nav2_delay_sec')
 
@@ -128,9 +127,6 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             'use_rviz': use_rviz,
             'headless': headless,
-            'x_pose': x_pose,
-            'y_pose': y_pose,
-            'yaw': yaw,
         }.items(),
     )
 
@@ -163,9 +159,6 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument('use_sim_time', default_value='true'),
             DeclareLaunchArgument('use_rviz', default_value='True'),
             DeclareLaunchArgument('headless', default_value='False'),
-            DeclareLaunchArgument('x_pose', default_value='0.0'),
-            DeclareLaunchArgument('y_pose', default_value='12.0'),
-            DeclareLaunchArgument('yaw', default_value='-1.57'),
             DeclareLaunchArgument('slam_delay_sec', default_value='10.0'),
             DeclareLaunchArgument('nav2_delay_sec', default_value='20.0'),
             DeclareLaunchArgument('window_scans', default_value='20'),
