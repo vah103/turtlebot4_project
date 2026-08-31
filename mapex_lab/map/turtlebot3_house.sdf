@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!--
+  TurtleBot3 House world adapted for the Gazebo Sim / TurtleBot4 stack used by
+  mapex_lab.
+
+  Source geometry:
+    EBang2k4/Omni_Boe_Robot
+    omni_diff/models/turtlebot3_house/model.sdf
+
+  The original repository launches this environment from a Gazebo Classic
+  .world file.  mapex_lab uses modern Gazebo Sim world SDF files, so this file
+  provides the same kind of world-level wrapper as hospital_aws_flat.sdf:
+  Gazebo Sim systems + deterministic real-time physics + flat ground + the
+  house model as a static environment.
+
+  IMPORTANT:
+  The model assets must be discoverable as model://turtlebot3_house through
+  GZ_SIM_RESOURCE_PATH.  This world is an auxiliary/debug environment and does
+  not change the canonical hospital_v2 experiment protocol.
+-->
+<sdf version="1.9">
+  <world name="turtlebot3_house_world">
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+
+    <physics name="house_realtime" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <gravity>0 0 -9.8</gravity>
+
+    <scene>
+      <ambient>0.65 0.65 0.65 1</ambient>
+      <background>0.4 0.4 0.4 1</background>
+      <shadows>false</shadows>
+    </scene>
+
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/Sun</uri>
+    </include>
+
+    <!-- Flat drivable floor, matching the role of ground_plane in the
+         original Gazebo Classic turtlebot3_house.world. -->
+    <model name="house_flat_ground">
+      <static>true</static>
+      <pose>0 0 0 0 0 0</pose>
+      <link name="ground_link">
+        <collision name="ground_collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>30 30</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="ground_visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>30 30</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.80 0.80 0.82 1</ambient>
+            <diffuse>0.80 0.80 0.82 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Original TurtleBot3 House geometry. -->
+    <include>
+      <name>turtlebot3_house</name>
+      <uri>model://turtlebot3_house</uri>
+      <pose>0 0 0 0 0 0</pose>
+      <static>true</static>
+    </include>
+  </world>
+</sdf>
