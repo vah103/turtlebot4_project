@@ -1,21 +1,19 @@
-"""Launch TurtleBot3 House + segmented local scan frontend + SLAM Toolbox + stock Nav2.
+"""Launch self-contained TurtleBot3 House + segmented scan frontend + SLAM + Nav2.
 
 This file mirrors submap.launch.py. The exploration / SLAM / Nav2 stack is kept
 unchanged; only the simulation environment is switched from Hospital to the
-TurtleBot3 House world stored at mapex_lab/map/turtlebot3_house.sdf.
+self-contained TurtleBot3 House world stored at mapex_lab/map/turtlebot3_house.sdf.
 
 This experiment is intentionally not part of the official hospital_v2 protocol.
 """
 
 import os
 import tempfile
-from pathlib import Path
 
 import yaml
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import (
-    AppendEnvironmentVariable,
     DeclareLaunchArgument,
     ExecuteProcess,
     IncludeLaunchDescription,
@@ -100,33 +98,6 @@ def _frontend_process(context, script_path: str):
     ]
 
 
-def _find_house_models_dir(project_root: str) -> str:
-    env_root = os.environ.get('OMNI_BOE_ROBOT_ROOT')
-    candidates = []
-    if env_root:
-        candidates.append(Path(env_root).expanduser())
-
-    project_path = Path(project_root).resolve()
-    candidates.extend(
-        [
-            project_path.parent / 'Omni_Boe_Robot',
-            Path.home() / 'Omni_Boe_Robot',
-            Path.home() / 'catkin_ws' / 'src' / 'Omni_Boe_Robot',
-        ]
-    )
-
-    for root in candidates:
-        models_dir = root / 'omni_diff' / 'models'
-        if (models_dir / 'turtlebot3_house' / 'model.sdf').is_file():
-            return str(models_dir.resolve())
-
-    raise FileNotFoundError(
-        'Could not find Omni_Boe_Robot/omni_diff/models/turtlebot3_house. '
-        'Clone EBang2k4/Omni_Boe_Robot locally or set OMNI_BOE_ROBOT_ROOT '
-        'to the repository root.'
-    )
-
-
 def generate_launch_description() -> LaunchDescription:
     frontier_pkg = get_package_share_directory('frontier_exploration')
     tb4_nav_pkg = get_package_share_directory('turtlebot4_navigation')
@@ -164,7 +135,6 @@ def generate_launch_description() -> LaunchDescription:
     nav2_delay_sec = LaunchConfiguration('nav2_delay_sec')
 
     house_world = os.path.join(research_root, 'map', 'turtlebot3_house.sdf')
-    house_models = _find_house_models_dir(research_root)
     simulation_launch = os.path.join(
         frontier_pkg, 'launch', 'tb4_simulation_safe.launch.py'
     )
@@ -183,8 +153,8 @@ def generate_launch_description() -> LaunchDescription:
             'rviz_config_file': rviz_config,
             'robot_sdf': robot_sdf,
             'headless': headless,
-            'x_pose': '0.0',
-            'y_pose': '0.0',
+            'x_pose': '1.0',
+            'y_pose': '0.5',
             'yaw': '0.0',
         }.items(),
     )
@@ -234,7 +204,6 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument('handoff_scans', default_value='20'),
             DeclareLaunchArgument('min_segment_scans', default_value='30'),
             DeclareLaunchArgument('tf_timeout_s', default_value='0.20'),
-            AppendEnvironmentVariable('GZ_SIM_RESOURCE_PATH', house_models),
             cleanup,
             simulation,
             OpaqueFunction(
