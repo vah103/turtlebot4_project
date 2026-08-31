@@ -3,6 +3,12 @@
 import os
 
 from ament_index_python.packages import get_package_share_directory
+from frontier_exploration.hospital_scale import (
+    HOSPITAL_SCALE,
+    ORIGINAL_SPAWN_X,
+    ORIGINAL_SPAWN_Y,
+    ORIGINAL_SPAWN_YAW,
+)
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
 from launch.conditions import IfCondition
@@ -20,6 +26,9 @@ def generate_launch_description() -> LaunchDescription:
     default_slam_params = os.path.join(
         package_dir, 'config', 'hospital_slam.yaml'
     )
+
+    default_spawn_x = ORIGINAL_SPAWN_X * HOSPITAL_SCALE
+    default_spawn_y = ORIGINAL_SPAWN_Y * HOSPITAL_SCALE
 
     use_rviz = LaunchConfiguration('use_rviz')
     rviz_config_file = LaunchConfiguration('rviz_config_file')
@@ -92,17 +101,17 @@ def generate_launch_description() -> LaunchDescription:
             ),
             DeclareLaunchArgument(
                 'x_pose',
-                default_value='0.0',
-                description='Initial TurtleBot4 x in the flat Hospital world.',
+                default_value=str(default_spawn_x),
+                description='Initial TurtleBot4 x in the scaled flat Hospital world.',
             ),
             DeclareLaunchArgument(
                 'y_pose',
-                default_value='12.0',
-                description='Initial TurtleBot4 y in the flat Hospital world.',
+                default_value=str(default_spawn_y),
+                description='Initial TurtleBot4 y in the scaled flat Hospital world.',
             ),
             DeclareLaunchArgument(
                 'yaw',
-                default_value='-1.57',
+                default_value=str(ORIGINAL_SPAWN_YAW),
                 description='Initial TurtleBot4 yaw in the flat Hospital world.',
             ),
             DeclareLaunchArgument(
