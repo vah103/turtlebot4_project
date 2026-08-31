@@ -26,8 +26,8 @@ GENERATED_ROOT = MAP_ROOT / "generated"
 HOSPITAL_SCALE = 0.5
 
 # Reference spawn in the original (1.0x) Hospital.
-# Y=8.0 moves the start farther inward than the previous Y=12.0 position.
-ORIGINAL_SPAWN_X = 0.0
+# At 0.5x this becomes (-4.0, 4.0), moved into the larger open interior area.
+ORIGINAL_SPAWN_X = -8.0
 ORIGINAL_SPAWN_Y = 8.0
 ORIGINAL_SPAWN_YAW = -1.57
 
