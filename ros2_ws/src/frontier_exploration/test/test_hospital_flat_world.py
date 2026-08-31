@@ -3,6 +3,8 @@ import xml.etree.ElementTree as ET
 
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = PACKAGE_ROOT.parents[2]
+HOSPITAL_WORLD = PROJECT_ROOT / 'mapex_lab' / 'map' / 'hospital_aws_flat.sdf'
 
 
 def _floats(text: str) -> list[float]:
@@ -10,8 +12,7 @@ def _floats(text: str) -> list[float]:
 
 
 def test_flat_hospital_uses_one_level_ground_and_no_aws_floor_mesh():
-    world_path = PACKAGE_ROOT / 'worlds' / 'hospital_aws_flat.sdf'
-    root = ET.parse(world_path).getroot()
+    root = ET.parse(HOSPITAL_WORLD).getroot()
     world = root.find('world')
     assert world is not None
 
@@ -37,13 +38,12 @@ def test_flat_hospital_uses_one_level_ground_and_no_aws_floor_mesh():
 
 
 def test_flat_hospital_physically_closes_both_elevator_openings():
-    world_path = PACKAGE_ROOT / 'worlds' / 'hospital_aws_flat.sdf'
-    world = ET.parse(world_path).getroot().find('world')
+    world = ET.parse(HOSPITAL_WORLD).getroot().find('world')
     assert world is not None
 
     expected_xy = {
-        'elevator_opening_blocker_left': (-1.51, 19.35),
-        'elevator_opening_blocker_right': (1.52843, 19.3627),
+        'elevator_blocker_left': (-1.51, 19.35),
+        'elevator_blocker_right': (1.52843, 19.3627),
     }
 
     for name, (expected_x, expected_y) in expected_xy.items():
@@ -70,8 +70,7 @@ def test_flat_hospital_physically_closes_both_elevator_openings():
 
 
 def test_flat_hospital_pins_physics_to_realtime_clock():
-    world_path = PACKAGE_ROOT / 'worlds' / 'hospital_aws_flat.sdf'
-    world = ET.parse(world_path).getroot().find('world')
+    world = ET.parse(HOSPITAL_WORLD).getroot().find('world')
     assert world is not None
 
     physics = world.find("physics[@name='hospital_realtime']")
@@ -80,7 +79,7 @@ def test_flat_hospital_pins_physics_to_realtime_clock():
     assert abs(float(physics.findtext('real_time_factor')) - 1.0) < 1e-12
 
 
-def test_default_hospital_runtime_uses_flat_world_without_keepout_filter():
+def test_default_hospital_runtime_uses_mapex_lab_world_without_keepout_filter():
     simulation_text = (
         PACKAGE_ROOT / 'launch' / 'hospital_flat_simulation.launch.py'
     ).read_text(encoding='utf-8')
@@ -94,7 +93,7 @@ def test_default_hospital_runtime_uses_flat_world_without_keepout_filter():
         PACKAGE_ROOT / 'config' / 'nav2_hospital_override.yaml'
     ).read_text(encoding='utf-8')
 
-    assert "worlds', 'hospital_aws_flat.sdf'" in simulation_text
+    assert "mapex_lab/scripts/hospital_scale.py" in simulation_text
     assert "hospital_flat_simulation.launch.py" in stack_text
 
     assert 'keepout_enabled' not in nav2_text
