@@ -1,5 +1,6 @@
 import importlib.util
 import os
+import sys
 from pathlib import Path
 
 from ament_index_python.packages import get_package_share_directory
@@ -37,6 +38,7 @@ def _load_hospital_scale(project_root: Path):
     if spec is None or spec.loader is None:
         raise RuntimeError(f'Could not load Hospital scale module: {module_path}')
     module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
 
