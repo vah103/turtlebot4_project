@@ -1,52 +1,26 @@
 #!/usr/bin/env python3
-"""Prepare the currently configured scaled Hospital world.
+"""Preview/pre-generate the currently configured Hospital scale.
 
-Normally this script does not need to be run manually: the Hospital simulation
-launch prepares the scaled world automatically. It is kept as a quick preview /
-pre-generation command.
-
-To change the long-term scale, edit only:
-    ros2_ws/src/frontier_exploration/frontier_exploration/hospital_scale.py
-    HOSPITAL_SCALE = ...
+Normal Hospital launch files do this automatically. To change the long-term
+scale, edit only ``HOSPITAL_SCALE`` in ``mapex_lab/scripts/hospital_scale.py``.
+All world/model/generated paths remain under ``mapex_lab/map``.
 """
 
 from __future__ import annotations
 
 import sys
-from pathlib import Path
 
-
-REPO_ROOT = Path(__file__).resolve().parents[2]
-PACKAGE_SOURCE = REPO_ROOT / "ros2_ws/src/frontier_exploration"
-sys.path.insert(0, str(PACKAGE_SOURCE))
-
-from frontier_exploration.hospital_scale import (  # noqa: E402
-    HOSPITAL_SCALE,
-    prepare_scaled_hospital,
-)
+from hospital_scale import HOSPITAL_SCALE, prepare_scaled_hospital
 
 
 def main() -> int:
-    source_world = (
-        REPO_ROOT
-        / "ros2_ws/src/frontier_exploration/worlds/hospital_aws_flat.sdf"
-    )
-    source_models = (
-        Path.home()
-        / ".cache/turtlebot4_project/hospital_world/models"
-    )
-
     try:
-        hospital = prepare_scaled_hospital(
-            source_world=source_world,
-            source_models_dir=source_models,
-            scale=HOSPITAL_SCALE,
-        )
+        hospital = prepare_scaled_hospital()
     except Exception as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
 
-    print(f"Configured Hospital scale: x{hospital.scale:g}")
+    print(f"Configured Hospital scale: x{HOSPITAL_SCALE:g}")
     print(f"World: {hospital.world}")
     print(f"Models: {hospital.models_dir}")
     print(
