@@ -159,6 +159,8 @@
         <visual name="v1"><pose>4.77578 0 1.25 0 0 0</pose><geometry><box><size>4.94845 0.15 2.5</size></box></geometry><material><ambient>0.72 0.72 0.72 1</ambient><diffuse>0.72 0.72 0.72 1</diffuse></material></visual>
         <collision name="c2"><pose>1.85155 0 2.25 0 0 0</pose><geometry><box><size>0.9 0.15 0.5</size></box></geometry></collision>
         <visual name="v2"><pose>1.85155 0 2.25 0 0 0</pose><geometry><box><size>0.9 0.15 0.5</size></box></geometry><material><ambient>0.72 0.72 0.72 1</ambient><diffuse>0.72 0.72 0.72 1</diffuse></material></visual>
+        <collision name="door_plug_outer_top"><pose>1.85155 0 1.0 0 0 0</pose><geometry><box><size>0.9 0.15 2.0</size></box></geometry></collision>
+        <visual name="door_plug_outer_top_visual"><pose>1.85155 0 1.0 0 0 0</pose><geometry><box><size>0.9 0.15 2.0</size></box></geometry><material><ambient>0.72 0.72 0.72 1</ambient><diffuse>0.72 0.72 0.72 1</diffuse></material></visual>
       </link>
       <link name="Wall_42">
         <pose>-2.03986 3.37044 0 0 0 1.5708</pose>
