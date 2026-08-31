@@ -1,8 +1,8 @@
-"""Automatic uniform scaling for the flat AWS Hospital world.
+"""Automatic Y-axis scaling for the flat AWS Hospital world.
 
 All Hospital map/scaling paths live under ``mapex_lab/map``.
-Change only ``HOSPITAL_SCALE`` when a different long-term scale is wanted.
-The TurtleBot4 itself is intentionally not scaled.
+Change only ``HOSPITAL_SCALE`` when a different long-term Y scale is wanted.
+X and Z are intentionally left unchanged. The TurtleBot4 itself is not scaled.
 """
 
 from __future__ import annotations
@@ -22,13 +22,15 @@ SOURCE_WORLD = MAP_ROOT / "hospital_aws_flat.sdf"
 SOURCE_MODELS_DIR = MAP_ROOT / "models"
 GENERATED_ROOT = MAP_ROOT / "generated"
 
-# Single source of truth for Hospital geometry scale.
+# Single source of truth for Hospital Y-axis geometry scale.
+# 1.0 = original Y size, 0.5 = half Y size. X and Z stay unchanged.
 HOSPITAL_SCALE = 0.5
+SCALE_MODE = "y_only"
 
 # Reference spawn in the original (1.0x) Hospital.
-# At 0.5x this becomes (-4.0, 4.0), moved into the larger open interior area.
-ORIGINAL_SPAWN_X = -8.0
-ORIGINAL_SPAWN_Y = 8.0
+# Only Y follows HOSPITAL_SCALE, so 0.5 gives spawn (0.0, 6.0).
+ORIGINAL_SPAWN_X = 0.0
+ORIGINAL_SPAWN_Y = 12.0
 ORIGINAL_SPAWN_YAW = -1.57
 
 _LOCAL_MODELS = (
@@ -65,60 +67,63 @@ def _sha256(path: Path) -> str:
     return h.hexdigest()
 
 
-def _scale_numbers(text: str | None, scale: float, count: int) -> str | None:
+def _scale_component(
+    text: str | None,
+    scale: float,
+    count: int,
+    index: int,
+) -> str | None:
     if text is None:
         return None
     values = text.split()
     if len(values) != count:
         raise ValueError(f"Expected {count} numbers, got {text!r}")
-    return " ".join(_fmt(float(v) * scale) for v in values)
+    numbers = [float(v) for v in values]
+    numbers[index] *= scale
+    return " ".join(_fmt(v) for v in numbers)
 
 
-def _scale_pose(text: str | None, scale: float) -> str | None:
+def _scale_pose_y(text: str | None, scale: float) -> str | None:
     if text is None:
         return None
     parts = text.split()
     if len(parts) not in (6, 7):
         raise ValueError(f"Unsupported <pose>: {text!r}")
     values = [float(v) for v in parts]
-    values[0] *= scale
-    values[1] *= scale
-    values[2] *= scale
+    values[1] *= scale  # Y only; X/Z and rotation stay unchanged.
     return " ".join(_fmt(v) for v in values)
 
 
-def _scale_tree(root: ET.Element, scale: float) -> None:
+def _scale_tree_y(root: ET.Element, scale: float) -> None:
+    """Compress SDF geometry only along its Y axis."""
     for pose in root.iter("pose"):
-        pose.text = _scale_pose(pose.text, scale)
+        pose.text = _scale_pose_y(pose.text, scale)
 
+    # Mesh scale is X Y Z. Keep X/Z at their existing values and scale Y only.
     for mesh in root.iter("mesh"):
         el = mesh.find("scale")
         if el is None:
             el = ET.SubElement(mesh, "scale")
-            el.text = f"{_fmt(scale)} {_fmt(scale)} {_fmt(scale)}"
+            el.text = f"1 {_fmt(scale)} 1"
         else:
-            el.text = _scale_numbers(el.text, scale, 3)
+            el.text = _scale_component(el.text, scale, 3, 1)
 
+    # Box size is X Y Z: shrink width only along world/model Y.
     for box in root.iter("box"):
         size = box.find("size")
         if size is not None:
-            size.text = _scale_numbers(size.text, scale, 3)
+            size.text = _scale_component(size.text, scale, 3, 1)
 
+    # Plane size is X Y.
     for plane in root.iter("plane"):
         size = plane.find("size")
         if size is not None:
-            size.text = _scale_numbers(size.text, scale, 2)
+            size.text = _scale_component(size.text, scale, 2, 1)
 
-    for sphere in root.iter("sphere"):
-        radius = sphere.find("radius")
-        if radius is not None and radius.text:
-            radius.text = _fmt(float(radius.text) * scale)
-
-    for shape in list(root.iter("cylinder")) + list(root.iter("capsule")):
-        for name in ("radius", "length"):
-            el = shape.find(name)
-            if el is not None and el.text:
-                el.text = _fmt(float(el.text) * scale)
+    # Spheres/cylinders/capsules cannot be anisotropically scaled through their
+    # primitive radius/length fields without changing another axis, so leave
+    # those primitives unchanged. The Hospital structural assets used here are
+    # meshes/boxes/planes.
 
 
 def _write_tree(tree: ET.ElementTree, path: Path) -> None:
@@ -163,7 +168,7 @@ def _make_scaled_model(
     if model is None:
         raise ValueError(f"No <model> in {sdf_path}")
     model.set("name", generated_name)
-    _scale_tree(root, scale)
+    _scale_tree_y(root, scale)
     _rewrite_model_uris(root, original_name, generated_name)
     _write_tree(tree, sdf_path)
     _write_clean_model_config(target / "model.config", generated_name)
@@ -188,28 +193,46 @@ def prepare_scaled_hospital(scale: float = HOSPITAL_SCALE) -> ScaledHospital:
                 "Run mapex_lab/scripts/setup_hospital_world_assets.sh first."
             )
 
-    spawn_x = ORIGINAL_SPAWN_X * scale
+    # Spawn follows exactly the same Y-only transform as the Hospital.
+    spawn_x = ORIGINAL_SPAWN_X
     spawn_y = ORIGINAL_SPAWN_Y * scale
 
     if abs(scale - 1.0) < 1e-12:
-        return ScaledHospital(scale, source_world, source_models, spawn_x, spawn_y, ORIGINAL_SPAWN_YAW)
+        return ScaledHospital(
+            scale, source_world, source_models, spawn_x, spawn_y, ORIGINAL_SPAWN_YAW
+        )
 
     tag = _tag(scale)
-    generated_dir = output_root / f"hospital_scale_{tag}"
+    # Separate cache namespace from the old uniform-scaling implementation.
+    generated_dir = output_root / f"hospital_y_scale_{tag}"
     output_models = generated_dir / "models"
-    output_world = generated_dir / f"hospital_aws_flat_scale_{tag}.sdf"
+    output_world = generated_dir / f"hospital_aws_flat_y_scale_{tag}.sdf"
     manifest_path = generated_dir / "manifest.json"
 
     fingerprint = {
         "world_sha256": _sha256(source_world),
-        "models": {name: _sha256(source_models / name / "model.sdf") for name in _LOCAL_MODELS},
+        "models": {
+            name: _sha256(source_models / name / "model.sdf")
+            for name in _LOCAL_MODELS
+        },
     }
 
     if manifest_path.is_file() and output_world.is_file() and output_models.is_dir():
         try:
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-            if manifest.get("scale") == scale and manifest.get("source_fingerprint") == fingerprint:
-                return ScaledHospital(scale, output_world, output_models, spawn_x, spawn_y, ORIGINAL_SPAWN_YAW)
+            if (
+                manifest.get("scale") == scale
+                and manifest.get("scale_mode") == SCALE_MODE
+                and manifest.get("source_fingerprint") == fingerprint
+            ):
+                return ScaledHospital(
+                    scale,
+                    output_world,
+                    output_models,
+                    spawn_x,
+                    spawn_y,
+                    ORIGINAL_SPAWN_YAW,
+                )
         except (OSError, ValueError, json.JSONDecodeError):
             pass
 
@@ -218,7 +241,7 @@ def prepare_scaled_hospital(scale: float = HOSPITAL_SCALE) -> ScaledHospital:
 
     tree = ET.parse(source_world)
     root = tree.getroot()
-    _scale_tree(root, scale)
+    _scale_tree_y(root, scale)
 
     mapping: dict[str, str] = {}
     for include in root.iter("include"):
@@ -228,8 +251,14 @@ def prepare_scaled_hospital(scale: float = HOSPITAL_SCALE) -> ScaledHospital:
         original = uri.text.strip().removeprefix("model://")
         if original not in _LOCAL_MODELS:
             continue
-        generated = f"{original}_scale_{tag}"
-        _make_scaled_model(source_models / original, output_models, original, generated, scale)
+        generated = f"{original}_y_scale_{tag}"
+        _make_scaled_model(
+            source_models / original,
+            output_models,
+            original,
+            generated,
+            scale,
+        )
         uri.text = f"model://{generated}"
         mapping[original] = generated
 
@@ -243,16 +272,29 @@ def prepare_scaled_hospital(scale: float = HOSPITAL_SCALE) -> ScaledHospital:
         json.dumps(
             {
                 "scale": scale,
+                "scale_mode": SCALE_MODE,
                 "source_world": str(source_world),
                 "generated_world": str(output_world),
                 "source_fingerprint": fingerprint,
                 "model_mapping": mapping,
-                "spawn": {"x": spawn_x, "y": spawn_y, "yaw": ORIGINAL_SPAWN_YAW},
+                "spawn": {
+                    "x": spawn_x,
+                    "y": spawn_y,
+                    "yaw": ORIGINAL_SPAWN_YAW,
+                },
                 "robot_scaled": False,
             },
             indent=2,
-        ) + "\n",
+        )
+        + "\n",
         encoding="utf-8",
     )
 
-    return ScaledHospital(scale, output_world, output_models, spawn_x, spawn_y, ORIGINAL_SPAWN_YAW)
+    return ScaledHospital(
+        scale,
+        output_world,
+        output_models,
+        spawn_x,
+        spawn_y,
+        ORIGINAL_SPAWN_YAW,
+    )
