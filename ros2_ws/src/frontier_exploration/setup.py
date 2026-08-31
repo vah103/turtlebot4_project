@@ -52,10 +52,6 @@ setup(
                 'urdf/rplidar_hospital_low_load.urdf.xacro',
             ],
         ),
-        (
-            'share/' + package_name + '/worlds',
-            ['worlds/hospital_aws_flat.sdf'],
-        ),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
