@@ -2,6 +2,11 @@
 # output from making the worktree dirty between benchmark runs.
 experiments/**
 
+# Hospital source world is tracked; downloaded model assets and generated scaled
+# copies are local runtime data under mapex_lab/map.
+map/models/
+map/generated/
+
 # Generated ground-truth / ROI artifacts
 ground_truth/**/generated/
 
