@@ -184,7 +184,7 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument('max_rmse_m', default_value='0.12'),
             DeclareLaunchArgument('max_translation_correction_m', default_value='0.20'),
             DeclareLaunchArgument('max_rotation_correction_rad', default_value='0.13962634'),
-            DeclareLaunchArgument('segment_distance_m', default_value='6.0'),
+            DeclareLaunchArgument('segment_distance_m', default_value='4.2'),
             DeclareLaunchArgument('segment_turn_rad', default_value='2.09439510'),
             DeclareLaunchArgument('segment_max_translation_correction_m', default_value='0.30'),
             DeclareLaunchArgument('segment_max_rotation_correction_rad', default_value='0.05235988'),
