@@ -3,9 +3,11 @@
 The Hospital world is project-specific. Nav2 starts from the installed
 `turtlebot4_navigation/config/nav2.yaml` and applies only the tiny
 `config/nav2.yaml` override so frontier goals are position-only.
-SLAM uses `mapex_lab/config/slam.yaml`, which follows the
-TurtleBot4 stock SLAM config except that max_laser_range is 20 m to match the
-simulated Hospital LiDAR.
+SLAM uses `mapex_lab/config/slam.yaml`, which follows the TurtleBot4 stock SLAM
+config except that max_laser_range is 20 m to match the simulated Hospital LiDAR.
+
+Hospital world geometry and default spawn are inherited from the scale-aware
+hospital_flat_simulation.launch.py.
 """
 
 import os
@@ -51,14 +53,8 @@ def generate_launch_description() -> LaunchDescription:
     research_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     slam_params = os.path.join(research_root, 'config', 'slam.yaml')
 
-    # Start from the official installed TurtleBot4 Nav2 parameters and change
-    # only the terminal-yaw behavior needed by position-only frontier goals.
     stock_nav2_params = os.path.join(tb4_nav_pkg, 'config', 'nav2.yaml')
-    xy_only_override = os.path.join(
-        research_root,
-        'config',
-        'nav2.yaml',
-    )
+    xy_only_override = os.path.join(research_root, 'config', 'nav2.yaml')
 
     with open(stock_nav2_params, 'r', encoding='utf-8') as stream:
         nav2_base = yaml.safe_load(stream) or {}
@@ -82,9 +78,6 @@ def generate_launch_description() -> LaunchDescription:
     use_sim_time = LaunchConfiguration('use_sim_time')
     use_rviz = LaunchConfiguration('use_rviz')
     headless = LaunchConfiguration('headless')
-    x_pose = LaunchConfiguration('x_pose')
-    y_pose = LaunchConfiguration('y_pose')
-    yaw = LaunchConfiguration('yaw')
     slam_delay_sec = LaunchConfiguration('slam_delay_sec')
     nav2_delay_sec = LaunchConfiguration('nav2_delay_sec')
 
@@ -99,9 +92,6 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             'use_rviz': use_rviz,
             'headless': headless,
-            'x_pose': x_pose,
-            'y_pose': y_pose,
-            'yaw': yaw,
         }.items(),
     )
 
@@ -140,9 +130,6 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument('use_sim_time', default_value='true'),
             DeclareLaunchArgument('use_rviz', default_value='True'),
             DeclareLaunchArgument('headless', default_value='False'),
-            DeclareLaunchArgument('x_pose', default_value='0.0'),
-            DeclareLaunchArgument('y_pose', default_value='12.0'),
-            DeclareLaunchArgument('yaw', default_value='-1.57'),
             DeclareLaunchArgument('slam_delay_sec', default_value='10.0'),
             DeclareLaunchArgument('nav2_delay_sec', default_value='20.0'),
             cleanup,
