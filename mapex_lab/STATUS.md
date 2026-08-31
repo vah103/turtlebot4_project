@@ -34,7 +34,7 @@
 - The recorder gates benchmark start until NavigateToPose has remained ready for at least `3.0 s` with map and TF available. The benchmark clock still starts at the first actual frontier decision after that gate opens.
 - The recorder writes an active main/subgoal as `result=interrupted` during finalize/Ctrl+C instead of silently dropping it, and tracks `main_interrupted` / `subgoal_interrupted` separately from navigation failures.
 - Pilot `pilot_003` passed the recorder smoke-test: readiness occurred before the first frontier decision, coverage was numeric (`0.446064938` at manual stop), and Ctrl+C during main goal 4 produced `result=interrupted` with `main_interrupted=1` in `summary.json`.
-- To reduce disk use without losing the fixed evaluation representation, periodic `maps/snapshot_*` files save **fixed-canvas NPZ only**. Exact decision maps still save both raw + fixed-canvas, and the final map still saves both raw and fixed-canvas.
+- To reduce disk use without losing the fixed evaluation representation, periodic `maps/snapshot_*` files save **fixed-canvas NPZ only**. Exact decision maps still save both raw + fixed-canvas, and the final map still saves both raw + fixed-canvas.
 - `nearest_001` is retained as run 1 by user decision: exploration data are usable, final coverage `0.996184464`, distance `578.24 m`, but the run ended by manual Ctrl+C because the old completion logic deadlocked after the remaining large frontier representatives returned `208`. Any comparison/report must disclose this manual legacy termination rather than treating it as automatic terminal confirmation.
 - The run-1 completion deadlock directly motivated the case-2 planner-reachability completion verification.
 - `nearest_002` completed automatically under the current local-window debug workflow with coverage `0.993965697`, distance `525.85 m`, benchmark time `5897.07 s`, 59 selected frontiers, 50/62 successful main attempts (`80.65%`), 3 recovery subgoal attempts (2 success, 1 failure), and terminal reason `no_planner_reachable_frontier` after 5 stable planner sweeps.
@@ -52,6 +52,7 @@
 - The probabilistic raycast in `scripts/mapex.py` follows Sec. IV-C literally: accumulated occupancy Delta is initialized once per ray and increases along pixels until epsilon. This intentionally follows the paper definition rather than reproducing the upstream helper bug where the accumulator is reset inside the per-pixel loop.
 - `scripts/mapex.py` has been updated to the current shared planner-blocking API (`is_planner_blocked_suppressed`) so the Stage-3 policy inherits both `206 GOAL_OCCUPIED` and `208 NO_VALID_PATH` handling correctly.
 - Direct execution of `scripts/mapex.py` forces ROS node name `mapex_explorer` and suppresses the Nearest-specific parent startup line; Nearest keeps its original node name/log because `nf_basic.py` itself was not changed.
+- Added `mapex_lab/map/turtlebot3_house.sdf`, a Gazebo Sim SDF 1.9 wrapper for the `Omni_Boe_Robot` TurtleBot3 House geometry, for auxiliary cross-environment testing without changing the canonical `hospital_v2` protocol.
 
 ## In progress
 
@@ -60,6 +61,7 @@
 - Continue runtime validation of path-guided recovery for controller error `105`.
 - Continue local-window SLAM diagnostics separately; the current local-window workflow remains a debug runtime profile relative to formal `hospital_v2`.
 - Runtime-smoke-test `scripts/mapex.py`: confirm official preprocessing imports in the ROS/LaMa environment, the intended three models load, `/map` is exactly `0.10 m/cell`, first mean/variance/visibility/IG/score values are finite, ROS node name is `mapex_explorer`, and the selected frontier follows the same Nav2/recovery/completion behavior as `nf_basic.py`.
+- TurtleBot3 House is converted to a modern world file, but its model assets still need to be exposed through `GZ_SIM_RESOURCE_PATH` and a dedicated launch path must be wired before closed-loop TurtleBot4 testing.
 
 ## Next actions
 
@@ -70,6 +72,7 @@
 5. Continue the Nearest batch to at least 5 completed runs, target 10, after the `206` runtime check passes.
 6. Smoke-test `scripts/mapex.py` separately before long Stage-3 runs: verify model loading, official preprocessing, first prediction, first visibility/IG ranking, `mapex_explorer` node identity, and first exact-frontier Nav2 goal.
 7. Before treating either batch as formal `hospital_v2` benchmark data, resolve the current `local.launch.py` debug-profile vs official-protocol mismatch and ensure Nearest/MapEx/proposed method all use the same effective SLAM/Nav2 stack.
+8. For auxiliary House testing, expose `Omni_Boe_Robot/omni_diff/models` to Gazebo Sim and add a dedicated House launch that uses `mapex_lab/map/turtlebot3_house.sdf` while keeping House results separate from `hospital_v2`.
 
 ## Important decisions
 
@@ -89,7 +92,8 @@
 - Pilot/debug launch alternatives do not count as official benchmark runs unless the protocol is deliberately changed for every compared method.
 - Storage policy: periodic snapshots keep the fixed canvas only; decision-time maps and final maps keep both raw + fixed-canvas forms.
 - Per-run provenance is mandatory: every new `scripts/nf_run.py` run should contain `metadata.json` and `runtime_nav2_merged.yaml` from startup onward.
+- TurtleBot3 House tests are auxiliary/debug cross-environment checks and must not be mixed with `hospital_v2` benchmark statistics unless a new protocol is explicitly defined for all compared methods.
 
 ## Latest result
 
-2026-08-29: `nearest_003` completed automatically at coverage `0.992034720` (99.2035%), distance `479.20 m`, benchmark time `5663.42 s` (~1 h 34 min 23 s). It selected 56 frontiers; 42 of 58 main navigation attempts succeeded (`72.41%`). Error counts were `208:15`, `105:2`, `206:1`; 14 frontiers were abandoned after `208`. Completion used the second terminal rule after repeated `ComputePathToPose` sweeps found no planner-reachable eligible frontier. A subsequent `nearest_004` attempt was interrupted at coverage `0.854499037`, distance `159.13 m` after repeated `206 GOAL_OCCUPIED` retries; commit `6c81982` changes main-goal `206` handling to the same suppress-and-terminal-revalidate policy as `208`, so `nearest_004` must be rerun from scratch. Stage-3 `scripts/mapex.py` has now been aligned with the official MapEx preprocessing and visibility-boundary implementation while retaining the paper-defined accumulated probabilistic raycast, YAML-source policy settings, shared current `206/208` API, and MapEx-specific node identity; runtime smoke validation is the next gate before any long MapEx run.
+2026-08-29: `nearest_003` completed automatically at coverage `0.992034720` (99.2035%), distance `479.20 m`, benchmark time `5663.42 s` (~1 h 34 min 23 s). It selected 56 frontiers; 42 of 58 main navigation attempts succeeded (`72.41%`). Error counts were `208:15`, `105:2`, `206:1`; 14 frontiers were abandoned after `208`. Completion used the second terminal rule after repeated `ComputePathToPose` sweeps found no planner-reachable eligible frontier. A subsequent `nearest_004` attempt was interrupted at coverage `0.854499037`, distance `159.13 m` after repeated `206 GOAL_OCCUPIED` retries; commit `6c81982` changes main-goal `206` handling to the same suppress-and-terminal-revalidate policy as `208`, so `nearest_004` must be rerun from scratch. Stage-3 `scripts/mapex.py` has now been aligned with the official MapEx preprocessing and visibility-boundary implementation while retaining the paper-defined accumulated probabilistic raycast, YAML-source policy settings, shared current `206/208` API, and MapEx-specific node identity; runtime smoke validation is the next gate before any long MapEx run. On 2026-08-31, `mapex_lab/map/turtlebot3_house.sdf` was added as an auxiliary Gazebo Sim world wrapper for cross-environment testing; it is not yet wired into the TurtleBot4 launch stack and does not modify `hospital_v2`.
