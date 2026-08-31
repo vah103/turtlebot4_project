@@ -23,11 +23,12 @@ SOURCE_MODELS_DIR = MAP_ROOT / "models"
 GENERATED_ROOT = MAP_ROOT / "generated"
 
 # Single source of truth for Hospital geometry scale.
-# 1.0 = original size, 0.7 = 70% linear size, etc.
 HOSPITAL_SCALE = 0.5
 
+# Reference spawn in the original (1.0x) Hospital.
+# Y=8.0 moves the start farther inward than the previous Y=12.0 position.
 ORIGINAL_SPAWN_X = 0.0
-ORIGINAL_SPAWN_Y = 12.0
+ORIGINAL_SPAWN_Y = 8.0
 ORIGINAL_SPAWN_YAW = -1.57
 
 _LOCAL_MODELS = (
@@ -53,16 +54,15 @@ def _fmt(value: float) -> str:
 
 
 def _tag(scale: float) -> str:
-    text = f"{scale:.6f}".rstrip("0").rstrip(".")
-    return text.replace("-", "m").replace(".", "p")
+    return f"{scale:.6f}".rstrip("0").rstrip(".").replace("-", "m").replace(".", "p")
 
 
 def _sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
 
 
 def _scale_numbers(text: str | None, scale: float, count: int) -> str | None:
@@ -71,7 +71,7 @@ def _scale_numbers(text: str | None, scale: float, count: int) -> str | None:
     values = text.split()
     if len(values) != count:
         raise ValueError(f"Expected {count} numbers, got {text!r}")
-    return " ".join(_fmt(float(value) * scale) for value in values)
+    return " ".join(_fmt(float(v) * scale) for v in values)
 
 
 def _scale_pose(text: str | None, scale: float) -> str | None:
@@ -80,11 +80,11 @@ def _scale_pose(text: str | None, scale: float) -> str | None:
     parts = text.split()
     if len(parts) not in (6, 7):
         raise ValueError(f"Unsupported <pose>: {text!r}")
-    values = [float(value) for value in parts]
+    values = [float(v) for v in parts]
     values[0] *= scale
     values[1] *= scale
     values[2] *= scale
-    return " ".join(_fmt(value) for value in values)
+    return " ".join(_fmt(v) for v in values)
 
 
 def _scale_tree(root: ET.Element, scale: float) -> None:
@@ -92,12 +92,12 @@ def _scale_tree(root: ET.Element, scale: float) -> None:
         pose.text = _scale_pose(pose.text, scale)
 
     for mesh in root.iter("mesh"):
-        scale_el = mesh.find("scale")
-        if scale_el is None:
-            scale_el = ET.SubElement(mesh, "scale")
-            scale_el.text = f"{_fmt(scale)} {_fmt(scale)} {_fmt(scale)}"
+        el = mesh.find("scale")
+        if el is None:
+            el = ET.SubElement(mesh, "scale")
+            el.text = f"{_fmt(scale)} {_fmt(scale)} {_fmt(scale)}"
         else:
-            scale_el.text = _scale_numbers(scale_el.text, scale, 3)
+            el.text = _scale_numbers(el.text, scale, 3)
 
     for box in root.iter("box"):
         size = box.find("size")
@@ -116,9 +116,9 @@ def _scale_tree(root: ET.Element, scale: float) -> None:
 
     for shape in list(root.iter("cylinder")) + list(root.iter("capsule")):
         for name in ("radius", "length"):
-            element = shape.find(name)
-            if element is not None and element.text:
-                element.text = _fmt(float(element.text) * scale)
+            el = shape.find(name)
+            if el is not None and el.text:
+                el.text = _fmt(float(el.text) * scale)
 
 
 def _write_tree(tree: ET.ElementTree, path: Path) -> None:
@@ -136,12 +136,8 @@ def _rewrite_model_uris(root: ET.Element, old: str, new: str) -> None:
 
 
 def _write_clean_model_config(path: Path, generated_name: str) -> None:
-    """Write a minimal valid Gazebo model.config.
-
-    Some upstream AWS assets contain an unescaped '&' in <description>, so
-    parsing their model.config with a strict XML parser fails. The scaled model
-    only needs a valid name/version/SDF declaration, so generate that directly.
-    """
+    # Do not parse upstream model.config: the curtain description contains an
+    # unescaped '&', which is invalid XML. A minimal valid config is sufficient.
     root = ET.Element("model")
     ET.SubElement(root, "name").text = generated_name
     ET.SubElement(root, "version").text = "1.0"
@@ -170,12 +166,10 @@ def _make_scaled_model(
     _scale_tree(root, scale)
     _rewrite_model_uris(root, original_name, generated_name)
     _write_tree(tree, sdf_path)
-
     _write_clean_model_config(target / "model.config", generated_name)
 
 
 def prepare_scaled_hospital(scale: float = HOSPITAL_SCALE) -> ScaledHospital:
-    """Return the configured Hospital world/models, generating them if needed."""
     scale = float(scale)
     if not math.isfinite(scale) or scale <= 0.0:
         raise ValueError(f"HOSPITAL_SCALE must be finite and > 0, got {scale!r}")
@@ -187,10 +181,10 @@ def prepare_scaled_hospital(scale: float = HOSPITAL_SCALE) -> ScaledHospital:
     if not source_world.is_file():
         raise FileNotFoundError(f"Hospital world not found: {source_world}")
 
-    for model_name in _LOCAL_MODELS:
-        if not (source_models / model_name / "model.sdf").is_file():
+    for name in _LOCAL_MODELS:
+        if not (source_models / name / "model.sdf").is_file():
             raise FileNotFoundError(
-                f"Missing Hospital asset {source_models / model_name}. "
+                f"Missing Hospital asset {source_models / name}. "
                 "Run mapex_lab/scripts/setup_hospital_world_assets.sh first."
             )
 
@@ -198,14 +192,7 @@ def prepare_scaled_hospital(scale: float = HOSPITAL_SCALE) -> ScaledHospital:
     spawn_y = ORIGINAL_SPAWN_Y * scale
 
     if abs(scale - 1.0) < 1e-12:
-        return ScaledHospital(
-            scale=scale,
-            world=source_world,
-            models_dir=source_models,
-            spawn_x=spawn_x,
-            spawn_y=spawn_y,
-            spawn_yaw=ORIGINAL_SPAWN_YAW,
-        )
+        return ScaledHospital(scale, source_world, source_models, spawn_x, spawn_y, ORIGINAL_SPAWN_YAW)
 
     tag = _tag(scale)
     generated_dir = output_root / f"hospital_scale_{tag}"
@@ -213,29 +200,16 @@ def prepare_scaled_hospital(scale: float = HOSPITAL_SCALE) -> ScaledHospital:
     output_world = generated_dir / f"hospital_aws_flat_scale_{tag}.sdf"
     manifest_path = generated_dir / "manifest.json"
 
-    source_fingerprint = {
+    fingerprint = {
         "world_sha256": _sha256(source_world),
-        "models": {
-            name: _sha256(source_models / name / "model.sdf")
-            for name in _LOCAL_MODELS
-        },
+        "models": {name: _sha256(source_models / name / "model.sdf") for name in _LOCAL_MODELS},
     }
 
     if manifest_path.is_file() and output_world.is_file() and output_models.is_dir():
         try:
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-            if (
-                manifest.get("scale") == scale
-                and manifest.get("source_fingerprint") == source_fingerprint
-            ):
-                return ScaledHospital(
-                    scale=scale,
-                    world=output_world,
-                    models_dir=output_models,
-                    spawn_x=spawn_x,
-                    spawn_y=spawn_y,
-                    spawn_yaw=ORIGINAL_SPAWN_YAW,
-                )
+            if manifest.get("scale") == scale and manifest.get("source_fingerprint") == fingerprint:
+                return ScaledHospital(scale, output_world, output_models, spawn_x, spawn_y, ORIGINAL_SPAWN_YAW)
         except (OSError, ValueError, json.JSONDecodeError):
             pass
 
@@ -251,20 +225,13 @@ def prepare_scaled_hospital(scale: float = HOSPITAL_SCALE) -> ScaledHospital:
         uri = include.find("uri")
         if uri is None or not uri.text:
             continue
-        original_name = uri.text.strip().removeprefix("model://")
-        if original_name not in _LOCAL_MODELS:
+        original = uri.text.strip().removeprefix("model://")
+        if original not in _LOCAL_MODELS:
             continue
-
-        generated_name = f"{original_name}_scale_{tag}"
-        _make_scaled_model(
-            source_models / original_name,
-            output_models,
-            original_name,
-            generated_name,
-            scale,
-        )
-        uri.text = f"model://{generated_name}"
-        mapping[original_name] = generated_name
+        generated = f"{original}_scale_{tag}"
+        _make_scaled_model(source_models / original, output_models, original, generated, scale)
+        uri.text = f"model://{generated}"
+        mapping[original] = generated
 
     missing = sorted(set(_LOCAL_MODELS) - set(mapping))
     if missing:
@@ -278,26 +245,14 @@ def prepare_scaled_hospital(scale: float = HOSPITAL_SCALE) -> ScaledHospital:
                 "scale": scale,
                 "source_world": str(source_world),
                 "generated_world": str(output_world),
-                "source_fingerprint": source_fingerprint,
+                "source_fingerprint": fingerprint,
                 "model_mapping": mapping,
-                "spawn": {
-                    "x": spawn_x,
-                    "y": spawn_y,
-                    "yaw": ORIGINAL_SPAWN_YAW,
-                },
+                "spawn": {"x": spawn_x, "y": spawn_y, "yaw": ORIGINAL_SPAWN_YAW},
                 "robot_scaled": False,
             },
             indent=2,
-        )
-        + "\n",
+        ) + "\n",
         encoding="utf-8",
     )
 
-    return ScaledHospital(
-        scale=scale,
-        world=output_world,
-        models_dir=output_models,
-        spawn_x=spawn_x,
-        spawn_y=spawn_y,
-        spawn_yaw=ORIGINAL_SPAWN_YAW,
-    )
+    return ScaledHospital(scale, output_world, output_models, spawn_x, spawn_y, ORIGINAL_SPAWN_YAW)
