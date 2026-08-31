@@ -135,6 +135,21 @@ def _rewrite_model_uris(root: ET.Element, old: str, new: str) -> None:
             uri.text = replacement + uri.text[len(prefix):]
 
 
+def _write_clean_model_config(path: Path, generated_name: str) -> None:
+    """Write a minimal valid Gazebo model.config.
+
+    Some upstream AWS assets contain an unescaped '&' in <description>, so
+    parsing their model.config with a strict XML parser fails. The scaled model
+    only needs a valid name/version/SDF declaration, so generate that directly.
+    """
+    root = ET.Element("model")
+    ET.SubElement(root, "name").text = generated_name
+    ET.SubElement(root, "version").text = "1.0"
+    sdf = ET.SubElement(root, "sdf", {"version": "1.6"})
+    sdf.text = "model.sdf"
+    _write_tree(ET.ElementTree(root), path)
+
+
 def _make_scaled_model(
     source: Path,
     output_models: Path,
@@ -156,13 +171,7 @@ def _make_scaled_model(
     _rewrite_model_uris(root, original_name, generated_name)
     _write_tree(tree, sdf_path)
 
-    config_path = target / "model.config"
-    if config_path.is_file():
-        config_tree = ET.parse(config_path)
-        name = config_tree.getroot().find("name")
-        if name is not None:
-            name.text = generated_name
-        _write_tree(config_tree, config_path)
+    _write_clean_model_config(target / "model.config", generated_name)
 
 
 def prepare_scaled_hospital(scale: float = HOSPITAL_SCALE) -> ScaledHospital:
