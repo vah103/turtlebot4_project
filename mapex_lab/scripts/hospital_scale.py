@@ -24,13 +24,13 @@ SOURCE_MODELS_DIR = MAP_ROOT / "models"
 GENERATED_ROOT = MAP_ROOT / "generated"
 
 # Single source of truth for Hospital geometry scale.
-# 1.0 = original size; 0.5 = half size in X, Y and Z.
-HOSPITAL_SCALE = 0.5
+# 1.0 = original size; 0.7 = 70% size in X, Y and Z.
+HOSPITAL_SCALE = 0.7
 SCALE_MODE = "uniform_map_spawn_y_only"
 
 # Reference spawn in the original (1.0x) Hospital.
 # Spawn X is NOT scaled; spawn Y follows HOSPITAL_SCALE.
-# At 0.5 this gives (0.0, 6.0).
+# At 0.7 this gives (0.0, 8.4).
 ORIGINAL_SPAWN_X = 0.0
 ORIGINAL_SPAWN_Y = 12.0
 ORIGINAL_SPAWN_YAW = -1.57
