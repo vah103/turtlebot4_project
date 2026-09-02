@@ -3,17 +3,18 @@
 
 The file keeps ROS2/Nav2 execution, exact-frontier goals, recovery, planner-
 blocking suppression, terminal revalidation, completion, markers and status in
-``NearestEuclideanFrontier``.  Only the exploration policy is replaced by the
-MapEx pipeline from Ho et al., ICRA 2025 / arXiv:2409.15590:
+``NearestEuclideanFrontier``. Only the exploration policy is implemented here,
+with the code structure intentionally following the MapEx block diagram:
 
     observed map
-      -> MapEx frontier representatives
       -> three LaMa ensemble predictions
       -> ensemble mean + variance
+      -> MapEx frontier extraction
       -> probabilistic visibility at each frontier
       -> IG = sum(variance on predicted-visible AND currently-unknown cells)
-      -> score = IG / Euclidean distance
-      -> choose the highest-score selectable frontier
+      -> Euclidean distance
+      -> score = IG / distance
+      -> choose argmax(score)
 
 Pinned reference implementation:
     castacks/MapEx @ 53636bd1c79153acc3c74a532837d78c926bae5e
@@ -24,9 +25,8 @@ Reproduction choices:
   ``default_map_eval`` transform rather than a locally recreated tensor path.
 - Visibility follows the official boundary construction: probabilistic ray hit
   points -> Polygon -> buffer(1) -> Bresenham boundary -> 4-neighbour flood fill.
-- The occupancy accumulator is intentionally initialized ONCE PER RAY, matching
-  Sec. IV-C of the paper.  This avoids reproducing the upstream helper bug that
-  resets the accumulator inside the per-pixel loop.
+- The occupancy accumulator is initialized ONCE PER RAY, matching Sec. IV-C of
+  the paper rather than reproducing the upstream accumulator-reset helper bug.
 - Hospital does not apply the original implementation's <1 m waypoint rejection
   or the Nearest-only <0.5 m guard; Nav2 reachability handles close frontiers.
 """
@@ -205,37 +205,6 @@ def ros_occupancy_to_mapex(grid: np.ndarray) -> np.ndarray:
     return observed
 
 
-def _paper_probabilistic_hit_points(
-    mean_map: np.ndarray,
-    viewpoint: tuple[int, int],
-    ray_range_cells: int,
-    num_rays: int,
-    epsilon: float,
-) -> np.ndarray:
-    """Return ordered ray endpoints with Delta accumulated once along each ray."""
-    height, width = mean_map.shape
-    vr, vc = viewpoint
-    hit_points: list[tuple[int, int]] = []
-
-    # Official implementation uses np.linspace with the endpoint included.
-    for angle in np.linspace(0.0, 2.0 * math.pi, num_rays):
-        end_r = int(vr + ray_range_cells * math.cos(angle))
-        end_c = int(vc + ray_range_cells * math.sin(angle))
-
-        delta = 0.0
-        last_valid = (vr, vc)
-        for row, col in _bresenham((vr, vc), (end_r, end_c)):
-            if row < 0 or row >= height or col < 0 or col >= width:
-                break
-            last_valid = (row, col)
-            delta += float(np.clip(mean_map[row, col], 0.0, 1.0))
-            if delta >= epsilon:
-                break
-        hit_points.append(last_valid)
-
-    return np.asarray(hit_points, dtype=np.int64)
-
-
 def _init_buffered_boundary(
     shape: tuple[int, int],
     boundary_points: np.ndarray,
@@ -278,96 +247,6 @@ def _flood_fill_simple(
                 flooded[nr, nc] = 0.0
                 fringe.append((nr, nc))
     return flooded
-
-
-def probabilistic_visibility_mask(
-    mean_map: np.ndarray,
-    observed_map: np.ndarray,
-    viewpoint: tuple[int, int],
-    ray_range_cells: int,
-    num_rays: int,
-    epsilon: float,
-) -> np.ndarray:
-    """MapEx probabilistic visibility with official buffered-boundary flood fill."""
-    try:
-        from shapely.geometry import MultiPolygon, Point, Polygon
-    except Exception as exc:  # noqa: BLE001
-        raise RuntimeError(
-            "Shapely is required for the official MapEx visibility boundary"
-        ) from exc
-
-    height, width = mean_map.shape
-    vr, vc = viewpoint
-    if not (0 <= vr < height and 0 <= vc < width):
-        return np.zeros_like(mean_map, dtype=bool)
-
-    hit_points = _paper_probabilistic_hit_points(
-        mean_map,
-        viewpoint,
-        ray_range_cells,
-        num_rays,
-        epsilon,
-    )
-    if len(hit_points) < 3 or len(np.unique(hit_points, axis=0)) < 3:
-        return np.zeros_like(mean_map, dtype=bool)
-
-    # simple_mask_utils.get_vis_mask constructs Polygon(hit_points).buffer(1).
-    polygon = Polygon(hit_points)
-    if polygon.is_empty:
-        return np.zeros_like(mean_map, dtype=bool)
-    if not polygon.is_valid:
-        polygon = polygon.buffer(0)
-    expanded = polygon.buffer(1)
-
-    if isinstance(expanded, MultiPolygon):
-        viewpoint_point = Point(vr, vc)
-        containing = [
-            geometry
-            for geometry in expanded.geoms
-            if geometry.contains(viewpoint_point) or geometry.touches(viewpoint_point)
-        ]
-        expanded = max(
-            containing if containing else list(expanded.geoms),
-            key=lambda geometry: geometry.area,
-        )
-    if expanded.is_empty or not hasattr(expanded, "exterior"):
-        return np.zeros_like(mean_map, dtype=bool)
-
-    expanded_boundary = np.asarray(expanded.exterior.coords).astype(np.int64)
-    initialized = _init_buffered_boundary(mean_map.shape, expanded_boundary)
-    boundary_indices = np.argwhere(initialized == 0.0)
-
-    seed = (vr, vc)
-    if initialized[seed[0], seed[1]] == 0.0:
-        interior = Polygon(hit_points).representative_point()
-        seed = (int(interior.x), int(interior.y))
-
-    if (
-        not (0 <= seed[0] < height and 0 <= seed[1] < width)
-        or initialized[seed[0], seed[1]] == 0.0
-    ):
-        # Robust fallback for a degenerate discretized boundary.
-        candidates = np.argwhere(initialized == 0.5)
-        if len(candidates) == 0:
-            return np.zeros_like(mean_map, dtype=bool)
-        seed = tuple(
-            candidates[
-                np.argmin(
-                    np.sum(
-                        (candidates - np.asarray([vr, vc], dtype=np.int64)) ** 2,
-                        axis=1,
-                    )
-                )
-            ]
-        )
-
-    flooded = _flood_fill_simple((int(seed[0]), int(seed[1])), initialized)
-    if len(boundary_indices):
-        flooded[boundary_indices[:, 0], boundary_indices[:, 1]] = 0.5
-
-    predicted_visible = flooded == 0.0
-    currently_unknown = np.isclose(observed_map, 0.5)
-    return predicted_visible & currently_unknown
 
 
 class LamaEnsemble:
@@ -418,7 +297,6 @@ class LamaEnsemble:
         self.torch = torch
         self.convert_obsimg_to_model_input = convert_obsimg_to_model_input
         transform_variant = str(prediction_config["transform_variant"])
-        # default_map_eval ignores out_size, but the official API expects it.
         self.map_transform = get_lama_transform(transform_variant, (512, 512))
         self.load_lama_model = load_lama_model
 
@@ -433,9 +311,7 @@ class LamaEnsemble:
             )
             model.eval()
             self.models.append(model)
-            self.source_names.append(
-                str(model_dir / "models" / checkpoint_name)
-            )
+            self.source_names.append(str(model_dir / "models" / checkpoint_name))
 
     def _resolve_model_specs(self) -> list[tuple[Path, str]]:
         checkpoint_values = [
@@ -466,9 +342,7 @@ class LamaEnsemble:
             )
         ).expanduser().resolve()
         if not ensemble_dir.is_dir():
-            raise RuntimeError(
-                f"MapEx ensemble directory not found: {ensemble_dir}"
-            )
+            raise RuntimeError(f"MapEx ensemble directory not found: {ensemble_dir}")
 
         member_dirs = sorted(path for path in ensemble_dir.iterdir() if path.is_dir())
         if len(member_dirs) != ENSEMBLE_SIZE:
@@ -505,11 +379,11 @@ class LamaEnsemble:
             )
         return model_dir, checkpoint_name
 
-    def predict_mean_variance(
+    def predict_maps(
         self,
         observed_map: np.ndarray,
-    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, int, int]:
-        """Run official preprocessing, then compute MapEx ensemble mean/variance."""
+    ) -> tuple[np.ndarray, np.ndarray, int, int]:
+        """Run official preprocessing and return P1/P2/P3 plus padded O_t."""
         torch = self.torch
         observed_3channel = np.stack(
             [observed_map, observed_map, observed_map],
@@ -541,8 +415,6 @@ class LamaEnsemble:
         predictions = []
         with torch.no_grad():
             for model in self.models:
-                # Keep the official batch semantics, but clone tensors so one model
-                # cannot leave fields that influence the next ensemble member.
                 batch = {
                     key: (value.clone() if torch.is_tensor(value) else value)
                     for key, value in input_batch.items()
@@ -554,30 +426,55 @@ class LamaEnsemble:
                     )
                 predictions.append(output["inpainted"][0, 0].detach())
 
-        prediction_stack = torch.stack(predictions, dim=0)
-        mean_map = torch.mean(prediction_stack, dim=0).float().cpu().numpy()
-        variance_map = torch.var(prediction_stack, dim=0).float().cpu().numpy()
+        prediction_stack = (
+            torch.stack(predictions, dim=0)
+            .float()
+            .cpu()
+            .numpy()
+            .astype(np.float32, copy=False)
+        )
+        if prediction_stack.shape[0] != ENSEMBLE_SIZE:
+            raise RuntimeError(
+                f"Expected {ENSEMBLE_SIZE} LaMa predictions; "
+                f"got shape {prediction_stack.shape}"
+            )
+        return prediction_stack, padded_observed, pad_top, pad_left
 
+    @staticmethod
+    def compute_mean_map(
+        predictions: np.ndarray,
+        padded_observed: np.ndarray,
+    ) -> np.ndarray:
+        """P_bar_t = mean(P1_t, P2_t, P3_t), preserving known observed cells."""
+        mean_map = np.mean(predictions, axis=0)
         mean_map = np.nan_to_num(mean_map, nan=0.5, posinf=1.0, neginf=0.0)
+        mean_map = np.clip(mean_map, 0.0, 1.0).astype(np.float32, copy=False)
+
+        known = ~np.isclose(padded_observed, 0.5)
+        mean_map[known] = padded_observed[known]
+        return mean_map
+
+    @staticmethod
+    def compute_variance_map(
+        predictions: np.ndarray,
+        padded_observed: np.ndarray,
+    ) -> np.ndarray:
+        """V_t = variance(P1_t, P2_t, P3_t), preserving current semantics."""
+        variance_map = np.var(predictions, axis=0, ddof=1)
         variance_map = np.nan_to_num(
             variance_map,
             nan=0.0,
             posinf=0.0,
             neginf=0.0,
         )
-        mean_map = np.clip(mean_map, 0.0, 1.0).astype(np.float32, copy=False)
         variance_map = np.maximum(variance_map, 0.0).astype(
             np.float32,
             copy=False,
         )
 
-        # Inpainting output should already preserve known cells. Enforce the same
-        # semantics explicitly so numerical noise cannot create known-cell IG.
         known = ~np.isclose(padded_observed, 0.5)
-        mean_map[known] = padded_observed[known]
         variance_map[known] = 0.0
-
-        return mean_map, variance_map, padded_observed, pad_top, pad_left
+        return variance_map
 
 
 class MapExExplorer(NearestEuclideanFrontier):
@@ -615,6 +512,9 @@ class MapExExplorer(NearestEuclideanFrontier):
         self.mapex_sensor_range_m = float(visibility["ray_length_m"])
         self.mapex_num_rays = int(visibility["num_rays"])
         self.mapex_epsilon = float(visibility["occupancy_threshold"])
+        self.ray_range_cells = int(
+            round(self.mapex_sensor_range_m / self.mapex_resolution_m)
+        )
 
         self.get_logger().info("Loading official MapEx LaMa ensemble...")
         self.ensemble = LamaEnsemble(
@@ -640,63 +540,99 @@ class MapExExplorer(NearestEuclideanFrontier):
         for index, source in enumerate(self.ensemble.source_names, start=1):
             self.get_logger().info(f"MapEx G{index}: {source}")
 
-    def _score_mapex_candidates(
+    def get_current_map(self) -> np.ndarray:
+        """Return the current ROS OccupancyGrid as a 2-D numpy array."""
+        width = self.map_msg.info.width
+        height = self.map_msg.info.height
+        return np.asarray(self.map_msg.data, dtype=np.int16).reshape(height, width)
+
+    def get_robot_pose(self):
+        """Block-diagram name for the inherited map-frame robot pose lookup."""
+        return self.robot_position()
+
+    def predict_maps(
         self,
-        grid: np.ndarray,
-        regions,
-        robot_x: float,
-        robot_y: float,
-    ) -> tuple[list[tuple], list[dict]]:
-        observed = ros_occupancy_to_mapex(grid)
+        observed_map: np.ndarray,
+    ) -> tuple[np.ndarray, np.ndarray, int, int]:
+        """P1_t, P2_t, P3_t = G1/G2/G3(O_t)."""
+        return self.ensemble.predict_maps(observed_map)
 
-        prediction_start = time.perf_counter()
-        (
-            mean_map,
-            variance_map,
-            padded_observed,
-            pad_top,
-            pad_left,
-        ) = self.ensemble.predict_mean_variance(observed)
-        prediction_s = time.perf_counter() - prediction_start
+    def compute_mean_map(
+        self,
+        predictions: np.ndarray,
+        padded_observed: np.ndarray,
+    ) -> np.ndarray:
+        """Compute the ensemble mean predicted map P_bar_t."""
+        return self.ensemble.compute_mean_map(predictions, padded_observed)
 
-        if (
-            mean_map.shape != padded_observed.shape
-            or variance_map.shape != padded_observed.shape
-        ):
-            raise RuntimeError(
-                f"LaMa shape mismatch: obs={padded_observed.shape}, "
-                f"mean={mean_map.shape}, variance={variance_map.shape}"
-            )
+    def compute_variance_map(
+        self,
+        predictions: np.ndarray,
+        padded_observed: np.ndarray,
+    ) -> np.ndarray:
+        """Compute the ensemble variance map V_t."""
+        return self.ensemble.compute_variance_map(predictions, padded_observed)
 
-        self.last_mean_map = mean_map
-        self.last_variance_map = variance_map
-        ray_range_cells = int(
-            round(self.mapex_sensor_range_m / self.mapex_resolution_m)
-        )
+    def detect_frontier_cells(self, grid: np.ndarray) -> np.ndarray:
+        """Detect free cells adjacent to unknown using the MapEx 8-neighbour rule."""
+        return self.frontier_mask(grid)
 
-        candidates = []
-        metrics = []
-        scoring_start = time.perf_counter()
+    @staticmethod
+    def connected_components(frontier_mask: np.ndarray) -> list[list[tuple[int, int]]]:
+        """Return all 8-connected frontier components without size filtering."""
+        height, width = frontier_mask.shape
+        visited = np.zeros_like(frontier_mask, dtype=bool)
+        regions: list[list[tuple[int, int]]] = []
+
+        for row in range(height):
+            for col in range(width):
+                if not frontier_mask[row, col] or visited[row, col]:
+                    continue
+
+                queue = deque([(row, col)])
+                visited[row, col] = True
+                region: list[tuple[int, int]] = []
+
+                while queue:
+                    r, c = queue.popleft()
+                    region.append((r, c))
+
+                    for dr in (-1, 0, 1):
+                        for dc in (-1, 0, 1):
+                            if dr == 0 and dc == 0:
+                                continue
+                            nr = r + dr
+                            nc = c + dc
+                            if (
+                                0 <= nr < height
+                                and 0 <= nc < width
+                                and frontier_mask[nr, nc]
+                                and not visited[nr, nc]
+                            ):
+                                visited[nr, nc] = True
+                                queue.append((nr, nc))
+
+                regions.append(region)
+
+        return regions
+
+    @staticmethod
+    def filter_small_clusters(
+        regions: list[list[tuple[int, int]]],
+    ) -> list[list[tuple[int, int]]]:
+        """Keep MapEx frontier regions whose size is strictly greater than 10."""
+        return [region for region in regions if len(region) > MIN_REGION_SIZE]
+
+    def compute_frontier_centroids(
+        self,
+        regions: list[list[tuple[int, int]]],
+    ) -> list[dict]:
+        """Create F_t using the frontier cell nearest each region arithmetic mean."""
+        frontiers = []
         for candidate_id, region in enumerate(regions):
             row, col = self.representative(region)
             x, y = self.cell_to_world(row, col)
-            distance_m = math.hypot(x - robot_x, y - robot_y)
-
-            visibility = probabilistic_visibility_mask(
-                mean_map,
-                padded_observed,
-                (row + pad_top, col + pad_left),
-                ray_range_cells,
-                self.mapex_num_rays,
-                self.mapex_epsilon,
-            )
-            information_gain = float(np.sum(variance_map[visibility]))
-            score = information_gain / max(distance_m, 1e-6)
-
-            # Parent helpers minimize tuple[0].  -score preserves that interface
-            # while MapEx itself maximizes IG / distance.
-            candidates.append((-score, x, y, row, col, len(region)))
-            metrics.append(
+            frontiers.append(
                 {
                     "candidate_id": candidate_id,
                     "row": int(row),
@@ -704,27 +640,244 @@ class MapExExplorer(NearestEuclideanFrontier):
                     "x": float(x),
                     "y": float(y),
                     "region_size": int(len(region)),
+                }
+            )
+        return frontiers
+
+    def cast_ray(
+        self,
+        mean_map: np.ndarray,
+        viewpoint: tuple[int, int],
+        angle: float,
+    ) -> tuple[int, int]:
+        """Cast one probabilistic ray and return its endpoint."""
+        height, width = mean_map.shape
+        vr, vc = viewpoint
+        end_r = int(vr + self.ray_range_cells * math.cos(angle))
+        end_c = int(vc + self.ray_range_cells * math.sin(angle))
+
+        delta = 0.0
+        last_valid = (vr, vc)
+        for row, col in _bresenham((vr, vc), (end_r, end_c)):
+            if row < 0 or row >= height or col < 0 or col >= width:
+                break
+            last_valid = (row, col)
+            delta += float(np.clip(mean_map[row, col], 0.0, 1.0))
+            if delta >= self.mapex_epsilon:
+                break
+        return last_valid
+
+    def collect_ray_endpoints(
+        self,
+        mean_map: np.ndarray,
+        viewpoint: tuple[int, int],
+    ) -> np.ndarray:
+        """Cast the configured 360-degree ray set from one frontier."""
+        hit_points = [
+            self.cast_ray(mean_map, viewpoint, angle)
+            for angle in np.linspace(
+                0.0,
+                2.0 * math.pi,
+                self.mapex_num_rays,
+            )
+        ]
+        return np.asarray(hit_points, dtype=np.int64)
+
+    @staticmethod
+    def build_visibility_mask(
+        hit_points: np.ndarray,
+        viewpoint: tuple[int, int],
+        shape: tuple[int, int],
+    ) -> np.ndarray:
+        """Build the predicted sensor-coverage mask from ordered ray endpoints."""
+        try:
+            from shapely.geometry import MultiPolygon, Point, Polygon
+        except Exception as exc:  # noqa: BLE001
+            raise RuntimeError(
+                "Shapely is required for the official MapEx visibility boundary"
+            ) from exc
+
+        vr, vc = viewpoint
+        height, width = shape
+        if not (0 <= vr < height and 0 <= vc < width):
+            return np.zeros(shape, dtype=bool)
+        if len(hit_points) < 3 or len(np.unique(hit_points, axis=0)) < 3:
+            return np.zeros(shape, dtype=bool)
+
+        polygon = Polygon(hit_points)
+        if polygon.is_empty:
+            return np.zeros(shape, dtype=bool)
+        if not polygon.is_valid:
+            polygon = polygon.buffer(0)
+        expanded = polygon.buffer(1)
+
+        if isinstance(expanded, MultiPolygon):
+            viewpoint_point = Point(vr, vc)
+            containing = [
+                geometry
+                for geometry in expanded.geoms
+                if geometry.contains(viewpoint_point)
+                or geometry.touches(viewpoint_point)
+            ]
+            expanded = max(
+                containing if containing else list(expanded.geoms),
+                key=lambda geometry: geometry.area,
+            )
+        if expanded.is_empty or not hasattr(expanded, "exterior"):
+            return np.zeros(shape, dtype=bool)
+
+        expanded_boundary = np.asarray(expanded.exterior.coords).astype(np.int64)
+        initialized = _init_buffered_boundary(shape, expanded_boundary)
+        boundary_indices = np.argwhere(initialized == 0.0)
+
+        seed = (vr, vc)
+        if initialized[seed[0], seed[1]] == 0.0:
+            interior = Polygon(hit_points).representative_point()
+            seed = (int(interior.x), int(interior.y))
+
+        if (
+            not (0 <= seed[0] < height and 0 <= seed[1] < width)
+            or initialized[seed[0], seed[1]] == 0.0
+        ):
+            candidates = np.argwhere(initialized == 0.5)
+            if len(candidates) == 0:
+                return np.zeros(shape, dtype=bool)
+            seed = tuple(
+                candidates[
+                    np.argmin(
+                        np.sum(
+                            (
+                                candidates
+                                - np.asarray([vr, vc], dtype=np.int64)
+                            )
+                            ** 2,
+                            axis=1,
+                        )
+                    )
+                ]
+            )
+
+        flooded = _flood_fill_simple((int(seed[0]), int(seed[1])), initialized)
+        if len(boundary_indices):
+            flooded[boundary_indices[:, 0], boundary_indices[:, 1]] = 0.5
+        return flooded == 0.0
+
+    def compute_visibility(
+        self,
+        frontier: dict,
+        mean_map: np.ndarray,
+        padded_observed: np.ndarray,
+        pad_top: int,
+        pad_left: int,
+    ) -> np.ndarray:
+        """Return nu(f) = predicted-visible AND currently-unknown cells."""
+        viewpoint = (
+            int(frontier["row"]) + pad_top,
+            int(frontier["col"]) + pad_left,
+        )
+        hit_points = self.collect_ray_endpoints(mean_map, viewpoint)
+        sensor_coverage_mask = self.build_visibility_mask(
+            hit_points,
+            viewpoint,
+            mean_map.shape,
+        )
+        currently_unknown = np.isclose(padded_observed, 0.5)
+        return sensor_coverage_mask & currently_unknown
+
+    @staticmethod
+    def compute_information_gain(
+        variance_map: np.ndarray,
+        visibility_mask: np.ndarray,
+    ) -> float:
+        """I(f) = sum V_t(x,y) over cells in nu(f)."""
+        return float(np.sum(variance_map[visibility_mask]))
+
+    @staticmethod
+    def compute_distance(robot_pose, frontier: dict) -> float:
+        """d(f) = Euclidean distance from current robot pose to frontier."""
+        robot_x, robot_y = robot_pose
+        return math.hypot(
+            float(frontier["x"]) - robot_x,
+            float(frontier["y"]) - robot_y,
+        )
+
+    @staticmethod
+    def compute_score(information_gain: float, distance_m: float) -> float:
+        """S(f) = I(f) / d(f)."""
+        return information_gain / max(distance_m, 1e-6)
+
+    def evaluate_frontiers(
+        self,
+        frontiers: list[dict],
+        mean_map: np.ndarray,
+        variance_map: np.ndarray,
+        padded_observed: np.ndarray,
+        robot_pose,
+        pad_top: int,
+        pad_left: int,
+        prediction_s: float,
+    ) -> tuple[list[dict], float]:
+        """Evaluate every f in F_t: visibility -> IG -> distance -> score."""
+        evaluations = []
+        scoring_start = time.perf_counter()
+
+        for frontier in frontiers:
+            visibility = self.compute_visibility(
+                frontier,
+                mean_map,
+                padded_observed,
+                pad_top,
+                pad_left,
+            )
+            information_gain = self.compute_information_gain(
+                variance_map,
+                visibility,
+            )
+            distance_m = self.compute_distance(robot_pose, frontier)
+            score = self.compute_score(information_gain, distance_m)
+
+            evaluations.append(
+                {
+                    **frontier,
                     "distance_m": float(distance_m),
-                    "information_gain": information_gain,
+                    "information_gain": float(information_gain),
                     "score": float(score),
                     "visible_unknown_cells": int(np.count_nonzero(visibility)),
                 }
             )
 
         scoring_s = time.perf_counter() - scoring_start
-        for metric in metrics:
-            metric["ensemble_prediction_s"] = prediction_s
-            metric["all_frontier_scoring_s"] = scoring_s
-        return candidates, metrics
+        for evaluation in evaluations:
+            evaluation["ensemble_prediction_s"] = prediction_s
+            evaluation["all_frontier_scoring_s"] = scoring_s
+        return evaluations, scoring_s
+
+    @staticmethod
+    def select_best_frontier(evaluations: list[dict]) -> dict | None:
+        """Psi = argmax_f S(f)."""
+        if not evaluations:
+            return None
+        return max(evaluations, key=lambda candidate: candidate["score"])
+
+    @staticmethod
+    def to_execution_candidate(evaluation: dict) -> tuple:
+        """Adapt MapEx dict data to the tuple interface expected by nf_basic."""
+        return (
+            -float(evaluation["score"]),
+            float(evaluation["x"]),
+            float(evaluation["y"]),
+            int(evaluation["row"]),
+            int(evaluation["col"]),
+            int(evaluation["region_size"]),
+        )
 
     def exploration_step(self):
-        """Run one MapEx decision; goal execution remains inherited from nf_basic."""
+        """Run one MapEx decision; execution remains inherited from nf_basic."""
         if self.completed:
             return
         if self.map_msg is None or self.goal_active or self.revalidation_active:
             return
 
-        # Preserve the exact same selected-frontier lock/recovery semantics.
         if self.main_goal is not None:
             self.reset_completion_verification("main_frontier_still_pending")
             self.revalidation_signature = None
@@ -735,8 +888,8 @@ class MapExExplorer(NearestEuclideanFrontier):
             self.send_navigation_goal(x, y, mode="main")
             return
 
-        robot = self.robot_position()
-        if robot is None:
+        robot_pose = self.get_robot_pose()
+        if robot_pose is None:
             return
 
         resolution = float(self.map_msg.info.resolution)
@@ -760,29 +913,59 @@ class MapExExplorer(NearestEuclideanFrontier):
             )
             return
 
-        width = self.map_msg.info.width
-        height = self.map_msg.info.height
-        grid = np.asarray(self.map_msg.data, dtype=np.int16).reshape(height, width)
-
-        # These inherited routines match the pinned MapEx frontier implementation:
-        # free==0, unknown<0, 8-neighbour frontier, 8-connected clusters, size>10,
-        # representative = actual frontier cell nearest the arithmetic mean.
-        regions = self.frontier_regions(self.frontier_mask(grid))
-        if not regions:
-            self.clear_goal_markers()
-            self.revalidation_signature = None
-            self.observe_no_frontier_terminal_state()
-            return
-
-        robot_x, robot_y = robot
+        grid = self.get_current_map()
+        observed_map = ros_occupancy_to_mapex(grid)
         self.mapex_decision_id += 1
         decision_start = time.perf_counter()
+
         try:
-            all_candidates, metrics = self._score_mapex_candidates(
-                grid,
-                regions,
-                robot_x,
-                robot_y,
+            prediction_start = time.perf_counter()
+            (
+                predictions,
+                padded_observed,
+                pad_top,
+                pad_left,
+            ) = self.predict_maps(observed_map)
+            mean_map = self.compute_mean_map(predictions, padded_observed)
+            variance_map = self.compute_variance_map(
+                predictions,
+                padded_observed,
+            )
+            prediction_s = time.perf_counter() - prediction_start
+
+            if (
+                mean_map.shape != padded_observed.shape
+                or variance_map.shape != padded_observed.shape
+            ):
+                raise RuntimeError(
+                    f"LaMa shape mismatch: obs={padded_observed.shape}, "
+                    f"mean={mean_map.shape}, variance={variance_map.shape}"
+                )
+
+            self.last_mean_map = mean_map
+            self.last_variance_map = variance_map
+
+            frontier_cells = self.detect_frontier_cells(grid)
+            regions = self.connected_components(frontier_cells)
+            regions = self.filter_small_clusters(regions)
+
+            if not regions:
+                self.last_candidate_metrics = []
+                self.clear_goal_markers()
+                self.revalidation_signature = None
+                self.observe_no_frontier_terminal_state()
+                return
+
+            frontiers = self.compute_frontier_centroids(regions)
+            evaluations, _scoring_s = self.evaluate_frontiers(
+                frontiers=frontiers,
+                mean_map=mean_map,
+                variance_map=variance_map,
+                padded_observed=padded_observed,
+                robot_pose=robot_pose,
+                pad_top=pad_top,
+                pad_left=pad_left,
+                prediction_s=prediction_s,
             )
         except Exception as exc:  # noqa: BLE001
             self.clear_goal_markers()
@@ -798,8 +981,8 @@ class MapExExplorer(NearestEuclideanFrontier):
             )
             return
 
-        self.last_candidate_metrics = metrics
-        if not all_candidates:
+        self.last_candidate_metrics = evaluations
+        if not evaluations:
             self.clear_goal_markers()
             self.reset_completion_verification("mapex_no_scoreable_candidate")
             self.publish_status(
@@ -810,20 +993,26 @@ class MapExExplorer(NearestEuclideanFrontier):
             )
             return
 
-        metric_by_grid = {(m["row"], m["col"]): m for m in metrics}
-        candidates = []
+        selectable_evaluations = []
         suppressed_planner_blocked = 0
-        for candidate in all_candidates:
-            _negative_score, x, y, _row, _col, _region_size = candidate
-            if self.is_planner_blocked_suppressed(x, y):
+        for evaluation in evaluations:
+            if self.is_planner_blocked_suppressed(
+                evaluation["x"],
+                evaluation["y"],
+            ):
                 suppressed_planner_blocked += 1
             else:
-                candidates.append(candidate)
+                selectable_evaluations.append(evaluation)
 
-        if not candidates:
+        all_execution_candidates = [
+            self.to_execution_candidate(evaluation)
+            for evaluation in evaluations
+        ]
+
+        if not selectable_evaluations:
             self.clear_goal_markers()
-            if suppressed_planner_blocked == len(all_candidates):
-                self.maybe_start_planner_revalidation(all_candidates)
+            if suppressed_planner_blocked == len(evaluations):
+                self.maybe_start_planner_revalidation(all_execution_candidates)
                 return
             self.revalidation_signature = None
             self.reset_completion_verification("mapex_frontier_region_present")
@@ -832,32 +1021,45 @@ class MapExExplorer(NearestEuclideanFrontier):
         self.revalidation_signature = None
         self.reset_completion_verification("planner_candidate_available")
 
-        selected = min(candidates, key=lambda item: item[0])
-        negative_score, x, y, row, col, region_size = selected
-        selected_metric = metric_by_grid[(row, col)]
-        self.publish_goal_markers(candidates, selected)
+        selected_metric = self.select_best_frontier(selectable_evaluations)
+        if selected_metric is None:
+            return
 
+        selectable_execution_candidates = [
+            self.to_execution_candidate(evaluation)
+            for evaluation in selectable_evaluations
+        ]
+        selected_execution_candidate = self.to_execution_candidate(selected_metric)
+        self.publish_goal_markers(
+            selectable_execution_candidates,
+            selected_execution_candidate,
+        )
+
+        x = float(selected_metric["x"])
+        y = float(selected_metric["y"])
+        region_size = int(selected_metric["region_size"])
         decision_s = time.perf_counter() - decision_start
+
         self.get_logger().info(
             f"MapEx decision {self.mapex_decision_id}: selected x={x:.2f}, y={y:.2f}, "
             f"IG={selected_metric['information_gain']:.6f}, "
             f"distance={selected_metric['distance_m']:.2f} m, "
-            f"score={-negative_score:.6f}, region={region_size}, "
-            f"candidates={len(candidates)}, compute={decision_s:.2f} s"
+            f"score={selected_metric['score']:.6f}, region={region_size}, "
+            f"candidates={len(selectable_evaluations)}, compute={decision_s:.2f} s"
         )
         self.publish_status(
             "MAPEX_SELECTED",
             reason="highest_information_gain_over_euclidean_distance",
             decision_id=self.mapex_decision_id,
-            candidate_count=len(candidates),
+            candidate_count=len(selectable_evaluations),
             suppressed_planner_blocked=suppressed_planner_blocked,
-            selected_row=int(row),
-            selected_col=int(col),
+            selected_row=int(selected_metric["row"]),
+            selected_col=int(selected_metric["col"]),
             target_x=round(x, 4),
             target_y=round(y, 4),
             information_gain=selected_metric["information_gain"],
             distance_m=selected_metric["distance_m"],
-            score=-negative_score,
+            score=selected_metric["score"],
             computation_s=round(decision_s, 4),
         )
 
