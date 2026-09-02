@@ -379,10 +379,7 @@ class LamaEnsemble:
             )
         return model_dir, checkpoint_name
 
-    def predict_maps(
-        self,
-        observed_map: np.ndarray,
-    ) -> tuple[np.ndarray, np.ndarray, int, int]:
+    def predict_maps(self, observed_map: np.ndarray):
         """Run official preprocessing and return P1/P2/P3 plus padded O_t."""
         torch = self.torch
         observed_3channel = np.stack(
@@ -426,27 +423,22 @@ class LamaEnsemble:
                     )
                 predictions.append(output["inpainted"][0, 0].detach())
 
-        prediction_stack = (
-            torch.stack(predictions, dim=0)
-            .float()
-            .cpu()
-            .numpy()
-            .astype(np.float32, copy=False)
-        )
+        prediction_stack = torch.stack(predictions, dim=0)
         if prediction_stack.shape[0] != ENSEMBLE_SIZE:
             raise RuntimeError(
                 f"Expected {ENSEMBLE_SIZE} LaMa predictions; "
-                f"got shape {prediction_stack.shape}"
+                f"got shape {tuple(prediction_stack.shape)}"
             )
         return prediction_stack, padded_observed, pad_top, pad_left
 
-    @staticmethod
-    def compute_mean_map(
-        predictions: np.ndarray,
-        padded_observed: np.ndarray,
-    ) -> np.ndarray:
+    def compute_mean_map(self, predictions, padded_observed: np.ndarray) -> np.ndarray:
         """P_bar_t = mean(P1_t, P2_t, P3_t), preserving known observed cells."""
-        mean_map = np.mean(predictions, axis=0)
+        mean_map = (
+            self.torch.mean(predictions, dim=0)
+            .float()
+            .cpu()
+            .numpy()
+        )
         mean_map = np.nan_to_num(mean_map, nan=0.5, posinf=1.0, neginf=0.0)
         mean_map = np.clip(mean_map, 0.0, 1.0).astype(np.float32, copy=False)
 
@@ -454,13 +446,14 @@ class LamaEnsemble:
         mean_map[known] = padded_observed[known]
         return mean_map
 
-    @staticmethod
-    def compute_variance_map(
-        predictions: np.ndarray,
-        padded_observed: np.ndarray,
-    ) -> np.ndarray:
+    def compute_variance_map(self, predictions, padded_observed: np.ndarray) -> np.ndarray:
         """V_t = variance(P1_t, P2_t, P3_t), preserving current semantics."""
-        variance_map = np.var(predictions, axis=0, ddof=1)
+        variance_map = (
+            self.torch.var(predictions, dim=0)
+            .float()
+            .cpu()
+            .numpy()
+        )
         variance_map = np.nan_to_num(
             variance_map,
             nan=0.0,
@@ -550,16 +543,13 @@ class MapExExplorer(NearestEuclideanFrontier):
         """Block-diagram name for the inherited map-frame robot pose lookup."""
         return self.robot_position()
 
-    def predict_maps(
-        self,
-        observed_map: np.ndarray,
-    ) -> tuple[np.ndarray, np.ndarray, int, int]:
+    def predict_maps(self, observed_map: np.ndarray):
         """P1_t, P2_t, P3_t = G1/G2/G3(O_t)."""
         return self.ensemble.predict_maps(observed_map)
 
     def compute_mean_map(
         self,
-        predictions: np.ndarray,
+        predictions,
         padded_observed: np.ndarray,
     ) -> np.ndarray:
         """Compute the ensemble mean predicted map P_bar_t."""
@@ -567,7 +557,7 @@ class MapExExplorer(NearestEuclideanFrontier):
 
     def compute_variance_map(
         self,
-        predictions: np.ndarray,
+        predictions,
         padded_observed: np.ndarray,
     ) -> np.ndarray:
         """Compute the ensemble variance map V_t."""
