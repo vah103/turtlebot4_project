@@ -1,7 +1,8 @@
-"""Launch selectable world + segmented local scan frontend + SLAM Toolbox + stock Nav2.
+"""Launch New Room + segmented local scan frontend + SLAM Toolbox + stock Nav2.
 
-Hospital remains the default world. Pass world:=new_room to reuse this submap
-SLAM/Nav2 stack on mapex_lab/map/new_room.sdf.
+New Room is the default world and uses spawn (0, 0, 0), matching the active
+New Room GT/ROI pipeline. Hospital can still be selected explicitly with launch
+arguments when needed.
 
 This experiment is intentionally not part of the official hospital_v2 protocol.
 """
@@ -177,10 +178,10 @@ def generate_launch_description() -> LaunchDescription:
 
     return LaunchDescription(
         [
-            DeclareLaunchArgument('world', default_value='hospital'),
-            DeclareLaunchArgument('x_pose', default_value='auto'),
-            DeclareLaunchArgument('y_pose', default_value='auto'),
-            DeclareLaunchArgument('yaw', default_value='auto'),
+            DeclareLaunchArgument('world', default_value='new_room'),
+            DeclareLaunchArgument('x_pose', default_value='0.0'),
+            DeclareLaunchArgument('y_pose', default_value='0.0'),
+            DeclareLaunchArgument('yaw', default_value='0.0'),
             DeclareLaunchArgument('use_sim_time', default_value='true'),
             DeclareLaunchArgument('use_rviz', default_value='True'),
             DeclareLaunchArgument('headless', default_value='False'),
