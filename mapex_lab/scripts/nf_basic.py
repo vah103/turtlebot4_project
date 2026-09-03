@@ -14,10 +14,13 @@ Frontier policy:
 Navigation recovery:
 - the selected frontier remains the main exploration goal until reached
 - a lightweight Nav2 BT returns planner/controller failure quickly
-- on main-goal execution failure, choose a temporary subgoal on the last global path
-- after reaching the subgoal, retry the exact same main frontier
-- if a main goal returns Nav2 error 206 (GOAL_OCCUPIED) or 208 (NO_VALID_PATH),
-  abandon that frontier for ordinary selection instead of retrying it forever
+- on ordinary main-goal execution failure, choose a temporary subgoal on the last
+  global path and then retry the exact same main frontier
+- Nav2 105 (FAILED_TO_MAKE_PROGRESS) gets at most one path-guided recovery attempt;
+  if no useful subgoal exists, the recovery subgoal fails, or 105 happens again,
+  suppress that frontier locally for a short cooldown and continue elsewhere
+- Nav2 206 (GOAL_OCCUPIED) and 208 (NO_VALID_PATH) remain planner-blocking failures
+  and are handled by the existing planner suppression/revalidation logic
 
 Completion policy:
 - NEVER declare complete while a main/subgoal is active
@@ -26,6 +29,8 @@ Completion policy:
 - case 2: if frontier regions remain but every eligible representative is currently
   suppressed after planner-blocking 206/208 failures, revalidate the whole set with
   ComputePathToPose; require 5 consecutive exhausted planner sweeps at least 2 s apart
+- a temporary 105 execution cooldown is NOT terminal evidence and blocks terminal
+  planner revalidation until the cooldown expires
 - any planner-reachable frontier resets completion verification and resumes exploration
 - terminal evidence must span at least 10 s of navigation idle time
 - do not declare complete during the first 20 s after node start
@@ -65,10 +70,15 @@ SUBGOAL_MAIN_GOAL_CLEARANCE_M = 0.15
 # the exact main frontier, rather than stopping early because of planner/goal tolerance.
 MAIN_PLAN_ENDPOINT_TOLERANCE_M = 0.10
 
-# NavigateToPose propagates planner failures from ComputePathToPose.  GOAL_OCCUPIED
-# (206) and NO_VALID_PATH (208) are both treated as planner-blocking failures for
-# ordinary frontier selection: skip the affected frontier temporarily, then explicitly
-# recheck it during terminal planner sweeps rather than treating it as permanently dead.
+# FollowPath error 105 is an execution/local-navigation failure. Give it one
+# path-guided recovery chance, then move on temporarily rather than retry forever.
+FAILED_TO_MAKE_PROGRESS_ERROR_CODE = 105
+EXECUTION_FAILURE_LIMIT = 2
+EXECUTION_BLOCKED_SKIP_RADIUS_M = 0.30
+EXECUTION_BLOCKED_COOLDOWN_S = 30.0
+
+# NavigateToPose propagates planner failures from ComputePathToPose. GOAL_OCCUPIED
+# (206) and NO_VALID_PATH (208) are planner-blocking failures.
 GOAL_OCCUPIED_ERROR_CODE = 206
 NO_VALID_PATH_ERROR_CODE = 208
 PLANNER_BLOCKING_ERROR_CODES = {
@@ -104,9 +114,14 @@ class NearestEuclideanFrontier(Node):
         self.latest_main_plan = None
         self.recovery_count = 0
 
+        # 105-specific bounded recovery state for the current main frontier.
+        self.execution_failure_count = 0
+        self.recovery_trigger_error_code = None
+        # (x, y, expiry_time_s)
+        self.execution_blocked_goals = []
+
         # Main frontier positions that most recently returned planner-blocking
-        # GOAL_OCCUPIED (206) or NO_VALID_PATH (208). They are skipped during
-        # ordinary nearest selection, but terminal revalidation tests them again.
+        # GOAL_OCCUPIED (206) or NO_VALID_PATH (208).
         self.planner_blocked_goals = []
 
         # Robust completion state shared by both terminal conditions.
@@ -121,9 +136,7 @@ class NearestEuclideanFrontier(Node):
         self.completion_last_map_generation = -1
         self.last_status_state = None
 
-        # Planner-only terminal revalidation state.  A sweep checks every
-        # currently eligible representative with ComputePathToPose.  Five
-        # consecutive exhausted sweeps are required before completion.
+        # Planner-only terminal revalidation state.
         self.revalidation_active = False
         self.revalidation_candidates = []
         self.revalidation_index = 0
@@ -185,6 +198,8 @@ class NearestEuclideanFrontier(Node):
             "Nearest Euclidean Frontier started "
             f"(min distance={MIN_DISTANCE_THRESHOLD:.2f} m, "
             f"path-subgoal recovery={SUBGOAL_MAX_DISTANCE_M:.2f} m max, "
+            f"105 limit={EXECUTION_FAILURE_LIMIT}, "
+            f"105 cooldown={EXECUTION_BLOCKED_COOLDOWN_S:.0f} s, "
             f"completion={COMPLETION_REQUIRED_SWEEPS} stable sweeps)"
         )
 
@@ -199,8 +214,6 @@ class NearestEuclideanFrontier(Node):
         self.path_pub.publish(msg)
 
         # A subgoal plan must not overwrite the last path to the main frontier.
-        # For main-goal recovery, also verify that the path has enough poses and
-        # that its final pose actually reaches the exact frontier position.
         if (
             self.goal_active
             and self.current_goal_mode == "main"
@@ -286,11 +299,8 @@ class NearestEuclideanFrontier(Node):
 
         now_s = self.now_s()
 
-        # Do not count the same OccupancyGrid repeatedly.
         if self.map_generation == self.completion_last_map_generation:
             return
-
-        # Keep terminal sweeps spaced in time even if /map updates very quickly.
         if now_s - self.completion_last_sweep_s < COMPLETION_SWEEP_INTERVAL_S:
             return
 
@@ -478,7 +488,101 @@ class NearestEuclideanFrontier(Node):
             transform.transform.translation.y,
         )
 
+    # ----- temporary 105 execution suppression -----
+
+    def prune_execution_blocked_goals(self):
+        now_s = self.now_s()
+        self.execution_blocked_goals = [
+            (x, y, expiry_s)
+            for x, y, expiry_s in self.execution_blocked_goals
+            if expiry_s > now_s
+        ]
+
+    def is_execution_blocked_suppressed(self, x: float, y: float) -> bool:
+        self.prune_execution_blocked_goals()
+        return any(
+            math.hypot(x - blocked_x, y - blocked_y)
+            <= EXECUTION_BLOCKED_SKIP_RADIUS_M
+            for blocked_x, blocked_y, _expiry_s in self.execution_blocked_goals
+        )
+
+    def execution_blocked_remaining_s(self, x: float, y: float):
+        self.prune_execution_blocked_goals()
+        remaining = [
+            expiry_s - self.now_s()
+            for blocked_x, blocked_y, expiry_s in self.execution_blocked_goals
+            if math.hypot(x - blocked_x, y - blocked_y)
+            <= EXECUTION_BLOCKED_SKIP_RADIUS_M
+        ]
+        return max(remaining) if remaining else 0.0
+
+    def candidates_have_execution_cooldown(self, candidates) -> bool:
+        self.prune_execution_blocked_goals()
+        return any(
+            self.is_execution_blocked_suppressed(candidate[1], candidate[2])
+            for candidate in candidates
+        )
+
+    def suppress_main_goal_execution_failed(
+        self,
+        error_code: int,
+        reason: str,
+    ):
+        if self.main_goal is None:
+            return
+
+        x, y = self.main_goal
+        now_s = self.now_s()
+        expiry_s = now_s + EXECUTION_BLOCKED_COOLDOWN_S
+
+        # Refresh one suppression record around this frontier rather than stacking it.
+        self.execution_blocked_goals = [
+            (blocked_x, blocked_y, blocked_expiry_s)
+            for blocked_x, blocked_y, blocked_expiry_s
+            in self.execution_blocked_goals
+            if math.hypot(x - blocked_x, y - blocked_y)
+            > EXECUTION_BLOCKED_SKIP_RADIUS_M
+        ]
+        self.execution_blocked_goals.append((x, y, expiry_s))
+
+        self.get_logger().warn(
+            "Main frontier temporarily suppressed after "
+            f"FAILED_TO_MAKE_PROGRESS ({error_code}): x={x:.2f}, y={y:.2f}; "
+            f"reason={reason}; radius={EXECUTION_BLOCKED_SKIP_RADIUS_M:.2f} m, "
+            f"cooldown={EXECUTION_BLOCKED_COOLDOWN_S:.0f} s. "
+            "Exploration will continue with another frontier."
+        )
+
+        failure_count = self.execution_failure_count
+        self.main_goal = None
+        self.latest_main_plan = None
+        self.recovery_count = 0
+        self.execution_failure_count = 0
+        self.recovery_trigger_error_code = None
+        self.revalidation_signature = None
+
+        self.publish_status(
+            "EXPLORING",
+            reason="main_goal_execution_cooldown",
+            abandoned_x=round(x, 4),
+            abandoned_y=round(y, 4),
+            error_code=error_code,
+            execution_failure_count=failure_count,
+            execution_failure_limit=EXECUTION_FAILURE_LIMIT,
+            skip_radius_m=EXECUTION_BLOCKED_SKIP_RADIUS_M,
+            cooldown_s=EXECUTION_BLOCKED_COOLDOWN_S,
+            cooldown_reason=reason,
+        )
+
+    # ----- planner-blocked suppression -----
+
     def is_planner_blocked_suppressed(self, x: float, y: float) -> bool:
+        # Keep the existing public method as the shared selection gate used by
+        # both Nearest and MapEx. A temporary 105 cooldown therefore affects both
+        # methods without duplicating execution logic in mapex.py.
+        if self.is_execution_blocked_suppressed(x, y):
+            return True
+
         return any(
             math.hypot(x - rejected_x, y - rejected_y)
             <= PLANNER_BLOCKED_SKIP_RADIUS_M
@@ -498,7 +602,15 @@ class NearestEuclideanFrontier(Node):
             return
 
         x, y = self.main_goal
-        if not self.is_planner_blocked_suppressed(x, y):
+
+        # Check planner suppression only; a temporary 105 cooldown for a nearby
+        # point must not prevent recording a real 206/208 planner failure.
+        already_planner_blocked = any(
+            math.hypot(x - rejected_x, y - rejected_y)
+            <= PLANNER_BLOCKED_SKIP_RADIUS_M
+            for rejected_x, rejected_y in self.planner_blocked_goals
+        )
+        if not already_planner_blocked:
             self.planner_blocked_goals.append((x, y))
 
         if error_code == GOAL_OCCUPIED_ERROR_CODE:
@@ -518,6 +630,8 @@ class NearestEuclideanFrontier(Node):
         self.main_goal = None
         self.latest_main_plan = None
         self.recovery_count = 0
+        self.execution_failure_count = 0
+        self.recovery_trigger_error_code = None
         self.publish_status(
             "EXPLORING",
             reason=status_reason,
@@ -545,6 +659,29 @@ class NearestEuclideanFrontier(Node):
 
     def maybe_start_planner_revalidation(self, candidates):
         if self.completed or self.goal_active or self.revalidation_active:
+            return
+
+        # A 105 cooldown is deliberately temporary execution evidence, not proof
+        # that the frontier is planner-unreachable. Do not let MapEx/Nearest's
+        # existing "all suppressed" branch immediately revive the same goal via
+        # ComputePathToPose. Wait for the cooldown to expire.
+        if self.candidates_have_execution_cooldown(candidates):
+            remaining_s = max(
+                (
+                    self.execution_blocked_remaining_s(candidate[1], candidate[2])
+                    for candidate in candidates
+                ),
+                default=0.0,
+            )
+            self.reset_completion_verification(
+                "execution_cooldown_active"
+            )
+            self.publish_status(
+                "WAITING_EXECUTION_COOLDOWN",
+                reason="failed_to_make_progress_frontier_temporarily_suppressed",
+                candidate_count=len(candidates),
+                remaining_cooldown_s=round(max(0.0, remaining_s), 3),
+            )
             return
 
         now_s = self.now_s()
@@ -799,9 +936,9 @@ class NearestEuclideanFrontier(Node):
         if self.map_msg is None or self.goal_active or self.revalidation_active:
             return
 
-        # Execution failures keep the selected frontier pending so path-guided
-        # recovery can retry it. Planner-blocking main errors 206/208 are different:
-        # they are abandoned in goal_result_callback and never reach this retry branch.
+        # Most execution failures keep the selected frontier pending so path-guided
+        # recovery can retry it. 105 may clear main_goal when its bounded recovery
+        # budget is exhausted; 206/208 clear it immediately as planner-blocked.
         if self.main_goal is not None:
             self.reset_completion_verification("main_frontier_still_pending")
             self.revalidation_signature = None
@@ -826,8 +963,6 @@ class NearestEuclideanFrontier(Node):
         mask = self.frontier_mask(grid)
         regions = self.frontier_regions(mask)
 
-        # Case 1: no large frontier regions. A transient empty map must survive
-        # the stable verification window.
         if not regions:
             self.clear_goal_markers()
             self.revalidation_signature = None
@@ -859,10 +994,8 @@ class NearestEuclideanFrontier(Node):
         if not candidates:
             self.clear_goal_markers()
 
-            # Case 2: there are eligible frontier representatives, but every one
-            # has previously returned a planner-blocking 206/208 result. Do not
-            # remain blocked forever; re-run ComputePathToPose over the full set
-            # every >=2 s. Five consecutive exhausted sweeps are terminal evidence.
+            # This call now refuses terminal revalidation while any candidate is
+            # under a temporary 105 execution cooldown.
             if (
                 all_candidates
                 and suppressed_planner_blocked == len(all_candidates)
@@ -870,8 +1003,6 @@ class NearestEuclideanFrontier(Node):
                 self.maybe_start_planner_revalidation(all_candidates)
                 return
 
-            # Representatives hidden only by the short-distance guard are not
-            # sufficient evidence of exploration completion.
             self.revalidation_signature = None
             self.reset_completion_verification("frontier_region_present")
             self.publish_status(
@@ -888,7 +1019,6 @@ class NearestEuclideanFrontier(Node):
             )
             return
 
-        # A normally selectable frontier invalidates all terminal evidence.
         self.revalidation_signature = None
         self.reset_completion_verification("planner_candidate_available")
 
@@ -905,6 +1035,8 @@ class NearestEuclideanFrontier(Node):
         self.main_goal = (x, y)
         self.latest_main_plan = None
         self.recovery_count = 0
+        self.execution_failure_count = 0
+        self.recovery_trigger_error_code = None
         self.send_navigation_goal(x, y, mode="main")
 
     def send_navigation_goal(self, x: float, y: float, mode: str):
@@ -940,6 +1072,7 @@ class NearestEuclideanFrontier(Node):
             target_x=round(x, 4),
             target_y=round(y, 4),
             recovery_count=self.recovery_count,
+            execution_failure_count=self.execution_failure_count,
         )
 
         future = self.nav_client.send_goal_async(goal)
@@ -1005,6 +1138,7 @@ class NearestEuclideanFrontier(Node):
                 self.get_logger().info(
                     "Recovery subgoal reached; retrying the same main frontier."
                 )
+                self.recovery_trigger_error_code = None
                 if self.main_goal is not None:
                     x, y = self.main_goal
                     self.send_navigation_goal(x, y, mode="main")
@@ -1014,6 +1148,8 @@ class NearestEuclideanFrontier(Node):
             self.main_goal = None
             self.latest_main_plan = None
             self.recovery_count = 0
+            self.execution_failure_count = 0
+            self.recovery_trigger_error_code = None
             self.revalidation_signature = None
             self.publish_status("EXPLORING", reason="main_goal_reached")
             return
@@ -1026,52 +1162,89 @@ class NearestEuclideanFrontier(Node):
 
         self.get_logger().warn(f"{mode.capitalize()} goal failed ({detail})")
 
-        # GOAL_OCCUPIED (206) and NO_VALID_PATH (208) are planner-blocking
-        # failures. Do not use path-guided recovery and do not retry the same
-        # exact frontier immediately. Terminal revalidation can still revive it.
+        # Planner failures keep their existing semantics.
         if mode == "main" and error_code in PLANNER_BLOCKING_ERROR_CODES:
             self.abandon_main_goal_planner_blocked(error_code)
             return
 
-        if mode == "main":
-            self.try_path_guided_subgoal()
-        else:
-            # A failed temporary subgoal does not by itself prove the main
-            # frontier is unreachable. Keep the main frontier and retry it.
-            self.get_logger().warn(
-                "Recovery subgoal also failed; keeping the same main frontier."
-            )
+        # Bounded handling for FAILED_TO_MAKE_PROGRESS.
+        if (
+            mode == "main"
+            and error_code == FAILED_TO_MAKE_PROGRESS_ERROR_CODE
+        ):
+            self.execution_failure_count += 1
 
-    def try_path_guided_subgoal(self):
-        if self.main_goal is None or self.completed:
+            if self.execution_failure_count >= EXECUTION_FAILURE_LIMIT:
+                self.suppress_main_goal_execution_failed(
+                    error_code,
+                    reason="repeated_failed_to_make_progress",
+                )
+                return
+
+            recovery_started = self.try_path_guided_subgoal(
+                trigger_error_code=error_code,
+            )
+            if not recovery_started:
+                self.suppress_main_goal_execution_failed(
+                    error_code,
+                    reason="no_useful_path_guided_subgoal",
+                )
             return
+
+        if mode == "main":
+            self.try_path_guided_subgoal(trigger_error_code=error_code)
+            return
+
+        # If a subgoal launched specifically to recover from 105 also fails,
+        # that recovery attempt is exhausted: cool down the main frontier now.
+        if (
+            mode == "subgoal"
+            and self.recovery_trigger_error_code
+            == FAILED_TO_MAKE_PROGRESS_ERROR_CODE
+        ):
+            self.suppress_main_goal_execution_failed(
+                FAILED_TO_MAKE_PROGRESS_ERROR_CODE,
+                reason="failed_to_make_progress_recovery_subgoal_failed",
+            )
+            return
+
+        # Preserve old behavior for recovery subgoals triggered by other errors.
+        self.recovery_trigger_error_code = None
+        self.get_logger().warn(
+            "Recovery subgoal also failed; keeping the same main frontier."
+        )
+
+    def try_path_guided_subgoal(self, trigger_error_code=None) -> bool:
+        if self.main_goal is None or self.completed:
+            return False
 
         plan = self.latest_main_plan
         if plan is None or len(plan.poses) < 2:
             self.get_logger().warn(
-                "Main goal failed but no usable main-goal /plan is available; "
-                "the same main frontier will be retried."
+                "Main goal failed but no usable main-goal /plan is available."
             )
-            return
+            return False
 
         subgoal = self.select_subgoal_on_path(plan)
         if subgoal is None:
             self.get_logger().warn(
-                "Could not choose a useful intermediate point on the main path; "
-                "the same main frontier will be retried."
+                "Could not choose a useful intermediate point on the main path."
             )
-            return
+            return False
 
         x, y, along_path_m, remaining_path_m = subgoal
         self.recovery_count += 1
+        self.recovery_trigger_error_code = trigger_error_code
 
         self.get_logger().warn(
             f"Path-guided recovery #{self.recovery_count}: "
             f"temporary subgoal x={x:.2f}, y={y:.2f}, "
             f"{along_path_m:.2f} m ahead on main path "
-            f"(remaining main path={remaining_path_m:.2f} m)"
+            f"(remaining main path={remaining_path_m:.2f} m, "
+            f"trigger_error={trigger_error_code})"
         )
         self.send_navigation_goal(x, y, mode="subgoal")
+        return True
 
     def select_subgoal_on_path(self, plan: Path):
         robot = self.robot_position()
@@ -1115,8 +1288,6 @@ class NearestEuclideanFrontier(Node):
             ),
         )
 
-        # Keep the temporary goal distinct from the main frontier whenever the
-        # remaining path is long enough.
         if remaining_path_m > SUBGOAL_MAIN_GOAL_CLEARANCE_M:
             desired_distance_m = min(
                 desired_distance_m,
@@ -1135,8 +1306,6 @@ class NearestEuclideanFrontier(Node):
         selected_pose = poses[closest_index + selected_offset].pose.position
         actual_distance_m = cumulative[selected_offset]
 
-        # If discretization leaves the selected pose effectively on top of the
-        # robot, there is no useful recovery motion to command.
         if math.hypot(
             selected_pose.x - robot_x,
             selected_pose.y - robot_y,
