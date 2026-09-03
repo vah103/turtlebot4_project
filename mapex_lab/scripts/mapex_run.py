@@ -106,13 +106,14 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         self.startup_gate_open = False
         self.startup_wait_logged = False
 
-        # MapEx-specific statistics.
+        # MapEx-specific statistics/state.
         self.prediction_ms = []
         self.frontier_scoring_ms = []
         self.selected_ig = []
         self.selected_score = []
         self.selected_distance = []
         self.selection_verification_failures = 0
+        self.last_ensemble_predictions: np.ndarray | None = None
 
         q = QoSProfile(depth=100)
         q.reliability = ReliabilityPolicy.BEST_EFFORT
@@ -267,6 +268,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "lama_worker_python_version": worker_python_version,
             "ensemble_checkpoints": checkpoints,
             "save_prediction_maps": self.save_predictions,
+            "saved_prediction_members": 3 if self.save_predictions else 0,
             "sim_seed": None,
             "sim_seed_policy": SIM_SEED_POLICY,
             "config_sha256": config_sha256,
@@ -329,6 +331,9 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                 "outcome",
                 "raw_map",
                 "canvas_map",
+                "g1_map",
+                "g2_map",
+                "g3_map",
                 "mean_map",
                 "variance_map",
             ],
@@ -417,6 +422,24 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         )
         return True
 
+    def predict_maps(self, observed_map: np.ndarray):
+        """Capture P1/P2/P3 while preserving the canonical MapEx policy call."""
+        result = mapex.MapExExplorer.predict_maps(self, observed_map)
+        predictions = result[0]
+        if hasattr(predictions, "detach"):
+            captured = predictions.detach().float().cpu().numpy()
+        else:
+            captured = np.asarray(predictions, dtype=np.float32)
+        if captured.ndim != 3 or captured.shape[0] != 3:
+            raise RuntimeError(
+                "Recorder expected three LaMa predictions with shape (3,H,W); "
+                f"got {captured.shape}"
+            )
+        self.last_ensemble_predictions = captured.astype(
+            np.float32, copy=True
+        )
+        return result
+
     def exploration_step(self):
         if not self.startup_ready():
             return
@@ -440,6 +463,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
 
             # Prevent a failed/no-frontier decision from inheriting prior diagnostics.
             self.last_candidate_metrics = []
+            self.last_ensemble_predictions = None
             self.last_mean_map = None
             self.last_variance_map = None
 
@@ -464,32 +488,48 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         if self.compute_t0 is not None:
             self.record_decision([], None, "NO_SELECTION")
 
-    def _save_prediction_maps(self, decision_id: int) -> tuple[str, str]:
+    def _save_prediction_maps(
+        self,
+        decision_id: int,
+    ) -> tuple[str, str, str, str, str]:
         if (
             not self.save_predictions
+            or self.last_ensemble_predictions is None
             or self.last_mean_map is None
             or self.last_variance_map is None
             or self.map_msg is None
         ):
-            return "", ""
+            return "", "", "", "", ""
+
+        predictions = np.asarray(
+            self.last_ensemble_predictions, dtype=np.float32
+        )
+        if predictions.ndim != 3 or predictions.shape[0] != 3:
+            raise RuntimeError(
+                "Cannot save LaMa ensemble: expected (3,H,W), "
+                f"got {predictions.shape}"
+            )
 
         mean = np.asarray(self.last_mean_map, dtype=np.float32)
         variance = np.asarray(self.last_variance_map, dtype=np.float32)
+        if predictions.shape[1:] != mean.shape or variance.shape != mean.shape:
+            raise RuntimeError(
+                "Prediction save shape mismatch: "
+                f"ensemble={predictions.shape}, mean={mean.shape}, "
+                f"variance={variance.shape}"
+            )
+
         source_h = int(self.map_msg.info.height)
         source_w = int(self.map_msg.info.width)
         pad_top = max(0, (mean.shape[0] - source_h) // 2)
         pad_left = max(0, (mean.shape[1] - source_w) // 2)
 
-        mean_path = (
-            self.run
-            / "predictions"
-            / f"decision_{decision_id:06d}_mean.npz"
-        )
-        var_path = (
-            self.run
-            / "predictions"
-            / f"decision_{decision_id:06d}_variance.npz"
-        )
+        pred_dir = self.run / "predictions"
+        g1_path = pred_dir / f"decision_{decision_id:06d}_g1.npz"
+        g2_path = pred_dir / f"decision_{decision_id:06d}_g2.npz"
+        g3_path = pred_dir / f"decision_{decision_id:06d}_g3.npz"
+        mean_path = pred_dir / f"decision_{decision_id:06d}_mean.npz"
+        var_path = pred_dir / f"decision_{decision_id:06d}_variance.npz"
 
         common = {
             "resolution": float(self.map_msg.info.resolution),
@@ -500,11 +540,15 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "origin_x": float(self.map_msg.info.origin.position.x),
             "origin_y": float(self.map_msg.info.origin.position.y),
         }
-        np.savez_compressed(mean_path, data=mean, **common)
-        np.savez_compressed(var_path, data=variance, **common)
-        return (
-            str(mean_path.relative_to(self.run)),
-            str(var_path.relative_to(self.run)),
+        np.savez_compressed(g1_path, data=predictions[0], member="G1", **common)
+        np.savez_compressed(g2_path, data=predictions[1], member="G2", **common)
+        np.savez_compressed(g3_path, data=predictions[2], member="G3", **common)
+        np.savez_compressed(mean_path, data=mean, member="mean", **common)
+        np.savez_compressed(var_path, data=variance, member="variance", **common)
+
+        return tuple(
+            str(path.relative_to(self.run))
+            for path in (g1_path, g2_path, g3_path, mean_path, var_path)
         )
 
     def record_decision(self, candidates, selected, outcome):
@@ -515,7 +559,9 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         raw, canvas = self.save_map_pair(
             self.run / "decision_maps" / f"decision_{did:06d}"
         )
-        mean_path, var_path = self._save_prediction_maps(did)
+        g1_path, g2_path, g3_path, mean_path, var_path = (
+            self._save_prediction_maps(did)
+        )
 
         metrics = list(self.last_candidate_metrics or [])
         metric_by_grid = {(m["row"], m["col"]): m for m in metrics}
@@ -590,6 +636,9 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                 "outcome": outcome,
                 "raw_map": raw,
                 "canvas_map": canvas,
+                "g1_map": g1_path,
+                "g2_map": g2_path,
+                "g3_map": g3_path,
                 "mean_map": mean_path,
                 "variance_map": var_path,
             }
@@ -780,6 +829,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "occupied_iou_online": None,
             "tu_online": None,
             "prediction_maps_saved": self.save_predictions,
+            "prediction_members_saved": 3 if self.save_predictions else 0,
         }
         (self.run / "summary.json").write_text(
             json.dumps(summary, indent=2, allow_nan=True),
@@ -826,8 +876,8 @@ def main():
         action=argparse.BooleanOptionalAction,
         default=True,
         help=(
-            "Save per-decision LaMa ensemble mean/variance NPZ files "
-            "(disable with --no-save-predictions to reduce disk use)."
+            "Save per-decision LaMa G1/G2/G3, ensemble mean, and variance NPZ "
+            "files (disable with --no-save-predictions to reduce disk use)."
         ),
     )
     args, ros_args = parser.parse_known_args()
