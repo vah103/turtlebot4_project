@@ -20,8 +20,10 @@
 - `scripts/mapex.py` uses official MapEx LaMa preprocessing and the reference buffered-polygon/Bresenham/flood-fill visibility construction. The probabilistic ray accumulator follows the paper definition (accumulate along each ray) rather than reproducing the upstream helper reset bug.
 - Auxiliary `new_room` closed-loop testing successfully loaded all three LaMa models on CPU, produced finite IG/distance/score values, sent exact frontier goals to Nav2, and reached multiple goals. This is an auxiliary cross-environment check, not formal `hospital_v2` benchmark evidence.
 - `scripts/mapex_run.py` records MapEx runs under `experiments/mapex/<run_id>/`: coverage/known fraction vs time/distance, trajectory, goals, plans, candidate set, selected IG/distance/score, prediction/scoring/total computation timing, exact decision maps, periodic/final maps, and `summary.json`/`metadata.json` provenance.
-- `scripts/mapex_run.py` saves per-decision ensemble **mean** and **variance** NPZ files by default. Prediction metadata now includes source resolution, source shape, padding, and `/map` origin `x/y`, which is required for fixed-canvas structural evaluation.
-- `scripts/mapex_run.py` now records the map-frame robot pose at the first policy decision as `evaluation_start_x/y` for Topological Understanding.
+- `scripts/mapex_lama_worker.py` now exports the complete three-member LaMa prediction stack `P1/P2/P3` in addition to mean/variance, and `scripts/mapex_lama_bridge.py` exposes the canonical `predict_maps` / mean / variance interface to the ROS-side MapEx policy.
+- `scripts/mapex_run.py` now captures and saves **five prediction products per completed prediction decision by default**: `G1`, `G2`, `G3`, ensemble `mean`, and ensemble `variance`. The three member maps are the individual LaMa outputs before the recorder combines them; mean/variance remain the maps used by MapEx policy/evaluation.
+- Each saved prediction NPZ carries source resolution, source shape, padding, `/map` origin `x/y`, and a `member` label. `decisions.csv` now includes `g1_map`, `g2_map`, `g3_map`, `mean_map`, and `variance_map` paths.
+- `scripts/mapex_run.py` records the map-frame robot pose at the first policy decision as `evaluation_start_x/y` for Topological Understanding.
 - Added `scripts/evaluate_mapex_run.py` and integrated it into `scripts/mapex_run.py`. The evaluator runs only **after recorder CSV files are closed**, so IoU/TU computation does not contaminate online benchmark time.
 - Occupied IoU follows the official MapEx threshold convention: ensemble-mean prediction `> 0.5` is occupied; evaluation is against occupied structural ground truth inside the structural evaluation mask.
 - Topological Understanding follows the MapEx evaluation idea: 100 deterministic free-space goals, 4-connected predicted-map planning, success only if a predicted path exists and no path cell intersects occupied ground truth. `pyastar2d` is used when available; otherwise a deterministic 4-neighbour BFS shortest-path fallback is recorded in provenance.
@@ -31,20 +33,20 @@
 
 ## In progress
 
-- **Generate and validate the real Hospital structural ground truth** `ground_truth/hospital/generated/hospital_structural_gt_v1.npz`. Until this exists, real IoU/TU are intentionally not produced.
+- Runtime-smoke-test the updated bridge/recorder on the currently used auxiliary map and verify every prediction decision produces exactly `G1/G2/G3/mean/variance` NPZ files with matching shape/metadata.
+- Generate and validate structural ground truth for the actual map selected for quantitative IoU/TU evaluation. Until the correct map-specific GT exists, real IoU/TU are intentionally not produced.
 - Validate structural GT alignment against the SLAM map: collision source, world -> map transform, resolution, building footprint/evaluation mask, wall/door treatment, and free start pose.
-- Run one real `scripts/mapex_run.py` smoke test after structural GT exists and verify `evaluation.json` reports `status: ok`, `evaluation.csv` contains decision-wise IoU/TU, and `summary.json` contains final IoU/TU.
 - Continue runtime validation of shared `206/208` suppression, path-guided recovery, and terminal planner-reachability completion.
 - Resolve the current debug `local.launch.py` runtime profile vs formal `hospital_v2` protocol before treating long Nearest/MapEx batches as formal benchmark comparisons.
 
 ## Next actions
 
 1. Pull the latest repo.
-2. Build `ground_truth/hospital/generated/hospital_structural_gt_v1.npz` according to `structural_gt_v1.yaml` and visually validate its alignment with Hospital/SLAM.
-3. Run one short MapEx recorder test with the normal single entry point:
+2. Run one short MapEx recorder test with the normal single entry point:
    `python mapex_lab/scripts/mapex_run.py --run-id mapex_test_001`
-4. Check `experiments/mapex/mapex_test_001/evaluation.json`; require `status: ok` before trusting IoU/TU.
-5. Inspect `evaluation.csv`, `metrics.csv`, and `summary.json` for Coverage + Time + Distance + IoU + TU.
+3. Check `experiments/mapex/mapex_test_001/predictions/`; each prediction decision must contain matching `_g1.npz`, `_g2.npz`, `_g3.npz`, `_mean.npz`, `_variance.npz` files.
+4. Check `decisions.csv` and verify all five prediction-path columns are populated for decisions where LaMa inference completed.
+5. Build/validate the structural ground truth for the actual evaluation map, then rerun `scripts/evaluate_mapex_run.py` or let `mapex_run.py` invoke it automatically at run end.
 6. Only after the single-run validation passes, run repeated MapEx/Nearest experiments under one frozen runtime profile.
 
 ## Important decisions
@@ -53,6 +55,7 @@
 - **Official MapEx policy:** `mapex_lab/scripts/mapex.py`.
 - **Official MapEx recorded-run entry point:** `mapex_lab/scripts/mapex_run.py`.
 - **Offline MapEx structural evaluator:** `mapex_lab/scripts/evaluate_mapex_run.py`.
+- The canonical MapEx policy file remains untouched by the new G1/G2/G3 recording feature; individual-member capture is instrumentation in the worker/bridge/recorder path only.
 - IoU/TU are post-run metrics. They must not be computed inside the online decision loop because TU is expensive and would change exploration timing.
 - If structural GT is missing/invalid, the evaluator writes a `skipped_*` status and leaves IoU/TU unavailable; it must never invent placeholder scores.
 - Structural GT is local/generated data and is not committed. The lightweight semantic contract is committed in `ground_truth/hospital/structural_gt_v1.yaml`.
@@ -63,4 +66,4 @@
 
 ## Latest result
 
-2026-09-03: offline occupied-IoU/TU evaluation was implemented and connected to `mapex_run.py`. The recorder now preserves the prediction origin and first map-frame start pose needed for structural evaluation. A synthetic evaluator test returned IoU `1.0` and TU `1.0` for a matching prediction/ground-truth case and successfully backfilled `metrics.csv`. **No real Hospital IoU/TU result is claimed yet** because `hospital_structural_gt_v1.npz` still needs to be generated and alignment-validated.
+2026-09-03: MapEx run instrumentation was extended to preserve all three individual LaMa outputs. The legacy worker now returns `P1/P2/P3`; the ROS bridge exposes them through the canonical MapEx inference interface; and `mapex_run.py` stores `G1/G2/G3/mean/variance` per completed prediction decision and records their paths in `decisions.csv`. The canonical `mapex.py` frontier-selection policy was not changed. Runtime file-output validation on the user's current map is the next gate; map-specific structural ground truth can be added afterward for IoU/TU.
