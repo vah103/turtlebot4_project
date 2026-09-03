@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Run canonical MapEx policy with integrated Stage-3 measurement.
 
-The exploration policy remains in mapex.py.  This wrapper reuses Stage2Run's
+The exploration policy remains in mapex.py. This wrapper reuses Stage2Run's
 measurement hooks and nf_basic.py's shared execution layer, while adding
 MapEx-specific candidate metrics, prediction/scoring timing, prediction maps,
-and provenance for the ROS<->legacy-LaMa bridge.
+provenance for the ROS<->legacy-LaMa bridge, and post-run IoU/TU evaluation.
 """
 from __future__ import annotations
 
@@ -28,6 +28,7 @@ from rclpy.executors import ExternalShutdownException
 from rclpy.qos import QoSProfile, ReliabilityPolicy
 
 import mapex
+from evaluate_mapex_run import evaluate_run
 from mapex_lama_bridge import LamaEnsembleBridge
 from nf_run import (
     CANVAS_RES,
@@ -183,6 +184,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
 
         hash_paths = {
             "mapex_run": self.root / "scripts" / "mapex_run.py",
+            "mapex_evaluator": self.root / "scripts" / "evaluate_mapex_run.py",
             "mapex_policy": self.root / "scripts" / "mapex.py",
             "mapex_ros_launcher": self.root / "scripts" / "mapex_ros.py",
             "mapex_lama_bridge": self.root / "scripts" / "mapex_lama_bridge.py",
@@ -237,6 +239,8 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "fixed_canvas_resolution_m": CANVAS_RES,
             "evaluation_roi_id": EVALUATION_ROI_ID,
             "evaluation_roi_denominator": ROI_N,
+            "evaluation_start_x": None,
+            "evaluation_start_y": None,
             "exploration_start_sim_s": None,
             "exploration_start_source": "first_policy_decision_before_compute",
             "execution_goal_semantics": "exact_frontier_center_xy",
@@ -427,7 +431,8 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             and not self.revalidation_active
             and self.nav_client.server_is_ready()
         )
-        if ready and self.robot_position() is not None:
+        robot_pose = self.robot_position() if ready else None
+        if ready and robot_pose is not None:
             self.decision_id += 1
             self.active_decision = self.decision_id
             self.compute_sim_t0 = self.now_s()
@@ -442,6 +447,8 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                 self.t0 = self.compute_sim_t0
                 self._update_metadata(
                     exploration_start_sim_s=self.t0,
+                    evaluation_start_x=float(robot_pose[0]),
+                    evaluation_start_y=float(robot_pose[1]),
                     runtime_map_resolution_m=(
                         None
                         if self.map_msg is None
@@ -473,7 +480,11 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         pad_top = max(0, (mean.shape[0] - source_h) // 2)
         pad_left = max(0, (mean.shape[1] - source_w) // 2)
 
-        mean_path = self.run / "predictions" / f"decision_{decision_id:06d}_mean.npz"
+        mean_path = (
+            self.run
+            / "predictions"
+            / f"decision_{decision_id:06d}_mean.npz"
+        )
         var_path = (
             self.run
             / "predictions"
@@ -486,6 +497,8 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "source_width": source_w,
             "pad_top": pad_top,
             "pad_left": pad_left,
+            "origin_x": float(self.map_msg.info.origin.position.x),
+            "origin_y": float(self.map_msg.info.origin.position.y),
         }
         np.savez_compressed(mean_path, data=mean, **common)
         np.savez_compressed(var_path, data=variance, **common)
@@ -560,7 +573,9 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                 "map_generation": self.map_generation,
                 "candidate_total": len(metrics),
                 "candidate_selectable": len(selectable_keys),
-                "candidate_suppressed": max(0, len(metrics) - len(selectable_keys)),
+                "candidate_suppressed": max(
+                    0, len(metrics) - len(selectable_keys)
+                ),
                 "ensemble_prediction_ms": self.fmt(prediction_ms),
                 "all_frontier_scoring_ms": self.fmt(scoring_ms),
                 "total_computation_ms": self.fmt(ms),
@@ -585,7 +600,11 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             self.count["frontiers_selected"] += 1
 
         selectable_rank = 0
-        ordered = sorted(metrics, key=lambda m: float(m["score"]), reverse=True)
+        ordered = sorted(
+            metrics,
+            key=lambda metric: float(metric["score"]),
+            reverse=True,
+        )
         for rank_all, metric in enumerate(ordered, 1):
             key = (metric["row"], metric["col"])
             selectable = key in selectable_keys
@@ -644,11 +663,15 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         if self.t0 is None or self.finalized:
             return
         self.known, self.coverage = self.map_metrics()
-        ma = self.count["main_attempts"]
-        ms = self.count["main_succeeded"]
-        rate = ms / ma if ma else math.nan
-        blocked_total = self.count["abandoned_206"] + self.count["abandoned_208"]
+        main_attempts = self.count["main_attempts"]
+        main_succeeded = self.count["main_succeeded"]
+        rate = main_succeeded / main_attempts if main_attempts else math.nan
+        blocked_total = (
+            self.count["abandoned_206"] + self.count["abandoned_208"]
+        )
 
+        # IoU/TU stay NaN online. evaluate_run() backfills them after the run
+        # using the latest completed MapEx prediction at each metrics timestamp.
         self.wm.writerow(
             {
                 "time_s": self.fmt(self.elapsed()),
@@ -658,8 +681,8 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                 "occupied_iou": "nan",
                 "tu": "nan",
                 "frontiers_selected": self.count["frontiers_selected"],
-                "main_attempts": ma,
-                "main_succeeded": ms,
+                "main_attempts": main_attempts,
+                "main_succeeded": main_succeeded,
                 "main_failed": self.count["main_failed"],
                 "main_interrupted": self.count["main_interrupted"],
                 "abandoned_206": self.count["abandoned_206"],
@@ -703,10 +726,12 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         self.known, self.coverage = self.map_metrics()
         self.save_map_pair(self.run / "maps" / "final")
 
-        ma = self.count["main_attempts"]
-        ms = self.count["main_succeeded"]
+        main_attempts = self.count["main_attempts"]
+        main_succeeded = self.count["main_succeeded"]
         total_time = None if self.t0 is None else self.elapsed()
-        blocked_total = self.count["abandoned_206"] + self.count["abandoned_208"]
+        blocked_total = (
+            self.count["abandoned_206"] + self.count["abandoned_208"]
+        )
 
         summary = {
             "run_id": self.run.name,
@@ -716,14 +741,16 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "total_distance_m": self.distance,
             "total_time_s": total_time,
             "frontiers_selected": self.count["frontiers_selected"],
-            "main_attempts": ma,
-            "main_succeeded": ms,
+            "main_attempts": main_attempts,
+            "main_succeeded": main_succeeded,
             "main_failed": self.count["main_failed"],
             "main_interrupted": self.count["main_interrupted"],
             "abandoned_206": self.count["abandoned_206"],
             "abandoned_208": self.count["abandoned_208"],
             "planner_blocked_abandoned_total": blocked_total,
-            "main_success_rate": ms / ma if ma else math.nan,
+            "main_success_rate": (
+                main_succeeded / main_attempts if main_attempts else math.nan
+            ),
             "subgoal_attempts": self.count["subgoal_attempts"],
             "subgoal_succeeded": self.count["subgoal_succeeded"],
             "subgoal_failed": self.count["subgoal_failed"],
@@ -733,12 +760,18 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "decision_computation_ms_std": self._std(self.comp),
             "ensemble_prediction_ms_mean": self._mean(self.prediction_ms),
             "ensemble_prediction_ms_std": self._std(self.prediction_ms),
-            "all_frontier_scoring_ms_mean": self._mean(self.frontier_scoring_ms),
-            "all_frontier_scoring_ms_std": self._std(self.frontier_scoring_ms),
+            "all_frontier_scoring_ms_mean": self._mean(
+                self.frontier_scoring_ms
+            ),
+            "all_frontier_scoring_ms_std": self._std(
+                self.frontier_scoring_ms
+            ),
             "selected_information_gain_mean": self._mean(self.selected_ig),
             "selected_score_mean": self._mean(self.selected_score),
             "selected_distance_m_mean": self._mean(self.selected_distance),
-            "selection_verification_failures": self.selection_verification_failures,
+            "selection_verification_failures": (
+                self.selection_verification_failures
+            ),
             "selection_verification_passed": (
                 self.selection_verification_failures == 0
             ),
@@ -756,19 +789,32 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         self._update_metadata(
             termination_reason=reason,
             runtime_map_resolution_m=(
-                None if self.map_msg is None else float(self.map_msg.info.resolution)
+                None
+                if self.map_msg is None
+                else float(self.map_msg.info.resolution)
             ),
             final_coverage=self.coverage,
             final_known_fraction=self.known,
             total_distance_m=self.distance,
             total_time_s=total_time,
-            selection_verification_failures=self.selection_verification_failures,
+            selection_verification_failures=(
+                self.selection_verification_failures
+            ),
         )
 
         self.get_logger().warn(
             f"MAPEX SAVED: coverage={self.fmt(self.coverage)}, "
             f"distance={self.distance:.2f}m, output={self.run}"
         )
+
+    def close_recorder_files(self):
+        """Flush/close recorder CSVs before post-run evaluator rewrites metrics.csv."""
+        for name in ("fm", "ft", "fd", "fc", "fg", "fp"):
+            stream = getattr(self, name, None)
+            if stream is None or stream.closed:
+                continue
+            stream.flush()
+            stream.close()
 
 
 def main():
@@ -788,8 +834,13 @@ def main():
 
     rclpy.init(args=mapex._mapex_init_args(ros_args))
     node = None
+    run_dir = None
     try:
-        node = MapExRun(args.run_id, args.odom_topic, args.save_predictions)
+        node = MapExRun(
+            args.run_id,
+            args.odom_topic,
+            args.save_predictions,
+        )
         rclpy.spin(node)
     except (KeyboardInterrupt, ExternalShutdownException):
         pass
@@ -797,12 +848,30 @@ def main():
         if node is not None:
             if not node.finalized:
                 node.finalize("keyboard_interrupt")
+            run_dir = node.run
+            node.close_recorder_files()
             ensemble = getattr(node, "ensemble", None)
             if ensemble is not None and hasattr(ensemble, "close"):
                 ensemble.close()
             node.destroy_node()
         if rclpy.ok():
             rclpy.shutdown()
+
+    if run_dir is not None:
+        result = evaluate_run(run_dir)
+        status = result.get("status", "unknown")
+        if status == "ok":
+            print(
+                "MAPEX OFFLINE EVAL: "
+                f"IoU={result['final_occupied_iou']:.6f}, "
+                f"TU={result['final_tu']:.6f}, "
+                f"decisions={result['evaluated_decisions']}"
+            )
+        else:
+            print(
+                "MAPEX OFFLINE EVAL: "
+                f"{status}: {result.get('reason', 'no reason')}"
+            )
 
 
 if __name__ == "__main__":
