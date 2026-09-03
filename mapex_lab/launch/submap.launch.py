@@ -1,10 +1,7 @@
-"""Launch Hospital + segmented local scan frontend + SLAM Toolbox + stock Nav2.
+"""Launch selectable world + segmented local scan frontend + SLAM Toolbox + stock Nav2.
 
-Experimental A/B alternative to local.launch.py. Unlike local_scan.py, this
-frontend never carries a run-long correction transform. Local ICP correction is
-bounded inside one segment and smoothly faded to identity before the next
-segment begins. SLAM Toolbox remains responsible for the connected global map,
-loop closure, and pose-graph optimization.
+Hospital remains the default world. Pass world:=new_room to reuse this submap
+SLAM/Nav2 stack on mapex_lab/map/new_room.sdf.
 
 This experiment is intentionally not part of the official hospital_v2 protocol.
 """
@@ -133,6 +130,10 @@ def generate_launch_description() -> LaunchDescription:
     use_sim_time = LaunchConfiguration('use_sim_time')
     use_rviz = LaunchConfiguration('use_rviz')
     headless = LaunchConfiguration('headless')
+    world = LaunchConfiguration('world')
+    x_pose = LaunchConfiguration('x_pose')
+    y_pose = LaunchConfiguration('y_pose')
+    yaw = LaunchConfiguration('yaw')
     slam_delay_sec = LaunchConfiguration('slam_delay_sec')
     nav2_delay_sec = LaunchConfiguration('nav2_delay_sec')
 
@@ -141,8 +142,12 @@ def generate_launch_description() -> LaunchDescription:
             os.path.join(frontier_pkg, 'launch', 'hospital_flat_simulation.launch.py')
         ),
         launch_arguments={
+            'world': world,
             'use_rviz': use_rviz,
             'headless': headless,
+            'x_pose': x_pose,
+            'y_pose': y_pose,
+            'yaw': yaw,
         }.items(),
     )
 
@@ -172,6 +177,10 @@ def generate_launch_description() -> LaunchDescription:
 
     return LaunchDescription(
         [
+            DeclareLaunchArgument('world', default_value='hospital'),
+            DeclareLaunchArgument('x_pose', default_value='auto'),
+            DeclareLaunchArgument('y_pose', default_value='auto'),
+            DeclareLaunchArgument('yaw', default_value='auto'),
             DeclareLaunchArgument('use_sim_time', default_value='true'),
             DeclareLaunchArgument('use_rviz', default_value='True'),
             DeclareLaunchArgument('headless', default_value='False'),
