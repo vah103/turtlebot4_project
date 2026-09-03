@@ -36,6 +36,7 @@
 - Coverage denominator is now environment-specific in `mapex_run.py`: it is computed from the actual loaded connected-free ROI rather than always using Hospital's fixed `215435` cells.
 - The standalone evaluator synthetic consistency test previously returned occupied IoU `1.0` and TU `1.0` for matching prediction/ground truth and successfully backfilled `metrics.csv`.
 - `launch/stock.launch.py` now defaults to `new_room` with spawn `(0.0, 0.0, 0.0)`, matching `stock2.launch.py` and the New Room GT/ROI assumptions. Hospital can still be selected explicitly with launch arguments when needed.
+- `launch/submap.launch.py` now also defaults to `new_room` with spawn `(0.0, 0.0, 0.0)`, while retaining its segmented local scan frontend + `slam_submap.yaml` stack. Hospital remains selectable explicitly.
 - For the current auxiliary New Room smoke test, `config/nav2.yaml` now allows `velocity_smoother` linear commands up to `±0.75 m/s` while keeping angular commands at `±1.9 rad/s`; the Gazebo Create3 hard linear cap remains `0.8 m/s`. This speed setting is not yet validated as a formal Hospital benchmark setting.
 
 ## In progress
@@ -43,6 +44,7 @@
 - Runtime-smoke-test the new `new_room` profile end-to-end: confirm auto-generated GT/ROI, numeric New Room Coverage, five prediction files per decision, and final `evaluation.json` with `status: ok`.
 - Visually validate `ground_truth/new_room/generated/new_room_structural_gt_v1.pgm` against Gazebo/RViz before treating New Room IoU/TU as research results.
 - Confirm stable SLAM/Nav2 behavior at the new `0.75 m/s` New Room linear limit before using it for repeated runs.
+- Compare `stock.launch.py` and `submap.launch.py` on the same New Room setup if the segmented scan frontend is being evaluated.
 - Continue runtime validation of shared `206/208` suppression, path-guided recovery, and terminal planner-reachability completion.
 - Hospital structural GT still needs generation/alignment validation before real Hospital IoU/TU are claimed.
 - Resolve the current debug `local.launch.py` runtime profile vs formal `hospital_v2` protocol before treating long Hospital Nearest/MapEx batches as formal benchmark comparisons.
@@ -50,7 +52,7 @@
 ## Next actions
 
 1. Pull the latest repo.
-2. Launch New Room with `ros2 launch mapex_lab/launch/stock.launch.py`.
+2. Launch New Room with either `ros2 launch mapex_lab/launch/stock.launch.py` or `ros2 launch mapex_lab/launch/submap.launch.py`, depending on which SLAM frontend is being tested.
 3. Run one short New Room MapEx recorder test with the normal single entry point:
    `python mapex_lab/scripts/mapex_run.py --run-id mapex_test_001`
    (`--environment new_room` is optional because New Room is now the default.)
@@ -79,4 +81,4 @@
 
 ## Latest result
 
-2026-09-03: The active New Room runtime was raised from `0.5 m/s` to a Nav2 `velocity_smoother` linear limit of `0.75 m/s` (forward and reverse), while angular limit remains `1.9 rad/s`. The Gazebo Create3 model retains a hard `0.8 m/s` linear cap. This change is intended for the upcoming New Room smoke test and still needs runtime validation in narrow passages before repeated quantitative runs.
+2026-09-03: `submap.launch.py` was aligned with the active New Room workflow. It now defaults to `new_room` and spawn `(0.0, 0.0, 0.0)`, matching the New Room GT/ROI assumptions, while preserving the segmented local scan frontend and `slam_submap.yaml`. `stock.launch.py` and `submap.launch.py` can now be launched on the same New Room geometry for direct runtime comparison.
