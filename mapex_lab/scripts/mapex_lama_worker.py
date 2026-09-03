@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Persistent LaMa inference worker for MapEx.
 
-This process is intentionally ROS-free.  It runs inside the legacy MapEx/LaMa
+This process is intentionally ROS-free. It runs inside the legacy MapEx/LaMa
 Python environment while ``mapex_ros.py`` keeps ROS 2 Jazzy in system Python.
 Communication uses JSON lines plus temporary NumPy files so the three ensemble
 models are loaded only once.
@@ -173,9 +173,21 @@ def main():
                         predictions.append(output["inpainted"][0, 0].detach())
 
                 prediction_stack = torch.stack(predictions, dim=0)
+                prediction_stack_np = (
+                    prediction_stack.float().cpu().numpy().astype(np.float32, copy=False)
+                )
                 mean_map = torch.mean(prediction_stack, dim=0).float().cpu().numpy()
                 variance_map = torch.var(prediction_stack, dim=0).float().cpu().numpy()
 
+            prediction_stack_np = np.nan_to_num(
+                prediction_stack_np,
+                nan=0.5,
+                posinf=1.0,
+                neginf=0.0,
+            )
+            prediction_stack_np = np.clip(
+                prediction_stack_np, 0.0, 1.0
+            ).astype(np.float32, copy=False)
             mean_map = np.nan_to_num(mean_map, nan=0.5, posinf=1.0, neginf=0.0)
             variance_map = np.nan_to_num(
                 variance_map, nan=0.0, posinf=0.0, neginf=0.0
@@ -198,6 +210,7 @@ def main():
 
             np.savez_compressed(
                 request["output"],
+                predictions=prediction_stack_np,
                 mean_map=mean_map,
                 variance_map=variance_map,
                 padded_observed=padded_observed,
