@@ -1,0 +1,52 @@
+id: hospital_structural_gt_v1
+status: pending_generation_and_alignment_validation
+
+purpose:
+  - occupied_iou_offline
+  - topological_understanding_offline
+
+canvas:
+  id: hospital_canvas_v1
+  resolution_m: 0.05
+  width: 1504
+  height: 2123
+  origin_x: -25.6
+  origin_y: -60.1
+
+artifact:
+  path: generated/hospital_structural_gt_v1.npz
+  committed: false
+  format: npz
+  required_keys:
+    - data
+    - evaluation_mask
+    - resolution
+    - origin_x
+    - origin_y
+
+semantics:
+  data:
+    outside_or_unscored: -1
+    free: 0
+    occupied: 100
+  evaluation_mask:
+    false: outside_building_footprint_or_unscored
+    true: include_in_structural_evaluation
+
+metric_contract:
+  occupied_iou:
+    prediction_source: per_decision_ensemble_mean
+    prediction_occupied_threshold_strictly_greater_than: 0.5
+    class: occupied
+  topological_understanding:
+    random_goal_count: 100
+    random_seed: 2025
+    connectivity: 4
+    success: predicted_path_exists_and_does_not_intersect_gt_occupied
+
+validation_required_before_reporting:
+  - source_collision_geometry_documented
+  - world_to_map_transform_documented
+  - structural_raster_aligned_with_slam_map
+  - building_footprint_mask_reviewed
+  - free_start_pose_confirmed
