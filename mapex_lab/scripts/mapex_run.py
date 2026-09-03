@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Run canonical MapEx policy with integrated Stage-3 measurement.
+"""Run canonical MapEx policy with integrated measurement and offline evaluation.
 
 The exploration policy remains in mapex.py. This wrapper reuses Stage2Run's
 measurement hooks and nf_basic.py's shared execution layer, while adding
-MapEx-specific candidate metrics, prediction/scoring timing, prediction maps,
-provenance for the ROS<->legacy-LaMa bridge, and post-run IoU/TU evaluation.
+MapEx-specific candidate metrics, G1/G2/G3 + mean/variance prediction storage,
+provenance, environment-specific coverage ROI, and post-run IoU/TU evaluation.
 """
 from __future__ import annotations
 
@@ -28,7 +28,8 @@ from rclpy.executors import ExternalShutdownException
 from rclpy.qos import QoSProfile, ReliabilityPolicy
 
 import mapex
-from evaluate_mapex_run import evaluate_run
+from evaluate_mapex_profiled import evaluate_run
+from generate_new_room_ground_truth import generate as generate_new_room_ground_truth
 from mapex_lama_bridge import LamaEnsembleBridge
 from nf_run import (
     CANVAS_RES,
@@ -49,11 +50,108 @@ from nf_run import (
 mapex.LamaEnsemble = LamaEnsembleBridge
 
 
-class MapExRun(Stage2Run, mapex.MapExExplorer):
-    """MapExExplorer plus the same run recorder used by the Nearest baseline."""
+ENVIRONMENT_PROFILES = {
+    "new_room": {
+        "protocol_version": "new_room_v1",
+        "runtime_profile": "new_room_stock2",
+        "runtime_profile_note": (
+            "Auxiliary New Room benchmark using map/new_room.sdf; intended launch "
+            "is launch/stock2.launch.py with the same MapEx/Nav2 policy stack."
+        ),
+        "roi_id": "new_room_connected_free_v1",
+        "roi_relative": "ground_truth/new_room/generated/new_room_connected_free_v1.npy",
+        "ground_truth_id": "new_room_structural_gt_v1",
+        "ground_truth_relative": (
+            "ground_truth/new_room/generated/new_room_structural_gt_v1.npz"
+        ),
+        "auto_generate_ground_truth": True,
+    },
+    "hospital": {
+        "protocol_version": PROTOCOL_VERSION,
+        "runtime_profile": "not_auto_detected",
+        "runtime_profile_note": (
+            "Hospital recorder archives the same TurtleBot4 stock Nav2 + "
+            "mapex_lab/config/nav2.yaml merge used by the current launchers; "
+            "the launch file itself is not auto-detected."
+        ),
+        "roi_id": EVALUATION_ROI_ID,
+        "roi_relative": (
+            "ground_truth/hospital/generated/hospital_connected_free_v1.npy"
+        ),
+        "ground_truth_id": "hospital_structural_gt_v1",
+        "ground_truth_relative": (
+            "ground_truth/hospital/generated/hospital_structural_gt_v1.npz"
+        ),
+        "auto_generate_ground_truth": False,
+    },
+}
 
-    def __init__(self, run_id: str, odom_topic: str, save_predictions: bool):
+
+def _ensure_new_room_ground_truth(root: FilePath) -> None:
+    """Regenerate New Room GT only when missing or stale relative to the SDF."""
+    sdf = root / "map" / "new_room.sdf"
+    output_dir = root / "ground_truth" / "new_room" / "generated"
+    gt = output_dir / "new_room_structural_gt_v1.npz"
+    roi = output_dir / "new_room_connected_free_v1.npy"
+    summary = output_dir / "new_room_structural_gt_v1_summary.json"
+
+    current_sha = _sha256_file(sdf)
+    generated_sha = None
+    if summary.is_file():
+        try:
+            generated_sha = json.loads(summary.read_text(encoding="utf-8")).get(
+                "source_sdf_sha256"
+            )
+        except Exception:
+            generated_sha = None
+
+    if gt.is_file() and roi.is_file() and generated_sha == current_sha:
+        return
+
+    generate_new_room_ground_truth(
+        sdf_path=sdf.resolve(),
+        output_dir=output_dir.resolve(),
+        z_slice_m=0.20,
+        spawn_x=0.0,
+        spawn_y=0.0,
+    )
+
+
+class MapExRun(Stage2Run, mapex.MapExExplorer):
+    """MapExExplorer plus the shared recorder and environment-aware evaluation."""
+
+    def __init__(
+        self,
+        run_id: str,
+        odom_topic: str,
+        save_predictions: bool,
+        environment: str,
+    ):
         root = FilePath(__file__).resolve().parents[1]
+        if environment not in ENVIRONMENT_PROFILES:
+            raise RuntimeError(f"Unknown environment: {environment}")
+
+        self.root = root
+        self.repo_root = root.parent
+        self.environment = environment
+        self.environment_profile = dict(ENVIRONMENT_PROFILES[environment])
+
+        if self.environment_profile["auto_generate_ground_truth"]:
+            _ensure_new_room_ground_truth(root)
+
+        self.roi_path = root / self.environment_profile["roi_relative"]
+        self.ground_truth_path = root / self.environment_profile[
+            "ground_truth_relative"
+        ]
+        self.roi = (
+            np.load(self.roi_path).astype(bool)
+            if self.roi_path.is_file()
+            else None
+        )
+        self.roi_n = (
+            int(np.count_nonzero(self.roi)) if self.roi is not None else 0
+        )
+
         run = root / "experiments" / "mapex" / run_id
         if run.exists():
             raise RuntimeError(f"Run exists: {run}")
@@ -62,8 +160,6 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         # MapExExplorer still initializes through the exact canonical policy class.
         mapex.MapExExplorer.__init__(self)
 
-        self.root = root
-        self.repo_root = self.root.parent
         self.run = run
         self.save_predictions = bool(save_predictions)
         (self.run / "maps").mkdir(parents=True)
@@ -73,16 +169,11 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
 
         self.metadata = self._write_initial_provenance(run_id)
 
-        roi = (
-            self.root
-            / "ground_truth"
-            / "hospital"
-            / "generated"
-            / "hospital_connected_free_v1.npy"
-        )
-        self.roi = np.load(roi).astype(bool) if roi.exists() else None
-        if self.roi is None:
-            self.get_logger().warn("ROI missing: coverage will be NaN")
+        if self.roi is None or self.roi_n <= 0:
+            self.get_logger().warn(
+                f"{environment} ROI missing/empty: coverage will be NaN: "
+                f"{self.roi_path}"
+            )
 
         # Common Stage2 recorder state.
         self.t0 = None
@@ -121,7 +212,9 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         self._open_files()
         self.create_timer(1.0, self.metric_tick)
 
-        self.get_logger().warn(f"MAPEX RECORDING: {self.run}")
+        self.get_logger().warn(
+            f"MAPEX RECORDING: env={self.environment}, output={self.run}"
+        )
         self.get_logger().info(
             "MapEx provenance saved: metadata.json + runtime_nav2_merged.yaml "
             "+ runtime_mapex.yaml"
@@ -186,6 +279,9 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         hash_paths = {
             "mapex_run": self.root / "scripts" / "mapex_run.py",
             "mapex_evaluator": self.root / "scripts" / "evaluate_mapex_run.py",
+            "mapex_profiled_evaluator": (
+                self.root / "scripts" / "evaluate_mapex_profiled.py"
+            ),
             "mapex_policy": self.root / "scripts" / "mapex.py",
             "mapex_ros_launcher": self.root / "scripts" / "mapex_ros.py",
             "mapex_lama_bridge": self.root / "scripts" / "mapex_lama_bridge.py",
@@ -200,6 +296,22 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "installed_nav2_base_params": nav2_base,
             "runtime_nav2_merged": merged_path,
         }
+        if self.environment == "new_room":
+            hash_paths.update(
+                {
+                    "environment_world": self.root / "map" / "new_room.sdf",
+                    "ground_truth_generator": (
+                        self.root / "scripts" / "generate_new_room_ground_truth.py"
+                    ),
+                    "ground_truth_contract": (
+                        self.root
+                        / "ground_truth"
+                        / "new_room"
+                        / "structural_gt_v1.yaml"
+                    ),
+                }
+            )
+
         config_sha256 = {
             name: _sha256_file(path)
             for name, path in hash_paths.items()
@@ -209,17 +321,19 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         checkpoints = []
         for index, source in enumerate(self.ensemble.source_names, start=1):
             path = FilePath(source).expanduser()
-            item = {
-                "member": f"G{index}",
-                "path": str(path),
-                "size_bytes": path.stat().st_size if path.is_file() else None,
-                "sha256": _sha256_file(path) if path.is_file() else None,
-            }
-            checkpoints.append(item)
+            checkpoints.append(
+                {
+                    "member": f"G{index}",
+                    "path": str(path),
+                    "size_bytes": path.stat().st_size if path.is_file() else None,
+                    "sha256": _sha256_file(path) if path.is_file() else None,
+                }
+            )
 
         metadata = {
             "run_id": run_id,
             "method": "mapex",
+            "environment": self.environment,
             "recorder": "mapex_run.py",
             "canonical_policy": "mapex.py",
             "runtime_launcher_equivalent": "mapex_ros.py bridge backend",
@@ -228,18 +342,24 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "git_dirty_at_recorder_start": (
                 None if git_status is None else bool(git_status)
             ),
-            "protocol_version": PROTOCOL_VERSION,
-            "runtime_profile": "not_auto_detected",
-            "runtime_profile_note": (
-                "Recorder archives the same TurtleBot4 stock Nav2 + "
-                "mapex_lab/config/nav2.yaml merge used by the current "
-                "stock/local debug launchers; the launch file itself is not auto-detected."
-            ),
+            "protocol_version": self.environment_profile["protocol_version"],
+            "runtime_profile": self.environment_profile["runtime_profile"],
+            "runtime_profile_note": self.environment_profile[
+                "runtime_profile_note"
+            ],
             "runtime_map_resolution_m": None,
             "fixed_canvas_id": FIXED_CANVAS_ID,
             "fixed_canvas_resolution_m": CANVAS_RES,
-            "evaluation_roi_id": EVALUATION_ROI_ID,
-            "evaluation_roi_denominator": ROI_N,
+            "evaluation_roi_id": self.environment_profile["roi_id"],
+            "evaluation_roi_denominator": (
+                self.roi_n if self.roi_n > 0 else None
+            ),
+            "evaluation_roi_file": str(self.roi_path),
+            "structural_ground_truth_id": self.environment_profile[
+                "ground_truth_id"
+            ],
+            "structural_ground_truth_file": str(self.ground_truth_path),
+            "structural_ground_truth_exists_at_start": self.ground_truth_path.is_file(),
             "evaluation_start_x": None,
             "evaluation_start_y": None,
             "exploration_start_sim_s": None,
@@ -411,9 +531,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             return False
         if now - self.nav_ready_since < NAV2_READY_STABLE_S:
             return False
-        if self.map_msg is None:
-            return False
-        if self.robot_position() is None:
+        if self.map_msg is None or self.robot_position() is None:
             return False
         self.startup_gate_open = True
         self.get_logger().warn(
@@ -435,9 +553,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                 "Recorder expected three LaMa predictions with shape (3,H,W); "
                 f"got {captured.shape}"
             )
-        self.last_ensemble_predictions = captured.astype(
-            np.float32, copy=True
-        )
+        self.last_ensemble_predictions = captured.astype(np.float32, copy=True)
         return result
 
     def exploration_step(self):
@@ -461,7 +577,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             self.compute_sim_t0 = self.now_s()
             self.compute_t0 = time.perf_counter()
 
-            # Prevent a failed/no-frontier decision from inheriting prior diagnostics.
+            # Prevent failed/no-frontier decisions from inheriting old diagnostics.
             self.last_candidate_metrics = []
             self.last_ensemble_predictions = None
             self.last_mean_map = None
@@ -473,16 +589,11 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                     exploration_start_sim_s=self.t0,
                     evaluation_start_x=float(robot_pose[0]),
                     evaluation_start_y=float(robot_pose[1]),
-                    runtime_map_resolution_m=(
-                        None
-                        if self.map_msg is None
-                        else float(self.map_msg.info.resolution)
-                    ),
+                    runtime_map_resolution_m=float(self.map_msg.info.resolution),
                 )
 
-        # Call the canonical MapEx policy directly. Its publish_goal_markers()
-        # resolves to Stage2Run.publish_goal_markers through this class MRO, so
-        # successful selections are recorded without changing the policy.
+        # Successful selections call Stage2Run.publish_goal_markers through MRO,
+        # which invokes this class's record_decision without altering MapEx policy.
         mapex.MapExExplorer.exploration_step(self)
 
         if self.compute_t0 is not None:
@@ -501,17 +612,13 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         ):
             return "", "", "", "", ""
 
-        predictions = np.asarray(
-            self.last_ensemble_predictions, dtype=np.float32
-        )
-        if predictions.ndim != 3 or predictions.shape[0] != 3:
-            raise RuntimeError(
-                "Cannot save LaMa ensemble: expected (3,H,W), "
-                f"got {predictions.shape}"
-            )
-
+        predictions = np.asarray(self.last_ensemble_predictions, dtype=np.float32)
         mean = np.asarray(self.last_mean_map, dtype=np.float32)
         variance = np.asarray(self.last_variance_map, dtype=np.float32)
+        if predictions.ndim != 3 or predictions.shape[0] != 3:
+            raise RuntimeError(
+                f"Cannot save LaMa ensemble: expected (3,H,W), got {predictions.shape}"
+            )
         if predictions.shape[1:] != mean.shape or variance.shape != mean.shape:
             raise RuntimeError(
                 "Prediction save shape mismatch: "
@@ -523,14 +630,14 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         source_w = int(self.map_msg.info.width)
         pad_top = max(0, (mean.shape[0] - source_h) // 2)
         pad_left = max(0, (mean.shape[1] - source_w) // 2)
-
         pred_dir = self.run / "predictions"
-        g1_path = pred_dir / f"decision_{decision_id:06d}_g1.npz"
-        g2_path = pred_dir / f"decision_{decision_id:06d}_g2.npz"
-        g3_path = pred_dir / f"decision_{decision_id:06d}_g3.npz"
-        mean_path = pred_dir / f"decision_{decision_id:06d}_mean.npz"
-        var_path = pred_dir / f"decision_{decision_id:06d}_variance.npz"
-
+        paths = [
+            pred_dir / f"decision_{decision_id:06d}_g1.npz",
+            pred_dir / f"decision_{decision_id:06d}_g2.npz",
+            pred_dir / f"decision_{decision_id:06d}_g3.npz",
+            pred_dir / f"decision_{decision_id:06d}_mean.npz",
+            pred_dir / f"decision_{decision_id:06d}_variance.npz",
+        ]
         common = {
             "resolution": float(self.map_msg.info.resolution),
             "source_height": source_h,
@@ -539,17 +646,15 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "pad_left": pad_left,
             "origin_x": float(self.map_msg.info.origin.position.x),
             "origin_y": float(self.map_msg.info.origin.position.y),
+            "environment": self.environment,
         }
-        np.savez_compressed(g1_path, data=predictions[0], member="G1", **common)
-        np.savez_compressed(g2_path, data=predictions[1], member="G2", **common)
-        np.savez_compressed(g3_path, data=predictions[2], member="G3", **common)
-        np.savez_compressed(mean_path, data=mean, member="mean", **common)
-        np.savez_compressed(var_path, data=variance, member="variance", **common)
-
-        return tuple(
-            str(path.relative_to(self.run))
-            for path in (g1_path, g2_path, g3_path, mean_path, var_path)
-        )
+        for index in range(3):
+            np.savez_compressed(
+                paths[index], data=predictions[index], member=f"G{index + 1}", **common
+            )
+        np.savez_compressed(paths[3], data=mean, member="mean", **common)
+        np.savez_compressed(paths[4], data=variance, member="variance", **common)
+        return tuple(str(path.relative_to(self.run)) for path in paths)
 
     def record_decision(self, candidates, selected, outcome):
         ms = (time.perf_counter() - self.compute_t0) * 1000.0
@@ -559,8 +664,8 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         raw, canvas = self.save_map_pair(
             self.run / "decision_maps" / f"decision_{did:06d}"
         )
-        g1_path, g2_path, g3_path, mean_path, var_path = (
-            self._save_prediction_maps(did)
+        g1_path, g2_path, g3_path, mean_path, var_path = self._save_prediction_maps(
+            did
         )
 
         metrics = list(self.last_candidate_metrics or [])
@@ -590,7 +695,6 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             ss = float(selected_metric["score"])
             sv = int(selected_metric["visible_unknown_cells"])
             sr = int(selected_metric["region_size"])
-
             selectable_scores = [
                 float(m["score"])
                 for m in metrics
@@ -604,7 +708,6 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             verified = int(verified_bool)
             if not verified_bool:
                 self.selection_verification_failures += 1
-
             self.selected_ig.append(sig)
             self.selected_score.append(ss)
             self.selected_distance.append(sd)
@@ -612,16 +715,12 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         self.wd.writerow(
             {
                 "decision_id": did,
-                "mapex_policy_decision_id": (
-                    self.mapex_decision_id if metrics else ""
-                ),
+                "mapex_policy_decision_id": self.mapex_decision_id if metrics else "",
                 "time_s": self.fmt(self.elapsed(self.compute_sim_t0)),
                 "map_generation": self.map_generation,
                 "candidate_total": len(metrics),
                 "candidate_selectable": len(selectable_keys),
-                "candidate_suppressed": max(
-                    0, len(metrics) - len(selectable_keys)
-                ),
+                "candidate_suppressed": max(0, len(metrics) - len(selectable_keys)),
                 "ensemble_prediction_ms": self.fmt(prediction_ms),
                 "all_frontier_scoring_ms": self.fmt(scoring_ms),
                 "total_computation_ms": self.fmt(ms),
@@ -649,11 +748,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             self.count["frontiers_selected"] += 1
 
         selectable_rank = 0
-        ordered = sorted(
-            metrics,
-            key=lambda metric: float(metric["score"]),
-            reverse=True,
-        )
+        ordered = sorted(metrics, key=lambda metric: float(metric["score"]), reverse=True)
         for rank_all, metric in enumerate(ordered, 1):
             key = (metric["row"], metric["col"])
             selectable = key in selectable_keys
@@ -662,7 +757,6 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                 rank_selectable = selectable_rank
             else:
                 rank_selectable = ""
-
             self.wc.writerow(
                 {
                     "decision_id": did,
@@ -680,9 +774,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                     "visible_unknown_cells": metric["visible_unknown_cells"],
                     "selectable": int(selectable),
                     "suppressed_planner_blocked": int(not selectable),
-                    "selected": int(
-                        selected_key is not None and key == selected_key
-                    ),
+                    "selected": int(selected_key is not None and key == selected_key),
                 }
             )
         self.fc.flush()
@@ -700,12 +792,26 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             code = getattr(wrapped.result, "error_code", None)
         except Exception:
             pass
-
         super().goal_result_callback(future, mode)
-
         if mode == "main" and code == 206:
             self.count["abandoned_206"] += 1
             self.active_decision = None
+
+    # ----- environment-specific coverage -----
+    def map_metrics(self):
+        if self.map_msg is None:
+            return math.nan, math.nan
+        canvas = self.fixed_canvas(self.map_msg)
+        if canvas is None:
+            return math.nan, math.nan
+        known = canvas >= 0
+        known_fraction = np.count_nonzero(known) / known.size
+        coverage = (
+            np.count_nonzero(known & self.roi) / self.roi_n
+            if self.roi is not None and self.roi_n > 0
+            else math.nan
+        )
+        return float(known_fraction), float(coverage)
 
     # ----- online metrics -----
     def metric_tick(self):
@@ -715,12 +821,9 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         main_attempts = self.count["main_attempts"]
         main_succeeded = self.count["main_succeeded"]
         rate = main_succeeded / main_attempts if main_attempts else math.nan
-        blocked_total = (
-            self.count["abandoned_206"] + self.count["abandoned_208"]
-        )
+        blocked_total = self.count["abandoned_206"] + self.count["abandoned_208"]
 
-        # IoU/TU stay NaN online. evaluate_run() backfills them after the run
-        # using the latest completed MapEx prediction at each metrics timestamp.
+        # IoU/TU remain NaN online and are backfilled after the run.
         self.wm.writerow(
             {
                 "time_s": self.fmt(self.elapsed()),
@@ -745,11 +848,8 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             }
         )
         self.fm.flush()
-
         if self.elapsed() - self.last_snap >= 10:
-            self.save_canvas(
-                self.run / "maps" / f"snapshot_{int(self.elapsed()):06d}"
-            )
+            self.save_canvas(self.run / "maps" / f"snapshot_{int(self.elapsed()):06d}")
             self.last_snap = self.elapsed()
 
     @staticmethod
@@ -774,17 +874,18 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         self.finalized = True
         self.known, self.coverage = self.map_metrics()
         self.save_map_pair(self.run / "maps" / "final")
-
         main_attempts = self.count["main_attempts"]
         main_succeeded = self.count["main_succeeded"]
         total_time = None if self.t0 is None else self.elapsed()
-        blocked_total = (
-            self.count["abandoned_206"] + self.count["abandoned_208"]
-        )
+        blocked_total = self.count["abandoned_206"] + self.count["abandoned_208"]
 
         summary = {
             "run_id": self.run.name,
             "method": "mapex",
+            "environment": self.environment,
+            "evaluation_roi_id": self.environment_profile["roi_id"],
+            "evaluation_roi_denominator": self.roi_n if self.roi_n > 0 else None,
+            "structural_ground_truth_id": self.environment_profile["ground_truth_id"],
             "final_coverage": self.coverage,
             "final_known_fraction": self.known,
             "total_distance_m": self.distance,
@@ -809,21 +910,13 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "decision_computation_ms_std": self._std(self.comp),
             "ensemble_prediction_ms_mean": self._mean(self.prediction_ms),
             "ensemble_prediction_ms_std": self._std(self.prediction_ms),
-            "all_frontier_scoring_ms_mean": self._mean(
-                self.frontier_scoring_ms
-            ),
-            "all_frontier_scoring_ms_std": self._std(
-                self.frontier_scoring_ms
-            ),
+            "all_frontier_scoring_ms_mean": self._mean(self.frontier_scoring_ms),
+            "all_frontier_scoring_ms_std": self._std(self.frontier_scoring_ms),
             "selected_information_gain_mean": self._mean(self.selected_ig),
             "selected_score_mean": self._mean(self.selected_score),
             "selected_distance_m_mean": self._mean(self.selected_distance),
-            "selection_verification_failures": (
-                self.selection_verification_failures
-            ),
-            "selection_verification_passed": (
-                self.selection_verification_failures == 0
-            ),
+            "selection_verification_failures": self.selection_verification_failures,
+            "selection_verification_passed": self.selection_verification_failures == 0,
             "termination_reason": reason,
             "nav2_startup_stable_s": NAV2_READY_STABLE_S,
             "occupied_iou_online": None,
@@ -832,45 +925,47 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "prediction_members_saved": 3 if self.save_predictions else 0,
         }
         (self.run / "summary.json").write_text(
-            json.dumps(summary, indent=2, allow_nan=True),
-            encoding="utf-8",
+            json.dumps(summary, indent=2, allow_nan=True), encoding="utf-8"
         )
 
         self._update_metadata(
             termination_reason=reason,
             runtime_map_resolution_m=(
-                None
-                if self.map_msg is None
-                else float(self.map_msg.info.resolution)
+                None if self.map_msg is None else float(self.map_msg.info.resolution)
             ),
             final_coverage=self.coverage,
             final_known_fraction=self.known,
             total_distance_m=self.distance,
             total_time_s=total_time,
-            selection_verification_failures=(
-                self.selection_verification_failures
-            ),
+            selection_verification_failures=self.selection_verification_failures,
         )
-
         self.get_logger().warn(
-            f"MAPEX SAVED: coverage={self.fmt(self.coverage)}, "
+            f"MAPEX SAVED: env={self.environment}, coverage={self.fmt(self.coverage)}, "
             f"distance={self.distance:.2f}m, output={self.run}"
         )
 
     def close_recorder_files(self):
-        """Flush/close recorder CSVs before post-run evaluator rewrites metrics.csv."""
+        """Flush/close CSVs before the offline evaluator rewrites metrics.csv."""
         for name in ("fm", "ft", "fd", "fc", "fg", "fp"):
             stream = getattr(self, name, None)
-            if stream is None or stream.closed:
-                continue
-            stream.flush()
-            stream.close()
+            if stream is not None and not stream.closed:
+                stream.flush()
+                stream.close()
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--odom-topic", default="/odom")
+    parser.add_argument(
+        "--environment",
+        choices=sorted(ENVIRONMENT_PROFILES),
+        default="new_room",
+        help=(
+            "Evaluation environment/profile. Default is new_room; use "
+            "--environment hospital for the Hospital benchmark."
+        ),
+    )
     parser.add_argument(
         "--save-predictions",
         action=argparse.BooleanOptionalAction,
@@ -885,11 +980,14 @@ def main():
     rclpy.init(args=mapex._mapex_init_args(ros_args))
     node = None
     run_dir = None
+    ground_truth_path = None
+    roi_path = None
     try:
         node = MapExRun(
             args.run_id,
             args.odom_topic,
             args.save_predictions,
+            args.environment,
         )
         rclpy.spin(node)
     except (KeyboardInterrupt, ExternalShutdownException):
@@ -899,6 +997,8 @@ def main():
             if not node.finalized:
                 node.finalize("keyboard_interrupt")
             run_dir = node.run
+            ground_truth_path = node.ground_truth_path
+            roi_path = node.roi_path
             node.close_recorder_files()
             ensemble = getattr(node, "ensemble", None)
             if ensemble is not None and hasattr(ensemble, "close"):
@@ -907,12 +1007,13 @@ def main():
         if rclpy.ok():
             rclpy.shutdown()
 
-    if run_dir is not None:
-        result = evaluate_run(run_dir)
+    if run_dir is not None and ground_truth_path is not None and roi_path is not None:
+        result = evaluate_run(run_dir, ground_truth_path, roi_path)
         status = result.get("status", "unknown")
         if status == "ok":
             print(
                 "MAPEX OFFLINE EVAL: "
+                f"env={args.environment}, "
                 f"IoU={result['final_occupied_iou']:.6f}, "
                 f"TU={result['final_tu']:.6f}, "
                 f"decisions={result['evaluated_decisions']}"
@@ -920,7 +1021,8 @@ def main():
         else:
             print(
                 "MAPEX OFFLINE EVAL: "
-                f"{status}: {result.get('reason', 'no reason')}"
+                f"env={args.environment}, {status}: "
+                f"{result.get('reason', 'no reason')}"
             )
 
 
