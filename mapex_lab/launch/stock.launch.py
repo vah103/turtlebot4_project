@@ -1,7 +1,8 @@
 """Launch TurtleBot4 simulation with stock Nav2 and near-stock SLAM.
 
-Hospital remains the default world. Pass world:=new_room to reuse the same
-SLAM/Nav2 stack on mapex_lab/map/new_room.sdf.
+New Room is the default world and uses the same (0, 0, 0) spawn assumed by the
+New Room ground-truth/ROI pipeline. Pass world:=hospital with auto poses to use
+the Hospital world through this shared launcher.
 """
 
 import os
@@ -129,10 +130,10 @@ def generate_launch_description() -> LaunchDescription:
 
     return LaunchDescription(
         [
-            DeclareLaunchArgument('world', default_value='hospital'),
-            DeclareLaunchArgument('x_pose', default_value='auto'),
-            DeclareLaunchArgument('y_pose', default_value='auto'),
-            DeclareLaunchArgument('yaw', default_value='auto'),
+            DeclareLaunchArgument('world', default_value='new_room'),
+            DeclareLaunchArgument('x_pose', default_value='0.0'),
+            DeclareLaunchArgument('y_pose', default_value='0.0'),
+            DeclareLaunchArgument('yaw', default_value='0.0'),
             DeclareLaunchArgument('use_sim_time', default_value='true'),
             DeclareLaunchArgument('use_rviz', default_value='True'),
             DeclareLaunchArgument('headless', default_value='False'),
