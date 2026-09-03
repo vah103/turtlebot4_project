@@ -1,13 +1,7 @@
-"""Launch Hospital simulation with stock TurtleBot4 Nav2 and near-stock SLAM.
+"""Launch TurtleBot4 simulation with stock Nav2 and near-stock SLAM.
 
-The Hospital world is project-specific. Nav2 starts from the installed
-`turtlebot4_navigation/config/nav2.yaml` and applies only the tiny
-`config/nav2.yaml` override so frontier goals are position-only.
-SLAM uses `mapex_lab/config/slam.yaml`, which follows the TurtleBot4 stock SLAM
-config except that max_laser_range is 20 m to match the simulated Hospital LiDAR.
-
-Hospital world geometry and default spawn are inherited from the scale-aware
-hospital_flat_simulation.launch.py.
+Hospital remains the default world. Pass world:=new_room to reuse the same
+SLAM/Nav2 stack on mapex_lab/map/new_room.sdf.
 """
 
 import os
@@ -78,6 +72,10 @@ def generate_launch_description() -> LaunchDescription:
     use_sim_time = LaunchConfiguration('use_sim_time')
     use_rviz = LaunchConfiguration('use_rviz')
     headless = LaunchConfiguration('headless')
+    world = LaunchConfiguration('world')
+    x_pose = LaunchConfiguration('x_pose')
+    y_pose = LaunchConfiguration('y_pose')
+    yaw = LaunchConfiguration('yaw')
     slam_delay_sec = LaunchConfiguration('slam_delay_sec')
     nav2_delay_sec = LaunchConfiguration('nav2_delay_sec')
 
@@ -90,8 +88,12 @@ def generate_launch_description() -> LaunchDescription:
             )
         ),
         launch_arguments={
+            'world': world,
             'use_rviz': use_rviz,
             'headless': headless,
+            'x_pose': x_pose,
+            'y_pose': y_pose,
+            'yaw': yaw,
         }.items(),
     )
 
@@ -127,6 +129,10 @@ def generate_launch_description() -> LaunchDescription:
 
     return LaunchDescription(
         [
+            DeclareLaunchArgument('world', default_value='hospital'),
+            DeclareLaunchArgument('x_pose', default_value='auto'),
+            DeclareLaunchArgument('y_pose', default_value='auto'),
+            DeclareLaunchArgument('yaw', default_value='auto'),
             DeclareLaunchArgument('use_sim_time', default_value='true'),
             DeclareLaunchArgument('use_rviz', default_value='True'),
             DeclareLaunchArgument('headless', default_value='False'),
