@@ -1,0 +1,49 @@
+ground_truth:
+  id: new_room_structural_gt_v1
+  source_sdf: map/new_room.sdf
+  source_model: mini_hospital_structure
+  generator: scripts/generate_new_room_ground_truth.py
+
+rasterization:
+  canvas_id: hospital_canvas_v1
+  resolution_m: 0.05
+  width_cells: 1504
+  height_cells: 2123
+  origin_x: -25.6
+  origin_y: -60.1
+  z_slice_m: 0.20
+  rule: cell_center_inside_projected_collision_box
+  include:
+    - all box collisions in mini_hospital_structure intersecting z_slice_m
+  exclude:
+    - new_room_ground plane
+    - visuals without collision geometry
+
+labels:
+  outside_unscored: -1
+  free: 0
+  occupied: 100
+
+evaluation_mask:
+  rule: axis_aligned_outer_bounds_of_all_included_structure_collisions
+  note: >-
+    For the current new_room.sdf, the outer wall collisions define the map
+    footprint; door gaps and internal openings remain free automatically.
+
+connected_free_roi:
+  id: new_room_connected_free_v1
+  spawn_world_xy: [0.0, 0.0]
+  connectivity: 4
+  source: structural_free_cells_inside_evaluation_mask
+  output: generated/new_room_connected_free_v1.npy
+
+generated_outputs:
+  ground_truth: generated/new_room_structural_gt_v1.npz
+  connected_free_roi: generated/new_room_connected_free_v1.npy
+  preview: generated/new_room_structural_gt_v1.pgm
+  summary: generated/new_room_structural_gt_v1_summary.json
+
+provenance:
+  source_sdf_sha256_saved_in_artifact: true
+  generated_artifacts_committed: false
+  reason: generated ground-truth artifacts are local-only by .gitignore policy
