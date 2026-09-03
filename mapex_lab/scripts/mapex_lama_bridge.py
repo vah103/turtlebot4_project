@@ -21,6 +21,8 @@ class LamaEnsembleBridge:
         self.prediction_config = prediction_config
         self._tmp = tempfile.TemporaryDirectory(prefix="mapex_lama_")
         self._counter = 0
+        self._last_mean_map = None
+        self._last_variance_map = None
 
         default_python = (
             Path.home() / "miniforge3" / "envs" / "lama" / "bin" / "python"
@@ -89,10 +91,7 @@ class LamaEnsembleBridge:
             ) from exc
         return payload
 
-    def predict_mean_variance(
-        self,
-        observed_map: np.ndarray,
-    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, int, int]:
+    def _predict_bundle(self, observed_map: np.ndarray) -> dict:
         if self.process.poll() is not None:
             raise RuntimeError(
                 f"MapEx LaMa worker already exited with code {self.process.returncode}"
@@ -124,6 +123,7 @@ class LamaEnsembleBridge:
             raise RuntimeError("MapEx LaMa worker returned success without output")
 
         with np.load(output_path) as data:
+            predictions = data["predictions"].astype(np.float32, copy=True)
             mean_map = data["mean_map"].astype(np.float32, copy=True)
             variance_map = data["variance_map"].astype(np.float32, copy=True)
             padded_observed = data["padded_observed"].astype(np.float32, copy=True)
@@ -132,7 +132,90 @@ class LamaEnsembleBridge:
 
         input_path.unlink(missing_ok=True)
         output_path.unlink(missing_ok=True)
-        return mean_map, variance_map, padded_observed, pad_top, pad_left
+
+        if predictions.ndim != 3 or predictions.shape[0] != 3:
+            raise RuntimeError(
+                "MapEx LaMa worker must return predictions with shape (3,H,W); "
+                f"got {predictions.shape}"
+            )
+        if predictions.shape[1:] != padded_observed.shape:
+            raise RuntimeError(
+                "Prediction/observation shape mismatch: "
+                f"predictions={predictions.shape}, observed={padded_observed.shape}"
+            )
+
+        return {
+            "predictions": predictions,
+            "mean_map": mean_map,
+            "variance_map": variance_map,
+            "padded_observed": padded_observed,
+            "pad_top": pad_top,
+            "pad_left": pad_left,
+        }
+
+    def predict_maps(self, observed_map: np.ndarray):
+        """Canonical mapex.LamaEnsemble interface: return P1/P2/P3 plus O_t."""
+        bundle = self._predict_bundle(observed_map)
+        self._last_mean_map = bundle["mean_map"]
+        self._last_variance_map = bundle["variance_map"]
+        return (
+            bundle["predictions"],
+            bundle["padded_observed"],
+            bundle["pad_top"],
+            bundle["pad_left"],
+        )
+
+    def compute_mean_map(
+        self,
+        predictions: np.ndarray,
+        padded_observed: np.ndarray,
+    ) -> np.ndarray:
+        """Return worker-computed ensemble mean for the latest prediction call."""
+        if self._last_mean_map is None:
+            mean_map = np.mean(predictions, axis=0, dtype=np.float32)
+            mean_map = np.nan_to_num(mean_map, nan=0.5, posinf=1.0, neginf=0.0)
+            mean_map = np.clip(mean_map, 0.0, 1.0).astype(np.float32, copy=False)
+            known = ~np.isclose(padded_observed, 0.5)
+            mean_map[known] = padded_observed[known]
+            return mean_map
+        return self._last_mean_map.copy()
+
+    def compute_variance_map(
+        self,
+        predictions: np.ndarray,
+        padded_observed: np.ndarray,
+    ) -> np.ndarray:
+        """Return worker-computed torch.var-equivalent ensemble variance."""
+        if self._last_variance_map is None:
+            variance_map = np.var(predictions, axis=0, ddof=1).astype(
+                np.float32, copy=False
+            )
+            variance_map = np.nan_to_num(
+                variance_map, nan=0.0, posinf=0.0, neginf=0.0
+            )
+            variance_map = np.maximum(variance_map, 0.0).astype(
+                np.float32, copy=False
+            )
+            known = ~np.isclose(padded_observed, 0.5)
+            variance_map[known] = 0.0
+            return variance_map
+        return self._last_variance_map.copy()
+
+    def predict_mean_variance(
+        self,
+        observed_map: np.ndarray,
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, int, int]:
+        """Backward-compatible helper retained for older bridge callers."""
+        bundle = self._predict_bundle(observed_map)
+        self._last_mean_map = bundle["mean_map"]
+        self._last_variance_map = bundle["variance_map"]
+        return (
+            bundle["mean_map"],
+            bundle["variance_map"],
+            bundle["padded_observed"],
+            bundle["pad_top"],
+            bundle["pad_left"],
+        )
 
     def close(self) -> None:
         process = getattr(self, "process", None)
