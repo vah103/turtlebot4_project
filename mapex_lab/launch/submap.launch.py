@@ -1,8 +1,7 @@
 """Launch New Room + segmented local scan frontend + SLAM Toolbox + stock Nav2.
 
-New Room is the default world and uses spawn (0, 0, 0), matching the active
-New Room GT/ROI pipeline. Hospital can still be selected explicitly with launch
-arguments when needed.
+New Room is the default world and uses spawn (0, 3, 0). Hospital can still be
+selected explicitly with launch arguments when needed.
 
 This experiment is intentionally not part of the official hospital_v2 protocol.
 """
@@ -180,7 +179,7 @@ def generate_launch_description() -> LaunchDescription:
         [
             DeclareLaunchArgument('world', default_value='new_room'),
             DeclareLaunchArgument('x_pose', default_value='0.0'),
-            DeclareLaunchArgument('y_pose', default_value='0.0'),
+            DeclareLaunchArgument('y_pose', default_value='3.0'),
             DeclareLaunchArgument('yaw', default_value='0.0'),
             DeclareLaunchArgument('use_sim_time', default_value='true'),
             DeclareLaunchArgument('use_rviz', default_value='True'),
