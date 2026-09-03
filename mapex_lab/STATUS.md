@@ -35,6 +35,7 @@
 - Added `scripts/evaluate_mapex_profiled.py` so the existing evaluator receives the active environment's GT + ROI pair. This prevents New Room TU goals from accidentally being sampled from Hospital's ROI.
 - Coverage denominator is now environment-specific in `mapex_run.py`: it is computed from the actual loaded connected-free ROI rather than always using Hospital's fixed `215435` cells.
 - The standalone evaluator synthetic consistency test previously returned occupied IoU `1.0` and TU `1.0` for matching prediction/ground truth and successfully backfilled `metrics.csv`.
+- `launch/stock.launch.py` now defaults to `new_room` with spawn `(0.0, 0.0, 0.0)`, matching `stock2.launch.py` and the New Room GT/ROI assumptions. Hospital can still be selected explicitly with launch arguments when needed.
 
 ## In progress
 
@@ -47,7 +48,7 @@
 ## Next actions
 
 1. Pull the latest repo.
-2. Launch New Room with `ros2 launch mapex_lab/launch/stock2.launch.py` (or the installed-package equivalent currently used locally).
+2. Launch New Room with `ros2 launch mapex_lab/launch/stock.launch.py`.
 3. Run one short New Room MapEx recorder test with the normal single entry point:
    `python mapex_lab/scripts/mapex_run.py --run-id mapex_test_001`
    (`--environment new_room` is optional because New Room is now the default.)
@@ -74,4 +75,4 @@
 
 ## Latest result
 
-2026-09-03: New Room structural ground truth was generated from the tracked `new_room.sdf` collision model and attached to the MapEx run/evaluation pipeline. `mapex_run.py` now defaults to the `new_room` profile, auto-regenerates New Room GT/ROI when missing or stale, computes Coverage with the New Room connected-free ROI denominator, saves G1/G2/G3/mean/variance, and passes the New Room GT + ROI to offline IoU/TU evaluation. Hospital remains available via `--environment hospital`. The next gate is one end-to-end runtime smoke test plus visual GT alignment inspection before trusting quantitative New Room IoU/TU.
+2026-09-03: `stock.launch.py` was aligned with the active New Room workflow: its default world is now `new_room` and its default spawn is `(0.0, 0.0, 0.0)`, matching the New Room GT/ROI generator and `mapex_run.py`'s default `new_room` evaluation profile. A plain `ros2 launch mapex_lab/launch/stock.launch.py` can now be used for the New Room smoke test; Hospital remains an explicit alternate profile. The next gate is one end-to-end runtime smoke test plus visual GT alignment inspection before trusting quantitative New Room IoU/TU.
