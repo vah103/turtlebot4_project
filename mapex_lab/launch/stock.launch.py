@@ -1,8 +1,9 @@
 """Launch TurtleBot4 simulation with stock Nav2 and near-stock SLAM.
 
-New Room is the default world and uses the same (0, 0, 0) spawn assumed by the
-New Room ground-truth/ROI pipeline. Pass world:=hospital with auto poses to use
-the Hospital world through this shared launcher.
+New Room is the default world. Spawn poses are resolved by the shared simulation
+launcher so New Room uses its safe (0, 3, 0) pose while Hospital keeps its own
+canonical spawn. Pass explicit x_pose/y_pose/yaw values only when intentionally
+overriding the world-specific defaults.
 """
 
 import os
@@ -131,9 +132,9 @@ def generate_launch_description() -> LaunchDescription:
     return LaunchDescription(
         [
             DeclareLaunchArgument('world', default_value='new_room'),
-            DeclareLaunchArgument('x_pose', default_value='0.0'),
-            DeclareLaunchArgument('y_pose', default_value='0.0'),
-            DeclareLaunchArgument('yaw', default_value='0.0'),
+            DeclareLaunchArgument('x_pose', default_value='auto'),
+            DeclareLaunchArgument('y_pose', default_value='auto'),
+            DeclareLaunchArgument('yaw', default_value='auto'),
             DeclareLaunchArgument('use_sim_time', default_value='true'),
             DeclareLaunchArgument('use_rviz', default_value='True'),
             DeclareLaunchArgument('headless', default_value='False'),
