@@ -10,7 +10,7 @@
 #    end of the path, rather than handing off early just because the goal is
 #    Euclidean-close through a wall or around a long detour.
 #
-# The velocity smoother uses the previous profile: 0.5 m/s linear and
+# The velocity smoother uses 0.75 m/s linear and
 # 1.9 rad/s angular.
 
 planner_server:
@@ -74,8 +74,8 @@ behavior_server:
 velocity_smoother:
   ros__parameters:
     enable_stamped_cmd_vel: false
-    max_velocity: [0.5, 0.0, 1.9]
-    min_velocity: [-0.5, 0.0, -1.9]
+    max_velocity: [0.75, 0.0, 1.9]
+    min_velocity: [-0.75, 0.0, -1.9]
 
 collision_monitor:
   ros__parameters:
