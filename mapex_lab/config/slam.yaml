@@ -1,6 +1,5 @@
-# TurtleBot4 stock SLAM Toolbox parameters with two Hospital-specific changes:
+# TurtleBot4 stock SLAM Toolbox parameters with one Hospital-specific change:
 # - resolution is 0.10 m/cell to match the frontier/debug setup used here.
-# - max_laser_range is raised from 12.0 m to 20.0 m to match the simulated LiDAR.
 # Everything else intentionally follows turtlebot4_navigation/config/slam.yaml.
 
 slam_toolbox:
@@ -25,7 +24,7 @@ slam_toolbox:
     transform_publish_period: 0.02
     map_update_interval: 1.0
     resolution: 0.10
-    max_laser_range: 20.0
+    max_laser_range: 12.0
     minimum_time_interval: 0.5
     transform_timeout: 0.2
     tf_buffer_duration: 30.0
