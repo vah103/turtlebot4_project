@@ -7,7 +7,7 @@ measurement, provenance, map snapshots, and result logging.
 
 New Room is the default environment. The default runtime profile is ``submap``
 so runs launched with launch/submap.launch.py record the active SLAM/frontend
-files accurately. Use --runtime-profile stock2 for stock SLAM runs and
+files accurately. Use --runtime-profile stock for stock SLAM runs and
 --environment hospital for the legacy Hospital benchmark.
 """
 from __future__ import annotations
@@ -97,14 +97,14 @@ RUNTIME_PROFILES = {
             "local_scan_frontend": "scripts/local_scan.py",
         },
     },
-    "stock2": {
+    "stock": {
         "environment": "new_room",
-        "id": "new_room_stock2",
+        "id": "new_room_stock",
         "note": (
-            "New Room benchmark launched with launch/stock2.launch.py using the "
+            "New Room benchmark launched with launch/stock.launch.py using the "
             "stock SLAM scan path."
         ),
-        "launch_relative": "launch/stock2.launch.py",
+        "launch_relative": "launch/stock.launch.py",
         "slam_relative": "config/slam.yaml",
         "extra_hashes": {},
     },
@@ -1026,7 +1026,7 @@ def main():
         default=None,
         help=(
             "Runtime provenance profile. For new_room the default is submap; "
-            "use stock2 for launch/stock2.launch.py. Hospital defaults to hospital."
+            "use stock for launch/stock.launch.py. Hospital defaults to hospital."
         ),
     )
     args, ros_args = parser.parse_known_args()
