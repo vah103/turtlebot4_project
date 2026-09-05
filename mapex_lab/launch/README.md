@@ -1,31 +1,16 @@
 # Launch
 
-Launch files mới dành riêng cho lộ trình nghiên cứu sẽ đặt ở đây.
+Ba launch chính của `mapex_lab`:
 
-## Stock reference stack
+- `stock.launch.py`
+  - simulation + SLAM Toolbox + Nav2
+  - không có local scan frontend
 
-- `hospital_stock_stack.launch.py`
-  - dùng Hospital simulation hiện có;
-  - dùng launch/config mặc định của package `turtlebot4_navigation` cho SLAM;
-  - dùng launch/config mặc định của package `turtlebot4_navigation` cho Nav2;
-  - không dùng `hospital_slam.yaml`, `hospital_slam_no_loop.yaml` hay `nav2_hospital_override.yaml`.
-  - chỉ dùng làm reference/debug cơ bản, không thay thế protocol benchmark Hospital v2.
+- `local.launch.py`
+  - simulation + local scan frontend + SLAM Toolbox + Nav2
 
-Chạy trực tiếp từ repo:
+- `submap.launch.py`
+  - simulation + segmented submap/ICP frontend + SLAM Toolbox + Nav2
+  - dùng `scripts/submap.py` và `config/slam_submap.yaml`
 
-```bash
-ros2 launch mapex_hospital_research/launch/hospital_stock_stack.launch.py
-```
-
-Sau đó có thể chạy controller frontier riêng, ví dụ `control_tb4.py`.
-
-## Research launches
-
-Planned:
-- `hospital_nearest.launch.py`
-- `hospital_mapex.launch.py`
-- nếu cần: launch riêng recorder/logger.
-
-Không copy mù các launch cũ. Benchmark Nearest và MapEx phải tiếp tục dùng đúng cùng protocol/config đã chốt trong `EXPERIMENT_PROTOCOL.md`.
-
-Existing dependencies có thể tham khảo trong `ros2_ws/src/frontier_exploration/launch/`.
+New Room là môi trường mặc định của stack hiện tại.
