@@ -7,8 +7,8 @@ MapEx-specific candidate metrics, G1/G2/G3 + mean/variance prediction storage,
 provenance, environment-specific coverage ROI, and post-run IoU/TU evaluation.
 
 New Room defaults to the same ``submap`` runtime provenance profile as nf_run.py.
-Use --runtime-profile stock2 when the surrounding simulation/SLAM launch is
-launch/stock2.launch.py.
+Use --runtime-profile stock when the surrounding simulation/SLAM launch is
+launch/stock.launch.py.
 """
 from __future__ import annotations
 
@@ -998,7 +998,7 @@ def main():
         default=None,
         help=(
             "Runtime provenance profile. For new_room the default is submap; "
-            "use stock2 for launch/stock2.launch.py. Hospital defaults to hospital."
+            "use stock for launch/stock.launch.py. Hospital defaults to hospital."
         ),
     )
     parser.add_argument(
