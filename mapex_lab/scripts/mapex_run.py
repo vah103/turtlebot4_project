@@ -5,6 +5,10 @@ The exploration policy remains in mapex.py. This wrapper reuses Stage2Run's
 measurement hooks and nf_basic.py's shared execution layer, while adding
 MapEx-specific candidate metrics, G1/G2/G3 + mean/variance prediction storage,
 provenance, environment-specific coverage ROI, and post-run IoU/TU evaluation.
+
+New Room defaults to the same ``submap`` runtime provenance profile as nf_run.py.
+Use --runtime-profile stock2 when the surrounding simulation/SLAM launch is
+launch/stock2.launch.py.
 """
 from __future__ import annotations
 
@@ -38,6 +42,7 @@ from nf_run import (
     NAV2_READY_STABLE_S,
     PROTOCOL_VERSION,
     ROI_N,
+    RUNTIME_PROFILES,
     SIM_SEED_POLICY,
     Stage2Run,
     _deep_merge,
@@ -53,11 +58,6 @@ mapex.LamaEnsemble = LamaEnsembleBridge
 ENVIRONMENT_PROFILES = {
     "new_room": {
         "protocol_version": "new_room_v1",
-        "runtime_profile": "new_room_stock2",
-        "runtime_profile_note": (
-            "Auxiliary New Room benchmark using map/new_room.sdf; intended launch "
-            "is launch/stock2.launch.py with the same MapEx/Nav2 policy stack."
-        ),
         "roi_id": "new_room_connected_free_v1",
         "roi_relative": "ground_truth/new_room/generated/new_room_connected_free_v1.npy",
         "ground_truth_id": "new_room_structural_gt_v1",
@@ -68,12 +68,6 @@ ENVIRONMENT_PROFILES = {
     },
     "hospital": {
         "protocol_version": PROTOCOL_VERSION,
-        "runtime_profile": "not_auto_detected",
-        "runtime_profile_note": (
-            "Hospital recorder archives the same TurtleBot4 stock Nav2 + "
-            "mapex_lab/config/nav2.yaml merge used by the current launchers; "
-            "the launch file itself is not auto-detected."
-        ),
         "roi_id": EVALUATION_ROI_ID,
         "roi_relative": (
             "ground_truth/hospital/generated/hospital_connected_free_v1.npy"
@@ -126,10 +120,22 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         odom_topic: str,
         save_predictions: bool,
         environment: str,
+        runtime_profile: str | None = None,
     ):
         root = FilePath(__file__).resolve().parents[1]
         if environment not in ENVIRONMENT_PROFILES:
             raise RuntimeError(f"Unknown environment: {environment}")
+
+        if runtime_profile is None:
+            runtime_profile = "submap" if environment == "new_room" else "hospital"
+        if runtime_profile not in RUNTIME_PROFILES:
+            raise RuntimeError(f"Unknown runtime profile: {runtime_profile}")
+        profile = dict(RUNTIME_PROFILES[runtime_profile])
+        if profile["environment"] != environment:
+            raise RuntimeError(
+                f"Runtime profile '{runtime_profile}' belongs to "
+                f"{profile['environment']}, not {environment}"
+            )
 
         self.root = root
         self.repo_root = root.parent
@@ -160,6 +166,8 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         # MapExExplorer still initializes through the exact canonical policy class.
         mapex.MapExExplorer.__init__(self)
 
+        self.runtime_profile_name = runtime_profile
+        self.runtime_profile = profile
         self.run = run
         self.save_predictions = bool(save_predictions)
         (self.run / "maps").mkdir(parents=True)
@@ -213,7 +221,8 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         self.create_timer(1.0, self.metric_tick)
 
         self.get_logger().warn(
-            f"MAPEX RECORDING: env={self.environment}, output={self.run}"
+            f"MAPEX RECORDING: env={self.environment}, "
+            f"profile={self.runtime_profile_name}, output={self.run}"
         )
         self.get_logger().info(
             "MapEx provenance saved: metadata.json + runtime_nav2_merged.yaml "
@@ -276,6 +285,11 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             except (OSError, subprocess.CalledProcessError):
                 pass
 
+        slam_relative = self.runtime_profile["slam_relative"]
+        launch_relative = self.runtime_profile["launch_relative"]
+        active_slam = self.root / slam_relative if slam_relative else None
+        active_launch = self.root / launch_relative if launch_relative else None
+
         hash_paths = {
             "mapex_run": self.root / "scripts" / "mapex_run.py",
             "mapex_evaluator": self.root / "scripts" / "evaluate_mapex_run.py",
@@ -291,11 +305,16 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "mapex_config": mapex_config,
             "runtime_mapex": runtime_mapex,
             "nav2_override": nav2_override,
-            "slam": self.root / "config" / "slam.yaml",
-            "slam_local": self.root / "config" / "slam_local.yaml",
             "installed_nav2_base_params": nav2_base,
             "runtime_nav2_merged": merged_path,
         }
+        if active_slam is not None:
+            hash_paths["runtime_slam"] = active_slam
+        if active_launch is not None:
+            hash_paths["runtime_launch"] = active_launch
+        for name, relative in self.runtime_profile["extra_hashes"].items():
+            hash_paths[name] = self.root / relative
+
         if self.environment == "new_room":
             hash_paths.update(
                 {
@@ -343,10 +362,13 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                 None if git_status is None else bool(git_status)
             ),
             "protocol_version": self.environment_profile["protocol_version"],
-            "runtime_profile": self.environment_profile["runtime_profile"],
-            "runtime_profile_note": self.environment_profile[
-                "runtime_profile_note"
-            ],
+            "runtime_profile": self.runtime_profile["id"],
+            "runtime_profile_name": self.runtime_profile_name,
+            "runtime_profile_note": self.runtime_profile["note"],
+            "runtime_launch_file": (
+                None if active_launch is None else str(active_launch)
+            ),
+            "runtime_slam_file": None if active_slam is None else str(active_slam),
             "runtime_map_resolution_m": None,
             "fixed_canvas_id": FIXED_CANVAS_ID,
             "fixed_canvas_resolution_m": CANVAS_RES,
@@ -883,6 +905,8 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "run_id": self.run.name,
             "method": "mapex",
             "environment": self.environment,
+            "runtime_profile": self.runtime_profile["id"],
+            "runtime_profile_name": self.runtime_profile_name,
             "evaluation_roi_id": self.environment_profile["roi_id"],
             "evaluation_roi_denominator": self.roi_n if self.roi_n > 0 else None,
             "structural_ground_truth_id": self.environment_profile["ground_truth_id"],
@@ -940,7 +964,9 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             selection_verification_failures=self.selection_verification_failures,
         )
         self.get_logger().warn(
-            f"MAPEX SAVED: env={self.environment}, coverage={self.fmt(self.coverage)}, "
+            f"MAPEX SAVED: env={self.environment}, "
+            f"profile={self.runtime_profile_name}, "
+            f"coverage={self.fmt(self.coverage)}, "
             f"distance={self.distance:.2f}m, output={self.run}"
         )
 
@@ -967,6 +993,15 @@ def main():
         ),
     )
     parser.add_argument(
+        "--runtime-profile",
+        choices=sorted(RUNTIME_PROFILES),
+        default=None,
+        help=(
+            "Runtime provenance profile. For new_room the default is submap; "
+            "use stock2 for launch/stock2.launch.py. Hospital defaults to hospital."
+        ),
+    )
+    parser.add_argument(
         "--save-predictions",
         action=argparse.BooleanOptionalAction,
         default=True,
@@ -988,6 +1023,7 @@ def main():
             args.odom_topic,
             args.save_predictions,
             args.environment,
+            args.runtime_profile,
         )
         rclpy.spin(node)
     except (KeyboardInterrupt, ExternalShutdownException):
