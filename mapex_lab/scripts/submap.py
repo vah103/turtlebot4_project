@@ -50,7 +50,7 @@ class SubmapScanFrontend(local_scan.LocalScanWindow):
     def __init__(self) -> None:
         super().__init__()
 
-        self.declare_parameter("segment_distance_m", 6.0)
+        self.declare_parameter("segment_distance_m", 4.5)
         self.declare_parameter("segment_turn_rad", math.radians(120.0))
         self.declare_parameter("segment_max_translation_correction_m", 0.30)
         self.declare_parameter("segment_max_rotation_correction_rad", math.radians(3.0))
