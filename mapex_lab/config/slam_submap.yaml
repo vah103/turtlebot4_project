@@ -1,8 +1,8 @@
 # Experimental SLAM Toolbox profile for the segmented submap frontend.
 #
-# This matches mapex_lab/config/slam_local.yaml except that SLAM consumes
-# /scan_submap from scripts/submap.py. Global scan matching, loop closure, and
-# pose-graph optimization remain SLAM Toolbox responsibilities.
+# SLAM consumes /scan_submap from scripts/submap.py. Global scan matching,
+# loop closure, and pose-graph optimization remain SLAM Toolbox responsibilities.
+# The laser range is kept at the TurtleBot4 stock value of 12.0 m.
 
 slam_toolbox:
   ros__parameters:
@@ -26,7 +26,7 @@ slam_toolbox:
     transform_publish_period: 0.02
     map_update_interval: 1.0
     resolution: 0.10
-    max_laser_range: 20.0
+    max_laser_range: 12.0
     minimum_time_interval: 0.5
     transform_timeout: 0.2
     tf_buffer_duration: 30.0
