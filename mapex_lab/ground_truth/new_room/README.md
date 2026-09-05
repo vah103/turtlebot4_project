@@ -16,8 +16,8 @@ that intersect the 2-D robot slice at `z=0.20 m`. This includes the outer and
 inner walls, low room obstacles and the angled central LiDAR occlusion screen.
 The ground plane is excluded.
 
-The actual `stock2.launch.py` spawn `(0,0)` is used to derive a 4-connected free
-ROI for coverage.
+The generator uses `(0,0)` as the connectivity seed for deriving the
+4-connected free ROI used by coverage evaluation.
 
 ## Outputs
 
@@ -33,20 +33,8 @@ generated/
 
 `new_room_structural_gt_v1.npz` contains:
 - `data`: `-1` outside the evaluated building footprint, `0` free, `100` occupied;
-- `evaluation_mask`;
-- fixed-canvas resolution/origin/shape;
-- source SDF SHA-256 and the z-slice used for rasterization.
+- fixed-canvas metadata (`resolution`, `origin`, width/height);
+- `source_sdf_sha256` so `mapex_run.py` can detect stale generated GT.
 
-The raster frame intentionally reuses `hospital_canvas_v1` (`0.05 m/cell`) so
-existing MapEx prediction snapshots can be aligned using the same world-to-grid
-convention. Reusing the raster frame does **not** make New Room a Hospital-v2
-benchmark environment; New Room remains an auxiliary evaluation profile.
-
-The PGM preview uses black=occupied, white=free, gray=outside/unscored.
-
-## Validation before reporting metrics
-
-After every geometry change to `map/new_room.sdf`, regenerate the files and
-check that the SHA in `new_room_structural_gt_v1_summary.json` matches the
-current SDF. Visually inspect the PGM against Gazebo/RViz before trusting IoU or
-TU.
+`new_room_connected_free_v1.npy` is the connected-free ROI used by the New Room
+Coverage/IoU/TU evaluation profile.
