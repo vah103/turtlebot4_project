@@ -22,5 +22,9 @@ Normal Hospital launch files automatically use the canonical world and configure
 - `turtlebot3_house.sdf`: self-contained Gazebo Sim / xacro world adapted from the TurtleBot3 House geometry in `EBang2k4/Omni_Boe_Robot`.
 - Structural walls are retained and mesh-backed furniture is represented with simple local primitive geometry suitable for LiDAR / SLAM / navigation testing.
 - No `Omni_Boe_Robot` checkout, `model://turtlebot3_house`, external mesh, texture, or `GZ_SIM_RESOURCE_PATH` setup is required.
-- `launch/submap1.launch.py` uses this world directly and spawns TurtleBot4 at `(x=1.0, y=0.5, yaw=0.0)`.
+- No dedicated launch file is kept for this auxiliary world.
 - This world is intended for auxiliary/debug cross-environment testing only. It is **not** part of the canonical `hospital_v2` benchmark unless the experiment protocol is deliberately changed.
+
+## New Room
+
+- `new_room.sdf`: self-contained primary New Room world used by the current `stock.launch.py`, `local.launch.py`, and `submap.launch.py` workflows.
