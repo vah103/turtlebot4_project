@@ -5,8 +5,10 @@ The exploration policy remains in nf_basic.py and is inherited unchanged from
 nf_basic.NearestEuclideanFrontier. This wrapper only adds benchmark setup,
 measurement, provenance, map snapshots, and result logging.
 
-By default the recorder uses the same New Room benchmark contract as
-mapex_run.py. Hospital remains available through --environment hospital.
+New Room is the default environment. The default runtime profile is ``submap``
+so runs launched with launch/submap.launch.py record the active SLAM/frontend
+files accurately. Use --runtime-profile stock2 for stock SLAM runs and
+--environment hospital for the legacy Hospital benchmark.
 """
 from __future__ import annotations
 
@@ -30,7 +32,12 @@ from rclpy.executors import ExternalShutdownException
 from rclpy.qos import QoSProfile, ReliabilityPolicy
 
 from generate_new_room_ground_truth import generate as generate_new_room_ground_truth
-from nf_basic import MAIN_PLAN_ENDPOINT_TOLERANCE_M, NearestEuclideanFrontier
+from nf_basic import (
+    GOAL_OCCUPIED_ERROR_CODE,
+    MAIN_PLAN_ENDPOINT_TOLERANCE_M,
+    NO_VALID_PATH_ERROR_CODE,
+    NearestEuclideanFrontier,
+)
 
 CANVAS_RES = 0.05
 CANVAS_W = 1504
@@ -38,6 +45,7 @@ CANVAS_H = 2123
 CANVAS_X = -25.6
 CANVAS_Y = -60.1
 
+# Legacy Hospital constants are kept because mapex_run.py imports them.
 ROI_N = 215435
 PROTOCOL_VERSION = "hospital_v2"
 FIXED_CANVAS_ID = "hospital_canvas_v1"
@@ -50,11 +58,6 @@ SIM_SEED_POLICY = "intentionally_uncontrolled_gazebo_default_multiple_run_statis
 ENVIRONMENT_PROFILES = {
     "new_room": {
         "protocol_version": "new_room_v1",
-        "runtime_profile": "new_room_stock2",
-        "runtime_profile_note": (
-            "Auxiliary New Room benchmark using map/new_room.sdf; intended launch "
-            "is launch/stock2.launch.py with the same Nearest/Nav2 policy stack."
-        ),
         "roi_id": "new_room_connected_free_v1",
         "roi_relative": "ground_truth/new_room/generated/new_room_connected_free_v1.npy",
         "ground_truth_id": "new_room_structural_gt_v1",
@@ -65,12 +68,6 @@ ENVIRONMENT_PROFILES = {
     },
     "hospital": {
         "protocol_version": PROTOCOL_VERSION,
-        "runtime_profile": "not_auto_detected",
-        "runtime_profile_note": (
-            "Hospital recorder archives the same TurtleBot4 stock Nav2 + "
-            "mapex_lab/config/nav2.yaml merge used by the current launchers; "
-            "the launch file itself is not auto-detected."
-        ),
         "roi_id": EVALUATION_ROI_ID,
         "roi_relative": (
             "ground_truth/hospital/generated/hospital_connected_free_v1.npy"
@@ -80,6 +77,47 @@ ENVIRONMENT_PROFILES = {
             "ground_truth/hospital/generated/hospital_structural_gt_v1.npz"
         ),
         "auto_generate_ground_truth": False,
+    },
+}
+
+
+RUNTIME_PROFILES = {
+    "submap": {
+        "environment": "new_room",
+        "id": "new_room_submap",
+        "note": (
+            "New Room benchmark launched with launch/submap.launch.py. SLAM "
+            "consumes /scan_submap from scripts/submap.py; slam_submap.yaml, "
+            "submap.py, local_scan.py, and submap.launch.py are archived by hash."
+        ),
+        "launch_relative": "launch/submap.launch.py",
+        "slam_relative": "config/slam_submap.yaml",
+        "extra_hashes": {
+            "submap_frontend": "scripts/submap.py",
+            "local_scan_frontend": "scripts/local_scan.py",
+        },
+    },
+    "stock2": {
+        "environment": "new_room",
+        "id": "new_room_stock2",
+        "note": (
+            "New Room benchmark launched with launch/stock2.launch.py using the "
+            "stock SLAM scan path."
+        ),
+        "launch_relative": "launch/stock2.launch.py",
+        "slam_relative": "config/slam.yaml",
+        "extra_hashes": {},
+    },
+    "hospital": {
+        "environment": "hospital",
+        "id": "hospital_not_auto_detected",
+        "note": (
+            "Legacy Hospital benchmark. The recorder stores the stock SLAM and "
+            "Nav2 configuration; the exact launch file is not auto-detected."
+        ),
+        "launch_relative": None,
+        "slam_relative": "config/slam.yaml",
+        "extra_hashes": {},
     },
 }
 
@@ -153,6 +191,7 @@ class Stage2Run(NearestEuclideanFrontier):
         run_id: str,
         odom_topic: str,
         environment: str = "new_room",
+        runtime_profile: str | None = None,
     ):
         super().__init__()
         self.root = FilePath(__file__).resolve().parents[1]
@@ -162,6 +201,19 @@ class Stage2Run(NearestEuclideanFrontier):
             raise RuntimeError(f"Unknown environment: {environment}")
         self.environment = environment
         self.environment_profile = dict(ENVIRONMENT_PROFILES[environment])
+
+        if runtime_profile is None:
+            runtime_profile = "submap" if environment == "new_room" else "hospital"
+        if runtime_profile not in RUNTIME_PROFILES:
+            raise RuntimeError(f"Unknown runtime profile: {runtime_profile}")
+        profile = dict(RUNTIME_PROFILES[runtime_profile])
+        if profile["environment"] != environment:
+            raise RuntimeError(
+                f"Runtime profile '{runtime_profile}' belongs to "
+                f"{profile['environment']}, not {environment}"
+            )
+        self.runtime_profile_name = runtime_profile
+        self.runtime_profile = profile
 
         if self.environment_profile["auto_generate_ground_truth"]:
             _ensure_new_room_ground_truth(self.root)
@@ -175,9 +227,7 @@ class Stage2Run(NearestEuclideanFrontier):
             if self.roi_path.is_file()
             else None
         )
-        self.roi_n = (
-            int(np.count_nonzero(self.roi)) if self.roi is not None else 0
-        )
+        self.roi_n = int(np.count_nonzero(self.roi)) if self.roi is not None else 0
 
         self.run = self.root / "experiments" / "nearest" / run_id
         if self.run.exists():
@@ -226,7 +276,8 @@ class Stage2Run(NearestEuclideanFrontier):
         self.create_timer(1.0, self.metric_tick)
 
         self.get_logger().warn(
-            f"NEAREST RECORDING: env={self.environment}, output={self.run}"
+            f"NEAREST RECORDING: env={self.environment}, "
+            f"profile={self.runtime_profile_name}, output={self.run}"
         )
         self.get_logger().info(
             "Nearest provenance saved: metadata.json + runtime_nav2_merged.yaml"
@@ -250,15 +301,25 @@ class Stage2Run(NearestEuclideanFrontier):
         git_commit = _git_value(self.repo_root, "rev-parse", "HEAD")
         git_status = _git_value(self.repo_root, "status", "--porcelain")
 
+        slam_relative = self.runtime_profile["slam_relative"]
+        launch_relative = self.runtime_profile["launch_relative"]
+        active_slam = self.root / slam_relative if slam_relative else None
+        active_launch = self.root / launch_relative if launch_relative else None
+
         hash_paths = {
             "nf_run": self.root / "scripts" / "nf_run.py",
             "nf_basic": self.root / "scripts" / "nf_basic.py",
             "nav2_override": nav2_override,
-            "slam": self.root / "config" / "slam.yaml",
-            "slam_local": self.root / "config" / "slam_local.yaml",
             "installed_nav2_base_params": nav2_base,
             "runtime_nav2_merged": merged_path,
         }
+        if active_slam is not None:
+            hash_paths["runtime_slam"] = active_slam
+        if active_launch is not None:
+            hash_paths["runtime_launch"] = active_launch
+        for name, relative in self.runtime_profile["extra_hashes"].items():
+            hash_paths[name] = self.root / relative
+
         if self.environment == "new_room":
             hash_paths.update(
                 {
@@ -292,25 +353,24 @@ class Stage2Run(NearestEuclideanFrontier):
                 None if git_status is None else bool(git_status)
             ),
             "protocol_version": self.environment_profile["protocol_version"],
-            "runtime_profile": self.environment_profile["runtime_profile"],
-            "runtime_profile_note": self.environment_profile[
-                "runtime_profile_note"
-            ],
+            "runtime_profile": self.runtime_profile["id"],
+            "runtime_profile_name": self.runtime_profile_name,
+            "runtime_profile_note": self.runtime_profile["note"],
+            "runtime_launch_file": (
+                None if active_launch is None else str(active_launch)
+            ),
+            "runtime_slam_file": None if active_slam is None else str(active_slam),
             "runtime_map_resolution_m": None,
             "fixed_canvas_id": FIXED_CANVAS_ID,
             "fixed_canvas_resolution_m": CANVAS_RES,
             "evaluation_roi_id": self.environment_profile["roi_id"],
-            "evaluation_roi_denominator": (
-                self.roi_n if self.roi_n > 0 else None
-            ),
+            "evaluation_roi_denominator": self.roi_n if self.roi_n > 0 else None,
             "evaluation_roi_file": str(self.roi_path),
             "structural_ground_truth_id": self.environment_profile[
                 "ground_truth_id"
             ],
             "structural_ground_truth_file": str(self.ground_truth_path),
-            "structural_ground_truth_exists_at_start": (
-                self.ground_truth_path.is_file()
-            ),
+            "structural_ground_truth_exists_at_start": self.ground_truth_path.is_file(),
             "evaluation_start_x": None,
             "evaluation_start_y": None,
             "exploration_start_sim_s": None,
@@ -335,8 +395,7 @@ class Stage2Run(NearestEuclideanFrontier):
     def _write_metadata(self, metadata: dict | None = None):
         payload = self.metadata if metadata is None else metadata
         (self.run / "metadata.json").write_text(
-            json.dumps(payload, indent=2, allow_nan=True),
-            encoding="utf-8",
+            json.dumps(payload, indent=2, allow_nan=True), encoding="utf-8"
         )
 
     def _update_metadata(self, **updates):
@@ -365,7 +424,9 @@ class Stage2Run(NearestEuclideanFrontier):
                 "main_succeeded",
                 "main_failed",
                 "main_interrupted",
+                "abandoned_206",
                 "abandoned_208",
+                "planner_blocked_abandoned_total",
                 "main_success_rate",
                 "subgoal_attempts",
                 "subgoal_succeeded",
@@ -653,17 +714,23 @@ class Stage2Run(NearestEuclideanFrontier):
         except Exception as exc:
             self.finish_goal("result_error", "", "", str(exc))
             return super().goal_result_callback(future, mode)
+
         self.finish_goal(
-            "succeeded" if status == 4 else "failed",
-            status,
-            code,
-            msg,
+            "succeeded" if status == 4 else "failed", status, code, msg
         )
         if mode == "main" and status == 4:
             self.active_decision = None
-        if mode == "main" and code == 208:
+
+        if mode == "main" and code == GOAL_OCCUPIED_ERROR_CODE:
+            # MapExRun has its own 206 accounting wrapper. Avoid double-counting
+            # when Stage2Run is used as its recorder base.
+            if type(self).goal_result_callback is Stage2Run.goal_result_callback:
+                self.count["abandoned_206"] += 1
+            self.active_decision = None
+        if mode == "main" and code == NO_VALID_PATH_ERROR_CODE:
             self.count["abandoned_208"] += 1
             self.active_decision = None
+
         super().goal_result_callback(future, mode)
 
     def finish_goal(self, result, status, code, msg):
@@ -728,6 +795,7 @@ class Stage2Run(NearestEuclideanFrontier):
         ma = self.count["main_attempts"]
         ms = self.count["main_succeeded"]
         rate = ms / ma if ma else math.nan
+        blocked_total = self.count["abandoned_206"] + self.count["abandoned_208"]
         self.wm.writerow(
             {
                 "time_s": self.fmt(self.elapsed()),
@@ -741,7 +809,9 @@ class Stage2Run(NearestEuclideanFrontier):
                 "main_succeeded": ms,
                 "main_failed": self.count["main_failed"],
                 "main_interrupted": self.count["main_interrupted"],
+                "abandoned_206": self.count["abandoned_206"],
                 "abandoned_208": self.count["abandoned_208"],
+                "planner_blocked_abandoned_total": blocked_total,
                 "main_success_rate": self.fmt(rate),
                 "subgoal_attempts": self.count["subgoal_attempts"],
                 "subgoal_succeeded": self.count["subgoal_succeeded"],
@@ -869,15 +939,16 @@ class Stage2Run(NearestEuclideanFrontier):
         ma = self.count["main_attempts"]
         ms = self.count["main_succeeded"]
         total_time = None if self.t0 is None else self.elapsed()
+        blocked_total = self.count["abandoned_206"] + self.count["abandoned_208"]
 
         summary = {
             "run_id": self.run.name,
             "method": "nearest",
             "environment": self.environment,
+            "runtime_profile": self.runtime_profile["id"],
+            "runtime_profile_name": self.runtime_profile_name,
             "evaluation_roi_id": self.environment_profile["roi_id"],
-            "evaluation_roi_denominator": (
-                self.roi_n if self.roi_n > 0 else None
-            ),
+            "evaluation_roi_denominator": self.roi_n if self.roi_n > 0 else None,
             "structural_ground_truth_id": self.environment_profile[
                 "ground_truth_id"
             ],
@@ -890,7 +961,9 @@ class Stage2Run(NearestEuclideanFrontier):
             "main_succeeded": ms,
             "main_failed": self.count["main_failed"],
             "main_interrupted": self.count["main_interrupted"],
+            "abandoned_206": self.count["abandoned_206"],
             "abandoned_208": self.count["abandoned_208"],
+            "planner_blocked_abandoned_total": blocked_total,
             "main_success_rate": ms / ma if ma else math.nan,
             "subgoal_attempts": self.count["subgoal_attempts"],
             "subgoal_succeeded": self.count["subgoal_succeeded"],
@@ -905,27 +978,30 @@ class Stage2Run(NearestEuclideanFrontier):
             ),
             "termination_reason": reason,
             "nav2_startup_stable_s": NAV2_READY_STABLE_S,
+            # NF has no LaMa prediction; do not mix SLAM-map quality with
+            # MapEx prediction IoU/TU semantics.
             "occupied_iou_online": None,
             "tu_online": None,
         }
         (self.run / "summary.json").write_text(
-            json.dumps(summary, indent=2, allow_nan=True),
-            encoding="utf-8",
+            json.dumps(summary, indent=2, allow_nan=True), encoding="utf-8"
         )
         self._update_metadata(
             termination_reason=reason,
             runtime_map_resolution_m=(
-                None
-                if self.map_msg is None
-                else float(self.map_msg.info.resolution)
+                None if self.map_msg is None else float(self.map_msg.info.resolution)
             ),
             final_coverage=self.coverage,
             final_known_fraction=self.known,
             total_distance_m=self.distance,
             total_time_s=total_time,
+            abandoned_206=self.count["abandoned_206"],
+            abandoned_208=self.count["abandoned_208"],
+            planner_blocked_abandoned_total=blocked_total,
         )
         self.get_logger().warn(
             f"NEAREST SAVED: env={self.environment}, "
+            f"profile={self.runtime_profile_name}, "
             f"coverage={self.fmt(self.coverage)}, "
             f"distance={self.distance:.2f}m, output={self.run}"
         )
@@ -944,10 +1020,24 @@ def main():
             "--environment hospital for the Hospital benchmark."
         ),
     )
+    parser.add_argument(
+        "--runtime-profile",
+        choices=sorted(RUNTIME_PROFILES),
+        default=None,
+        help=(
+            "Runtime provenance profile. For new_room the default is submap; "
+            "use stock2 for launch/stock2.launch.py. Hospital defaults to hospital."
+        ),
+    )
     args, ros_args = parser.parse_known_args()
 
     rclpy.init(args=ros_args)
-    node = Stage2Run(args.run_id, args.odom_topic, args.environment)
+    node = Stage2Run(
+        args.run_id,
+        args.odom_topic,
+        args.environment,
+        args.runtime_profile,
+    )
     try:
         rclpy.spin(node)
     except (KeyboardInterrupt, ExternalShutdownException):
