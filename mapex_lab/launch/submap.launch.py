@@ -35,11 +35,12 @@ def _deep_merge(base: dict, override: dict) -> dict:
     return merged
 
 
-def _cleanup_temp_file(_context, path: str):
-    try:
-        os.remove(path)
-    except FileNotFoundError:
-        pass
+def _cleanup_temp_file(_context, *paths: str):
+    for path in paths:
+        try:
+            os.remove(path)
+        except FileNotFoundError:
+            pass
     return []
 
 
@@ -102,30 +103,47 @@ def generate_launch_description() -> LaunchDescription:
     tb4_nav_pkg = get_package_share_directory('turtlebot4_navigation')
     research_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    slam_params = os.path.join(research_root, 'config', 'slam_submap.yaml')
+    shared_slam_params = os.path.join(research_root, 'config', 'slam.yaml')
     frontend_script = os.path.join(research_root, 'scripts', 'submap.py')
 
-    stock_nav2_params = os.path.join(tb4_nav_pkg, 'config', 'nav2.yaml')
-    xy_only_override = os.path.join(research_root, 'config', 'nav2.yaml')
-
-    with open(stock_nav2_params, 'r', encoding='utf-8') as stream:
-        nav2_base = yaml.safe_load(stream) or {}
-    with open(xy_only_override, 'r', encoding='utf-8') as stream:
-        nav2_override = yaml.safe_load(stream) or {}
-
-    nav2_merged = _deep_merge(nav2_base, nav2_override)
-    temporary = tempfile.NamedTemporaryFile(
+    with open(shared_slam_params, 'r', encoding='utf-8') as stream:
+        slam_cfg = yaml.safe_load(stream) or {}
+    slam_ros = slam_cfg.setdefault('slam_toolbox', {}).setdefault('ros__parameters', {})
+    slam_ros['scan_topic'] = '/scan_submap'
+    slam_temp = tempfile.NamedTemporaryFile(
         mode='w',
-        prefix='tb4_submap_stock_xy_only_',
+        prefix='tb4_submap_slam_',
         suffix='.yaml',
         delete=False,
         encoding='utf-8',
     )
     try:
-        yaml.safe_dump(nav2_merged, temporary, sort_keys=False)
-        nav2_params = temporary.name
+        yaml.safe_dump(slam_cfg, slam_temp, sort_keys=False)
+        slam_params = slam_temp.name
     finally:
-        temporary.close()
+        slam_temp.close()
+
+    stock_nav2_params = os.path.join(tb4_nav_pkg, 'config', 'nav2.yaml')
+    nav2_override = os.path.join(research_root, 'config', 'nav2.yaml')
+
+    with open(stock_nav2_params, 'r', encoding='utf-8') as stream:
+        nav2_base = yaml.safe_load(stream) or {}
+    with open(nav2_override, 'r', encoding='utf-8') as stream:
+        nav2_override_cfg = yaml.safe_load(stream) or {}
+
+    nav2_merged = _deep_merge(nav2_base, nav2_override_cfg)
+    nav2_temp = tempfile.NamedTemporaryFile(
+        mode='w',
+        prefix='tb4_submap_nav2_',
+        suffix='.yaml',
+        delete=False,
+        encoding='utf-8',
+    )
+    try:
+        yaml.safe_dump(nav2_merged, nav2_temp, sort_keys=False)
+        nav2_params = nav2_temp.name
+    finally:
+        nav2_temp.close()
 
     use_sim_time = LaunchConfiguration('use_sim_time')
     use_rviz = LaunchConfiguration('use_rviz')
@@ -169,7 +187,9 @@ def generate_launch_description() -> LaunchDescription:
         OnShutdown(
             on_shutdown=[
                 OpaqueFunction(
-                    function=lambda context: _cleanup_temp_file(context, nav2_params)
+                    function=lambda context: _cleanup_temp_file(
+                        context, slam_params, nav2_params
+                    )
                 )
             ]
         )
