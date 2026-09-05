@@ -40,7 +40,7 @@ Các launch/file cũ chỉ được coi là dependency. Code nghiên cứu mới
 ## Cấu trúc
 
 ```text
-mapex_hospital_research/
+mapex_lab/
 ├── AGENTS.md
 ├── README.md
 ├── ROADMAP.md
@@ -53,7 +53,13 @@ mapex_hospital_research/
 │   ├── RESEARCH_ROADMAP.md
 │   └── RELATED_WORK.md
 ├── config/
+│   ├── nav2.yaml
+│   ├── slam.yaml
+│   └── mapex.yaml
 ├── launch/
+│   ├── stock.launch.py
+│   ├── local.launch.py
+│   └── submap.launch.py
 ├── src/
 ├── scripts/
 ├── analysis/
@@ -64,6 +70,8 @@ mapex_hospital_research/
     ├── DATA_SCHEMA.md
     └── TEACHER_REPORT.md
 ```
+
+`slam.yaml` là source of truth chung cho cả ba launch. `local.launch.py` và `submap.launch.py` chỉ tạo bản runtime tạm thời để đổi `scan_topic` cho frontend tương ứng; không giữ thêm file SLAM config riêng.
 
 ## Quy tắc dữ liệu
 
