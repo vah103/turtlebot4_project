@@ -13,7 +13,7 @@ Or pass the run directory directly::
         mapex_lab/experiments/mapex/mapex_submap_001 10
 
 The script opens the observed map at that exact decision together with G1, G2,
-G3, ensemble mean, and ensemble variance.
+G3, ensemble mean, and ensemble variance in a 2x3 layout.
 """
 
 from __future__ import annotations
@@ -27,7 +27,7 @@ import numpy as np
 
 
 PREDICTION_NAMES = ("g1", "g2", "g3", "mean", "variance")
-DISPLAY_NAMES = ("observed", "g1", "g2", "g3", "mean", "variance")
+DISPLAY_NAMES = ("g1", "g2", "g3", "observed", "mean", "variance")
 MAP_TITLES = {
     "observed": "Observed Map",
     "g1": "G1",
@@ -251,7 +251,8 @@ def main() -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
 
-    fig, axes = plt.subplots(1, 6, figsize=(24, 4.8), constrained_layout=True)
+    fig, axes = plt.subplots(2, 3, figsize=(15, 9), constrained_layout=True)
+    axes = axes.ravel()
     origin = "upper" if args.no_flip else "lower"
 
     for ax, name in zip(axes, DISPLAY_NAMES):
