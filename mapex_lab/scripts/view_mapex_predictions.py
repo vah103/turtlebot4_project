@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Visualize saved MapEx ensemble prediction maps for one decision.
+"""Visualize the observed SLAM map and saved MapEx predictions for one decision.
 
 Examples
 --------
@@ -12,7 +12,8 @@ Or pass the run directory directly::
     python3 mapex_lab/scripts/view_mapex_predictions.py \
         mapex_lab/experiments/mapex/mapex_submap_001 10
 
-The script opens G1, G2, G3, ensemble mean, and ensemble variance side by side.
+The script opens the observed map at that exact decision together with G1, G2,
+G3, ensemble mean, and ensemble variance.
 """
 
 from __future__ import annotations
@@ -25,8 +26,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-MAP_NAMES = ("g1", "g2", "g3", "mean", "variance")
+PREDICTION_NAMES = ("g1", "g2", "g3", "mean", "variance")
+DISPLAY_NAMES = ("observed", "g1", "g2", "g3", "mean", "variance")
 MAP_TITLES = {
+    "observed": "Observed Map",
     "g1": "G1",
     "g2": "G2",
     "g3": "G3",
@@ -57,25 +60,28 @@ def prediction_path(prediction_dir: Path, decision_id: int, name: str) -> Path:
     return prediction_dir / f"decision_{decision_id:06d}_{name}.npz"
 
 
+def raw_map_path(run_dir: Path, decision_id: int) -> Path:
+    return run_dir / "decision_maps" / f"decision_{decision_id:06d}_raw.npz"
+
+
 def available_decisions(prediction_dir: Path) -> list[int]:
     """Return decision ids for which a mean prediction file exists."""
     ids: list[int] = []
     for path in prediction_dir.glob("decision_*_mean.npz"):
-        stem = path.stem
         try:
-            ids.append(int(stem.split("_")[1]))
+            ids.append(int(path.stem.split("_")[1]))
         except (IndexError, ValueError):
             continue
     return sorted(set(ids))
 
 
-def load_prediction(path: Path) -> tuple[np.ndarray, dict[str, object]]:
-    """Load the saved prediction array and lightweight metadata."""
+def load_npz_map(path: Path) -> tuple[np.ndarray, dict[str, object]]:
+    """Load a saved 2-D map and lightweight metadata."""
     with np.load(path, allow_pickle=False) as archive:
         if "data" not in archive.files:
             raise KeyError(f"Missing 'data' key in {path}")
 
-        data = np.asarray(archive["data"], dtype=np.float32)
+        data = np.asarray(archive["data"])
         metadata: dict[str, object] = {}
         for key in (
             "member",
@@ -98,10 +104,52 @@ def load_prediction(path: Path) -> tuple[np.ndarray, dict[str, object]]:
     return data, metadata
 
 
+def ros_occupancy_to_mapex(raw: np.ndarray) -> np.ndarray:
+    """ROS OccupancyGrid labels -> MapEx display values: free=0, unknown=.5, occupied=1."""
+    observed = np.full(raw.shape, 0.5, dtype=np.float32)
+    observed[raw == 0] = 0.0
+    observed[raw > 0] = 1.0
+    return observed
+
+
+def align_observed_to_prediction(
+    observed: np.ndarray,
+    prediction_shape: tuple[int, int],
+    metadata: dict[str, object],
+) -> np.ndarray:
+    """Pad the raw observed map exactly as the saved LaMa prediction input was padded."""
+    if observed.shape == prediction_shape:
+        return observed.astype(np.float32, copy=False)
+
+    aligned = np.full(prediction_shape, 0.5, dtype=np.float32)
+    pad_top = int(metadata.get("pad_top", 0) or 0)
+    pad_left = int(metadata.get("pad_left", 0) or 0)
+
+    source_h = int(metadata.get("source_height", observed.shape[0]) or observed.shape[0])
+    source_w = int(metadata.get("source_width", observed.shape[1]) or observed.shape[1])
+    source_h = min(source_h, observed.shape[0])
+    source_w = min(source_w, observed.shape[1])
+
+    dst_h = max(0, min(source_h, prediction_shape[0] - pad_top))
+    dst_w = max(0, min(source_w, prediction_shape[1] - pad_left))
+    if dst_h <= 0 or dst_w <= 0:
+        raise ValueError(
+            "Cannot align observed map with prediction grid: "
+            f"observed={observed.shape}, prediction={prediction_shape}, "
+            f"pad_top={pad_top}, pad_left={pad_left}"
+        )
+
+    aligned[pad_top : pad_top + dst_h, pad_left : pad_left + dst_w] = observed[
+        :dst_h, :dst_w
+    ]
+    return aligned
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Show G1/G2/G3, Mean Map and Variance Map saved by a MapEx run."
+            "Show the observed SLAM map plus G1/G2/G3, Mean Map and Variance Map "
+            "saved by a MapEx run."
         )
     )
     parser.add_argument(
@@ -152,13 +200,17 @@ def main() -> int:
 
     paths = {
         name: prediction_path(prediction_dir, args.decision, name)
-        for name in MAP_NAMES
+        for name in PREDICTION_NAMES
     }
+    observed_path = raw_map_path(run_dir, args.decision)
     missing = [path for path in paths.values() if not path.is_file()]
+    if not observed_path.is_file():
+        missing.insert(0, observed_path)
+
     if missing:
         available = available_decisions(prediction_dir)
         print(
-            "ERROR: missing prediction file(s):\n  "
+            "ERROR: missing map file(s):\n  "
             + "\n  ".join(str(path) for path in missing),
             file=sys.stderr,
         )
@@ -173,22 +225,37 @@ def main() -> int:
     loaded: dict[str, np.ndarray] = {}
     metadata: dict[str, object] = {}
     for name, path in paths.items():
-        data, current_metadata = load_prediction(path)
-        loaded[name] = data
+        data, current_metadata = load_npz_map(path)
+        loaded[name] = np.asarray(data, dtype=np.float32)
         if not metadata:
             metadata = current_metadata
 
-    shapes = {name: value.shape for name, value in loaded.items()}
-    if len(set(shapes.values())) != 1:
-        print(f"ERROR: prediction shapes do not match: {shapes}", file=sys.stderr)
+    prediction_shapes = {name: value.shape for name, value in loaded.items()}
+    if len(set(prediction_shapes.values())) != 1:
+        print(
+            f"ERROR: prediction shapes do not match: {prediction_shapes}",
+            file=sys.stderr,
+        )
         return 2
 
-    fig, axes = plt.subplots(1, 5, figsize=(20, 4.8), constrained_layout=True)
+    prediction_shape = next(iter(loaded.values())).shape
+    raw_observed, raw_metadata = load_npz_map(observed_path)
+    observed = ros_occupancy_to_mapex(raw_observed)
+    try:
+        loaded["observed"] = align_observed_to_prediction(
+            observed,
+            prediction_shape,
+            metadata,
+        )
+    except ValueError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 2
 
-    for ax, name in zip(axes, MAP_NAMES):
+    fig, axes = plt.subplots(1, 6, figsize=(24, 4.8), constrained_layout=True)
+    origin = "upper" if args.no_flip else "lower"
+
+    for ax, name in zip(axes, DISPLAY_NAMES):
         data = loaded[name]
-        origin = "upper" if args.no_flip else "lower"
-
         if name == "variance":
             image = ax.imshow(data, origin=origin)
         else:
@@ -200,21 +267,22 @@ def main() -> int:
         ax.set_yticks([])
         fig.colorbar(image, ax=ax, fraction=0.046, pad=0.03)
 
-    resolution = metadata.get("resolution")
+    resolution = metadata.get("resolution", raw_metadata.get("resolution"))
     environment = metadata.get("environment", "unknown")
-    shape = next(iter(loaded.values())).shape
     resolution_text = "?" if resolution is None else f"{float(resolution):.3f} m/cell"
     fig.suptitle(
-        f"MapEx predictions | run={run_dir.name} | decision={args.decision} | "
-        f"env={environment} | shape={shape} | resolution={resolution_text}"
+        f"MapEx decision view | run={run_dir.name} | decision={args.decision} | "
+        f"env={environment} | prediction shape={prediction_shape} | "
+        f"resolution={resolution_text}"
     )
 
-    print(f"Run       : {run_dir.name}")
-    print(f"Decision  : {args.decision}")
-    print(f"Shape     : {shape}")
-    print(f"Resolution: {resolution_text}")
-    print(f"Files     : {prediction_dir}")
-    for name in MAP_NAMES:
+    print(f"Run          : {run_dir.name}")
+    print(f"Decision     : {args.decision}")
+    print(f"Observed raw : {observed_path}")
+    print(f"Raw shape    : {raw_observed.shape}")
+    print(f"Display shape: {prediction_shape}")
+    print(f"Resolution   : {resolution_text}")
+    for name in DISPLAY_NAMES:
         data = loaded[name]
         print(
             f"{MAP_TITLES[name]:12s}: min={np.nanmin(data):.6f}, "
@@ -225,7 +293,7 @@ def main() -> int:
         output_path = args.save.expanduser().resolve()
         output_path.parent.mkdir(parents=True, exist_ok=True)
         fig.savefig(output_path, dpi=180, bbox_inches="tight")
-        print(f"Saved     : {output_path}")
+        print(f"Saved        : {output_path}")
 
     plt.show()
     return 0
