@@ -1,5 +1,5 @@
 diff --git a/solvers/ceres_solver.cpp b/solvers/ceres_solver.cpp
-index 9fd9f8b..hard-chain 100644
+index 9fd9f8b..0000000 100644
 --- a/solvers/ceres_solver.cpp
 +++ b/solvers/ceres_solver.cpp
 @@ -9,6 +9,13 @@
