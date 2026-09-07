@@ -12,7 +12,8 @@
 - `launch/local.launch.py`: local scan frontend + SLAM Toolbox + Nav2. It reuses `config/slam.yaml` and overrides the scan topic at launch time.
 - `launch/submap.launch.py`: segmented local ICP frontend (`scripts/submap.py`) + SLAM Toolbox + Nav2. It reuses `config/slam.yaml` and overrides the scan topic at launch time.
 - `launch/toolbox.launch.py`: conservative Toolbox baseline; when the experimental patched solver is built this launch explicitly keeps `temporal_anchor_enabled=false`.
-- `launch/toolbox_anchor.launch.py`: experimental A/B variant with the same Toolbox scan/loop/Nav2 settings but `temporal_anchor_enabled=true`, early-local max weight `5.0`, decay `50` nodes, and local-edge gap threshold `5`.
+- `launch/toolbox_anchor.launch.py`: experimental soft temporal-anchor A/B variant.
+- `launch/toolbox_hard_chain.launch.py`: strict sequential-history experiment. It uses `scan_buffer_size=1`, disables loop closure, and enables the Ceres hard-chain patch so every solved historical pose is frozen permanently and only the newest pose is variable.
 - The launchers use world-specific automatic spawn resolution; New Room is the default world while Hospital remains selectable explicitly where supported.
 - `config/` is intentionally reduced to three source-of-truth files: `nav2.yaml`, `slam.yaml`, and `mapex.yaml`.
 
@@ -20,7 +21,6 @@
 
 - `scripts/nf_basic.py` is the shared canonical Nearest-Frontier execution layer.
 - `scripts/nf_run.py` adds benchmark recording and provenance for Nearest-Frontier runs.
-- `scripts/nf_anchor_run.py` keeps the canonical Nearest-Frontier policy unchanged while recording the `toolbox_anchor.launch.py` runtime provenance and hashing the temporal-anchor patch.
 - `scripts/mapex.py` contains the MapEx exploration policy.
 - `scripts/mapex_run.py` adds MapEx recording, saved prediction maps, environment-aware coverage, and post-run IoU/TU evaluation.
 - New Room uses the generated `new_room_connected_free_v1` ROI and `new_room_structural_gt_v1` structural ground truth.
@@ -44,4 +44,5 @@
 - Runtime-smoke-test the new `new_room` profile end-to-end: confirm auto-generated GT/ROI, numeric New Room Coverage, five prediction files per decision, and final `evaluation.json` with `status: ok`.
 - Visually validate `ground_truth/new_room/generated/new_room_structural_gt_v1.pgm` against Gazebo/RViz before treating New Room IoU/TU as research results.
 - Run repeated Nearest and MapEx trials under the same runtime profile before drawing conclusions from single-run outcomes.
-- Experimental temporal-anchor A/B: apply `src/slam/temporal_anchor_ceres.patch`, rebuild vendored `slam_toolbox`, run `toolbox_anchor.launch.py`, and use `nf_anchor_run.py` for an NF pilot. This is a diagnostic/proposed-SLAM variant, not the current benchmark baseline.
+- Experimental soft anchor: `src/slam/temporal_anchor_ceres.patch` + `toolbox_anchor.launch.py` remains available for A/B testing.
+- Experimental hard chain: restore vendored `slam_toolbox` solver to upstream, apply `src/slam/hard_chain_ceres.patch`, rebuild, launch `toolbox_hard_chain.launch.py`, and drive it with the ordinary `scripts/nf_basic.py`. No result recorder is required for the first diagnostic run.
