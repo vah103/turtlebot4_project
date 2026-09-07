@@ -2,9 +2,12 @@
 
 This launch uses the upstream SLAM Toolbox source vendored in this repository, but
 applies a small compatibility layer for the current mapex_lab exploration stack.
-The SLAM algorithm itself (scan matcher, pose graph, Ceres solver) remains upstream.
-For this diagnostic profile, loop closure is disabled explicitly to isolate whether
-false loop closures are responsible for late-run map deformation.
+The SLAM algorithm itself (scan matcher, pose graph, loop closure, Ceres solver)
+remains upstream.
+
+This diagnostic profile keeps the dense scan-processing cadence from the prior
+toolbox tests, but enables loop closure again with more conservative acceptance
+thresholds to reduce false loop closures in repetitive indoor geometry.
 
 Compatibility / exploration overrides:
 - base_frame: base_link
@@ -15,12 +18,15 @@ Compatibility / exploration overrides:
 - minimum_time_interval: 0.20 s
 - minimum_travel_distance: 0.10 m
 - minimum_travel_heading: 0.10 rad
-- do_loop_closing: false
+- do_loop_closing: true
+- loop_match_minimum_response_coarse: 0.45
+- loop_match_minimum_response_fine: 0.55
+- loop_match_minimum_chain_size: 20
 
-The 0.20 s scan interval is intentionally denser than the upstream 0.50 s default
-for this experiment. The scan-processing cadence remains unchanged from the prior
-toolbox test; only loop closure is disabled here so the suspected source of map
-breakage can be tested in isolation.
+The scan-processing cadence is unchanged from the previous toolbox test. Only the
+loop-closure acceptance settings are changed here, so this run can test whether a
+more conservative loop detector avoids the late-run map deformation while still
+retaining global loop-closure correction.
 
 The upstream mapper_params_online_async.yaml file itself is never modified.
 New Room is the default world. Hospital remains selectable with world:=hospital.
@@ -87,8 +93,7 @@ def generate_launch_description() -> LaunchDescription:
 
     # Start from the upstream SLAM Toolbox online-async configuration, then apply
     # compatibility values for the current TurtleBot4 + frontier exploration
-    # stack plus a denser scan-processing cadence for this scan-matching test.
-    # Loop closure is disabled only for this diagnostic run.
+    # stack, the denser scan-processing cadence, and conservative loop closure.
     upstream_slam_params = os.path.join(
         slam_toolbox_pkg,
         'config',
@@ -110,7 +115,10 @@ def generate_launch_description() -> LaunchDescription:
             'minimum_time_interval': 0.20,
             'minimum_travel_distance': 0.10,
             'minimum_travel_heading': 0.10,
-            'do_loop_closing': False,
+            'do_loop_closing': True,
+            'loop_match_minimum_response_coarse': 0.45,
+            'loop_match_minimum_response_fine': 0.55,
+            'loop_match_minimum_chain_size': 20,
         }
     )
     slam_params = _write_yaml_temp(
