@@ -6,8 +6,9 @@ The SLAM algorithm itself (scan matcher, pose graph, loop closure, Ceres solver)
 remains upstream.
 
 This diagnostic profile keeps the dense scan-processing cadence from the prior
-toolbox tests, but enables loop closure again with more conservative acceptance
-thresholds to reduce false loop closures in repetitive indoor geometry.
+toolbox tests, but enables loop closure with stricter acceptance thresholds and a
+smaller loop-search region to reduce false loop closures in repetitive indoor
+geometry.
 
 Compatibility / exploration overrides:
 - base_frame: base_link
@@ -19,14 +20,17 @@ Compatibility / exploration overrides:
 - minimum_travel_distance: 0.10 m
 - minimum_travel_heading: 0.10 rad
 - do_loop_closing: true
-- loop_match_minimum_response_coarse: 0.45
-- loop_match_minimum_response_fine: 0.55
-- loop_match_minimum_chain_size: 20
+- loop_match_minimum_response_coarse: 0.55
+- loop_match_minimum_response_fine: 0.65
+- loop_match_minimum_chain_size: 30
+- loop_search_maximum_distance: 2.0 m
+- loop_search_space_dimension: 4.0 m
+- loop_match_maximum_variance_coarse: 2.0
 
-The scan-processing cadence is unchanged from the previous toolbox test. Only the
-loop-closure acceptance settings are changed here, so this run can test whether a
-more conservative loop detector avoids the late-run map deformation while still
-retaining global loop-closure correction.
+The scan-processing cadence is unchanged from the previous toolbox tests. This
+profile tightens both loop acceptance and loop search scope so the diagnostic can
+test whether false loop closures can be suppressed while retaining global
+loop-closure correction.
 
 The upstream mapper_params_online_async.yaml file itself is never modified.
 New Room is the default world. Hospital remains selectable with world:=hospital.
@@ -93,7 +97,7 @@ def generate_launch_description() -> LaunchDescription:
 
     # Start from the upstream SLAM Toolbox online-async configuration, then apply
     # compatibility values for the current TurtleBot4 + frontier exploration
-    # stack, the denser scan-processing cadence, and conservative loop closure.
+    # stack, the denser scan-processing cadence, and strict loop closure tuning.
     upstream_slam_params = os.path.join(
         slam_toolbox_pkg,
         'config',
@@ -116,9 +120,12 @@ def generate_launch_description() -> LaunchDescription:
             'minimum_travel_distance': 0.10,
             'minimum_travel_heading': 0.10,
             'do_loop_closing': True,
-            'loop_match_minimum_response_coarse': 0.45,
-            'loop_match_minimum_response_fine': 0.55,
-            'loop_match_minimum_chain_size': 20,
+            'loop_match_minimum_response_coarse': 0.55,
+            'loop_match_minimum_response_fine': 0.65,
+            'loop_match_minimum_chain_size': 30,
+            'loop_search_maximum_distance': 2.0,
+            'loop_search_space_dimension': 4.0,
+            'loop_match_maximum_variance_coarse': 2.0,
         }
     )
     slam_params = _write_yaml_temp(
