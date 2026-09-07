@@ -106,9 +106,6 @@ def generate_launch_description() -> LaunchDescription:
             'scan_buffer_size': 1,
             'do_loop_closing': False,
             'hard_chain_enabled': True,
-            # If the earlier soft temporal-anchor patch is still present in a
-            # local build, explicitly disable it for this strict experiment.
-            'temporal_anchor_enabled': False,
         }
     )
     slam_params = _write_yaml_temp(
