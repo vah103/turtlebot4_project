@@ -1,9 +1,8 @@
 """Launch TurtleBot4 simulation with SLAM Toolbox + stock Nav2.
 
-This launch uses the upstream SLAM Toolbox source vendored in this repository, but
-applies a small compatibility layer for the current mapex_lab exploration stack.
-The SLAM algorithm itself (scan matcher, pose graph, loop closure, Ceres solver)
-remains upstream.
+This launch uses the upstream-style SLAM Toolbox pipeline vendored in this
+repository, with the experimental Adaptive Anchor solver code explicitly
+disabled so this launch remains the Toolbox A/B baseline.
 
 This diagnostic profile keeps the dense scan-processing cadence from the prior
 toolbox tests, but enables loop closure with stricter acceptance thresholds and a
@@ -26,7 +25,7 @@ Compatibility / exploration overrides:
 - loop_search_maximum_distance: 2.0 m
 - loop_search_space_dimension: 4.0 m
 - loop_match_maximum_variance_coarse: 2.0
-- temporal_anchor_enabled: false (baseline)
+- adaptive_anchor_enabled: false (baseline)
 
 The scan-processing cadence is unchanged from the previous toolbox tests. This
 profile tightens both loop acceptance and loop search scope so the diagnostic can
@@ -127,7 +126,7 @@ def generate_launch_description() -> LaunchDescription:
             'loop_search_maximum_distance': 2.0,
             'loop_search_space_dimension': 4.0,
             'loop_match_maximum_variance_coarse': 2.0,
-            'temporal_anchor_enabled': False,
+            'adaptive_anchor_enabled': False,
         }
     )
     slam_params = _write_yaml_temp(
