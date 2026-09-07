@@ -41,6 +41,7 @@ struct AdaptiveReleaseRegion
 
 struct AdaptiveLoopObservation
 {
+  std::pair<int, int> edge_key;
   int older_node;
   int newer_node;
   Eigen::Vector2d requested_global_translation;
@@ -55,6 +56,7 @@ struct AdaptiveLoopEvidence
   int region_end = 0;
   std::size_t edge_count = 0;
   double mean_mahalanobis_sq = 0.0;
+  std::vector<std::pair<int, int>> edge_keys;
 };
 
 // Adaptive Temporal Anchor V1.
@@ -65,6 +67,12 @@ struct AdaptiveLoopEvidence
 // are never strengthened; they are used only as conservative loop-evidence
 // candidates because LinkInfo does not expose an explicit edge-origin type to
 // the ScanSolver API.
+//
+// Evidence is captured when a long-gap edge is ADDED, before Karto calls the
+// pose-graph correction that can reduce its residual. This lets independent
+// loop events accumulate evidence over time. After a stage-1 release, stage-2
+// is allowed only if those same evidence edges are STILL inconsistent in the
+// current optimized graph.
 bool g_adaptive_anchor_enabled = false;
 double g_adaptive_min_weight = 1.0;
 double g_adaptive_max_weight = 3.0;
@@ -84,6 +92,7 @@ int g_adaptive_last_summary_node = -1;
 
 std::map<std::pair<int, int>, AdaptiveEdgeRecord> g_adaptive_edges;
 std::vector<AdaptiveReleaseRegion> g_adaptive_release_regions;
+std::vector<AdaptiveLoopObservation> g_adaptive_loop_history;
 
 std::pair<int, int> AdaptiveEdgeKey(const int node1, const int node2)
 {
@@ -184,82 +193,69 @@ int AdaptiveLatestNodeId(const std::unordered_map<int, Eigen::Vector3d> & nodes)
   return latest;
 }
 
-AdaptiveLoopEvidence AdaptiveDetectStrongLoopEvidence(
-  const std::unordered_map<int, Eigen::Vector3d> & nodes)
+bool AdaptiveBuildLoopObservation(
+  const std::pair<int, int> & edge_key,
+  const AdaptiveEdgeRecord & edge,
+  const std::unordered_map<int, Eigen::Vector3d> & nodes,
+  AdaptiveLoopObservation & observation)
+{
+  const auto node1it = nodes.find(edge.node1);
+  const auto node2it = nodes.find(edge.node2);
+  if (node1it == nodes.end() || node2it == nodes.end()) {
+    return false;
+  }
+
+  const double yaw1 = node1it->second(2);
+  const double cos_yaw = std::cos(yaw1);
+  const double sin_yaw = std::sin(yaw1);
+  Eigen::Matrix2d rotation;
+  rotation << cos_yaw, -sin_yaw, sin_yaw, cos_yaw;
+
+  const Eigen::Vector2d p1(node1it->second(0), node1it->second(1));
+  const Eigen::Vector2d p2(node2it->second(0), node2it->second(1));
+  const Eigen::Vector2d predicted_relative =
+    rotation.transpose() * (p2 - p1);
+
+  Eigen::Vector3d raw_error;
+  raw_error.head<2>() = predicted_relative - edge.measurement.head<2>();
+  raw_error(2) = AdaptiveNormalizeAngle(
+    (node2it->second(2) - node1it->second(2)) - edge.measurement(2));
+
+  // Use only Karto's original information matrix here. The extra temporal
+  // weight is intentionally excluded from the evidence test.
+  const Eigen::Vector3d normalized_error =
+    edge.base_sqrt_information * raw_error;
+
+  observation.edge_key = edge_key;
+  observation.older_node = std::min(edge.node1, edge.node2);
+  observation.newer_node = std::max(edge.node1, edge.node2);
+  observation.requested_global_translation =
+    rotation * (-raw_error.head<2>());
+  observation.requested_yaw = AdaptiveNormalizeAngle(-raw_error(2));
+  observation.mahalanobis_sq = normalized_error.squaredNorm();
+  return true;
+}
+
+AdaptiveLoopEvidence AdaptiveClusterLoopObservations(
+  std::vector<AdaptiveLoopObservation> candidates)
 {
   AdaptiveLoopEvidence evidence;
-  if (!g_adaptive_anchor_enabled ||
-    static_cast<int>(g_adaptive_edges.size()) < g_adaptive_loop_evidence_min_edges)
-  {
-    return evidence;
-  }
 
-  const int latest_graph_node = AdaptiveLatestNodeId(nodes);
-  if (latest_graph_node == std::numeric_limits<int>::min()) {
-    return evidence;
-  }
-
-  std::vector<AdaptiveLoopObservation> candidates;
-  for (const auto & item : g_adaptive_edges) {
-    const AdaptiveEdgeRecord & edge = item.second;
-    if (!edge.loop_candidate) {
-      continue;
-    }
-
-    const int older_node = std::min(edge.node1, edge.node2);
-    const int newer_node = std::max(edge.node1, edge.node2);
-    if (latest_graph_node - newer_node > g_adaptive_loop_evidence_window_nodes) {
-      continue;
-    }
-
-    const auto node1it = nodes.find(edge.node1);
-    const auto node2it = nodes.find(edge.node2);
-    if (node1it == nodes.end() || node2it == nodes.end()) {
-      continue;
-    }
-
-    const double yaw1 = node1it->second(2);
-    const double cos_yaw = std::cos(yaw1);
-    const double sin_yaw = std::sin(yaw1);
-    Eigen::Matrix2d rotation;
-    rotation << cos_yaw, -sin_yaw, sin_yaw, cos_yaw;
-
-    const Eigen::Vector2d p1(node1it->second(0), node1it->second(1));
-    const Eigen::Vector2d p2(node2it->second(0), node2it->second(1));
-    const Eigen::Vector2d predicted_relative =
-      rotation.transpose() * (p2 - p1);
-
-    Eigen::Vector3d raw_error;
-    raw_error.head<2>() = predicted_relative - edge.measurement.head<2>();
-    raw_error(2) = AdaptiveNormalizeAngle(
-      (node2it->second(2) - node1it->second(2)) - edge.measurement(2));
-
-    // This is the unmodified Karto information matrix. Temporal weight is not
-    // included here, so loop evidence is evaluated in the constraint's own
-    // normalized residual space rather than against our added prior.
-    const Eigen::Vector3d normalized_error =
-      edge.base_sqrt_information * raw_error;
-    const double mahalanobis_sq = normalized_error.squaredNorm();
-    if (mahalanobis_sq < g_adaptive_loop_min_mahalanobis_sq) {
-      continue;
-    }
-
-    AdaptiveLoopObservation observation;
-    observation.older_node = older_node;
-    observation.newer_node = newer_node;
-    observation.requested_global_translation =
-      rotation * (-raw_error.head<2>());
-    observation.requested_yaw = AdaptiveNormalizeAngle(-raw_error(2));
-    observation.mahalanobis_sq = mahalanobis_sq;
-    candidates.push_back(observation);
-  }
+  candidates.erase(
+    std::remove_if(
+      candidates.begin(), candidates.end(),
+      [](const AdaptiveLoopObservation & observation) {
+        return observation.mahalanobis_sq <
+               g_adaptive_loop_min_mahalanobis_sq;
+      }),
+    candidates.end());
 
   if (static_cast<int>(candidates.size()) < g_adaptive_loop_evidence_min_edges) {
     return evidence;
   }
 
-  // Newest-first lets one newly accepted scan contribute at most one vote when
-  // several long-gap edges happen to be attached to that same scan.
+  // Newest-first plus the separation check means several long-gap edges
+  // attached to essentially the same scan cannot manufacture independent votes.
   std::sort(
     candidates.begin(), candidates.end(),
     [](const AdaptiveLoopObservation & a, const AdaptiveLoopObservation & b) {
@@ -315,6 +311,7 @@ AdaptiveLoopEvidence AdaptiveDetectStrongLoopEvidence(
   for (const AdaptiveLoopObservation & observation : best_cluster) {
     evidence.region_start = std::min(evidence.region_start, observation.older_node);
     evidence.region_end = std::max(evidence.region_end, observation.newer_node);
+    evidence.edge_keys.push_back(observation.edge_key);
     mahalanobis_sum += observation.mahalanobis_sq;
   }
   evidence.edge_count = best_cluster.size();
@@ -323,9 +320,70 @@ AdaptiveLoopEvidence AdaptiveDetectStrongLoopEvidence(
   return evidence;
 }
 
+AdaptiveLoopEvidence AdaptiveDetectHistoricalStrongLoopEvidence(
+  const std::unordered_map<int, Eigen::Vector3d> & nodes)
+{
+  AdaptiveLoopEvidence evidence;
+  if (!g_adaptive_anchor_enabled ||
+    static_cast<int>(g_adaptive_loop_history.size()) <
+    g_adaptive_loop_evidence_min_edges)
+  {
+    return evidence;
+  }
+
+  const int latest_graph_node = AdaptiveLatestNodeId(nodes);
+  if (latest_graph_node == std::numeric_limits<int>::min()) {
+    return evidence;
+  }
+
+  std::vector<AdaptiveLoopObservation> recent;
+  for (const AdaptiveLoopObservation & observation : g_adaptive_loop_history) {
+    if (latest_graph_node - observation.newer_node <=
+      g_adaptive_loop_evidence_window_nodes)
+    {
+      recent.push_back(observation);
+    }
+  }
+
+  return AdaptiveClusterLoopObservations(std::move(recent));
+}
+
+AdaptiveLoopEvidence AdaptiveEvaluateEvidenceNow(
+  const AdaptiveLoopEvidence & historical_evidence,
+  const std::unordered_map<int, Eigen::Vector3d> & nodes)
+{
+  AdaptiveLoopEvidence evidence;
+  if (!historical_evidence.valid) {
+    return evidence;
+  }
+
+  std::vector<AdaptiveLoopObservation> current;
+  for (const std::pair<int, int> & key : historical_evidence.edge_keys) {
+    const auto edge_it = g_adaptive_edges.find(key);
+    if (edge_it == g_adaptive_edges.end()) {
+      continue;
+    }
+
+    AdaptiveLoopObservation observation;
+    if (AdaptiveBuildLoopObservation(key, edge_it->second, nodes, observation)) {
+      current.push_back(observation);
+    }
+  }
+
+  return AdaptiveClusterLoopObservations(std::move(current));
+}
+
 void AdaptiveEraseConstraintMetadata(const int source_id, const int target_id)
 {
-  g_adaptive_edges.erase(AdaptiveEdgeKey(source_id, target_id));
+  const std::pair<int, int> key = AdaptiveEdgeKey(source_id, target_id);
+  g_adaptive_edges.erase(key);
+  g_adaptive_loop_history.erase(
+    std::remove_if(
+      g_adaptive_loop_history.begin(), g_adaptive_loop_history.end(),
+      [&key](const AdaptiveLoopObservation & observation) {
+        return observation.edge_key == key;
+      }),
+    g_adaptive_loop_history.end());
 }
 
 void AdaptiveEraseNodeMetadata(const int node_id)
@@ -337,6 +395,15 @@ void AdaptiveEraseNodeMetadata(const int node_id)
       ++it;
     }
   }
+
+  g_adaptive_loop_history.erase(
+    std::remove_if(
+      g_adaptive_loop_history.begin(), g_adaptive_loop_history.end(),
+      [node_id](const AdaptiveLoopObservation & observation) {
+        return observation.older_node == node_id ||
+               observation.newer_node == node_id;
+      }),
+    g_adaptive_loop_history.end());
 }
 
 }  // namespace
@@ -524,6 +591,7 @@ void CeresSolver::Configure(rclcpp_lifecycle::LifecycleNode::SharedPtr node)
 
   g_adaptive_edges.clear();
   g_adaptive_release_regions.clear();
+  g_adaptive_loop_history.clear();
   g_adaptive_first_node_id = -1;
   g_adaptive_last_summary_node = -1;
 
@@ -594,7 +662,7 @@ void CeresSolver::Configure(rclcpp_lifecycle::LifecycleNode::SharedPtr node)
   } else if (preconditioner_type == "SCHUR_JACOBI") {
     RCLCPP_INFO(
       node->get_logger(),
-      "CeresSolver: Using SCHUR_JACOBI solver.");
+      "CeresSolver: Using SCHUR_JACOBI preconditioner.");
     options_.preconditioner_type = ceres::SCHUR_JACOBI;
   }
 
@@ -763,8 +831,9 @@ void CeresSolver::Compute()
   }
 
   AdaptiveLoopEvidence pre_solve_evidence;
+  bool stage1_released_now = false;
   if (g_adaptive_anchor_enabled) {
-    pre_solve_evidence = AdaptiveDetectStrongLoopEvidence(*nodes_);
+    pre_solve_evidence = AdaptiveDetectHistoricalStrongLoopEvidence(*nodes_);
     if (pre_solve_evidence.valid &&
       AdaptiveRegionNeedsRelease(
         pre_solve_evidence.region_start,
@@ -776,10 +845,11 @@ void CeresSolver::Compute()
         pre_solve_evidence.region_end,
         g_adaptive_release_stage1_factor);
       const std::size_t rebuilt = rebuild_adaptive_local_blocks();
+      stage1_released_now = true;
       RCLCPP_WARN(
         logger_,
         "Adaptive anchor strong-loop stage1: edges=%zu, region=[%d,%d], "
-        "mean_mahal_sq=%.2f, release=%.2f, rebuilt=%zu",
+        "mean_initial_mahal_sq=%.2f, release=%.2f, rebuilt=%zu",
         pre_solve_evidence.edge_count,
         pre_solve_evidence.region_start,
         pre_solve_evidence.region_end,
@@ -806,12 +876,12 @@ void CeresSolver::Compute()
     return;
   }
 
-  // Only after the stage-1 solve do we consider the final fallback. If the
-  // same region still has independent, consistent high normalized residuals,
-  // remove the temporal boost there completely and solve once more.
+  // The final fallback is based on CURRENT residuals of the SAME independent
+  // evidence edges that justified stage 1. Historical pre-optimization errors
+  // are never reused to claim stage-1 failure.
   if (g_adaptive_anchor_enabled && pre_solve_evidence.valid) {
     const AdaptiveLoopEvidence post_solve_evidence =
-      AdaptiveDetectStrongLoopEvidence(*nodes_);
+      AdaptiveEvaluateEvidenceNow(pre_solve_evidence, *nodes_);
     if (post_solve_evidence.valid &&
       AdaptiveRegionsOverlap(pre_solve_evidence, post_solve_evidence) &&
       AdaptiveRegionNeedsRelease(
@@ -827,14 +897,15 @@ void CeresSolver::Compute()
       RCLCPP_WARN(
         logger_,
         "Adaptive anchor strong-loop stage2 fallback: edges=%zu, "
-        "region=[%d,%d], mean_mahal_sq=%.2f, release=%.2f (Toolbox 1x), "
-        "rebuilt=%zu",
+        "region=[%d,%d], mean_current_mahal_sq=%.2f, release=%.2f "
+        "(Toolbox 1x), rebuilt=%zu%s",
         post_solve_evidence.edge_count,
         pre_solve_evidence.region_start,
         pre_solve_evidence.region_end,
         post_solve_evidence.mean_mahalanobis_sq,
         g_adaptive_release_stage2_factor,
-        rebuilt);
+        rebuilt,
+        stage1_released_now ? "" : " after persistent stage1 conflict");
 
       summary = solve_problem();
       if (!summary.IsSolutionUsable()) {
@@ -865,9 +936,10 @@ void CeresSolver::Compute()
       RCLCPP_INFO(
         logger_,
         "Adaptive anchor summary: latest_node=%d, local_edges=%zu, "
-        "avg_effective_weight=%.3f, release_regions=%zu",
+        "loop_history=%zu, avg_effective_weight=%.3f, release_regions=%zu",
         latest_node,
         local_count,
+        g_adaptive_loop_history.size(),
         average_weight,
         g_adaptive_release_regions.size());
       g_adaptive_last_summary_node = latest_node;
@@ -914,6 +986,7 @@ void CeresSolver::Reset()
 
   g_adaptive_edges.clear();
   g_adaptive_release_regions.clear();
+  g_adaptive_loop_history.clear();
   g_adaptive_first_node_id = -1;
   g_adaptive_last_summary_node = -1;
 
@@ -1048,7 +1121,9 @@ void CeresSolver::AddConstraint(karto::Edge<karto::LocalizedRangeScan> * pEdge)
     record.loop_candidate = loop_candidate;
     record.temporal_weight = temporal_weight;
     record.effective_weight = effective_weight;
-    g_adaptive_edges[AdaptiveEdgeKey(node1, node2)] = record;
+
+    const std::pair<int, int> key = AdaptiveEdgeKey(node1, node2);
+    g_adaptive_edges[key] = record;
 
     if (temporal_local) {
       RCLCPP_DEBUG(
@@ -1056,10 +1131,32 @@ void CeresSolver::AddConstraint(karto::Edge<karto::LocalizedRangeScan> * pEdge)
         "Adaptive anchor local edge %d-%d: temporal=%.3f effective=%.3f",
         node1, node2, temporal_weight, effective_weight);
     } else if (loop_candidate) {
-      RCLCPP_DEBUG(
-        logger_,
-        "Adaptive anchor long-gap evidence candidate %d-%d: gap=%d weight=1.0",
-        node1, node2, node_gap);
+      // Capture evidence NOW, before Karto's loop-closure CorrectPoses() can
+      // optimize this new edge and erase the conflict that introduced it.
+      AdaptiveLoopObservation observation;
+      if (AdaptiveBuildLoopObservation(key, record, *nodes_, observation)) {
+        RCLCPP_DEBUG(
+          logger_,
+          "Adaptive anchor long-gap edge %d-%d: gap=%d, initial_mahal_sq=%.3f, weight=1.0",
+          node1, node2, node_gap, observation.mahalanobis_sq);
+        if (observation.mahalanobis_sq >=
+          g_adaptive_loop_min_mahalanobis_sq)
+        {
+          g_adaptive_loop_history.push_back(observation);
+        }
+      }
+
+      // Keep only observations that can still participate in the configured
+      // recent-evidence window. This bounds memory without changing decisions.
+      const int latest_node = AdaptiveLatestNodeId(*nodes_);
+      g_adaptive_loop_history.erase(
+        std::remove_if(
+          g_adaptive_loop_history.begin(), g_adaptive_loop_history.end(),
+          [latest_node](const AdaptiveLoopObservation & old_observation) {
+            return latest_node - old_observation.newer_node >
+                   g_adaptive_loop_evidence_window_nodes;
+          }),
+        g_adaptive_loop_history.end());
     }
   }
 }
