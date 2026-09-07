@@ -3,17 +3,23 @@
 This launch uses the upstream SLAM Toolbox source vendored in this repository, but
 applies a small compatibility layer for the current mapex_lab exploration stack.
 The SLAM algorithm itself (scan matcher, pose graph, loop closure, Ceres solver)
-remains upstream. Only robot-interface and map/update parameters that the current
-frontier exploration pipeline depends on are overridden at runtime.
+remains upstream. Robot-interface, map/update, and scan-processing cadence values
+needed by the current frontier exploration pipeline are overridden at runtime.
 
-Compatibility overrides:
+Compatibility / exploration overrides:
 - base_frame: base_link
 - scan_topic: /scan
 - map_update_interval: 1.0 s
 - resolution: 0.10 m/cell
 - max_laser_range: 12.0 m
+- minimum_time_interval: 0.20 s
 - minimum_travel_distance: 0.10 m
 - minimum_travel_heading: 0.10 rad
+
+The 0.20 s scan interval is intentionally denser than the upstream 0.50 s default
+for this experiment. It reduces the robot motion between scan-matching updates
+while leaving Nav2 speed, loop closure, and the remaining upstream matcher tuning
+unchanged, so scan-matching cadence can be evaluated in isolation.
 
 The upstream mapper_params_online_async.yaml file itself is never modified.
 New Room is the default world. Hospital remains selectable with world:=hospital.
@@ -79,9 +85,8 @@ def generate_launch_description() -> LaunchDescription:
     research_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     # Start from the upstream SLAM Toolbox online-async configuration, then apply
-    # only the compatibility values needed by the current TurtleBot4 + frontier
-    # exploration stack. Core scan-matching / graph / loop-closure tuning stays
-    # upstream.
+    # compatibility values for the current TurtleBot4 + frontier exploration
+    # stack plus a denser scan-processing cadence for this scan-matching test.
     upstream_slam_params = os.path.join(
         slam_toolbox_pkg,
         'config',
@@ -100,6 +105,7 @@ def generate_launch_description() -> LaunchDescription:
             'map_update_interval': 1.0,
             'resolution': 0.10,
             'max_laser_range': 12.0,
+            'minimum_time_interval': 0.20,
             'minimum_travel_distance': 0.10,
             'minimum_travel_heading': 0.10,
         }
