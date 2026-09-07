@@ -5,21 +5,24 @@
 - Build a reproducible New Room exploration benchmark around the shared Nearest-Frontier execution layer and MapEx policy.
 - Compare stock SLAM, local scan correction, and segmented submap correction without duplicating exploration logic.
 - Keep experiment provenance, map snapshots, prediction artifacts, and evaluation outputs tied to the exact runtime configuration.
+- Runtime-validate Adaptive Temporal Anchor V1 as a diagnostic SLAM ablation before considering any protocol change.
 
 ## Current runtime stack
 
 - `launch/stock.launch.py`: New Room by default, stock scan path into SLAM Toolbox, stock TurtleBot4 Nav2 plus `config/nav2.yaml` overrides.
 - `launch/local.launch.py`: local scan frontend + SLAM Toolbox + Nav2. It reuses `config/slam.yaml` and overrides the scan topic at launch time.
 - `launch/submap.launch.py`: segmented local ICP frontend (`scripts/submap.py`) + SLAM Toolbox + Nav2. It reuses `config/slam.yaml` and overrides the scan topic at launch time.
-- `launch/toolbox.launch.py`: conservative Toolbox baseline; when the experimental patched solver is built this launch explicitly keeps `temporal_anchor_enabled=false`.
-- `launch/toolbox_anchor.launch.py`: experimental soft temporal-anchor A/B variant.
-- `launch/toolbox_hard_chain.launch.py`: strict sequential-history experiment. It uses `scan_buffer_size=1`, disables loop closure, and enables the Ceres hard-chain patch so every solved historical pose is frozen permanently and only the newest pose is variable.
+- `launch/toolbox.launch.py`: conservative Toolbox A/B baseline. The vendored Ceres solver now contains Adaptive Anchor V1 code but this launch explicitly sets `adaptive_anchor_enabled=false`, so ordinary Toolbox constraint weights remain unchanged.
+- `launch/toolbox_adaptive.launch.py`: current experimental Adaptive Temporal Anchor V1. It keeps the stable Toolbox scan matching, graph construction, loop closure, whole-graph Ceres optimization, scan cadence, loop thresholds and Nav2 settings. Only strict sequential edges receive `w(n)=1+2*exp(-n/50)` temporal weighting; strong consistent long-gap evidence can regionally release that added weight `1.0 -> 0.5 -> 0.0`.
+- `src/slam/adaptive_anchor_v1.md`: exact current Adaptive V1 algorithm, parameters, fallback edge classification, release logic and validation checklist.
+- `launch/toolbox_anchor.launch.py` + `src/slam/temporal_anchor_ceres.patch`: earlier fixed soft-anchor prototype retained only as historical diagnostic material; it is not the current adaptive implementation.
+- `launch/toolbox_hard_chain.launch.py` + `scripts/apply_hard_chain.py`: earlier strict hard-chain diagnostic. It froze solved history, used `scan_buffer_size=1` and disabled loop closure; the first runtime test was not satisfactory and this is no longer the current direction.
 - The launchers use world-specific automatic spawn resolution; New Room is the default world while Hospital remains selectable explicitly where supported.
 - `config/` is intentionally reduced to three source-of-truth files: `nav2.yaml`, `slam.yaml`, and `mapex.yaml`.
 
 ## Benchmark / recorder state
 
-- `scripts/nf_basic.py` is the shared canonical Nearest-Frontier execution layer.
+- `scripts/nf_basic.py` is the shared canonical Nearest-Frontier execution layer and remains unchanged for Adaptive Anchor tests.
 - `scripts/nf_run.py` adds benchmark recording and provenance for Nearest-Frontier runs.
 - `scripts/mapex.py` contains the MapEx exploration policy.
 - `scripts/mapex_run.py` adds MapEx recording, saved prediction maps, environment-aware coverage, and post-run IoU/TU evaluation.
@@ -39,10 +42,23 @@
 - `launch/submap.launch.py` now also defaults to `new_room`, while retaining its segmented local scan frontend. Hospital remains selectable explicitly.
 - For the current auxiliary New Room smoke test, `config/nav2.yaml` allows `velocity_smoother` linear commands up to `±0.75 m/s` while keeping angular commands at `±1.9 rad/s`; the Gazebo Create3 hard linear cap remains `0.8 m/s`. This speed setting is not yet validated as a formal Hospital benchmark setting.
 
-## In progress
+## Adaptive Anchor V1 implementation state
 
+- Vendored `slam_toolbox/solvers/ceres_solver.cpp` contains the current Adaptive V1 implementation and defaults to disabled.
+- Strict sequential local edges use temporal weight `1 + 2*exp(-n/50)`; long-gap edges remain at normal `1x` weight.
+- V1 deliberately has no extra covariance confidence multiplier because Karto covariance already forms the Ceres information matrix.
+- Since `karto::LinkInfo` does not expose an edge-origin type through the ScanSolver API, V1 uses `node_gap<=1` for temporal local edges and `node_gap>=30` only as conservative loop-evidence candidates.
+- Long-gap evidence is captured at `AddConstraint()` before Karto loop correction can optimize away the initial residual. Strong evidence requires at least three recent independent edges with consistent correction and squared normalized/Mahalanobis residual >= `9.0`.
+- A strong evidence cluster releases only its related trajectory interval to factor `0.5`, then Ceres solves the whole graph. Stage 2 recomputes current residuals for the same evidence edges; only persistent strong conflict releases that interval to factor `0.0`, which returns those local edges to ordinary Toolbox `1x`, followed by another whole-graph solve.
+- Release is one-way for a mapping session; no historical pose is hard-frozen by Adaptive V1.
+- This remains a diagnostic experiment and does **not** modify `hospital_v2` official benchmark protocol.
+
+## In progress / next action
+
+- Build the vendored `slam_toolbox` after pulling the Adaptive V1 source and confirm compilation before any mapping interpretation.
+- Smoke-test `toolbox.launch.py` and confirm startup log reports `CeresSolver adaptive anchor V1: enabled=false`.
+- Smoke-test `toolbox_adaptive.launch.py` and confirm startup log reports `enabled=true`, `weight=3.00->1.00`, `decay=50.0`, then drive with ordinary `scripts/nf_basic.py`.
+- During the first adaptive diagnostic run, verify that one long-gap edge cannot release history, stage-1 logs a finite interval with `release=0.50`, and stage-2 occurs only if the same evidence edges remain strongly inconsistent after the stage-1 solve.
 - Runtime-smoke-test the new `new_room` profile end-to-end: confirm auto-generated GT/ROI, numeric New Room Coverage, five prediction files per decision, and final `evaluation.json` with `status: ok`.
 - Visually validate `ground_truth/new_room/generated/new_room_structural_gt_v1.pgm` against Gazebo/RViz before treating New Room IoU/TU as research results.
 - Run repeated Nearest and MapEx trials under the same runtime profile before drawing conclusions from single-run outcomes.
-- Experimental soft anchor: `src/slam/temporal_anchor_ceres.patch` + `toolbox_anchor.launch.py` remains available for A/B testing.
-- Experimental hard chain: restore vendored `slam_toolbox` solver to upstream, apply `src/slam/hard_chain_ceres.patch`, rebuild, launch `toolbox_hard_chain.launch.py`, and drive it with the ordinary `scripts/nf_basic.py`. No result recorder is required for the first diagnostic run.
