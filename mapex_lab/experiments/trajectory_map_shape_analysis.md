@@ -2,40 +2,26 @@
 
 ## Scope
 
-This note compares the robot motion recorded in four New Room runs:
+This note compares the robot motion recorded in the three New Room runs currently retained in the repository:
 
-- MapEx: `mapex_submap_003`, `mapex_submap_004`
-- Nearest Frontier (`nf_basic.py`): `nf_toolbox_01`, `nf_toolbox_02`
+- MapEx: `mapex_run_001`, `mapex_run_002`
+- Nearest Frontier (`nf_basic.py`): `nf_run_001`
 
-The goal is not to claim that one exploration policy intrinsically produces a more accurate map from only four runs. The narrower question is whether the **trajectory induced by the exploration policy** can explain the qualitative difference observed in RViz: MapEx runs tended to finish with straighter / better-aligned walls, while NF runs tended to retain more visible shear or angular drift.
-
-## Important provenance note
-
-Operationally, these runs were performed while `launch/toolbox.launch.py` was used with the Test-3 tuned SLAM Toolbox loop-closure settings. However, the MapEx recorder was launched with `--runtime-profile submap`, so `mapex_submap_003/metadata.json` and `mapex_submap_004/metadata.json` label the runtime as `new_room_submap` and hash `submap.launch.py`. The NF runs correctly record `runtime_profile = new_room_toolbox_tuned_loop`.
-
-Therefore, the trajectory comparison below is valid as an analysis of the recorded robot motion, but the MapEx metadata should **not** be used as formal proof that the same SLAM launch profile was recorded. Future MapEx runs should add/use a `toolbox` runtime profile so provenance matches the actual launch.
+All three runs were actually executed with `launch/toolbox.launch.py` using the Test-3 tuned SLAM Toolbox loop-closure configuration. The two MapEx runs were originally mislabeled as `submap` by the recorder because they were launched with `--runtime-profile submap`; their `summary.json` and `metadata.json` have since been corrected in the repository, with an explicit post-run correction note retained in metadata.
 
 ## Run-level results
 
 | Run | Method | Coverage | Distance | Time | Main attempts | Main succeeded | Distance / attempt |
 |---|---|---:|---:|---:|---:|---:|---:|
-| `mapex_submap_003` | MapEx | 83.77% | 314.34 m | 972.06 s | 31 | 22 | 10.14 m |
-| `mapex_submap_004` | MapEx | 83.70% | 273.68 m | 948.24 s | 29 | 25 | 9.44 m |
-| `nf_toolbox_01` | Nearest Frontier | 84.26% | 184.72 m | 786.10 s | 41 | 33 | 4.51 m |
-| `nf_toolbox_02` | Nearest Frontier | 83.69% | 237.44 m | 924.41 s | 44 | 35 | 5.40 m |
+| `mapex_run_001` | MapEx | 83.77% | 314.34 m | 972.06 s | 31 | 22 | 10.14 m |
+| `mapex_run_002` | MapEx | 83.70% | 273.68 m | 948.24 s | 29 | 25 | 9.44 m |
+| `nf_run_001` | Nearest Frontier | 83.69% | 237.44 m | 924.41 s | 44 | 35 | 5.40 m |
 
-Two-run averages:
-
-- MapEx: 294.01 m total travel, 30 main attempts, 9.79 m travel per main attempt, 83.73% coverage.
-- NF: 211.08 m total travel, 42.5 main attempts, 4.95 m travel per main attempt, 83.97% coverage.
-
-The most obvious trajectory difference is that MapEx travels roughly **2x farther per main attempt**. NF makes more local decisions and changes goal more frequently.
+The clearest motion difference is that MapEx travels substantially farther per main exploration attempt, while NF changes goal more frequently and tends to consume nearby frontiers locally.
 
 ## Coarse trajectory samples
 
-The following points are sampled directly from each `trajectory.csv`. They are not intended to reconstruct every Nav2 path; they show how the robot moves between large regions over the run.
-
-### MapEx run 3
+### MapEx run 001
 
 Approximate progression `(time: x, y)`:
 
@@ -46,9 +32,9 @@ Approximate progression `(time: x, y)`:
 - 823 s: `(-9.14, -5.82)`
 - 965 s: `(0.02, -8.10)`
 
-The sequence repeatedly moves between distant parts of the map rather than continuing in one local sweep.
+The robot repeatedly moves between distant regions instead of completing one continuous local sweep.
 
-### MapEx run 4
+### MapEx run 002
 
 Approximate progression:
 
@@ -58,24 +44,9 @@ Approximate progression:
 - 666 s: `(1.97, 4.93)`
 - 840 s: `(-13.81, -1.61)`
 
-This is an even clearer cross-map pattern: right side -> lower-right -> far left -> upper/central area -> far left again. It repeatedly reconnects regions that were mapped at substantially different times.
+This run shows an especially clear cross-map pattern: right side -> lower-right -> far left -> upper/central area -> far left again. It repeatedly reconnects regions mapped at substantially different times.
 
-### NF run 1
-
-Approximate progression:
-
-- 76 s: `(6.15, 1.51)`
-- 152 s: `(7.02, 6.02)`
-- 229 s: `(-9.46, 0.65)`
-- 306 s: `(-10.92, -7.94)`
-- 384 s: `(-9.50, -6.45)`
-- 462 s: `(0.69, -9.33)`
-- 540 s: `(6.64, -16.62)`
-- 618 s: `(7.06, -11.40)`
-
-NF still crosses the map, but after reaching a region it tends to continue consuming nearby frontiers before moving to the next region. This creates a more continuous spatial sweep than MapEx's repeated cross-region returns.
-
-### NF run 2
+### NF run 001
 
 Approximate progression:
 
@@ -88,80 +59,70 @@ Approximate progression:
 - 630 s: `(-11.06, -5.30)`
 - 721 s: `(-13.39, 2.28)`
 
-This run most clearly matches the expected nearest-frontier behavior: the explored wavefront progresses from the right side into the lower part of the map and then toward the left side. Consecutive phases are spatially adjacent rather than alternating repeatedly between opposite sides.
+This is consistent with nearest-frontier behavior: the explored wavefront tends to progress through spatially adjacent regions rather than repeatedly alternating between distant sides of the map.
 
-## Why this can affect map straightness
+## Why trajectory can affect map straightness
 
-SLAM Toolbox does not explicitly force walls to be horizontal, vertical, or square. The visible straightening comes from correcting robot poses so that repeated laser observations agree better.
+SLAM Toolbox does not explicitly force walls to be horizontal, vertical, or square. Visible straightening comes from pose-graph correction: repeated laser observations of the same geometry provide constraints that can redistribute accumulated pose error.
 
-### Nearest Frontier trajectory
+### Nearest Frontier
 
-Nearest Frontier tends to select the closest reachable frontier. In a room-and-corridor environment this naturally produces a local sweep: finish nearby openings/rooms first, then propagate outward.
+Nearest Frontier usually selects the closest reachable frontier. In a room-and-corridor environment this often creates a local sweep.
 
-This has two consequences:
+That can allow drift to accumulate coherently over a sequence of adjacent rooms before the robot obtains a strong long-baseline revisit constraint. `nf_run_001` also uses many short exploration attempts: 44 main attempts for 237.44 m, about 5.40 m per attempt.
 
-1. **Drift can accumulate coherently during a long local sweep.** If pose error slowly rotates or translates while the robot progresses through adjacent rooms, a whole section of the map can become slightly sheared before a strong global constraint is encountered.
-2. **Many goals are local.** The two NF runs use 41 and 44 main attempts but only about 4.5-5.4 m of travel per attempt. A new goal does not necessarily provide a new long-baseline geometric constraint against a distant previously mapped region.
+This is consistent with the qualitative observation that the final NF map can remain slightly sheared or angularly distorted even when it does not catastrophically break.
 
-This is consistent with the qualitative RViz observation that NF maps can remain slightly skewed even though they do not catastrophically break.
+### MapEx
 
-### MapEx trajectory
+The two MapEx runs use fewer main attempts but much longer motion per attempt: about 9.4-10.1 m. Their trajectories also show repeated transitions between distant regions and later returns to previously observed areas.
 
-The two MapEx runs use fewer main attempts but about 9.4-10.1 m of robot travel per attempt. The sampled coordinates show repeated transitions between distant regions and later returns to previously observed areas.
+With the tuned Test-3 loop closure, those long cross-region returns can be useful:
 
-With the tuned Test-3 loop closure, these long cross-region returns can be helpful:
-
-1. the robot observes old geometry again after a long accumulated trajectory;
-2. the revisit occurs with a substantially different path history / approach direction;
+1. the robot observes old geometry again after substantial accumulated travel;
+2. the revisit comes after a different path history and often a different approach direction;
 3. a valid loop closure adds a long-baseline constraint to the pose graph;
-4. Ceres can redistribute accumulated error over a much larger portion of the trajectory;
-5. walls that looked slightly skewed during the run can move back into alignment after optimization.
+4. Ceres can redistribute accumulated pose error over a larger portion of the trajectory;
+5. walls that looked slightly skewed during the run can move back toward alignment after optimization.
 
-This matches the observed behavior in MapEx run 4: the map could look somewhat distorted mid-run and then become noticeably straighter near the end.
+This matches the observed behavior in `mapex_run_002`, where the map could look somewhat distorted during exploration and become noticeably straighter near the end.
 
 ## Relation to the earlier false-loop problem
 
-Long cross-map revisits are not automatically beneficial. With the earlier permissive loop-closure parameters, repetitive rooms/corridors could be mistaken for one another and MapEx produced duplicated or broken geometry.
+Long revisits are not automatically beneficial. In repetitive room geometry, permissive loop-closure thresholds can match the wrong places and create duplicated or broken walls.
 
-After Test-3 tuning, loop closure is stricter. Under these settings the same type of long revisit is more likely to provide useful global correction without accepting an incorrect match. In other words:
+The current Test-3 settings are deliberately stricter. Under these settings, a correct long revisit can provide useful global correction while reducing the chance of a false loop.
 
-- permissive loop closure + repetitive geometry + long revisit -> risk of catastrophic false loop;
+So the current working interpretation is:
+
+- permissive loop closure + repetitive geometry + wrong revisit match -> catastrophic map deformation;
 - conservative loop closure + valid long revisit -> useful global drift correction.
 
-The stable MapEx runs 3 and 4 support the second case, but two runs are not enough to establish a failure probability.
+## Current conclusion
 
-## What the current data does and does not show
+The retained runs support the following working hypothesis:
 
-The four runs support the following **working hypothesis**:
+> Exploration policy changes the spatial and temporal structure of the trajectory. NF tends to propagate locally through nearby frontiers, while MapEx tends to make longer cross-region moves and revisits. With a reliable loop detector, the MapEx revisit pattern can create stronger global pose-graph constraints and therefore correct accumulated angular or positional drift more visibly.
 
-> Exploration policy changes the spatial and temporal structure of the robot trajectory. NF tends to propagate locally through nearby frontiers, while MapEx performs longer cross-region moves and revisits. With a reliable loop detector, MapEx's revisit pattern can create stronger global pose-graph constraints and therefore correct accumulated angular/positional drift more visibly.
+This is still a hypothesis rather than a statistically established result because there are currently only two MapEx runs and one retained NF run, and no direct numerical wall-straightness or loop-closure-event metric is stored.
 
-However, this is not yet a quantitative claim that MapEx produces a more accurate or "more square" map. Important limitations are:
+## Recommended next measurements
 
-- only two runs per method are included;
-- Gazebo seed is intentionally uncontrolled;
-- final coverage is very similar across methods and does not measure wall angular accuracy;
-- no direct loop-closure event log is stored in these runs;
-- no numerical wall-straightness / orthogonality metric is currently computed;
-- MapEx runtime provenance is mislabeled as `submap` even though the operational launch used for these tests was `toolbox.launch.py`.
-
-## Recommended next measurement
-
-To turn the visual observation into a defensible result, add two classes of metrics:
+To test the hypothesis quantitatively, add:
 
 1. **Trajectory / revisit metrics**
    - revisit count after a minimum time separation;
    - fraction of trajectory spent within 1-2 m of old poses;
    - long-range revisit count;
-   - total heading change / number of strong direction reversals;
+   - total heading change / strong direction reversals;
    - distance traveled per exploration decision.
 
 2. **Map geometry metrics**
-   - dominant-wall angular error relative to the known New Room ground-truth walls;
-   - duplicated/ghost-wall rate;
-   - occupied-cell IoU after appropriate map/ground-truth registration;
-   - map deformation measured at several timestamps, not only the final map.
+   - dominant-wall angular error relative to New Room ground truth;
+   - duplicated / ghost-wall rate;
+   - occupied-cell IoU after appropriate registration;
+   - map deformation measured at multiple timestamps, not only the final map.
 
-These would allow a direct test of the chain:
+These measurements would directly test:
 
 `exploration policy -> trajectory/revisit pattern -> loop-closure opportunity -> pose-graph correction -> final map geometry`.
