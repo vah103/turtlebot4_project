@@ -26,6 +26,7 @@ Compatibility / exploration overrides:
 - loop_search_maximum_distance: 2.0 m
 - loop_search_space_dimension: 4.0 m
 - loop_match_maximum_variance_coarse: 2.0
+- temporal_anchor_enabled: false (baseline)
 
 The scan-processing cadence is unchanged from the previous toolbox tests. This
 profile tightens both loop acceptance and loop search scope so the diagnostic can
@@ -126,6 +127,7 @@ def generate_launch_description() -> LaunchDescription:
             'loop_search_maximum_distance': 2.0,
             'loop_search_space_dimension': 4.0,
             'loop_match_maximum_variance_coarse': 2.0,
+            'temporal_anchor_enabled': False,
         }
     )
     slam_params = _write_yaml_temp(
