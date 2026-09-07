@@ -41,3 +41,4 @@
 - Runtime-smoke-test the new `new_room` profile end-to-end: confirm auto-generated GT/ROI, numeric New Room Coverage, five prediction files per decision, and final `evaluation.json` with `status: ok`.
 - Visually validate `ground_truth/new_room/generated/new_room_structural_gt_v1.pgm` against Gazebo/RViz before treating New Room IoU/TU as research results.
 - Run repeated Nearest and MapEx trials under the same runtime profile before drawing conclusions from single-run outcomes.
+- Experimental only: `src/slam/temporal_anchor_ceres.patch` prototypes a SLAM Toolbox Ceres modification that keeps the first pose fixed, strengthens early local pose-graph constraints with an exponentially decaying weight, and leaves large-gap loop-closure edges at normal weight. It is not wired into the current Toolbox runtime and does not change the benchmark protocol yet.
