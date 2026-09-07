@@ -13,6 +13,23 @@ Ghi ngắn gọn các quyết định hoặc sự cố có thể ảnh hưởng 
 - Observation:
 - Next action:
 
+## 2026-09-07 — Adaptive Temporal Anchor V1 after hard-chain diagnostic
+
+- What changed:
+  - Added `launch/toolbox_adaptive.launch.py` as a clean A/B variant of the previously stable `toolbox.launch.py`; scan cadence, Karto scan matching, near-chain graph construction, conservative loop-closure settings, whole-graph Ceres optimization and Nav2 remain unchanged.
+  - Integrated Adaptive Anchor V1 into the vendored `slam_toolbox/solvers/ceres_solver.cpp`, default disabled. `toolbox.launch.py` explicitly sets `adaptive_anchor_enabled=false`; `toolbox_adaptive.launch.py` enables it.
+  - Only strict sequential graph edges (`node_gap<=1`) receive `w(n)=1+2*exp(-n/50)`, i.e. `3x -> 1x`. Long-gap edges are never strengthened.
+  - V1 intentionally does not apply a second covariance confidence multiplier because Karto covariance already forms the Ceres information matrix.
+  - `LinkInfo` does not expose edge origin/type to `ScanSolver`, so V1 uses `node_gap>=30` only as a conservative loop-evidence candidate fallback. Evidence is captured at `AddConstraint()` before Karto loop correction can optimize away the initial residual.
+  - Strong release evidence requires at least 3 recent independent long-gap observations with consistent correction and squared normalized/Mahalanobis residual `>=9.0`. Multiple edges attached to essentially the same new node cannot count as independent votes.
+  - Strong evidence releases only the related trajectory interval from factor `1.0 -> 0.5`, then Ceres solves the whole graph. Stage 2 recomputes current residuals for the same evidence edges; persistent strong conflict releases that interval to factor `0.0`, returning its sequential edges to ordinary Toolbox `1x`, followed by another whole-graph solve. Release is one-way for the mapping session.
+  - Added `src/slam/adaptive_anchor_v1.md` with the exact algorithm, limitations and runtime validation checklist.
+- Why: the strict hard-chain test was not satisfactory because it removed too much of Toolbox's ability to distribute correction. The new diagnostic keeps Toolbox's normal mechanisms and adds only a reversible soft temporal preference, with a later-evidence escape path so an incorrect early trajectory is not protected indefinitely.
+- Affected runs: Adaptive Anchor V1 diagnostic runs only. Existing Toolbox/Nearest/MapEx data are not reclassified by this change.
+- Does baseline need rerun?: no official `hospital_v2` protocol change has been made. For an Adaptive-vs-Toolbox diagnostic, both variants should use the same newly built solver binary, with only `adaptive_anchor_enabled` differing.
+- Observation: implementation is committed but compile/runtime validation on the TurtleBot4 Jazzy machine is still pending. The explicit edge-type limitation remains: long-gap evidence is a fallback heuristic because Karto's `LinkInfo` API does not identify loop origin.
+- Next action: pull, rebuild `slam_toolbox`, verify `toolbox.launch.py` logs `enabled=false`, verify `toolbox_adaptive.launch.py` logs `enabled=true`, then run ordinary `scripts/nf_basic.py` and inspect stage-1/stage-2 release logs before judging map quality.
+
 ## 2026-08-29 — Treat GOAL_OCCUPIED (206) like NO_VALID_PATH (208)
 
 - What changed:
