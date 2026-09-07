@@ -1,5 +1,4 @@
 diff --git a/solvers/ceres_solver.cpp b/solvers/ceres_solver.cpp
-index 9fd9f8b..temporal-anchor 100644
 --- a/solvers/ceres_solver.cpp
 +++ b/solvers/ceres_solver.cpp
 @@ -1,8 +1,11 @@
