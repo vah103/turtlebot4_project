@@ -2,8 +2,7 @@
 """Run canonical MapEx recorder with launch/oldmap_toolbox.launch.py.
 
 This wrapper does not change the MapEx exploration policy. It only registers the
-old-map-first temporal pose-graph runtime provenance profile before delegating
-to mapex_run.py.
+Old-Map-First V2 SLAM runtime provenance profile before delegating to mapex_run.py.
 """
 
 import sys
@@ -13,16 +12,20 @@ from nf_run import RUNTIME_PROFILES
 
 RUNTIME_PROFILES["oldmap_toolbox"] = {
     "environment": "new_room",
-    "id": "new_room_oldmap_toolbox_v1",
+    "id": "new_room_oldmap_toolbox_v2",
     "note": (
         "New Room benchmark launched with launch/oldmap_toolbox.launch.py using "
-        "scan_buffer_size=30, first-pose hard anchoring, local edge gap<=5, "
-        "temporal weight 5x->1x with decay 70 nodes, and release disabled."
+        "scan_buffer_size=30; weighted sequential scan matching with old>new "
+        "confidence (min=0.25, decay=70), first scan retained as trusted history, "
+        "0.5 m historical keyframes within 3.0 m (max 40); first-pose hard anchor; "
+        "local Ceres edge gap<=5 with 5x->1x decay 70; loop edges 1x; release disabled."
     ),
     "launch_relative": "launch/oldmap_toolbox.launch.py",
     "slam_relative": None,
     "extra_hashes": {
         "oldmap_run_wrapper": "scripts/mapex_oldmap_toolbox_run.py",
+        "oldmap_mapper": "../slam_toolbox/include/slam_toolbox/oldmap_mapper.hpp",
+        "slam_mapper_glue": "../slam_toolbox/src/slam_mapper.cpp",
         "adaptive_ceres_solver": "../slam_toolbox/solvers/ceres_solver.cpp",
     },
 }
