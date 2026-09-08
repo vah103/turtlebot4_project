@@ -41,6 +41,15 @@ find_package(rclcpp_components REQUIRED)
 set(BUILD_SHARED_LIBS ON)
 add_subdirectory(lib/karto_sdk)
 
+# Old-Map-First V2 calls several MapperSensorManager accessors from a
+# different translation unit. Karto defines those accessors as `inline` in
+# Mapper.cpp, so GCC may omit their externally-callable symbols when they are
+# not referenced from Mapper.cpp itself. Keep the inline functions emitted in
+# the shared Karto library so slam_mapper.cpp can link against them.
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(kartoSlamToolbox PRIVATE -fkeep-inline-functions)
+endif()
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(dependencies
