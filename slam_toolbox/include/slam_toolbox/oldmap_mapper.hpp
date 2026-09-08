@@ -1,10 +1,15 @@
 /*
  * Old-map-first scan-matching diagnostic for slam_toolbox.
  *
- * This mapper keeps upstream Karto graph construction and loop closure intact,
- * but changes the sequential/local scan-matching reference grid when explicitly
- * enabled. Earlier scans contribute more strongly than later scans, while the
- * first pose remains hard-fixed by the existing Ceres solver behavior.
+ * This mapper keeps upstream Karto loop closure intact, but changes the
+ * sequential/local scan-matching reference grid when explicitly enabled.
+ * Earlier scans contribute more strongly than later scans, while the first
+ * pose remains hard-fixed by the existing Ceres solver behavior.
+ *
+ * The enabled path mirrors Karto's normal AddEdges topology, with one intended
+ * difference: local near-chain matching uses the same temporal weighted
+ * correlation rule as the initial sequential match. Loop-closure matching is
+ * deliberately left upstream/unweighted.
  */
 
 #ifndef SLAM_TOOLBOX__OLDMAP_MAPPER_HPP_
@@ -12,6 +17,8 @@
 
 #include <algorithm>
 #include <cmath>
+#include <iterator>
+#include <list>
 #include <set>
 #include <vector>
 
@@ -106,6 +113,8 @@ public:
     karto::Matrix3 cov;
     cov.SetToIdentity();
 
+    // Initial sequential/local correction uses recent scans plus trusted
+    // spatially relevant historical keyframes, with old > new confidence.
     if (m_pUseScanMatching->GetValue() && pLastScan != nullptr) {
       karto::Pose2 bestPose;
       karto::LocalizedRangeScanVector references;
@@ -113,7 +122,7 @@ public:
       BuildReferenceSet(pScan, references, weights);
 
       if (!references.empty()) {
-        WeightedMatchScan(pScan, references, weights, bestPose, cov);
+        WeightedMatchScan(pScan, references, weights, bestPose, cov, true);
       } else {
         // Defensive fallback: preserve upstream behavior if no weighted
         // reference can be constructed for an otherwise valid scan.
@@ -130,12 +139,16 @@ public:
       }
     }
 
-    // The rest is intentionally identical to upstream Mapper::Process().
     m_pMapperSensorManager->AddScan(pScan);
 
     if (m_pUseScanMatching->GetValue()) {
       m_pGraph->AddVertex(pScan);
-      m_pGraph->AddEdges(pScan, cov);
+
+      // Mirror Karto AddEdges, but route LinkNearChains through the weighted
+      // old-map-first matcher so every local matching stage follows the same
+      // temporal hierarchy. Loop closure below remains untouched.
+      AddEdgesOldMap(pScan, cov);
+
       m_pMapperSensorManager->AddRunningScan(pScan);
 
       if (m_pDoLoopClosing->GetValue()) {
@@ -158,6 +171,40 @@ private:
       -static_cast<kt_double>(age) / oldmap_scan_decay_nodes_);
     return oldmap_scan_min_confidence_ +
            (1.0 - oldmap_scan_min_confidence_) * alpha;
+  }
+
+  void NormalizeRawWeights(
+    const std::vector<kt_double> & raw_weights,
+    std::vector<kt_double> & normalized_weights) const
+  {
+    normalized_weights.clear();
+    if (raw_weights.empty()) {
+      return;
+    }
+
+    // Normalize by the strongest active reference. The oldest active scan gets
+    // weight 1.0, while later scans keep the strict temporal ordering below it.
+    // This avoids globally shrinking match responses when only late scans are
+    // available in a newly explored region.
+    const kt_double max_raw = *std::max_element(raw_weights.begin(), raw_weights.end());
+    const kt_double denominator = std::max<kt_double>(max_raw, 1e-6);
+    normalized_weights.reserve(raw_weights.size());
+    for (kt_double raw : raw_weights) {
+      normalized_weights.push_back(
+        std::max<kt_double>(0.01, std::min<kt_double>(1.0, raw / denominator)));
+    }
+  }
+
+  void BuildWeightsForReferences(
+    const karto::LocalizedRangeScanVector & references,
+    std::vector<kt_double> & normalized_weights) const
+  {
+    std::vector<kt_double> raw_weights;
+    raw_weights.reserve(references.size());
+    for (karto::LocalizedRangeScan * scan : references) {
+      raw_weights.push_back(scan != nullptr ? RawConfidence(scan) : 0.01);
+    }
+    NormalizeRawWeights(raw_weights, normalized_weights);
   }
 
   void AddReference(
@@ -251,21 +298,7 @@ private:
       }
     }
 
-    if (references.empty()) {
-      return;
-    }
-
-    // Use global age confidence for relative ordering, then normalize by the
-    // strongest active reference. This keeps S1>S2>S3... when old history is
-    // present without collapsing the absolute scan-matcher response when the
-    // robot is exploring only a new region.
-    const kt_double max_raw = *std::max_element(raw_weights.begin(), raw_weights.end());
-    const kt_double denominator = std::max<kt_double>(max_raw, 1e-6);
-    normalized_weights.reserve(raw_weights.size());
-    for (kt_double raw : raw_weights) {
-      normalized_weights.push_back(
-        std::max<kt_double>(0.01, std::min<kt_double>(1.0, raw / denominator)));
-    }
+    NormalizeRawWeights(raw_weights, normalized_weights);
   }
 
   karto::PointVectorDouble FindValidPointsWeighted(
@@ -358,7 +391,8 @@ private:
     const karto::LocalizedRangeScanVector & references,
     const std::vector<kt_double> & weights,
     karto::Pose2 & mean,
-    karto::Matrix3 & covariance)
+    karto::Matrix3 & covariance,
+    kt_bool do_penalize)
   {
     karto::Pose2 scan_pose = pScan->GetSensorPose();
     if (pScan->GetNumberOfRangeReadings() == 0) {
@@ -411,7 +445,7 @@ private:
       coarse_search_resolution,
       m_pCoarseSearchAngleOffset->GetValue(),
       m_pCoarseAngleResolution->GetValue(),
-      true,
+      do_penalize,
       mean,
       covariance,
       false);
@@ -429,7 +463,7 @@ private:
           coarse_search_resolution,
           expanded_angle,
           m_pCoarseAngleResolution->GetValue(),
-          true,
+          do_penalize,
           mean,
           covariance,
           false);
@@ -449,12 +483,322 @@ private:
       fine_search_resolution,
       0.5 * m_pCoarseAngleResolution->GetValue(),
       m_pFineSearchAngleOffset->GetValue(),
-      true,
+      do_penalize,
       mean,
       covariance,
       true);
 
     return std::min<kt_double>(1.0, best_response);
+  }
+
+  karto::LocalizedRangeScan * GetClosestScanToPoseOldMap(
+    const karto::LocalizedRangeScanVector & scans,
+    const karto::Pose2 & pose) const
+  {
+    karto::LocalizedRangeScan * closest_scan = nullptr;
+    kt_double best_squared_distance = DBL_MAX;
+
+    for (karto::LocalizedRangeScan * scan : scans) {
+      if (scan == nullptr) {
+        continue;
+      }
+      const karto::Pose2 scan_pose = scan->GetReferencePose(
+        m_pUseScanBarycenter->GetValue());
+      const kt_double squared_distance =
+        pose.GetPosition().SquaredDistance(scan_pose.GetPosition());
+      if (squared_distance < best_squared_distance) {
+        best_squared_distance = squared_distance;
+        closest_scan = scan;
+      }
+    }
+
+    return closest_scan;
+  }
+
+  void LinkScansOldMap(
+    karto::LocalizedRangeScan * from_scan,
+    karto::LocalizedRangeScan * to_scan,
+    const karto::Pose2 & mean,
+    const karto::Matrix3 & covariance)
+  {
+    if (from_scan == nullptr || to_scan == nullptr) {
+      return;
+    }
+
+    kt_bool is_new_edge = true;
+    karto::Edge<karto::LocalizedRangeScan> * edge =
+      m_pGraph->AddEdge(from_scan, to_scan, is_new_edge);
+    if (edge == nullptr || !is_new_edge) {
+      return;
+    }
+
+    edge->SetLabel(new karto::LinkInfo(
+      from_scan->GetCorrectedPose(),
+      to_scan->GetCorrectedAt(mean),
+      covariance));
+    if (m_pScanOptimizer != nullptr) {
+      m_pScanOptimizer->AddConstraint(edge);
+    }
+  }
+
+  void LinkChainToScanOldMap(
+    const karto::LocalizedRangeScanVector & chain,
+    karto::LocalizedRangeScan * pScan,
+    const karto::Pose2 & mean,
+    const karto::Matrix3 & covariance)
+  {
+    if (chain.empty()) {
+      return;
+    }
+
+    const karto::Pose2 pose = pScan->GetReferencePose(
+      m_pUseScanBarycenter->GetValue());
+    karto::LocalizedRangeScan * closest_scan =
+      GetClosestScanToPoseOldMap(chain, pose);
+    if (closest_scan == nullptr) {
+      return;
+    }
+
+    const karto::Pose2 closest_pose = closest_scan->GetReferencePose(
+      m_pUseScanBarycenter->GetValue());
+    const kt_double squared_distance =
+      pose.GetPosition().SquaredDistance(closest_pose.GetPosition());
+    if (squared_distance <
+      karto::math::Square(m_pLinkScanMaximumDistance->GetValue()) + KT_TOLERANCE)
+    {
+      LinkScansOldMap(closest_scan, pScan, mean, covariance);
+    }
+  }
+
+  std::vector<karto::LocalizedRangeScanVector> FindNearChainsOldMap(
+    karto::LocalizedRangeScan * pScan)
+  {
+    std::vector<karto::LocalizedRangeScanVector> near_chains;
+    const karto::Pose2 scan_pose = pScan->GetReferencePose(
+      m_pUseScanBarycenter->GetValue());
+
+    karto::LocalizedRangeScanVector processed;
+    const karto::LocalizedRangeScanVector near_linked_scans =
+      m_pGraph->FindNearLinkedScans(
+        pScan, m_pLinkScanMaximumDistance->GetValue());
+
+    for (karto::LocalizedRangeScan * near_scan : near_linked_scans) {
+      if (near_scan == nullptr || near_scan == pScan) {
+        continue;
+      }
+      if (std::find(processed.begin(), processed.end(), near_scan) != processed.end()) {
+        continue;
+      }
+
+      processed.push_back(near_scan);
+      bool is_valid_chain = true;
+      std::list<karto::LocalizedRangeScan *> chain;
+
+      for (kt_int32s candidate_num = near_scan->GetStateId() - 1;
+        candidate_num >= 0; --candidate_num)
+      {
+        karto::LocalizedRangeScan * candidate =
+          m_pMapperSensorManager->GetScan(near_scan->GetSensorName(), candidate_num);
+        if (candidate == pScan) {
+          is_valid_chain = false;
+        }
+        if (candidate == nullptr) {
+          continue;
+        }
+
+        const karto::Pose2 candidate_pose = candidate->GetReferencePose(
+          m_pUseScanBarycenter->GetValue());
+        const kt_double squared_distance =
+          scan_pose.GetPosition().SquaredDistance(candidate_pose.GetPosition());
+        if (squared_distance <
+          karto::math::Square(m_pLinkScanMaximumDistance->GetValue()) + KT_TOLERANCE)
+        {
+          chain.push_front(candidate);
+          processed.push_back(candidate);
+        } else {
+          break;
+        }
+      }
+
+      chain.push_back(near_scan);
+
+      const kt_int32u end = static_cast<kt_int32u>(
+        m_pMapperSensorManager->GetScans(near_scan->GetSensorName()).size());
+      for (kt_int32u candidate_num =
+          static_cast<kt_int32u>(near_scan->GetStateId() + 1);
+        candidate_num < end; ++candidate_num)
+      {
+        karto::LocalizedRangeScan * candidate =
+          m_pMapperSensorManager->GetScan(near_scan->GetSensorName(), candidate_num);
+        if (candidate == pScan) {
+          is_valid_chain = false;
+        }
+        if (candidate == nullptr) {
+          continue;
+        }
+
+        const karto::Pose2 candidate_pose = candidate->GetReferencePose(
+          m_pUseScanBarycenter->GetValue());
+        const kt_double squared_distance =
+          scan_pose.GetPosition().SquaredDistance(candidate_pose.GetPosition());
+        if (squared_distance <
+          karto::math::Square(m_pLinkScanMaximumDistance->GetValue()) + KT_TOLERANCE)
+        {
+          chain.push_back(candidate);
+          processed.push_back(candidate);
+        } else {
+          break;
+        }
+      }
+
+      if (is_valid_chain) {
+        karto::LocalizedRangeScanVector temp_chain;
+        std::copy(chain.begin(), chain.end(), std::back_inserter(temp_chain));
+        near_chains.push_back(temp_chain);
+      }
+    }
+
+    return near_chains;
+  }
+
+  karto::Pose2 ComputeWeightedMeanOldMap(
+    const karto::Pose2Vector & means,
+    const std::vector<karto::Matrix3> & covariances) const
+  {
+    assert(means.size() == covariances.size());
+
+    std::vector<karto::Matrix3> inverses;
+    inverses.reserve(covariances.size());
+    karto::Matrix3 sum_of_inverses;
+    for (const karto::Matrix3 & covariance : covariances) {
+      karto::Matrix3 inverse = covariance.Inverse();
+      inverses.push_back(inverse);
+      sum_of_inverses += inverse;
+    }
+    const karto::Matrix3 inverse_of_sum = sum_of_inverses.Inverse();
+
+    karto::Pose2 accumulated_pose;
+    kt_double theta_x = 0.0;
+    kt_double theta_y = 0.0;
+    for (std::size_t i = 0; i < means.size(); ++i) {
+      const karto::Pose2 pose = means[i];
+      const kt_double angle = pose.GetHeading();
+      theta_x += std::cos(angle);
+      theta_y += std::sin(angle);
+
+      const karto::Matrix3 weight = inverse_of_sum * inverses[i];
+      accumulated_pose += weight * pose;
+    }
+
+    theta_x /= means.size();
+    theta_y /= means.size();
+    accumulated_pose.SetHeading(std::atan2(theta_y, theta_x));
+    return accumulated_pose;
+  }
+
+  void LinkNearChainsOldMap(
+    karto::LocalizedRangeScan * pScan,
+    karto::Pose2Vector & means,
+    std::vector<karto::Matrix3> & covariances)
+  {
+    const std::vector<karto::LocalizedRangeScanVector> near_chains =
+      FindNearChainsOldMap(pScan);
+
+    for (const karto::LocalizedRangeScanVector & chain : near_chains) {
+      if (chain.size() < m_pLoopMatchMinimumChainSize->GetValue()) {
+        continue;
+      }
+
+      std::vector<kt_double> weights;
+      BuildWeightsForReferences(chain, weights);
+
+      karto::Pose2 mean;
+      karto::Matrix3 covariance;
+      const kt_double response = WeightedMatchScan(
+        pScan, chain, weights, mean, covariance, false);
+
+      if (response > m_pLinkMatchMinimumResponseFine->GetValue() - KT_TOLERANCE) {
+        means.push_back(mean);
+        covariances.push_back(covariance);
+        LinkChainToScanOldMap(chain, pScan, mean, covariance);
+      }
+    }
+  }
+
+  void AddEdgesOldMap(
+    karto::LocalizedRangeScan * pScan,
+    const karto::Matrix3 & covariance)
+  {
+    karto::MapperSensorManager * sensor_manager = m_pMapperSensorManager;
+    const karto::Name sensor_name = pScan->GetSensorName();
+
+    // Same first edge as Karto: always link the accepted scan to the previous
+    // scan for this sensor.
+    const kt_int32s previous_scan_num = pScan->GetStateId() - 1;
+    if (sensor_manager->GetLastScan(sensor_name) != nullptr) {
+      assert(previous_scan_num >= 0);
+      karto::LocalizedRangeScan * previous_scan =
+        sensor_manager->GetScan(sensor_name, previous_scan_num);
+      if (previous_scan == nullptr) {
+        return;
+      }
+      LinkScansOldMap(previous_scan, pScan, pScan->GetSensorPose(), covariance);
+    }
+
+    karto::Pose2Vector means;
+    std::vector<karto::Matrix3> covariances;
+
+    if (sensor_manager->GetLastScan(sensor_name) == nullptr) {
+      // Preserve upstream multi-sensor initialization behavior. This project
+      // normally has one laser, but keeping this branch avoids changing Karto
+      // semantics unnecessarily.
+      assert(sensor_manager->GetScans(sensor_name).size() == 1);
+      const std::vector<karto::Name> device_names = sensor_manager->GetSensorNames();
+      for (const karto::Name & candidate_sensor_name : device_names) {
+        if (candidate_sensor_name == sensor_name ||
+          sensor_manager->GetScans(candidate_sensor_name).empty())
+        {
+          continue;
+        }
+
+        karto::Pose2 best_pose;
+        karto::Matrix3 candidate_covariance;
+        const kt_double response =
+          m_pSequentialScanMatcher->MatchScan<karto::LocalizedRangeScanMap>(
+            pScan,
+            sensor_manager->GetScans(candidate_sensor_name),
+            best_pose,
+            candidate_covariance);
+
+        LinkScansOldMap(
+          sensor_manager->GetScan(candidate_sensor_name, 0),
+          pScan,
+          best_pose,
+          candidate_covariance);
+
+        if (response > m_pLinkMatchMinimumResponseFine->GetValue()) {
+          means.push_back(best_pose);
+          covariances.push_back(candidate_covariance);
+        }
+      }
+    } else {
+      const karto::Pose2 scan_pose = pScan->GetSensorPose();
+      means.push_back(scan_pose);
+      covariances.push_back(covariance);
+      LinkChainToScanOldMap(
+        sensor_manager->GetRunningScans(sensor_name),
+        pScan,
+        scan_pose,
+        covariance);
+    }
+
+    // Intentional V2 change: near-chain local matching now uses temporal
+    // old>new confidence instead of Karto's unweighted MatchScan().
+    LinkNearChainsOldMap(pScan, means, covariances);
+
+    if (!means.empty()) {
+      pScan->SetSensorPose(ComputeWeightedMeanOldMap(means, covariances));
+    }
   }
 
   bool oldmap_scan_weighting_enabled_;
