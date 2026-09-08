@@ -389,14 +389,20 @@ private:
       }
     }
 
-    const karto::Vector2<kt_double> search_dimensions(
-      static_cast<kt_double>(roi.GetWidth()),
-      static_cast<kt_double>(roi.GetHeight()));
+    // Match Karto's original search-space geometry. The correlation grid ROI
+    // is intentionally much larger because it includes laser-range margins;
+    // using ROI width here would incorrectly make the pose search enormous.
+    const kt_double search_dimension =
+      m_pCorrelationSearchSpaceDimension->GetValue();
+    const kt_double search_resolution = grid->GetResolution();
+    const kt_int32u search_side_cells = static_cast<kt_int32u>(
+      karto::math::Round(search_dimension / search_resolution) + 1);
+    const kt_double search_half_extent =
+      0.5 * (static_cast<kt_double>(search_side_cells) - 1.0) * search_resolution;
     const karto::Vector2<kt_double> coarse_search_offset(
-      0.5 * (search_dimensions.GetX() - 1) * grid->GetResolution(),
-      0.5 * (search_dimensions.GetY() - 1) * grid->GetResolution());
+      search_half_extent, search_half_extent);
     const karto::Vector2<kt_double> coarse_search_resolution(
-      2 * grid->GetResolution(), 2 * grid->GetResolution());
+      2 * search_resolution, 2 * search_resolution);
 
     kt_double best_response = m_pSequentialScanMatcher->CorrelateScan(
       pScan,
@@ -435,7 +441,7 @@ private:
 
     const karto::Vector2<kt_double> fine_search_offset(coarse_search_resolution * 0.5);
     const karto::Vector2<kt_double> fine_search_resolution(
-      grid->GetResolution(), grid->GetResolution());
+      search_resolution, search_resolution);
     best_response = m_pSequentialScanMatcher->CorrelateScan(
       pScan,
       mean,
