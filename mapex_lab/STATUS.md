@@ -14,9 +14,10 @@
 - `launch/submap.launch.py`: segmented local ICP frontend (`scripts/submap.py`) + SLAM Toolbox + Nav2. It reuses `config/slam.yaml` and overrides the scan topic at launch time.
 - `launch/toolbox.launch.py`: conservative Toolbox A/B baseline. The vendored Ceres solver contains Adaptive Anchor V1 code but this launch explicitly sets `adaptive_anchor_enabled=false`, so ordinary Toolbox constraint weights remain unchanged.
 - `launch/new_toolbox.launch.py`: Adaptive Temporal Anchor V1 diagnostic. It uses `scan_buffer_size=30`, strict sequential temporal edges (`node_gap<=1`) with `w(n)=1+2*exp(-n/50)`, and strong-loop regional release `1.0 -> 0.5 -> 0.0`.
-- `launch/oldmap_toolbox.launch.py`: new old-map-first V1 diagnostic. The first node remains hard-fixed by upstream Ceres, local edges with `node_gap<=5` use `w(n)=1+4*exp(-n/70)` (`5x -> 1x`), long-gap/loop edges remain `1x`, `scan_buffer_size=30`, and adaptive release is disabled with release factors `1.0 -> 1.0` so early constraints are not weakened by the adaptive fallback.
+- `launch/oldmap_toolbox.launch.py`: current Old-Map-First V2 diagnostic. It applies old>new confidence at both sequential scan matching and Ceres pose-graph levels. The local matcher keeps the normal recent buffer (`30` scans), adds nearby trusted historical keyframes (`0.5 m` spacing, `3.0 m` radius, max `40`), retains scan 1 as trusted history, and uses `c_raw(i)=0.25+0.75*exp(-i/70)` with active-reference normalization. The first node remains hard-fixed by Ceres; local edges with `node_gap<=5` use `w(n)=1+4*exp(-n/70)` (`5x -> 1x`); long-gap/loop edges remain `1x`; adaptive release is disabled with `1.0 -> 1.0`.
 - `src/slam/adaptive_anchor_v1.md`: exact Adaptive V1 algorithm, parameters, fallback edge classification, release logic and validation checklist.
-- `src/slam/oldmap_anchor_v1.md`: exact old-map-first V1 idea, parameters, expected behavior, limitations and runtime validation checklist.
+- `src/slam/oldmap_anchor_v1.md`: historical pose-graph-only Old-Map-First V1 diagnostic.
+- `src/slam/oldmap_anchor_v2.md`: current two-layer Old-Map-First V2 algorithm, weighted local scan matcher, temporal Ceres policy, limitations and validation checklist.
 - `src/slam/temporal_anchor_ceres.patch`: earlier fixed soft-anchor prototype retained only as historical diagnostic material; its obsolete launch file has been removed.
 - `scripts/apply_hard_chain.py`: earlier strict hard-chain diagnostic helper retained only for history; its obsolete launch file has been removed. The first runtime test was not satisfactory and this is no longer the current direction.
 - The launchers use world-specific automatic spawn resolution; New Room is the default world while Hospital remains selectable explicitly where supported.
@@ -30,8 +31,9 @@
 - `scripts/mapex_run.py` adds MapEx recording, saved prediction maps, environment-aware coverage, and post-run IoU/TU evaluation.
 - `scripts/nf_new_toolbox_run.py` registers `new_room_new_toolbox_adaptive_v1_buffer30` provenance and records Nearest runs under `launch/new_toolbox.launch.py` without changing the policy.
 - `scripts/mapex_new_toolbox_run.py` registers the same `new_room_new_toolbox_adaptive_v1_buffer30` provenance for MapEx.
-- `scripts/nf_oldmap_toolbox_run.py` registers `new_room_oldmap_toolbox_v1` provenance and records Nearest runs under `launch/oldmap_toolbox.launch.py` without changing the policy.
-- `scripts/mapex_oldmap_toolbox_run.py` registers the same `new_room_oldmap_toolbox_v1` provenance for MapEx.
+- `scripts/nf_oldmap_toolbox_run.py` registers `new_room_oldmap_toolbox_v2` provenance and hashes the V2 matcher/glue/Ceres implementation.
+- `scripts/mapex_oldmap_toolbox_run.py` registers the same `new_room_oldmap_toolbox_v2` provenance for MapEx.
+- Old-Map-First V1 and V2 runs must not be mixed because V2 changes C++ sequential scan matching in addition to the pose-graph weighting.
 - New Room uses the generated `new_room_connected_free_v1` ROI and `new_room_structural_gt_v1` structural ground truth.
 
 ## Ground truth / evaluation
@@ -48,26 +50,27 @@
 - `launch/submap.launch.py` now also defaults to `new_room`, while retaining its segmented local scan frontend. Hospital remains selectable explicitly.
 - For the current auxiliary New Room smoke test, `config/nav2.yaml` allows `velocity_smoother` linear commands up to `±0.75 m/s` while keeping angular commands at `±1.9 rad/s`; the Gazebo Create3 hard linear cap remains `0.8 m/s`. This speed setting is not yet validated as a formal Hospital benchmark setting.
 
-## Adaptive Anchor V1 implementation state
+## Old-Map-First V2 implementation state
 
-- Vendored `slam_toolbox/solvers/ceres_solver.cpp` contains the current Adaptive V1 implementation and defaults to disabled.
-- The first graph node is already set constant by upstream Ceres behavior.
-- Temporal local edges use the existing age-weight function, and launch profiles choose `max_weight`, `decay_nodes`, and `local_edge_max_gap`.
-- Karto covariance already forms the Ceres information matrix; no second covariance multiplier is used.
-- Since `karto::LinkInfo` does not expose an edge-origin type through the ScanSolver API, temporal-local and loop-like edges are classified by node-gap heuristics.
-- `new_toolbox` keeps the original Adaptive V1 release behavior.
-- `oldmap_toolbox` deliberately reuses the same solver implementation but sets release factors to `1.0 -> 1.0`; therefore strong-loop evidence cannot reduce its temporal local weights. This avoids a Ceres source change for the first old-map-first test and isolates the weighting policy cleanly.
-- `oldmap_toolbox` expands local weighting to `node_gap<=5`, starts early local information at `5x`, and decays with `70` nodes. This is intended to make the old part of the trajectory progressively stiffer than the new part while leaving loop constraints at ordinary `1x`.
-- The vendored `slam_toolbox` previously compiled successfully on `com1`. The new old-map launch does not modify C++ and therefore does not require another build; runtime validation is still pending.
+- `slam_toolbox/include/slam_toolbox/oldmap_mapper.hpp` adds `OldMapMapper`, a subclass of `karto::Mapper` whose weighted sequential matcher is disabled by default.
+- `slam_toolbox/src/slam_mapper.cpp` now constructs `OldMapMapper` as a strict superset of the upstream mapper and exposes the V2 ROS parameters. Because `oldmap_scan_weighting_enabled` defaults to `false`, `toolbox`, `new_toolbox`, and other profiles call upstream `karto::Mapper::Process()` unchanged.
+- When enabled by `oldmap_toolbox.launch.py`, each ordinary sequential match uses the normal recent running scans plus sparse historical keyframes near the predicted pose. The first scan is retained as a historical keyframe but participates directly only when spatially relevant.
+- Raw scan confidence is `c_raw(i)=0.25+0.75*exp(-i/70)`. Active reference weights are divided by the strongest active raw confidence, preserving old>new ordering while preventing matcher response from collapsing in regions where only late scans are available.
+- The custom correlation grid keeps Karto's Gaussian smear shape but scales each reference scan's kernel amplitude by its active temporal confidence. Grid fusion remains max-based.
+- Coarse/fine pose search, odometry penalty, covariance calculation, graph construction, near-chain links and loop-closure matcher remain Karto mechanisms. Loop closure is deliberately not temporal-weighted so it remains an independent source of evidence.
+- Vendored `slam_toolbox/solvers/ceres_solver.cpp` still provides the pose-graph half of the method: first node constant, local edge `node_gap<=5`, `5x -> 1x` decay over `70` nodes, loop/long-gap edges `1x`, no release under this profile.
+- This V2 **does modify C++** and therefore requires rebuilding the vendored `slam_toolbox` before runtime testing.
+- Compile/runtime validation on `com1` is still pending for V2. The previous successful build only validated the earlier Ceres implementation, not the new weighted matcher.
 - These remain diagnostic experiments and do **not** modify `hospital_v2` official benchmark protocol.
 
 ## In progress / next action
 
-- Pull the new `oldmap_toolbox` launch and run a clean New Room smoke test before collecting formal-looking repeated runs.
-- Verify startup log reports approximately `weight=5.00->1.00`, `decay=70.0`, `local_gap<=5`, and `release=1.00->1.00`.
-- Verify first node remains constant, local gap 2..5 edges receive temporal weight, and long-gap edges remain `1x`.
-- Drive/explore far enough to revisit early mapped space and compare whether early walls remain more stable than under `new_toolbox`.
-- If valid loop closure cannot correct the recent trajectory enough, first reduce `adaptive_anchor_max_weight` or `adaptive_anchor_decay_nodes`; do not add a new release mechanism until the basic old-map-first hypothesis is evaluated.
+- Pull current `main`, rebuild only vendored `slam_toolbox` sequentially on `com1`, then verify the workspace package is being used.
+- Launch `oldmap_toolbox.launch.py` and verify startup reports `Old-map sequential matcher: enabled=true, min_conf=0.25, decay=70.0, keep_first=true, keyframe_dist=0.50, history_radius=3.00, history_max=40`.
+- Verify Ceres startup reports approximately `weight=5.00->1.00`, `decay=70.0`, `local_gap<=5`, and `release=1.00->1.00`.
+- Run `nf_basic.py` first rather than a recorder. Check that mapping starts normally, the first node remains constant, and no weighted-matcher assertion/correlation-grid error occurs.
+- Drive/explore far enough to revisit early mapped space and compare whether early walls remain more stable while the recent trajectory is pulled back toward trusted history.
+- If historical matching creates false attraction in repeated geometry, reduce `oldmap_history_search_radius` or historical keyframe density before changing Ceres weights.
+- If valid loop closure cannot correct the recent trajectory enough, first reduce `adaptive_anchor_max_weight` or `adaptive_anchor_decay_nodes`; do not add a release mechanism until the two-layer hypothesis is evaluated.
 - Only after the smoke test is stable, collect repeated Nearest/MapEx runs with `nf_oldmap_toolbox_run.py` / `mapex_oldmap_toolbox_run.py`, restarting simulation/SLAM fresh before every run.
-- Do not mix `toolbox`, `new_toolbox`, and `oldmap_toolbox` results under the same runtime provenance.
-- Runtime-smoke-test the New Room recording profile end-to-end: confirm auto-generated GT/ROI, numeric Coverage, and final evaluation artifacts before treating results as research evidence.
+- Do not mix `toolbox`, `new_toolbox`, Old-Map V1, and Old-Map V2 results under the same runtime provenance.
