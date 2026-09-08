@@ -1,20 +1,21 @@
 """Launch TurtleBot4 with Old-Map-First V2.
 
-This diagnostic profile keeps the normal SLAM Toolbox graph construction,
-near-chain links, loop-closure detector, whole-graph Ceres optimization,
-New Room simulation and Nav2 behavior. Old-map-first confidence is applied at
-two layers:
+This diagnostic profile keeps the normal SLAM Toolbox loop-closure detector,
+whole-graph Ceres optimization, New Room simulation and Nav2 behavior.
+Old-map-first confidence is applied at two layers:
 
-1. Sequential/local scan matching:
-   - keep the normal recent running buffer (30 scans);
-   - add sparse historical keyframes near the predicted current pose;
-   - retain the first scan as a trusted historical keyframe;
+1. Local scan matching:
+   - the initial sequential/local match keeps the normal recent running buffer
+     (30 scans) and adds sparse historical keyframes near the predicted pose;
+   - the first scan is retained as a trusted historical keyframe;
    - earlier reference scans contribute more strongly than later scans using
      c(i) = c_min + (1-c_min) * exp(-i / 70), c_min=0.25;
    - active confidences are normalized by the strongest active reference so
      relative order S1>S2>S3... is preserved without collapsing matcher
      response when only late scans are locally available;
-   - loop-closure matching itself stays upstream/unweighted.
+   - OldMapMapper mirrors Karto AddEdges topology, but the local near-chain
+     MatchScan step also uses the same old>new weighted correlation rule;
+   - loop-closure coarse/fine matching itself stays upstream/unweighted.
 
 2. Pose-graph optimization:
    - the first scan pose remains hard-fixed exactly as upstream Ceres does;
