@@ -20,6 +20,7 @@
 
 #include <memory>
 #include "slam_toolbox/slam_mapper.hpp"
+#include "slam_toolbox/oldmap_mapper.hpp"
 
 namespace mapper_utils
 {
@@ -28,7 +29,10 @@ namespace mapper_utils
 SMapper::SMapper()
 /*****************************************************************************/
 {
-  mapper_ = std::make_unique<karto::Mapper>();
+  // OldMapMapper is a strict superset of karto::Mapper. Its custom sequential
+  // matcher is disabled by default, so stock launch profiles keep upstream
+  // behavior until oldmap_scan_weighting_enabled is explicitly set.
+  mapper_ = std::make_unique<OldMapMapper>();
 }
 
 /*****************************************************************************/
@@ -150,6 +154,78 @@ void SMapper::configure(const NodeT & node)
     scan_buffer_maximum_scan_distance = 10;
   }
   mapper_->setParamScanBufferMaximumScanDistance(scan_buffer_maximum_scan_distance);
+
+  // Old-map-first sequential scan-matching parameters. These are inert for
+  // stock/new_toolbox because the enable flag defaults to false.
+  bool oldmap_scan_weighting_enabled = false;
+  if (!node->has_parameter("oldmap_scan_weighting_enabled")) {
+    node->declare_parameter("oldmap_scan_weighting_enabled", oldmap_scan_weighting_enabled);
+  }
+  node->get_parameter("oldmap_scan_weighting_enabled", oldmap_scan_weighting_enabled);
+
+  double oldmap_scan_min_confidence = 0.25;
+  if (!node->has_parameter("oldmap_scan_min_confidence")) {
+    node->declare_parameter("oldmap_scan_min_confidence", oldmap_scan_min_confidence);
+  }
+  node->get_parameter("oldmap_scan_min_confidence", oldmap_scan_min_confidence);
+
+  double oldmap_scan_decay_nodes = 70.0;
+  if (!node->has_parameter("oldmap_scan_decay_nodes")) {
+    node->declare_parameter("oldmap_scan_decay_nodes", oldmap_scan_decay_nodes);
+  }
+  node->get_parameter("oldmap_scan_decay_nodes", oldmap_scan_decay_nodes);
+
+  bool oldmap_keep_first_scan = true;
+  if (!node->has_parameter("oldmap_keep_first_scan")) {
+    node->declare_parameter("oldmap_keep_first_scan", oldmap_keep_first_scan);
+  }
+  node->get_parameter("oldmap_keep_first_scan", oldmap_keep_first_scan);
+
+  double oldmap_keyframe_distance = 0.5;
+  if (!node->has_parameter("oldmap_keyframe_distance")) {
+    node->declare_parameter("oldmap_keyframe_distance", oldmap_keyframe_distance);
+  }
+  node->get_parameter("oldmap_keyframe_distance", oldmap_keyframe_distance);
+
+  double oldmap_history_search_radius = 3.0;
+  if (!node->has_parameter("oldmap_history_search_radius")) {
+    node->declare_parameter("oldmap_history_search_radius", oldmap_history_search_radius);
+  }
+  node->get_parameter("oldmap_history_search_radius", oldmap_history_search_radius);
+
+  int oldmap_history_max_keyframes = 40;
+  if (!node->has_parameter("oldmap_history_max_keyframes")) {
+    node->declare_parameter("oldmap_history_max_keyframes", oldmap_history_max_keyframes);
+  }
+  node->get_parameter("oldmap_history_max_keyframes", oldmap_history_max_keyframes);
+
+  OldMapMapper * oldmap_mapper = dynamic_cast<OldMapMapper *>(mapper_.get());
+  if (oldmap_mapper != nullptr) {
+    oldmap_mapper->setOldMapScanWeightingEnabled(oldmap_scan_weighting_enabled);
+    oldmap_mapper->setOldMapScanMinConfidence(oldmap_scan_min_confidence);
+    oldmap_mapper->setOldMapScanDecayNodes(oldmap_scan_decay_nodes);
+    oldmap_mapper->setOldMapKeepFirstScan(oldmap_keep_first_scan);
+    oldmap_mapper->setOldMapKeyframeDistance(oldmap_keyframe_distance);
+    oldmap_mapper->setOldMapHistorySearchRadius(oldmap_history_search_radius);
+    oldmap_mapper->setOldMapHistoryMaxKeyframes(oldmap_history_max_keyframes);
+
+    RCLCPP_INFO(
+      node->get_logger(),
+      "Old-map sequential matcher: enabled=%s, min_conf=%.2f, decay=%.1f, "
+      "keep_first=%s, keyframe_dist=%.2f, history_radius=%.2f, history_max=%d",
+      oldmap_scan_weighting_enabled ? "true" : "false",
+      std::max(0.01, std::min(1.0, oldmap_scan_min_confidence)),
+      std::max(1.0, oldmap_scan_decay_nodes),
+      oldmap_keep_first_scan ? "true" : "false",
+      std::max(0.0, oldmap_keyframe_distance),
+      std::max(0.1, oldmap_history_search_radius),
+      std::max(1, oldmap_history_max_keyframes));
+  } else if (oldmap_scan_weighting_enabled) {
+    RCLCPP_WARN(
+      node->get_logger(),
+      "oldmap_scan_weighting_enabled=true but active mapper is not OldMapMapper; "
+      "falling back to upstream scan matching.");
+  }
 
   double link_match_minimum_response_fine = 0.1;
   if (!node->has_parameter("link_match_minimum_response_fine")) {
