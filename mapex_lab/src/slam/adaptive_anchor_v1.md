@@ -7,7 +7,7 @@ Experimental diagnostic SLAM variant for `mapex_lab`. It is **not** part of the 
 Runtime entry point:
 
 ```bash
-ros2 launch mapex_lab/launch/toolbox_adaptive.launch.py
+ros2 launch mapex_lab/launch/new_toolbox.launch.py
 ```
 
 The implementation lives in the vendored `slam_toolbox/solvers/ceres_solver.cpp` and is disabled by default. `toolbox.launch.py` explicitly sets `adaptive_anchor_enabled=false`, so one compiled solver supports a clean Toolbox-vs-Adaptive A/B.
@@ -174,7 +174,7 @@ The only direct optimization change is the information weight of selected sequen
 
 ## 7. Current diagnostic parameters
 
-`toolbox_adaptive.launch.py` uses:
+`new_toolbox.launch.py` uses:
 
 ```yaml
 adaptive_anchor_enabled: true
@@ -201,7 +201,7 @@ Before interpreting map quality, verify runtime behavior in this order:
 
 1. Build the vendored `slam_toolbox` source successfully.
 2. Start `toolbox.launch.py` and verify the solver prints `adaptive anchor V1: enabled=false`.
-3. Start `toolbox_adaptive.launch.py` and verify `enabled=true` with `weight=3.00->1.00` and `decay=50`.
+3. Start `new_toolbox.launch.py` and verify `enabled=true` with `weight=3.00->1.00` and `decay=50`.
 4. Confirm ordinary operation shows local-edge weighting while long-gap evidence edges stay at `1x`.
 5. Confirm no release occurs from a single long-gap edge.
 6. If a stage-1 release occurs, confirm the log reports a finite node interval and `release=0.50`.
