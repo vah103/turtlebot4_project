@@ -3,7 +3,7 @@
 This is an A/B variant of toolbox.launch.py. Simulation, map resolution, Nav2,
 loop-closure thresholds and exploration behavior stay the same as the stable
 Toolbox profile. The intentional SLAM differences are Adaptive Temporal Anchor
-V1 inside the Ceres solver and a larger sequential scan buffer of 20 scans.
+V1 inside the Ceres solver and a larger sequential scan buffer of 30 scans.
 
 V1 policy:
 - keep upstream scan matching, near-chain links, loop closure and whole-graph
@@ -107,7 +107,7 @@ def generate_launch_description() -> LaunchDescription:
             'minimum_time_interval': 0.20,
             'minimum_travel_distance': 0.10,
             'minimum_travel_heading': 0.10,
-            'scan_buffer_size': 20,
+            'scan_buffer_size': 30,
             'do_loop_closing': True,
             'loop_match_minimum_response_coarse': 0.55,
             'loop_match_minimum_response_fine': 0.65,
