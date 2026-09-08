@@ -13,11 +13,11 @@ from nf_run import RUNTIME_PROFILES, main
 
 RUNTIME_PROFILES["new_toolbox"] = {
     "environment": "new_room",
-    "id": "new_room_new_toolbox_adaptive_v1",
+    "id": "new_room_new_toolbox_adaptive_v1_buffer20",
     "note": (
         "New Room benchmark launched with launch/new_toolbox.launch.py using "
-        "vendored SLAM Toolbox + Adaptive Temporal Anchor V1 and the Nav2 "
-        "settings embedded/merged by that launch file."
+        "vendored SLAM Toolbox + Adaptive Temporal Anchor V1, scan_buffer_size=20, "
+        "and the Nav2 settings embedded/merged by that launch file."
     ),
     "launch_relative": "launch/new_toolbox.launch.py",
     "slam_relative": None,
