@@ -15,8 +15,8 @@
 - `launch/toolbox.launch.py`: conservative Toolbox A/B baseline. The vendored Ceres solver now contains Adaptive Anchor V1 code but this launch explicitly sets `adaptive_anchor_enabled=false`, so ordinary Toolbox constraint weights remain unchanged.
 - `launch/new_toolbox.launch.py`: current experimental Adaptive Temporal Anchor V1. It keeps the stable Toolbox scan matching, graph construction, loop closure, whole-graph Ceres optimization, scan cadence, loop thresholds and Nav2 settings. Only strict sequential edges receive `w(n)=1+2*exp(-n/50)` temporal weighting; strong consistent long-gap evidence can regionally release that added weight `1.0 -> 0.5 -> 0.0`.
 - `src/slam/adaptive_anchor_v1.md`: exact current Adaptive V1 algorithm, parameters, fallback edge classification, release logic and validation checklist.
-- `launch/toolbox_anchor.launch.py` + `src/slam/temporal_anchor_ceres.patch`: earlier fixed soft-anchor prototype retained only as historical diagnostic material; it is not the current adaptive implementation.
-- `launch/toolbox_hard_chain.launch.py` + `scripts/apply_hard_chain.py`: earlier strict hard-chain diagnostic. It froze solved history, used `scan_buffer_size=1` and disabled loop closure; the first runtime test was not satisfactory and this is no longer the current direction.
+- `src/slam/temporal_anchor_ceres.patch`: earlier fixed soft-anchor prototype retained only as historical diagnostic material; its obsolete launch file has been removed.
+- `scripts/apply_hard_chain.py`: earlier strict hard-chain diagnostic helper retained only for history; its obsolete launch file has been removed. The first runtime test was not satisfactory and this is no longer the current direction.
 - The launchers use world-specific automatic spawn resolution; New Room is the default world while Hospital remains selectable explicitly where supported.
 - `config/` is intentionally reduced to three source-of-truth files: `nav2.yaml`, `slam.yaml`, and `mapex.yaml`.
 
