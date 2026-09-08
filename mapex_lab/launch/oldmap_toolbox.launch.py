@@ -1,28 +1,34 @@
-"""Launch TurtleBot4 with an old-map-first temporal pose-graph profile.
+"""Launch TurtleBot4 with Old-Map-First V2.
 
-This diagnostic profile keeps the normal SLAM Toolbox / Karto scan matcher,
-near-chain graph construction, loop closure, whole-graph Ceres optimization,
-New Room simulation and Nav2 behavior. It changes only how local pose-graph
-constraints are weighted.
+This diagnostic profile keeps the normal SLAM Toolbox graph construction,
+near-chain links, loop-closure detector, whole-graph Ceres optimization,
+New Room simulation and Nav2 behavior. Old-map-first confidence is applied at
+two layers:
 
-Old-map-first V1 policy:
-- the first scan pose remains hard-fixed exactly as upstream Ceres already does;
-- sequential/local constraints with node gap <= 5 receive an age-dependent
-  information boost;
-- w(n) = 1 + 4 * exp(-n / 70), so early local constraints start near 5x and
-  monotonically decay toward ordinary Toolbox 1x;
-- later trajectory is therefore softer than earlier trajectory, so loop
-  correction is encouraged to be absorbed by newer poses first;
-- long-gap / loop constraints are never strengthened and remain at 1x;
-- adaptive release is intentionally disabled in this V1 diagnostic by setting
-  both release factors to 1.0. Loop evidence may still be observed/logged, but
-  it cannot reduce the old-map temporal weights;
-- scan_buffer_size is 30 so each new scan is matched against a broader recent
-  local reference window.
+1. Sequential/local scan matching:
+   - keep the normal recent running buffer (30 scans);
+   - add sparse historical keyframes near the predicted current pose;
+   - retain the first scan as a trusted historical keyframe;
+   - earlier reference scans contribute more strongly than later scans using
+     c(i) = c_min + (1-c_min) * exp(-i / 70), c_min=0.25;
+   - active confidences are normalized by the strongest active reference so
+     relative order S1>S2>S3... is preserved without collapsing matcher
+     response when only late scans are locally available;
+   - loop-closure matching itself stays upstream/unweighted.
 
-Important: later scans are not forced to match the first scan directly. The
-first scan anchors the graph, while the decreasing local-edge weights transmit
-that confidence progressively through the trajectory.
+2. Pose-graph optimization:
+   - the first scan pose remains hard-fixed exactly as upstream Ceres does;
+   - local constraints with node gap <= 5 receive
+     w(n) = 1 + 4 * exp(-n / 70), i.e. early constraints start near 5x and
+     monotonically decay toward ordinary Toolbox 1x;
+   - long-gap / loop constraints remain at 1x;
+   - adaptive release is disabled (1.0 -> 1.0) for this diagnostic, so loop
+     evidence cannot weaken the old-map temporal preference.
+
+The first scan is not forced into every local match. It participates directly
+only when it is spatially relevant to the predicted current pose; otherwise its
+confidence is transmitted progressively through trusted local history and the
+pose graph.
 """
 
 import os
@@ -112,6 +118,17 @@ def generate_launch_description() -> LaunchDescription:
             'loop_search_maximum_distance': 2.0,
             'loop_search_space_dimension': 4.0,
             'loop_match_maximum_variance_coarse': 2.0,
+
+            # Old-Map-First V2 sequential/local scan matcher.
+            'oldmap_scan_weighting_enabled': True,
+            'oldmap_scan_min_confidence': 0.25,
+            'oldmap_scan_decay_nodes': 70.0,
+            'oldmap_keep_first_scan': True,
+            'oldmap_keyframe_distance': 0.5,
+            'oldmap_history_search_radius': 3.0,
+            'oldmap_history_max_keyframes': 40,
+
+            # Old-Map-First pose-graph hierarchy.
             'adaptive_anchor_enabled': True,
             'adaptive_anchor_min_weight': 1.0,
             'adaptive_anchor_max_weight': 5.0,
@@ -124,14 +141,14 @@ def generate_launch_description() -> LaunchDescription:
             'adaptive_anchor_loop_consistency_translation_m': 0.20,
             'adaptive_anchor_loop_consistency_yaw_deg': 3.0,
             'adaptive_anchor_loop_min_mahalanobis_sq': 9.0,
-            # V1 old-map-first: do not release historical temporal weighting.
+            # V2 old-map-first: do not release historical temporal weighting.
             'adaptive_anchor_release_stage1_factor': 1.0,
             'adaptive_anchor_release_stage2_factor': 1.0,
         }
     )
     slam_params = _write_yaml_temp(
         slam_config,
-        prefix='tb4_mapex_slam_toolbox_oldmap_',
+        prefix='tb4_mapex_slam_toolbox_oldmap_v2_',
     )
 
     stock_nav2_params = os.path.join(tb4_nav_pkg, 'config', 'nav2.yaml')
@@ -145,7 +162,7 @@ def generate_launch_description() -> LaunchDescription:
     nav2_merged = _deep_merge(nav2_base, nav2_override)
     nav2_params = _write_yaml_temp(
         nav2_merged,
-        prefix='tb4_toolbox_oldmap_nav2_',
+        prefix='tb4_toolbox_oldmap_v2_nav2_',
     )
 
     use_sim_time = LaunchConfiguration('use_sim_time')
