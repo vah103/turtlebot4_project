@@ -15,10 +15,11 @@ RUNTIME_PROFILES["oldmap_toolbox"] = {
     "id": "new_room_oldmap_toolbox_v2",
     "note": (
         "New Room benchmark launched with launch/oldmap_toolbox.launch.py using "
-        "scan_buffer_size=30; weighted sequential scan matching with old>new "
-        "confidence (min=0.25, decay=70), first scan retained as trusted history, "
-        "0.5 m historical keyframes within 3.0 m (max 40); first-pose hard anchor; "
-        "local Ceres edge gap<=5 with 5x->1x decay 70; loop edges 1x; release disabled."
+        "scan_buffer_size=30; old>new weighted initial and near-chain local scan "
+        "matching (min confidence=0.25, decay=70), first scan retained as trusted "
+        "history, 0.5 m historical keyframes within 3.0 m (max 40); first-pose "
+        "hard anchor; local Ceres edge gap<=5 with 5x->1x decay 70; Karto loop "
+        "matching and loop edges remain unweighted/1x; release disabled."
     ),
     "launch_relative": "launch/oldmap_toolbox.launch.py",
     "slam_relative": None,
