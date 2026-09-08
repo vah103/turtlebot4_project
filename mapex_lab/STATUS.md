@@ -63,12 +63,14 @@
 - Karto loop-closure coarse/fine matching remains upstream/unweighted so it stays an independent source of evidence. Accepted loop constraints remain `1x` in Ceres.
 - Vendored `slam_toolbox/solvers/ceres_solver.cpp` still provides the pose-graph half of the method: first node constant, local edge `node_gap<=5`, `5x -> 1x` decay over `70` nodes, loop/long-gap edges `1x`, no release under this profile.
 - This V2 **modifies C++** and therefore requires rebuilding the vendored `slam_toolbox` before runtime testing.
+- First weighted-near-chain rebuild attempt on `com1` reached the linker but failed because Karto defines several public `MapperSensorManager` accessors as `inline` only in `Mapper.cpp`; the new `OldMapMapper` calls them from `slam_mapper.cpp`, so GCC omitted the externally-callable symbols. `slam_toolbox/CMakeLists.txt` now adds GNU `-fkeep-inline-functions` to `kartoSlamToolbox` so those existing accessors are emitted without changing algorithm behavior. Rebuild validation is pending.
 - Compile/runtime validation on `com1` is still pending for the weighted-near-chain version. The previous successful build only validated the earlier Ceres implementation, not this current frontend implementation.
 - These remain diagnostic experiments and do **not** modify `hospital_v2` official benchmark protocol.
 
 ## In progress / next action
 
-- Pull current `main`, rebuild only vendored `slam_toolbox` sequentially on `com1`, then verify the workspace package is being used.
+- Pull current `main`, rebuild only vendored `slam_toolbox` sequentially on `com1`, and confirm the linker error for `MapperSensorManager::{GetLastScan,GetScans,GetRunningScans,AddRunningScan}` is gone.
+- Verify the workspace package is being used after the successful rebuild.
 - Launch `oldmap_toolbox.launch.py` and verify startup reports `Old-map sequential matcher: enabled=true, min_conf=0.25, decay=70.0, keep_first=true, keyframe_dist=0.50, history_radius=3.00, history_max=40`.
 - Verify Ceres startup reports approximately `weight=5.00->1.00`, `decay=70.0`, `local_gap<=5`, and `release=1.00->1.00`.
 - Run `nf_basic.py` first rather than a recorder. Check that mapping starts normally, the first node remains constant, and no custom AddEdges / weighted near-chain assertion or correlation-grid error occurs.
