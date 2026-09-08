@@ -14,10 +14,10 @@
 - `launch/submap.launch.py`: segmented local ICP frontend (`scripts/submap.py`) + SLAM Toolbox + Nav2. It reuses `config/slam.yaml` and overrides the scan topic at launch time.
 - `launch/toolbox.launch.py`: conservative Toolbox A/B baseline. The vendored Ceres solver contains Adaptive Anchor V1 code but this launch explicitly sets `adaptive_anchor_enabled=false`, so ordinary Toolbox constraint weights remain unchanged.
 - `launch/new_toolbox.launch.py`: Adaptive Temporal Anchor V1 diagnostic. It uses `scan_buffer_size=30`, strict sequential temporal edges (`node_gap<=1`) with `w(n)=1+2*exp(-n/50)`, and strong-loop regional release `1.0 -> 0.5 -> 0.0`.
-- `launch/oldmap_toolbox.launch.py`: current Old-Map-First V2 diagnostic. It applies old>new confidence at both sequential scan matching and Ceres pose-graph levels. The local matcher keeps the normal recent buffer (`30` scans), adds nearby trusted historical keyframes (`0.5 m` spacing, `3.0 m` radius, max `40`), retains scan 1 as trusted history, and uses `c_raw(i)=0.25+0.75*exp(-i/70)` with active-reference normalization. The first node remains hard-fixed by Ceres; local edges with `node_gap<=5` use `w(n)=1+4*exp(-n/70)` (`5x -> 1x`); long-gap/loop edges remain `1x`; adaptive release is disabled with `1.0 -> 1.0`.
+- `launch/oldmap_toolbox.launch.py`: current Old-Map-First V2 diagnostic. It applies old>new confidence in both local scan-matching stages and at the Ceres pose-graph level. Initial local matching keeps the normal recent buffer (`30` scans), adds nearby trusted historical keyframes (`0.5 m` spacing, `3.0 m` radius, max `40`), retains scan 1 as trusted history, and uses `c_raw(i)=0.25+0.75*exp(-i/70)` with active-reference normalization. Graph construction mirrors Karto topology, but near-chain local matching now uses the same temporal weighted correlation rule rather than equal-confidence `MatchScan`. The first node remains hard-fixed by Ceres; local edges with `node_gap<=5` use `w(n)=1+4*exp(-n/70)` (`5x -> 1x`); long-gap/loop edges remain `1x`; adaptive release is disabled with `1.0 -> 1.0`. Karto loop-closure matching remains upstream/unweighted.
 - `src/slam/adaptive_anchor_v1.md`: exact Adaptive V1 algorithm, parameters, fallback edge classification, release logic and validation checklist.
 - `src/slam/oldmap_anchor_v1.md`: historical pose-graph-only Old-Map-First V1 diagnostic.
-- `src/slam/oldmap_anchor_v2.md`: current two-layer Old-Map-First V2 algorithm, weighted local scan matcher, temporal Ceres policy, limitations and validation checklist.
+- `src/slam/oldmap_anchor_v2.md`: current two-layer Old-Map-First V2 algorithm, weighted initial + near-chain local matching, temporal Ceres policy, limitations and validation checklist.
 - `src/slam/temporal_anchor_ceres.patch`: earlier fixed soft-anchor prototype retained only as historical diagnostic material; its obsolete launch file has been removed.
 - `scripts/apply_hard_chain.py`: earlier strict hard-chain diagnostic helper retained only for history; its obsolete launch file has been removed. The first runtime test was not satisfactory and this is no longer the current direction.
 - The launchers use world-specific automatic spawn resolution; New Room is the default world while Hospital remains selectable explicitly where supported.
@@ -33,7 +33,8 @@
 - `scripts/mapex_new_toolbox_run.py` registers the same `new_room_new_toolbox_adaptive_v1_buffer30` provenance for MapEx.
 - `scripts/nf_oldmap_toolbox_run.py` registers `new_room_oldmap_toolbox_v2` provenance and hashes the V2 matcher/glue/Ceres implementation.
 - `scripts/mapex_oldmap_toolbox_run.py` registers the same `new_room_oldmap_toolbox_v2` provenance for MapEx.
-- Old-Map-First V1 and V2 runs must not be mixed because V2 changes C++ sequential scan matching in addition to the pose-graph weighting.
+- `oldmap_mapper.hpp` is included in provenance hashes, so the weighted-near-chain implementation is distinguishable from earlier V2 code even though the profile ID remains V2. Do not mix implementation hashes in one formal batch.
+- Old-Map-First V1 and V2 runs must not be mixed because V2 changes C++ local scan matching in addition to the pose-graph weighting.
 - New Room uses the generated `new_room_connected_free_v1` ROI and `new_room_structural_gt_v1` structural ground truth.
 
 ## Ground truth / evaluation
@@ -52,15 +53,17 @@
 
 ## Old-Map-First V2 implementation state
 
-- `slam_toolbox/include/slam_toolbox/oldmap_mapper.hpp` adds `OldMapMapper`, a subclass of `karto::Mapper` whose weighted sequential matcher is disabled by default.
-- `slam_toolbox/src/slam_mapper.cpp` now constructs `OldMapMapper` as a strict superset of the upstream mapper and exposes the V2 ROS parameters. Because `oldmap_scan_weighting_enabled` defaults to `false`, `toolbox`, `new_toolbox`, and other profiles call upstream `karto::Mapper::Process()` unchanged.
-- When enabled by `oldmap_toolbox.launch.py`, each ordinary sequential match uses the normal recent running scans plus sparse historical keyframes near the predicted pose. The first scan is retained as a historical keyframe but participates directly only when spatially relevant.
+- `slam_toolbox/include/slam_toolbox/oldmap_mapper.hpp` adds `OldMapMapper`, a subclass of `karto::Mapper` whose weighted path is disabled by default.
+- `slam_toolbox/src/slam_mapper.cpp` constructs `OldMapMapper` as a strict superset of the upstream mapper and exposes the V2 ROS parameters. Because `oldmap_scan_weighting_enabled` defaults to `false`, `toolbox`, `new_toolbox`, and other profiles call upstream `karto::Mapper::Process()` unchanged.
+- When enabled by `oldmap_toolbox.launch.py`, the initial local match uses the normal recent running scans plus sparse historical keyframes near the predicted pose. The first scan is retained as a historical keyframe but participates directly only when spatially relevant.
 - Raw scan confidence is `c_raw(i)=0.25+0.75*exp(-i/70)`. Active reference weights are divided by the strongest active raw confidence, preserving old>new ordering while preventing matcher response from collapsing in regions where only late scans are available.
 - The custom correlation grid keeps Karto's Gaussian smear shape but scales each reference scan's kernel amplitude by its active temporal confidence. Grid fusion remains max-based.
-- Coarse/fine pose search, odometry penalty, covariance calculation, graph construction, near-chain links and loop-closure matcher remain Karto mechanisms. Loop closure is deliberately not temporal-weighted so it remains an independent source of evidence.
+- `OldMapMapper` now mirrors Karto `AddEdges()` internally when the feature is enabled. Previous-scan linking, running-chain linking, near-chain discovery, thresholding, closest-scan linking and covariance-weighted mean fusion follow the upstream logic; the intentional difference is that near-chain `MatchScan(..., doPenalize=false)` is replaced by `WeightedMatchScan(..., do_penalize=false)` with old>new weights computed inside that chain.
+- Therefore both local frontend stages that can alter a new scan pose are temporal-weighted: initial sequential/local matching and near-chain local matching.
+- Karto loop-closure coarse/fine matching remains upstream/unweighted so it stays an independent source of evidence. Accepted loop constraints remain `1x` in Ceres.
 - Vendored `slam_toolbox/solvers/ceres_solver.cpp` still provides the pose-graph half of the method: first node constant, local edge `node_gap<=5`, `5x -> 1x` decay over `70` nodes, loop/long-gap edges `1x`, no release under this profile.
-- This V2 **does modify C++** and therefore requires rebuilding the vendored `slam_toolbox` before runtime testing.
-- Compile/runtime validation on `com1` is still pending for V2. The previous successful build only validated the earlier Ceres implementation, not the new weighted matcher.
+- This V2 **modifies C++** and therefore requires rebuilding the vendored `slam_toolbox` before runtime testing.
+- Compile/runtime validation on `com1` is still pending for the weighted-near-chain version. The previous successful build only validated the earlier Ceres implementation, not this current frontend implementation.
 - These remain diagnostic experiments and do **not** modify `hospital_v2` official benchmark protocol.
 
 ## In progress / next action
@@ -68,9 +71,10 @@
 - Pull current `main`, rebuild only vendored `slam_toolbox` sequentially on `com1`, then verify the workspace package is being used.
 - Launch `oldmap_toolbox.launch.py` and verify startup reports `Old-map sequential matcher: enabled=true, min_conf=0.25, decay=70.0, keep_first=true, keyframe_dist=0.50, history_radius=3.00, history_max=40`.
 - Verify Ceres startup reports approximately `weight=5.00->1.00`, `decay=70.0`, `local_gap<=5`, and `release=1.00->1.00`.
-- Run `nf_basic.py` first rather than a recorder. Check that mapping starts normally, the first node remains constant, and no weighted-matcher assertion/correlation-grid error occurs.
+- Run `nf_basic.py` first rather than a recorder. Check that mapping starts normally, the first node remains constant, and no custom AddEdges / weighted near-chain assertion or correlation-grid error occurs.
 - Drive/explore far enough to revisit early mapped space and compare whether early walls remain more stable while the recent trajectory is pulled back toward trusted history.
 - If historical matching creates false attraction in repeated geometry, reduce `oldmap_history_search_radius` or historical keyframe density before changing Ceres weights.
+- If weighted near-chain matching makes graph construction too rigid or rejects too many near-chain links, inspect response/covariance first; do not immediately loosen loop closure.
 - If valid loop closure cannot correct the recent trajectory enough, first reduce `adaptive_anchor_max_weight` or `adaptive_anchor_decay_nodes`; do not add a release mechanism until the two-layer hypothesis is evaluated.
 - Only after the smoke test is stable, collect repeated Nearest/MapEx runs with `nf_oldmap_toolbox_run.py` / `mapex_oldmap_toolbox_run.py`, restarting simulation/SLAM fresh before every run.
 - Do not mix `toolbox`, `new_toolbox`, Old-Map V1, and Old-Map V2 results under the same runtime provenance.
