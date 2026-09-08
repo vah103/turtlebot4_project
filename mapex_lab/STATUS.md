@@ -26,6 +26,8 @@
 - `scripts/nf_run.py` adds benchmark recording and provenance for Nearest-Frontier runs.
 - `scripts/mapex.py` contains the MapEx exploration policy.
 - `scripts/mapex_run.py` adds MapEx recording, saved prediction maps, environment-aware coverage, and post-run IoU/TU evaluation.
+- `scripts/nf_new_toolbox_run.py` registers `new_room_new_toolbox_adaptive_v1` provenance and records Nearest runs under `launch/new_toolbox.launch.py` without changing the policy.
+- `scripts/mapex_new_toolbox_run.py` registers the same `new_room_new_toolbox_adaptive_v1` provenance for MapEx and also hashes the vendored adaptive Ceres solver.
 - New Room uses the generated `new_room_connected_free_v1` ROI and `new_room_structural_gt_v1` structural ground truth.
 
 ## Ground truth / evaluation
@@ -56,9 +58,10 @@
 
 ## In progress / next action
 
-- Smoke-test `toolbox.launch.py` and confirm startup log reports `CeresSolver adaptive anchor V1: enabled=false`.
-- Continue smoke-testing `new_toolbox.launch.py` and confirm startup log reports `enabled=true`, `weight=3.00->1.00`, `decay=50.0`, then drive with ordinary `scripts/nf_basic.py` or MapEx.
+- Collect three fresh Nearest runs on `new_toolbox`: `nf_001`, `nf_002`, `nf_003`.
+- Collect three fresh MapEx runs on the same `new_toolbox` runtime: `mpx_001`, `mpx_002`, `mpx_003`.
+- Restart `new_toolbox.launch.py` from a fresh simulation/SLAM state before every recorded run; do not chain multiple recorders onto one mapping session.
 - During adaptive diagnostic runs, verify that one long-gap edge cannot release history, stage-1 logs a finite interval with `release=0.50`, and stage-2 occurs only if the same evidence edges remain strongly inconsistent after the stage-1 solve.
 - Runtime-smoke-test the new `new_room` profile end-to-end: confirm auto-generated GT/ROI, numeric New Room Coverage, five prediction files per decision, and final `evaluation.json` with `status: ok`.
 - Visually validate `ground_truth/new_room/generated/new_room_structural_gt_v1.pgm` against Gazebo/RViz before treating New Room IoU/TU as research results.
-- Run repeated Nearest and MapEx trials under the same runtime profile before drawing conclusions from single-run outcomes.
+- Compare the repeated Nearest and MapEx trials only after all runs share the same runtime profile and provenance.
