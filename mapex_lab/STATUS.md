@@ -13,7 +13,7 @@
 - `launch/local.launch.py`: local scan frontend + SLAM Toolbox + Nav2. It reuses `config/slam.yaml` and overrides the scan topic at launch time.
 - `launch/submap.launch.py`: segmented local ICP frontend (`scripts/submap.py`) + SLAM Toolbox + Nav2. It reuses `config/slam.yaml` and overrides the scan topic at launch time.
 - `launch/toolbox.launch.py`: conservative Toolbox A/B baseline. The vendored Ceres solver now contains Adaptive Anchor V1 code but this launch explicitly sets `adaptive_anchor_enabled=false`, so ordinary Toolbox constraint weights remain unchanged.
-- `launch/toolbox_adaptive.launch.py`: current experimental Adaptive Temporal Anchor V1. It keeps the stable Toolbox scan matching, graph construction, loop closure, whole-graph Ceres optimization, scan cadence, loop thresholds and Nav2 settings. Only strict sequential edges receive `w(n)=1+2*exp(-n/50)` temporal weighting; strong consistent long-gap evidence can regionally release that added weight `1.0 -> 0.5 -> 0.0`.
+- `launch/new_toolbox.launch.py`: current experimental Adaptive Temporal Anchor V1. It keeps the stable Toolbox scan matching, graph construction, loop closure, whole-graph Ceres optimization, scan cadence, loop thresholds and Nav2 settings. Only strict sequential edges receive `w(n)=1+2*exp(-n/50)` temporal weighting; strong consistent long-gap evidence can regionally release that added weight `1.0 -> 0.5 -> 0.0`.
 - `src/slam/adaptive_anchor_v1.md`: exact current Adaptive V1 algorithm, parameters, fallback edge classification, release logic and validation checklist.
 - `launch/toolbox_anchor.launch.py` + `src/slam/temporal_anchor_ceres.patch`: earlier fixed soft-anchor prototype retained only as historical diagnostic material; it is not the current adaptive implementation.
 - `launch/toolbox_hard_chain.launch.py` + `scripts/apply_hard_chain.py`: earlier strict hard-chain diagnostic. It froze solved history, used `scan_buffer_size=1` and disabled loop closure; the first runtime test was not satisfactory and this is no longer the current direction.
@@ -51,14 +51,14 @@
 - Long-gap evidence is captured at `AddConstraint()` before Karto loop correction can optimize away the initial residual. Strong evidence requires at least three recent independent edges with consistent correction and squared normalized/Mahalanobis residual >= `9.0`.
 - A strong evidence cluster releases only its related trajectory interval to factor `0.5`, then Ceres solves the whole graph. Stage 2 recomputes current residuals for the same evidence edges; only persistent strong conflict releases that interval to factor `0.0`, which returns those local edges to ordinary Toolbox `1x`, followed by another whole-graph solve.
 - Release is one-way for a mapping session; no historical pose is hard-frozen by Adaptive V1.
+- The vendored `slam_toolbox` compiled successfully on `com1`, and the first `new_toolbox` smoke test was reported as running stably. This is still a diagnostic observation, not an official benchmark result.
 - This remains a diagnostic experiment and does **not** modify `hospital_v2` official benchmark protocol.
 
 ## In progress / next action
 
-- Build the vendored `slam_toolbox` after pulling the Adaptive V1 source and confirm compilation before any mapping interpretation.
 - Smoke-test `toolbox.launch.py` and confirm startup log reports `CeresSolver adaptive anchor V1: enabled=false`.
-- Smoke-test `toolbox_adaptive.launch.py` and confirm startup log reports `enabled=true`, `weight=3.00->1.00`, `decay=50.0`, then drive with ordinary `scripts/nf_basic.py`.
-- During the first adaptive diagnostic run, verify that one long-gap edge cannot release history, stage-1 logs a finite interval with `release=0.50`, and stage-2 occurs only if the same evidence edges remain strongly inconsistent after the stage-1 solve.
+- Continue smoke-testing `new_toolbox.launch.py` and confirm startup log reports `enabled=true`, `weight=3.00->1.00`, `decay=50.0`, then drive with ordinary `scripts/nf_basic.py` or MapEx.
+- During adaptive diagnostic runs, verify that one long-gap edge cannot release history, stage-1 logs a finite interval with `release=0.50`, and stage-2 occurs only if the same evidence edges remain strongly inconsistent after the stage-1 solve.
 - Runtime-smoke-test the new `new_room` profile end-to-end: confirm auto-generated GT/ROI, numeric New Room Coverage, five prediction files per decision, and final `evaluation.json` with `status: ok`.
 - Visually validate `ground_truth/new_room/generated/new_room_structural_gt_v1.pgm` against Gazebo/RViz before treating New Room IoU/TU as research results.
 - Run repeated Nearest and MapEx trials under the same runtime profile before drawing conclusions from single-run outcomes.
