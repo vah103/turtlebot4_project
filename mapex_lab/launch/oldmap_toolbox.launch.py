@@ -121,7 +121,7 @@ def generate_launch_description() -> LaunchDescription:
             'loop_match_maximum_variance_coarse': 2.0,
 
             # Old-Map-First V2 sequential/local scan matcher.
-            'oldmap_scan_weighting_enabled': True,
+            'oldmap_scan_weighting_enabled': False,
             'oldmap_scan_min_confidence': 0.25,
             'oldmap_scan_decay_nodes': 70.0,
             'oldmap_keep_first_scan': True,
