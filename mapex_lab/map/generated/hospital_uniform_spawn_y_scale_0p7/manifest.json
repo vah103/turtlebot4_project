@@ -1,0 +1,23 @@
+{
+  "scale": 0.7,
+  "scale_mode": "uniform_map_spawn_y_only",
+  "source_world": "/home/com1/turtlebot4_project/mapex_lab/map/hospital_aws_flat.sdf",
+  "generated_world": "/home/com1/turtlebot4_project/mapex_lab/map/generated/hospital_uniform_spawn_y_scale_0p7/hospital_aws_flat_uniform_scale_0p7.sdf",
+  "source_fingerprint": {
+    "world_sha256": "59d482029ad56dabf7ce9bb68ece16e476fd263c0ec57f237dff1f893880aeb0",
+    "models": {
+      "aws_robomaker_hospital_floor_01_walls": "ea1233686edd6b52c0d74927d403e331f0ab21709a22a1607b79a91112d82202",
+      "aws_robomaker_hospital_curtain_closed_01": "fb11e52b8b534abd55c01a75745c05e3f7a72d70d8e8bf80a0b66366fc137897"
+    }
+  },
+  "model_mapping": {
+    "aws_robomaker_hospital_floor_01_walls": "aws_robomaker_hospital_floor_01_walls_uniform_scale_0p7",
+    "aws_robomaker_hospital_curtain_closed_01": "aws_robomaker_hospital_curtain_closed_01_uniform_scale_0p7"
+  },
+  "spawn": {
+    "x": 0.0,
+    "y": 8.399999999999999,
+    "yaw": -1.57
+  },
+  "robot_scaled": false
+}

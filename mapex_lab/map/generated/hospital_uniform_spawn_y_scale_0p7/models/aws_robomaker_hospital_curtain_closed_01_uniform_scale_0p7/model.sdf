@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.6">
+  <model name="aws_robomaker_hospital_curtain_closed_01_uniform_scale_0p7">
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://aws_robomaker_hospital_curtain_closed_01_uniform_scale_0p7/meshes/aws_robomaker_hospital_curtain_closed_01_visual.dae</uri>
+            <scale>0.7 0.7 0.7</scale>
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://aws_robomaker_hospital_curtain_closed_01_uniform_scale_0p7/meshes/aws_robomaker_hospital_curtain_closed_01_collision.dae</uri>
+            <scale>0.7 0.7 0.7</scale>
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+    <static>1</static>
+  </model>
+</sdf>
