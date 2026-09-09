@@ -1,14 +1,17 @@
 # Minimal Nav2 override for frontier exploration in the Hospital simulation.
 #
 # Keep TurtleBot4 Nav2 stock behavior except for simulation/frontier-specific needs:
-# 1) frontier goals are position-only, so terminal yaw is irrelevant;
+# 1) frontier goals are position-only, so terminal yaw is normally irrelevant;
 # 2) the Hospital Gazebo TB4 command path expects geometry_msgs/msg/Twist,
 #    so Nav2 must keep cmd_vel unstamped end-to-end;
-# 3) reduce MPPI compute load to avoid controller loop overruns while preserving
-#    approximately the same 2.8 s rollout horizon as stock;
+# 3) reduce MPPI compute load while preserving approximately the same 2.8 s
+#    rollout horizon as stock;
 # 4) keep MPPI committed to the global path until the robot is genuinely at the
 #    end of the path, rather than handing off early just because the goal is
 #    Euclidean-close through a wall or around a long detour.
+#
+# nf_004 A/B test: MPPI trajectory visualization and GoalAngleCritic are
+# temporarily re-enabled to evaluate their effect on navigation smoothness.
 #
 # The velocity smoother uses 0.50 m/s linear and
 # 1.9 rad/s angular.
@@ -27,7 +30,7 @@ controller_server:
     controller_frequency: 15.0
 
     general_goal_checker:
-      # Accept frontier goals once the robot is within 0.4 m; terminal yaw is irrelevant.
+      # Accept frontier goals once the robot is within 0.4 m.
       xy_goal_tolerance: 0.4
       yaw_goal_tolerance: 3.141592653589793
 
@@ -36,9 +39,9 @@ controller_server:
       model_dt: 0.0666667
       time_steps: 42
 
-      # Halve sampled trajectories and disable expensive trajectory visualization.
+      # Keep the reduced trajectory batch but re-enable visualization for nf_004.
       batch_size: 1000
-      visualize: false
+      visualize: true
 
       # Do not let Euclidean closeness to the goal switch MPPI away from the
       # global path while a wall forces a long remaining path. The hand-off is
@@ -63,9 +66,9 @@ controller_server:
         cost_weight: 4.0
         threshold_to_consider: 0.45
 
-      # MPPI should not optimize toward the goal pose's arbitrary yaw value.
+      # Re-enabled for the nf_004 navigation smoothness test.
       GoalAngleCritic:
-        enabled: false
+        enabled: true
 
 behavior_server:
   ros__parameters:
