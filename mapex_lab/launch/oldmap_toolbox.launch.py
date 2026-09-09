@@ -130,7 +130,7 @@ def generate_launch_description() -> LaunchDescription:
             'oldmap_history_max_keyframes': 40,
 
             # Old-Map-First pose-graph hierarchy.
-            'adaptive_anchor_enabled': True,
+            'adaptive_anchor_enabled': False,
             'adaptive_anchor_min_weight': 1.0,
             'adaptive_anchor_max_weight': 5.0,
             'adaptive_anchor_decay_nodes': 70.0,
