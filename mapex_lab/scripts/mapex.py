@@ -27,8 +27,9 @@ Reproduction choices:
   points -> Polygon -> buffer(1) -> Bresenham boundary -> 4-neighbour flood fill.
 - The occupancy accumulator is initialized ONCE PER RAY, matching Sec. IV-C of
   the paper rather than reproducing the upstream accumulator-reset helper bug.
-- Hospital does not apply the original implementation's <1 m waypoint rejection
-  or the Nearest-only <0.5 m guard; Nav2 reachability handles close frontiers.
+- Frontier execution shares nf_basic's 1.0 m distance preference: normally only
+  frontiers at least 1.0 m away are selectable, but if every current frontier is
+  closer than 1.0 m the near-frontier set is allowed as a fallback.
 """
 
 from __future__ import annotations
@@ -44,7 +45,11 @@ from typing import Iterable
 import numpy as np
 import rclpy
 
-from nf_basic import MIN_REGION_SIZE, NearestEuclideanFrontier
+from nf_basic import (
+    MIN_DISTANCE_THRESHOLD,
+    MIN_REGION_SIZE,
+    NearestEuclideanFrontier,
+)
 
 
 MAPEX_REFERENCE_COMMIT = "53636bd1c79153acc3c74a532837d78c926bae5e"
@@ -139,8 +144,8 @@ def load_mapex_policy_config(path: Path) -> dict:
         )
     if frontier.get("reject_below_distance_m") is not None:
         raise RuntimeError(
-            "Hospital MapEx adaptation must keep close frontiers; "
-            "frontier.reject_below_distance_m must be null"
+            "MapEx uses the shared nf_basic distance preference with near-frontier "
+            "fallback; frontier.reject_below_distance_m must remain null"
         )
 
     if str(_required(visibility, "method", "visibility")) != "mapex_probabilistic_raycast":
@@ -528,7 +533,8 @@ class MapExExplorer(NearestEuclideanFrontier):
             f"grid={self.mapex_resolution_m:.2f} m, "
             f"visibility={self.mapex_sensor_range_m:.1f} m/"
             f"{self.mapex_num_rays} rays, epsilon={self.mapex_epsilon:.2f}, "
-            "shared execution=nf_basic)"
+            f"preferred min distance={MIN_DISTANCE_THRESHOLD:.2f} m, "
+            "near fallback=all-frontiers-close, shared execution=nf_basic)"
         )
         for index, source in enumerate(self.ensemble.source_names, start=1):
             self.get_logger().info(f"MapEx G{index}: {source}")
@@ -983,9 +989,25 @@ class MapExExplorer(NearestEuclideanFrontier):
             )
             return
 
+        distant_evaluations = [
+            evaluation
+            for evaluation in evaluations
+            if evaluation["distance_m"] >= MIN_DISTANCE_THRESHOLD
+        ]
+        near_frontier_fallback = not distant_evaluations
+        distance_eligible_evaluations = (
+            distant_evaluations if distant_evaluations else evaluations
+        )
+
+        if near_frontier_fallback:
+            self.get_logger().info(
+                "All current MapEx frontier representatives are closer than "
+                f"{MIN_DISTANCE_THRESHOLD:.2f} m; enabling near-frontier fallback."
+            )
+
         selectable_evaluations = []
         suppressed_planner_blocked = 0
-        for evaluation in evaluations:
+        for evaluation in distance_eligible_evaluations:
             if self.is_planner_blocked_suppressed(
                 evaluation["x"],
                 evaluation["y"],
@@ -996,12 +1018,12 @@ class MapExExplorer(NearestEuclideanFrontier):
 
         all_execution_candidates = [
             self.to_execution_candidate(evaluation)
-            for evaluation in evaluations
+            for evaluation in distance_eligible_evaluations
         ]
 
         if not selectable_evaluations:
             self.clear_goal_markers()
-            if suppressed_planner_blocked == len(evaluations):
+            if suppressed_planner_blocked == len(distance_eligible_evaluations):
                 self.maybe_start_planner_revalidation(all_execution_candidates)
                 return
             self.revalidation_signature = None
@@ -1035,7 +1057,8 @@ class MapExExplorer(NearestEuclideanFrontier):
             f"IG={selected_metric['information_gain']:.6f}, "
             f"distance={selected_metric['distance_m']:.2f} m, "
             f"score={selected_metric['score']:.6f}, region={region_size}, "
-            f"candidates={len(selectable_evaluations)}, compute={decision_s:.2f} s"
+            f"candidates={len(selectable_evaluations)}, "
+            f"near_fallback={near_frontier_fallback}, compute={decision_s:.2f} s"
         )
         self.publish_status(
             "MAPEX_SELECTED",
@@ -1043,6 +1066,8 @@ class MapExExplorer(NearestEuclideanFrontier):
             decision_id=self.mapex_decision_id,
             candidate_count=len(selectable_evaluations),
             suppressed_planner_blocked=suppressed_planner_blocked,
+            preferred_min_distance_m=MIN_DISTANCE_THRESHOLD,
+            near_frontier_fallback=near_frontier_fallback,
             selected_row=int(selected_metric["row"]),
             selected_col=int(selected_metric["col"]),
             target_x=round(x, 4),
