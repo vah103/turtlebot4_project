@@ -1,21 +1,22 @@
 /*
- * Lightweight old-map-first scan refinement for slam_toolbox.
+ * Old-map historical-search A/B diagnostic for slam_toolbox.
  *
- * The expensive weighted correlation grid used by the first prototype is not
- * used in this path.  When enabled, each accepted scan is handled in two
- * stages:
+ * This diagnostic keeps the same lightweight OldMap path and historical
+ * candidate search as the previous two-pass prototype, but deliberately
+ * disables only the second historical MatchScan() call.
+ *
+ * Each accepted scan is therefore handled as follows:
  *
  *   1. Karto's normal sequential matcher aligns the new scan against the
  *      ordinary recent running buffer.
- *   2. At most a few sparse, genuinely historical keyframes near that stock
- *      pose are matched with the same upstream Karto matcher.  A confidence-
- *      gated and tightly capped fraction of that historical correction is then
- *      applied to the stock pose.
+ *   2. Up to a few sparse, genuinely historical keyframes near that stock pose
+ *      are still searched and collected exactly as before.
+ *   3. No second scan matching / CorrelateScan pass is executed on those
+ *      historical keyframes; the stock recent-buffer pose remains final.
  *
- * This preserves normal local continuity and gives old observations a small
- * scan-level influence without rebuilding a custom Gaussian grid for all of
- * the recent scans on every update.  Graph construction and loop closure stay
- * identical to upstream Karto.
+ * This isolates the CPU/navigation impact of the second historical scan-match
+ * pass from the cost of merely searching the historical scan set. Graph
+ * construction and loop closure stay identical to upstream Karto.
  */
 
 #ifndef SLAM_TOOLBOX__OLDMAP_MAPPER_HPP_
@@ -124,7 +125,7 @@ public:
         m_pMapperSensorManager->GetRunningScans(pScan->GetSensorName());
 
       // Stage 1: keep the normal Karto local matcher unchanged for the entire
-      // recent running buffer.  This is the pose that remains authoritative.
+      // recent running buffer. This stock result remains authoritative.
       karto::Pose2 recent_pose;
       m_pSequentialScanMatcher->MatchScan(
         pScan,
@@ -133,9 +134,11 @@ public:
         cov);
       pScan->SetSensorPose(recent_pose);
 
-      // Stage 2: build a tiny historical-only reference set around the stock
-      // pose.  Scans still present in the running buffer are explicitly
-      // excluded, so they are never rasterized a second time here.
+      // Stage 2 diagnostic: perform exactly the same historical candidate
+      // search as the two-pass prototype, including running-buffer exclusion,
+      // keyframe spacing, radius gating and the configured maximum count.
+      // Deliberately do NOT call MatchScan() on this set. This lets the runtime
+      // test isolate historical-search overhead from CorrelateScan overhead.
       karto::LocalizedRangeScanVector historical;
       std::vector<kt_double> historical_confidences;
       BuildHistoricalReferenceSet(
@@ -144,38 +147,9 @@ public:
         historical,
         historical_confidences);
 
-      if (!historical.empty()) {
-        karto::Pose2 historical_pose;
-        karto::Matrix3 historical_cov;
-        historical_cov.SetToIdentity();
+      // No historical pose correction is applied in this A/B branch.
+      pScan->SetSensorPose(recent_pose);
 
-        // Use upstream Karto again.  Skip the optional fine pass to keep this
-        // second, old-map-only correction lightweight.
-        const kt_double historical_response =
-          m_pSequentialScanMatcher->MatchScan(
-          pScan,
-          historical,
-          historical_pose,
-          historical_cov,
-          true,
-          false);
-
-        // Ignore weak historical matches.  Strong matches can only nudge the
-        // stock pose by a small bounded amount; they can never replace it.
-        if (historical_response >= 0.55) {
-          const karto::Pose2 refined_pose = BlendHistoricalCorrection(
-            recent_pose,
-            historical_pose,
-            historical_confidences,
-            historical_response);
-          pScan->SetSensorPose(refined_pose);
-        } else {
-          pScan->SetSensorPose(recent_pose);
-        }
-      }
-
-      // Keep covariance from the normal recent-buffer match.  The historical
-      // pass is deliberately only a small prior-like pose refinement.
       if (covariance != nullptr) {
         *covariance = cov;
       }
@@ -232,7 +206,7 @@ private:
 
     karto::LocalizedRangeScan * last_keyframe = nullptr;
 
-    // Iteration is chronological.  When more candidates are available than
+    // Iteration is chronological. When more candidates are available than
     // the cap permits, the oldest spatially relevant keyframes win.
     for (auto & item : all_scans) {
       karto::LocalizedRangeScan * scan = item.second;
@@ -266,7 +240,7 @@ private:
       }
 
       // A scan is historical here only after it has left the normal recent
-      // running buffer.  This is the key difference from the heavy prototype.
+      // running buffer, exactly as in the preceding two-pass prototype.
       if (running_set.find(scan) != running_set.end()) {
         continue;
       }
@@ -286,55 +260,6 @@ private:
         break;
       }
     }
-  }
-
-  karto::Pose2 BlendHistoricalCorrection(
-    const karto::Pose2 & recent_pose,
-    const karto::Pose2 & historical_pose,
-    const std::vector<kt_double> & confidences,
-    kt_double response) const
-  {
-    // Bound the raw old-map suggestion before blending.  With the maximum
-    // gain below, the actual per-scan correction is <= 9 cm and <= 2.25 deg.
-    constexpr kt_double kRawTranslationCapM = 0.20;
-    const kt_double raw_yaw_cap = karto::math::DegreesToRadians(5.0);
-
-    kt_double dx = historical_pose.GetX() - recent_pose.GetX();
-    kt_double dy = historical_pose.GetY() - recent_pose.GetY();
-    const kt_double distance = std::hypot(dx, dy);
-    if (distance > kRawTranslationCapM && distance > 1e-9) {
-      const kt_double scale = kRawTranslationCapM / distance;
-      dx *= scale;
-      dy *= scale;
-    }
-
-    kt_double dyaw = std::atan2(
-      std::sin(historical_pose.GetHeading() - recent_pose.GetHeading()),
-      std::cos(historical_pose.GetHeading() - recent_pose.GetHeading()));
-    dyaw = std::max(-raw_yaw_cap, std::min(raw_yaw_cap, dyaw));
-
-    kt_double confidence = oldmap_scan_min_confidence_;
-    if (!confidences.empty()) {
-      kt_double sum = 0.0;
-      for (kt_double value : confidences) {
-        sum += value;
-      }
-      confidence = sum / static_cast<kt_double>(confidences.size());
-    }
-
-    // Old history remains influential, but recent scan matching stays dominant.
-    const kt_double gain = std::max<kt_double>(
-      0.0,
-      std::min<kt_double>(0.45, 0.45 * confidence * response));
-
-    const kt_double refined_heading = std::atan2(
-      std::sin(recent_pose.GetHeading() + gain * dyaw),
-      std::cos(recent_pose.GetHeading() + gain * dyaw));
-
-    return karto::Pose2(
-      recent_pose.GetX() + gain * dx,
-      recent_pose.GetY() + gain * dy,
-      refined_heading);
   }
 
   bool oldmap_scan_weighting_enabled_;
