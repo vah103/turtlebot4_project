@@ -2,6 +2,14 @@
 
 Các launch chính của `mapex_lab`:
 
+- `slam.launch.py`
+  - SLAM chính hiện tại
+  - stock Karto sequential scan matching
+  - `scan_buffer_size=30`
+  - OldMap scan-level weighting tắt
+  - Adaptive Anchor bật: local Ceres edges `node_gap<=5` dùng temporal weight `5x -> 1x`
+  - đây là cấu hình đã test chạy mượt với Nav2
+
 - `stock.launch.py`
   - simulation + SLAM Toolbox + Nav2
   - dùng trực tiếp `config/slam.yaml`
@@ -24,12 +32,5 @@ Các launch chính của `mapex_lab`:
   - Adaptive Temporal Anchor V1 diagnostic
   - `scan_buffer_size=30`
   - strict sequential temporal weighting và strong-loop regional release
-
-- `oldmap_toolbox.launch.py`
-  - Old-Map-First V2 diagnostic
-  - weighted sequential scan matching: recent buffer + nearby trusted historical keyframes, old scan > new scan
-  - first pose hard-fixed; local Ceres edges `node_gap<=5` dùng temporal weight `5x -> 1x`
-  - loop edges `1x`, temporal release disabled
-  - cần rebuild vendored `slam_toolbox` sau khi pull vì V2 có thay đổi C++
 
 Các launch vẫn dùng chung Nav2 override `config/nav2.yaml` khi phù hợp. New Room là môi trường mặc định của stack hiện tại. Các SLAM diagnostic không tự động thay đổi official `hospital_v2` protocol.
