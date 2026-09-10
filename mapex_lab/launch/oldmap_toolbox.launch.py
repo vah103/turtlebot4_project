@@ -120,8 +120,8 @@ def generate_launch_description() -> LaunchDescription:
             'loop_search_space_dimension': 4.0,
             'loop_match_maximum_variance_coarse': 2.0,
 
-            # A/B baseline: bypass the custom weighted scan matcher and
-            # disable the pose-graph adaptive anchor below.
+            # A/B diagnostic: bypass the custom weighted scan matcher while
+            # keeping the pose-graph adaptive anchor enabled below.
             'oldmap_scan_weighting_enabled': False,
             'oldmap_scan_min_confidence': 0.25,
             'oldmap_scan_decay_nodes': 70.0,
@@ -133,7 +133,7 @@ def generate_launch_description() -> LaunchDescription:
             # Old-Map-First pose-graph hierarchy.
             # Keep the original weighting strength; this path only reweights
             # existing local constraints and does not widen the history search.
-            'adaptive_anchor_enabled': False,
+            'adaptive_anchor_enabled': True,
             'adaptive_anchor_min_weight': 1.0,
             'adaptive_anchor_max_weight': 5.0,
             'adaptive_anchor_decay_nodes': 70.0,
