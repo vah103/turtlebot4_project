@@ -626,6 +626,7 @@ class Stage2Run(NearestEuclideanFrontier):
         if self.compute_t0 is not None:
             if self.pending_decision_selection is not None:
                 candidates, selected = self.pending_decision_selection
+                self.pending_decision_selection = None
                 self.record_decision(candidates, selected, "SELECTED")
             else:
                 self.record_decision([], None, "NO_SELECTION")
@@ -635,7 +636,7 @@ class Stage2Run(NearestEuclideanFrontier):
             self.decision_compute_ms = (time.perf_counter() - self.compute_t0) * 1000.0
         result = super().publish_goal_markers(candidates, selected)
         if getattr(self, "compute_t0", None) is not None:
-            self.record_decision(candidates, selected, "SELECTED")
+            self.pending_decision_selection = (list(candidates), selected)
         return result
 
     def odom_cb(self, msg: Odometry):
