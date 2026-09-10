@@ -667,10 +667,13 @@ class Stage2Run(NearestEuclideanFrontier):
             )
         return str(raw_path.relative_to(self.run)), str(canvas_path.relative_to(self.run))
 
-    def send_goal(self, x, y, mode="main"):
-        if mode == "main":
+    def send_navigation_goal(self, x, y, mode="main"):
+        previous_goal_id = self.active_goal
+        super().send_navigation_goal(x, y, mode)
+        if not self.goal_active or self.current_goal_mode != mode:
+            return
+        if mode == "main" and previous_goal_id is None:
             self.count["frontiers_selected"] += 1
-        super().send_goal(x, y, mode)
         self.goal_id += 1
         self.active_goal = self.goal_id
         self.wg.writerow(
@@ -730,7 +733,29 @@ class Stage2Run(NearestEuclideanFrontier):
         )
         self.fp.flush()
 
+    def goal_response_callback(self, future, mode):
+        goal_id = self.active_goal
+        accepted = False
+        response_error = ""
+        try:
+            goal_handle = future.result()
+            accepted = bool(goal_handle.accepted)
+        except Exception as exc:
+            response_error = str(exc)
+
+        super().goal_response_callback(future, mode)
+
+        if not accepted:
+            self.finish_goal(
+                "rejected",
+                "",
+                "",
+                response_error or "goal_rejected",
+                goal_id=goal_id,
+            )
+
     def goal_result_callback(self, future, mode):
+        completed_goal_id = self.active_goal
         code = None
         status = None
         message = ""
@@ -769,14 +794,17 @@ class Stage2Run(NearestEuclideanFrontier):
             status,
             code,
             message,
+            goal_id=completed_goal_id,
         )
 
-    def finish_goal(self, result, status, code, message):
-        if self.active_goal is None:
+    def finish_goal(self, result, status, code, message, goal_id=None):
+        if goal_id is None:
+            goal_id = self.active_goal
+        if goal_id is None:
             return
         self.wg.writerow(
             {
-                "goal_id": self.active_goal,
+                "goal_id": goal_id,
                 "mode": "",
                 "start_time_s": "",
                 "end_time_s": self.fmt(self.elapsed()),
@@ -789,7 +817,8 @@ class Stage2Run(NearestEuclideanFrontier):
             }
         )
         self.fg.flush()
-        self.active_goal = None
+        if self.active_goal == goal_id:
+            self.active_goal = None
 
     def finalize(self, reason):
         if self.finalized:
