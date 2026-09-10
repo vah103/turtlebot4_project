@@ -1,5 +1,19 @@
 # mapex_lab status
 
+## 2026-09-09 all-training evaluation implementation
+
+- DONE: restored the original three-ensemble online worker/bridge/recorder and config; removed the fourth-checkpoint requirement. Added ROS-free `scripts/predict_alltrain_offline.py` for completed runs.
+- LATEST RESULT: four ROS-free tests pass, covering online recording without alltrain, offline geometry/labels/manifest integrity, checkpoint resolution, and evaluation source labels.
+- IN PROGRESS: real LaMa inference remains unverified in this environment; default weights/environment are absent.
+- NEXT ACTION: run with the existing three-model LaMa installation on the experiment machine. After completion, generate offline alltrain predictions and reevaluate using the active environment's GT/ROI. No robot commands were issued.
+
+## 2026-09-09 static MapEx audit
+
+- DONE: compared current policy/runner with paper v2 and local reference checkout; see `docs/experiment_notes/2026-09-09-mapex-audit.md`.
+- LATEST RESULT: core IG/ranking follows the paper; reference ray accumulation differs, evaluation uses ensemble mean instead of the separate all-training predictor, and Nearest's 0.5 m exclusion is absent from MapEx.
+- IN PROGRESS: numerical/runtime equivalence and checkpoint provenance remain unverified.
+- NEXT ACTION: align candidate eligibility and document execution/evaluation adaptations before formal comparison. Existing SLAM validation work below remains pending.
+
 ## Current focus
 
 - Build a reproducible New Room exploration benchmark around the shared Nearest-Frontier execution layer and MapEx policy.

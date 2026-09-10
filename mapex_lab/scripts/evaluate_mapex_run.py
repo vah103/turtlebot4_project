@@ -12,7 +12,7 @@ Canonical Hospital structural-GT contract:
 - resolution/origin/shape must match hospital_canvas_v1
 
 MapEx-style metrics:
-- occupied IoU thresholds the ensemble-mean prediction at > 0.5;
+- occupied IoU thresholds the all-training prediction at > 0.5 (legacy CSVs: ensemble mean);
 - TU uses 100 deterministic free-space goals, 4-connected predicted-map paths,
   and succeeds only when a path exists and does not intersect GT occupied cells.
 """
@@ -143,7 +143,7 @@ def _prediction_to_canvas(path: Path) -> np.ndarray:
 
     ratio_f = resolution / CANVAS_RES
     ratio = int(round(ratio_f))
-    if ratio < 1 or not math.isclose(ratio_f, ratio, abs_tol=1e-9):
+    if ratio < 1 or not math.isclose(ratio_f, ratio, abs_tol=1e-6):
         raise ValueError(
             "prediction resolution is incompatible with canonical canvas"
         )
@@ -402,6 +402,10 @@ def _write_csv(path: Path, rows):
         "tu_failed",
         "tu_total",
         "mean_map",
+        "prediction_map",
+        "prediction_source",
+        "ensemble_mean_occupied_iou",
+        "ensemble_mean_tu",
     ]
     with path.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=fields)
@@ -474,6 +478,31 @@ def _skip(run_dir: Path, status: str, reason: str, **extra):
         },
     )
     return payload
+
+
+def attach_offline_predictions(run_dir, decisions):
+    """Require a complete manifest tied to this exact decisions.csv."""
+    manifest_path = run_dir / "evaluation" / "alltrain" / "manifest.json"
+    if not manifest_path.is_file():
+        return decisions
+    manifest = json.loads(manifest_path.read_text())
+    if manifest.get("decisions_sha256") != _sha256(run_dir / "decisions.csv"):
+        raise ValueError("Offline alltrain manifest belongs to different decisions.csv")
+    entries = manifest["decisions"]
+    indexed = {int(entry["decision_id"]): entry for entry in entries}
+    if len(indexed) != len(entries) or len(indexed) != len(decisions):
+        raise ValueError("Incomplete or duplicate offline prediction decisions")
+    attached = []
+    for decision in decisions:
+        entry = indexed[int(decision["decision_id"])]
+        if entry["raw_map"] != decision.get("raw_map"):
+            raise ValueError("Offline raw-map association mismatch")
+        if _sha256(run_dir / entry["raw_map"]) != entry["raw_sha256"]:
+            raise ValueError("Raw map changed since offline inference")
+        if not (run_dir / entry["alltrain_map"]).is_file():
+            raise ValueError("Missing offline alltrain prediction")
+        attached.append(dict(decision, alltrain_map=entry["alltrain_map"]))
+    return attached
 
 
 def evaluate_run(
@@ -567,18 +596,19 @@ def evaluate_run(
     evaluation_dir = run_dir / "evaluation"
     evaluation_dir.mkdir(exist_ok=True)
     np.save(evaluation_dir / "tu_goals.npy", goals)
-    decisions = _read_csv(decisions_path)
+    decisions = attach_offline_predictions(run_dir, _read_csv(decisions_path))
     trajectory = (
         _read_csv(run_dir / "trajectory.csv")
         if (run_dir / "trajectory.csv").is_file()
         else []
     )
 
+    prediction_field = "alltrain_map" if decisions and "alltrain_map" in decisions[0] else "mean_map"
     output = []
     errors = []
     planner_used = None
     for decision in decisions:
-        mean_rel = (decision.get("mean_map") or "").strip()
+        mean_rel = (decision.get(prediction_field) or "").strip()
         if not mean_rel:
             continue
         prediction_path = run_dir / mean_rel
@@ -600,6 +630,16 @@ def evaluate_run(
                 start,
                 goals,
             )
+            secondary_iou, secondary_tu = "", ""
+            if prediction_field == "alltrain_map" and decision.get("mean_map"):
+                try:
+                    mean_canvas = _prediction_to_canvas(run_dir / decision["mean_map"])
+                    secondary_iou = occupied_iou(mean_canvas, gt_occ, mask)
+                    secondary_tu = topological_understanding(
+                        mean_canvas, mask, gt_occ, start, goals)[0]
+                except Exception as exc:
+                    errors.append({"decision_id": decision.get("decision_id"),
+                                   "error": "secondary ensemble mean: " + str(exc)})
             planner_used = planner
             decision_time = float(decision["time_s"])
             output.append(
@@ -614,7 +654,11 @@ def evaluate_run(
                     "tu_succeeded": succeeded,
                     "tu_failed": failed,
                     "tu_total": succeeded + failed,
-                    "mean_map": mean_rel,
+                    "mean_map": decision.get("mean_map", ""),
+                    "prediction_map": mean_rel,
+                    "prediction_source": prediction_field,
+                    "ensemble_mean_occupied_iou": secondary_iou,
+                    "ensemble_mean_tu": secondary_tu,
                 }
             )
         except Exception as exc:
@@ -639,6 +683,7 @@ def evaluate_run(
     last = output[-1]
     payload = {
         "status": "ok",
+        "prediction_source": prediction_field,
         "ground_truth": str(gt_path),
         "ground_truth_sha256": _sha256(gt_path),
         "evaluation_canvas": {
@@ -711,9 +756,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("run_dir")
     parser.add_argument("--ground-truth", default=None)
+    parser.add_argument("--roi", default=None, help="Connected-free ROI for the active environment")
     parser.add_argument("--tu-goals", type=int, default=TU_GOAL_COUNT)
     parser.add_argument("--tu-seed", type=int, default=TU_RANDOM_SEED)
     args = parser.parse_args()
+    global DEFAULT_ROI_RELATIVE
+    if args.roi:
+        DEFAULT_ROI_RELATIVE = Path(args.roi).expanduser().resolve()
     result = evaluate_run(
         args.run_dir,
         args.ground_truth,

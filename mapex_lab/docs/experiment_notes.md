@@ -1,5 +1,13 @@
 # Experiment Notes
 
+## 2026-09-09 — All-training evaluation moved offline
+
+- Restored three-model online config/worker/bridge/recorder; removed alltrain startup, saving and metadata requirements.
+- Added `predict_alltrain_offline.py`: loads only the whole-training predictor, consumes saved raw decision maps, publishes complete hash-linked manifest, and preserves original run records.
+- Evaluator uses completed offline predictions for primary IoU/TU with secondary ensemble-mean metrics; incomplete/stale manifests are rejected.
+- Four ROS-free tests pass. Real inference remains pending absent model weights/environment. No robot motion or formal research result was produced.
+- The earlier four-model online implementation is superseded; alltrain no longer adds decision time or GPU memory during exploration.
+
 Ghi ngắn gọn các quyết định hoặc sự cố có thể ảnh hưởng kết quả.
 
 ## Template

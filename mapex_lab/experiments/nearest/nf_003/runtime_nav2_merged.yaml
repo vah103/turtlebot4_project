@@ -64,7 +64,7 @@ controller_server:
       temperature: 0.3
       gamma: 0.015
       motion_model: DiffDrive
-      visualize: false
+      visualize: true
       regenerate_noises: true
       TrajectoryVisualizer:
         trajectory_step: 5
@@ -90,7 +90,7 @@ controller_server:
         cost_weight: 5.0
         threshold_to_consider: 0.45
       GoalAngleCritic:
-        enabled: false
+        enabled: true
         cost_power: 1
         cost_weight: 3.0
         threshold_to_consider: 0.5

@@ -1,151 +1,46 @@
 {
-  "status": "skipped_no_evaluable_predictions",
-  "reason": "no saved mean prediction could be evaluated",
+  "status": "ok",
+  "prediction_source": "mean_map",
   "ground_truth": "/home/com1/turtlebot4_project/mapex_lab/ground_truth/new_room/generated/new_room_structural_gt_v1.npz",
-  "errors": [
-    {
-      "decision_id": "1",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "2",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "3",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "4",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "5",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "6",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "7",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "8",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "9",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "10",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "11",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "12",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "13",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "14",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "15",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "16",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "17",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "18",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "19",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "20",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "21",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "22",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "23",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "24",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "25",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "26",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "27",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "28",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "29",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "30",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "31",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "32",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "33",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "34",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "35",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    },
-    {
-      "decision_id": "36",
-      "error": "prediction resolution is incompatible with canonical canvas"
-    }
-  ]
+  "ground_truth_sha256": "42275a4cef55a3f8ec0b0041388fb50174109891d6d1b76e101adeb43a62043a",
+  "evaluation_canvas": {
+    "id": "hospital_canvas_v1",
+    "resolution_m": 0.05,
+    "width": 1504,
+    "height": 2123,
+    "origin_x": -25.6,
+    "origin_y": -60.1
+  },
+  "occupied_iou": {
+    "class": "occupied",
+    "prediction_threshold": 0.5,
+    "domain": "structural_ground_truth_evaluation_mask",
+    "unrepresented_prediction_cells": "treated_as_free"
+  },
+  "tu": {
+    "goal_count": 100,
+    "seed": 2025,
+    "goal_source": "/home/com1/turtlebot4_project/mapex_lab/ground_truth/new_room/generated/new_room_connected_free_v1.npy",
+    "start_world_xy": [
+      2.2902167643548936e-12,
+      -4.794853698896321e-24
+    ],
+    "start_canvas_row_col": [
+      1202,
+      512
+    ],
+    "planner": "four_neighbor_bfs_fallback",
+    "connectivity": 4,
+    "success": "predicted path exists and does not intersect GT occupied cells"
+  },
+  "evaluated_decisions": 36,
+  "metrics_csv_backfilled_step_hold": true,
+  "final_decision_id": 36,
+  "final_occupied_iou": 0.145931543,
+  "final_tu": 0.03,
+  "occupied_iou_auc_time": 91.93748180544624,
+  "occupied_iou_auc_distance": 32.87465596452161,
+  "tu_auc_time": 22.730017223359994,
+  "tu_auc_distance": 8.018835633975,
+  "errors": []
 }
