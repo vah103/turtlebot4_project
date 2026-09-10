@@ -2,7 +2,7 @@
  * Lightweight old-map scan influence for slam_toolbox.
  *
  * This implementation deliberately keeps karto::Mapper::Process() authoritative.
- * OldMapMapper does not duplicate the stock processing pipeline.  Instead, it
+ * OldMapMapper does not duplicate the stock processing pipeline. Instead, it
  * temporarily prepends a very small number of cached historical keyframes to
  * Karto's ordinary recent running-scan buffer, calls the stock Process() once,
  * then removes those temporary references again.
@@ -16,7 +16,7 @@
  *   - no full all_scans traversal is performed on every scan.
  *
  * Historical keyframes are cached incrementally and only become eligible once
- * they have left the normal recent running buffer.  With the current launch
+ * they have left the normal recent running buffer. With the current launch
  * profile, at most three spatially nearby old keyframes are added to the one
  * stock scan-match reference set.
  */
@@ -92,13 +92,14 @@ public:
     }
 
     const karto::Name sensor_name = pScan->GetSensorName();
+
+    // GetLastScan() also registers a new sensor in Karto when needed, so it
+    // must be queried before asking for that sensor's running buffer.
+    karto::LocalizedRangeScan * last_scan =
+      m_pMapperSensorManager->GetLastScan(sensor_name);
     karto::LocalizedRangeScanVector & running =
       m_pMapperSensorManager->GetRunningScans(sensor_name);
 
-    // A fresh mapper/session has no last scan. Clear the lightweight cache too,
-    // so stale pointers can never cross a mapper reset.
-    karto::LocalizedRangeScan * last_scan =
-      m_pMapperSensorManager->GetLastScan(sensor_name);
     if (last_scan == nullptr) {
       historical_keyframes_.clear();
       last_cached_keyframe_ = nullptr;
@@ -106,9 +107,17 @@ public:
 
     karto::LocalizedRangeScanVector injected_history;
     if (last_scan != nullptr && !historical_keyframes_.empty()) {
-      SelectNearbyHistorical(pScan, running, injected_history);
+      // Reproduce only the stock odometry->corrected pose prediction for
+      // candidate selection, without modifying the scan. Mapper::Process()
+      // remains responsible for the real pose update and all processing.
+      karto::Transform last_transform(
+        last_scan->GetOdometricPose(), last_scan->GetCorrectedPose());
+      const karto::Pose2 predicted_pose =
+        last_transform.TransformPose(pScan->GetOdometricPose());
 
-      // Prepend temporary old references.  Karto's MatchScan is occupancy-grid
+      SelectNearbyHistorical(predicted_pose, running, injected_history);
+
+      // Prepend temporary old references. Karto's MatchScan is occupancy-grid
       // based, so reference order does not change the correlation semantics.
       // Prepending also means Karto's normal size trimming removes temporary
       // references before genuine recent scans if the buffer is already full.
@@ -122,8 +131,8 @@ public:
     const kt_bool accepted = karto::Mapper::Process(pScan, covariance);
 
     // Remove any temporary history references that survived Karto's normal
-    // running-buffer trimming.  The persistent recent buffer is therefore the
-    // same kind of buffer stock Karto expects on the next scan.
+    // running-buffer trimming. The persistent recent buffer therefore remains
+    // a normal stock-style recent buffer for the next scan.
     if (!injected_history.empty()) {
       running.erase(
         std::remove_if(
@@ -147,12 +156,11 @@ public:
 
 private:
   void SelectNearbyHistorical(
-    karto::LocalizedRangeScan * pScan,
+    const karto::Pose2 & predicted_pose,
     const karto::LocalizedRangeScanVector & running,
     karto::LocalizedRangeScanVector & selected) const
   {
     selected.clear();
-    const karto::Pose2 predicted_pose = pScan->GetSensorPose();
     const kt_double radius_sq =
       oldmap_history_search_radius_ * oldmap_history_search_radius_;
 
