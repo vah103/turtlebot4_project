@@ -1,14 +1,24 @@
 /*
- * Old-map custom-Process A/B diagnostic for slam_toolbox.
+ * Lightweight old-map scan influence for slam_toolbox.
  *
- * Test C deliberately removes all historical-scan work while keeping the
- * OldMapMapper override active. With oldmap_scan_weighting_enabled=true,
- * accepted scans still execute this custom Process() implementation instead of
- * delegating to karto::Mapper::Process(). The processing path below mirrors
- * upstream sequential scan matching, graph construction and loop closure only.
+ * This implementation deliberately keeps karto::Mapper::Process() authoritative.
+ * OldMapMapper does not duplicate the stock processing pipeline.  Instead, it
+ * temporarily prepends a very small number of cached historical keyframes to
+ * Karto's ordinary recent running-scan buffer, calls the stock Process() once,
+ * then removes those temporary references again.
  *
- * Historical scan lookup, historical MatchScan(), weighted correlation and
- * historical pose correction are all disabled in this diagnostic.
+ * Consequences:
+ *   - exactly one stock sequential MatchScan() is executed per accepted scan;
+ *   - graph construction, running-buffer maintenance and loop closure are the
+ *     upstream Karto implementations;
+ *   - no second historical MatchScan() is executed;
+ *   - no custom weighted/Gaussian correlation grid is built;
+ *   - no full all_scans traversal is performed on every scan.
+ *
+ * Historical keyframes are cached incrementally and only become eligible once
+ * they have left the normal recent running buffer.  With the current launch
+ * profile, at most three spatially nearby old keyframes are added to the one
+ * stock scan-match reference set.
  */
 
 #ifndef SLAM_TOOLBOX__OLDMAP_MAPPER_HPP_
@@ -33,7 +43,8 @@ public:
     oldmap_keep_first_scan_(true),
     oldmap_keyframe_distance_(0.5),
     oldmap_history_search_radius_(3.0),
-    oldmap_history_max_keyframes_(40)
+    oldmap_history_max_keyframes_(40),
+    last_cached_keyframe_(nullptr)
   {
   }
 
@@ -76,74 +87,134 @@ public:
     karto::LocalizedRangeScan * pScan,
     karto::Matrix3 * covariance = nullptr) override
   {
-    if (!oldmap_scan_weighting_enabled_) {
+    if (!oldmap_scan_weighting_enabled_ || pScan == nullptr) {
       return karto::Mapper::Process(pScan, covariance);
     }
 
-    if (pScan == nullptr) {
-      return false;
+    const karto::Name sensor_name = pScan->GetSensorName();
+    karto::LocalizedRangeScanVector & running =
+      m_pMapperSensorManager->GetRunningScans(sensor_name);
+
+    // A fresh mapper/session has no last scan. Clear the lightweight cache too,
+    // so stale pointers can never cross a mapper reset.
+    karto::LocalizedRangeScan * last_scan =
+      m_pMapperSensorManager->GetLastScan(sensor_name);
+    if (last_scan == nullptr) {
+      historical_keyframes_.clear();
+      last_cached_keyframe_ = nullptr;
     }
 
-    karto::LaserRangeFinder * pLaserRangeFinder = pScan->GetLaserRangeFinder();
-    if (pLaserRangeFinder == nullptr || !pLaserRangeFinder->Validate(pScan)) {
-      return false;
+    karto::LocalizedRangeScanVector injected_history;
+    if (last_scan != nullptr && !historical_keyframes_.empty()) {
+      SelectNearbyHistorical(pScan, running, injected_history);
+
+      // Prepend temporary old references.  Karto's MatchScan is occupancy-grid
+      // based, so reference order does not change the correlation semantics.
+      // Prepending also means Karto's normal size trimming removes temporary
+      // references before genuine recent scans if the buffer is already full.
+      running.insert(
+        running.begin(),
+        injected_history.begin(),
+        injected_history.end());
     }
 
-    if (!m_Initialized) {
-      Initialize(pLaserRangeFinder->GetRangeThreshold());
+    // Crucial point: the complete stock Karto processing pipeline runs here.
+    const kt_bool accepted = karto::Mapper::Process(pScan, covariance);
+
+    // Remove any temporary history references that survived Karto's normal
+    // running-buffer trimming.  The persistent recent buffer is therefore the
+    // same kind of buffer stock Karto expects on the next scan.
+    if (!injected_history.empty()) {
+      running.erase(
+        std::remove_if(
+          running.begin(),
+          running.end(),
+          [&injected_history](karto::LocalizedRangeScan * scan) {
+            return std::find(
+              injected_history.begin(),
+              injected_history.end(),
+              scan) != injected_history.end();
+          }),
+        running.end());
     }
 
-    karto::LocalizedRangeScan * pLastScan =
-      m_pMapperSensorManager->GetLastScan(pScan->GetSensorName());
-
-    if (pLastScan != nullptr) {
-      karto::Transform lastTransform(
-        pLastScan->GetOdometricPose(), pLastScan->GetCorrectedPose());
-      pScan->SetCorrectedPose(lastTransform.TransformPose(pScan->GetOdometricPose()));
+    if (accepted) {
+      RememberKeyframe(pScan);
     }
 
-    if (!HasMovedEnough(pScan, pLastScan)) {
-      return false;
-    }
-
-    karto::Matrix3 cov;
-    cov.SetToIdentity();
-
-    if (m_pUseScanMatching->GetValue() && pLastScan != nullptr) {
-      karto::Pose2 bestPose;
-      m_pSequentialScanMatcher->MatchScan(
-        pScan,
-        m_pMapperSensorManager->GetRunningScans(pScan->GetSensorName()),
-        bestPose,
-        cov);
-      pScan->SetSensorPose(bestPose);
-
-      if (covariance != nullptr) {
-        *covariance = cov;
-      }
-    }
-
-    m_pMapperSensorManager->AddScan(pScan);
-
-    if (m_pUseScanMatching->GetValue()) {
-      m_pGraph->AddVertex(pScan);
-      m_pGraph->AddEdges(pScan, cov);
-      m_pMapperSensorManager->AddRunningScan(pScan);
-
-      if (m_pDoLoopClosing->GetValue()) {
-        std::vector<karto::Name> deviceNames =
-          m_pMapperSensorManager->GetSensorNames();
-        for (const karto::Name & sensorName : deviceNames) {
-          m_pGraph->TryCloseLoop(pScan, sensorName);
-        }
-      }
-    }
-
-    m_pMapperSensorManager->SetLastScan(pScan);
-    return true;
+    return accepted;
   }
 
 private:
+  void SelectNearbyHistorical(
+    karto::LocalizedRangeScan * pScan,
+    const karto::LocalizedRangeScanVector & running,
+    karto::LocalizedRangeScanVector & selected) const
+  {
+    selected.clear();
+    const karto::Pose2 predicted_pose = pScan->GetSensorPose();
+    const kt_double radius_sq =
+      oldmap_history_search_radius_ * oldmap_history_search_radius_;
+
+    for (karto::LocalizedRangeScan * scan : historical_keyframes_) {
+      if (scan == nullptr) {
+        continue;
+      }
+
+      // Only truly historical scans are eligible. Recent scans are already in
+      // the stock buffer and must not be duplicated in the same match.
+      if (std::find(running.begin(), running.end(), scan) != running.end()) {
+        continue;
+      }
+
+      const kt_double distance_sq =
+        scan->GetSensorPose().GetPosition().SquaredDistance(
+          predicted_pose.GetPosition());
+      if (distance_sq > radius_sq) {
+        continue;
+      }
+
+      selected.push_back(scan);
+      if (static_cast<int>(selected.size()) >= oldmap_history_max_keyframes_) {
+        break;
+      }
+    }
+  }
+
+  void RememberKeyframe(karto::LocalizedRangeScan * scan)
+  {
+    if (scan == nullptr) {
+      return;
+    }
+
+    // State zero marks a fresh scan sequence. This also makes the cache robust
+    // to a mapper reset even if Process() was not called while last_scan=null.
+    if (scan->GetStateId() == 0) {
+      historical_keyframes_.clear();
+      last_cached_keyframe_ = scan;
+      if (oldmap_keep_first_scan_) {
+        historical_keyframes_.push_back(scan);
+      }
+      return;
+    }
+
+    if (last_cached_keyframe_ == nullptr) {
+      last_cached_keyframe_ = scan;
+      historical_keyframes_.push_back(scan);
+      return;
+    }
+
+    const kt_double spacing_sq =
+      scan->GetSensorPose().GetPosition().SquaredDistance(
+        last_cached_keyframe_->GetSensorPose().GetPosition());
+    if (oldmap_keyframe_distance_ <= 0.0 ||
+      spacing_sq >= oldmap_keyframe_distance_ * oldmap_keyframe_distance_)
+    {
+      historical_keyframes_.push_back(scan);
+      last_cached_keyframe_ = scan;
+    }
+  }
+
   bool oldmap_scan_weighting_enabled_;
   double oldmap_scan_min_confidence_;
   double oldmap_scan_decay_nodes_;
@@ -151,6 +222,9 @@ private:
   double oldmap_keyframe_distance_;
   double oldmap_history_search_radius_;
   int oldmap_history_max_keyframes_;
+
+  karto::LocalizedRangeScanVector historical_keyframes_;
+  karto::LocalizedRangeScan * last_cached_keyframe_;
 };
 
 }  // namespace mapper_utils
