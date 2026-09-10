@@ -47,7 +47,14 @@
     "ground_truth_generator": "8a683dd9858435bdd79db0b4ac03e513e89999bd30cd345297f718d7d6114928",
     "ground_truth_contract": "74671971348fe8a8f0eef5f6d98bccd4c7b36a9b12b15d7e6cfc1179d5d743af"
   },
-  "termination_reason": null,
+  "termination_reason": "keyboard_interrupt",
   "evaluation_start_x": 2.2902167533342124e-12,
-  "evaluation_start_y": -4.794853699850965e-24
+  "evaluation_start_y": -4.794853699850965e-24,
+  "final_coverage": 0.7559806063189302,
+  "final_known_fraction": 0.057946903719144925,
+  "total_distance_m": 208.53502247222534,
+  "total_time_s": 582.9553747177124,
+  "policy_decisions": 34,
+  "near_frontier_fallback_count": 0,
+  "planner_blocked_abandoned_total": 4
 }
