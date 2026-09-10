@@ -1,30 +1,8 @@
-"""Launch TurtleBot4 with lightweight Old-Map-First refinement.
+"""Launch TurtleBot4 with Old-Map-First V2.
 
-This profile keeps the normal SLAM Toolbox loop-closure detector, whole-graph
-Ceres optimization, New Room simulation and Nav2 behavior.
-
-Old-map-first influence is applied at two layers:
-
-1. Local scan matching:
-   - the normal Karto matcher first aligns each new scan against the ordinary
-     recent running buffer (30 scans);
-   - scans still inside that recent buffer are not processed a second time;
-   - after the stock match, at most 3 sparse historical keyframes within 1.5 m
-     are matched with Karto again, coarse-only;
-   - only a confidence-gated, tightly bounded fraction of that historical
-     correction is applied to the stock pose;
-   - no custom Gaussian weighted grid is rebuilt for the 30 recent scans.
-
-2. Pose-graph optimization:
-   - the first scan pose remains hard-fixed exactly as upstream Ceres does;
-   - local constraints with node gap <= 5 receive
-     w(n) = 1 + 4 * exp(-n / 70), i.e. early constraints start near 5x and
-     monotonically decay toward ordinary Toolbox 1x;
-   - long-gap / loop constraints remain at 1x;
-   - adaptive release remains disabled (1.0 -> 1.0).
-
-This is a lightweight two-pass OldMap variant, not the earlier per-reference
-weighted-correlation implementation.
+This profile uses stock Karto sequential scan matching and keeps the
+Old-Map-First adaptive pose-graph anchor enabled. The custom OldMap scan-level
+matcher is disabled, matching the previously tested smooth configuration.
 """
 
 import os
@@ -115,17 +93,16 @@ def generate_launch_description() -> LaunchDescription:
             'loop_search_space_dimension': 4.0,
             'loop_match_maximum_variance_coarse': 2.0,
 
-            # Lightweight two-pass OldMap scan refinement:
-            # stock 30-scan local match first, then <=3 historical keyframes.
-            'oldmap_scan_weighting_enabled': True,
+            # Restored smooth A/B profile: stock scan matching.
+            'oldmap_scan_weighting_enabled': False,
             'oldmap_scan_min_confidence': 0.25,
             'oldmap_scan_decay_nodes': 70.0,
             'oldmap_keep_first_scan': True,
             'oldmap_keyframe_distance': 1.0,
             'oldmap_history_search_radius': 1.5,
-            'oldmap_history_max_keyframes': 3,
+            'oldmap_history_max_keyframes': 6,
 
-            # Old-Map-First pose-graph hierarchy.
+            # Keep Old-Map-First pose-graph anchor enabled.
             'adaptive_anchor_enabled': True,
             'adaptive_anchor_min_weight': 1.0,
             'adaptive_anchor_max_weight': 5.0,
@@ -138,7 +115,6 @@ def generate_launch_description() -> LaunchDescription:
             'adaptive_anchor_loop_consistency_translation_m': 0.20,
             'adaptive_anchor_loop_consistency_yaw_deg': 3.0,
             'adaptive_anchor_loop_min_mahalanobis_sq': 9.0,
-            # V2 old-map-first: do not release historical temporal weighting.
             'adaptive_anchor_release_stage1_factor': 1.0,
             'adaptive_anchor_release_stage2_factor': 1.0,
         }
