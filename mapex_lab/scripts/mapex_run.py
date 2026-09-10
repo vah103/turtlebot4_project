@@ -4,6 +4,11 @@
 The MapEx policy stays in mapex.py. This wrapper reuses nf_run.py's shared
 measurement/execution recorder, adds MapEx prediction/scoring diagnostics, and
 stores replayable per-decision data without changing frontier selection.
+
+For selected frontiers, recorder/disk I/O is deliberately deferred until after
+NavigateToPose has been dispatched. This keeps prediction-map persistence and
+benchmark logging off the policy-to-navigation critical path while preserving
+all replay artifacts.
 """
 from __future__ import annotations
 
@@ -59,6 +64,7 @@ MAPEX_POLICY_DECISION_FIELDS = POLICY_DECISION_FIELDS + [
     "mapex_policy_decision_id",
     "ensemble_prediction_ms",
     "all_frontier_scoring_ms",
+    "prediction_save_ms",
     "selected_information_gain",
     "selected_score",
     "selected_visible_unknown_cells",
@@ -224,6 +230,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         self.comp = []
         self.prediction_ms = []
         self.frontier_scoring_ms = []
+        self.prediction_save_ms = []
         self.selected_ig = []
         self.selected_score = []
         self.selected_distance = []
@@ -374,6 +381,8 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "near_frontier_fallback": "all_frontiers_below_threshold",
             "frontier_region_min_cells_strictly_greater_than": MIN_REGION_SIZE,
             "distance_metric": "euclidean",
+            "recorder_io_semantics": "selected-decision disk I/O occurs after NavigateToPose dispatch",
+            "prediction_save_timing_semantics": "measured separately; excluded from policy computation time",
             "runtime_nav2_merged_file": merged_path.name,
             "runtime_mapex_file": runtime_mapex.name,
             "nav2_base_params_file": str(nav2_base),
@@ -421,6 +430,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                 "decision_id", "mapex_policy_decision_id", "time_s", "map_generation",
                 "candidate_total", "candidate_selectable", "candidate_suppressed",
                 "ensemble_prediction_ms", "all_frontier_scoring_ms", "total_computation_ms",
+                "prediction_save_ms",
                 "selected_x", "selected_y", "selected_distance_m", "selected_information_gain",
                 "selected_score", "selected_visible_unknown_cells", "selected_region_size",
                 "selection_verified_max_score", "near_frontier_fallback", "below_1m_count",
@@ -488,6 +498,17 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         self.last_ensemble_predictions = captured.astype(np.float32, copy=True)
         return result
 
+    def publish_goal_markers(self, candidates, selected):
+        """Publish markers now, but defer recorder I/O until after goal dispatch."""
+        if self.compute_t0 is not None:
+            self.decision_compute_ms = (time.perf_counter() - self.compute_t0) * 1000.0
+        # Call the canonical policy/execution marker publisher directly, bypassing
+        # Stage2Run.publish_goal_markers because that wrapper records immediately.
+        result = mapex.MapExExplorer.publish_goal_markers(self, candidates, selected)
+        if self.compute_t0 is not None:
+            self.pending_decision_selection = (list(candidates), selected)
+        return result
+
     def exploration_step(self):
         if not self.startup_ready():
             return
@@ -503,6 +524,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             self.compute_sim_t0 = self.now_s()
             self.compute_t0 = time.perf_counter()
             self.decision_compute_ms = None
+            self.pending_decision_selection = None
             self.decision_map_msg = self.map_msg
             self.decision_robot_xy = (float(robot_pose[0]), float(robot_pose[1]))
             self.decision_robot_yaw = self.robot_map_pose()[2]
@@ -521,10 +543,15 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                     runtime_map_resolution_m=float(self.map_msg.info.resolution),
                 )
 
-        # Stage2Run.publish_goal_markers records a successful selection through
-        # this class's record_decision(). No policy ranking/execution is changed.
+        # A successful MapEx selection publishes markers and dispatches
+        # NavigateToPose inside this call. Recorder I/O is intentionally deferred
+        # until control returns here, so disk writes cannot delay goal dispatch.
         mapex.MapExExplorer.exploration_step(self)
-        if self.compute_t0 is not None:
+        if self.pending_decision_selection is not None:
+            candidates, selected = self.pending_decision_selection
+            self.pending_decision_selection = None
+            self.record_decision(candidates, selected, "SELECTED")
+        elif self.compute_t0 is not None:
             self.record_decision([], None, "NO_SELECTION")
 
     def _save_prediction_maps(self, decision_id: int) -> tuple[str, str, str, str, str]:
@@ -596,7 +623,14 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         legacy_raw, legacy_canvas = self.save_map_pair(
             self.run / "decision_maps" / f"decision_{did:06d}", msg=source_msg
         )
+
+        prediction_save_start = time.perf_counter()
         g1_path, g2_path, g3_path, mean_path, var_path = self._save_prediction_maps(did)
+        if any((g1_path, g2_path, g3_path, mean_path, var_path)):
+            prediction_save_ms = (time.perf_counter() - prediction_save_start) * 1000.0
+            self.prediction_save_ms.append(float(prediction_save_ms))
+        else:
+            prediction_save_ms = math.nan
 
         metrics = list(self.last_candidate_metrics or [])
         metric_by_grid = {(int(m["row"]), int(m["col"])): m for m in metrics}
@@ -778,6 +812,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "mapex_policy_decision_id": self.mapex_decision_id if metrics else "",
             "ensemble_prediction_ms": self.fmt(prediction_ms),
             "all_frontier_scoring_ms": self.fmt(scoring_ms),
+            "prediction_save_ms": self.fmt(prediction_save_ms),
             "selected_information_gain": self.fmt(sig),
             "selected_score": self.fmt(ss),
             "selected_visible_unknown_cells": self.fmt(sv),
@@ -797,6 +832,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                 "ensemble_prediction_ms": self.fmt(prediction_ms),
                 "all_frontier_scoring_ms": self.fmt(scoring_ms),
                 "total_computation_ms": self.fmt(ms),
+                "prediction_save_ms": self.fmt(prediction_save_ms),
                 "selected_x": self.fmt(sx),
                 "selected_y": self.fmt(sy),
                 "selected_distance_m": self.fmt(sd),
@@ -900,6 +936,8 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "ensemble_prediction_ms_std": self._std(self.prediction_ms),
             "all_frontier_scoring_ms_mean": self._mean(self.frontier_scoring_ms),
             "all_frontier_scoring_ms_std": self._std(self.frontier_scoring_ms),
+            "prediction_save_ms_mean": self._mean(self.prediction_save_ms),
+            "prediction_save_ms_std": self._std(self.prediction_save_ms),
             "selected_information_gain_mean": self._mean(self.selected_ig),
             "selected_score_mean": self._mean(self.selected_score),
             "selected_distance_m_mean": self._mean(self.selected_distance),
@@ -911,6 +949,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "tu_online": None,
             "prediction_maps_saved": self.save_predictions,
             "prediction_members_saved": 3 if self.save_predictions else 0,
+            "prediction_save_semantics": "post_goal_dispatch",
         }
         (self.run / "summary.json").write_text(
             json.dumps(summary, indent=2, allow_nan=True), encoding="utf-8"
@@ -928,6 +967,8 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             near_frontier_fallback_count=self.near_frontier_fallback_count,
             planner_blocked_abandoned_total=blocked_total,
             selection_verification_failures=self.selection_verification_failures,
+            prediction_save_ms_mean=self._mean(self.prediction_save_ms),
+            prediction_save_ms_std=self._std(self.prediction_save_ms),
         )
         self.get_logger().warn(
             f"MAPEX SAVED: env={self.environment}, profile={self.runtime_profile_name}, "
@@ -965,7 +1006,7 @@ def main():
         default=True,
         help=(
             "Save per-decision LaMa G1/G2/G3, ensemble mean, and variance NPZ "
-            "files (disable with --no-save-predictions to reduce disk use)."
+            "files after goal dispatch (disable with --no-save-predictions to reduce disk use)."
         ),
     )
     args, ros_args = parser.parse_known_args()
