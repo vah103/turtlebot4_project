@@ -121,16 +121,20 @@ def generate_launch_description() -> LaunchDescription:
             'loop_match_maximum_variance_coarse': 2.0,
 
             # Old-Map-First V2 sequential/local scan matcher.
-            'oldmap_scan_weighting_enabled': False,
+            # Lightweight history profile: keep the old>new weighting logic
+            # while reducing historical candidates considered per local match.
+            'oldmap_scan_weighting_enabled': True,
             'oldmap_scan_min_confidence': 0.25,
             'oldmap_scan_decay_nodes': 70.0,
             'oldmap_keep_first_scan': True,
-            'oldmap_keyframe_distance': 0.5,
-            'oldmap_history_search_radius': 3.0,
-            'oldmap_history_max_keyframes': 40,
+            'oldmap_keyframe_distance': 0.8,
+            'oldmap_history_search_radius': 2.0,
+            'oldmap_history_max_keyframes': 12,
 
             # Old-Map-First pose-graph hierarchy.
-            'adaptive_anchor_enabled': False,
+            # Keep the original weighting strength; this path only reweights
+            # existing local constraints and does not widen the history search.
+            'adaptive_anchor_enabled': True,
             'adaptive_anchor_min_weight': 1.0,
             'adaptive_anchor_max_weight': 5.0,
             'adaptive_anchor_decay_nodes': 70.0,
