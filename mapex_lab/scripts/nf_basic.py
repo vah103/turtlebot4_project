@@ -9,7 +9,9 @@ Frontier policy:
 - keep region only when size > 10 cells
 - representative: actual frontier cell nearest the arithmetic mean
 - ranking: Euclidean robot -> representative
-- representatives closer than 0.5 m are not eligible
+- representatives at least 1.0 m away are preferred; if every current
+  representative is closer than 1.0 m, the near-frontier set is allowed as a
+  fallback so exploration does not stall solely because of the distance guard
 
 Navigation recovery:
 - the selected frontier remains the main exploration goal until reached
@@ -24,7 +26,7 @@ Navigation recovery:
 
 Completion policy:
 - NEVER declare complete while a main/subgoal is active
-- NEVER declare complete merely because remaining representatives are < 0.5 m
+- NEVER declare complete merely because remaining representatives are < 1.0 m
 - case 1: require zero frontier regions (>10 cells) on 5 distinct map updates
 - case 2: if frontier regions remain but every eligible representative is currently
   suppressed after planner-blocking 206/208 failures, revalidate the whole set with
@@ -57,7 +59,7 @@ from visualization_msgs.msg import Marker, MarkerArray
 
 
 MIN_REGION_SIZE = 10
-MIN_DISTANCE_THRESHOLD = 0.5
+MIN_DISTANCE_THRESHOLD = 1.0
 MAP_FRAME = "map"
 ROBOT_FRAME = "base_link"
 
@@ -196,7 +198,8 @@ class NearestEuclideanFrontier(Node):
 
         self.get_logger().info(
             "Nearest Euclidean Frontier started "
-            f"(min distance={MIN_DISTANCE_THRESHOLD:.2f} m, "
+            f"(preferred min distance={MIN_DISTANCE_THRESHOLD:.2f} m, "
+            "near fallback=all-frontiers-close, "
             f"path-subgoal recovery={SUBGOAL_MAX_DISTANCE_M:.2f} m max, "
             f"105 limit={EXECUTION_FAILURE_LIMIT}, "
             f"105 cooldown={EXECUTION_BLOCKED_COOLDOWN_S:.0f} s, "
@@ -970,31 +973,43 @@ class NearestEuclideanFrontier(Node):
             return
 
         robot_x, robot_y = robot
-        all_candidates = []
-        candidates = []
-        suppressed_planner_blocked = 0
+        raw_candidates = []
 
         for region in regions:
             row, col = self.representative(region)
             x, y = self.cell_to_world(row, col)
             distance = math.hypot(x - robot_x, y - robot_y)
+            raw_candidates.append((distance, x, y, row, col, len(region)))
 
-            if distance < MIN_DISTANCE_THRESHOLD:
-                continue
+        distant_candidates = [
+            candidate
+            for candidate in raw_candidates
+            if candidate[0] >= MIN_DISTANCE_THRESHOLD
+        ]
+        near_frontier_fallback = not distant_candidates
+        all_candidates = (
+            distant_candidates if distant_candidates else raw_candidates
+        )
 
-            candidate = (distance, x, y, row, col, len(region))
-            all_candidates.append(candidate)
+        if near_frontier_fallback:
+            self.get_logger().info(
+                "All current frontier representatives are closer than "
+                f"{MIN_DISTANCE_THRESHOLD:.2f} m; enabling near-frontier fallback."
+            )
 
+        candidates = []
+        suppressed_planner_blocked = 0
+        for candidate in all_candidates:
+            _distance, x, y, _row, _col, _region_size = candidate
             if self.is_planner_blocked_suppressed(x, y):
                 suppressed_planner_blocked += 1
                 continue
-
             candidates.append(candidate)
 
         if not candidates:
             self.clear_goal_markers()
 
-            # This call now refuses terminal revalidation while any candidate is
+            # This call refuses terminal revalidation while any candidate is
             # under a temporary 105 execution cooldown.
             if (
                 all_candidates
@@ -1006,16 +1021,13 @@ class NearestEuclideanFrontier(Node):
             self.revalidation_signature = None
             self.reset_completion_verification("frontier_region_present")
             self.publish_status(
-                "BLOCKED_BY_MIN_DISTANCE",
-                reason="frontier_regions_exist_but_all_representatives_too_close",
+                "EXPLORING",
+                reason="frontier_candidates_present_but_not_selectable",
                 frontier_regions=len(regions),
-                min_distance_m=MIN_DISTANCE_THRESHOLD,
+                candidate_count=len(all_candidates),
+                preferred_min_distance_m=MIN_DISTANCE_THRESHOLD,
+                near_frontier_fallback=near_frontier_fallback,
                 suppressed_planner_blocked=suppressed_planner_blocked,
-            )
-            self.get_logger().warn(
-                "Frontier regions still exist, but no eligible representative "
-                f"remains outside the {MIN_DISTANCE_THRESHOLD:.2f} m distance "
-                "guard. NOT declaring exploration complete."
             )
             return
 
@@ -1029,7 +1041,8 @@ class NearestEuclideanFrontier(Node):
 
         self.get_logger().info(
             f"Selected nearest frontier: x={x:.2f}, y={y:.2f}, "
-            f"distance={distance:.2f} m, region={region_size} cells"
+            f"distance={distance:.2f} m, region={region_size} cells, "
+            f"near_fallback={near_frontier_fallback}"
         )
 
         self.main_goal = (x, y)
