@@ -1,21 +1,19 @@
-"""Launch TurtleBot4 with Old-Map-First V2.
+"""Launch TurtleBot4 with lightweight Old-Map-First refinement.
 
-This diagnostic profile keeps the normal SLAM Toolbox loop-closure detector,
-whole-graph Ceres optimization, New Room simulation and Nav2 behavior.
-Old-map-first confidence is applied at two layers:
+This profile keeps the normal SLAM Toolbox loop-closure detector, whole-graph
+Ceres optimization, New Room simulation and Nav2 behavior.
+
+Old-map-first influence is applied at two layers:
 
 1. Local scan matching:
-   - the initial sequential/local match keeps the normal recent running buffer
-     (30 scans) and adds sparse historical keyframes near the predicted pose;
-   - the first scan is retained as a trusted historical keyframe;
-   - earlier reference scans contribute more strongly than later scans using
-     c(i) = c_min + (1-c_min) * exp(-i / 70), c_min=0.25;
-   - active confidences are normalized by the strongest active reference so
-     relative order S1>S2>S3... is preserved without collapsing matcher
-     response when only late scans are locally available;
-   - OldMapMapper mirrors Karto AddEdges topology, but the local near-chain
-     MatchScan step also uses the same old>new weighted correlation rule;
-   - loop-closure coarse/fine matching itself stays upstream/unweighted.
+   - the normal Karto matcher first aligns each new scan against the ordinary
+     recent running buffer (30 scans);
+   - scans still inside that recent buffer are not processed a second time;
+   - after the stock match, at most 3 sparse historical keyframes within 1.5 m
+     are matched with Karto again, coarse-only;
+   - only a confidence-gated, tightly bounded fraction of that historical
+     correction is applied to the stock pose;
+   - no custom Gaussian weighted grid is rebuilt for the 30 recent scans.
 
 2. Pose-graph optimization:
    - the first scan pose remains hard-fixed exactly as upstream Ceres does;
@@ -23,13 +21,10 @@ Old-map-first confidence is applied at two layers:
      w(n) = 1 + 4 * exp(-n / 70), i.e. early constraints start near 5x and
      monotonically decay toward ordinary Toolbox 1x;
    - long-gap / loop constraints remain at 1x;
-   - adaptive release is disabled (1.0 -> 1.0) for this diagnostic, so loop
-     evidence cannot weaken the old-map temporal preference.
+   - adaptive release remains disabled (1.0 -> 1.0).
 
-The first scan is not forced into every local match. It participates directly
-only when it is spatially relevant to the predicted current pose; otherwise its
-confidence is transmitted progressively through trusted local history and the
-pose graph.
+This is a lightweight two-pass OldMap variant, not the earlier per-reference
+weighted-correlation implementation.
 """
 
 import os
@@ -120,19 +115,17 @@ def generate_launch_description() -> LaunchDescription:
             'loop_search_space_dimension': 4.0,
             'loop_match_maximum_variance_coarse': 2.0,
 
-            # A/B diagnostic: bypass the custom weighted scan matcher while
-            # keeping the pose-graph adaptive anchor enabled below.
-            'oldmap_scan_weighting_enabled': False,
+            # Lightweight two-pass OldMap scan refinement:
+            # stock 30-scan local match first, then <=3 historical keyframes.
+            'oldmap_scan_weighting_enabled': True,
             'oldmap_scan_min_confidence': 0.25,
             'oldmap_scan_decay_nodes': 70.0,
             'oldmap_keep_first_scan': True,
             'oldmap_keyframe_distance': 1.0,
             'oldmap_history_search_radius': 1.5,
-            'oldmap_history_max_keyframes': 6,
+            'oldmap_history_max_keyframes': 3,
 
             # Old-Map-First pose-graph hierarchy.
-            # Keep the original weighting strength; this path only reweights
-            # existing local constraints and does not widen the history search.
             'adaptive_anchor_enabled': True,
             'adaptive_anchor_min_weight': 1.0,
             'adaptive_anchor_max_weight': 5.0,
