@@ -172,7 +172,7 @@ echo "Launch : mapex_lab/launch/slam.launch.py"
 echo "=============================="
 echo ""
 
-ros2 launch mapex_lab slam.launch.py &
+ros2 launch "$ROOT_DIR/mapex_lab/launch/slam.launch.py" &
 LAUNCH_PID=$!
 
 wait_for_stack
@@ -192,7 +192,7 @@ echo "Starting $METHOD_LABEL..."
 printf 'Command:'
 printf ' %q' "${EXPLORE_CMD[@]}"
 echo
- echo "Nhan Ctrl+C mot lan de dung ca exploration va slam.launch.py."
+echo "Nhan Ctrl+C mot lan de dung ca exploration va slam.launch.py."
 echo ""
 
 "${EXPLORE_CMD[@]}" &
