@@ -1,5 +1,13 @@
 # mapex_lab status
 
+## 2026-09-11 interactive experiment runner
+
+- DONE: added executable `mapex_lab/run` to replace the normal two-terminal workflow for `slam.launch.py` + NF/MapEx. The runner interactively asks for NF vs MapEx, whether to record, and the run name when recording.
+- DONE: runner sources ROS 2 Jazzy and the workspace, launches `launch/slam.launch.py`, waits for `/map` and `/navigate_to_pose`, then dispatches `nf_basic.py`, `mapex.py`, `nf_run.py`, or `mapex_run.py` as appropriate. Recorded runs explicitly use `--runtime-profile slam`.
+- DONE: duplicate run names are rejected before launching the simulation, and `Ctrl+C` triggers shutdown of the launch process so simulation / SLAM / Nav2 are cleaned up from the same terminal.
+- LATEST RESULT: static implementation and repository wiring are complete; `mapex_lab/run` is tracked executable (`100755`). Runtime smoke testing on `com1` is still required.
+- NEXT ACTION: `git pull` on `com1`, run `./mapex_lab/run`, first test NF without record, then one short recorded run to verify startup gating, output path, provenance label `slam`, and one-shot shutdown behavior.
+
 ## 2026-09-09 all-training evaluation implementation
 
 - DONE: restored the original three-ensemble online worker/bridge/recorder and config; removed the fourth-checkpoint requirement. Added ROS-free `scripts/predict_alltrain_offline.py` for completed runs.
