@@ -8,6 +8,55 @@ LAUNCH_PID=""
 EXPLORATION_PID=""
 CLEANED_UP=0
 
+process_group_alive() {
+  local pgid="$1"
+  kill -0 -- "-$pgid" 2>/dev/null
+}
+
+wait_for_process_group_exit() {
+  local pgid="$1"
+  local timeout_s="$2"
+  local elapsed=0
+
+  while (( elapsed < timeout_s )); do
+    if ! process_group_alive "$pgid"; then
+      return 0
+    fi
+    sleep 1
+    ((elapsed+=1))
+  done
+  return 1
+}
+
+stop_process_group() {
+  local pgid="$1"
+  local label="$2"
+
+  if [[ -z "$pgid" ]] || ! process_group_alive "$pgid"; then
+    return 0
+  fi
+
+  # First allow ROS 2 launch / Python nodes to perform a normal Ctrl+C-style
+  # shutdown and flush files cleanly.
+  kill -INT -- "-$pgid" 2>/dev/null || true
+  if wait_for_process_group_exit "$pgid" 12; then
+    wait "$pgid" 2>/dev/null || true
+    return 0
+  fi
+
+  echo "WARNING: $label did not stop after SIGINT; sending SIGTERM..."
+  kill -TERM -- "-$pgid" 2>/dev/null || true
+  if wait_for_process_group_exit "$pgid" 5; then
+    wait "$pgid" 2>/dev/null || true
+    return 0
+  fi
+
+  echo "WARNING: $label still running; forcing SIGKILL..."
+  kill -KILL -- "-$pgid" 2>/dev/null || true
+  wait_for_process_group_exit "$pgid" 2 || true
+  wait "$pgid" 2>/dev/null || true
+}
+
 cleanup() {
   if [[ "$CLEANED_UP" -eq 1 ]]; then
     return
@@ -18,15 +67,17 @@ cleanup() {
   echo
   echo "Stopping experiment..."
 
-  if [[ -n "$EXPLORATION_PID" ]] && kill -0 "$EXPLORATION_PID" 2>/dev/null; then
-    kill -INT "$EXPLORATION_PID" 2>/dev/null || true
-    wait "$EXPLORATION_PID" 2>/dev/null || true
+  if [[ -n "$EXPLORATION_PID" ]]; then
+    stop_process_group "$EXPLORATION_PID" "exploration"
+    EXPLORATION_PID=""
   fi
 
-  if [[ -n "$LAUNCH_PID" ]] && kill -0 "$LAUNCH_PID" 2>/dev/null; then
-    kill -INT "$LAUNCH_PID" 2>/dev/null || true
-    wait "$LAUNCH_PID" 2>/dev/null || true
+  if [[ -n "$LAUNCH_PID" ]]; then
+    stop_process_group "$LAUNCH_PID" "slam.launch.py"
+    LAUNCH_PID=""
   fi
+
+  echo "Experiment stopped."
 }
 
 trap cleanup INT TERM EXIT
@@ -61,6 +112,11 @@ fi
 
 if [[ -z "$ROS_PYTHON" ]]; then
   echo "ERROR: Python 3 not found."
+  exit 1
+fi
+
+if ! command -v setsid >/dev/null 2>&1; then
+  echo "ERROR: setsid not found (normally provided by util-linux)."
   exit 1
 fi
 
@@ -177,7 +233,7 @@ wait_for_stack() {
   echo ""
   echo "Dang cho /map va /navigate_to_pose san sang..."
   while (( elapsed < timeout_s )); do
-    if ! kill -0 "$LAUNCH_PID" 2>/dev/null; then
+    if ! process_group_alive "$LAUNCH_PID"; then
       echo "ERROR: slam.launch.py da dung truoc khi stack san sang."
       return 1
     fi
@@ -233,7 +289,9 @@ echo "Launch : mapex_lab/launch/slam.launch.py"
 echo "=============================="
 echo ""
 
-ros2 launch "$ROOT_DIR/mapex_lab/launch/slam.launch.py" &
+# Run launch in its own process group so cleanup can stop the complete ROS/Gazebo
+# tree instead of only the ros2 launch parent process.
+setsid ros2 launch "$ROOT_DIR/mapex_lab/launch/slam.launch.py" &
 LAUNCH_PID=$!
 
 wait_for_stack
@@ -253,10 +311,13 @@ echo "Starting $METHOD_LABEL..."
 printf 'Command:'
 printf ' %q' "${EXPLORE_CMD[@]}"
 echo
-echo "Nhan Ctrl+C mot lan de dung ca exploration va slam.launch.py."
+echo "Run hoan tat se tu dong dung exploration, SLAM, Nav2 va Gazebo."
+echo "Nhan Ctrl+C mot lan neu muon dung som."
 echo ""
 
-"${EXPLORE_CMD[@]}" &
+# Give exploration (and the MapEx LaMa worker, when used) its own process group
+# so an early Ctrl+C can clean the whole tree reliably.
+setsid "${EXPLORE_CMD[@]}" &
 EXPLORATION_PID=$!
 
 set +e
@@ -269,5 +330,8 @@ if [[ "$EXPLORATION_STATUS" -ne 0 && "$EXPLORATION_STATUS" -ne 130 ]]; then
   echo "Exploration ket thuc voi ma loi: $EXPLORATION_STATUS"
 fi
 
+# Normal completion reaches here only after the recorder has printed SAVED and
+# OFFLINE EVAL. Now stop the full simulation/navigation stack before returning
+# the shell prompt.
 cleanup
 exit "$EXPLORATION_STATUS"
