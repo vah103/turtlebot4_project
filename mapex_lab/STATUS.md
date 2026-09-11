@@ -2,11 +2,12 @@
 
 ## 2026-09-11 interactive experiment runner
 
-- DONE: added executable `mapex_lab/run` to replace the normal two-terminal workflow for `slam.launch.py` + NF/MapEx. The runner interactively asks for NF vs MapEx, whether to record, and the run name when recording.
-- DONE: runner sources ROS 2 Jazzy and the workspace, launches `launch/slam.launch.py`, waits for `/map` and `/navigate_to_pose`, then dispatches `nf_basic.py`, `mapex.py`, `nf_run.py`, or `mapex_run.py` as appropriate. Recorded runs explicitly use `--runtime-profile slam`.
-- DONE: duplicate run names are rejected before launching the simulation, and `Ctrl+C` triggers shutdown of the launch process so simulation / SLAM / Nav2 are cleaned up from the same terminal.
-- LATEST RESULT: static implementation and repository wiring are complete; `mapex_lab/run` is tracked executable (`100755`). Runtime smoke testing on `com1` is still required.
-- NEXT ACTION: `git pull` on `com1`, run `./mapex_lab/run`, first test NF without record, then one short recorded run to verify startup gating, output path, provenance label `slam`, and one-shot shutdown behavior.
+- DONE: added executable root-level `run` to replace the normal two-terminal workflow for `slam.launch.py` + NF/MapEx. The runner interactively asks for NF vs MapEx, whether to record, and the run name when recording.
+- DONE: runner sources ROS 2 Jazzy and the workspace, launches `launch/slam.launch.py`, waits for `/map`, `/navigate_to_pose`, and active Nav2 lifecycle state, then dispatches `nf_basic.py`, `mapex.py`, `nf_run.py`, or `mapex_run.py` as appropriate. Recorded runs explicitly use `--runtime-profile slam`.
+- DONE: startup refuses a stale ROS/Nav2 stack; each launch/exploration tree is placed in its own session and cleanup targets the full session with INT -> TERM -> KILL fallback before returning the shell prompt.
+- DONE: when a requested run ID already exists, the runner now offers three choices before simulation starts: delete the old run and reuse the name, choose another name, or cancel.
+- LATEST RESULT: runtime smoke testing on `com1` exposed stale Nav2 processes and an inactive `controller_server`; lifecycle gating and full-session cleanup were added. Root `run` remains tracked executable (`100755`).
+- NEXT ACTION: `git pull` on `com1` and test one fresh recorded NF/MapEx run, verifying active Nav2 gating, duplicate-run handling, output path/provenance, and clean one-shot shutdown.
 
 ## 2026-09-09 all-training evaluation implementation
 
