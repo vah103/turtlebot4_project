@@ -35,6 +35,10 @@ if [[ ! -f /opt/ros/jazzy/setup.bash ]]; then
   echo "ERROR: /opt/ros/jazzy/setup.bash not found."
   exit 1
 fi
+
+# ROS/ament setup scripts may legitimately reference variables that are unset.
+# Temporarily disable nounset while sourcing them, then restore strict mode.
+set +u
 source /opt/ros/jazzy/setup.bash
 
 if [[ -f "$ROOT_DIR/ros2_ws/install/setup.bash" ]]; then
@@ -42,6 +46,7 @@ if [[ -f "$ROOT_DIR/ros2_ws/install/setup.bash" ]]; then
 else
   echo "WARNING: ros2_ws/install/setup.bash not found; using only /opt/ros/jazzy."
 fi
+set -u
 
 export TURTLEBOT4_PROJECT_ROOT="$ROOT_DIR"
 
