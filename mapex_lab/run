@@ -1,0 +1,209 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+LAB_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd -- "${LAB_DIR}/.." && pwd)"
+ROS_SETUP="${ROS_SETUP:-/opt/ros/jazzy/setup.bash}"
+WS_SETUP="${ROOT_DIR}/ros2_ws/install/setup.bash"
+PYTHON_BIN="${PYTHON_BIN:-python3}"
+LAUNCH_PID=""
+
+fail() {
+    printf 'ERROR: %s\n' "$*" >&2
+    exit 1
+}
+
+if [[ ! -t 0 ]]; then
+    fail "This runner is interactive; run it from a terminal."
+fi
+
+printf '\n=== mapex_lab runner ===\n'
+printf 'Chọn thuật toán:\n'
+printf '  1) NF (Nearest Frontier)\n'
+printf '  2) MapEx\n'
+
+while true; do
+    read -r -p '> ' choice
+    case "${choice,,}" in
+        1|nf|nearest)
+            METHOD="nf"
+            break
+            ;;
+        2|mapex|map-ex)
+            METHOD="mapex"
+            break
+            ;;
+        q|quit|exit)
+            exit 0
+            ;;
+        *)
+            printf 'Chọn 1 (NF) hoặc 2 (MapEx).\n'
+            ;;
+    esac
+done
+
+while true; do
+    read -r -p 'Lưu record? [y/N]: ' record_answer
+    case "${record_answer,,}" in
+        y|yes)
+            RECORD=1
+            break
+            ;;
+        ''|n|no)
+            RECORD=0
+            break
+            ;;
+        *)
+            printf 'Nhập y hoặc n.\n'
+            ;;
+    esac
+done
+
+RUN_ID=""
+if (( RECORD )); then
+    if [[ "$METHOD" == "nf" ]]; then
+        RUN_BASE="${LAB_DIR}/experiments/nearest"
+    else
+        RUN_BASE="${LAB_DIR}/experiments/mapex"
+    fi
+
+    while true; do
+        read -r -p 'Tên run: ' RUN_ID
+        if [[ -z "$RUN_ID" ]]; then
+            printf 'Tên run không được để trống.\n'
+            continue
+        fi
+        if [[ ! "$RUN_ID" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
+            printf 'Chỉ dùng chữ, số, dấu chấm, gạch dưới hoặc gạch ngang.\n'
+            continue
+        fi
+        if [[ -e "${RUN_BASE}/${RUN_ID}" ]]; then
+            printf 'Run "%s" đã tồn tại. Chọn tên khác.\n' "$RUN_ID"
+            continue
+        fi
+        break
+    done
+fi
+
+[[ -f "$ROS_SETUP" ]] || fail "Không tìm thấy ROS setup: ${ROS_SETUP}"
+[[ -f "$WS_SETUP" ]] || fail "Không tìm thấy workspace setup: ${WS_SETUP}. Hãy build ros2_ws trước."
+[[ -f "${LAB_DIR}/launch/slam.launch.py" ]] || fail "Không tìm thấy mapex_lab/launch/slam.launch.py"
+
+# shellcheck disable=SC1090
+source "$ROS_SETUP"
+# shellcheck disable=SC1090
+source "$WS_SETUP"
+
+export ROS_DOMAIN_ID="${ROS_DOMAIN_ID:-0}"
+export RMW_IMPLEMENTATION="${RMW_IMPLEMENTATION:-rmw_fastrtps_cpp}"
+
+cleanup() {
+    local status=$?
+    trap - EXIT INT TERM
+
+    if [[ -n "$LAUNCH_PID" ]] && kill -0 "$LAUNCH_PID" 2>/dev/null; then
+        printf '\nĐang dừng simulation / SLAM / Nav2...\n'
+        kill -INT "$LAUNCH_PID" 2>/dev/null || true
+
+        for _ in {1..50}; do
+            if ! kill -0 "$LAUNCH_PID" 2>/dev/null; then
+                break
+            fi
+            sleep 0.1
+        done
+
+        if kill -0 "$LAUNCH_PID" 2>/dev/null; then
+            kill -TERM "$LAUNCH_PID" 2>/dev/null || true
+        fi
+    fi
+
+    if [[ -n "$LAUNCH_PID" ]]; then
+        wait "$LAUNCH_PID" 2>/dev/null || true
+    fi
+
+    exit "$status"
+}
+
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
+cd "$ROOT_DIR"
+
+printf '\nĐang bật slam.launch.py...\n'
+ros2 launch "${LAB_DIR}/launch/slam.launch.py" &
+LAUNCH_PID=$!
+
+printf 'Đang chờ /map và NavigateToPose sẵn sàng'
+READY=0
+DEADLINE=$((SECONDS + 120))
+while (( SECONDS < DEADLINE )); do
+    if ! kill -0 "$LAUNCH_PID" 2>/dev/null; then
+        printf '\n'
+        set +e
+        wait "$LAUNCH_PID"
+        launch_status=$?
+        set -e
+        fail "slam.launch.py đã thoát sớm (status=${launch_status})."
+    fi
+
+    map_ready=0
+    nav_ready=0
+
+    if ros2 topic list 2>/dev/null | grep -Fxq '/map'; then
+        map_ready=1
+    fi
+    if ros2 action list 2>/dev/null | grep -Fxq '/navigate_to_pose'; then
+        nav_ready=1
+    fi
+
+    if (( map_ready && nav_ready )); then
+        READY=1
+        break
+    fi
+
+    printf '.'
+    sleep 1
+done
+printf '\n'
+
+if (( ! READY )); then
+    fail "Quá 120 giây nhưng /map hoặc /navigate_to_pose chưa sẵn sàng."
+fi
+
+# Give Nav2 a short stable window after discovery before exploration starts.
+sleep 3
+
+if (( RECORD )); then
+    if [[ "$METHOD" == "nf" ]]; then
+        CMD=(
+            "$PYTHON_BIN" "${LAB_DIR}/scripts/nf_run.py"
+            --run-id "$RUN_ID"
+            --environment new_room
+            --runtime-profile slam
+        )
+    else
+        CMD=(
+            "$PYTHON_BIN" "${LAB_DIR}/scripts/mapex_run.py"
+            --run-id "$RUN_ID"
+            --environment new_room
+            --runtime-profile slam
+        )
+    fi
+else
+    if [[ "$METHOD" == "nf" ]]; then
+        CMD=("$PYTHON_BIN" "${LAB_DIR}/scripts/nf_basic.py")
+    else
+        CMD=("$PYTHON_BIN" "${LAB_DIR}/scripts/mapex.py")
+    fi
+fi
+
+printf 'Bắt đầu: %s' "$METHOD"
+if (( RECORD )); then
+    printf ' | record=%s' "$RUN_ID"
+else
+    printf ' | record=no'
+fi
+printf '\nCtrl+C một lần để dừng toàn bộ.\n\n'
+
+"${CMD[@]}"
