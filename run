@@ -4,10 +4,17 @@ set -Eeuo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Keep local simulation isolated from the real TurtleBot / other PCs that may
-# also use ROS_DOMAIN_ID=0.  All processes launched by the runner inherit this
+# also use ROS_DOMAIN_ID=0. All processes launched by the runner inherit this
 # domain and localhost-only discovery, so exactly one Gazebo /clock can be seen.
 export ROS_DOMAIN_ID="${MAPEX_SIM_ROS_DOMAIN_ID:-42}"
 export ROS_LOCALHOST_ONLY="${MAPEX_SIM_LOCALHOST_ONLY:-1}"
+
+# Runner-only Python hook: once NF/MapEx itself declares completed=True, make
+# rclpy.spin return normally. Recorder runs then finalize as
+# "exploration_complete", perform offline evaluation, and let .run_core stop
+# SLAM/Nav2/Gazebo without requiring Ctrl+C.
+export MAPEX_RUNNER_AUTO_EXIT=1
+export PYTHONPATH="$ROOT_DIR/mapex_lab/runner_hooks${PYTHONPATH:+:$PYTHONPATH}"
 
 echo "ROS isolation: domain=$ROS_DOMAIN_ID, localhost_only=$ROS_LOCALHOST_ONLY"
 exec bash "$ROOT_DIR/.run_core" "$@"
