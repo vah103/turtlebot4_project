@@ -34,9 +34,6 @@ wait_for_session_exit() {
 signal_session() {
   local signal_name="$1"
   local sid="$2"
-
-  # pkill -s targets every process still belonging to the session, including
-  # children that created their own process group under ros2 launch.
   pkill "-$signal_name" -s "$sid" 2>/dev/null || true
 }
 
@@ -52,8 +49,7 @@ stop_session() {
     return 0
   fi
 
-  # First request a normal Ctrl+C-style shutdown so ROS nodes can finalize and
-  # recorders can flush files cleanly.
+  # Prefer a normal Ctrl+C-style shutdown so ROS nodes can flush/finalize.
   signal_session INT "$sid"
   if wait_for_session_exit "$sid" 12; then
     if [[ -n "$leader_pid" ]]; then
@@ -111,8 +107,7 @@ if [[ ! -f /opt/ros/jazzy/setup.bash ]]; then
   exit 1
 fi
 
-# ROS/ament setup scripts may legitimately reference variables that are unset.
-# Temporarily disable nounset while sourcing them, then restore strict mode.
+# ROS/ament setup scripts may legitimately reference unset variables.
 set +u
 source /opt/ros/jazzy/setup.bash
 
@@ -125,9 +120,8 @@ set -u
 
 export TURTLEBOT4_PROJECT_ROOT="$ROOT_DIR"
 
-# Run ROS nodes with Ubuntu's system Python. The LaMa model itself is launched
-# by mapex_lama_bridge.py with MAPEX_LAMA_PYTHON, so it keeps its dedicated
-# legacy Conda environment without making rclpy depend on that environment.
+# ROS nodes use Ubuntu/Jazzy Python. MapEx LaMa inference keeps its own Conda
+# Python via MAPEX_LAMA_PYTHON and is launched by mapex_lama_bridge.py.
 if [[ -x /usr/bin/python3 ]]; then
   ROS_PYTHON="/usr/bin/python3"
 else
@@ -139,28 +133,53 @@ if [[ -z "$ROS_PYTHON" ]]; then
   exit 1
 fi
 
-if ! command -v setsid >/dev/null 2>&1; then
-  echo "ERROR: setsid not found (normally provided by util-linux)."
-  exit 1
-fi
-if ! command -v pkill >/dev/null 2>&1; then
-  echo "ERROR: pkill not found (normally provided by procps)."
-  exit 1
-fi
+for required_cmd in setsid pkill ps timeout; do
+  if ! command -v "$required_cmd" >/dev/null 2>&1; then
+    echo "ERROR: required command not found: $required_cmd"
+    exit 1
+  fi
+done
 
 preflight_python() {
-  if ! "$ROS_PYTHON" -c 'import rclpy, yaml, numpy' >/dev/null 2>&1; then
+  if ! "$ROS_PYTHON" -c 'import rclpy, yaml, numpy, rosgraph_msgs' >/dev/null 2>&1; then
     echo "ERROR: ROS Python environment is incomplete: $ROS_PYTHON"
-    echo "Expected imports: rclpy, yaml, numpy"
-    echo "Check with: $ROS_PYTHON -c 'import rclpy, yaml, numpy; print(\"OK\")'"
+    echo "Expected imports: rclpy, yaml, numpy, rosgraph_msgs"
+    echo "Check with: $ROS_PYTHON -c 'import rclpy, yaml, numpy, rosgraph_msgs; print(\"OK\")'"
     exit 1
   fi
 }
 
+find_stale_gazebo() {
+  ps -eo pid=,args= 2>/dev/null \
+    | grep -E '(^|/|[[:space:]])gz sim([[:space:]]|$)' \
+    | grep -v -E 'grep -E|grep -v' \
+    || true
+}
+
 preflight_clean_stack() {
   local node_list
+  local stale_gz
   local stale_nodes=()
   local node
+
+  # A leftover Gazebo server can keep publishing an old simulation clock. If a
+  # new run starts beside it, /clock can jump backwards and TF/Nav2 become
+  # unusable even though lifecycle nodes report active.
+  stale_gz="$(find_stale_gazebo)"
+  if [[ -n "$stale_gz" ]]; then
+    echo ""
+    echo "ERROR: old Gazebo process is still running."
+    echo "Starting another simulation can create multiple /clock timelines."
+    echo "$stale_gz"
+    echo ""
+    echo "Stop the old Gazebo process first. Example:"
+    echo "  pkill -INT -f 'gz sim'"
+    echo "  sleep 3"
+    echo "  pkill -TERM -f 'gz sim'"
+    echo "Then verify:"
+    echo "  ps aux | grep -E 'gz sim|ros_gz_sim/create' | grep -v grep"
+    exit 1
+  fi
 
   node_list="$(timeout 5 ros2 node list 2>/dev/null || true)"
   for node in \
@@ -190,8 +209,6 @@ preflight_clean_stack() {
 }
 
 configure_mapex_environment() {
-  # Defaults are the known-good runtime paths on com1. Existing exported values
-  # win, so the runner remains usable if the MapEx checkout/weights move later.
   export MAPEX_ROOT="${MAPEX_ROOT:-$HOME/MapEx}"
   export MAPEX_LAMA_PYTHON="${MAPEX_LAMA_PYTHON:-/work/conda-envs/lama/bin/python}"
   export MAPEX_ENSEMBLE_DIR="${MAPEX_ENSEMBLE_DIR:-/work/com1/mapex_weights/weights/lama_ensemble}"
@@ -256,7 +273,7 @@ choose_record() {
 }
 
 ask_run_id() {
-  local stamp default_id
+  local stamp default_id run_dir existing_choice
   stamp="$(date +%Y%m%d_%H%M%S)"
   default_id="${METHOD}_${stamp}"
 
@@ -270,7 +287,6 @@ ask_run_id() {
       continue
     fi
 
-    local run_dir
     if [[ "$METHOD" == "nf" ]]; then
       run_dir="$ROOT_DIR/mapex_lab/experiments/nearest/$RUN_ID"
     else
@@ -294,16 +310,12 @@ ask_run_id() {
             echo "Da xoa run cu: $run_dir"
             return
             ;;
-          2)
-            break
-            ;;
+          2) break ;;
           3)
             echo "Da huy."
             exit 0
             ;;
-          *)
-            echo "Lua chon khong hop le. Chon 1, 2 hoac 3."
-            ;;
+          *) echo "Lua chon khong hop le. Chon 1, 2 hoac 3." ;;
         esac
       done
       continue
@@ -317,13 +329,77 @@ lifecycle_active() {
   timeout 3 ros2 lifecycle get "$node" 2>/dev/null | grep -Eq '^active([[:space:]]|$)'
 }
 
-wait_for_stack() {
-  local timeout_s=120
-  local elapsed=0
+clock_stable_once() {
+  # Watch /clock for a short wall-time window. Any backwards step means TF
+  # caches can be invalidated, so exploration must not start yet.
+  "$ROS_PYTHON" - <<'PY'
+import sys
+import time
 
+import rclpy
+from rosgraph_msgs.msg import Clock
+from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
+
+state = {
+    'first': None,
+    'prev': None,
+    'samples': 0,
+    'backward': False,
+}
+
+
+def callback(msg):
+    now_ns = int(msg.clock.sec) * 1_000_000_000 + int(msg.clock.nanosec)
+    if state['first'] is None:
+        state['first'] = now_ns
+    if state['prev'] is not None and now_ns < state['prev']:
+        state['backward'] = True
+    state['prev'] = now_ns
+    state['samples'] += 1
+
+
+rclpy.init(args=None)
+node = rclpy.create_node('mapex_runner_clock_guard')
+qos = QoSProfile(depth=20)
+qos.reliability = ReliabilityPolicy.BEST_EFFORT
+qos.durability = DurabilityPolicy.VOLATILE
+sub = node.create_subscription(Clock, '/clock', callback, qos)
+
+deadline = time.monotonic() + 5.0
+try:
+    while time.monotonic() < deadline and rclpy.ok():
+        rclpy.spin_once(node, timeout_sec=0.2)
+finally:
+    node.destroy_subscription(sub)
+    node.destroy_node()
+    rclpy.shutdown()
+
+if state['backward']:
+    sys.exit(2)
+if state['samples'] < 10:
+    sys.exit(3)
+if state['first'] is None or state['prev'] is None or state['prev'] <= state['first']:
+    sys.exit(4)
+sys.exit(0)
+PY
+}
+
+wait_for_stack() {
+  local timeout_s=150
+  local start_wall
+  local elapsed
+  local clock_notice=0
+
+  start_wall="$(date +%s)"
   echo ""
-  echo "Dang cho /map, /navigate_to_pose va Nav2 lifecycle active..."
-  while (( elapsed < timeout_s )); do
+  echo "Dang cho /map, Nav2 lifecycle active va /clock on dinh..."
+
+  while true; do
+    elapsed=$(( $(date +%s) - start_wall ))
+    if (( elapsed >= timeout_s )); then
+      break
+    fi
+
     if ! session_alive "$LAUNCH_SID"; then
       echo "ERROR: slam.launch.py da dung truoc khi stack san sang."
       return 1
@@ -356,19 +432,27 @@ wait_for_stack() {
       && "$controller_active" -eq 1 \
       && "$planner_active" -eq 1 \
       && "$bt_active" -eq 1 ]]; then
-      echo "SLAM/Nav2 san sang (controller/planner/bt_navigator active)."
-      return 0
+      if [[ "$clock_notice" -eq 0 ]]; then
+        echo "Nav2 active; kiem tra /clock lien tuc trong 5 giay..."
+        clock_notice=1
+      fi
+      if clock_stable_once; then
+        echo "SLAM/Nav2 san sang; /clock on dinh, khong co buoc nhay lui trong 5 giay."
+        return 0
+      fi
+      echo "WARNING: /clock chua on dinh; chua khoi dong $METHOD_LABEL. Thu lai..."
     fi
 
     sleep 1
-    ((elapsed+=1))
   done
 
-  echo "ERROR: qua ${timeout_s}s nhung stack chua active day du."
+  echo "ERROR: qua ${timeout_s}s nhung stack/clock chua on dinh day du."
   echo "Lifecycle hien tai:"
   ros2 lifecycle get /controller_server 2>/dev/null || true
   ros2 lifecycle get /planner_server 2>/dev/null || true
   ros2 lifecycle get /bt_navigator 2>/dev/null || true
+  echo "Clock publishers:"
+  ros2 topic info /clock -v 2>/dev/null || true
   return 1
 }
 
@@ -401,9 +485,6 @@ echo "Launch : mapex_lab/launch/slam.launch.py"
 echo "=============================="
 echo ""
 
-# Start the complete ROS/Gazebo stack in a dedicated session. Cleanup targets
-# the whole session rather than only one process group, because ros2 launch may
-# place child nodes in separate process groups.
 setsid ros2 launch "$ROOT_DIR/mapex_lab/launch/slam.launch.py" &
 LAUNCH_PID=$!
 LAUNCH_SID="$LAUNCH_PID"
@@ -438,14 +519,9 @@ wait "$EXPLORATION_PID"
 EXPLORATION_STATUS=$?
 set -e
 
-# The exploration session may still contain a LaMa worker after the recorder
-# leader exits, so cleanup must keep the SID until every member is gone.
 if [[ "$EXPLORATION_STATUS" -ne 0 && "$EXPLORATION_STATUS" -ne 130 ]]; then
   echo "Exploration ket thuc voi ma loi: $EXPLORATION_STATUS"
 fi
 
-# Normal completion reaches here only after the recorder has printed SAVED and
-# OFFLINE EVAL. Stop every remaining process in both dedicated sessions before
-# printing Experiment stopped and returning the shell prompt.
 cleanup
 exit "$EXPLORATION_STATUS"
