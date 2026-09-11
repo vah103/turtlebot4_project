@@ -5,21 +5,24 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT_DIR"
 
 LAUNCH_PID=""
+LAUNCH_SID=""
 EXPLORATION_PID=""
+EXPLORATION_SID=""
 CLEANED_UP=0
 
-process_group_alive() {
-  local pgid="$1"
-  kill -0 -- "-$pgid" 2>/dev/null
+session_alive() {
+  local sid="$1"
+  [[ -n "$sid" ]] || return 1
+  ps -eo sid= 2>/dev/null | awk -v sid="$sid" '$1 == sid { found=1; exit } END { exit(found ? 0 : 1) }'
 }
 
-wait_for_process_group_exit() {
-  local pgid="$1"
+wait_for_session_exit() {
+  local sid="$1"
   local timeout_s="$2"
   local elapsed=0
 
   while (( elapsed < timeout_s )); do
-    if ! process_group_alive "$pgid"; then
+    if ! session_alive "$sid"; then
       return 0
     fi
     sleep 1
@@ -28,33 +31,52 @@ wait_for_process_group_exit() {
   return 1
 }
 
-stop_process_group() {
-  local pgid="$1"
-  local label="$2"
+signal_session() {
+  local signal_name="$1"
+  local sid="$2"
 
-  if [[ -z "$pgid" ]] || ! process_group_alive "$pgid"; then
+  # pkill -s targets every process still belonging to the session, including
+  # children that created their own process group under ros2 launch.
+  pkill "-$signal_name" -s "$sid" 2>/dev/null || true
+}
+
+stop_session() {
+  local sid="$1"
+  local leader_pid="$2"
+  local label="$3"
+
+  if [[ -z "$sid" ]] || ! session_alive "$sid"; then
+    if [[ -n "$leader_pid" ]]; then
+      wait "$leader_pid" 2>/dev/null || true
+    fi
     return 0
   fi
 
-  # First allow ROS 2 launch / Python nodes to perform a normal Ctrl+C-style
-  # shutdown and flush files cleanly.
-  kill -INT -- "-$pgid" 2>/dev/null || true
-  if wait_for_process_group_exit "$pgid" 12; then
-    wait "$pgid" 2>/dev/null || true
+  # First request a normal Ctrl+C-style shutdown so ROS nodes can finalize and
+  # recorders can flush files cleanly.
+  signal_session INT "$sid"
+  if wait_for_session_exit "$sid" 12; then
+    if [[ -n "$leader_pid" ]]; then
+      wait "$leader_pid" 2>/dev/null || true
+    fi
     return 0
   fi
 
   echo "WARNING: $label did not stop after SIGINT; sending SIGTERM..."
-  kill -TERM -- "-$pgid" 2>/dev/null || true
-  if wait_for_process_group_exit "$pgid" 5; then
-    wait "$pgid" 2>/dev/null || true
+  signal_session TERM "$sid"
+  if wait_for_session_exit "$sid" 5; then
+    if [[ -n "$leader_pid" ]]; then
+      wait "$leader_pid" 2>/dev/null || true
+    fi
     return 0
   fi
 
   echo "WARNING: $label still running; forcing SIGKILL..."
-  kill -KILL -- "-$pgid" 2>/dev/null || true
-  wait_for_process_group_exit "$pgid" 2 || true
-  wait "$pgid" 2>/dev/null || true
+  signal_session KILL "$sid"
+  wait_for_session_exit "$sid" 3 || true
+  if [[ -n "$leader_pid" ]]; then
+    wait "$leader_pid" 2>/dev/null || true
+  fi
 }
 
 cleanup() {
@@ -67,14 +89,16 @@ cleanup() {
   echo
   echo "Stopping experiment..."
 
-  if [[ -n "$EXPLORATION_PID" ]]; then
-    stop_process_group "$EXPLORATION_PID" "exploration"
+  if [[ -n "$EXPLORATION_SID" ]]; then
+    stop_session "$EXPLORATION_SID" "$EXPLORATION_PID" "exploration"
     EXPLORATION_PID=""
+    EXPLORATION_SID=""
   fi
 
-  if [[ -n "$LAUNCH_PID" ]]; then
-    stop_process_group "$LAUNCH_PID" "slam.launch.py"
+  if [[ -n "$LAUNCH_SID" ]]; then
+    stop_session "$LAUNCH_SID" "$LAUNCH_PID" "slam.launch.py"
     LAUNCH_PID=""
+    LAUNCH_SID=""
   fi
 
   echo "Experiment stopped."
@@ -117,6 +141,10 @@ fi
 
 if ! command -v setsid >/dev/null 2>&1; then
   echo "ERROR: setsid not found (normally provided by util-linux)."
+  exit 1
+fi
+if ! command -v pkill >/dev/null 2>&1; then
+  echo "ERROR: pkill not found (normally provided by procps)."
   exit 1
 fi
 
@@ -233,7 +261,7 @@ wait_for_stack() {
   echo ""
   echo "Dang cho /map va /navigate_to_pose san sang..."
   while (( elapsed < timeout_s )); do
-    if ! process_group_alive "$LAUNCH_PID"; then
+    if ! session_alive "$LAUNCH_SID"; then
       echo "ERROR: slam.launch.py da dung truoc khi stack san sang."
       return 1
     fi
@@ -289,10 +317,12 @@ echo "Launch : mapex_lab/launch/slam.launch.py"
 echo "=============================="
 echo ""
 
-# Run launch in its own process group so cleanup can stop the complete ROS/Gazebo
-# tree instead of only the ros2 launch parent process.
+# Start the complete ROS/Gazebo stack in a dedicated session. Cleanup targets
+# the whole session rather than only one process group, because ros2 launch may
+# place child nodes in separate process groups.
 setsid ros2 launch "$ROOT_DIR/mapex_lab/launch/slam.launch.py" &
 LAUNCH_PID=$!
+LAUNCH_SID="$LAUNCH_PID"
 
 wait_for_stack
 
@@ -315,23 +345,23 @@ echo "Run hoan tat se tu dong dung exploration, SLAM, Nav2 va Gazebo."
 echo "Nhan Ctrl+C mot lan neu muon dung som."
 echo ""
 
-# Give exploration (and the MapEx LaMa worker, when used) its own process group
-# so an early Ctrl+C can clean the whole tree reliably.
 setsid "${EXPLORE_CMD[@]}" &
 EXPLORATION_PID=$!
+EXPLORATION_SID="$EXPLORATION_PID"
 
 set +e
 wait "$EXPLORATION_PID"
 EXPLORATION_STATUS=$?
 set -e
-EXPLORATION_PID=""
 
+# The exploration session may still contain a LaMa worker after the recorder
+# leader exits, so cleanup must keep the SID until every member is gone.
 if [[ "$EXPLORATION_STATUS" -ne 0 && "$EXPLORATION_STATUS" -ne 130 ]]; then
   echo "Exploration ket thuc voi ma loi: $EXPLORATION_STATUS"
 fi
 
 # Normal completion reaches here only after the recorder has printed SAVED and
-# OFFLINE EVAL. Now stop the full simulation/navigation stack before returning
-# the shell prompt.
+# OFFLINE EVAL. Stop every remaining process in both dedicated sessions before
+# printing Experiment stopped and returning the shell prompt.
 cleanup
 exit "$EXPLORATION_STATUS"
