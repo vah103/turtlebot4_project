@@ -35,6 +35,7 @@ BAG_TOPICS = [
     "/imu",
     "/joint_states",
     "/cmd_vel",
+    "/cmd_vel_unstamped",
     "/cmd_vel_stamped",
     "/battery_state",
     "/dock_status",
