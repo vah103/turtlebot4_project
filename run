@@ -157,6 +157,38 @@ preflight_python() {
   fi
 }
 
+preflight_clean_stack() {
+  local node_list
+  local stale_nodes=()
+  local node
+
+  node_list="$(timeout 5 ros2 node list 2>/dev/null || true)"
+  for node in \
+    /controller_server \
+    /planner_server \
+    /bt_navigator \
+    /lifecycle_manager_navigation \
+    /slam_toolbox \
+    /mapex_explorer \
+    /nearest_euclidean_frontier; do
+    if grep -Fxq "$node" <<<"$node_list"; then
+      stale_nodes+=("$node")
+    fi
+  done
+
+  if (( ${#stale_nodes[@]} > 0 )); then
+    echo ""
+    echo "ERROR: an old experiment stack is still visible in ROS 2."
+    echo "Do not start another run while these nodes are alive:"
+    printf '  %s\n' "${stale_nodes[@]}"
+    echo ""
+    echo "Stop the old run/processes first, then run ./run again."
+    echo "Inspect leftovers with:"
+    echo "  ps -eo pid,sid,pgid,cmd | grep -E 'controller_server|planner_server|bt_navigator|slam_toolbox|ros2 launch|gz sim' | grep -v grep"
+    exit 1
+  fi
+}
+
 configure_mapex_environment() {
   # Defaults are the known-good runtime paths on com1. Existing exported values
   # win, so the runner remains usable if the MapEx checkout/weights move later.
@@ -254,12 +286,17 @@ ask_run_id() {
   done
 }
 
+lifecycle_active() {
+  local node="$1"
+  timeout 3 ros2 lifecycle get "$node" 2>/dev/null | grep -Eq '^active([[:space:]]|$)'
+}
+
 wait_for_stack() {
-  local timeout_s=90
+  local timeout_s=120
   local elapsed=0
 
   echo ""
-  echo "Dang cho /map va /navigate_to_pose san sang..."
+  echo "Dang cho /map, /navigate_to_pose va Nav2 lifecycle active..."
   while (( elapsed < timeout_s )); do
     if ! session_alive "$LAUNCH_SID"; then
       echo "ERROR: slam.launch.py da dung truoc khi stack san sang."
@@ -268,6 +305,9 @@ wait_for_stack() {
 
     local have_map=0
     local have_nav=0
+    local controller_active=0
+    local planner_active=0
+    local bt_active=0
 
     if timeout 3 ros2 topic list 2>/dev/null | grep -qx '/map'; then
       have_map=1
@@ -275,9 +315,22 @@ wait_for_stack() {
     if timeout 3 ros2 action list 2>/dev/null | grep -qx '/navigate_to_pose'; then
       have_nav=1
     fi
+    if lifecycle_active /controller_server; then
+      controller_active=1
+    fi
+    if lifecycle_active /planner_server; then
+      planner_active=1
+    fi
+    if lifecycle_active /bt_navigator; then
+      bt_active=1
+    fi
 
-    if [[ "$have_map" -eq 1 && "$have_nav" -eq 1 ]]; then
-      echo "SLAM/Nav2 san sang."
+    if [[ "$have_map" -eq 1 \
+      && "$have_nav" -eq 1 \
+      && "$controller_active" -eq 1 \
+      && "$planner_active" -eq 1 \
+      && "$bt_active" -eq 1 ]]; then
+      echo "SLAM/Nav2 san sang (controller/planner/bt_navigator active)."
       return 0
     fi
 
@@ -285,12 +338,17 @@ wait_for_stack() {
     ((elapsed+=1))
   done
 
-  echo "ERROR: qua ${timeout_s}s nhung /map hoac /navigate_to_pose chua san sang."
+  echo "ERROR: qua ${timeout_s}s nhung stack chua active day du."
+  echo "Lifecycle hien tai:"
+  ros2 lifecycle get /controller_server 2>/dev/null || true
+  ros2 lifecycle get /planner_server 2>/dev/null || true
+  ros2 lifecycle get /bt_navigator 2>/dev/null || true
   return 1
 }
 
-choose_method
 preflight_python
+preflight_clean_stack
+choose_method
 if [[ "$METHOD" == "mapex" ]]; then
   configure_mapex_environment
 fi
