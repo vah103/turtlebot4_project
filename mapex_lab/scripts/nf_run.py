@@ -21,6 +21,27 @@ from _nf_run_core import _deep_merge, _git_value, _sha256_file, _stamp_s  # noqa
 from evaluate_nf_profiled import evaluate_run
 
 
+# ``slam.launch.py`` is now the normal launch path for the current New Room
+# experiments. RUNTIME_PROFILES is the same mutable dict owned by
+# ``_nf_run_core.py``; registering it here therefore makes the profile available
+# to both Stage2Run and mapex_run.py without changing either exploration policy.
+RUNTIME_PROFILES["slam"] = {
+    "environment": "new_room",
+    "id": "new_room_slam_adaptive_anchor",
+    "note": (
+        "New Room benchmark launched with launch/slam.launch.py. Uses stock "
+        "Karto sequential scan matching with the tested Adaptive Temporal Anchor "
+        "pose-graph weighting enabled; the custom OldMap scan-level matcher is "
+        "disabled."
+    ),
+    "launch_relative": "launch/slam.launch.py",
+    "slam_relative": None,
+    "extra_hashes": {
+        "adaptive_ceres_solver": "../slam_toolbox/solvers/ceres_solver.cpp",
+    },
+}
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-id", required=True)
