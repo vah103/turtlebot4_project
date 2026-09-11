@@ -1,0 +1,4 @@
+policy_decision_id,candidate_id,raw_rank,policy_rank,row,col,x,y,distance_cells,distance_m,region_size,below_1m,distance_eligible,near_frontier_fallback,execution_suppressed,planner_suppressed,selectable,status,selected,execution_result
+42,r152_c30,1,1,152,30,-9.882151875,2.234103170,60.803374493,6.080337540,127,0,1,0,0,0,1,selected,1,
+42,r171_c53,2,2,171,53,-7.582151841,4.134103198,88.269975534,8.826997685,158,0,1,0,0,0,1,ranked,0,
+42,r158_c84,3,3,158,84,-4.482151795,2.834103179,99.169433324,9.916943480,51,0,1,0,0,0,1,ranked,0,
