@@ -2,6 +2,29 @@
 
 Workspace riêng cho lộ trình làm lại từ đầu để tìm bài toán nghiên cứu từ điểm yếu của MapEx trên môi trường Hospital.
 
+## Chạy thí nghiệm nhanh
+
+Từ root repo, chạy:
+
+```bash
+./mapex_lab/run
+```
+
+Runner tương tác sẽ hỏi lần lượt:
+
+1. Chạy `NF` hay `MapEx`.
+2. Có lưu record hay không.
+3. Nếu có record, nhập tên run.
+
+Runner tự source ROS 2 Jazzy và `ros2_ws/install/setup.bash`, khởi động `launch/slam.launch.py`, chờ `/map` và `/navigate_to_pose` sẵn sàng rồi mới chạy thuật toán.
+
+- NF không record → `scripts/nf_basic.py`
+- MapEx không record → `scripts/mapex.py`
+- NF có record → `scripts/nf_run.py --runtime-profile slam`
+- MapEx có record → `scripts/mapex_run.py --runtime-profile slam`
+
+Tên run được kiểm tra để không ghi đè thư mục đã tồn tại. `Ctrl+C` một lần sẽ dừng runner và yêu cầu `slam.launch.py` tắt simulation / SLAM / Nav2.
+
 ## Mục tiêu
 
 Không giả định trước bottleneck. Quy trình nghiên cứu là:
@@ -46,6 +69,7 @@ mapex_lab/
 ├── ROADMAP.md
 ├── STATUS.md
 ├── EXPERIMENT_PROTOCOL.md
+├── run
 ├── .gitignore
 ├── references/
 │   ├── README.md
@@ -57,6 +81,7 @@ mapex_lab/
 │   ├── slam.yaml
 │   └── mapex.yaml
 ├── launch/
+│   ├── slam.launch.py
 │   ├── stock.launch.py
 │   ├── local.launch.py
 │   └── submap.launch.py
@@ -71,7 +96,7 @@ mapex_lab/
     └── TEACHER_REPORT.md
 ```
 
-`slam.yaml` là source of truth chung cho cả ba launch. `local.launch.py` và `submap.launch.py` chỉ tạo bản runtime tạm thời để đổi `scan_topic` cho frontend tương ứng; không giữ thêm file SLAM config riêng.
+`slam.yaml` là source of truth chung cho các launch sử dụng file cấu hình này. Một số launch chẩn đoán mới hơn có thể merge/override tham số trực tiếp ở runtime.
 
 ## Quy tắc dữ liệu
 
