@@ -50,6 +50,28 @@ set -u
 
 export TURTLEBOT4_PROJECT_ROOT="$ROOT_DIR"
 
+# Do not use a Conda/base python for ROS nodes. ROS Jazzy on Ubuntu 24.04 is
+# installed for the system Python, and Conda may shadow modules such as PyYAML.
+if [[ -x /usr/bin/python3 ]]; then
+  ROS_PYTHON="/usr/bin/python3"
+else
+  ROS_PYTHON="$(command -v python3 || true)"
+fi
+
+if [[ -z "$ROS_PYTHON" ]]; then
+  echo "ERROR: Python 3 not found."
+  exit 1
+fi
+
+preflight_python() {
+  if ! "$ROS_PYTHON" -c 'import rclpy, yaml, numpy' >/dev/null 2>&1; then
+    echo "ERROR: ROS Python environment is incomplete: $ROS_PYTHON"
+    echo "Expected imports: rclpy, yaml, numpy"
+    echo "Check with: $ROS_PYTHON -c 'import rclpy, yaml, numpy; print(\"OK\")'"
+    exit 1
+  fi
+}
+
 choose_method() {
   while true; do
     echo ""
@@ -160,6 +182,7 @@ wait_for_stack() {
   return 1
 }
 
+preflight_python
 choose_method
 choose_record
 if [[ "$RECORD" == "yes" ]]; then
@@ -173,6 +196,7 @@ echo "Record : $RECORD"
 if [[ "$RECORD" == "yes" ]]; then
   echo "Run ID : $RUN_ID"
 fi
+echo "Python : $ROS_PYTHON"
 echo "Launch : mapex_lab/launch/slam.launch.py"
 echo "=============================="
 echo ""
@@ -183,13 +207,13 @@ LAUNCH_PID=$!
 wait_for_stack
 
 if [[ "$METHOD" == "nf" && "$RECORD" == "no" ]]; then
-  EXPLORE_CMD=(python3 "$ROOT_DIR/mapex_lab/scripts/nf_basic.py")
+  EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/nf_basic.py")
 elif [[ "$METHOD" == "mapex" && "$RECORD" == "no" ]]; then
-  EXPLORE_CMD=(python3 "$ROOT_DIR/mapex_lab/scripts/mapex.py")
+  EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mapex.py")
 elif [[ "$METHOD" == "nf" && "$RECORD" == "yes" ]]; then
-  EXPLORE_CMD=(python3 "$ROOT_DIR/mapex_lab/scripts/nf_run.py" --run-id "$RUN_ID" --environment new_room --runtime-profile slam)
+  EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/nf_run.py" --run-id "$RUN_ID" --environment new_room --runtime-profile slam)
 else
-  EXPLORE_CMD=(python3 "$ROOT_DIR/mapex_lab/scripts/mapex_run.py" --run-id "$RUN_ID" --environment new_room --runtime-profile slam)
+  EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mapex_run.py" --run-id "$RUN_ID" --environment new_room --runtime-profile slam)
 fi
 
 echo ""
