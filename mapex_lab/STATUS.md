@@ -3,11 +3,11 @@
 ## 2026-09-11 interactive experiment runner
 
 - DONE: added executable root-level `run` to replace the normal two-terminal workflow for `slam.launch.py` + NF/MapEx. The runner interactively asks for NF vs MapEx, whether to record, and the run name when recording.
-- DONE: runner sources ROS 2 Jazzy and the workspace, launches `launch/slam.launch.py`, waits for `/map`, `/navigate_to_pose`, and active Nav2 lifecycle state, then dispatches `nf_basic.py`, `mapex.py`, `nf_run.py`, or `mapex_run.py` as appropriate. Recorded runs explicitly use `--runtime-profile slam`.
-- DONE: startup refuses a stale ROS/Nav2 stack; each launch/exploration tree is placed in its own session and cleanup targets the full session with INT -> TERM -> KILL fallback before returning the shell prompt.
-- DONE: when a requested run ID already exists, the runner now offers three choices before simulation starts: delete the old run and reuse the name, choose another name, or cancel.
-- LATEST RESULT: runtime smoke testing on `com1` exposed stale Nav2 processes and an inactive `controller_server`; lifecycle gating and full-session cleanup were added. Root `run` remains tracked executable (`100755`).
-- NEXT ACTION: `git pull` on `com1` and test one fresh recorded NF/MapEx run, verifying active Nav2 gating, duplicate-run handling, output path/provenance, and clean one-shot shutdown.
+- DONE: runner sources ROS 2 Jazzy and the workspace, launches `launch/slam.launch.py`, waits for `/map`, `/navigate_to_pose`, active Nav2 lifecycle state, and a 5 s monotonic `/clock` window before dispatching `nf_basic.py`, `mapex.py`, `nf_run.py`, or `mapex_run.py`. Recorded runs explicitly use `--runtime-profile slam`.
+- DONE: startup refuses both a stale ROS/Nav2 stack and any pre-existing `gz sim` process, because an old simulation can create conflicting clock timelines. Each launch/exploration tree is placed in its own session and cleanup targets the full session with INT -> TERM -> KILL fallback before returning the shell prompt.
+- DONE: when a requested run ID already exists, the runner offers three choices before simulation starts: delete the old run and reuse the name, choose another name, or cancel.
+- LATEST RESULT: `mpx_110` reached active Nav2 but `/clock` continued jumping backwards, producing TF-cache resets, transform extrapolation failures and Nav2 error 102; the run was manually stopped after 3 decisions and is not valid benchmark data. Runner hardening now blocks stale Gazebo and requires stable monotonic `/clock` before exploration starts. Root `run` remains tracked executable (`100755`).
+- NEXT ACTION: `git pull` on `com1`, ensure no old Gazebo process is running, then rerun `mpx_110`; verify the runner prints the 5 s stable-clock confirmation before `Starting MapEx...`, and verify normal one-shot shutdown leaves no Gazebo/Nav2 processes behind.
 
 ## 2026-09-09 all-training evaluation implementation
 
