@@ -1,0 +1,527 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$ROOT_DIR"
+
+LAUNCH_PID=""
+LAUNCH_SID=""
+EXPLORATION_PID=""
+EXPLORATION_SID=""
+CLEANED_UP=0
+
+session_alive() {
+  local sid="$1"
+  [[ -n "$sid" ]] || return 1
+  ps -eo sid= 2>/dev/null | awk -v sid="$sid" '$1 == sid { found=1; exit } END { exit(found ? 0 : 1) }'
+}
+
+wait_for_session_exit() {
+  local sid="$1"
+  local timeout_s="$2"
+  local elapsed=0
+
+  while (( elapsed < timeout_s )); do
+    if ! session_alive "$sid"; then
+      return 0
+    fi
+    sleep 1
+    ((elapsed+=1))
+  done
+  return 1
+}
+
+signal_session() {
+  local signal_name="$1"
+  local sid="$2"
+  pkill "-$signal_name" -s "$sid" 2>/dev/null || true
+}
+
+stop_session() {
+  local sid="$1"
+  local leader_pid="$2"
+  local label="$3"
+
+  if [[ -z "$sid" ]] || ! session_alive "$sid"; then
+    if [[ -n "$leader_pid" ]]; then
+      wait "$leader_pid" 2>/dev/null || true
+    fi
+    return 0
+  fi
+
+  # Prefer a normal Ctrl+C-style shutdown so ROS nodes can flush/finalize.
+  signal_session INT "$sid"
+  if wait_for_session_exit "$sid" 12; then
+    if [[ -n "$leader_pid" ]]; then
+      wait "$leader_pid" 2>/dev/null || true
+    fi
+    return 0
+  fi
+
+  echo "WARNING: $label did not stop after SIGINT; sending SIGTERM..."
+  signal_session TERM "$sid"
+  if wait_for_session_exit "$sid" 5; then
+    if [[ -n "$leader_pid" ]]; then
+      wait "$leader_pid" 2>/dev/null || true
+    fi
+    return 0
+  fi
+
+  echo "WARNING: $label still running; forcing SIGKILL..."
+  signal_session KILL "$sid"
+  wait_for_session_exit "$sid" 3 || true
+  if [[ -n "$leader_pid" ]]; then
+    wait "$leader_pid" 2>/dev/null || true
+  fi
+}
+
+cleanup() {
+  if [[ "$CLEANED_UP" -eq 1 ]]; then
+    return
+  fi
+  CLEANED_UP=1
+  trap - INT TERM EXIT
+
+  echo
+  echo "Stopping experiment..."
+
+  if [[ -n "$EXPLORATION_SID" ]]; then
+    stop_session "$EXPLORATION_SID" "$EXPLORATION_PID" "exploration"
+    EXPLORATION_PID=""
+    EXPLORATION_SID=""
+  fi
+
+  if [[ -n "$LAUNCH_SID" ]]; then
+    stop_session "$LAUNCH_SID" "$LAUNCH_PID" "slam.launch.py"
+    LAUNCH_PID=""
+    LAUNCH_SID=""
+  fi
+
+  echo "Experiment stopped."
+}
+
+trap cleanup INT TERM EXIT
+
+if [[ ! -f /opt/ros/jazzy/setup.bash ]]; then
+  echo "ERROR: /opt/ros/jazzy/setup.bash not found."
+  exit 1
+fi
+
+# ROS/ament setup scripts may legitimately reference unset variables.
+set +u
+source /opt/ros/jazzy/setup.bash
+
+if [[ -f "$ROOT_DIR/ros2_ws/install/setup.bash" ]]; then
+  source "$ROOT_DIR/ros2_ws/install/setup.bash"
+else
+  echo "WARNING: ros2_ws/install/setup.bash not found; using only /opt/ros/jazzy."
+fi
+set -u
+
+export TURTLEBOT4_PROJECT_ROOT="$ROOT_DIR"
+
+# ROS nodes use Ubuntu/Jazzy Python. MapEx LaMa inference keeps its own Conda
+# Python via MAPEX_LAMA_PYTHON and is launched by mapex_lama_bridge.py.
+if [[ -x /usr/bin/python3 ]]; then
+  ROS_PYTHON="/usr/bin/python3"
+else
+  ROS_PYTHON="$(command -v python3 || true)"
+fi
+
+if [[ -z "$ROS_PYTHON" ]]; then
+  echo "ERROR: Python 3 not found."
+  exit 1
+fi
+
+for required_cmd in setsid pkill ps timeout; do
+  if ! command -v "$required_cmd" >/dev/null 2>&1; then
+    echo "ERROR: required command not found: $required_cmd"
+    exit 1
+  fi
+done
+
+preflight_python() {
+  if ! "$ROS_PYTHON" -c 'import rclpy, yaml, numpy, rosgraph_msgs' >/dev/null 2>&1; then
+    echo "ERROR: ROS Python environment is incomplete: $ROS_PYTHON"
+    echo "Expected imports: rclpy, yaml, numpy, rosgraph_msgs"
+    echo "Check with: $ROS_PYTHON -c 'import rclpy, yaml, numpy, rosgraph_msgs; print(\"OK\")'"
+    exit 1
+  fi
+}
+
+find_stale_gazebo() {
+  ps -eo pid=,args= 2>/dev/null \
+    | grep -E '(^|/|[[:space:]])gz sim([[:space:]]|$)' \
+    | grep -v -E 'grep -E|grep -v' \
+    || true
+}
+
+preflight_clean_stack() {
+  local node_list
+  local stale_gz
+  local stale_nodes=()
+  local node
+
+  # A leftover Gazebo server can keep publishing an old simulation clock. If a
+  # new run starts beside it, /clock can jump backwards and TF/Nav2 become
+  # unusable even though lifecycle nodes report active.
+  stale_gz="$(find_stale_gazebo)"
+  if [[ -n "$stale_gz" ]]; then
+    echo ""
+    echo "ERROR: old Gazebo process is still running."
+    echo "Starting another simulation can create multiple /clock timelines."
+    echo "$stale_gz"
+    echo ""
+    echo "Stop the old Gazebo process first. Example:"
+    echo "  pkill -INT -f 'gz sim'"
+    echo "  sleep 3"
+    echo "  pkill -TERM -f 'gz sim'"
+    echo "Then verify:"
+    echo "  ps aux | grep -E 'gz sim|ros_gz_sim/create' | grep -v grep"
+    exit 1
+  fi
+
+  node_list="$(timeout 5 ros2 node list 2>/dev/null || true)"
+  for node in \
+    /controller_server \
+    /planner_server \
+    /bt_navigator \
+    /lifecycle_manager_navigation \
+    /slam_toolbox \
+    /mapex_explorer \
+    /nearest_euclidean_frontier; do
+    if grep -Fxq "$node" <<<"$node_list"; then
+      stale_nodes+=("$node")
+    fi
+  done
+
+  if (( ${#stale_nodes[@]} > 0 )); then
+    echo ""
+    echo "ERROR: an old experiment stack is still visible in ROS 2."
+    echo "Do not start another run while these nodes are alive:"
+    printf '  %s\n' "${stale_nodes[@]}"
+    echo ""
+    echo "Stop the old run/processes first, then run ./run again."
+    echo "Inspect leftovers with:"
+    echo "  ps -eo pid,sid,pgid,cmd | grep -E 'controller_server|planner_server|bt_navigator|slam_toolbox|ros2 launch|gz sim' | grep -v grep"
+    exit 1
+  fi
+}
+
+configure_mapex_environment() {
+  export MAPEX_ROOT="${MAPEX_ROOT:-$HOME/MapEx}"
+  export MAPEX_LAMA_PYTHON="${MAPEX_LAMA_PYTHON:-/work/conda-envs/lama/bin/python}"
+  export MAPEX_ENSEMBLE_DIR="${MAPEX_ENSEMBLE_DIR:-/work/com1/mapex_weights/weights/lama_ensemble}"
+  export MAPEX_DEVICE="${MAPEX_DEVICE:-cpu}"
+
+  if [[ ! -d "$MAPEX_ROOT" ]]; then
+    echo "ERROR: MAPEX_ROOT not found: $MAPEX_ROOT"
+    exit 1
+  fi
+  if [[ ! -x "$MAPEX_LAMA_PYTHON" ]]; then
+    echo "ERROR: MAPEX_LAMA_PYTHON not executable: $MAPEX_LAMA_PYTHON"
+    exit 1
+  fi
+  if [[ ! -d "$MAPEX_ENSEMBLE_DIR" ]]; then
+    echo "ERROR: MAPEX_ENSEMBLE_DIR not found: $MAPEX_ENSEMBLE_DIR"
+    exit 1
+  fi
+}
+
+choose_method() {
+  while true; do
+    echo ""
+    echo "Chon phuong phap:"
+    echo "  1) NF"
+    echo "  2) MapEx"
+    read -r -p "> " choice
+    case "$choice" in
+      1|nf|NF)
+        METHOD="nf"
+        METHOD_LABEL="NF"
+        return
+        ;;
+      2|mapex|MapEx|MAPEX)
+        METHOD="mapex"
+        METHOD_LABEL="MapEx"
+        return
+        ;;
+      *) echo "Lua chon khong hop le. Chon 1 hoac 2." ;;
+    esac
+  done
+}
+
+choose_record() {
+  while true; do
+    echo ""
+    echo "Co luu record khong?"
+    echo "  1) Co"
+    echo "  2) Khong"
+    read -r -p "> " choice
+    case "$choice" in
+      1|y|Y|yes|YES|co|Co|CO)
+        RECORD="yes"
+        return
+        ;;
+      2|n|N|no|NO|khong|Khong|KHONG)
+        RECORD="no"
+        return
+        ;;
+      *) echo "Lua chon khong hop le. Chon 1 hoac 2." ;;
+    esac
+  done
+}
+
+ask_run_id() {
+  local stamp default_id run_dir existing_choice
+  stamp="$(date +%Y%m%d_%H%M%S)"
+  default_id="${METHOD}_${stamp}"
+
+  while true; do
+    echo ""
+    read -r -p "Ten run [${default_id}]: " RUN_ID
+    RUN_ID="${RUN_ID:-$default_id}"
+
+    if [[ ! "$RUN_ID" =~ ^[A-Za-z0-9._-]+$ ]]; then
+      echo "Ten run chi nen gom chu, so, dau cham, gach duoi hoac gach ngang."
+      continue
+    fi
+
+    if [[ "$METHOD" == "nf" ]]; then
+      run_dir="$ROOT_DIR/mapex_lab/experiments/nearest/$RUN_ID"
+    else
+      run_dir="$ROOT_DIR/mapex_lab/experiments/mapex/$RUN_ID"
+    fi
+
+    if [[ -e "$run_dir" ]]; then
+      echo "Run da ton tai: $run_dir"
+      while true; do
+        echo "  1) Xoa run cu va dung lai ten nay"
+        echo "  2) Chon ten khac"
+        echo "  3) Huy"
+        read -r -p "> " existing_choice
+        case "$existing_choice" in
+          1)
+            rm -rf -- "$run_dir"
+            if [[ -e "$run_dir" ]]; then
+              echo "ERROR: khong the xoa run cu: $run_dir"
+              exit 1
+            fi
+            echo "Da xoa run cu: $run_dir"
+            return
+            ;;
+          2) break ;;
+          3)
+            echo "Da huy."
+            exit 0
+            ;;
+          *) echo "Lua chon khong hop le. Chon 1, 2 hoac 3." ;;
+        esac
+      done
+      continue
+    fi
+    return
+  done
+}
+
+lifecycle_active() {
+  local node="$1"
+  timeout 3 ros2 lifecycle get "$node" 2>/dev/null | grep -Eq '^active([[:space:]]|$)'
+}
+
+clock_stable_once() {
+  # Watch /clock for a short wall-time window. Any backwards step means TF
+  # caches can be invalidated, so exploration must not start yet.
+  "$ROS_PYTHON" - <<'PY'
+import sys
+import time
+
+import rclpy
+from rosgraph_msgs.msg import Clock
+from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
+
+state = {
+    'first': None,
+    'prev': None,
+    'samples': 0,
+    'backward': False,
+}
+
+
+def callback(msg):
+    now_ns = int(msg.clock.sec) * 1_000_000_000 + int(msg.clock.nanosec)
+    if state['first'] is None:
+        state['first'] = now_ns
+    if state['prev'] is not None and now_ns < state['prev']:
+        state['backward'] = True
+    state['prev'] = now_ns
+    state['samples'] += 1
+
+
+rclpy.init(args=None)
+node = rclpy.create_node('mapex_runner_clock_guard')
+qos = QoSProfile(depth=20)
+qos.reliability = ReliabilityPolicy.BEST_EFFORT
+qos.durability = DurabilityPolicy.VOLATILE
+sub = node.create_subscription(Clock, '/clock', callback, qos)
+
+deadline = time.monotonic() + 5.0
+try:
+    while time.monotonic() < deadline and rclpy.ok():
+        rclpy.spin_once(node, timeout_sec=0.2)
+finally:
+    node.destroy_subscription(sub)
+    node.destroy_node()
+    rclpy.shutdown()
+
+if state['backward']:
+    sys.exit(2)
+if state['samples'] < 10:
+    sys.exit(3)
+if state['first'] is None or state['prev'] is None or state['prev'] <= state['first']:
+    sys.exit(4)
+sys.exit(0)
+PY
+}
+
+wait_for_stack() {
+  local timeout_s=150
+  local start_wall
+  local elapsed
+  local clock_notice=0
+
+  start_wall="$(date +%s)"
+  echo ""
+  echo "Dang cho /map, Nav2 lifecycle active va /clock on dinh..."
+
+  while true; do
+    elapsed=$(( $(date +%s) - start_wall ))
+    if (( elapsed >= timeout_s )); then
+      break
+    fi
+
+    if ! session_alive "$LAUNCH_SID"; then
+      echo "ERROR: slam.launch.py da dung truoc khi stack san sang."
+      return 1
+    fi
+
+    local have_map=0
+    local have_nav=0
+    local controller_active=0
+    local planner_active=0
+    local bt_active=0
+
+    if timeout 3 ros2 topic list 2>/dev/null | grep -qx '/map'; then
+      have_map=1
+    fi
+    if timeout 3 ros2 action list 2>/dev/null | grep -qx '/navigate_to_pose'; then
+      have_nav=1
+    fi
+    if lifecycle_active /controller_server; then
+      controller_active=1
+    fi
+    if lifecycle_active /planner_server; then
+      planner_active=1
+    fi
+    if lifecycle_active /bt_navigator; then
+      bt_active=1
+    fi
+
+    if [[ "$have_map" -eq 1 \
+      && "$have_nav" -eq 1 \
+      && "$controller_active" -eq 1 \
+      && "$planner_active" -eq 1 \
+      && "$bt_active" -eq 1 ]]; then
+      if [[ "$clock_notice" -eq 0 ]]; then
+        echo "Nav2 active; kiem tra /clock lien tuc trong 5 giay..."
+        clock_notice=1
+      fi
+      if clock_stable_once; then
+        echo "SLAM/Nav2 san sang; /clock on dinh, khong co buoc nhay lui trong 5 giay."
+        return 0
+      fi
+      echo "WARNING: /clock chua on dinh; chua khoi dong $METHOD_LABEL. Thu lai..."
+    fi
+
+    sleep 1
+  done
+
+  echo "ERROR: qua ${timeout_s}s nhung stack/clock chua on dinh day du."
+  echo "Lifecycle hien tai:"
+  ros2 lifecycle get /controller_server 2>/dev/null || true
+  ros2 lifecycle get /planner_server 2>/dev/null || true
+  ros2 lifecycle get /bt_navigator 2>/dev/null || true
+  echo "Clock publishers:"
+  ros2 topic info /clock -v 2>/dev/null || true
+  return 1
+}
+
+preflight_python
+preflight_clean_stack
+choose_method
+if [[ "$METHOD" == "mapex" ]]; then
+  configure_mapex_environment
+fi
+choose_record
+if [[ "$RECORD" == "yes" ]]; then
+  ask_run_id
+fi
+
+echo ""
+echo "=============================="
+echo "Method : $METHOD_LABEL"
+echo "Record : $RECORD"
+if [[ "$RECORD" == "yes" ]]; then
+  echo "Run ID : $RUN_ID"
+fi
+echo "Python : $ROS_PYTHON"
+if [[ "$METHOD" == "mapex" ]]; then
+  echo "MapEx  : $MAPEX_ROOT"
+  echo "LaMa   : $MAPEX_LAMA_PYTHON"
+  echo "Weights: $MAPEX_ENSEMBLE_DIR"
+  echo "Device : $MAPEX_DEVICE"
+fi
+echo "Launch : mapex_lab/launch/slam.launch.py"
+echo "=============================="
+echo ""
+
+setsid ros2 launch "$ROOT_DIR/mapex_lab/launch/slam.launch.py" &
+LAUNCH_PID=$!
+LAUNCH_SID="$LAUNCH_PID"
+
+wait_for_stack
+
+if [[ "$METHOD" == "nf" && "$RECORD" == "no" ]]; then
+  EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/nf_basic.py")
+elif [[ "$METHOD" == "mapex" && "$RECORD" == "no" ]]; then
+  EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mapex.py")
+elif [[ "$METHOD" == "nf" && "$RECORD" == "yes" ]]; then
+  EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/nf_run.py" --run-id "$RUN_ID" --environment new_room --runtime-profile slam)
+else
+  EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mapex_run.py" --run-id "$RUN_ID" --environment new_room --runtime-profile slam)
+fi
+
+echo ""
+echo "Starting $METHOD_LABEL..."
+printf 'Command:'
+printf ' %q' "${EXPLORE_CMD[@]}"
+echo
+echo "Run hoan tat se tu dong dung exploration, SLAM, Nav2 va Gazebo."
+echo "Nhan Ctrl+C mot lan neu muon dung som."
+echo ""
+
+setsid "${EXPLORE_CMD[@]}" &
+EXPLORATION_PID=$!
+EXPLORATION_SID="$EXPLORATION_PID"
+
+set +e
+wait "$EXPLORATION_PID"
+EXPLORATION_STATUS=$?
+set -e
+
+if [[ "$EXPLORATION_STATUS" -ne 0 && "$EXPLORATION_STATUS" -ne 130 ]]; then
+  echo "Exploration ket thuc voi ma loi: $EXPLORATION_STATUS"
+fi
+
+cleanup
+exit "$EXPLORATION_STATUS"
