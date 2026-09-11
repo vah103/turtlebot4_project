@@ -279,7 +279,33 @@ ask_run_id() {
 
     if [[ -e "$run_dir" ]]; then
       echo "Run da ton tai: $run_dir"
-      echo "Hay chon ten khac de tranh ghi de du lieu."
+      while true; do
+        echo "  1) Xoa run cu va dung lai ten nay"
+        echo "  2) Chon ten khac"
+        echo "  3) Huy"
+        read -r -p "> " existing_choice
+        case "$existing_choice" in
+          1)
+            rm -rf -- "$run_dir"
+            if [[ -e "$run_dir" ]]; then
+              echo "ERROR: khong the xoa run cu: $run_dir"
+              exit 1
+            fi
+            echo "Da xoa run cu: $run_dir"
+            return
+            ;;
+          2)
+            break
+            ;;
+          3)
+            echo "Da huy."
+            exit 0
+            ;;
+          *)
+            echo "Lua chon khong hop le. Chon 1, 2 hoac 3."
+            ;;
+        esac
+      done
       continue
     fi
     return
