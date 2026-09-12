@@ -3,7 +3,7 @@
   "method": "mapex",
   "environment": "new_room",
   "runtime_profile": "new_room_new_toolbox_adaptive_v1_buffer30",
-  "runtime_profile_name": "new_toolbox",
+  "runtime_profile_name": "slam",
   "evaluation_roi_id": "new_room_connected_free_v1",
   "evaluation_roi_denominator": 187690,
   "structural_ground_truth_id": "new_room_structural_gt_v1",
