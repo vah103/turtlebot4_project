@@ -1,0 +1,165 @@
+name: Backfill missing offline metrics
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/evaluate-missing-offline-metrics.yml
+
+permissions:
+  contents: write
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        include:
+          - kind: nearest
+            run: nf_001
+            dir: mapex_lab/experiments/nearest/nf_001
+          - kind: nearest
+            run: nf_002
+            dir: mapex_lab/experiments/nearest/nf_002
+          - kind: nearest
+            run: nf_003
+            dir: mapex_lab/experiments/nearest/nf_003
+          - kind: nearest
+            run: nf_004
+            dir: mapex_lab/experiments/nearest/nf_004
+          - kind: nearest
+            run: nf_005
+            dir: mapex_lab/experiments/nearest/nf_005
+          - kind: mapex
+            run: mpx_001
+            dir: mapex_lab/experiments/mapex/mpx_001
+          - kind: mapex
+            run: mpx_002
+            dir: mapex_lab/experiments/mapex/mpx_002
+          - kind: mapex
+            run: mpx_003
+            dir: mapex_lab/experiments/mapex/mpx_003
+          - kind: mapex
+            run: mpx_004
+            dir: mapex_lab/experiments/mapex/mpx_004
+          - kind: mapex
+            run: mpx_005
+            dir: mapex_lab/experiments/mapex/mpx_005
+          - kind: mapex
+            run: mpx_006
+            dir: mapex_lab/experiments/mapex/mpx_006
+          - kind: mapex
+            run: mpx_007
+            dir: mapex_lab/experiments/mapex/mpx_007
+          - kind: mapex
+            run: mpx_010
+            dir: mapex_lab/experiments/mapex/mpx_010
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install evaluator dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install 'numpy<2' pyastar2d
+
+      - name: Evaluate ${{ matrix.run }}
+        env:
+          KIND: ${{ matrix.kind }}
+          RUN_DIR: ${{ matrix.dir }}
+        run: |
+          set -euo pipefail
+          cd mapex_lab
+          GT="ground_truth/new_room/generated/new_room_structural_gt_v1.npz"
+          ROI="ground_truth/new_room/generated/new_room_connected_free_v1.npy"
+          REL_RUN_DIR="${RUN_DIR#mapex_lab/}"
+          if [ "$KIND" = "nearest" ]; then
+            python scripts/evaluate_nf_profiled.py "$REL_RUN_DIR" --ground-truth "$GT" --roi "$ROI"
+          else
+            python scripts/evaluate_mapex_run.py "$REL_RUN_DIR" --ground-truth "$GT" --roi "$ROI"
+          fi
+          python - "$REL_RUN_DIR" <<'PY'
+          import json, pathlib, sys
+          run_dir = pathlib.Path(sys.argv[1])
+          summary = json.loads((run_dir / "summary.json").read_text())
+          evaluation = json.loads((run_dir / "evaluation.json").read_text())
+          assert evaluation.get("status") == "ok", evaluation
+          assert summary.get("offline_evaluation_status") == "ok", summary
+          assert summary.get("final_occupied_iou") is not None, summary
+          assert summary.get("final_tu") is not None, summary
+          print(run_dir, summary["final_occupied_iou"], summary["final_tu"])
+          PY
+
+      - name: Pack changed files
+        env:
+          KIND: ${{ matrix.kind }}
+          RUN: ${{ matrix.run }}
+        run: |
+          set -euo pipefail
+          mapfile -t files < <({ git diff --name-only; git ls-files --others --exclude-standard; } | sort -u)
+          printf '%s\n' "${files[@]}"
+          test "${#files[@]}" -gt 0
+          tar -czf "/tmp/${KIND}-${RUN}.tgz" "${files[@]}"
+
+      - name: Upload changed files
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-${{ matrix.kind }}-${{ matrix.run }}
+          path: /tmp/${{ matrix.kind }}-${{ matrix.run }}.tgz
+          retention-days: 1
+
+  commit:
+    needs: evaluate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download evaluated results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: eval-*
+          path: /tmp/evaluations
+          merge-multiple: true
+
+      - name: Apply and verify results
+        run: |
+          set -euo pipefail
+          for archive in /tmp/evaluations/*.tgz; do
+            tar -xzf "$archive" -C .
+          done
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          runs = [
+              *(Path('mapex_lab/experiments/nearest') / f'nf_{i:03d}' for i in range(1, 6)),
+              *(Path('mapex_lab/experiments/mapex') / f'mpx_{i:03d}' for i in range(1, 8)),
+              Path('mapex_lab/experiments/mapex/mpx_010'),
+          ]
+          for run_dir in runs:
+              s = json.loads((run_dir / 'summary.json').read_text())
+              e = json.loads((run_dir / 'evaluation.json').read_text())
+              assert e.get('status') == 'ok', (run_dir, e)
+              assert s.get('offline_evaluation_status') == 'ok', (run_dir, s)
+              assert s.get('final_occupied_iou') is not None, run_dir
+              assert s.get('final_tu') is not None, run_dir
+              print(run_dir.name, s['final_occupied_iou'], s['final_tu'])
+          PY
+
+      - name: Commit evaluated metrics
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add mapex_lab/experiments
+          git status --short
+          git diff --cached --quiet && exit 0
+          git commit -m 'Backfill offline IoU and TU for remaining runs'
+          git push origin HEAD:main
