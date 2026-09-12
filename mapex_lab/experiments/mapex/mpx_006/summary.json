@@ -51,5 +51,17 @@
   "tu_online": null,
   "prediction_maps_saved": true,
   "prediction_members_saved": 3,
-  "prediction_save_semantics": "post_goal_dispatch"
+  "prediction_save_semantics": "post_goal_dispatch",
+  "offline_evaluation_status": "ok",
+  "offline_evaluation_reason": null,
+  "final_occupied_iou": 0.134352075,
+  "final_tu": 0.04,
+  "occupied_iou_auc_time": 97.69746033807046,
+  "occupied_iou_auc_distance": 35.314202168492955,
+  "tu_auc_time": 33.472475793375004,
+  "tu_auc_distance": 11.948474072805,
+  "offline_metric_last_decision_id": 36,
+  "tu_goal_count": 100,
+  "tu_random_seed": 2025,
+  "tu_planner": "pyastar2d_astar_allow_diagonal_false"
 }
