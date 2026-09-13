@@ -6,8 +6,10 @@ other methods. Run ``predict_alltrain_offline.py`` first; this evaluator then
 compares those predictions against the same structural GT/ROI contract used by
 the MapEx evaluator.
 
-Observed SLAM canvases are still retained by the recorder for replay/audit, but
-they are no longer used as the primary IoU/TU source here.
+Observed SLAM canvases are retained as diagnostics. For legacy/debug workflows,
+``--allow-observed-fallback`` can reproduce the previous observed-map metrics,
+but those values must not be mixed with all-training MapEx metrics in the main
+paper-style comparison.
 """
 from __future__ import annotations
 
@@ -35,7 +37,6 @@ def _sha256(path: Path) -> str:
 
 
 def _load_observed_canvas(path: Path) -> np.ndarray:
-    """Legacy/audit helper for the recorded fixed-canvas SLAM map."""
     with np.load(path) as bundle:
         data = np.asarray(bundle["data"], dtype=np.int16)
         resolution = float(bundle["resolution"].reshape(-1)[0])
@@ -166,8 +167,9 @@ def evaluate_run(
     roi_path: str | Path,
     goal_count: int = base.TU_GOAL_COUNT,
     seed: int = base.TU_RANDOM_SEED,
+    allow_observed_fallback: bool = False,
 ) -> dict:
-    """Evaluate one recorded Nearest run using all-training LaMa predictions."""
+    """Evaluate one recorded Nearest run, preferring all-training predictions."""
     run_dir = Path(run_dir).expanduser().resolve()
     gt_path = Path(ground_truth_path).expanduser().resolve()
     roi_path = Path(roi_path).expanduser().resolve()
@@ -235,14 +237,18 @@ def evaluate_run(
     np.save(evaluation_dir / "tu_goals.npy", goals)
 
     decisions = _read_policy_decisions(decisions_path)
+    prediction_mode = "alltrain"
+    manifest = None
     try:
         decisions, manifest = _attach_alltrain_predictions(run_dir, decisions)
     except Exception as exc:
-        return base._skip(
-            run_dir,
-            "skipped_missing_or_invalid_alltrain_predictions",
-            str(exc),
-        )
+        if not allow_observed_fallback:
+            return base._skip(
+                run_dir,
+                "skipped_missing_or_invalid_alltrain_predictions",
+                str(exc),
+            )
+        prediction_mode = "observed_fallback"
 
     trajectory = (
         base._read_csv(run_dir / "trajectory.csv")
@@ -256,16 +262,9 @@ def evaluate_run(
     observed_planner_used = None
     for decision in decisions:
         decision_id = int(decision["policy_decision_id"])
-        alltrain_rel = decision["alltrain_map"]
         observed_rel = (decision.get("canvas_map") or "").strip()
         try:
-            prediction = base._prediction_to_canvas(run_dir / alltrain_rel)
-            iou = base.occupied_iou(prediction, gt_occ, mask)
-            tu, succeeded, failed, planner = base.topological_understanding(
-                prediction, mask, gt_occ, start, goals
-            )
-            planner_used = planner
-
+            observed = None
             observed_iou = ""
             observed_tu = ""
             if observed_rel and (run_dir / observed_rel).is_file():
@@ -277,19 +276,39 @@ def evaluate_run(
                 observed_tu = observed_tu_value
                 observed_planner_used = observed_planner
 
+            if prediction_mode == "alltrain":
+                alltrain_rel = decision["alltrain_map"]
+                prediction = base._prediction_to_canvas(run_dir / alltrain_rel)
+                iou = base.occupied_iou(prediction, gt_occ, mask)
+                tu, succeeded, failed, planner = base.topological_understanding(
+                    prediction, mask, gt_occ, start, goals
+                )
+                prediction_map = alltrain_rel
+                source = "alltrain"
+            else:
+                if observed is None:
+                    raise FileNotFoundError(f"missing observed canvas at decision {decision_id}")
+                iou = observed_iou
+                tu, succeeded, failed, planner = _topological_understanding_observed(
+                    observed, mask, gt_occ, start, goals
+                )
+                prediction_map = ""
+                source = "observed_fallback"
+
+            planner_used = planner
             decision_time = float(decision["sim_time_s"])
             output.append(
                 {
                     "decision_id": decision_id,
                     "time_s": f"{decision_time:.9f}",
                     "distance_m": f"{base._distance_at_time(trajectory, decision_time):.9f}",
-                    "occupied_iou": f"{iou:.9f}",
-                    "tu": f"{tu:.9f}",
+                    "occupied_iou": f"{float(iou):.9f}",
+                    "tu": f"{float(tu):.9f}",
                     "tu_succeeded": succeeded,
                     "tu_failed": failed,
                     "tu_total": succeeded + failed,
-                    "prediction_map": alltrain_rel,
-                    "prediction_source": "alltrain",
+                    "prediction_map": prediction_map,
+                    "prediction_source": source,
                     "observed_map": observed_rel,
                     "observed_occupied_iou": "" if observed_iou == "" else f"{float(observed_iou):.9f}",
                     "observed_tu": "" if observed_tu == "" else f"{float(observed_tu):.9f}",
@@ -301,8 +320,8 @@ def evaluate_run(
     if not output:
         return base._skip(
             run_dir,
-            "skipped_no_evaluable_alltrain_predictions",
-            "no saved all-training prediction could be evaluated",
+            "skipped_no_evaluable_predictions",
+            "no saved prediction/map could be evaluated",
             ground_truth=str(gt_path),
             errors=errors,
         )
@@ -312,10 +331,13 @@ def evaluate_run(
     last = output[-1]
     payload = {
         "status": "ok",
-        "source": "nearest_alltrain_prediction",
-        "prediction_source": "alltrain",
-        "prediction_manifest": str(run_dir / "evaluation" / "alltrain" / "manifest.json"),
-        "prediction_checkpoint": manifest.get("checkpoint"),
+        "source": "nearest_alltrain_prediction" if prediction_mode == "alltrain" else "nearest_observed_slam_canvas_legacy",
+        "prediction_source": "alltrain" if prediction_mode == "alltrain" else "observed_fallback",
+        "prediction_manifest": (
+            str(run_dir / "evaluation" / "alltrain" / "manifest.json")
+            if prediction_mode == "alltrain" else None
+        ),
+        "prediction_checkpoint": manifest.get("checkpoint") if manifest else None,
         "ground_truth": str(gt_path),
         "ground_truth_sha256": base._sha256(gt_path),
         "evaluation_canvas": {
@@ -328,8 +350,8 @@ def evaluate_run(
         },
         "occupied_iou": {
             "class": "occupied",
-            "prediction_threshold": base.PRED_OCC_THRESHOLD,
-            "unknown_unrepresented_prediction": "free",
+            "prediction_threshold": base.PRED_OCC_THRESHOLD if prediction_mode == "alltrain" else None,
+            "observed_threshold": base.GT_OCC_THRESHOLD if prediction_mode != "alltrain" else None,
             "domain": "structural_ground_truth_evaluation_mask",
         },
         "tu": {
@@ -340,8 +362,7 @@ def evaluate_run(
             "start_canvas_row_col": [int(start[0]), int(start[1])],
             "planner": planner_used,
             "connectivity": 4,
-            "traversable": "predicted_free",
-            "success": "predicted-map path exists and does not intersect GT occupied cells",
+            "traversable": "predicted_free" if prediction_mode == "alltrain" else "observed_free_only_unknown_blocked",
         },
         "observed_map_diagnostics": {
             "retained": True,
@@ -365,7 +386,7 @@ def evaluate_run(
         {
             "offline_evaluation_status": "ok",
             "offline_evaluation_reason": None,
-            "offline_evaluation_source": "nearest_alltrain_prediction",
+            "offline_evaluation_source": payload["source"],
             "final_occupied_iou": payload["final_occupied_iou"],
             "final_tu": payload["final_tu"],
             "occupied_iou_auc_time": payload["occupied_iou_auc_time"],
@@ -376,7 +397,7 @@ def evaluate_run(
             "tu_goal_count": int(goal_count),
             "tu_random_seed": int(seed),
             "tu_planner": planner_used,
-            "prediction_source": "alltrain",
+            "prediction_source": payload["prediction_source"],
         },
     )
     return payload
@@ -389,6 +410,11 @@ def main() -> None:
     parser.add_argument("--roi", required=True)
     parser.add_argument("--tu-goals", type=int, default=base.TU_GOAL_COUNT)
     parser.add_argument("--tu-seed", type=int, default=base.TU_RANDOM_SEED)
+    parser.add_argument(
+        "--allow-observed-fallback",
+        action="store_true",
+        help="legacy/debug only: evaluate observed SLAM if alltrain predictions are absent",
+    )
     args = parser.parse_args()
     result = evaluate_run(
         args.run_dir,
@@ -396,6 +422,7 @@ def main() -> None:
         args.roi,
         args.tu_goals,
         args.tu_seed,
+        args.allow_observed_fallback,
     )
     print(json.dumps(result, indent=2, allow_nan=True))
 
