@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Generate MapEx whole-training predictions from a completed run (no ROS).
 
-Run with the LaMa environment's Python. Original decisions/metadata stay intact.
-An atomically written manifest is published only after all predictions succeed.
+This script supports both MapEx ``decisions.csv`` logs and Nearest-Frontier
+``policy_decisions.csv`` logs. Original decisions/metadata stay intact. An
+atomically written manifest is published only after all predictions succeed.
 """
 import argparse
 import contextlib
@@ -25,6 +26,19 @@ def sha256(path):
     return digest.hexdigest()
 
 
+def _decision_log(run):
+    """Return (path, id_field) for a supported recorded-run decision log."""
+    mapex_path = run / 'decisions.csv'
+    nf_path = run / 'policy_decisions.csv'
+    if mapex_path.is_file():
+        return mapex_path, 'decision_id'
+    if nf_path.is_file():
+        return nf_path, 'policy_decision_id'
+    raise FileNotFoundError(
+        'Run has neither decisions.csv nor policy_decisions.csv: {}'.format(run)
+    )
+
+
 def load_observed(path):
     with np.load(str(path), allow_pickle=False) as bundle:
         raw = np.asarray(bundle['data'])
@@ -45,23 +59,29 @@ def load_observed(path):
 def generate(run, checkpoint, predict):
     """predict(observed) returns the padded all-training occupancy prediction."""
     run = Path(run).resolve()
-    decisions_path = run / 'decisions.csv'
+    decisions_path, id_field = _decision_log(run)
     source_hash = sha256(decisions_path)
     with decisions_path.open(newline='') as stream:
         rows = list(csv.DictReader(stream))
     if not rows:
         raise ValueError('No decisions to process')
-    ids = [int(row['decision_id']) for row in rows]
+
+    try:
+        ids = [int(row[id_field]) for row in rows]
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError('Decision log has invalid {} values'.format(id_field)) from exc
     if len(set(ids)) != len(ids):
         raise ValueError('Duplicate decision IDs')
+
     output = run / 'evaluation' / 'alltrain'
     # Never overwrite existing evaluated predictions or an interrupted attempt.
     output.mkdir(parents=True, exist_ok=False)
     records = []
     for row in rows:
+        decision_id = int(row[id_field])
         raw_rel = row.get('raw_map', '').strip()
         if not raw_rel:
-            raise ValueError('Decision {} lacks raw_map'.format(row['decision_id']))
+            raise ValueError('Decision {} lacks raw_map'.format(decision_id))
         raw_path = run / raw_rel
         observed, geometry = load_observed(raw_path)
         prediction = np.asarray(predict(observed), dtype=np.float32)
@@ -69,17 +89,21 @@ def generate(run, checkpoint, predict):
         if (prediction.ndim != 2 or prediction.shape[0] < h
                 or prediction.shape[1] < w or not np.isfinite(prediction).all()):
             raise ValueError('Invalid prediction shape or non-finite values')
-        name = 'decision_{:06d}_alltrain.npz'.format(int(row['decision_id']))
+        name = 'decision_{:06d}_alltrain.npz'.format(decision_id)
         target = output / name
         np.savez_compressed(str(target), data=np.clip(prediction, 0., 1.),
                             member='alltrain', pad_top=(prediction.shape[0]-h)//2,
                             pad_left=(prediction.shape[1]-w)//2, **geometry)
-        records.append(dict(decision_id=int(row['decision_id']),
+        records.append(dict(decision_id=decision_id,
                             alltrain_map=str(target.relative_to(run)),
                             raw_map=raw_rel, raw_sha256=sha256(raw_path)))
     if sha256(decisions_path) != source_hash:
-        raise RuntimeError('decisions.csv changed during inference; manifest not published')
-    payload = dict(prediction_source='alltrain', decisions_sha256=source_hash,
+        raise RuntimeError('{} changed during inference; manifest not published'.format(
+            decisions_path.name))
+    payload = dict(prediction_source='alltrain',
+                   decision_log=decisions_path.name,
+                   decision_id_field=id_field,
+                   decisions_sha256=source_hash,
                    checkpoint=dict(path=str(checkpoint), sha256=sha256(checkpoint)),
                    decisions=records)
     temporary = output / 'manifest.tmp'
