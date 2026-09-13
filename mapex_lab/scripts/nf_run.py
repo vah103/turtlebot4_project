@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Nearest-Frontier benchmark entrypoint with post-run offline evaluation.
+"""Nearest-Frontier benchmark entrypoint with post-run offline diagnostics.
 
 The online recorder/execution implementation is kept in ``_nf_run_core.py``.
-This entrypoint re-exports that implementation for MapEx compatibility and runs
-Nearest occupied-IoU/TU evaluation only after ROS recording has stopped, so the
-offline evaluator cannot affect exploration timing or Nav2 execution.
+This entrypoint re-exports that implementation for MapEx compatibility. The
+paper-style IoU/TU pass is performed later from the saved raw maps using the
+shared all-training LaMa predictor. Immediately after a run, this wrapper may
+still write explicitly-labelled observed-map diagnostics so existing run
+workflows remain usable before that post-processing step.
 """
 from __future__ import annotations
 
@@ -95,7 +97,8 @@ def main():
             )
             node.metadata["nf_run_core_file"] = str(core_path)
             node.metadata["offline_evaluation_semantics"] = (
-                "post_run_observed_slam_iou_tu"
+                "paper_style_alltrain_required_for_primary_iou_tu; "
+                "immediate_observed_map_metrics_are_legacy_diagnostics"
             )
             node._write_metadata(node.metadata)
 
@@ -104,17 +107,32 @@ def main():
         if rclpy.ok():
             rclpy.shutdown()
 
-    # Offline only: all ROS recording/navigation has already stopped above.
+    # Offline only: ROS recording/navigation has already stopped above. At this
+    # point alltrain predictions normally do not exist yet, so preserve the old
+    # observed-map evaluation as an explicitly-labelled diagnostic. Running
+    # predict_alltrain_offline.py and then evaluate_nf_profiled.py replaces it
+    # with the paper-style primary metrics.
     if run_dir is not None and ground_truth_path is not None and roi_path is not None:
-        result = evaluate_run(run_dir, ground_truth_path, roi_path)
+        result = evaluate_run(
+            run_dir,
+            ground_truth_path,
+            roi_path,
+            allow_observed_fallback=True,
+        )
         status = result.get("status", "unknown")
         if status == "ok":
             print(
                 "NEAREST OFFLINE EVAL: "
-                f"env={args.environment}, IoU={result['final_occupied_iou']:.6f}, "
+                f"env={args.environment}, source={result.get('prediction_source')}, "
+                f"IoU={result['final_occupied_iou']:.6f}, "
                 f"TU={result['final_tu']:.6f}, "
                 f"decisions={result['evaluated_decisions']}"
             )
+            if result.get("prediction_source") != "alltrain":
+                print(
+                    "NEAREST OFFLINE EVAL NOTE: observed-map values are legacy "
+                    "diagnostics; run alltrain post-processing before paper-style comparison."
+                )
         else:
             print(
                 "NEAREST OFFLINE EVAL: "
