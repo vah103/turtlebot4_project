@@ -1,0 +1,14 @@
+{
+  "source_commit": "7bc6d6de856a51ddb4d9489d14c73bae2cb76871",
+  "prediction_source": "alltrain",
+  "runs_per_method": 10,
+  "interpolation": "linear between saved decision checkpoints",
+  "extrapolation": false,
+  "std": "sample standard deviation (n-1)",
+  "time_step_s": 10.0,
+  "distance_step_m": 5.0,
+  "common_max_time_s_exact": 579.997535944,
+  "time_grid_max_s": 570.0,
+  "common_max_distance_m_exact": 199.463914392,
+  "distance_grid_max_m": 195.0
+}
