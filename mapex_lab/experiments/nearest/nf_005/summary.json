@@ -41,15 +41,16 @@
   "tu_online": null,
   "offline_evaluation_status": "ok",
   "offline_evaluation_reason": null,
-  "offline_evaluation_source": "nearest_observed_slam_canvas",
-  "final_occupied_iou": 0.089387436,
+  "offline_evaluation_source": "nearest_alltrain_prediction",
+  "final_occupied_iou": 0.109727949,
   "final_tu": 0.04,
-  "occupied_iou_auc_time": 41.41817738388567,
-  "occupied_iou_auc_distance": 14.962622176176811,
-  "tu_auc_time": 27.189980309009997,
-  "tu_auc_distance": 9.67626214299,
+  "occupied_iou_auc_time": 66.0206330882622,
+  "occupied_iou_auc_distance": 23.596039122648417,
+  "tu_auc_time": 21.179963103545,
+  "tu_auc_distance": 7.514269886099999,
   "offline_metric_last_decision_id": 51,
   "tu_goal_count": 100,
   "tu_random_seed": 2025,
-  "tu_planner": "pyastar2d_astar_allow_diagonal_false"
+  "tu_planner": "four_neighbor_bfs_fallback",
+  "prediction_source": "alltrain"
 }

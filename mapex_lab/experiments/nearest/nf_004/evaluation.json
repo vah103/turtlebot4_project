@@ -1,10 +1,16 @@
 {
   "status": "ok",
-  "source": "nearest_observed_slam_canvas",
-  "ground_truth": "/home/runner/work/turtlebot4_project/turtlebot4_project/mapex_lab/ground_truth/new_room/generated/new_room_structural_gt_v1.npz",
+  "source": "nearest_alltrain_prediction",
+  "prediction_source": "alltrain",
+  "prediction_manifest": "/home/dell/turtlebot4_project/mapex_lab/experiments/nearest/nf_004/evaluation/alltrain/manifest.json",
+  "prediction_checkpoint": {
+    "path": "/home/dell/MapEx/pretrained_models/weights/big_lama/models/best.ckpt",
+    "sha256": "58c1841c10d4d97bc1f894ec8fe5b015b165277ddb2b9bb29eb688b21d4363b5"
+  },
+  "ground_truth": "/home/dell/turtlebot4_project/mapex_lab/ground_truth/new_room/generated/new_room_structural_gt_v1.npz",
   "ground_truth_sha256": "42275a4cef55a3f8ec0b0041388fb50174109891d6d1b76e101adeb43a62043a",
   "evaluation_canvas": {
-    "id": "hospital_canvas_v1",
+    "id": "new_room_canvas_v1",
     "resolution_m": 0.05,
     "width": 1504,
     "height": 2123,
@@ -13,14 +19,14 @@
   },
   "occupied_iou": {
     "class": "occupied",
-    "observed_threshold": 50,
-    "unknown_cells": "not_predicted_occupied",
+    "prediction_threshold": 0.5,
+    "observed_threshold": null,
     "domain": "structural_ground_truth_evaluation_mask"
   },
   "tu": {
     "goal_count": 100,
     "seed": 2025,
-    "goal_source": "/home/runner/work/turtlebot4_project/turtlebot4_project/mapex_lab/ground_truth/new_room/generated/new_room_connected_free_v1.npy",
+    "goal_source": "/home/dell/turtlebot4_project/mapex_lab/ground_truth/new_room/generated/new_room_connected_free_v1.npy",
     "start_world_xy": [
       2.2902167364021783e-12,
       -4.7948537013179455e-24
@@ -29,19 +35,26 @@
       1202,
       512
     ],
-    "planner": "pyastar2d_astar_allow_diagonal_false",
+    "planner": "four_neighbor_bfs_fallback",
     "connectivity": 4,
-    "traversable": "observed_free_only_unknown_blocked",
-    "success": "observed-free path exists and does not intersect GT occupied cells"
+    "traversable": "predicted_free"
+  },
+  "observed_map_diagnostics": {
+    "retained": true,
+    "planner": "four_neighbor_bfs_fallback",
+    "columns": [
+      "observed_occupied_iou",
+      "observed_tu"
+    ]
   },
   "evaluated_decisions": 47,
   "metrics_csv_backfilled_step_hold": true,
   "final_decision_id": 47,
-  "final_occupied_iou": 0.08723432,
-  "final_tu": 0.04,
-  "occupied_iou_auc_time": 38.40868102241518,
-  "occupied_iou_auc_distance": 12.74371802516395,
-  "tu_auc_time": 25.989997251040005,
-  "tu_auc_distance": 8.46447055089,
+  "final_occupied_iou": 0.111471622,
+  "final_tu": 0.03,
+  "occupied_iou_auc_time": 66.02826032802298,
+  "occupied_iou_auc_distance": 21.460004387526354,
+  "tu_auc_time": 20.21997950077,
+  "tu_auc_distance": 6.56553660401,
   "errors": []
 }
