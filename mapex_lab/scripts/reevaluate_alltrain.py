@@ -86,6 +86,20 @@ def _evaluate(run_dir: Path, method: str, ground_truth: Path, roi: Path):
     return evaluate_mapex_run.evaluate_run(run_dir, ground_truth, roi)
 
 
+def _verify_reused_manifest(manifest_path: Path, checkpoint: Path) -> None:
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if payload.get("prediction_source") != "alltrain":
+        raise ValueError(f"{manifest_path} is not an alltrain manifest")
+    checkpoint_meta = payload.get("checkpoint") or {}
+    actual_sha = checkpoint_meta.get("sha256")
+    expected_sha = predictor.sha256(checkpoint)
+    if actual_sha != expected_sha:
+        raise ValueError(
+            f"{manifest_path} was generated with a different checkpoint; "
+            "rerun with --overwrite-alltrain"
+        )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -154,9 +168,10 @@ def main() -> None:
             except FileExistsError:
                 if not manifest.is_file():
                     raise
+                _verify_reused_manifest(manifest, checkpoint)
                 print(
-                    f"alltrain already exists: {manifest}; reusing it "
-                    "(pass --overwrite-alltrain to regenerate)",
+                    f"alltrain already exists with the requested checkpoint: {manifest}; "
+                    "reusing it (pass --overwrite-alltrain to regenerate)",
                     flush=True,
                 )
 
