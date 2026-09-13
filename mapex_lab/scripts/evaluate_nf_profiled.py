@@ -1,21 +1,19 @@
 #!/usr/bin/env python3
 """Offline occupied-IoU and TU evaluation for recorded Nearest-Frontier runs.
 
-This evaluator runs only after ROS recording has stopped. It evaluates the
-observed SLAM canvas saved at each policy decision against the same structural
-GT/ROI contract used by the MapEx evaluator.
+Paper-style NF evaluation uses the same MapEx whole-training LaMa predictor as
+other methods. Run ``predict_alltrain_offline.py`` first; this evaluator then
+compares those predictions against the same structural GT/ROI contract used by
+the MapEx evaluator.
 
-Semantics for Nearest observed maps:
-- occupied IoU: observed occupied cells (>50) vs GT occupied cells;
-- unknown cells are not counted as predicted occupied, so unexplored structure
-  is naturally penalized in IoU;
-- TU: paths may traverse only cells already observed as free (0..50). Unknown
-  cells are non-traversable rather than optimistically treated as free.
+Observed SLAM canvases are still retained by the recorder for replay/audit, but
+they are no longer used as the primary IoU/TU source here.
 """
 from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -28,7 +26,16 @@ import evaluate_mapex_run as base
 ROS_FLOAT_ABS_TOL = 1e-6
 
 
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def _load_observed_canvas(path: Path) -> np.ndarray:
+    """Legacy/audit helper for the recorded fixed-canvas SLAM map."""
     with np.load(path) as bundle:
         data = np.asarray(bundle["data"], dtype=np.int16)
         resolution = float(bundle["resolution"].reshape(-1)[0])
@@ -69,24 +76,66 @@ def _topological_understanding_observed(
     start: tuple[int, int],
     goals: np.ndarray,
 ):
-    # Only mapped free space is traversable. Unknown (<0) is blocked.
     pred_free = mask & (observed >= 0) & (observed <= base.GT_OCC_THRESHOLD)
     collision_mask = gt_occ | ~mask
     try:
         import pyastar2d  # noqa: F401
     except Exception:
         planner = "four_neighbor_bfs_fallback"
-        succeeded, failed = base._tu_bfs(
-            pred_free, collision_mask, start, goals
-        )
+        succeeded, failed = base._tu_bfs(pred_free, collision_mask, start, goals)
     else:
         planner = "pyastar2d_astar_allow_diagonal_false"
-        succeeded, failed = base._tu_pyastar(
-            pred_free, collision_mask, start, goals
-        )
+        succeeded, failed = base._tu_pyastar(pred_free, collision_mask, start, goals)
     total = succeeded + failed
     score = float(succeeded / total) if total else math.nan
     return score, succeeded, failed, planner
+
+
+def _read_policy_decisions(path: Path):
+    with path.open("r", newline="", encoding="utf-8") as stream:
+        return list(csv.DictReader(stream))
+
+
+def _attach_alltrain_predictions(run_dir: Path, decisions):
+    """Attach paper-style all-training predictions to every NF decision."""
+    manifest_path = run_dir / "evaluation" / "alltrain" / "manifest.json"
+    if not manifest_path.is_file():
+        raise FileNotFoundError(
+            f"missing {manifest_path}; run predict_alltrain_offline.py first"
+        )
+
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    decisions_path = run_dir / "policy_decisions.csv"
+    expected_hash = _sha256(decisions_path)
+    if manifest.get("decisions_sha256") != expected_hash:
+        raise ValueError("alltrain manifest belongs to a different policy_decisions.csv")
+    if manifest.get("decision_log") not in (None, "policy_decisions.csv"):
+        raise ValueError("alltrain manifest was not generated from policy_decisions.csv")
+
+    entries = manifest.get("decisions", [])
+    indexed = {int(entry["decision_id"]): entry for entry in entries}
+    if len(indexed) != len(entries) or len(indexed) != len(decisions):
+        raise ValueError("incomplete or duplicate alltrain prediction decisions")
+
+    attached = []
+    for decision in decisions:
+        decision_id = int(decision["policy_decision_id"])
+        if decision_id not in indexed:
+            raise ValueError(f"alltrain manifest lacks NF decision {decision_id}")
+        entry = indexed[decision_id]
+        raw_rel = (decision.get("raw_map") or "").strip()
+        if entry.get("raw_map") != raw_rel:
+            raise ValueError(f"alltrain raw-map association mismatch at decision {decision_id}")
+        raw_path = run_dir / raw_rel
+        if not raw_path.is_file():
+            raise FileNotFoundError(raw_path)
+        if _sha256(raw_path) != entry.get("raw_sha256"):
+            raise ValueError(f"raw map changed since alltrain inference at decision {decision_id}")
+        alltrain_rel = entry.get("alltrain_map", "")
+        if not alltrain_rel or not (run_dir / alltrain_rel).is_file():
+            raise ValueError(f"missing alltrain prediction at decision {decision_id}")
+        attached.append(dict(decision, alltrain_map=alltrain_rel))
+    return attached, manifest
 
 
 def _write_csv(path: Path, rows) -> None:
@@ -99,7 +148,11 @@ def _write_csv(path: Path, rows) -> None:
         "tu_succeeded",
         "tu_failed",
         "tu_total",
+        "prediction_map",
+        "prediction_source",
         "observed_map",
+        "observed_occupied_iou",
+        "observed_tu",
     ]
     with path.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=fields)
@@ -114,7 +167,7 @@ def evaluate_run(
     goal_count: int = base.TU_GOAL_COUNT,
     seed: int = base.TU_RANDOM_SEED,
 ) -> dict:
-    """Evaluate one recorded Nearest run using saved observed SLAM canvases."""
+    """Evaluate one recorded Nearest run using all-training LaMa predictions."""
     run_dir = Path(run_dir).expanduser().resolve()
     gt_path = Path(ground_truth_path).expanduser().resolve()
     roi_path = Path(roi_path).expanduser().resolve()
@@ -132,17 +185,9 @@ def evaluate_run(
     decisions_path = run_dir / "policy_decisions.csv"
     metadata_path = run_dir / "metadata.json"
     if not decisions_path.is_file():
-        return base._skip(
-            run_dir,
-            "skipped_missing_decisions",
-            "policy_decisions.csv is missing",
-        )
+        return base._skip(run_dir, "skipped_missing_decisions", "policy_decisions.csv is missing")
     if not metadata_path.is_file():
-        return base._skip(
-            run_dir,
-            "skipped_missing_metadata",
-            "metadata.json is missing",
-        )
+        return base._skip(run_dir, "skipped_missing_metadata", "metadata.json is missing")
 
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
     start_x = metadata.get("evaluation_start_x")
@@ -158,12 +203,7 @@ def evaluate_run(
     try:
         mask, gt_occ, gt_free = base._load_ground_truth(gt_path)
     except Exception as exc:
-        return base._skip(
-            run_dir,
-            "skipped_invalid_ground_truth",
-            str(exc),
-            ground_truth=str(gt_path),
-        )
+        return base._skip(run_dir, "skipped_invalid_ground_truth", str(exc), ground_truth=str(gt_path))
     if not base._inside(gt_free.shape, start) or not gt_free[start]:
         return base._skip(
             run_dir,
@@ -188,17 +228,22 @@ def evaluate_run(
     try:
         goals = base._sample_goals(valid_goals, int(goal_count), int(seed))
     except Exception as exc:
-        return base._skip(
-            run_dir,
-            "skipped_goal_sampling_failed",
-            str(exc),
-        )
+        return base._skip(run_dir, "skipped_goal_sampling_failed", str(exc))
 
     evaluation_dir = run_dir / "evaluation"
     evaluation_dir.mkdir(exist_ok=True)
     np.save(evaluation_dir / "tu_goals.npy", goals)
 
-    decisions = base._read_csv(decisions_path)
+    decisions = _read_policy_decisions(decisions_path)
+    try:
+        decisions, manifest = _attach_alltrain_predictions(run_dir, decisions)
+    except Exception as exc:
+        return base._skip(
+            run_dir,
+            "skipped_missing_or_invalid_alltrain_predictions",
+            str(exc),
+        )
+
     trajectory = (
         base._read_csv(run_dir / "trajectory.csv")
         if (run_dir / "trajectory.csv").is_file()
@@ -208,32 +253,31 @@ def evaluate_run(
     output = []
     errors = []
     planner_used = None
+    observed_planner_used = None
     for decision in decisions:
+        decision_id = int(decision["policy_decision_id"])
+        alltrain_rel = decision["alltrain_map"]
         observed_rel = (decision.get("canvas_map") or "").strip()
-        if not observed_rel:
-            continue
-        observed_path = run_dir / observed_rel
-        if not observed_path.is_file():
-            errors.append(
-                {
-                    "decision_id": decision.get("policy_decision_id"),
-                    "error": f"missing observed canvas {observed_path}",
-                }
-            )
-            continue
         try:
-            observed = _load_observed_canvas(observed_path)
-            iou = _occupied_iou_observed(observed, gt_occ, mask)
-            tu, succeeded, failed, planner = _topological_understanding_observed(
-                observed,
-                mask,
-                gt_occ,
-                start,
-                goals,
+            prediction = base._prediction_to_canvas(run_dir / alltrain_rel)
+            iou = base.occupied_iou(prediction, gt_occ, mask)
+            tu, succeeded, failed, planner = base.topological_understanding(
+                prediction, mask, gt_occ, start, goals
             )
             planner_used = planner
+
+            observed_iou = ""
+            observed_tu = ""
+            if observed_rel and (run_dir / observed_rel).is_file():
+                observed = _load_observed_canvas(run_dir / observed_rel)
+                observed_iou = _occupied_iou_observed(observed, gt_occ, mask)
+                observed_tu_value, _, _, observed_planner = _topological_understanding_observed(
+                    observed, mask, gt_occ, start, goals
+                )
+                observed_tu = observed_tu_value
+                observed_planner_used = observed_planner
+
             decision_time = float(decision["sim_time_s"])
-            decision_id = int(decision["policy_decision_id"])
             output.append(
                 {
                     "decision_id": decision_id,
@@ -244,22 +288,21 @@ def evaluate_run(
                     "tu_succeeded": succeeded,
                     "tu_failed": failed,
                     "tu_total": succeeded + failed,
+                    "prediction_map": alltrain_rel,
+                    "prediction_source": "alltrain",
                     "observed_map": observed_rel,
+                    "observed_occupied_iou": "" if observed_iou == "" else f"{float(observed_iou):.9f}",
+                    "observed_tu": "" if observed_tu == "" else f"{float(observed_tu):.9f}",
                 }
             )
         except Exception as exc:
-            errors.append(
-                {
-                    "decision_id": decision.get("policy_decision_id"),
-                    "error": str(exc),
-                }
-            )
+            errors.append({"decision_id": decision_id, "error": str(exc)})
 
     if not output:
         return base._skip(
             run_dir,
-            "skipped_no_evaluable_observed_maps",
-            "no saved observed SLAM canvas could be evaluated",
+            "skipped_no_evaluable_alltrain_predictions",
+            "no saved all-training prediction could be evaluated",
             ground_truth=str(gt_path),
             errors=errors,
         )
@@ -269,7 +312,10 @@ def evaluate_run(
     last = output[-1]
     payload = {
         "status": "ok",
-        "source": "nearest_observed_slam_canvas",
+        "source": "nearest_alltrain_prediction",
+        "prediction_source": "alltrain",
+        "prediction_manifest": str(run_dir / "evaluation" / "alltrain" / "manifest.json"),
+        "prediction_checkpoint": manifest.get("checkpoint"),
         "ground_truth": str(gt_path),
         "ground_truth_sha256": base._sha256(gt_path),
         "evaluation_canvas": {
@@ -282,8 +328,8 @@ def evaluate_run(
         },
         "occupied_iou": {
             "class": "occupied",
-            "observed_threshold": base.GT_OCC_THRESHOLD,
-            "unknown_cells": "not_predicted_occupied",
+            "prediction_threshold": base.PRED_OCC_THRESHOLD,
+            "unknown_unrepresented_prediction": "free",
             "domain": "structural_ground_truth_evaluation_mask",
         },
         "tu": {
@@ -294,8 +340,13 @@ def evaluate_run(
             "start_canvas_row_col": [int(start[0]), int(start[1])],
             "planner": planner_used,
             "connectivity": 4,
-            "traversable": "observed_free_only_unknown_blocked",
-            "success": "observed-free path exists and does not intersect GT occupied cells",
+            "traversable": "predicted_free",
+            "success": "predicted-map path exists and does not intersect GT occupied cells",
+        },
+        "observed_map_diagnostics": {
+            "retained": True,
+            "planner": observed_planner_used,
+            "columns": ["observed_occupied_iou", "observed_tu"],
         },
         "evaluated_decisions": len(output),
         "metrics_csv_backfilled_step_hold": backfilled,
@@ -314,7 +365,7 @@ def evaluate_run(
         {
             "offline_evaluation_status": "ok",
             "offline_evaluation_reason": None,
-            "offline_evaluation_source": "nearest_observed_slam_canvas",
+            "offline_evaluation_source": "nearest_alltrain_prediction",
             "final_occupied_iou": payload["final_occupied_iou"],
             "final_tu": payload["final_tu"],
             "occupied_iou_auc_time": payload["occupied_iou_auc_time"],
@@ -325,6 +376,7 @@ def evaluate_run(
             "tu_goal_count": int(goal_count),
             "tu_random_seed": int(seed),
             "tu_planner": planner_used,
+            "prediction_source": "alltrain",
         },
     )
     return payload
