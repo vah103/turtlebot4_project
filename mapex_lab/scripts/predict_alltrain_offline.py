@@ -13,6 +13,7 @@ import json
 import math
 import os
 from pathlib import Path
+import shutil
 import sys
 
 import numpy as np
@@ -56,7 +57,7 @@ def load_observed(path):
     return observed, geometry
 
 
-def generate(run, checkpoint, predict):
+def generate(run, checkpoint, predict, overwrite=False):
     """predict(observed) returns the padded all-training occupancy prediction."""
     run = Path(run).resolve()
     decisions_path, id_field = _decision_log(run)
@@ -74,8 +75,15 @@ def generate(run, checkpoint, predict):
         raise ValueError('Duplicate decision IDs')
 
     output = run / 'evaluation' / 'alltrain'
-    # Never overwrite existing evaluated predictions or an interrupted attempt.
+    if output.exists():
+        if not overwrite:
+            raise FileExistsError(
+                '{} already exists; use --overwrite-alltrain only when intentionally '
+                'regenerating predictions'.format(output)
+            )
+        shutil.rmtree(output)
     output.mkdir(parents=True, exist_ok=False)
+
     records = []
     for row in rows:
         decision_id = int(row[id_field])
@@ -118,6 +126,11 @@ def main():
     parser.add_argument('--mapex-root', default=os.environ.get('MAPEX_ROOT', str(Path.home()/'MapEx')))
     parser.add_argument('--checkpoint', default='pretrained_models/weights/big_lama')
     parser.add_argument('--device', default='cuda:0')
+    parser.add_argument(
+        '--overwrite-alltrain',
+        action='store_true',
+        help='replace an existing evaluation/alltrain directory for this run',
+    )
     args = parser.parse_args()
     root = Path(args.mapex_root).expanduser().resolve()
     checkpoint = Path(args.checkpoint).expanduser()
@@ -145,7 +158,7 @@ def main():
                 np.stack([observed]*3, axis=2), transform, args.device)
             return model(batch)['inpainted'][0, 0].detach().float().cpu().numpy()
 
-    print(generate(args.run_dir, checkpoint, predict))
+    print(generate(args.run_dir, checkpoint, predict, overwrite=args.overwrite_alltrain))
 
 
 if __name__ == '__main__':
