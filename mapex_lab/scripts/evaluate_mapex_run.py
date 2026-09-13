@@ -604,6 +604,7 @@ def evaluate_run(
     )
 
     prediction_field = "alltrain_map" if decisions and "alltrain_map" in decisions[0] else "mean_map"
+    prediction_source = "alltrain" if prediction_field == "alltrain_map" else prediction_field
     output = []
     errors = []
     planner_used = None
@@ -656,7 +657,7 @@ def evaluate_run(
                     "tu_total": succeeded + failed,
                     "mean_map": decision.get("mean_map", ""),
                     "prediction_map": mean_rel,
-                    "prediction_source": prediction_field,
+                    "prediction_source": prediction_source,
                     "ensemble_mean_occupied_iou": secondary_iou,
                     "ensemble_mean_tu": secondary_tu,
                 }
@@ -683,7 +684,7 @@ def evaluate_run(
     last = output[-1]
     payload = {
         "status": "ok",
-        "prediction_source": prediction_field,
+        "prediction_source": prediction_source,
         "ground_truth": str(gt_path),
         "ground_truth_sha256": _sha256(gt_path),
         "evaluation_canvas": {
@@ -747,6 +748,7 @@ def evaluate_run(
             "tu_goal_count": int(goal_count),
             "tu_random_seed": int(seed),
             "tu_planner": planner_used,
+            "prediction_source": prediction_source,
         },
     )
     return payload
