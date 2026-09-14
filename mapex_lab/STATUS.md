@@ -32,6 +32,27 @@
 - Keep experiment provenance, map snapshots, prediction artifacts, and evaluation outputs tied to the exact runtime configuration.
 - Runtime-validate SLAM diagnostics before considering any protocol change.
 
+## Candidate research directions
+
+Two MapEx improvement directions are currently being considered. Neither is selected as the final thesis direction yet; both should first be discussed with the supervisor and supported by analysis of the existing NF/MapEx runs.
+
+### Direction 1 — Improve MapEx frontier selection while preserving full exploration
+
+- Keep the original exploration objective: the robot continues exploring until the shared completion condition is satisfied.
+- Investigate whether the current `IG / EuclideanDistance` ranking causes unnecessary travel, long or difficult goals, lower navigation success, or weak information gained per travelled meter.
+- Candidate improvements may incorporate a stronger travel penalty, navigation/path cost, reachability or navigation-success likelihood, while keeping the MapEx prediction/uncertainty pipeline intact.
+- Primary objective: reduce exploration time and travelled distance and improve robustness while maintaining or improving Coverage, occupied IoU and TU.
+- Any proposed scoring change must be motivated by evidence from the current runs rather than chosen arbitrarily.
+
+### Direction 2 — Prediction/uncertainty-aware early stopping
+
+- Extend MapEx so prediction is used not only to choose where to explore next, but also to decide whether further physical exploration is still necessary.
+- If the remaining unobserved regions are predicted with sufficiently high confidence / sufficiently low useful uncertainty, allow exploration to terminate before all frontiers have been physically visited.
+- Construct the final map from observed SLAM evidence plus prediction for the remaining unobserved area.
+- Evaluate the trade-off between saved time/distance and degradation, if any, in occupied IoU and TU.
+- Do not assume a fixed stopping coverage such as 50%; the stopping criterion must be derived and validated from prediction confidence/uncertainty and experiment data.
+- First validation should be offline where possible: use intermediate MapEx snapshots/predictions to measure how reconstructed-map quality changes as a function of physical coverage, time and distance before modifying the online policy.
+
 ## Current runtime stack
 
 - `launch/stock.launch.py`: New Room by default, stock scan path into SLAM Toolbox, stock TurtleBot4 Nav2 plus `config/nav2.yaml` overrides.
