@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Compare selected fixed MapEx early-stopping rules on recorded runs.
 
-This script is intentionally simpler than threshold sweep / LOOCV. It answers:
+This script answers:
 
     If one fixed rule were chosen now, how would that same rule perform
     on every recorded MapEx run?
@@ -30,7 +30,6 @@ import argparse
 import csv
 import json
 import math
-from collections import Counter
 from pathlib import Path
 
 import sweep_early_stopping_thresholds as sweep
@@ -147,7 +146,6 @@ def main() -> int:
     args = parser.parse_args()
 
     rules = args.rules or [(0.23, 1), (0.25, 2), (0.20, 1)]
-    # Preserve command-line order while removing accidental duplicates.
     rules = list(dict.fromkeys(rules))
 
     experiments_dir = Path(args.experiments_dir).expanduser().resolve()
@@ -185,13 +183,9 @@ def main() -> int:
         detail_rows.extend(details)
         summary_rows.append(summary)
 
-        worst_run = max(
-            details,
-            key=lambda row: float(row["iou_loss_vs_final"]),
-        )
+        worst_run = max(details, key=lambda row: float(row["iou_loss_vs_final"]))
         best_saving_run = max(
-            details,
-            key=lambda row: float(row["distance_saved_fraction"]),
+            details, key=lambda row: float(row["distance_saved_fraction"])
         )
         failures_0_01 = [
             row["run_id"]
@@ -254,8 +248,6 @@ def main() -> int:
     _write_csv(output, SUMMARY_FIELDS, summary_rows)
     _write_csv(details_output, DETAIL_FIELDS, detail_rows)
 
-    # A compact ranking is useful for terminal review, but no rule is declared
-    # "validated" here. The ranking only summarizes the recorded 10-run set.
     ranked = sorted(
         json_rules,
         key=lambda row: (
@@ -265,7 +257,6 @@ def main() -> int:
         ),
     )
 
-    selected_rule_counts = Counter(row["rule"] for row in ranked)
     print(
         json.dumps(
             {
