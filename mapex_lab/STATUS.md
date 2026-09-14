@@ -1,128 +1,223 @@
 # mapex_lab status
 
-## 2026-09-11 interactive experiment runner
+_Last synchronized with `main`: 2026-09-14._
 
-- DONE: added executable root-level `run` to replace the normal two-terminal workflow for `slam.launch.py` + NF/MapEx. The runner interactively asks for NF vs MapEx, whether to record, and the run name when recording.
-- DONE: runner sources ROS 2 Jazzy and the workspace, launches `launch/slam.launch.py`, waits for `/map`, `/navigate_to_pose`, active Nav2 lifecycle state, and a 5 s monotonic `/clock` window before dispatching `nf_basic.py`, `mapex.py`, `nf_run.py`, or `mapex_run.py`. Recorded runs explicitly use `--runtime-profile slam`.
-- DONE: startup refuses both a stale ROS/Nav2 stack and any pre-existing `gz sim` process, because an old simulation can create conflicting clock timelines. Each launch/exploration tree is placed in its own session and cleanup targets the full session with INT -> TERM -> KILL fallback before returning the shell prompt.
-- DONE: when a requested run ID already exists, the runner offers three choices before simulation starts: delete the old run and reuse the name, choose another name, or cancel.
-- DONE: after diagnosing two simultaneous `/clock` publishers named `bridge_ros_gz`, `./run` now isolates simulation on `ROS_DOMAIN_ID=42` with `ROS_LOCALHOST_ONLY=1` by default so external TurtleBot/PC ROS traffic on domain 0 cannot contaminate benchmark sim time.
-- DONE: runner-only Python hook now converts the policy's terminal `completed=True` state into a normal process exit. Recorder runs finalize with `termination_reason=exploration_complete`, perform offline evaluation, then `.run_core` automatically shuts down SLAM/Nav2/Gazebo; no Ctrl+C should be needed after a valid 5/5 completion.
-- LATEST RESULT: one MapEx run reached `5/5 stable no-frontier sweeps` and printed `EXPLORATION COMPLETE`, exposing that the policy previously stopped issuing goals but remained inside `rclpy.spin()`. Auto-exit handling has now been added; runtime verification after `git pull` is pending. The same log still showed backwards-time warnings, so that run should not be treated as clean benchmark data until the isolated-domain run is verified.
-- NEXT ACTION: `git pull` on `com1`, start a fresh run, verify the header reports `ROS isolation: domain=42, localhost_only=1`, verify `/clock` has exactly one publisher inside that domain, and verify a natural 5/5 completion flows through `MAPEX/NEAREST SAVED` -> offline eval -> `Stopping experiment...` -> `Experiment stopped.` with no manual Ctrl+C.
-
-## 2026-09-09 all-training evaluation implementation
-
-- DONE: restored the original three-ensemble online worker/bridge/recorder and config; removed the fourth-checkpoint requirement. Added ROS-free `scripts/predict_alltrain_offline.py` for completed runs.
-- LATEST RESULT: four ROS-free tests pass, covering online recording without alltrain, offline geometry/labels/manifest integrity, checkpoint resolution, and evaluation source labels.
-- IN PROGRESS: real LaMa inference remains unverified in this environment; default weights/environment are absent.
-- NEXT ACTION: run with the existing three-model LaMa installation on the experiment machine. After completion, generate offline alltrain predictions and reevaluate using the active environment's GT/ROI. No robot commands were issued.
-
-## 2026-09-09 static MapEx audit
-
-- DONE: compared current policy/runner with paper v2 and local reference checkout; see `docs/experiment_notes/2026-09-09-mapex-audit.md`.
-- LATEST RESULT: core IG/ranking follows the paper; reference ray accumulation differs, evaluation uses ensemble mean instead of the separate all-training predictor, and Nearest's 0.5 m exclusion is absent from MapEx.
-- IN PROGRESS: numerical/runtime equivalence and checkpoint provenance remain unverified.
-- NEXT ACTION: align candidate eligibility and document execution/evaluation adaptations before formal comparison. Existing SLAM validation work below remains pending.
+This file describes the code that actually exists on the current `main` branch. Historical experiments or ideas that are no longer present in the repository are not treated as active state.
 
 ## Current focus
 
-- Build a reproducible New Room exploration benchmark around the shared Nearest-Frontier execution layer and MapEx policy.
-- Compare stock SLAM, local scan correction, segmented submap correction, Adaptive Temporal Anchor V1, and an old-map-first temporal anchoring diagnostic without duplicating exploration logic.
-- Keep experiment provenance, map snapshots, prediction artifacts, and evaluation outputs tied to the exact runtime configuration.
-- Runtime-validate SLAM diagnostics before considering any protocol change.
+- Maintain a reproducible exploration benchmark comparing Nearest Frontier (NF) and MapEx in New Room.
+- Keep the navigation/execution layer as shared as possible so the comparison focuses on frontier-selection policy rather than different Nav2 behavior.
+- Record run provenance, trajectory/map metrics, prediction artifacts and offline evaluation outputs.
+- Use completed NF/MapEx runs to identify a defensible MapEx research direction instead of assuming the bottleneck in advance.
+
+## Primary way to run experiments
+
+The normal simulation entry point is:
+
+```bash
+./mapex_lab/run
+```
+
+Current behavior of `run`:
+
+- interactively asks for `NF` or `MapEx`;
+- asks whether the run should be recorded;
+- asks for a run ID when recording and refuses to overwrite an existing run directory;
+- sources ROS 2 Jazzy and `ros2_ws/install/setup.bash`;
+- launches `launch/slam.launch.py`;
+- waits until `/map` and `/navigate_to_pose` are visible, then waits a short stabilization interval;
+- dispatches:
+  - NF, no record -> `scripts/nf_basic.py`
+  - MapEx, no record -> `scripts/mapex.py`
+  - NF, record -> `scripts/nf_run.py --runtime-profile slam`
+  - MapEx, record -> `scripts/mapex_run.py --runtime-profile slam`
+- defaults to `ROS_DOMAIN_ID=0` unless the environment already sets another value;
+- handles Ctrl+C by stopping the launched simulation/SLAM/Nav2 process.
+
+Important: the current runner does **not** implement the previously documented domain-42 isolation, `ROS_LOCALHOST_ONLY=1`, stale-ROS/Gazebo rejection, Nav2 lifecycle checks, or a 5 s monotonic `/clock` gate. Those features must not be described as active unless they are implemented in the code first.
+
+## Current launch stack
+
+Files currently present under `mapex_lab/launch/`:
+
+- `slam.launch.py` — primary simulation launch used by `./mapex_lab/run`.
+- `slam_robot.launch.py` — launch path for robot-side/real-robot use.
+- `stock.launch.py` — stock SLAM diagnostic/baseline launch.
+- `local.launch.py` — local scan frontend diagnostic launch.
+- `submap.launch.py` — segmented submap/local-ICP diagnostic launch.
+- `toolbox.launch.py` — auxiliary Toolbox diagnostic launch.
+- `new_toolbox.launch.py` — auxiliary newer Toolbox diagnostic launch.
+
+`oldmap_toolbox.launch.py` is no longer present and must not be treated as an active runtime profile.
+
+## Configuration source of truth
+
+`mapex_lab/config/` currently contains only:
+
+- `mapex.yaml` — MapEx policy/model parameters.
+- `nav2.yaml` — Nav2 overrides.
+- `slam.yaml` — SLAM Toolbox configuration shared by the relevant launchers.
+
+Do not document additional config files as active unless they exist on `main`.
+
+## NF implementation
+
+- `scripts/nf_basic.py` — canonical Nearest-Frontier exploration/execution layer.
+- `scripts/nf_run.py` — NF benchmark wrapper and provenance registration.
+- `scripts/_nf_run_core.py` — shared recorder/runtime core used by NF benchmarking.
+- `scripts/evaluate_nf_profiled.py` — post-run/profile-aware NF evaluation support.
+
+NF run data is stored under:
+
+```text
+mapex_lab/experiments/nearest/<run_id>/
+```
+
+## MapEx implementation
+
+- `scripts/mapex.py` — MapEx exploration policy and frontier ranking.
+- `scripts/mapex_run.py` — MapEx benchmark recording, map/prediction artifact saving and evaluation integration.
+- `scripts/mapex_lama_bridge.py` — bridge from the ROS-side process to the LaMa inference environment.
+- `scripts/mapex_lama_worker.py` — online LaMa ensemble inference worker.
+- Online MapEx uses the three-model ensemble configuration; the separate all-training predictor is an offline evaluation path rather than a fourth online ensemble member.
+
+MapEx run data is stored under:
+
+```text
+mapex_lab/experiments/mapex/<run_id>/
+```
+
+## Offline all-training evaluation
+
+Current offline evaluation tooling includes:
+
+- `scripts/predict_alltrain_offline.py` — generate all-training predictions from completed run snapshots without ROS.
+- `scripts/reevaluate_alltrain.py` — batch/re-evaluate completed NF/MapEx runs using the all-training predictor.
+- `scripts/evaluate_mapex_run.py` — core MapEx IoU/TU evaluator.
+- `scripts/evaluate_mapex_profiled.py` — environment/profile-aware MapEx evaluation wrapper.
+- `scripts/evaluate_nf_profiled.py` — NF evaluation with compatible prediction/evaluation handling.
+
+Recent evaluation work on 2026-09-13:
+
+- ground-truth-specific evaluation canvas metadata was adopted;
+- reused all-training predictions are checked against the requested checkpoint;
+- the all-training prediction source label was normalized;
+- NF and MapEx all-training evaluation outputs were refreshed;
+- the temporary IoU-curve export workflow was removed after the comparison curves were generated.
+
+## Ground truth and map-quality evaluation
+
+The benchmark supports environment-specific ground truth / ROI handling.
+
+For New Room:
+
+- `scripts/generate_new_room_ground_truth.py` generates the structural GT and connected-free ROI when needed;
+- generated heavy artifacts remain local under `ground_truth/new_room/generated/`;
+- Coverage uses the connected-free ROI for the active environment;
+- MapEx evaluation uses occupied IoU and TU against the active environment's structural GT/ROI.
+
+Hospital retains its own ground-truth/profile files for the workflows that explicitly select that environment.
+
+## Current repository structure relevant to the benchmark
+
+```text
+mapex_lab/
+├── run
+├── config/
+│   ├── mapex.yaml
+│   ├── nav2.yaml
+│   └── slam.yaml
+├── launch/
+│   ├── slam.launch.py
+│   ├── slam_robot.launch.py
+│   ├── stock.launch.py
+│   ├── local.launch.py
+│   ├── submap.launch.py
+│   ├── toolbox.launch.py
+│   └── new_toolbox.launch.py
+├── scripts/
+│   ├── nf_basic.py
+│   ├── nf_run.py
+│   ├── _nf_run_core.py
+│   ├── mapex.py
+│   ├── mapex_run.py
+│   ├── mapex_lama_bridge.py
+│   ├── mapex_lama_worker.py
+│   ├── predict_alltrain_offline.py
+│   ├── reevaluate_alltrain.py
+│   ├── evaluate_nf_profiled.py
+│   ├── evaluate_mapex_run.py
+│   ├── evaluate_mapex_profiled.py
+│   └── ...
+├── experiments/
+│   ├── nearest/
+│   └── mapex/
+├── ground_truth/
+├── analysis/
+├── results/
+├── references/
+├── docs/
+└── src/
+    └── README.md
+```
+
+`src/slam/` has been removed. `src/` currently contains only its README describing possible future module organization.
+
+`scripts/apply_hard_chain.py` still exists as a legacy diagnostic helper, but it is not part of the primary NF/MapEx pipeline and must not be presented as the current research direction.
+
+## Static MapEx audit state
+
+A static comparison with the MapEx paper/reference implementation was previously recorded in `docs/experiment_notes/2026-09-09-mapex-audit.md`.
+
+Current interpretation:
+
+- the main MapEx IG/ranking idea follows the paper-level pipeline;
+- there are implementation/evaluation adaptations that must remain documented when making formal claims;
+- numerical/runtime equivalence to the reference implementation should not be assumed without dedicated validation;
+- candidate eligibility differences between NF and MapEx should be considered when interpreting benchmark results.
 
 ## Candidate research directions
 
-Two MapEx improvement directions are currently being considered. Neither is selected as the final thesis direction yet; both should first be discussed with the supervisor and supported by analysis of the existing NF/MapEx runs.
+Two directions are currently being considered. Neither is selected as the final thesis contribution yet.
 
 ### Direction 1 — Improve MapEx frontier selection while preserving full exploration
 
-- Keep the original exploration objective: the robot continues exploring until the shared completion condition is satisfied.
-- Investigate whether the current `IG / EuclideanDistance` ranking causes unnecessary travel, long or difficult goals, lower navigation success, or weak information gained per travelled meter.
-- Candidate improvements may incorporate a stronger travel penalty, navigation/path cost, reachability or navigation-success likelihood, while keeping the MapEx prediction/uncertainty pipeline intact.
-- Primary objective: reduce exploration time and travelled distance and improve robustness while maintaining or improving Coverage, occupied IoU and TU.
-- Any proposed scoring change must be motivated by evidence from the current runs rather than chosen arbitrarily.
+- Keep the original full-exploration completion objective.
+- Test whether `IG / EuclideanDistance` causes unnecessary travel, difficult goals, poor navigation success, or weak information gained per travelled meter.
+- Candidate changes may use stronger travel penalties, path/navigation cost, reachability or navigation-success likelihood while preserving the MapEx prediction/uncertainty pipeline.
+- Primary target: reduce time/distance and improve robustness while maintaining or improving Coverage, occupied IoU and TU.
+- Any scoring change must be justified by evidence from existing runs.
 
 ### Direction 2 — Prediction/uncertainty-aware early stopping
 
-- Extend MapEx so prediction is used not only to choose where to explore next, but also to decide whether further physical exploration is still necessary.
-- If the remaining unobserved regions are predicted with sufficiently high confidence / sufficiently low useful uncertainty, allow exploration to terminate before all frontiers have been physically visited.
-- Construct the final map from observed SLAM evidence plus prediction for the remaining unobserved area.
-- Evaluate the trade-off between saved time/distance and degradation, if any, in occupied IoU and TU.
-- Do not assume a fixed stopping coverage such as 50%; the stopping criterion must be derived and validated from prediction confidence/uncertainty and experiment data.
-- First validation should be offline where possible: use intermediate MapEx snapshots/predictions to measure how reconstructed-map quality changes as a function of physical coverage, time and distance before modifying the online policy.
+- Use MapEx prediction not only to rank frontiers but also to decide whether further physical exploration is still useful.
+- Permit earlier termination only when remaining unknown regions are predicted with sufficiently justified confidence/low useful uncertainty.
+- Reconstruct the final map from observed SLAM evidence plus prediction for the remaining unobserved area.
+- Measure the trade-off between saved time/distance and any loss in occupied IoU/TU.
+- Do not assume an arbitrary fixed stopping coverage; derive the criterion from prediction confidence/uncertainty and data.
+- Prefer offline validation on intermediate snapshots before changing the online exploration policy.
 
-## Current runtime stack
+## Removed / no longer active
 
-- `launch/stock.launch.py`: New Room by default, stock scan path into SLAM Toolbox, stock TurtleBot4 Nav2 plus `config/nav2.yaml` overrides.
-- `launch/local.launch.py`: local scan frontend + SLAM Toolbox + Nav2. It reuses `config/slam.yaml` and overrides the scan topic at launch time.
-- `launch/submap.launch.py`: segmented local ICP frontend (`scripts/submap.py`) + SLAM Toolbox + Nav2. It reuses `config/slam.yaml` and overrides the scan topic at launch time.
-- `launch/toolbox.launch.py`: conservative Toolbox A/B baseline. The vendored Ceres solver contains Adaptive Anchor V1 code but this launch explicitly sets `adaptive_anchor_enabled=false`, so ordinary Toolbox constraint weights remain unchanged.
-- `launch/new_toolbox.launch.py`: Adaptive Temporal Anchor V1 diagnostic. It uses `scan_buffer_size=30`, strict sequential temporal edges (`node_gap<=1`) with `w(n)=1+2*exp(-n/50)`, and strong-loop regional release `1.0 -> 0.5 -> 0.0`.
-- `launch/oldmap_toolbox.launch.py`: current Old-Map-First V2 diagnostic. It applies old>new confidence in both local scan-matching stages and at the Ceres pose-graph level. Initial local matching keeps the normal recent buffer (`30` scans), adds nearby trusted historical keyframes (`0.5 m` spacing, `3.0 m` radius, max `40`), retains scan 1 as trusted history, and uses `c_raw(i)=0.25+0.75*exp(-i/70)` with active-reference normalization. Graph construction mirrors Karto topology, but near-chain local matching now uses the same temporal weighted correlation rule rather than equal-confidence `MatchScan`. The first node remains hard-fixed by Ceres; local edges with `node_gap<=5` use `w(n)=1+4*exp(-n/70)` (`5x -> 1x`); long-gap/loop edges remain `1x`; adaptive release is disabled with `1.0 -> 1.0`. Karto loop-closure matching remains upstream/unweighted.
-- `src/slam/adaptive_anchor_v1.md`: exact Adaptive V1 algorithm, parameters, fallback edge classification, release logic and validation checklist.
-- `src/slam/oldmap_anchor_v1.md`: historical pose-graph-only Old-Map-First V1 diagnostic.
-- `src/slam/oldmap_anchor_v2.md`: current two-layer Old-Map-First V2 algorithm, weighted initial + near-chain local matching, temporal Ceres policy, limitations and validation checklist.
-- `src/slam/temporal_anchor_ceres.patch`: earlier fixed soft-anchor prototype retained only as historical diagnostic material; its obsolete launch file has been removed.
-- `scripts/apply_hard_chain.py`: earlier strict hard-chain diagnostic helper retained only for history; its obsolete launch file has been removed. The first runtime test was not satisfactory and this is no longer the current direction.
-- The launchers use world-specific automatic spawn resolution; New Room is the default world while Hospital remains selectable explicitly where supported.
-- `config/` is intentionally reduced to three source-of-truth files: `nav2.yaml`, `slam.yaml`, and `mapex.yaml`.
+The following items were previously described in this file but are no longer part of the current `main` state:
 
-## Benchmark / recorder state
+- `launch/oldmap_toolbox.launch.py`;
+- `scripts/nf_oldmap_toolbox_run.py`;
+- `scripts/mapex_oldmap_toolbox_run.py`;
+- `src/slam/adaptive_anchor_v1.md`;
+- `src/slam/oldmap_anchor_v1.md`;
+- `src/slam/oldmap_anchor_v2.md`;
+- `src/slam/temporal_anchor_ceres.patch`;
+- the Old-Map-First V1/V2 implementation plan as an active next action.
 
-- `scripts/nf_basic.py` is the shared canonical Nearest-Frontier execution layer and remains unchanged across SLAM diagnostics.
-- `scripts/nf_run.py` adds benchmark recording and provenance for Nearest-Frontier runs.
-- `scripts/mapex.py` contains the MapEx exploration policy.
-- `scripts/mapex_run.py` adds MapEx recording, saved prediction maps, environment-aware coverage, and post-run IoU/TU evaluation.
-- `scripts/nf_new_toolbox_run.py` registers `new_room_new_toolbox_adaptive_v1_buffer30` provenance and records Nearest runs under `launch/new_toolbox.launch.py` without changing the policy.
-- `scripts/mapex_new_toolbox_run.py` registers the same `new_room_new_toolbox_adaptive_v1_buffer30` provenance for MapEx.
-- `scripts/nf_oldmap_toolbox_run.py` registers `new_room_oldmap_toolbox_v2` provenance and hashes the V2 matcher/glue/Ceres implementation.
-- `scripts/mapex_oldmap_toolbox_run.py` registers the same `new_room_oldmap_toolbox_v2` provenance for MapEx.
-- `oldmap_mapper.hpp` is included in provenance hashes, so the weighted-near-chain implementation is distinguishable from earlier V2 code even though the profile ID remains V2. Do not mix implementation hashes in one formal batch.
-- Old-Map-First V1 and V2 runs must not be mixed because V2 changes C++ local scan matching in addition to the pose-graph weighting.
-- New Room uses the generated `new_room_connected_free_v1` ROI and `new_room_structural_gt_v1` structural ground truth.
+Historical commits may still contain these files, but they must not be used to describe the current branch.
 
-## Ground truth / evaluation
+## Current known limitations / next actions
 
-- Added `ground_truth/hospital/structural_gt_v1.yaml` for Hospital structural-GT semantics.
-- Added `scripts/generate_new_room_ground_truth.py` plus `ground_truth/new_room/structural_gt_v1.yaml`. New Room GT is rasterized directly from all `mini_hospital_structure` box collisions intersecting `z=0.20 m`, including walls, room obstacles, and rotated central screen `c66`; the ground plane is excluded.
-- New Room generated artifacts are local-only: `new_room_structural_gt_v1.npz`, `new_room_connected_free_v1.npy`, preview PGM, and summary JSON under `ground_truth/new_room/generated/`.
-- `mapex_run.py` has explicit `new_room` and `hospital` environment profiles. **`new_room` is the default profile.** New Room uses `new_room_connected_free_v1` for Coverage and `new_room_structural_gt_v1` + the same ROI for IoU/TU; Hospital retains its own ROI/GT paths.
-- For `new_room`, `mapex_run.py` automatically generates GT/ROI before the ROS benchmark begins when artifacts are missing, and regenerates them when the tracked `new_room.sdf` SHA-256 changes. This work occurs before the benchmark clock starts.
-- Added `scripts/evaluate_mapex_profiled.py` so the existing evaluator receives the active environment's GT + ROI pair. This prevents New Room TU goals from accidentally being sampled from Hospital's ROI.
-- Coverage denominator is environment-specific in `mapex_run.py`: it is computed from the actual loaded connected-free ROI rather than always using Hospital's fixed `215435` cells.
-- The standalone evaluator synthetic consistency test previously returned occupied IoU `1.0` and TU `1.0` for matching prediction/ground truth and successfully backfilled `metrics.csv`.
-- `launch/stock.launch.py` now defaults to `new_room`; its world-specific spawn is resolved automatically, and Hospital can still be selected explicitly.
-- `launch/submap.launch.py` now also defaults to `new_room`, while retaining its segmented local scan frontend. Hospital remains selectable explicitly.
-- For the current auxiliary New Room smoke test, `config/nav2.yaml` allows `velocity_smoother` linear commands up to `±0.75 m/s` while keeping angular commands at `±1.9 rad/s`; the Gazebo Create3 hard linear cap remains `0.8 m/s`. This speed setting is not yet validated as a formal Hospital benchmark setting.
-
-## Old-Map-First V2 implementation state
-
-- `slam_toolbox/include/slam_toolbox/oldmap_mapper.hpp` adds `OldMapMapper`, a subclass of `karto::Mapper` whose weighted path is disabled by default.
-- `slam_toolbox/src/slam_mapper.cpp` constructs `OldMapMapper` as a strict superset of the upstream mapper and exposes the V2 ROS parameters. Because `oldmap_scan_weighting_enabled` defaults to `false`, `toolbox`, `new_toolbox`, and other profiles call upstream `karto::Mapper::Process()` unchanged.
-- When enabled by `oldmap_toolbox.launch.py`, the initial local match uses the normal recent running scans plus sparse historical keyframes near the predicted pose. The first scan is retained as a historical keyframe but participates directly only when spatially relevant.
-- Raw scan confidence is `c_raw(i)=0.25+0.75*exp(-i/70)`. Active reference weights are divided by the strongest active raw confidence, preserving old>new ordering while preventing matcher response from collapsing in regions where only late scans are available.
-- The custom correlation grid keeps Karto's Gaussian smear shape but scales each reference scan's kernel amplitude by its active temporal confidence. Grid fusion remains max-based.
-- `OldMapMapper` now mirrors Karto `AddEdges()` internally when the feature is enabled. Previous-scan linking, running-chain linking, near-chain discovery, thresholding, closest-scan linking and covariance-weighted mean fusion follow the upstream logic; the intentional difference is that near-chain `MatchScan(..., doPenalize=false)` is replaced by `WeightedMatchScan(..., do_penalize=false)` with old>new weights computed inside that chain.
-- Therefore both local frontend stages that can alter a new scan pose are temporal-weighted: initial sequential/local matching and near-chain local matching.
-- Karto loop-closure coarse/fine matching remains upstream/unweighted so it stays an independent source of evidence. Accepted loop constraints remain `1x` in Ceres.
-- Vendored `slam_toolbox/solvers/ceres_solver.cpp` still provides the pose-graph half of the method: first node constant, local edge `node_gap<=5`, `5x -> 1x` decay over `70` nodes, loop/long-gap edges `1x`, no release under this profile.
-- This V2 **modifies C++** and therefore requires rebuilding the vendored `slam_toolbox` before runtime testing.
-- First weighted-near-chain rebuild attempt on `com1` reached the linker but failed because Karto defines several public `MapperSensorManager` accessors as `inline` only in `Mapper.cpp`; the new `OldMapMapper` calls them from `slam_mapper.cpp`, so GCC omitted the externally-callable symbols. `slam_toolbox/CMakeLists.txt` now adds GNU `-fkeep-inline-functions` to `kartoSlamToolbox` so those existing accessors are emitted without changing algorithm behavior. Rebuild validation is pending.
-- Compile/runtime validation on `com1` is still pending for the weighted-near-chain version. The previous successful build only validated the earlier Ceres implementation, not this current frontend implementation.
-- These remain diagnostic experiments and do **not** modify `hospital_v2` official benchmark protocol.
-
-## In progress / next action
-
-- Pull current `main`, rebuild only vendored `slam_toolbox` sequentially on `com1`, and confirm the linker error for `MapperSensorManager::{GetLastScan,GetScans,GetRunningScans,AddRunningScan}` is gone.
-- Verify the workspace package is being used after the successful rebuild.
-- Launch `oldmap_toolbox.launch.py` and verify startup reports `Old-map sequential matcher: enabled=true, min_conf=0.25, decay=70.0, keep_first=true, keyframe_dist=0.50, history_radius=3.00, history_max=40`.
-- Verify Ceres startup reports approximately `weight=5.00->1.00`, `decay=70.0`, `local_gap<=5`, and `release=1.00->1.00`.
-- Run `nf_basic.py` first rather than a recorder. Check that mapping starts normally, the first node remains constant, and no custom AddEdges / weighted near-chain assertion or correlation-grid error occurs.
-- Drive/explore far enough to revisit early mapped space and compare whether early walls remain more stable while the recent trajectory is pulled back toward trusted history.
-- If historical matching creates false attraction in repeated geometry, reduce `oldmap_history_search_radius` or historical keyframe density before changing Ceres weights.
-- If weighted near-chain matching makes graph construction too rigid or rejects too many near-chain links, inspect response/covariance first; do not immediately loosen loop closure.
-- If valid loop closure cannot correct the recent trajectory enough, first reduce `adaptive_anchor_max_weight` or `adaptive_anchor_decay_nodes`; do not add a release mechanism until the two-layer hypothesis is evaluated.
-- Only after the smoke test is stable, collect repeated Nearest/MapEx runs with `nf_oldmap_toolbox_run.py` / `mapex_oldmap_toolbox_run.py`, restarting simulation/SLAM fresh before every run.
-- Do not mix `toolbox`, `new_toolbox`, Old-Map V1, and Old-Map V2 results under the same runtime provenance.
+1. Treat `./mapex_lab/run` as implemented in the current shell script, not as described by older status notes.
+2. On `com1`, `git pull` before the next formal run so the local checkout matches `main`.
+3. Run fresh NF and MapEx smoke tests through the current runner and confirm clean startup, exploration completion, recording and offline evaluation.
+4. If ROS-domain isolation, stale-process checks or clock-monotonicity validation are still desired, implement and test them in `run` before marking them DONE here.
+5. Keep new NF/MapEx formal batches on one fixed runtime/configuration and do not mix results collected under materially different code/config states.
+6. Use the existing completed-run analysis to choose and justify the final MapEx improvement direction.
