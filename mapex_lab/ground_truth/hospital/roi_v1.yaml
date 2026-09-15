@@ -15,7 +15,7 @@ roi:
     ymin: -35.091079
     ymax: 21.044604
   structural_source:
-    world: ros2_ws/src/frontier_exploration/worlds/hospital_aws_flat.sdf
+    world: mapex_lab/map/hospital_aws_flat.sdf
     wall_collision_mesh: aws_robomaker_hospital_floor_01_walls_collision.dae
     include_flat_elevator_blockers: true
     wall_slice_z_m: 0.30
@@ -31,8 +31,8 @@ roi:
   coverage_rule:
     numerator: cells in ROI that are known in the aligned SLAM map
     denominator: all cells in the frozen ROI mask
-  generated_mask: mapex_hospital_research/ground_truth/hospital/generated/hospital_connected_free_v1.npy
-  generated_metadata: mapex_hospital_research/ground_truth/hospital/generated/hospital_connected_free_v1_metadata.json
+  generated_mask: mapex_lab/ground_truth/hospital/generated/hospital_connected_free_v1.npy
+  generated_metadata: mapex_lab/ground_truth/hospital/generated/hospital_connected_free_v1_metadata.json
   denominator_cells: 215435
   mask_sha256: 05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1
   freeze_rule: this mask is frozen for hospital_v1; any ROI change requires a new ROI ID and rerunning the corresponding baseline
