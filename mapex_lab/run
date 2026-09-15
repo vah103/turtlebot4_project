@@ -119,10 +119,14 @@ fi
 [[ -f "$WS_SETUP" ]] || fail "Không tìm thấy workspace setup: ${WS_SETUP}. Hãy build ros2_ws trước."
 [[ -f "${LAB_DIR}/launch/slam.launch.py" ]] || fail "Không tìm thấy mapex_lab/launch/slam.launch.py"
 
+# ROS / ament setup scripts may legitimately read variables that are not set.
+# Temporarily disable nounset while sourcing them, then restore strict mode.
+set +u
 # shellcheck disable=SC1090
 source "$ROS_SETUP"
 # shellcheck disable=SC1090
 source "$WS_SETUP"
+set -u
 
 export ROS_DOMAIN_ID="${ROS_DOMAIN_ID:-0}"
 export RMW_IMPLEMENTATION="${RMW_IMPLEMENTATION:-rmw_fastrtps_cpp}"
