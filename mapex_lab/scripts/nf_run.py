@@ -23,23 +23,41 @@ from _nf_run_core import _deep_merge, _git_value, _sha256_file, _stamp_s  # noqa
 from evaluate_nf_profiled import evaluate_run
 
 
-# ``slam.launch.py`` is now the normal launch path for the current New Room
-# experiments. RUNTIME_PROFILES is the same mutable dict owned by
-# ``_nf_run_core.py``; registering it here therefore makes the profile available
-# to both Stage2Run and mapex_run.py without changing either exploration policy.
+# ``slam.launch.py`` is now the normal launch path for the current experiments.
+# RUNTIME_PROFILES is the same mutable dict owned by ``_nf_run_core.py``;
+# registering these profiles here therefore makes them available to both
+# Stage2Run and mapex_run.py without changing either exploration policy.
 RUNTIME_PROFILES["slam"] = {
     "environment": "new_room",
     "id": "new_room_slam_adaptive_anchor",
     "note": (
-        "New Room benchmark launched with launch/slam.launch.py. Uses stock "
-        "Karto sequential scan matching with the tested Adaptive Temporal Anchor "
-        "pose-graph weighting enabled; the custom OldMap scan-level matcher is "
-        "disabled."
+        "New Room benchmark launched with launch/slam.launch.py world:=new_room. "
+        "Uses stock Karto sequential scan matching with the tested Adaptive "
+        "Temporal Anchor pose-graph weighting enabled; the custom OldMap "
+        "scan-level matcher is disabled."
     ),
     "launch_relative": "launch/slam.launch.py",
     "slam_relative": None,
     "extra_hashes": {
         "adaptive_ceres_solver": "../slam_toolbox/solvers/ceres_solver.cpp",
+    },
+}
+
+RUNTIME_PROFILES["hospital_slam"] = {
+    "environment": "hospital",
+    "id": "hospital_slam_adaptive_anchor",
+    "note": (
+        "Hospital benchmark launched with launch/slam.launch.py world:=hospital. "
+        "The simulation resolves Hospital geometry/spawn through "
+        "hospital_flat_simulation.launch.py and hospital_scale.py; the active "
+        "Hospital scale is therefore part of the recorded source/config provenance."
+    ),
+    "launch_relative": "launch/slam.launch.py",
+    "slam_relative": None,
+    "extra_hashes": {
+        "adaptive_ceres_solver": "../slam_toolbox/solvers/ceres_solver.cpp",
+        "hospital_scale": "scripts/hospital_scale.py",
+        "hospital_world": "map/hospital_aws_flat.sdf",
     },
 }
 
@@ -61,7 +79,7 @@ def main():
         "--runtime-profile",
         choices=sorted(RUNTIME_PROFILES),
         default=None,
-        help="Runtime provenance profile. New Room defaults to submap.",
+        help="Runtime provenance profile.",
     )
     args, ros_args = parser.parse_known_args()
 
