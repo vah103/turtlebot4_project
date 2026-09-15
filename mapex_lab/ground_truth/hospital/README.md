@@ -10,21 +10,33 @@
 
 ROI này dùng làm denominator cố định cho Coverage.
 
+### Provenance của ROI v1
+
+ROI v1 được freeze ngày 26/08/2026 bằng pipeline cũ `mapex_hospital_research/scripts/generate_hospital_roi.py`. Pipeline đó dùng `trimesh` để áp COLLADA scene-graph transforms, `cv2.line/fillPoly`, `cv2.dilate`, rồi lấy thành phần free-space 8-connected chứa robot start.
+
+Tại thời điểm freeze ROI v1, hai `elevator_blocker` trong `hospital_aws_flat.sdf` rộng **1.60 m**. Ngày 27/08/2026 world được sửa thành **1.80 m** để chặn khe elevator tốt hơn. Vì vậy world hiện tại không được phép mặc nhiên giả định sẽ có cùng SHA với ROI v1. Nếu cell-count/SHA khác sau khi generator canonical chạy, cần coi đó là geometry revision và quyết định tạo ROI version mới thay vì ép kết quả khớp v1.
+
+Frozen ROI v1 audit:
+
+- denominator: `215435` cells;
+- SHA-256: `05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1`.
+
 ## Structural ground truth cho IoU/TU
 
 - spec: `structural_gt_v1.yaml`
 - ID: `hospital_structural_gt_v1`
 - generated artifact: `generated/hospital_structural_gt_v1.npz` (local-only, không commit)
 - generator: `mapex_lab/scripts/generate_hospital_ground_truth.py`
-- trạng thái hiện tại: **chưa generate/validate trên máy chạy thí nghiệm**
+- canonical rasterization core: `mapex_lab/scripts/hospital_ground_truth_core.py`
+- trạng thái hiện tại: **chưa validate alignment trên máy chạy thí nghiệm**
 
-NPZ phải nằm trên `hospital_canvas_v1` và có:
+NPZ nằm trên `hospital_canvas_v1` và có:
 
 - `data`: `-1` = ngoài vùng chấm, `0` = free, `100` = occupied;
-- `evaluation_mask`: building footprint dùng để chấm structural metrics;
+- `evaluation_mask`: vùng dùng để chấm structural metrics;
 - `resolution`, `origin_x`, `origin_y`.
 
-Generator chỉ chấp nhận Hospital canonical **1.0x**. Nó rasterize wall collision mesh tại `z=0.30 m`, thêm hai `elevator_blocker`, đóng raster crack theo `roi_v1.yaml`, rồi flood-fill 8-connected từ `(0,0)` trong frame `slam_start_map`.
+Generator chỉ chấp nhận Hospital **1.0x**. Nó dùng lại đúng rasterization semantics của generator ROI v1 lịch sử, nhưng luôn rasterize geometry của **active world hiện tại** thay vì sửa geometry để ép hash cũ.
 
 Chạy:
 
@@ -33,24 +45,20 @@ cd ~/turtlebot4_project
 python3 mapex_lab/scripts/generate_hospital_ground_truth.py
 ```
 
-Generator tự kiểm tra:
-
-- Hospital scale phải bằng `1.0`;
-- wall-slice bounds phải khớp `roi_v1.yaml`;
-- ROI phải có đúng `215435` cell;
-- SHA-256 của ROI phải là `05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1`.
-
-Nếu cell-count hoặc SHA không khớp, script trả lỗi và artifact chỉ được xem là **candidate để kiểm tra**, không được dùng làm official GT. Có thể dùng `--allow-spec-mismatch` chỉ để debug/inspect.
-
 Output local:
 
 - `generated/hospital_connected_free_v1.npy`
 - `generated/hospital_connected_free_v1_metadata.json`
 - `generated/hospital_structural_gt_v1.npz`
-- `generated/hospital_structural_gt_v1.pgm`
+- `generated/hospital_structural_gt_v1_preview.png`
 - `generated/hospital_structural_gt_v1_summary.json`
 
-`mapex_lab/scripts/evaluate_mapex_run.py` dùng artifact này để tính:
+Output JSON sẽ báo một trong hai trạng thái chính:
+
+- `ok_frozen_v1_match`: active world tái tạo đúng mask v1;
+- `ok_active_world_differs_from_frozen_v1`: rasterization đã đúng pipeline canonical nhưng geometry active world cho mask khác v1. Trường hợp này không được đổi SHA/cell-count của v1 một cách âm thầm; cần version ROI/GT mới hoặc quay lại đúng geometry đã freeze.
+
+`mapex_lab/scripts/evaluate_mapex_run.py` dùng artifact structural GT để tính:
 
 - occupied IoU từ ensemble mean prediction, threshold `> 0.5`;
 - Topological Understanding với 100 goal cố định, 4-connected path planning;
