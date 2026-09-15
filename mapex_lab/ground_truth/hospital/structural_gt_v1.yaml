@@ -1,6 +1,8 @@
 id: hospital_structural_gt_v1
 status: pending_generation_and_alignment_validation
 
+generator: mapex_lab/scripts/generate_hospital_ground_truth.py
+
 purpose:
   - occupied_iou_offline
   - topological_understanding_offline
@@ -23,6 +25,14 @@ artifact:
     - resolution
     - origin_x
     - origin_y
+
+structural_source:
+  hospital_scale: 1.0
+  world: mapex_lab/map/hospital_aws_flat.sdf
+  wall_collision_mesh: aws_robomaker_hospital_floor_01_walls_collision.dae
+  wall_slice_z_m: 0.30
+  include_flat_elevator_blockers: true
+  exclude_closed_curtain_from_structural_gt: true
 
 semantics:
   data:
@@ -50,3 +60,4 @@ validation_required_before_reporting:
   - structural_raster_aligned_with_slam_map
   - building_footprint_mask_reviewed
   - free_start_pose_confirmed
+  - canonical_roi_cell_count_and_sha_match
