@@ -42,6 +42,36 @@ while true; do
     esac
 done
 
+printf '\nChọn map:\n'
+printf '  1) New Room\n'
+printf '  2) Hospital\n'
+
+while true; do
+    read -r -p '> ' map_choice
+    case "${map_choice,,}" in
+        1|new_room|new-room|newroom|room)
+            ENVIRONMENT="new_room"
+            WORLD_SELECTOR="new_room"
+            RUNTIME_PROFILE="slam"
+            MAP_LABEL="New Room"
+            break
+            ;;
+        2|hospital|hospital_flat|hospital-flat)
+            ENVIRONMENT="hospital"
+            WORLD_SELECTOR="hospital"
+            RUNTIME_PROFILE="hospital_slam"
+            MAP_LABEL="Hospital"
+            break
+            ;;
+        q|quit|exit)
+            exit 0
+            ;;
+        *)
+            printf 'Chọn 1 (New Room) hoặc 2 (Hospital).\n'
+            ;;
+    esac
+done
+
 while true; do
     read -r -p 'Lưu record? [y/N]: ' record_answer
     case "${record_answer,,}" in
@@ -130,8 +160,8 @@ trap 'exit 143' TERM
 
 cd "$ROOT_DIR"
 
-printf '\nĐang bật slam.launch.py...\n'
-ros2 launch "${LAB_DIR}/launch/slam.launch.py" &
+printf '\nĐang bật slam.launch.py | map=%s...\n' "$MAP_LABEL"
+ros2 launch "${LAB_DIR}/launch/slam.launch.py" world:="$WORLD_SELECTOR" &
 LAUNCH_PID=$!
 
 printf 'Đang chờ /map và NavigateToPose sẵn sàng'
@@ -179,15 +209,15 @@ if (( RECORD )); then
         CMD=(
             "$PYTHON_BIN" "${LAB_DIR}/scripts/nf_run.py"
             --run-id "$RUN_ID"
-            --environment new_room
-            --runtime-profile slam
+            --environment "$ENVIRONMENT"
+            --runtime-profile "$RUNTIME_PROFILE"
         )
     else
         CMD=(
             "$PYTHON_BIN" "${LAB_DIR}/scripts/mapex_run.py"
             --run-id "$RUN_ID"
-            --environment new_room
-            --runtime-profile slam
+            --environment "$ENVIRONMENT"
+            --runtime-profile "$RUNTIME_PROFILE"
         )
     fi
 else
@@ -198,7 +228,7 @@ else
     fi
 fi
 
-printf 'Bắt đầu: %s' "$METHOD"
+printf 'Bắt đầu: %s | map=%s' "$METHOD" "$MAP_LABEL"
 if (( RECORD )); then
     printf ' | record=%s' "$RUN_ID"
 else
