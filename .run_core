@@ -251,6 +251,33 @@ choose_method() {
   done
 }
 
+choose_map() {
+  while true; do
+    echo ""
+    echo "Chon map:"
+    echo "  1) New Room"
+    echo "  2) Hospital"
+    read -r -p "> " choice
+    case "$choice" in
+      1|new_room|new-room|newroom|room)
+        ENVIRONMENT="new_room"
+        WORLD_SELECTOR="new_room"
+        RUNTIME_PROFILE="slam"
+        MAP_LABEL="New Room"
+        return
+        ;;
+      2|hospital|Hospital|HOSPITAL)
+        ENVIRONMENT="hospital"
+        WORLD_SELECTOR="hospital"
+        RUNTIME_PROFILE="hospital_slam"
+        MAP_LABEL="Hospital"
+        return
+        ;;
+      *) echo "Lua chon khong hop le. Chon 1 hoac 2." ;;
+    esac
+  done
+}
+
 choose_record() {
   while true; do
     echo ""
@@ -459,6 +486,7 @@ wait_for_stack() {
 preflight_python
 preflight_clean_stack
 choose_method
+choose_map
 if [[ "$METHOD" == "mapex" ]]; then
   configure_mapex_environment
 fi
@@ -470,6 +498,7 @@ fi
 echo ""
 echo "=============================="
 echo "Method : $METHOD_LABEL"
+echo "Map    : $MAP_LABEL"
 echo "Record : $RECORD"
 if [[ "$RECORD" == "yes" ]]; then
   echo "Run ID : $RUN_ID"
@@ -485,7 +514,7 @@ echo "Launch : mapex_lab/launch/slam.launch.py"
 echo "=============================="
 echo ""
 
-setsid ros2 launch "$ROOT_DIR/mapex_lab/launch/slam.launch.py" &
+setsid ros2 launch "$ROOT_DIR/mapex_lab/launch/slam.launch.py" world:="$WORLD_SELECTOR" &
 LAUNCH_PID=$!
 LAUNCH_SID="$LAUNCH_PID"
 
@@ -496,13 +525,13 @@ if [[ "$METHOD" == "nf" && "$RECORD" == "no" ]]; then
 elif [[ "$METHOD" == "mapex" && "$RECORD" == "no" ]]; then
   EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mapex.py")
 elif [[ "$METHOD" == "nf" && "$RECORD" == "yes" ]]; then
-  EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/nf_run.py" --run-id "$RUN_ID" --environment new_room --runtime-profile slam)
+  EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/nf_run.py" --run-id "$RUN_ID" --environment "$ENVIRONMENT" --runtime-profile "$RUNTIME_PROFILE")
 else
-  EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mapex_run.py" --run-id "$RUN_ID" --environment new_room --runtime-profile slam)
+  EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mapex_run.py" --run-id "$RUN_ID" --environment "$ENVIRONMENT" --runtime-profile "$RUNTIME_PROFILE")
 fi
 
 echo ""
-echo "Starting $METHOD_LABEL..."
+echo "Starting $METHOD_LABEL on $MAP_LABEL..."
 printf 'Command:'
 printf ' %q' "${EXPLORE_CMD[@]}"
 echo
