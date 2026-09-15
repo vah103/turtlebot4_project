@@ -48,7 +48,29 @@ def _run_dir(method: str, run: str) -> Path:
 
 
 def _raw_path(run_dir: Path, decision_id: int) -> Path:
-    return run_dir / "decision_maps" / f"decision_{decision_id:06d}_raw.npz"
+    """Return the saved observed raw map for either recorder layout.
+
+    MapEx runs currently have the compact ``decision_maps`` layout, while the
+    NF benchmark runs keep the observed map inside
+    ``decisions/policy_decision_XXXXXX``. Supporting both makes the renderer
+    work on the existing recorded benchmark without copying or regenerating
+    data.
+    """
+    candidates = (
+        run_dir / "decision_maps" / f"decision_{decision_id:06d}_raw.npz",
+        run_dir
+        / "decisions"
+        / f"policy_decision_{decision_id:06d}"
+        / "observed_map_raw.npz",
+    )
+    for path in candidates:
+        if path.is_file():
+            return path
+    raise FileNotFoundError(
+        "Observed map not found for decision "
+        f"{decision_id} in {run_dir}. Checked:\n  "
+        + "\n  ".join(str(path) for path in candidates)
+    )
 
 
 def _mean_path(run_dir: Path, decision_id: int) -> Path:
