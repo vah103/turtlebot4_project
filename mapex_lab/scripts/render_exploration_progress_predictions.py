@@ -192,7 +192,14 @@ def main() -> int:
                 spine.set_linewidth(0.8)
                 spine.set_edgecolor("0.35")
 
-    axes[0, 0].set_ylabel("Nearest Frontier", fontsize=14, fontweight="bold", rotation=0, labelpad=68, va="center")
+    axes[0, 0].set_ylabel(
+        "Nearest\nFrontier",
+        fontsize=14,
+        fontweight="bold",
+        rotation=0,
+        labelpad=50,
+        va="center",
+    )
     axes[1, 0].set_ylabel("MapEx", fontsize=14, fontweight="bold", rotation=0, labelpad=68, va="center")
 
     fig.suptitle(
