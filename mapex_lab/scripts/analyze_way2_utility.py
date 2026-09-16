@@ -49,16 +49,19 @@ OUTPUT_FIELDS = [
     "gain_normalization",
     "variance_reference",
     "cost_definition",
+    "recorded_selected_candidate_id",
     "best_ratio_candidate_id",
     "best_ratio_gain",
     "best_ratio_cost_m",
     "lambda_break_even",
+    "ratio_matches_recorded_selection",
     "lambda_value",
     "best_utility_candidate_id",
     "best_utility_gain",
     "best_utility_cost_m",
     "max_utility",
     "utility_nonpositive",
+    "guard_state_counted",
     "guard_streak",
     "guard_k",
     "guarded_stop",
@@ -160,6 +163,24 @@ def _normalized_gain(
     raise ValueError(f"Unsupported gain normalization: {mode}")
 
 
+def _decision_signature(rows: list[dict[str, str]]) -> tuple:
+    """Stable signature used so the K guard counts distinct recorded states only."""
+    signature_rows = []
+    for row in rows:
+        signature_rows.append(
+            (
+                row.get("candidate_id", ""),
+                row.get("row", ""),
+                row.get("col", ""),
+                row.get("information_gain", ""),
+                row.get("distance_m", ""),
+                row.get("selectable", ""),
+                row.get("status", ""),
+            )
+        )
+    return tuple(sorted(signature_rows))
+
+
 def analyze_run(
     run_dir: Path,
     lambda_value: float | None,
@@ -185,10 +206,15 @@ def analyze_run(
     decision_times = _load_decision_times(run_dir)
     output_rows: list[dict[str, str]] = []
     guard_streak = 0
+    last_counted_nonpositive_signature = None
     first_guarded_stop_decision_id: int | None = None
+    score_formula_mismatch_count = 0
+    selection_mismatch_count = 0
+    selection_audit_count = 0
 
     for decision_id in sorted(grouped):
         all_candidates = grouped[decision_id]
+        state_signature = _decision_signature(all_candidates)
         selectable = [
             row
             for row in all_candidates
@@ -201,6 +227,17 @@ def analyze_run(
             cost = _finite_float(row.get("distance_m"))
             if not math.isfinite(raw_gain) or not math.isfinite(cost) or cost <= 0.0:
                 continue
+
+            recorded_score = _finite_float(row.get("score"))
+            raw_ratio = raw_gain / cost
+            if math.isfinite(recorded_score) and not math.isclose(
+                raw_ratio,
+                recorded_score,
+                rel_tol=1e-6,
+                abs_tol=1e-6,
+            ):
+                score_formula_mismatch_count += 1
+
             gain = _normalized_gain(raw_gain, gain_normalization, variance_reference)
             parsed.append(
                 {
@@ -211,8 +248,16 @@ def analyze_run(
                 }
             )
 
+        selected_rows = [
+            row for row in all_candidates if _int_value(row.get("selected"), 0) == 1
+        ]
+        recorded_selected_candidate_id = (
+            selected_rows[0].get("candidate_id", "") if len(selected_rows) == 1 else ""
+        )
+
         if not parsed:
             guard_streak = 0
+            last_counted_nonpositive_signature = None
             output_rows.append(
                 {
                     "run_id": run_dir.name,
@@ -223,16 +268,19 @@ def analyze_run(
                     "gain_normalization": gain_normalization,
                     "variance_reference": _fmt(variance_reference),
                     "cost_definition": "euclidean_distance_m",
+                    "recorded_selected_candidate_id": recorded_selected_candidate_id,
                     "best_ratio_candidate_id": "",
                     "best_ratio_gain": "",
                     "best_ratio_cost_m": "",
                     "lambda_break_even": "",
+                    "ratio_matches_recorded_selection": "",
                     "lambda_value": _fmt(lambda_value),
                     "best_utility_candidate_id": "",
                     "best_utility_gain": "",
                     "best_utility_cost_m": "",
                     "max_utility": "",
                     "utility_nonpositive": "",
+                    "guard_state_counted": "0",
                     "guard_streak": "0",
                     "guard_k": str(guard_k),
                     "guarded_stop": "0",
@@ -244,9 +292,20 @@ def analyze_run(
         best_ratio = max(parsed, key=lambda item: item["ratio"])
         lambda_break_even = best_ratio["ratio"]
 
+        selection_match = ""
+        if recorded_selected_candidate_id:
+            selection_audit_count += 1
+            matches = str(best_ratio["candidate_id"]) == str(
+                recorded_selected_candidate_id
+            )
+            selection_match = "1" if matches else "0"
+            if not matches:
+                selection_mismatch_count += 1
+
         best_utility = None
         max_utility = math.nan
         utility_nonpositive = None
+        guard_state_counted = False
         guarded_stop = False
 
         if lambda_value is not None:
@@ -255,15 +314,22 @@ def analyze_run(
             best_utility = max(parsed, key=lambda item: item["utility"])
             max_utility = float(best_utility["utility"])
             utility_nonpositive = max_utility <= 0.0
+
             if utility_nonpositive:
-                guard_streak += 1
+                if state_signature != last_counted_nonpositive_signature:
+                    guard_streak += 1
+                    guard_state_counted = True
+                    last_counted_nonpositive_signature = state_signature
             else:
                 guard_streak = 0
+                last_counted_nonpositive_signature = None
+
             guarded_stop = guard_streak >= guard_k
             if guarded_stop and first_guarded_stop_decision_id is None:
                 first_guarded_stop_decision_id = decision_id
         else:
             guard_streak = 0
+            last_counted_nonpositive_signature = None
 
         output_rows.append(
             {
@@ -275,10 +341,12 @@ def analyze_run(
                 "gain_normalization": gain_normalization,
                 "variance_reference": _fmt(variance_reference),
                 "cost_definition": "euclidean_distance_m",
+                "recorded_selected_candidate_id": recorded_selected_candidate_id,
                 "best_ratio_candidate_id": str(best_ratio["candidate_id"]),
                 "best_ratio_gain": _fmt(best_ratio["gain"]),
                 "best_ratio_cost_m": _fmt(best_ratio["cost"]),
                 "lambda_break_even": _fmt(lambda_break_even),
+                "ratio_matches_recorded_selection": selection_match,
                 "lambda_value": _fmt(lambda_value),
                 "best_utility_candidate_id": (
                     "" if best_utility is None else str(best_utility["candidate_id"])
@@ -295,6 +363,7 @@ def analyze_run(
                     if utility_nonpositive is None
                     else ("1" if utility_nonpositive else "0")
                 ),
+                "guard_state_counted": "1" if guard_state_counted else "0",
                 "guard_streak": str(guard_streak),
                 "guard_k": str(guard_k),
                 "guarded_stop": "1" if guarded_stop else "0",
@@ -314,8 +383,15 @@ def analyze_run(
         "cost_definition": "recorded Euclidean distance_m",
         "eligibility_definition": "recorded selectable == 1",
         "planner_path_cost_supported_by_current_candidate_recording": False,
+        "score_formula_mismatch_count": score_formula_mismatch_count,
+        "selection_audit_count": selection_audit_count,
+        "selection_mismatch_count": selection_mismatch_count,
         "lambda_value": lambda_value,
         "guard_k": guard_k,
+        "guard_distinct_state_semantics": (
+            "count only non-positive utility decisions with a different recorded "
+            "candidate-state signature"
+        ),
         "first_guarded_stop_decision_id": first_guarded_stop_decision_id,
         "development_only": True,
         "notes": (
@@ -361,8 +437,8 @@ def main() -> int:
         type=int,
         default=2,
         help=(
-            "Consecutive distinct non-positive-utility decisions required to stop "
-            "(default: 2)."
+            "Consecutive distinct non-positive-utility decision states required "
+            "to stop (default: 2)."
         ),
     )
     parser.add_argument(
@@ -436,6 +512,9 @@ def main() -> int:
             "WAY2 REPLAY: "
             f"run={run_dir.name}, decisions={summary['decision_count']}, "
             f"evaluable={summary['evaluable_decision_count']}, "
+            f"score_mismatch={summary['score_formula_mismatch_count']}, "
+            f"selection_mismatch={summary['selection_mismatch_count']}/"
+            f"{summary['selection_audit_count']}, "
             f"lambda_break_even_range={range_text}, "
             f"lambda={args.lambda_value}, guard_k={args.guard_k}, "
             f"first_guarded_stop={stop_text}"
