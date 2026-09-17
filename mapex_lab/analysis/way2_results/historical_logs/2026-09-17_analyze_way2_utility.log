@@ -1,0 +1,33 @@
+# HISTORICAL RECOVERED LOG
+# source_machine: com1
+# source_path: ~/turtlebot4_project
+# source_date: 2026-09-17
+# recovered_via: user-provided terminal transcript in ChatGPT
+# recomputed: false
+# data_class: development/tuning evidence
+# command:
+# python3 mapex_lab/scripts/analyze_way2_utility.py \
+#   mpx_001 mpx_002 mpx_003 mpx_004 mpx_005 \
+#   mpx_006 mpx_007 mpx_008 mpx_009 mpx_010 \
+#   mpx_011 mpx_012 mpx_013 mpx_014 mpx_015 \
+#   hpx_001 hpx_002
+
+WAY2 REPLAY: run=mpx_001, env=new_room, decisions=28, evaluable=28, score_mismatch=0, selection_mismatch=0/28, lambda_range=0.001000..33.581053, early_median=16.067668, late_median=0.178868, late/early=0.011132, lambda=None, guard_k=2, first_guarded_stop=None
+WAY2 REPLAY: run=mpx_002, env=new_room, decisions=28, evaluable=28, score_mismatch=0, selection_mismatch=0/28, lambda_range=0.139631..33.581053, early_median=14.485020, late_median=0.216712, late/early=0.014961, lambda=None, guard_k=2, first_guarded_stop=None
+WAY2 REPLAY: run=mpx_003, env=new_room, decisions=32, evaluable=32, score_mismatch=0, selection_mismatch=0/32, lambda_range=0.000285..33.581053, early_median=13.882101, late_median=0.921331, late/early=0.066368, lambda=None, guard_k=2, first_guarded_stop=None
+WAY2 REPLAY: run=mpx_004, env=new_room, decisions=36, evaluable=29, score_mismatch=0, selection_mismatch=0/29, lambda_range=0.007586..33.581053, early_median=12.055400, late_median=0.232305, late/early=0.019270, lambda=None, guard_k=2, first_guarded_stop=None
+WAY2 REPLAY: run=mpx_005, env=new_room, decisions=26, evaluable=26, score_mismatch=0, selection_mismatch=0/26, lambda_range=0.085196..33.581053, early_median=13.908076, late_median=0.548081, late/early=0.039407, lambda=None, guard_k=2, first_guarded_stop=None
+WAY2 REPLAY: run=mpx_006, env=new_room, decisions=36, evaluable=28, score_mismatch=0, selection_mismatch=0/28, lambda_range=0.000000..33.581053, early_median=13.240194, late_median=0.314583, late/early=0.023760, lambda=None, guard_k=2, first_guarded_stop=None
+WAY2 REPLAY: run=mpx_007, env=new_room, decisions=35, evaluable=29, score_mismatch=0, selection_mismatch=0/29, lambda_range=0.045421..40.551794, early_median=18.813646, late_median=0.471748, late/early=0.025075, lambda=None, guard_k=2, first_guarded_stop=None
+WAY2 REPLAY: run=mpx_008, env=new_room, decisions=27, evaluable=27, score_mismatch=0, selection_mismatch=0/27, lambda_range=0.071312..33.581053, early_median=15.371695, late_median=1.067136, late/early=0.069422, lambda=None, guard_k=2, first_guarded_stop=None
+WAY2 REPLAY: run=mpx_009, env=new_room, decisions=27, evaluable=27, score_mismatch=0, selection_mismatch=0/27, lambda_range=0.046968..33.581053, early_median=15.679523, late_median=0.290825, late/early=0.018548, lambda=None, guard_k=2, first_guarded_stop=None
+WAY2 REPLAY: run=mpx_010, env=new_room, decisions=31, evaluable=31, score_mismatch=0, selection_mismatch=0/31, lambda_range=0.050874..33.581053, early_median=11.635571, late_median=0.500587, late/early=0.043022, lambda=None, guard_k=2, first_guarded_stop=None
+WAY2 REPLAY: run=mpx_011, env=new_room, decisions=31, evaluable=31, score_mismatch=0, selection_mismatch=0/31, lambda_range=0.015195..33.581053, early_median=15.748737, late_median=0.660349, late/early=0.041930, lambda=None, guard_k=2, first_guarded_stop=None
+WAY2 REPLAY: run=mpx_012, env=new_room, decisions=34, evaluable=28, score_mismatch=0, selection_mismatch=0/28, lambda_range=0.129590..33.581053, early_median=12.613308, late_median=0.667350, late/early=0.052908, lambda=None, guard_k=2, first_guarded_stop=None
+WAY2 REPLAY: run=mpx_013, env=new_room, decisions=31, evaluable=31, score_mismatch=0, selection_mismatch=0/31, lambda_range=0.037441..33.581053, early_median=14.593331, late_median=0.346659, late/early=0.023755, lambda=None, guard_k=2, first_guarded_stop=None
+WAY2 REPLAY: run=mpx_014, env=new_room, decisions=28, evaluable=28, score_mismatch=0, selection_mismatch=0/28, lambda_range=0.028264..33.581053, early_median=14.835679, late_median=0.585213, late/early=0.039446, lambda=None, guard_k=2, first_guarded_stop=None
+WAY2 REPLAY: run=mpx_015, env=new_room, decisions=25, evaluable=25, score_mismatch=0, selection_mismatch=0/25, lambda_range=0.016826..33.581053, early_median=14.931567, late_median=0.148179, late/early=0.009924, lambda=None, guard_k=2, first_guarded_stop=None
+WAY2 REPLAY: run=hpx_001, env=hospital, decisions=56, evaluable=51, score_mismatch=0, selection_mismatch=0/51, lambda_range=0.007746..348.006926, early_median=9.848879, late_median=0.154310, late/early=0.015668, lambda=None, guard_k=2, first_guarded_stop=None
+WAY2 REPLAY: run=hpx_002, env=hospital, decisions=50, evaluable=45, score_mismatch=0, selection_mismatch=0/45, lambda_range=0.036170..348.006926, early_median=10.582031, late_median=0.580453, late/early=0.054853, lambda=None, guard_k=2, first_guarded_stop=None
+WAY2 ENV: env=hospital, runs=2, median_of_run_medians=5.674580262499999, median_early=10.21545485625, median_late=0.36738146174999997
+WAY2 ENV: env=new_room, runs=15, median_of_run_medians=6.4787649345, median_early=14.5933309645, median_late=0.47174761649999997
