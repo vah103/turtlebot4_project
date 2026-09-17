@@ -1,0 +1,7 @@
+run,environment,configuration,stop_decision,observed_iou_at_stop,observed_iou_final,observed_iou_loss,why_it_mattered
+hpx_001,hospital,"lambda=0.4,K=2",44,0.366621,0.398084,0.031463,showed that low R alone could stop before important occupied structure was observed
+hpx_001,hospital,"lambda=0.4,K=3",45,0.369641,0.398084,0.028442,showed that increasing K alone did not solve the Hospital structural-loss case
+hpx_001,hospital,"lambda=0.5,K=2",43,0.366833,0.398084,0.031251,showed a more aggressive R threshold was unsafe
+mpx_009,new_room,"R<=0.3/0.4,U<=10,fixed K=2",26,,,0.010516,remaining near-threshold failure after adding visible-unknown guard
+mpx_009,new_room,"same trajectory one decision later",27,,,-0.000272,one additional confirmation removed the failure and motivated adaptive candidate-count confirmation
+hpx_001,hospital,"U threshold=15 boundary case",,,,0.015491,showed U<=15 was too aggressive and helped bound the robust region
