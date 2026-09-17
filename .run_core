@@ -189,6 +189,7 @@ preflight_clean_stack() {
     /lifecycle_manager_navigation \
     /slam_toolbox \
     /mapex_explorer \
+    /mapex_way2_explorer \
     /nearest_euclidean_frontier; do
     if grep -Fxq "$node" <<<"$node_list"; then
       stale_nodes+=("$node")
@@ -234,6 +235,7 @@ choose_method() {
     echo "Chon phuong phap:"
     echo "  1) NF"
     echo "  2) MapEx"
+    echo "  3) MapEx Way2"
     read -r -p "> " choice
     case "$choice" in
       1|nf|NF)
@@ -246,7 +248,12 @@ choose_method() {
         METHOD_LABEL="MapEx"
         return
         ;;
-      *) echo "Lua chon khong hop le. Chon 1 hoac 2." ;;
+      3|mapex_way2|mapex-way2|way2|Way2|WAY2)
+        METHOD="mapex_way2"
+        METHOD_LABEL="MapEx Way2"
+        return
+        ;;
+      *) echo "Lua chon khong hop le. Chon 1, 2 hoac 3." ;;
     esac
   done
 }
@@ -487,7 +494,7 @@ preflight_python
 preflight_clean_stack
 choose_method
 choose_map
-if [[ "$METHOD" == "mapex" ]]; then
+if [[ "$METHOD" == "mapex" || "$METHOD" == "mapex_way2" ]]; then
   configure_mapex_environment
 fi
 choose_record
@@ -504,7 +511,7 @@ if [[ "$RECORD" == "yes" ]]; then
   echo "Run ID : $RUN_ID"
 fi
 echo "Python : $ROS_PYTHON"
-if [[ "$METHOD" == "mapex" ]]; then
+if [[ "$METHOD" == "mapex" || "$METHOD" == "mapex_way2" ]]; then
   echo "MapEx  : $MAPEX_ROOT"
   echo "LaMa   : $MAPEX_LAMA_PYTHON"
   echo "Weights: $MAPEX_ENSEMBLE_DIR"
@@ -524,10 +531,17 @@ if [[ "$METHOD" == "nf" && "$RECORD" == "no" ]]; then
   EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/nf_basic.py")
 elif [[ "$METHOD" == "mapex" && "$RECORD" == "no" ]]; then
   EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mapex.py")
+elif [[ "$METHOD" == "mapex_way2" && "$RECORD" == "no" ]]; then
+  EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mapex_way2.py")
 elif [[ "$METHOD" == "nf" && "$RECORD" == "yes" ]]; then
   EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/nf_run.py" --run-id "$RUN_ID" --environment "$ENVIRONMENT" --runtime-profile "$RUNTIME_PROFILE")
-else
+elif [[ "$METHOD" == "mapex" && "$RECORD" == "yes" ]]; then
   EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mapex_run.py" --run-id "$RUN_ID" --environment "$ENVIRONMENT" --runtime-profile "$RUNTIME_PROFILE")
+elif [[ "$METHOD" == "mapex_way2" && "$RECORD" == "yes" ]]; then
+  EXPLORE_CMD=("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mapex_way2_run.py" --run-id "$RUN_ID" --environment "$ENVIRONMENT" --runtime-profile "$RUNTIME_PROFILE")
+else
+  echo "ERROR: to hop method/record khong duoc ho tro: method=$METHOD record=$RECORD"
+  exit 1
 fi
 
 echo ""
