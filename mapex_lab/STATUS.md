@@ -10,15 +10,14 @@ The active thesis direction is **Way2: frontier-utility-based early stopping for
 - Way2 is still offline/development only; online MapEx has not yet been changed to stop early.
 - `G` is frozen as raw `information_gain`.
 - Historical replay `C` is frozen as Euclidean `distance_m`.
-- `K=2` is the current fixed debounce guard.
-- `lambda` is **not yet frozen**.
+- `lambda` and the final persistence/completion guard are **not yet frozen**.
+- The simple rule `R_t <= lambda` plus only a K-consecutive-state debounce is currently **not sufficient** as a cross-environment completion criterion.
 
-Core rule:
+Core utility signal:
 
 ```text
 V_t(f) = G_t(f) - lambda * C_t(f)
 R_t    = max_f G_t(f)/C_t(f)
-STOP when R_t <= lambda for K=2 distinct decision states
 ```
 
 All current 17 runs are development/diagnostic data only:
@@ -99,7 +98,7 @@ Frozen definition:
 G_t(f) = information_gain(f)
 ```
 
-Do not divide by `visible_unknown_cells`.
+Do not divide by `visible_unknown_cells` for frontier ranking.
 Do not use startup maxima to choose `lambda`.
 
 ## 3. Travel cost C — FROZEN FOR HISTORICAL REPLAY
@@ -111,84 +110,141 @@ Cost audit:
 | New Room | 100.0% | 98.1% | 5.5% | 1.413 |
 | Hospital | 100.0% | 89.6% | 6.7% | 1.479 |
 
-Interpretation:
-
-- `distance_m` exists for every selectable candidate.
-- `plans.csv` provides planner path only after a frontier becomes the active selected goal.
-- planner path therefore cannot be used fairly to rerank all historical candidates.
-
 Frozen historical replay definition:
 
 ```text
 C_t(f) = distance_m(f)
 ```
 
-A future planner-cost variant would require `ComputePathToPose` for every selectable frontier at decision time and must be evaluated separately.
+Planner path cannot be used fairly for historical all-candidate replay because old recordings only contain planner paths for selected goals.
 
 ## 4. Lambda sensitivity — COMPLETED, NOT FROZEN
 
-Script:
-
-```text
-scripts/analyze_way2_lambda.py
-```
-
-Sensitivity grid:
+Initial K=2 sensitivity grid:
 
 ```text
 lambda = 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0, 1.5, 2.0
-K = 2
 ```
 
-Environment-level results:
+Main result:
 
-| lambda | New Room trigger | NR median time saved | NR median distance saved | NR rebound runs | Hospital trigger | Hospital median time saved | Hospital median distance saved | Hospital rebound runs |
-|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 0.1 | 4/15 | 14.0% | 8.3% | 0.0% | 2/2 | 8.7% | 7.8% | 100.0% |
-| 0.2 | 10/15 | 16.8% | 9.8% | 20.0% | 2/2 | 13.1% | 12.4% | 50.0% |
-| 0.3 | 13/15 | 17.9% | 14.7% | 23.1% | 2/2 | 13.1% | 12.4% | 50.0% |
-| 0.4 | 14/15 | 19.1% | 15.4% | 14.3% | 2/2 | 14.4% | 13.7% | 50.0% |
-| 0.5 | 14/15 | 19.1% | 15.4% | 14.3% | 2/2 | 15.0% | 14.1% | 50.0% |
-| 0.75 | 14/15 | 22.5% | 16.6% | 28.6% | 2/2 | 29.9% | 29.9% | 50.0% |
-| 1.0 | 15/15 | 28.8% | 24.3% | 33.3% | 2/2 | 33.1% | 33.8% | 50.0% |
-| 1.5 | 15/15 | 34.7% | 31.6% | 33.3% | 2/2 | 41.8% | 43.9% | 50.0% |
-| 2.0 | 15/15 | 38.6% | 37.0% | 40.0% | 2/2 | 42.6% | 44.7% | 50.0% |
+- very low lambda is conservative and often fails to trigger in New Room.
+- high lambda gives larger savings but more rebound/premature-stop risk.
+- `lambda=0.4–0.5` initially looked like the useful middle region by savings/rebound alone.
 
-Current interpretation:
+However later map-quality audits show that savings/rebound alone are insufficient for selecting lambda.
 
-- very low `lambda` (`0.1–0.2`) is conservative and often fails to trigger in New Room.
-- high `lambda` (`>=0.75`) gives larger savings but more rebound/premature-stop risk.
-- `lambda = 0.4–0.5` is currently the most useful region for deeper inspection: New Room has moderate savings and comparatively low rebound.
-- Hospital still has rebound in **1/2 runs** throughout `lambda=0.2...2.0`, so the final lambda must not be frozen from the aggregate table alone.
+## 5. Rebound and persistence-guard audit — COMPLETED
 
-`lambda` remains **NOT FROZEN**.
+At `lambda=0.4` and `0.5`, K=2 had immediate/near-immediate rebounds in:
 
-## 5. Noise guard
+- `mpx_004`
+- `mpx_012`
+- `hpx_002`
 
-Current candidate guard:
+The rebounds occur within 1–2 later evaluable decisions.
+
+K comparison:
+
+- `K=3` removes New Room rebounds but `hpx_002` still rebounds.
+- `K=4` removes observed rebounds but trigger coverage collapses strongly.
+- trailing-mean smoothing windows 3/4 do not solve `hpx_002` and reduce coverage.
+
+Conclusion: simply increasing K or smoothing R_t is not a satisfactory general fix.
+
+## 6. Map-quality audit — CRITICAL RESULT
+
+Candidate rules tested:
 
 ```text
-K = 2 distinct non-positive decision states
+lambda = 0.4 or 0.5
+K = 2 or 3
 ```
 
-`K=2` is a debounce guard, not a parameter to sweep for maximum savings.
+New Room is comparatively well behaved, especially with K=3.
 
-## 6. Evaluation caveat
+Hospital reveals a different failure mode:
 
-Current `iou_loss_vs_final` uses the reconstructed map at the last analyzed policy decision as its reference, not necessarily the actual final observed SLAM map.
+- the run causing large IoU loss is **hpx_001**, not the rebound run `hpx_002`.
+- at candidate stops around decisions 43–45, `hpx_001` has coverage about **99.52–99.53%**, but observed structural quality still improves materially later.
+- observed-only IoU confirms the loss is real, not just instability in prediction-assisted reconstructed IoU.
 
-TU is weakly discriminative in the current dataset and should not be the primary stopping signal.
+Observed-only `hpx_001` examples:
+
+```text
+lambda=0.4, K=2: stop d44, observed IoU 0.366621 -> final 0.398084, loss 0.031463
+lambda=0.4, K=3: stop d45, observed IoU 0.369641 -> final 0.398084, loss 0.028442
+lambda=0.5, K=2: stop d43, observed IoU 0.366833 -> final 0.398084, loss 0.031251
+lambda=0.5, K=3: stop d44, observed IoU 0.366621 -> final 0.398084, loss 0.031463
+```
+
+The observed map continues to gain important occupied structure even while R_t is already low.
+
+## 7. Low-lambda quality sweep — COMPLETED
+
+Tested:
+
+```text
+lambda = 0.05, 0.075, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4
+K = 2, 3
+```
+
+Goal: find one cross-environment rule with useful trigger/savings and observed-only IoU loss <= 0.01.
+
+No simple lambda/K rule met that goal on the current development data.
+
+Key boundary cases:
+
+- `lambda=0.075, K=2` is quality-safe in triggered runs, but triggers only **3/15 New Room** and **1/2 Hospital**; `hpx_001` stops at d51 with essentially no distance saving.
+- `lambda=0.1, K=2` triggers **4/15 New Room** and **2/2 Hospital**, but `hpx_001` still has observed-IoU loss **0.015608**.
+- larger lambda values trigger more consistently but make `hpx_001` structural loss worse, reaching roughly **0.028–0.031** in the 0.2–0.4 region.
+
+Conclusion:
+
+> **The current one-step uncertainty-weighted G/C signal plus a fixed lambda/K guard is not yet a sufficient cross-environment completion criterion.**
+
+This is a useful negative result. Do not freeze lambda/K from the current sweep.
+
+## 8. Current hypothesis: secondary completion guard — UNDER AUDIT
+
+Potential issue:
+
+`information_gain` is uncertainty-weighted. A frontier may have low uncertainty-weighted gain while still exposing a meaningful amount of currently unknown map structure.
+
+Therefore the next audit keeps the frozen ranking semantics but tests a separate, online-available completion signal based on recorded:
+
+```text
+visible_unknown_cells
+```
+
+Candidate secondary signals:
+
+```text
+Umax_t  = max selectable visible_unknown_cells
+Udmax_t = max selectable visible_unknown_cells / distance_m
+```
+
+These are being evaluated as a possible **stop guard**, not as a replacement for G used in frontier ranking.
+
+No threshold is frozen yet.
+
+## 9. Evaluation caveats
+
+- `iou_loss_vs_final` from `early_stopping_analysis.csv` uses prediction-assisted reconstructed maps.
+- Observed-only IoU audits were added to verify whether losses correspond to actual SLAM structural observations.
+- `hpx_001` remains a genuine quality failure under observed-only IoU, so its issue is not explained away by prediction-reference instability.
+- TU remains weakly discriminative and should not be the primary stopping signal.
 
 ---
 
 # Current next actions
 
-1. Inspect per-run rebound details for `lambda=0.4` and `0.5`, especially `hpx_001` and `hpx_002`.
-2. For every rebound, measure how far `R_t` rises above `lambda` and how long after the hypothetical stop it occurs.
-3. Check stop timing and map-quality loss for the candidate lambda region.
-4. Freeze one lambda only after this failure-mode analysis.
-5. Backtest the frozen complete rule on the 17 development runs.
-6. Integrate the frozen rule into online MapEx.
+1. Run `scripts/audit_way2_visible_unknown_guard.py` on all 17 development runs.
+2. Check whether unsafe stops consistently retain larger `visible_unknown_cells` / `visible_unknown_cells per meter` than safe stops.
+3. If there is a stable separation, formulate a secondary online completion guard without changing the existing MapEx frontier ranking.
+4. If there is no separation, reconsider the Way2 gain/completion formulation rather than continuing to tune lambda/K.
+5. Freeze the full rule only after the formulation is stable.
+6. Integrate online only after freeze.
 7. Collect new independent New Room + Hospital validation runs with no environment-specific retuning.
 
 ## Analysis scripts
@@ -198,3 +254,13 @@ TU is weakly discriminative in the current dataset and should not be the primary
 - `scripts/compare_way2_gain_definitions.py`
 - `scripts/audit_way2_cost.py`
 - `scripts/analyze_way2_lambda.py`
+- `scripts/inspect_way2_lambda_focus.py`
+- `scripts/inspect_way2_rebounds.py`
+- `scripts/compare_way2_guard_k.py`
+- `scripts/compare_way2_guard_smoothing.py`
+- `scripts/evaluate_way2_candidate_quality.py`
+- `scripts/inspect_way2_quality_failures.py`
+- `scripts/inspect_way2_hospital_quality_trajectory.py`
+- `scripts/audit_way2_observed_quality.py`
+- `scripts/sweep_way2_lambda_quality.py`
+- `scripts/audit_way2_visible_unknown_guard.py`
