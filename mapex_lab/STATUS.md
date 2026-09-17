@@ -1,18 +1,22 @@
 # mapex_lab status
 
-_Last synchronized with `main`: 2026-09-16._
+_Last synchronized with `main`: 2026-09-17._
 
 This file records the current code/research state on `main`.
 
 ## Current focus
 
-The active thesis direction remains **Direction 2: early stopping for MapEx**, but the research path has now moved from **Way1: absolute global uncertainty threshold** to **Way2: frontier-utility-based stopping**.
+The active thesis direction is **Direction 2: early stopping for MapEx**.
+
+- **Way1: absolute global uncertainty threshold** is closed.
+- **Way2: frontier-utility-based stopping** is open.
+- Way2 is still in the **algorithm-design/offline-analysis** stage; online MapEx has not yet been changed to stop early.
+- Offline replay and the gain-definition audit are now complete.
+- The current next technical decision is the definition of travel cost `C`, followed by `lambda` analysis.
 
 Research question:
 
 > **When is the best remaining reachable frontier no longer worth its expected information gain relative to the physical cost of reaching it?**
-
-The online MapEx policy has **not** yet been changed to stop early. Way2 is currently in the algorithm-design/offline-analysis stage.
 
 ## Experiment runner
 
@@ -58,7 +62,7 @@ observed map
 -> choose max-score frontier
 ```
 
-The recorded decision/candidate data already exposes the quantities needed for Way2 analysis, including `information_gain`, `distance`, `score`, selected frontier state and candidate eligibility/suppression information.
+The recorded candidate/decision data exposes the quantities needed for Way2, including `information_gain`, `distance_m`, `score`, `visible_unknown_cells`, selected frontier state and candidate eligibility/suppression information.
 
 ---
 
@@ -66,13 +70,11 @@ The recorded decision/candidate data already exposes the quantities needed for W
 
 ## Definition
 
-Way1 used the global uncertainty statistic:
+Way1 used:
 
 ```text
 unknown_variance_p95
 ```
-
-computed over cells that are currently unknown in the observed map.
 
 Stopping rule:
 
@@ -86,11 +88,7 @@ Primary frozen rule:
 P95 <= 0.23, K=1
 ```
 
-Repeated identical terminal policy ticks were collapsed before persistence counting.
-
 ## Development/tuning — New Room mpx_001...mpx_010
-
-`mpx_001...mpx_010` were the Way1 development/tuning dataset.
 
 Fixed-rule results:
 
@@ -103,8 +101,6 @@ Fixed-rule results:
 LOOCV showed that repeatedly selecting the maximum-savings rule on only nine training runs could become too aggressive. Therefore `0.23 x 1` was frozen before prospective validation.
 
 ## Prospective New Room validation — mpx_011...mpx_015
-
-Five new runs were collected after freezing `P95 <= 0.23, K=1`.
 
 | Run | Time saved | Distance saved | IoU loss vs analyzer final reference |
 |---|---:|---:|---:|
@@ -128,7 +124,7 @@ Conclusion: Way1 had strong prospective validation **within New Room**.
 
 ## Hospital cross-environment diagnostic — hpx_001...hpx_002
 
-Way1 was then tested without retuning on canonical Hospital 1.0x.
+Frozen `P95 <= 0.23, K=1` was tested without retuning.
 
 ### hpx_001
 
@@ -137,16 +133,6 @@ P95 min    = 0.318309
 P95 median = 0.333203
 P95 last   = 0.333257
 trigger     = false
-```
-
-Full-run reference:
-
-```text
-decisions = 56
-time      = 2063.74 s
-distance  = 769.94 m
-IoU       = 0.429910
-TU        = 0.55
 ```
 
 ### hpx_002
@@ -158,26 +144,16 @@ P95 last   = 0.333297
 trigger     = false
 ```
 
-Full-run reference:
-
-```text
-decisions = 50
-distance  = 695.34 m
-IoU       = 0.417957
-TU        = 0.52
-coverage  = 0.999331585
-```
-
 ### Way1 conclusion
 
-- Hospital trigger rate with frozen `P95 <= 0.23, K=1`: **0/2**.
+- Hospital trigger rate: **0/2**.
 - Hospital P95 remains close to `1/3` through most of both runs.
-- With three prediction models and sample variance (`ddof=1`), a binary-like disagreement pattern such as `[0,0,1]` or `[0,1,1]` gives variance `1/3`; therefore a high global quantile can remain saturated if a persistent subset of unknown cells keeps strong ensemble disagreement.
-- Retuning the absolute threshold specifically for Hospital would undermine the original goal of a cross-environment stopping criterion.
+- With three prediction models and sample variance (`ddof=1`), binary-like disagreement such as `[0,0,1]` or `[0,1,1]` gives variance `1/3`, so a high global quantile can remain saturated.
+- Retuning the threshold specifically for Hospital would undermine the cross-environment objective.
 
-**Way1 is therefore closed as the primary research path.**
+**Way1 is closed as the primary research path.**
 
-No `hpx_003` is required merely to reconfirm the same Way1 failure mode. `hpx_001` and `hpx_002` are sufficient diagnostic evidence to motivate redesign, but not enough to claim a statistically general failure across all Hospital runs.
+No `hpx_003` is required merely to reconfirm the same Way1 failure mode.
 
 ---
 
@@ -185,33 +161,20 @@ No `hpx_003` is required merely to reconfirm the same Way1 failure mode. `hpx_00
 
 ## Design objective
 
-Way2 asks a more direct exploration decision question:
+Way2 asks:
 
 > **Does any remaining reachable frontier still have enough expected information value to justify the cost of physically visiting it?**
 
-The goal is to derive the stopping condition from a cost-benefit objective first, then use recorded runs to inspect behavior and failure modes. The algorithm should not be created by repeatedly sweeping thresholds until the experiment output looks favorable.
+The stopping condition is derived from a cost-benefit objective first. Existing runs are used as development/diagnostic data to inspect behavior and failure modes, not as independent validation.
 
 ## Core one-step utility formulation
 
-At decision `t`, for reachable/selectable frontier `f`:
-
-- `G_t(f)` = expected information gain from visiting `f`;
-- `C_t(f)` = travel cost to `f`;
-- `lambda` = declared exchange rate between information gain and travel cost.
-
-Define:
+For reachable/selectable frontier `f` at decision `t`:
 
 ```text
 V_t(f) = G_t(f) - lambda * C_t(f)
+V*_t   = max_f V_t(f)
 ```
-
-and:
-
-```text
-V*_t = max_f V_t(f)
-```
-
-over the remaining reachable/selectable frontiers.
 
 Core stopping rule:
 
@@ -222,164 +185,185 @@ else:
     continue exploration
 ```
 
-This is a **one-step utility-based stopping rule**, not a full-horizon globally optimal stopping solution. It is intentionally compatible with the current MapEx decision pipeline.
-
-## Information gain G
-
-MapEx already computes `information_gain` for every candidate frontier using ensemble uncertainty over cells that are both:
-
-- currently unknown; and
-- predicted visible from the frontier.
-
-Way2 should reuse this quantity rather than invent an unrelated stopping signal.
-
-For cross-environment use, gain normalization must be audited before it is frozen. A candidate is to normalize per-cell variance by a theoretically justified ensemble reference scale rather than by a run-specific maximum. With the current three-model pipeline, prediction range and variance semantics must be verified before treating `1/3` as the final normalization constant.
-
-Do **not** normalize by the maximum score observed so far in a run: startup frontiers can be extremely close and generate abnormally large `IG/distance` values, which can make all later utilities look artificially small.
-
-## Travel cost C
-
-Initial offline baseline:
+Equivalent when `C_t(f) > 0`:
 
 ```text
-C_t(f) = current Euclidean frontier distance
+max_f (G_t(f) / C_t(f)) <= lambda
 ```
 
-Preferred final definition if robustly available online:
+This is a **one-step utility-based stopping rule**, not a full-horizon optimal-control solution.
+
+## Offline replay — COMPLETED
+
+Development/diagnostic runs:
+
+- New Room: `mpx_001...mpx_015`;
+- Hospital: `hpx_001...hpx_002`.
+
+Replay baseline:
 
 ```text
-C_t(f) = planner path length to frontier
+G = information_gain
+C = distance_m
+score = G / C
+candidate set = selectable frontiers only
 ```
 
-Planner path length is more physically meaningful in Hospital because walls, corridors and detours can make Euclidean distance underestimate actual navigation cost.
+The replay matches current MapEx behavior:
+
+```text
+score_mismatch     = 0
+selection_mismatch = 0
+```
+
+Therefore the offline analyzer reproduces the recorded MapEx ranking semantics correctly.
+
+Implemented analysis scripts include:
+
+- `scripts/analyze_way2_utility.py`;
+- `scripts/audit_way2_gain.py`;
+- `scripts/compare_way2_gain_definitions.py`.
+
+## Information gain G — FROZEN FOR CURRENT WAY2
+
+Two definitions were compared:
+
+```text
+G_raw  = information_gain
+G_norm = information_gain / visible_unknown_cells
+```
+
+Main observations:
+
+- `G_norm` reduces startup/spawn-scale effects, but changes the best frontier substantially: candidate agreement with raw MapEx ranking is only about **30%** of decisions.
+- Therefore dividing by `visible_unknown_cells` is not merely a harmless scale normalization; it changes the frontier-value semantics from total expected information to mean uncertainty per visible cell.
+- With raw gain, post-early `G/C` scale is already reasonably similar across environments:
+  - New Room median post-early: **3.05**;
+  - Hospital median post-early: **2.23**.
+- Late-run scale is also close:
+  - New Room median late: **0.472**;
+  - Hospital median late: **0.367**.
+- In both environments, raw `G/C` decreases strongly toward the end of exploration, which is the behavior needed for a stopping signal.
+
+Hospital startup outlier:
+
+```text
+first-decision G/C ≈ 348
+```
+
+Audit shows this is mainly caused by a large initially visible unknown region plus a short frontier distance. Its per-cell uncertainty is not anomalously high.
+
+### Gain conclusion
+
+**Keep the original MapEx gain:**
+
+```text
+G_t(f) = information_gain(f)
+```
+
+Do **not** divide by `visible_unknown_cells` for Way2.
+
+Do **not** use first-decision/startup maxima as the basis for choosing `lambda`, because they are strongly spawn/view dependent.
+
+## Travel cost C — OPEN
+
+Historical offline replay currently uses:
+
+```text
+C_t(f) = recorded Euclidean distance_m
+```
+
+This is the only cost available consistently for every candidate in the existing runs.
+
+The preferred physically meaningful alternative remains planner path length, especially in Hospital where walls/corridors can make Euclidean distance underestimate actual navigation cost. However, historical `plans.csv` contains actual plans for selected navigation goals, not planner path length for every candidate at every decision.
+
+Therefore the next step is to decide whether:
+
+1. current Way2 should freeze Euclidean `distance_m` for compatibility with all historical candidate data; or
+2. new recording/integration should add per-candidate planner path length before final prospective validation.
 
 ## Reachability
 
-Stopping utility must only consider frontiers that are genuinely eligible for execution.
+Utility is evaluated only on genuinely selectable/reachable candidates.
 
-Planner-unreachable/suppressed candidates must not keep `V*_t` artificially positive and prevent stopping.
+Planner/execution-suppressed candidates must not keep `V*_t` artificially positive and prevent stopping.
 
-## Meaning of lambda
-
-`lambda` is the only central trade-off parameter in the core formulation:
+## Meaning of lambda — NOT YET FROZEN
 
 ```text
 lambda = required information gain per unit travel cost
 ```
 
-It should **not** be chosen by running many experiments and selecting the value that gives the prettiest savings.
+`lambda` must not be chosen from first-decision maxima or by cherry-picking the value with the prettiest savings.
 
-The preferred route is to define `lambda` from an explicit cost-quality objective before independent validation. If a defensible operational objective is not yet available, perform a declared sensitivity analysis and do not label one post-hoc value as a validated final parameter.
+The next offline analysis should inspect the empirical decision sequence:
+
+```text
+R_t = max_f (G_t(f) / C_t(f))
+```
+
+with raw `G`, fixed `C`, and a `K=2` distinct-state debounce, then study threshold crossings, rebounds and premature-stop risk across both environments before freezing any value/range.
 
 ## Noise guard
 
-Per-decision gain/utility can fluctuate because of SLAM, frontier extraction and prediction noise.
-
-Candidate implementation guard:
+Current candidate guard:
 
 ```text
 require V*_t <= 0 for K=2 distinct decision states before stopping
 ```
 
-`K=2` is treated as a debounce guard, not a parameter to sweep for maximum savings. If future analysis supports a confidence-bound rule, that could replace the fixed persistence guard later.
+`K=2` is treated as a debounce guard, not a parameter to sweep for maximum savings.
 
 ## Way2 data roles
 
-Because existing runs are already being inspected while Way2 is designed:
+Because the current 17 runs have already been used to design/audit Way2:
 
-- `mpx_001...mpx_015` = Way2 development/diagnostic data if used in formulation checks;
-- `hpx_001...hpx_002` = Way2 development/diagnostic data;
-- these runs must **not** later be presented as independent Way2 validation.
+- `mpx_001...mpx_015` = development/diagnostic only;
+- `hpx_001...hpx_002` = development/diagnostic only;
+- they must **not** later be reported as independent Way2 validation.
 
-Independent validation must use new runs collected only after the Way2 formula, normalization, `lambda`, cost definition and guard are frozen.
+Independent validation requires new runs collected only after `G`, `C`, `lambda` and the noise guard are frozen.
 
 ## Way2 implementation roadmap
 
-### A. Audit current code/data
+### A. Audit current code/data — COMPLETED
 
-Verify exactly how `mapex.py` computes and records:
+Verified `information_gain`, Euclidean distance, `score = IG/distance`, selectable/suppressed candidates and available recorder fields.
 
-- `information_gain`;
-- `distance`;
-- `score = IG/distance`;
-- selectable/suppressed candidates;
-- planner reachability semantics.
+### B. Build offline Way2 replay — COMPLETED
 
-Confirm whether existing `candidates.csv` / `decisions.csv` are sufficient for offline replay without changing the online controller.
+Replay matches current MapEx score and selected frontier on all evaluable decisions.
 
-### B. Build offline Way2 replay
+### C. Freeze gain and cost definitions — IN PROGRESS
 
-For every recorded decision in existing development/diagnostic runs:
+- `G`: **frozen as raw `information_gain`**.
+- `G / visible_unknown_cells`: rejected because it changes the best frontier in about 70% of decisions.
+- `C`: still open between historical Euclidean distance and a future per-candidate planner path-length definition.
 
-```text
-compute G_t(f)
-compute C_t(f)
-compute V_t(f)
-compute V*_t
-```
+### D. Define lambda from the objective — NEXT
 
-The purpose is to test whether the formulation behaves sensibly and expose failure modes, not to fit a hidden threshold.
-
-### C. Freeze gain and cost definitions
-
-Compare only scientifically motivated definitions, especially:
-
-- Euclidean distance vs planner path length;
-- raw summed variance vs a justified normalized gain.
-
-Choose the version that is physically meaningful, online-computable and consistent across New Room/Hospital.
-
-### D. Define lambda from the objective
-
-Specify the accepted cost-quality trade-off before validation.
-
-If no defensible final `lambda` can yet be declared, report a sensitivity range and keep Way2 in development status.
+After `C` is frozen, analyze `R_t = max(G/C)` distributions/crossings and select a defensible declared `lambda` or sensitivity range.
 
 ### E. Backtest development data
 
-Evaluate:
-
-- premature-stop timing;
-- time saved;
-- distance saved;
-- IoU loss;
-- TU loss;
-- behavior in New Room vs Hospital.
-
-Backtesting is for debugging/design diagnosis, not proof of generalization.
+Evaluate premature-stop timing, threshold rebound, time/distance savings and map-quality proxies without treating old data as independent validation.
 
 ### F. Freeze Way2
 
-Freeze all of the following before prospective validation:
+Freeze:
 
-- `G_t(f)` definition;
-- `C_t(f)` definition;
-- normalization;
+- `G_t(f)`;
+- `C_t(f)`;
 - `lambda`;
 - persistence/noise guard.
 
 ### G. Integrate online
 
-Insert the stopping decision after reachable frontier scoring is available:
-
-```text
-map -> predictions -> variance -> frontiers -> reachability
--> compute gain/cost/utility
--> V*_t <= 0 for guard period ?
-   yes -> stop with explicit utility-exhausted reason
-   no  -> continue normal MapEx frontier execution
-```
+Only after the offline formulation is stable, add the utility stop condition to online MapEx.
 
 ### H. Independent validation
 
-Collect entirely new runs after freeze on both:
-
-- New Room;
-- Hospital.
-
-Use the **same formula and same lambda** without environment-specific retuning.
-
-Compare Way2-stopped exploration against the corresponding full MapEx behavior using time, distance, IoU, TU and stop timing.
+Collect new New Room and Hospital runs after freeze, using the same formulation and same `lambda` without environment-specific retuning.
 
 ## Way2 success criteria
 
@@ -432,14 +416,14 @@ TU remains weakly discriminative in the current dataset and should not be the pr
 
 ## Current next actions
 
-1. **Do not continue Way1 threshold retuning.**
-2. **Do not run `hpx_003` merely to reconfirm Way1 P95 saturation.**
-3. Audit `mapex.py`, `candidates.csv` and `decisions.csv` for the exact Way2 gain/cost/reachability semantics.
-4. Build an offline Way2 replay using existing `mpx_001...015` and `hpx_001...002` as development/diagnostic data.
-5. Decide whether Way2 final travel cost should use planner path length or Euclidean distance.
-6. Verify a defensible cross-environment normalization for information gain.
-7. Define `lambda` from an explicit cost-quality objective, or keep a declared sensitivity analysis if the objective is not yet fixed.
-8. Backtest for failure modes; do not cherry-pick the best-looking parameter from old runs.
-9. Freeze the full Way2 rule before collecting new independent validation runs.
-10. Integrate online stopping into `mapex.py` only after the offline formulation is stable.
+1. **Way1 remains closed; do not retune the P95 threshold.**
+2. **Way2 replay is complete and raw `G = information_gain` is frozen.**
+3. Decide/freeze travel cost `C`: historical Euclidean `distance_m` vs adding per-candidate planner path length for future data.
+4. With fixed raw `G` and fixed `C`, analyze `R_t = max_f(G/C)` distributions and threshold crossings across all 17 development runs.
+5. Test `K=2` guarded crossings for rebounds/premature stopping; do not use first-decision maxima to select `lambda`.
+6. Define/freeze a defensible `lambda` or declared sensitivity range.
+7. Backtest the frozen candidate rule on development data for failure modes and savings.
+8. Freeze the complete Way2 rule before any prospective validation.
+9. Integrate online stopping only after offline behavior is stable.
+10. Collect new independent New Room + Hospital validation runs with no environment-specific retuning.
 11. Improve the final IoU reference before making strong final map-quality claims.
