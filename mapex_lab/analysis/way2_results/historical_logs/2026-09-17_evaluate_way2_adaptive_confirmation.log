@@ -1,0 +1,70 @@
+# HISTORICAL RECOVERED LOG
+# source_machine: com1
+# source_path: ~/turtlebot4_project
+# source_date: 2026-09-17
+# recovered_via: user-provided terminal transcript in ChatGPT
+# recomputed: false
+# data_class: development/tuning evidence
+# command:
+# git pull
+# python3 mapex_lab/scripts/evaluate_way2_adaptive_confirmation.py
+
+Way2 adaptive-confirmation backtest
+Base condition: R<=lambda AND max_visible_per_m<=threshold; adaptive rule uses K=2 when candidate_count<=1, else requires K=3.
+=== lambda=0.3, threshold=10 ===
+fixed K=2
+new_room: trigger=11/15, bad=1, median_loss=0.001605, worst=0.010516, time_saved=11.68%, distance_saved=10.40%
+hospital: trigger=2/2, bad=0, median_loss=-0.004374, worst=0.000000, time_saved=5.65%, distance_saved=4.54%
+fixed K=3
+new_room: trigger=9/15, bad=0, median_loss=-0.000186, worst=0.001605, time_saved=8.21%, distance_saved=6.29%
+hospital: trigger=1/2, bad=0, median_loss=0.003713, worst=0.003713, time_saved=5.33%, distance_saved=4.18%
+adaptive 2->3
+new_room: trigger=11/15, bad=0, median_loss=-0.000186, worst=0.001605, time_saved=8.21%, distance_saved=6.29%
+hospital: trigger=2/2, bad=0, median_loss=0.001857, worst=0.003713, time_saved=3.38%, distance_saved=2.09%
+adaptive run details:
+mpx_001: d27 cand=2 R=0.016 guard=1.821 loss=-0.003341 time=10.98% dist=10.92%
+mpx_002: d27 cand=2 R=0.217 guard=1.588 loss=-0.004631 time=13.10% dist=12.46%
+mpx_003: no stop
+mpx_004: d29 cand=1 R=0.008 guard=0.486 loss=0.001605 time=8.45% dist=6.29%
+mpx_005: no stop
+mpx_006: no stop
+mpx_007: d29 cand=1 R=0.045 guard=0.956 loss=0.000000 time=1.78% dist=0.00%
+mpx_008: no stop
+mpx_009: d27 cand=1 R=0.047 guard=0.999 loss=-0.000272 time=7.08% dist=5.75%
+mpx_010: d30 cand=2 R=0.137 guard=1.403 loss=-0.016608 time=11.61% dist=11.88%
+mpx_011: d31 cand=1 R=0.015 guard=4.594 loss=-0.000186 time=3.54% dist=1.62%
+mpx_012: d26 cand=1 R=0.141 guard=1.580 loss=-0.001258 time=13.33% dist=9.18%
+mpx_013: d31 cand=1 R=0.146 guard=3.080 loss=0.000647 time=5.42% dist=4.48%
+mpx_014: d28 cand=1 R=0.041 guard=2.249 loss=0.000117 time=5.07% dist=4.09%
+mpx_015: d25 cand=1 R=0.017 guard=1.050 loss=0.000277 time=8.21% dist=7.07%
+hpx_001: d51 cand=1 R=0.072 guard=8.732 loss=0.000000 time=1.44% dist=0.00%
+hpx_002: d44 cand=1 R=0.077 guard=6.095 loss=0.003713 time=5.33% dist=4.18%
+=== lambda=0.4, threshold=10 ===
+fixed K=2
+new_room: trigger=11/15, bad=1, median_loss=0.001605, worst=0.010516, time_saved=13.33%, distance_saved=11.31%
+hospital: trigger=2/2, bad=0, median_loss=-0.004374, worst=0.000000, time_saved=5.65%, distance_saved=4.54%
+fixed K=3
+new_room: trigger=9/15, bad=0, median_loss=0.000000, worst=0.003416, time_saved=8.45%, distance_saved=7.07%
+hospital: trigger=1/2, bad=0, median_loss=0.003713, worst=0.003713, time_saved=5.33%, distance_saved=4.18%
+adaptive 2->3
+new_room: trigger=11/15, bad=0, median_loss=0.000000, worst=0.003416, time_saved=8.45%, distance_saved=7.07%
+hospital: trigger=2/2, bad=0, median_loss=0.001857, worst=0.003713, time_saved=3.38%, distance_saved=2.09%
+adaptive run details:
+mpx_001: d27 cand=2 R=0.016 guard=1.821 loss=-0.003341 time=10.98% dist=10.92%
+mpx_002: d27 cand=2 R=0.217 guard=1.588 loss=-0.004631 time=13.10% dist=12.46%
+mpx_003: no stop
+mpx_004: d29 cand=1 R=0.008 guard=0.486 loss=0.001605 time=8.45% dist=6.29%
+mpx_005: no stop
+mpx_006: no stop
+mpx_007: d29 cand=1 R=0.045 guard=0.956 loss=0.000000 time=1.78% dist=0.00%
+mpx_008: no stop
+mpx_009: d27 cand=1 R=0.047 guard=0.999 loss=-0.000272 time=7.08% dist=5.75%
+mpx_010: d30 cand=2 R=0.137 guard=1.403 loss=-0.016608 time=11.61% dist=11.88%
+mpx_011: d30 cand=2 R=0.203 guard=3.734 loss=0.003416 time=9.58% dist=9.20%
+mpx_012: d26 cand=1 R=0.141 guard=1.580 loss=-0.001258 time=13.33% dist=9.18%
+mpx_013: d31 cand=1 R=0.146 guard=3.080 loss=0.000647 time=5.42% dist=4.48%
+mpx_014: d28 cand=1 R=0.041 guard=2.249 loss=0.000117 time=5.07% dist=4.09%
+mpx_015: d25 cand=1 R=0.017 guard=1.050 loss=0.000277 time=8.21% dist=7.07%
+hpx_001: d51 cand=1 R=0.072 guard=8.732 loss=0.000000 time=1.44% dist=0.00%
+hpx_002: d44 cand=1 R=0.077 guard=6.095 loss=0.003713 time=5.33% dist=4.18%
+Interpretation: the adaptive rule is useful only if it removes the near-threshold mpx_009 failure while preserving the safe late hpx_001 stop and reasonable cross-environment trigger coverage. Existing runs remain development-only.
