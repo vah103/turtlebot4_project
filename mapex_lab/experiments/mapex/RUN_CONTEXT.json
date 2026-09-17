@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "updated": "2026-09-17",
+  "authority": "canonical_correction_for_historical_cohort_interpretation",
+  "new_room_baseline": {
+    "runs": [
+      "mpx_001",
+      "mpx_002",
+      "mpx_003",
+      "mpx_004",
+      "mpx_005",
+      "mpx_006",
+      "mpx_007",
+      "mpx_008",
+      "mpx_009",
+      "mpx_010"
+    ],
+    "launcher": "./run",
+    "same_runtime_setup_cohort": true,
+    "comparison_rule": "Treat mpx_001 through mpx_010 as one comparable New Room MapEx baseline runtime cohort.",
+    "historical_metadata_warning": "Differences in runtime_profile/runtime_profile_name/runtime_profile_note/runtime_launch_file strings are naming/provenance artifacts and must not be used to split mpx_001...mpx_010 into separate runtime cohorts. Preserve raw metadata unchanged."
+  },
+  "way2": {
+    "mpx_w2_001": {
+      "role": "integration_sanity_run",
+      "launcher": "./run",
+      "prospective_validation": false
+    }
+  }
+}
