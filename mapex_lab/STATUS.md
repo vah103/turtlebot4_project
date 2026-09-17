@@ -7,25 +7,43 @@ _Last synchronized with `main`: 2026-09-17._
 The active thesis direction is **Way2: frontier-utility-based early stopping for MapEx**.
 
 - Way1 is closed.
-- Way2 is still offline/development only; online MapEx has not yet been changed to stop early.
+- Way2 candidate rule is now **FROZEN FOR PROSPECTIVE VALIDATION**.
+- Online MapEx has not yet been changed to stop early.
 - `G` is frozen as raw `information_gain`.
 - Historical replay `C` is frozen as Euclidean `distance_m`.
-- `lambda` and the final persistence/completion guard are **not yet frozen**.
-- The simple rule `R_t <= lambda` plus only a K-consecutive-state debounce is currently **not sufficient** as a cross-environment completion criterion.
+- The 17 existing runs remain development/diagnostic data only and must not be used as independent validation.
 
-Core utility signal:
+Frozen candidate rule for the next validation stage:
 
 ```text
-V_t(f) = G_t(f) - lambda * C_t(f)
-R_t    = max_f G_t(f)/C_t(f)
+For each evaluable decision t over selectable frontiers f:
+
+R_t = max_f information_gain(f) / distance_m(f)
+U_t = max_f visible_unknown_cells(f) / distance_m(f)
+
+base_valid_t := (R_t <= 0.30) AND (U_t <= 10.0)
+
+Persistence / confirmation:
+- require 2 consecutive evaluable base-valid states;
+- at the 2nd state, if selectable candidate_count <= 1: STOP;
+- otherwise require a 3rd consecutive base-valid state, then STOP.
 ```
 
-All current 17 runs are development/diagnostic data only:
+The rule is frozen as a **candidate validation rule**, not claimed as a validated final method yet.
 
-- New Room: `mpx_001...mpx_015`
-- Hospital: `hpx_001...hpx_002`
+Development backtest for the frozen candidate:
 
-They must not later be presented as independent Way2 validation.
+```text
+New Room: trigger 11/15, bad observed-IoU-loss runs 0/11
+  median time saved     = 8.21%
+  median distance saved = 6.29%
+  worst observed IoU loss = 0.001605
+
+Hospital: trigger 2/2, bad observed-IoU-loss runs 0/2
+  median time saved     = 3.38%
+  median distance saved = 2.09%
+  worst observed IoU loss = 0.003713
+```
 
 ---
 
@@ -55,7 +73,7 @@ Conclusion: Way1 works in New Room but does not transfer cleanly to Hospital wit
 
 ---
 
-# Way2 — OPEN
+# Way2 — CANDIDATE RULE FROZEN FOR VALIDATION
 
 ## 1. Offline replay — COMPLETED
 
@@ -68,7 +86,7 @@ score = G/C
 candidate set = selectable == 1
 ```
 
-Audit result over all evaluable decisions:
+Audit over all evaluable historical decisions:
 
 ```text
 score_mismatch = 0
@@ -86,20 +104,15 @@ G_raw  = information_gain
 G_norm = information_gain / visible_unknown_cells
 ```
 
-Key result:
+Normalized gain changes the best frontier heavily; agreement with raw MapEx is only about 30% of decisions. Raw `G/C` already has compatible post-early/late scale between New Room and Hospital and decreases toward the end of exploration.
 
-- normalized gain changes the best frontier heavily; agreement with raw MapEx ranking is only about **30%** of decisions.
-- raw `G/C` already shows compatible post-early/late scale between New Room and Hospital.
-- raw `G/C` decreases strongly toward the end of exploration in both environments.
-
-Frozen definition:
+Frozen:
 
 ```text
 G_t(f) = information_gain(f)
 ```
 
-Do not divide by `visible_unknown_cells` for frontier ranking.
-Do not use startup maxima to choose `lambda`.
+`visible_unknown_cells` is not used to replace G for frontier ranking. It is used only as a separate completion guard.
 
 ## 3. Travel cost C — FROZEN FOR HISTORICAL REPLAY
 
@@ -118,134 +131,194 @@ C_t(f) = distance_m(f)
 
 Planner path cannot be used fairly for historical all-candidate replay because old recordings only contain planner paths for selected goals.
 
-## 4. Lambda sensitivity — COMPLETED, NOT FROZEN
+## 4. Simple lambda/K rule — REJECTED
 
-Initial K=2 sensitivity grid:
+Initial sensitivity explored lambda from 0.05 to 2.0 and persistence guards K=2/3/4 plus trailing-mean smoothing.
 
-```text
-lambda = 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0, 1.5, 2.0
-```
+Important negative result:
 
-Main result:
+> **R_t = max(G/C) with only one fixed lambda and a fixed K-consecutive debounce is not a sufficient cross-environment completion criterion.**
 
-- very low lambda is conservative and often fails to trigger in New Room.
-- high lambda gives larger savings but more rebound/premature-stop risk.
-- `lambda=0.4–0.5` initially looked like the useful middle region by savings/rebound alone.
+Reasons:
 
-However later map-quality audits show that savings/rebound alone are insufficient for selecting lambda.
+- high lambda increases premature-stop/rebound risk;
+- low lambda becomes too conservative and often does not trigger;
+- increasing K removes some New Room rebounds but does not solve Hospital cleanly;
+- smoothing reduces trigger coverage and still does not solve the key Hospital failure.
 
-## 5. Rebound and persistence-guard audit — COMPLETED
+## 5. Map-quality audit — CRITICAL RESULT
 
-At `lambda=0.4` and `0.5`, K=2 had immediate/near-immediate rebounds in:
+Hospital exposed a failure that rebound analysis alone missed.
 
-- `mpx_004`
-- `mpx_012`
-- `hpx_002`
+`hpx_001` has low `R_t` around decisions 43–45 but the observed SLAM map still gains important occupied structure later.
 
-The rebounds occur within 1–2 later evaluable decisions.
-
-K comparison:
-
-- `K=3` removes New Room rebounds but `hpx_002` still rebounds.
-- `K=4` removes observed rebounds but trigger coverage collapses strongly.
-- trailing-mean smoothing windows 3/4 do not solve `hpx_002` and reduce coverage.
-
-Conclusion: simply increasing K or smoothing R_t is not a satisfactory general fix.
-
-## 6. Map-quality audit — CRITICAL RESULT
-
-Candidate rules tested:
-
-```text
-lambda = 0.4 or 0.5
-K = 2 or 3
-```
-
-New Room is comparatively well behaved, especially with K=3.
-
-Hospital reveals a different failure mode:
-
-- the run causing large IoU loss is **hpx_001**, not the rebound run `hpx_002`.
-- at candidate stops around decisions 43–45, `hpx_001` has coverage about **99.52–99.53%**, but observed structural quality still improves materially later.
-- observed-only IoU confirms the loss is real, not just instability in prediction-assisted reconstructed IoU.
-
-Observed-only `hpx_001` examples:
+Observed-only examples:
 
 ```text
 lambda=0.4, K=2: stop d44, observed IoU 0.366621 -> final 0.398084, loss 0.031463
 lambda=0.4, K=3: stop d45, observed IoU 0.369641 -> final 0.398084, loss 0.028442
 lambda=0.5, K=2: stop d43, observed IoU 0.366833 -> final 0.398084, loss 0.031251
-lambda=0.5, K=3: stop d44, observed IoU 0.366621 -> final 0.398084, loss 0.031463
 ```
 
-The observed map continues to gain important occupied structure even while R_t is already low.
+Therefore the apparent failure is real structural loss, not merely prediction-reference instability.
 
-## 7. Low-lambda quality sweep — COMPLETED
+## 6. Secondary completion guard — COMPLETED
 
-Tested:
+Audited online-available signals over selectable frontiers:
 
 ```text
-lambda = 0.05, 0.075, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4
-K = 2, 3
+Umax_t  = max visible_unknown_cells
+Udmax_t = max visible_unknown_cells / distance_m
 ```
 
-Goal: find one cross-environment rule with useful trigger/savings and observed-only IoU loss <= 0.01.
+`Udmax_t` was more useful cross-environment than raw `Umax_t`.
 
-No simple lambda/K rule met that goal on the current development data.
-
-Key boundary cases:
-
-- `lambda=0.075, K=2` is quality-safe in triggered runs, but triggers only **3/15 New Room** and **1/2 Hospital**; `hpx_001` stops at d51 with essentially no distance saving.
-- `lambda=0.1, K=2` triggers **4/15 New Room** and **2/2 Hospital**, but `hpx_001` still has observed-IoU loss **0.015608**.
-- larger lambda values trigger more consistently but make `hpx_001` structural loss worse, reaching roughly **0.028–0.031** in the 0.2–0.4 region.
-
-Conclusion:
-
-> **The current one-step uncertainty-weighted G/C signal plus a fixed lambda/K guard is not yet a sufficient cross-environment completion criterion.**
-
-This is a useful negative result. Do not freeze lambda/K from the current sweep.
-
-## 8. Current hypothesis: secondary completion guard — UNDER AUDIT
-
-Potential issue:
-
-`information_gain` is uncertainty-weighted. A frontier may have low uncertainty-weighted gain while still exposing a meaningful amount of currently unknown map structure.
-
-Therefore the next audit keeps the frozen ranking semantics but tests a separate, online-available completion signal based on recorded:
+The completion condition was expanded to:
 
 ```text
-visible_unknown_cells
+R_t <= lambda
+AND
+Udmax_t <= threshold
 ```
 
-Candidate secondary signals:
+This keeps the original MapEx frontier ranking unchanged; `Udmax_t` is only a stopping safety guard.
+
+## 7. Remaining New Room failure and adaptive confirmation
+
+With `lambda=0.3/0.4`, `Udmax<=10`, fixed K=2:
+
+- Hospital became safe 2/2;
+- New Room had one near-threshold failure: `mpx_009`, stop d26, observed IoU loss 0.010516.
+
+Focused trajectory:
 
 ```text
-Umax_t  = max selectable visible_unknown_cells
-Udmax_t = max selectable visible_unknown_cells / distance_m
+mpx_009 d26: observed loss = 0.010516
+mpx_009 d27: observed loss = -0.000272
 ```
 
-These are being evaluated as a possible **stop guard**, not as a replacement for G used in frontier ranking.
+One additional confirming decision removes the failure.
 
-No threshold is frozen yet.
+A blanket fixed K=3 is too conservative because it loses Hospital trigger coverage. This motivated the adaptive persistence rule based on the number of remaining selectable frontiers.
 
-## 9. Evaluation caveats
+## 8. Adaptive candidate-count confirmation — COMPLETED
 
-- `iou_loss_vs_final` from `early_stopping_analysis.csv` uses prediction-assisted reconstructed maps.
-- Observed-only IoU audits were added to verify whether losses correspond to actual SLAM structural observations.
-- `hpx_001` remains a genuine quality failure under observed-only IoU, so its issue is not explained away by prediction-reference instability.
-- TU remains weakly discriminative and should not be the primary stopping signal.
+Rule tested after two consecutive base-valid states:
+
+```text
+if candidate_count <= cutoff:
+    STOP
+else:
+    require one additional base-valid decision
+```
+
+Sensitivity:
+
+- cutoff=0 behaves like fixed K=3: safe but Hospital trigger falls to 1/2.
+- cutoff=1: New Room 11/15, Hospital 2/2, zero observed-IoU violations >0.01.
+- cutoff>=2 immediately restores the `mpx_009` d26 failure.
+
+`cutoff=1` also has a direct structural interpretation: only one selectable frontier remains, whereas >=2 means multiple exploration alternatives still remain.
+
+Frozen candidate cutoff:
+
+```text
+candidate_count <= 1
+```
+
+## 9. Local robustness sweep — COMPLETED
+
+Adaptive rule neighborhood tested:
+
+```text
+lambda = 0.25, 0.30, 0.35, 0.40
+Udmax threshold = 7.5, 10.0, 12.5, 15.0
+candidate_count cutoff = 1
+```
+
+Key result: zero-bad cross-environment behavior is not isolated to one exact parameter pair.
+
+A robust plateau exists around:
+
+```text
+lambda = 0.25 ... 0.40
+Udmax threshold = 10.0 ... 12.5
+```
+
+Examples with Hospital 2/2 and zero observed-IoU violations:
+
+```text
+lambda=0.25, Udmax<=10.0: NR 11/15, H 2/2
+lambda=0.30, Udmax<=10.0: NR 11/15, H 2/2
+lambda=0.35, Udmax<=10.0: NR 11/15, H 2/2
+lambda=0.40, Udmax<=10.0: NR 11/15, H 2/2
+
+lambda=0.25, Udmax<=12.5: NR 12/15, H 2/2
+lambda=0.30, Udmax<=12.5: NR 12/15, H 2/2
+lambda=0.35, Udmax<=12.5: NR 13/15, H 2/2
+lambda=0.40, Udmax<=12.5: NR 13/15, H 2/2
+```
+
+Boundary behavior is also coherent:
+
+- `Udmax<=7.5` is too conservative for Hospital (`1/2` trigger).
+- `Udmax<=15` allows the `hpx_001` premature stop back in (`observed IoU loss 0.015491`).
+
+Therefore the safe behavior is a local region rather than a single lucky grid point.
+
+## 10. Frozen candidate for prospective validation
+
+Chosen candidate:
+
+```text
+lambda = 0.30
+Udmax threshold = 10.0
+candidate_count cutoff = 1
+```
+
+Rationale:
+
+- lies inside the locally robust zero-bad plateau rather than on its aggressive edge;
+- more conservative than `lambda=0.4` without losing development trigger coverage at threshold 10;
+- threshold 10 has margin from the unsafe threshold 15 boundary;
+- zero observed-IoU violations >0.01 on all triggered development runs;
+- preserves Hospital 2/2 development trigger coverage;
+- does not maximize savings on the development set, reducing parameter-selection pressure toward overfit.
+
+Full stop logic:
+
+```text
+base_valid_t =
+    (max information_gain/distance_m <= 0.30)
+    AND
+    (max visible_unknown_cells/distance_m <= 10.0)
+
+After 2 consecutive evaluable base_valid states:
+    if selectable candidate_count <= 1:
+        STOP
+    else:
+        require a 3rd consecutive evaluable base_valid state, then STOP
+```
+
+This rule is now frozen. Do not retune it using the 17 development runs after prospective validation begins.
+
+## 11. Evaluation caveats
+
+- The 17 existing runs are development/tuning/audit data only.
+- Observed-only occupied IoU is used for quality auditing and is not an online stop input.
+- `iou_loss_vs_final` from `early_stopping_analysis.csv` uses prediction-assisted reconstructed maps; observed-only audits were added specifically to check real structural loss.
+- TU remains weakly discriminative and is not a primary stop signal.
 
 ---
 
 # Current next actions
 
-1. Run `scripts/audit_way2_visible_unknown_guard.py` on all 17 development runs.
-2. Check whether unsafe stops consistently retain larger `visible_unknown_cells` / `visible_unknown_cells per meter` than safe stops.
-3. If there is a stable separation, formulate a secondary online completion guard without changing the existing MapEx frontier ranking.
-4. If there is no separation, reconsider the Way2 gain/completion formulation rather than continuing to tune lambda/K.
-5. Freeze the full rule only after the formulation is stable.
-6. Integrate online only after freeze.
-7. Collect new independent New Room + Hospital validation runs with no environment-specific retuning.
+1. Integrate the frozen candidate rule into online MapEx without changing frontier ranking.
+2. Log all stop-signal components online: `R_t`, `Udmax_t`, selectable candidate count, persistence state, and termination reason.
+3. Sanity-test online integration without using new validation runs for retuning.
+4. Collect **new independent** New Room + Hospital validation runs with the rule frozen and no environment-specific retuning.
+5. Compare against the full MapEx baseline using time, distance, observed structural quality, reconstructed quality, and existing exploration metrics.
+6. Only after prospective validation decide whether Way2 is accepted or rejected as the thesis stopping rule.
 
 ## Analysis scripts
 
@@ -264,3 +337,9 @@ No threshold is frozen yet.
 - `scripts/audit_way2_observed_quality.py`
 - `scripts/sweep_way2_lambda_quality.py`
 - `scripts/audit_way2_visible_unknown_guard.py`
+- `scripts/sweep_way2_visible_unknown_guard.py`
+- `scripts/inspect_way2_guard_candidates.py`
+- `scripts/inspect_way2_mpx009_quality_trajectory.py`
+- `scripts/evaluate_way2_adaptive_confirmation.py`
+- `scripts/sweep_way2_adaptive_candidate_count.py`
+- `scripts/sweep_way2_adaptive_rule_neighborhood.py`
