@@ -1,0 +1,41 @@
+# HISTORICAL RECOVERED LOG
+# source_machine: com1
+# source_path: ~/turtlebot4_project
+# source_date: 2026-09-17
+# recovered_via: user-provided terminal transcript in ChatGPT
+# recomputed: false
+# data_class: development/tuning evidence
+# command:
+# git pull
+# python3 mapex_lab/scripts/inspect_way2_hospital_quality_trajectory.py
+
+=== hpx_001: R_t vs map quality ===
+decision   R_t      IoU_if_stop  IoU_loss   coverage   time_saved  dist_saved
+d 36       0.749      0.385251  0.044659     98.00%      40.69%      41.87%
+d 37       0.515      0.383410  0.046499     98.26%      35.26%      36.01%
+d 38       2.780      0.390585  0.039324     98.26%      30.13%      29.89%
+d 39       0.924      0.390528  0.039382     98.26%      29.50%      29.44%
+d 40       0.751      0.390573  0.039337     98.26%      29.25%      29.43%
+d 41       0.603      0.397117  0.032793     98.63%      24.75%      24.22%
+d 42       0.451      0.397117  0.032793     98.63%      24.51%      24.22%
+d 43       0.355      0.402922  0.026988     99.52%      20.10%      19.21%
+d 44       0.123      0.400926  0.028983     99.52%      18.93%      18.27%
+d 45       0.154      0.403214  0.026696     99.53%      16.41%      15.67%
+d 46       0.137      0.403214  0.026696     99.53%      16.17%      15.67%
+d 47       0.090      0.413983  0.015926     99.69%      12.39%      11.49%
+d 48       0.008      0.413867  0.016043     99.69%      12.15%      11.49%
+d 49       0.172      0.431229  -0.001319     99.70%       6.53%       5.24%
+d 50       0.051      0.431229  -0.001319     99.70%       6.29%       5.23%
+d 51       0.072      0.429910  0.000000     99.70%       1.44%       0.00%
+Candidate stops:
+lambda=0.4, K=2: stop=d44, R=0.123, IoU_loss=0.028983, coverage=99.52%
+lambda=0.4, K=3: stop=d45, R=0.154, IoU_loss=0.026696, coverage=99.53%
+lambda=0.5, K=2: stop=d43, R=0.355, IoU_loss=0.026988, coverage=99.52%
+lambda=0.5, K=3: stop=d44, R=0.123, IoU_loss=0.028983, coverage=99.52%
+Analyzer final reference: d56, IoU=0.429910, coverage=99.70%
+Post-stop observed quality gain:
+lambda=0.4, K=2: stop d44 -> best later d49, IoU gain=0.030302, later R=0.172
+lambda=0.4, K=3: stop d45 -> best later d49, IoU gain=0.028015, later R=0.172
+lambda=0.5, K=2: stop d43 -> best later d49, IoU gain=0.028307, later R=0.172
+lambda=0.5, K=3: stop d44 -> best later d49, IoU gain=0.030302, later R=0.172
+Interpretation: if R_t remains below lambda while IoU/coverage still improve materially, the issue is not merely rebound/noise; the current G/C utility is not yet a sufficient proxy for completion in that Hospital run.
