@@ -1,0 +1,11 @@
+lambda,u_threshold_cells_per_m,candidate_cutoff,new_room_trigger,new_room_total,hospital_trigger,hospital_total,observed_iou_violations_gt_0p01,status,note
+0.25,10.0,1,11,15,2,2,0,safe_plateau,
+0.30,10.0,1,11,15,2,2,0,frozen_candidate,"chosen conservative point inside safe plateau"
+0.35,10.0,1,11,15,2,2,0,safe_plateau,
+0.40,10.0,1,11,15,2,2,0,safe_plateau,
+0.25,12.5,1,12,15,2,2,0,safe_plateau,
+0.30,12.5,1,12,15,2,2,0,safe_plateau,
+0.35,12.5,1,13,15,2,2,0,safe_plateau,
+0.40,12.5,1,13,15,2,2,0,safe_plateau,
+,7.5,1,,,1,2,,too_conservative,"Hospital trigger coverage falls to 1/2"
+,15.0,1,,,,,,unsafe_boundary,"hpx_001 premature stop returns; observed IoU loss 0.015491"
