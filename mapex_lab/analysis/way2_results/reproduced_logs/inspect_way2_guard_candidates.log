@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/inspect_way2_guard_candidates.py", line 232, in <module>
+    main()
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/inspect_way2_guard_candidates.py", line 133, in main
+    runs = [resolve_run(root, x) for x in args.runs]
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/inspect_way2_guard_candidates.py", line 65, in resolve_run
+    raise FileNotFoundError(value)
+FileNotFoundError: mpx_011

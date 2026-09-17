@@ -1,0 +1,50 @@
+
+=== mpx_004 ===
+
+lambda=0.4, K=2
+  stop: d24 R=0.202; post decisions=5; rebounds=2
+  first rebound: d25 R=0.699 (+1 decisions)
+  max rebound:   d26 R=4.316 excess=3.916
+  last rebound:  d26 R=4.316 (+2 decisions)
+  rebound decisions:
+    d25: R=0.699, best_candidate=2
+    d26: R=4.316, best_candidate=2
+  local trajectory (±4 evaluable decisions):
+    d 20: R=1.368 
+    d 21: R=2.531 
+    d 22: R=1.650 
+    d 23: R=0.262 
+    d 24: R=0.202 STOP
+    d 25: R=0.699 RB
+    d 26: R=4.316 RB
+    d 27: R=0.115 
+    d 28: R=0.008 
+
+lambda=0.5, K=2
+  stop: d24 R=0.202; post decisions=5; rebounds=2
+  first rebound: d25 R=0.699 (+1 decisions)
+  max rebound:   d26 R=4.316 excess=3.816
+  last rebound:  d26 R=4.316 (+2 decisions)
+  rebound decisions:
+    d25: R=0.699, best_candidate=2
+    d26: R=4.316, best_candidate=2
+  local trajectory (±4 evaluable decisions):
+    d 20: R=1.368 
+    d 21: R=2.531 
+    d 22: R=1.650 
+    d 23: R=0.262 
+    d 24: R=0.202 STOP
+    d 25: R=0.699 RB
+    d 26: R=4.316 RB
+    d 27: R=0.115 
+    d 28: R=0.008 
+Traceback (most recent call last):
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/inspect_way2_rebounds.py", line 212, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/inspect_way2_rebounds.py", line 202, in main
+    inspect_run(_resolve_run(root, value), args.lambdas, args.guard_k, args.window)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/inspect_way2_rebounds.py", line 50, in _resolve_run
+    raise FileNotFoundError(f"Cannot resolve run: {value}")
+FileNotFoundError: Cannot resolve run: mpx_012

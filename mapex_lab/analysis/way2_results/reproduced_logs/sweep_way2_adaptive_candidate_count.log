@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/sweep_way2_adaptive_candidate_count.py", line 143, in <module>
+    main()
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/sweep_way2_adaptive_candidate_count.py", line 90, in main
+    runs = [base.resolve_run(root, x) for x in args.runs]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/evaluate_way2_adaptive_confirmation.py", line 75, in resolve_run
+    raise FileNotFoundError(value)
+FileNotFoundError: mpx_011

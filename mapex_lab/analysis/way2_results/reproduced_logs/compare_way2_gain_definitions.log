@@ -1,0 +1,4 @@
+usage: compare_way2_gain_definitions.py [-h] [--output-dir OUTPUT_DIR]
+                                        [--no-write]
+                                        runs [runs ...]
+compare_way2_gain_definitions.py: error: the following arguments are required: runs

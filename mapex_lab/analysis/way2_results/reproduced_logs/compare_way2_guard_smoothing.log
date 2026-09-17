@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/compare_way2_guard_smoothing.py", line 231, in <module>
+    main()
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/compare_way2_guard_smoothing.py", line 201, in main
+    run_dirs = [_resolve(root, r) for r in args.runs]
+                ^^^^^^^^^^^^^^^^^
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/compare_way2_guard_smoothing.py", line 55, in _resolve
+    raise FileNotFoundError(value)
+FileNotFoundError: mpx_011

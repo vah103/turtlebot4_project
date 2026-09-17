@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/evaluate_way2_candidate_quality.py", line 314, in <module>
+    main()
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/evaluate_way2_candidate_quality.py", line 263, in main
+    runs = [resolve_run(root, x) for x in args.runs]
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/evaluate_way2_candidate_quality.py", line 73, in resolve_run
+    raise FileNotFoundError(value)
+FileNotFoundError: mpx_011

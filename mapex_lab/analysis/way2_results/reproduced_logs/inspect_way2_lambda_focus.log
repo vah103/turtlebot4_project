@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/inspect_way2_lambda_focus.py", line 135, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/inspect_way2_lambda_focus.py", line 68, in main
+    raise FileNotFoundError(
+FileNotFoundError: Missing /home/dell/turtlebot4_project/mapex_lab/experiments/mapex/way2_lambda_sensitivity_runs.csv. Run analyze_way2_lambda.py first.

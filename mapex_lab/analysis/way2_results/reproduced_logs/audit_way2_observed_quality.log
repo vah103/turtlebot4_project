@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/audit_way2_observed_quality.py", line 268, in <module>
+    main()
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/audit_way2_observed_quality.py", line 220, in main
+    runs = [resolve_run(mapex_lab, r) for r in args.runs]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/audit_way2_observed_quality.py", line 78, in resolve_run
+    raise FileNotFoundError(value)
+FileNotFoundError: mpx_011

@@ -1,0 +1,4 @@
+usage: analyze_way2_lambda.py [-h] [--lambdas LAMBDAS [LAMBDAS ...]]
+                              [--guard-k GUARD_K] [--output-dir OUTPUT_DIR]
+                              runs [runs ...]
+analyze_way2_lambda.py: error: the following arguments are required: runs

@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/inspect_way2_hospital_quality_trajectory.py", line 196, in <module>
+    main()
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/inspect_way2_hospital_quality_trajectory.py", line 132, in main
+    qs = quality(run_dir)
+         ^^^^^^^^^^^^^^^^
+  File "/home/dell/turtlebot4_project/mapex_lab/scripts/inspect_way2_hospital_quality_trajectory.py", line 78, in quality
+    raise FileNotFoundError(
+FileNotFoundError: Missing /home/dell/turtlebot4_project/mapex_lab/experiments/mapex/hpx_001/early_stopping_analysis.csv. Run analyze_early_stopping.py for this run first.

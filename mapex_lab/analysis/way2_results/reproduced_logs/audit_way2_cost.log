@@ -1,0 +1,4 @@
+usage: audit_way2_cost.py [-h] [--match-tolerance-m MATCH_TOLERANCE_M]
+                          [--output-dir OUTPUT_DIR] [--no-write]
+                          runs [runs ...]
+audit_way2_cost.py: error: the following arguments are required: runs

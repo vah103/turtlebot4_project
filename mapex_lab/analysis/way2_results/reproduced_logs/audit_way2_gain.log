@@ -1,0 +1,4 @@
+usage: audit_way2_gain.py [-h] [--top-k TOP_K] [--output-dir OUTPUT_DIR]
+                          [--no-write]
+                          runs [runs ...]
+audit_way2_gain.py: error: the following arguments are required: runs

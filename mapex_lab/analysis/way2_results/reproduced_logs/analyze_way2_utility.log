@@ -1,0 +1,8 @@
+usage: analyze_way2_utility.py [-h] [--lambda-value LAMBDA_VALUE]
+                               [--guard-k GUARD_K]
+                               [--gain-normalization {raw,variance-reference}]
+                               [--variance-reference VARIANCE_REFERENCE]
+                               [--aggregate-output-dir AGGREGATE_OUTPUT_DIR]
+                               [--no-write]
+                               runs [runs ...]
+analyze_way2_utility.py: error: the following arguments are required: runs
