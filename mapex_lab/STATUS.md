@@ -11,8 +11,9 @@ The active thesis direction is **Direction 2: early stopping for MapEx**.
 - **Way1: absolute global uncertainty threshold** is closed.
 - **Way2: frontier-utility-based stopping** is open.
 - Way2 is still in the **algorithm-design/offline-analysis** stage; online MapEx has not yet been changed to stop early.
-- Offline replay and the gain-definition audit are now complete.
-- The current next technical decision is the definition of travel cost `C`, followed by `lambda` analysis.
+- Offline replay, the gain-definition audit, and the historical travel-cost audit are complete.
+- For historical Way2 replay, `G` is frozen as raw `information_gain` and `C` is frozen as Euclidean `distance_m`.
+- The current next technical step is `lambda` analysis.
 
 Research question:
 
@@ -222,7 +223,8 @@ Implemented analysis scripts include:
 
 - `scripts/analyze_way2_utility.py`;
 - `scripts/audit_way2_gain.py`;
-- `scripts/compare_way2_gain_definitions.py`.
+- `scripts/compare_way2_gain_definitions.py`;
+- `scripts/audit_way2_cost.py`.
 
 ## Information gain G — FROZEN FOR CURRENT WAY2
 
@@ -265,22 +267,39 @@ Do **not** divide by `visible_unknown_cells` for Way2.
 
 Do **not** use first-decision/startup maxima as the basis for choosing `lambda`, because they are strongly spawn/view dependent.
 
-## Travel cost C — OPEN
+## Travel cost C — FROZEN FOR HISTORICAL REPLAY
 
-Historical offline replay currently uses:
+Historical replay uses:
 
 ```text
 C_t(f) = recorded Euclidean distance_m
 ```
 
-This is the only cost available consistently for every candidate in the existing runs.
+Cost audit over `mpx_001...mpx_015` and `hpx_001...hpx_002` found:
 
-The preferred physically meaningful alternative remains planner path length, especially in Hospital where walls/corridors can make Euclidean distance underestimate actual navigation cost. However, historical `plans.csv` contains actual plans for selected navigation goals, not planner path length for every candidate at every decision.
+| Environment | Euclidean coverage of selectable candidates | Planner coverage of selected decisions | Planner all-candidate coverage upper bound | Median run-level planner/Euclidean ratio |
+|---|---:|---:|---:|---:|
+| New Room | 100.0% | 98.1% | 5.5% | 1.413 |
+| Hospital | 100.0% | 89.6% | 6.7% | 1.479 |
 
-Therefore the next step is to decide whether:
+Interpretation:
 
-1. current Way2 should freeze Euclidean `distance_m` for compatibility with all historical candidate data; or
-2. new recording/integration should add per-candidate planner path length before final prospective validation.
+- Euclidean `distance_m` is available for every selectable candidate at decision time.
+- `plans.csv` stores Nav2 path length only after a frontier has been selected as an active navigation goal; it does not provide planner cost for every candidate in the same decision.
+- A selected decision can contain multiple plan updates while the robot moves, so the audit compares Euclidean distance against the **first usable plan** for that decision.
+- On selected goals, planner paths are typically longer than straight-line distance, as expected; however this selected-goal subset cannot be used as an unbiased all-candidate Way2 cost replacement.
+
+### Cost conclusion
+
+For the existing 17 development runs, freeze:
+
+```text
+C_t(f) = distance_m
+```
+
+Planner path length is **not** used as historical `C` because its all-candidate coverage is only about 5.5–6.7%, which would make the replay incomplete and selection-biased.
+
+A future planner-cost Way2 variant would need to compute/store `ComputePathToPose` for every selectable frontier at each decision before ranking/stopping. That would be a separate online design change and should be evaluated separately from the current historical replay.
 
 ## Reachability
 
@@ -302,7 +321,7 @@ The next offline analysis should inspect the empirical decision sequence:
 R_t = max_f (G_t(f) / C_t(f))
 ```
 
-with raw `G`, fixed `C`, and a `K=2` distinct-state debounce, then study threshold crossings, rebounds and premature-stop risk across both environments before freezing any value/range.
+with frozen raw `G`, frozen Euclidean `C`, and a `K=2` distinct-state debounce, then study threshold crossings, rebounds and premature-stop risk across both environments before freezing any value/range.
 
 ## Noise guard
 
@@ -334,15 +353,16 @@ Verified `information_gain`, Euclidean distance, `score = IG/distance`, selectab
 
 Replay matches current MapEx score and selected frontier on all evaluable decisions.
 
-### C. Freeze gain and cost definitions — IN PROGRESS
+### C. Freeze gain and cost definitions — COMPLETED FOR HISTORICAL REPLAY
 
 - `G`: **frozen as raw `information_gain`**.
 - `G / visible_unknown_cells`: rejected because it changes the best frontier in about 70% of decisions.
-- `C`: still open between historical Euclidean distance and a future per-candidate planner path-length definition.
+- `C`: **frozen as Euclidean `distance_m` for the current 17-run replay** because it has 100% selectable-candidate coverage.
+- Planner path length remains a possible future variant only if per-candidate path cost is recorded online.
 
 ### D. Define lambda from the objective — NEXT
 
-After `C` is frozen, analyze `R_t = max(G/C)` distributions/crossings and select a defensible declared `lambda` or sensitivity range.
+With `G` and `C` now fixed, analyze `R_t = max(G/C)` distributions/crossings and select a defensible declared `lambda` or sensitivity range.
 
 ### E. Backtest development data
 
@@ -418,8 +438,8 @@ TU remains weakly discriminative in the current dataset and should not be the pr
 
 1. **Way1 remains closed; do not retune the P95 threshold.**
 2. **Way2 replay is complete and raw `G = information_gain` is frozen.**
-3. Decide/freeze travel cost `C`: historical Euclidean `distance_m` vs adding per-candidate planner path length for future data.
-4. With fixed raw `G` and fixed `C`, analyze `R_t = max_f(G/C)` distributions and threshold crossings across all 17 development runs.
+3. **Historical replay cost is frozen as `C = distance_m` (Euclidean).**
+4. Analyze `R_t = max_f(G/C)` distributions and threshold crossings across all 17 development runs.
 5. Test `K=2` guarded crossings for rebounds/premature stopping; do not use first-decision maxima to select `lambda`.
 6. Define/freeze a defensible `lambda` or declared sensitivity range.
 7. Backtest the frozen candidate rule on development data for failure modes and savings.
