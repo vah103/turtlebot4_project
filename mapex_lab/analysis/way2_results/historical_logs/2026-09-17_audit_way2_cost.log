@@ -1,0 +1,35 @@
+# HISTORICAL RECOVERED LOG
+# source_machine: com1
+# source_path: ~/turtlebot4_project
+# source_date: 2026-09-17
+# recovered_via: user-provided terminal transcript in ChatGPT
+# recomputed: false
+# data_class: development/tuning evidence
+# command:
+# python3 mapex_lab/scripts/audit_way2_cost.py \
+#   mpx_{001..015} hpx_{001..002}
+
+mpx_001 (new_room): euclidean=100.0% of selectable candidates, planner=96.4% of selected decisions, all-candidate planner upper bound=5.3%, median path/euclid=1.3170654060254525
+mpx_002 (new_room): euclidean=100.0% of selectable candidates, planner=96.4% of selected decisions, all-candidate planner upper bound=5.0%, median path/euclid=1.4672417696676623
+mpx_003 (new_room): euclidean=100.0% of selectable candidates, planner=100.0% of selected decisions, all-candidate planner upper bound=5.4%, median path/euclid=1.4352100753398194
+mpx_004 (new_room): euclidean=100.0% of selectable candidates, planner=96.6% of selected decisions, all-candidate planner upper bound=6.4%, median path/euclid=1.207504402029894
+mpx_005 (new_room): euclidean=100.0% of selectable candidates, planner=100.0% of selected decisions, all-candidate planner upper bound=5.3%, median path/euclid=1.3433141089634733
+mpx_006 (new_room): euclidean=100.0% of selectable candidates, planner=96.4% of selected decisions, all-candidate planner upper bound=5.7%, median path/euclid=1.4583713785025256
+mpx_007 (new_room): euclidean=100.0% of selectable candidates, planner=96.6% of selected decisions, all-candidate planner upper bound=5.4%, median path/euclid=1.4103729442754025
+mpx_008 (new_room): euclidean=100.0% of selectable candidates, planner=100.0% of selected decisions, all-candidate planner upper bound=5.3%, median path/euclid=1.4131006210614758
+mpx_009 (new_room): euclidean=100.0% of selectable candidates, planner=100.0% of selected decisions, all-candidate planner upper bound=5.5%, median path/euclid=1.547975106322896
+mpx_010 (new_room): euclidean=100.0% of selectable candidates, planner=100.0% of selected decisions, all-candidate planner upper bound=5.6%, median path/euclid=1.5486113783671553
+mpx_011 (new_room): euclidean=100.0% of selectable candidates, planner=96.8% of selected decisions, all-candidate planner upper bound=5.3%, median path/euclid=1.4470572525523018
+mpx_012 (new_room): euclidean=100.0% of selectable candidates, planner=100.0% of selected decisions, all-candidate planner upper bound=6.8%, median path/euclid=1.3748794251290082
+mpx_013 (new_room): euclidean=100.0% of selectable candidates, planner=96.8% of selected decisions, all-candidate planner upper bound=4.7%, median path/euclid=1.3364973438185217
+mpx_014 (new_room): euclidean=100.0% of selectable candidates, planner=100.0% of selected decisions, all-candidate planner upper bound=5.6%, median path/euclid=1.42426875735661
+mpx_015 (new_room): euclidean=100.0% of selectable candidates, planner=96.0% of selected decisions, all-candidate planner upper bound=5.6%, median path/euclid=1.315730843980012
+hpx_001 (hospital): euclidean=100.0% of selectable candidates, planner=86.3% of selected decisions, all-candidate planner upper bound=6.6%, median path/euclid=1.4705061909628616
+hpx_002 (hospital): euclidean=100.0% of selectable candidates, planner=93.3% of selected decisions, all-candidate planner upper bound=6.8%, median path/euclid=1.4880314781452202
+
+Environment summary:
+  hospital: euclidean=100.0%, selected planner=89.6%, all-candidate planner upper bound=6.7%, median(run median path/euclid)=1.4792688345540408
+  new_room: euclidean=100.0%, selected planner=98.1%, all-candidate planner upper bound=5.5%, median(run median path/euclid)=1.4131006210614758
+
+Conclusion: historical planner-path data are not complete enough for a fair all-candidate Way2 replay. Use recorded Euclidean distance_m as the historical C baseline.
+Wrote audit outputs to /home/com1/turtlebot4_project/mapex_lab/experiments/mapex
