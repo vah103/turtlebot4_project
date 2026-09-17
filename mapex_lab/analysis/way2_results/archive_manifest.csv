@@ -5,7 +5,10 @@ analysis/way2_online_runs.csv,post-freeze online run summary,validation,committe
 analysis/way2_results/verified_development_results.csv,verified machine-readable development facts,development,committed
 analysis/way2_results/quality_failure_cases.csv,concrete observed-quality failures that shaped the rule,development,committed
 analysis/way2_results/frozen_rule.json,canonical frozen rule and data-use boundary,frozen_definition,committed
-analysis/way2_results/reproduce_way2_analysis.sh,reproduction/capture script,reproducibility,committed
-analysis/way2_results/reproduced_logs/manifest.csv,exit codes and generated log mapping,reproduced_development,pending_local_execution
-analysis/way2_results/reproduced_logs/provenance.txt,git/python provenance for rerun,reproduced_development,pending_local_execution
-analysis/way2_results/reproduced_logs/*.log,verbatim stdout/stderr for each Way2 analysis script,reproduced_development,pending_local_execution
+analysis/way2_results/reproduce_way2_analysis.sh,reproduction/capture script,reproducibility,committed_fixed_preflight
+analysis/way2_results/reproduced_logs/manifest.csv,exit codes and generated log mapping,reproduced_development,committed_incomplete_missing_mpx_011_015
+analysis/way2_results/reproduced_logs/provenance.txt,git/python provenance for Dell rerun,reproduced_development,committed_incomplete_missing_mpx_011_015
+analysis/way2_results/reproduced_logs/*.log,verbatim stdout/stderr from attempted Dell rerun,reproduced_development,committed_incomplete_missing_mpx_011_015
+analysis/way2_results/historical_logs/README.md,provenance policy for recovered original terminal outputs,historical_development,committed
+analysis/way2_results/historical_logs/manifest.csv,index of recovered original terminal outputs,historical_development,committed
+analysis/way2_results/historical_logs/*.log,recovered original com1 terminal outputs used during Way2 development,historical_development,recovery_in_progress
