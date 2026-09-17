@@ -1,0 +1,46 @@
+{
+  "status": "ok",
+  "prediction_source": "mean_map",
+  "ground_truth": "/home/com1/turtlebot4_project/mapex_lab/ground_truth/hospital/generated/hospital_structural_gt_v1.npz",
+  "ground_truth_sha256": "7db2d4a2b5866e6854baa5b3e02ca3dd22ce205fcfcac5ec431e872c4724b9e9",
+  "evaluation_canvas": {
+    "id": "hospital_canvas_v1",
+    "resolution_m": 0.05,
+    "width": 1504,
+    "height": 2123,
+    "origin_x": -25.6,
+    "origin_y": -60.1
+  },
+  "occupied_iou": {
+    "class": "occupied",
+    "prediction_threshold": 0.5,
+    "domain": "structural_ground_truth_evaluation_mask",
+    "unrepresented_prediction_cells": "treated_as_free"
+  },
+  "tu": {
+    "goal_count": 100,
+    "seed": 2025,
+    "goal_source": "/home/com1/turtlebot4_project/mapex_lab/ground_truth/hospital/generated/hospital_connected_free_v1.npy",
+    "start_world_xy": [
+      2.2902259401933955e-12,
+      -4.823521009378867e-24
+    ],
+    "start_canvas_row_col": [
+      1202,
+      512
+    ],
+    "planner": "pyastar2d_astar_allow_diagonal_false",
+    "connectivity": 4,
+    "success": "predicted path exists and does not intersect GT occupied cells"
+  },
+  "evaluated_decisions": 57,
+  "metrics_csv_backfilled_step_hold": true,
+  "final_decision_id": 57,
+  "final_occupied_iou": 0.336533111,
+  "final_tu": 0.5,
+  "occupied_iou_auc_time": 519.6747689611585,
+  "occupied_iou_auc_distance": 192.16898348520917,
+  "tu_auc_time": 896.704061561775,
+  "tu_auc_distance": 331.0150399423199,
+  "errors": []
+}
