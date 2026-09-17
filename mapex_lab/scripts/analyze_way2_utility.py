@@ -7,27 +7,26 @@ utility
 
     V_t(f) = G_t(f) - lambda * C_t(f)
 
-over candidates that were genuinely selectable by the recorded online policy.
+over candidates that were selectable by the recorded online policy.
 
-Current baseline semantics:
+Baseline semantics:
 - G_t(f): recorded ``information_gain`` from MapEx;
 - C_t(f): recorded Euclidean ``distance_m``;
 - eligibility: recorded ``selectable == 1``;
 - planner-path cost is intentionally NOT reconstructed from ``plans.csv`` because
   current recordings do not contain a planner path for every candidate frontier.
 
-Without ``--lambda-value`` the script still produces the per-decision break-even
-lambda
+Without ``--lambda-value`` the script reports the per-decision break-even boundary
 
     lambda_break_even = max_f G_t(f) / C_t(f)
 
-which is the largest lambda for which at least one selectable frontier has
-positive utility. This is useful for formulation audit without prematurely
-freezing a lambda.
+At lambda < lambda_break_even at least one selectable frontier has positive utility;
+at lambda >= lambda_break_even the best one-step utility is non-positive (equality
+at the boundary). This permits formulation audit without prematurely freezing a
+lambda.
 
-A normalized gain can be inspected with ``--gain-normalization variance-reference``.
-That simply divides the recorded summed information gain by a declared theoretical
-variance reference. No normalization constant is assumed by default.
+The script also summarizes early-vs-late break-even behavior for every run and,
+when multiple runs are supplied, compares the scale across environments.
 """
 from __future__ import annotations
 
@@ -35,6 +34,7 @@ import argparse
 import csv
 import json
 import math
+import statistics
 from collections import defaultdict
 from pathlib import Path
 from typing import Iterable
@@ -42,6 +42,7 @@ from typing import Iterable
 
 OUTPUT_FIELDS = [
     "run_id",
+    "environment",
     "decision_id",
     "time_s",
     "candidate_total",
@@ -66,6 +67,26 @@ OUTPUT_FIELDS = [
     "guard_k",
     "guarded_stop",
     "status",
+]
+
+AGGREGATE_FIELDS = [
+    "run_id",
+    "environment",
+    "decision_count",
+    "evaluable_decision_count",
+    "lambda_break_even_min",
+    "lambda_break_even_max",
+    "lambda_break_even_median",
+    "lambda_break_even_first",
+    "lambda_break_even_last",
+    "lambda_break_even_early_median",
+    "lambda_break_even_late_median",
+    "lambda_late_to_early_ratio",
+    "lambda_late_change_fraction",
+    "score_formula_mismatch_count",
+    "selection_mismatch_count",
+    "selection_audit_count",
+    "first_guarded_stop_decision_id",
 ]
 
 
@@ -121,6 +142,17 @@ def _resolve_run(root: Path, value: str) -> Path:
     )
 
 
+def _load_metadata(run_dir: Path) -> dict:
+    path = run_dir / "metadata.json"
+    if not path.is_file():
+        return {}
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return value if isinstance(value, dict) else {}
+
+
 def _load_decision_times(run_dir: Path) -> dict[int, float]:
     path = run_dir / "decisions.csv"
     if not path.is_file():
@@ -164,7 +196,7 @@ def _normalized_gain(
 
 
 def _decision_signature(rows: list[dict[str, str]]) -> tuple:
-    """Stable signature used so the K guard counts distinct recorded states only."""
+    """Stable signature so the K guard counts distinct recorded states only."""
     signature_rows = []
     for row in rows:
         signature_rows.append(
@@ -181,6 +213,45 @@ def _decision_signature(rows: list[dict[str, str]]) -> tuple:
     return tuple(sorted(signature_rows))
 
 
+def _break_even_summary(values: list[float]) -> dict[str, float]:
+    finite = [float(v) for v in values if math.isfinite(float(v))]
+    if not finite:
+        return {
+            "min": math.nan,
+            "max": math.nan,
+            "median": math.nan,
+            "first": math.nan,
+            "last": math.nan,
+            "early_median": math.nan,
+            "late_median": math.nan,
+            "late_to_early_ratio": math.nan,
+            "late_change_fraction": math.nan,
+        }
+
+    quartile_n = max(1, math.ceil(len(finite) * 0.25))
+    early = finite[:quartile_n]
+    late = finite[-quartile_n:]
+    early_median = statistics.median(early)
+    late_median = statistics.median(late)
+    ratio = late_median / early_median if early_median != 0.0 else math.nan
+    change = (
+        (late_median - early_median) / early_median
+        if early_median != 0.0
+        else math.nan
+    )
+    return {
+        "min": min(finite),
+        "max": max(finite),
+        "median": statistics.median(finite),
+        "first": finite[0],
+        "last": finite[-1],
+        "early_median": early_median,
+        "late_median": late_median,
+        "late_to_early_ratio": ratio,
+        "late_change_fraction": change,
+    }
+
+
 def analyze_run(
     run_dir: Path,
     lambda_value: float | None,
@@ -191,6 +262,9 @@ def analyze_run(
     candidates_path = run_dir / "candidates.csv"
     if not candidates_path.is_file():
         raise FileNotFoundError(f"Missing candidates.csv: {candidates_path}")
+
+    metadata = _load_metadata(run_dir)
+    environment = str(metadata.get("environment") or "unknown")
 
     with candidates_path.open("r", newline="", encoding="utf-8") as stream:
         reader = csv.DictReader(stream)
@@ -261,6 +335,7 @@ def analyze_run(
             output_rows.append(
                 {
                     "run_id": run_dir.name,
+                    "environment": environment,
                     "decision_id": str(decision_id),
                     "time_s": _fmt(decision_times.get(decision_id, math.nan)),
                     "candidate_total": str(len(all_candidates)),
@@ -334,6 +409,7 @@ def analyze_run(
         output_rows.append(
             {
                 "run_id": run_dir.name,
+                "environment": environment,
                 "decision_id": str(decision_id),
                 "time_s": _fmt(decision_times.get(decision_id, math.nan)),
                 "candidate_total": str(len(all_candidates)),
@@ -372,8 +448,15 @@ def analyze_run(
         )
 
     evaluable = [row for row in output_rows if row["status"] == "ok"]
+    break_even_values = [
+        _finite_float(row["lambda_break_even"])
+        for row in evaluable
+        if row["lambda_break_even"] not in ("", "nan")
+    ]
+    trend = _break_even_summary(break_even_values)
     summary = {
         "run_id": run_dir.name,
+        "environment": environment,
         "source": str(candidates_path),
         "decision_count": len(output_rows),
         "evaluable_decision_count": len(evaluable),
@@ -381,11 +464,16 @@ def analyze_run(
         "gain_normalization": gain_normalization,
         "variance_reference": variance_reference,
         "cost_definition": "recorded Euclidean distance_m",
-        "eligibility_definition": "recorded selectable == 1",
+        "eligibility_definition": "recorded policy selectable == 1",
+        "eligibility_limit": (
+            "selectable means not filtered/suppressed by the recorded policy; "
+            "it is not an independent planner-path verification for every candidate"
+        ),
         "planner_path_cost_supported_by_current_candidate_recording": False,
         "score_formula_mismatch_count": score_formula_mismatch_count,
         "selection_audit_count": selection_audit_count,
         "selection_mismatch_count": selection_mismatch_count,
+        "lambda_break_even": trend,
         "lambda_value": lambda_value,
         "guard_k": guard_k,
         "guard_distinct_state_semantics": (
@@ -402,7 +490,61 @@ def analyze_run(
     return output_rows, summary
 
 
-def _write_outputs(run_dir: Path, rows: list[dict[str, str]], summary: dict) -> None:
+def _summary_row(summary: dict) -> dict[str, str]:
+    trend = summary["lambda_break_even"]
+    return {
+        "run_id": str(summary["run_id"]),
+        "environment": str(summary["environment"]),
+        "decision_count": str(summary["decision_count"]),
+        "evaluable_decision_count": str(summary["evaluable_decision_count"]),
+        "lambda_break_even_min": _fmt(trend["min"]),
+        "lambda_break_even_max": _fmt(trend["max"]),
+        "lambda_break_even_median": _fmt(trend["median"]),
+        "lambda_break_even_first": _fmt(trend["first"]),
+        "lambda_break_even_last": _fmt(trend["last"]),
+        "lambda_break_even_early_median": _fmt(trend["early_median"]),
+        "lambda_break_even_late_median": _fmt(trend["late_median"]),
+        "lambda_late_to_early_ratio": _fmt(trend["late_to_early_ratio"]),
+        "lambda_late_change_fraction": _fmt(trend["late_change_fraction"]),
+        "score_formula_mismatch_count": str(summary["score_formula_mismatch_count"]),
+        "selection_mismatch_count": str(summary["selection_mismatch_count"]),
+        "selection_audit_count": str(summary["selection_audit_count"]),
+        "first_guarded_stop_decision_id": _fmt(summary["first_guarded_stop_decision_id"]),
+    }
+
+
+def _environment_summary(summaries: list[dict]) -> dict[str, dict]:
+    grouped: dict[str, list[dict]] = defaultdict(list)
+    for summary in summaries:
+        grouped[str(summary["environment"])].append(summary)
+
+    result = {}
+    for environment, items in sorted(grouped.items()):
+        run_medians = [
+            float(item["lambda_break_even"]["median"])
+            for item in items
+            if math.isfinite(float(item["lambda_break_even"]["median"]))
+        ]
+        early = [
+            float(item["lambda_break_even"]["early_median"])
+            for item in items
+            if math.isfinite(float(item["lambda_break_even"]["early_median"]))
+        ]
+        late = [
+            float(item["lambda_break_even"]["late_median"])
+            for item in items
+            if math.isfinite(float(item["lambda_break_even"]["late_median"]))
+        ]
+        result[environment] = {
+            "run_count": len(items),
+            "run_median_lambda_median": statistics.median(run_medians) if run_medians else None,
+            "run_median_early_lambda": statistics.median(early) if early else None,
+            "run_median_late_lambda": statistics.median(late) if late else None,
+        }
+    return result
+
+
+def _write_run_outputs(run_dir: Path, rows: list[dict[str, str]], summary: dict) -> None:
     csv_path = run_dir / "way2_utility_replay.csv"
     json_path = run_dir / "way2_utility_summary.json"
 
@@ -412,6 +554,33 @@ def _write_outputs(run_dir: Path, rows: list[dict[str, str]], summary: dict) -> 
         writer.writerows(rows)
 
     json_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+
+
+def _write_aggregate_outputs(output_dir: Path, summaries: list[dict]) -> None:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    csv_path = output_dir / "way2_utility_aggregate.csv"
+    json_path = output_dir / "way2_utility_aggregate.json"
+
+    with csv_path.open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.DictWriter(stream, fieldnames=AGGREGATE_FIELDS)
+        writer.writeheader()
+        writer.writerows(_summary_row(summary) for summary in summaries)
+
+    payload = {
+        "run_count": len(summaries),
+        "environments": _environment_summary(summaries),
+        "runs": summaries,
+        "interpretation": {
+            "late_to_early_ratio_lt_1": (
+                "late-run break-even lambda is lower than early-run break-even lambda"
+            ),
+            "cross_environment_goal": (
+                "inspect whether New Room and Hospital occupy a compatible lambda scale "
+                "before any single lambda is frozen"
+            ),
+        },
+    }
+    json_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
 def main() -> int:
@@ -457,12 +626,17 @@ def main() -> int:
         ),
     )
     parser.add_argument(
+        "--aggregate-output-dir",
+        type=Path,
+        default=None,
+        help=(
+            "Directory for multi-run aggregate CSV/JSON. Default: experiments/mapex."
+        ),
+    )
+    parser.add_argument(
         "--no-write",
         action="store_true",
-        help=(
-            "Analyze and print summaries without writing replay files into run "
-            "directories."
-        ),
+        help="Analyze and print summaries without writing replay files.",
     )
     args = parser.parse_args()
 
@@ -483,6 +657,7 @@ def main() -> int:
         )
 
     root = Path(__file__).resolve().parents[1]
+    summaries = []
     for value in args.runs:
         run_dir = _resolve_run(root, value)
         rows, summary = analyze_run(
@@ -492,33 +667,45 @@ def main() -> int:
             gain_normalization=args.gain_normalization,
             variance_reference=args.variance_reference,
         )
+        summaries.append(summary)
         if not args.no_write:
-            _write_outputs(run_dir, rows, summary)
+            _write_run_outputs(run_dir, rows, summary)
 
-        break_even = [
-            _finite_float(row["lambda_break_even"])
-            for row in rows
-            if row["lambda_break_even"] not in ("", "nan")
-        ]
-        finite_break_even = [value for value in break_even if math.isfinite(value)]
-        range_text = "n/a"
-        if finite_break_even:
-            range_text = (
-                f"{min(finite_break_even):.6f}..{max(finite_break_even):.6f}"
-            )
-
-        stop_text = summary["first_guarded_stop_decision_id"]
+        trend = summary["lambda_break_even"]
         print(
             "WAY2 REPLAY: "
-            f"run={run_dir.name}, decisions={summary['decision_count']}, "
+            f"run={run_dir.name}, env={summary['environment']}, "
+            f"decisions={summary['decision_count']}, "
             f"evaluable={summary['evaluable_decision_count']}, "
             f"score_mismatch={summary['score_formula_mismatch_count']}, "
             f"selection_mismatch={summary['selection_mismatch_count']}/"
             f"{summary['selection_audit_count']}, "
-            f"lambda_break_even_range={range_text}, "
+            f"lambda_range={trend['min']:.6f}..{trend['max']:.6f}, "
+            f"early_median={trend['early_median']:.6f}, "
+            f"late_median={trend['late_median']:.6f}, "
+            f"late/early={trend['late_to_early_ratio']:.6f}, "
             f"lambda={args.lambda_value}, guard_k={args.guard_k}, "
-            f"first_guarded_stop={stop_text}"
+            f"first_guarded_stop={summary['first_guarded_stop_decision_id']}"
         )
+
+    if len(summaries) > 1:
+        env_summary = _environment_summary(summaries)
+        for environment, values in env_summary.items():
+            print(
+                "WAY2 ENV: "
+                f"env={environment}, runs={values['run_count']}, "
+                f"median_of_run_medians={values['run_median_lambda_median']}, "
+                f"median_early={values['run_median_early_lambda']}, "
+                f"median_late={values['run_median_late_lambda']}"
+            )
+
+        if not args.no_write:
+            aggregate_dir = (
+                args.aggregate_output_dir.resolve()
+                if args.aggregate_output_dir is not None
+                else root / "experiments" / "mapex"
+            )
+            _write_aggregate_outputs(aggregate_dir, summaries)
 
     return 0
 
