@@ -12,6 +12,7 @@ The active thesis direction is **Way2: frontier-utility-based early stopping for
 - `G` is frozen as raw `information_gain`.
 - Historical replay `C` is frozen as Euclidean `distance_m`.
 - The 17 existing runs remain development/diagnostic data only and must not be used as independent validation.
+- Teacher-facing Google Doc tab **“Triển khai Way2”** is synchronized through the frozen rule, development backtest, and prospective-validation next steps.
 
 Frozen candidate rule for the next validation stage:
 
