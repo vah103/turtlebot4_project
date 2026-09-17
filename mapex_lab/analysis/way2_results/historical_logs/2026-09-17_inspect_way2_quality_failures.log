@@ -1,0 +1,28 @@
+# HISTORICAL RECOVERED LOG
+# source_machine: com1
+# source_path: ~/turtlebot4_project
+# source_date: 2026-09-17
+# recovered_via: user-provided terminal transcript in ChatGPT
+# recomputed: false
+# data_class: development/tuning evidence
+# command:
+# git pull
+# python3 mapex_lab/scripts/inspect_way2_quality_failures.py
+
+=== Hospital candidate rules ===
+hpx_001  env=hospital  lambda=0.4 K=2 stop_d=44 time_saved=18.93% distance_saved=18.27% iou_loss=0.028983059 tu_loss=-0.010000000
+hpx_002  env=hospital  lambda=0.4 K=2 stop_d=43 time_saved=9.86% distance_saved=9.08% iou_loss=-0.005811506 tu_loss=0.040000000
+hpx_001  env=hospital  lambda=0.4 K=3 stop_d=45 time_saved=16.41% distance_saved=15.67% iou_loss=0.026695505 tu_loss=-0.020000000
+hpx_002  env=hospital  lambda=0.4 K=3 stop_d=44 time_saved=5.33% distance_saved=4.18% iou_loss=0.003983218 tu_loss=0.020000000
+hpx_001  env=hospital  lambda=0.5 K=2 stop_d=43 time_saved=20.10% distance_saved=19.21% iou_loss=0.026988013 tu_loss=-0.020000000
+hpx_002  env=hospital  lambda=0.5 K=2 stop_d=43 time_saved=9.86% distance_saved=9.08% iou_loss=-0.005811506 tu_loss=0.040000000
+hpx_001  env=hospital  lambda=0.5 K=3 stop_d=44 time_saved=18.93% distance_saved=18.27% iou_loss=0.028983059 tu_loss=-0.010000000
+hpx_002  env=hospital  lambda=0.5 K=3 stop_d=44 time_saved=5.33% distance_saved=4.18% iou_loss=0.003983218 tu_loss=0.020000000
+=== IoU loss > 0.01 ===
+hpx_001  env=hospital  lambda=0.4 K=2 stop_d=44 time_saved=18.93% distance_saved=18.27% iou_loss=0.028983059 tu_loss=-0.010000000
+hpx_001  env=hospital  lambda=0.4 K=3 stop_d=45 time_saved=16.41% distance_saved=15.67% iou_loss=0.026695505 tu_loss=-0.020000000
+hpx_001  env=hospital  lambda=0.5 K=2 stop_d=43 time_saved=20.10% distance_saved=19.21% iou_loss=0.026988013 tu_loss=-0.020000000
+hpx_001  env=hospital  lambda=0.5 K=3 stop_d=44 time_saved=18.93% distance_saved=18.27% iou_loss=0.028983059 tu_loss=-0.010000000
+mpx_009  env=new_room  lambda=0.4 K=2 stop_d=25 time_saved=17.80% distance_saved=17.46% iou_loss=0.018840484 tu_loss=0.000000000
+mpx_009  env=new_room  lambda=0.5 K=2 stop_d=25 time_saved=17.80% distance_saved=17.46% iou_loss=0.018840484 tu_loss=0.000000000
+Interpretation: if the same Hospital run repeatedly dominates IoU loss, inspect its stop decision and local R_t trajectory before changing lambda/K. Do not retune to one run blindly.
