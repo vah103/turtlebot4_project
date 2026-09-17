@@ -1,0 +1,56 @@
+# HISTORICAL RECOVERED LOG
+# source_machine: com1
+# source_path: ~/turtlebot4_project
+# source_date: 2026-09-17
+# recovered_via: user-provided terminal transcript in ChatGPT
+# recomputed: false
+# data_class: development/tuning evidence
+# command:
+# git pull
+# python3 mapex_lab/scripts/inspect_way2_lambda_focus.py
+
+=== lambda=0.4 ===
+new_room:
+mpx_001: stop_d=26, stop=92.9% of evaluable, time_saved=26.4%, distance_saved=18.8%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.016, max_excess=-0.384
+mpx_002: stop_d=26, stop=92.9% of evaluable, time_saved=31.5%, distance_saved=17.8%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.217, max_excess=-0.183
+mpx_003: stop_d=31, stop=96.9% of evaluable, time_saved=17.9%, distance_saved=12.4%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.000, max_excess=-0.400
+mpx_004: stop_d=24, stop=82.8% of evaluable, time_saved=27.2%, distance_saved=25.9%, rebounds=2, rebound_fraction=40.0%, max_post_R=4.316, max_excess=3.916
+mpx_005: stop_d=25, stop=96.2% of evaluable, time_saved=14.1%, distance_saved=11.3%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.085, max_excess=-0.315
+mpx_006: stop_d=26, stop=92.9% of evaluable, time_saved=11.6%, distance_saved=3.9%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.315, max_excess=-0.085
+mpx_007: stop_d=28, stop=96.6% of evaluable, time_saved=22.5%, distance_saved=4.1%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.045, max_excess=-0.355
+mpx_008: no stop
+mpx_009: stop_d=25, stop=92.6% of evaluable, time_saved=24.0%, distance_saved=17.5%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.093, max_excess=-0.307
+mpx_010: stop_d=29, stop=93.5% of evaluable, time_saved=26.0%, distance_saved=15.7%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.137, max_excess=-0.263
+mpx_011: stop_d=29, stop=93.5% of evaluable, time_saved=14.2%, distance_saved=15.4%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.203, max_excess=-0.197
+mpx_012: stop_d=26, stop=92.9% of evaluable, time_saved=13.3%, distance_saved=9.2%, rebounds=2, rebound_fraction=100.0%, max_post_R=0.902, max_excess=0.502
+mpx_013: stop_d=28, stop=90.3% of evaluable, time_saved=20.3%, distance_saved=22.2%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.297, max_excess=-0.103
+mpx_014: stop_d=27, stop=96.4% of evaluable, time_saved=9.8%, distance_saved=10.4%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.041, max_excess=-0.359
+mpx_015: stop_d=24, stop=96.0% of evaluable, time_saved=15.3%, distance_saved=15.5%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.017, max_excess=-0.383
+summary: trigger=14/15, rebound_runs=2/14
+hospital:
+hpx_001: stop_d=44, stop=86.3% of evaluable, time_saved=18.9%, distance_saved=18.3%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.172, max_excess=-0.228
+hpx_002: stop_d=43, stop=95.6% of evaluable, time_saved=9.9%, distance_saved=9.1%, rebounds=1, rebound_fraction=50.0%, max_post_R=0.721, max_excess=0.321
+summary: trigger=2/2, rebound_runs=1/2
+=== lambda=0.5 ===
+new_room:
+mpx_001: stop_d=26, stop=92.9% of evaluable, time_saved=26.4%, distance_saved=18.8%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.016, max_excess=-0.484
+mpx_002: stop_d=26, stop=92.9% of evaluable, time_saved=31.5%, distance_saved=17.8%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.217, max_excess=-0.283
+mpx_003: stop_d=31, stop=96.9% of evaluable, time_saved=17.9%, distance_saved=12.4%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.000, max_excess=-0.500
+mpx_004: stop_d=24, stop=82.8% of evaluable, time_saved=27.2%, distance_saved=25.9%, rebounds=2, rebound_fraction=40.0%, max_post_R=4.316, max_excess=3.816
+mpx_005: stop_d=25, stop=96.2% of evaluable, time_saved=14.1%, distance_saved=11.3%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.085, max_excess=-0.415
+mpx_006: stop_d=26, stop=92.9% of evaluable, time_saved=11.6%, distance_saved=3.9%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.315, max_excess=-0.185
+mpx_007: stop_d=27, stop=93.1% of evaluable, time_saved=26.5%, distance_saved=9.8%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.144, max_excess=-0.356
+mpx_008: no stop
+mpx_009: stop_d=25, stop=92.6% of evaluable, time_saved=24.0%, distance_saved=17.5%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.093, max_excess=-0.407
+mpx_010: stop_d=29, stop=93.5% of evaluable, time_saved=26.0%, distance_saved=15.7%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.137, max_excess=-0.363
+mpx_011: stop_d=29, stop=93.5% of evaluable, time_saved=14.2%, distance_saved=15.4%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.203, max_excess=-0.297
+mpx_012: stop_d=26, stop=92.9% of evaluable, time_saved=13.3%, distance_saved=9.2%, rebounds=2, rebound_fraction=100.0%, max_post_R=0.902, max_excess=0.402
+mpx_013: stop_d=28, stop=90.3% of evaluable, time_saved=20.3%, distance_saved=22.2%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.297, max_excess=-0.203
+mpx_014: stop_d=27, stop=96.4% of evaluable, time_saved=9.8%, distance_saved=10.4%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.041, max_excess=-0.459
+mpx_015: stop_d=24, stop=96.0% of evaluable, time_saved=15.3%, distance_saved=15.5%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.017, max_excess=-0.483
+summary: trigger=14/15, rebound_runs=2/14
+hospital:
+hpx_001: stop_d=43, stop=84.3% of evaluable, time_saved=20.1%, distance_saved=19.2%, rebounds=0, rebound_fraction=0.0%, max_post_R=0.172, max_excess=-0.328
+hpx_002: stop_d=43, stop=95.6% of evaluable, time_saved=9.9%, distance_saved=9.1%, rebounds=1, rebound_fraction=50.0%, max_post_R=0.721, max_excess=0.221
+summary: trigger=2/2, rebound_runs=1/2
+Interpretation: prioritize lambda values that stop consistently across both environments while keeping post-stop rebounds rare and small. Do not freeze lambda from savings alone.
