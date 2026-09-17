@@ -1,0 +1,49 @@
+# HISTORICAL RECOVERED LOG
+# source_machine: com1
+# source_path: ~/turtlebot4_project
+# source_date: 2026-09-17
+# recovered_via: user-provided terminal transcript in ChatGPT
+# recomputed: false
+# data_class: development/tuning evidence
+# command:
+# git pull
+# python3 mapex_lab/scripts/analyze_way2_lambda.py mpx_{001..015} hpx_{001..002}
+
+remote: Enumerating objects: 13, done.
+remote: Counting objects: 100% (13/13), done.
+remote: Compressing objects: 100% (9/9), done.
+remote: Total 9 (delta 6), reused 0 (delta 0), pack-reused 0 (from 0)
+Unpacking objects: 100% (9/9), 5.96 KiB | 1.49 MiB/s, done.
+From https://github.com/vah103/turtlebot4_project
+fd782659..dc53eec1  main       -> origin/main
+Updating fd782659..dc53eec1
+Fast-forward
+mapex_lab/STATUS.md                   |  54 +-
+.../scripts/analyze_way2_lambda.py    | 443 +++++++++++++
+2 files changed, 480 insertions(+), 17 deletions(-)
+create mode 100644 mapex_lab/scripts/analyze_way2_lambda.py
+Way2 lambda sensitivity (K=2)
+lambda grid: 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1, 1.5, 2
+Environment summary:
+hospital  lambda=0.1: trigger=2/2 (100.0%), median time saved=8.7% distance saved=7.8% rebound runs=100.0%
+hospital  lambda=0.2: trigger=2/2 (100.0%), median time saved=13.1% distance saved=12.4% rebound runs=50.0%
+hospital  lambda=0.3: trigger=2/2 (100.0%), median time saved=13.1% distance saved=12.4% rebound runs=50.0%
+hospital  lambda=0.4: trigger=2/2 (100.0%), median time saved=14.4% distance saved=13.7% rebound runs=50.0%
+hospital  lambda=0.5: trigger=2/2 (100.0%), median time saved=15.0% distance saved=14.1% rebound runs=50.0%
+hospital  lambda=0.75: trigger=2/2 (100.0%), median time saved=29.9% distance saved=29.9% rebound runs=50.0%
+hospital  lambda=1: trigger=2/2 (100.0%), median time saved=33.1% distance saved=33.8% rebound runs=50.0%
+hospital  lambda=1.5: trigger=2/2 (100.0%), median time saved=41.8% distance saved=43.9% rebound runs=50.0%
+hospital  lambda=2: trigger=2/2 (100.0%), median time saved=42.6% distance saved=44.7% rebound runs=50.0%
+new_room  lambda=0.1: trigger=4/15 (26.7%), median time saved=14.0% distance saved=8.3% rebound runs=0.0%
+new_room  lambda=0.2: trigger=10/15 (66.7%), median time saved=16.8% distance saved=9.8% rebound runs=20.0%
+new_room  lambda=0.3: trigger=13/15 (86.7%), median time saved=17.9% distance saved=14.7% rebound runs=23.1%
+new_room  lambda=0.4: trigger=14/15 (93.3%), median time saved=19.1% distance saved=15.4% rebound runs=14.3%
+new_room  lambda=0.5: trigger=14/15 (93.3%), median time saved=19.1% distance saved=15.4% rebound runs=14.3%
+new_room  lambda=0.75: trigger=14/15 (93.3%), median time saved=22.5% distance saved=16.6% rebound runs=28.6%
+new_room  lambda=1: trigger=15/15 (100.0%), median time saved=28.8% distance saved=24.3% rebound runs=33.3%
+new_room  lambda=1.5: trigger=15/15 (100.0%), median time saved=34.7% distance saved=31.6% rebound runs=33.3%
+new_room  lambda=2: trigger=15/15 (100.0%), median time saved=38.6% distance saved=37.0% rebound runs=40.0%
+Wrote /home/com1/turtlebot4_project/mapex_lab/experiments/mapex/way2_lambda_sensitivity_runs.csv
+Wrote /home/com1/turtlebot4_project/mapex_lab/experiments/mapex/way2_lambda_sensitivity_environments.csv
+Wrote /home/com1/turtlebot4_project/mapex_lab/experiments/mapex/way2_lambda_sensitivity.json
+Conclusion: this is sensitivity analysis only. Do not freeze lambda until cross-environment stop timing and rebound risk have been reviewed.
