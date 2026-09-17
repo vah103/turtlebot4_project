@@ -1,0 +1,50 @@
+# HISTORICAL RECOVERED LOG
+# source_machine: com1
+# source_path: ~/turtlebot4_project
+# source_date: 2026-09-17
+# recovered_via: user-provided terminal transcript in ChatGPT
+# recomputed: false
+# data_class: development/tuning evidence
+# command:
+# git pull
+# python3 mapex_lab/scripts/audit_way2_observed_quality.py
+
+Way2 observed-only IoU audit
+=== lambda=0.4, K=2 ===
+new_room: trigger=14/15, median_observed_iou_loss=0.001516675, worst=0.022177562, IoUloss>0.01=2
+hospital: trigger=2/2, median_observed_iou_loss=0.011357634, worst=0.031462906, IoUloss>0.01=1
+hpx_001: stop=d44, obsIoU=0.366621 -> final=0.398084, loss=0.031463
+hpx_002: stop=d43, obsIoU=0.385968 -> final=0.377220, loss=-0.008748
+=== lambda=0.4, K=3 ===
+new_room: trigger=13/15, median_observed_iou_loss=0.000000000, worst=0.010515983, IoUloss>0.01=1
+hospital: trigger=2/2, median_observed_iou_loss=0.016077752, worst=0.028442456, IoUloss>0.01=1
+hpx_001: stop=d45, obsIoU=0.369641 -> final=0.398084, loss=0.028442
+hpx_002: stop=d44, obsIoU=0.373507 -> final=0.377220, loss=0.003713
+=== lambda=0.5, K=2 ===
+new_room: trigger=14/15, median_observed_iou_loss=0.001516675, worst=0.022177562, IoUloss>0.01=2
+hospital: trigger=2/2, median_observed_iou_loss=0.011251463, worst=0.031250564, IoUloss>0.01=1
+hpx_001: stop=d43, obsIoU=0.366833 -> final=0.398084, loss=0.031251
+hpx_002: stop=d43, obsIoU=0.385968 -> final=0.377220, loss=-0.008748
+=== lambda=0.5, K=3 ===
+new_room: trigger=13/15, median_observed_iou_loss=0.000117376, worst=0.010515983, IoUloss>0.01=1
+hospital: trigger=2/2, median_observed_iou_loss=0.017587977, worst=0.031462906, IoUloss>0.01=1
+hpx_001: stop=d44, obsIoU=0.366621 -> final=0.398084, loss=0.031463
+hpx_002: stop=d44, obsIoU=0.373507 -> final=0.377220, loss=0.003713
+=== hpx_001 observed-only trajectory d36..d51 ===
+d 36: observed_iou=0.341466, known_fraction=16.909%
+d 37: observed_iou=0.343811, known_fraction=16.941%
+d 38: observed_iou=0.352986, known_fraction=16.954%
+d 39: observed_iou=0.354856, known_fraction=16.983%
+d 40: observed_iou=0.354856, known_fraction=16.983%
+d 41: observed_iou=0.362974, known_fraction=17.019%
+d 42: observed_iou=0.362974, known_fraction=17.019%
+d 43: observed_iou=0.366833, known_fraction=17.089%
+d 44: observed_iou=0.366621, known_fraction=17.091%
+d 45: observed_iou=0.369641, known_fraction=17.101%
+d 46: observed_iou=0.369641, known_fraction=17.101%
+d 47: observed_iou=0.382593, known_fraction=17.120%
+d 48: observed_iou=0.382476, known_fraction=17.120%
+d 49: observed_iou=0.399971, known_fraction=17.131%
+d 50: observed_iou=0.399971, known_fraction=17.131%
+d 51: observed_iou=0.398084, known_fraction=17.135%
+Interpretation: if reconstructed-IoU loss is large but observed-only IoU loss is small, the apparent failure is mainly prediction-reference instability. If observed-only loss is also large, the stop truly misses structural observations.
