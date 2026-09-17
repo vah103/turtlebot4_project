@@ -1,0 +1,27 @@
+# HISTORICAL RECOVERED LOG
+# source_machine: com1
+# source_path: ~/turtlebot4_project
+# source_date: 2026-09-17
+# recovered_via: user-provided terminal transcript in ChatGPT
+# recomputed: false
+# data_class: development/tuning evidence
+# command:
+# git pull
+# python3 mapex_lab/scripts/inspect_way2_mpx009_quality_trajectory.py
+
+=== mpx_009 quality trajectory ===
+decision   R_t    guard(U/m)  cand  obsIoU   obs_loss   recIoU   rec_loss   time_saved  dist_saved
+d 22   0.979      24.882     7  0.117079   0.019535  0.150628   0.008690      30.31%      31.56%
+d 23   0.997      20.495     3  0.118117   0.018497  0.149934   0.009385      23.93%      24.28%
+d 24   0.291      24.710     2  0.118024   0.018589  0.149551   0.009768      22.65%      23.15%
+d 25   0.067       2.085     2  0.114436   0.022178  0.140478   0.018840      17.80%      17.46%
+d 26   0.093       2.102     2  0.126098   0.010516  0.150845   0.008473      11.68%      10.40% STOP-K2
+d 27   0.047       0.999     1  0.136886  -0.000272  0.158227   0.001092       7.08%       5.75% STOP-K3
+Final observed-only IoU: 0.136614
+Analyzer final reconstructed IoU: 0.159319
+Focused comparison:
+d26 observed loss = 0.010516
+d27 observed loss = -0.000272
+d26 -> d27 observed IoU gain = 0.010788
+One additional confirming decision is enough to move this run below the 0.01 diagnostic loss threshold.
+Interpretation: do not tune lambda or the visible-unknown threshold to this single run. Use this trace only to decide whether the remaining failure is a debounce issue or a missing completion signal.
