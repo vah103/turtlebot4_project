@@ -1,0 +1,30 @@
+# HISTORICAL RECOVERED LOG
+# source_machine: com1
+# source_path: ~/turtlebot4_project
+# source_date: 2026-09-17
+# recovered_via: user-provided terminal transcript in ChatGPT
+# recomputed: false
+# data_class: development/tuning evidence
+# command:
+# git pull
+# python3 mapex_lab/scripts/evaluate_way2_candidate_quality.py
+
+Way2 candidate-rule map-quality backtest
+=== lambda=0.4 ===
+K=2
+new_room: trigger=14/15, quality=14/14, time_saved=14.48%, distance_saved=15.44%, median_iou_loss=-0.000027631, worst_iou_loss=0.018840484, IoUloss>0.01=1, median_tu_loss=0.000000000, worst_tu_loss=0.000000000
+hospital: trigger=2/2, quality=2/2, time_saved=14.40%, distance_saved=13.67%, median_iou_loss=0.011585776, worst_iou_loss=0.028983059, IoUloss>0.01=1, median_tu_loss=0.015000000, worst_tu_loss=0.040000000
+K=3
+new_room: trigger=13/15, quality=13/13, time_saved=8.45%, distance_saved=7.07%, median_iou_loss=0.000000000, worst_iou_loss=0.008473444, IoUloss>0.01=0, median_tu_loss=0.000000000, worst_tu_loss=0.000000000
+hospital: trigger=2/2, quality=2/2, time_saved=10.87%, distance_saved=9.92%, median_iou_loss=0.015339362, worst_iou_loss=0.026695505, IoUloss>0.01=1, median_tu_loss=0.000000000, worst_tu_loss=0.020000000
+=== lambda=0.5 ===
+K=2
+new_room: trigger=14/15, quality=14/14, time_saved=14.48%, distance_saved=15.44%, median_iou_loss=0.000067469, worst_iou_loss=0.018840484, IoUloss>0.01=1, median_tu_loss=0.000000000, worst_tu_loss=0.000000000
+hospital: trigger=2/2, quality=2/2, time_saved=14.98%, distance_saved=14.15%, median_iou_loss=0.010588254, worst_iou_loss=0.026988013, IoUloss>0.01=1, median_tu_loss=0.010000000, worst_tu_loss=0.040000000
+K=3
+new_room: trigger=13/15, quality=13/13, time_saved=8.45%, distance_saved=7.07%, median_iou_loss=-0.000031958, worst_iou_loss=0.008473444, IoUloss>0.01=0, median_tu_loss=0.000000000, worst_tu_loss=0.000000000
+hospital: trigger=2/2, quality=2/2, time_saved=12.13%, distance_saved=11.22%, median_iou_loss=0.016483139, worst_iou_loss=0.028983059, IoUloss>0.01=1, median_tu_loss=0.005000000, worst_tu_loss=0.020000000
+Wrote /home/com1/turtlebot4_project/mapex_lab/experiments/mapex/way2_candidate_quality_runs.csv
+Wrote /home/com1/turtlebot4_project/mapex_lab/experiments/mapex/way2_candidate_quality_environments.csv
+Wrote /home/com1/turtlebot4_project/mapex_lab/experiments/mapex/way2_candidate_quality.json
+Caveat: IoU loss is relative to the analyzer's last-decision reconstructed reference, not necessarily the actual final observed SLAM map.
