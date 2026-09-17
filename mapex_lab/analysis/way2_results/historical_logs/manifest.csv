@@ -5,3 +5,4 @@ file,source_machine,source_date,recovered_via,recomputed,data_class,scope,status
 2026-09-17_analyze_way2_lambda.log,com1,2026-09-17,user-provided terminal transcript in ChatGPT,false,development/tuning evidence,"mpx_001-mpx_015 + hpx_001-hpx_002",recovered
 2026-09-17_inspect_way2_lambda_focus.log,com1,2026-09-17,user-provided terminal transcript in ChatGPT,false,development/tuning evidence,"lambda=0.4/0.5 focus over mpx_001-mpx_015 + hpx_001-hpx_002",recovered
 2026-09-17_inspect_way2_rebounds.log,com1,2026-09-17,user-provided terminal transcript in ChatGPT,false,development/tuning evidence,"rebound cases mpx_004 + mpx_012 + hpx_002 at lambda=0.4/0.5 K=2",recovered
+2026-09-17_compare_way2_guard_k.log,com1,2026-09-17,user-provided terminal transcript in ChatGPT,false,development/tuning evidence,"fixed-K comparison K=2/3/4 at lambda=0.4/0.5 over mpx_001-mpx_015 + hpx_001-hpx_002",recovered
