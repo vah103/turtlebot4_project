@@ -142,7 +142,13 @@ def main():
     runs = [resolve_run(root, x) for x in args.runs]
 
     # Reuse the observed-only audit implementation to obtain per-decision observed IoU.
-    observed = {run.name: obsq.analyze_observed_run(run) for run in runs}
+    observed = {}
+    for run in runs:
+        quality = obsq.decision_quality(run, root)
+        observed[run.name] = {
+            "by_decision": {row["decision_id"]: row for row in quality},
+            "final_observed_iou": quality[-1]["observed_iou"] if quality else math.nan,
+        }
 
     all_results = []
     for lam in args.lambdas:
@@ -170,7 +176,7 @@ def main():
                         row["reconstructed_iou_loss"] = ffloat(early.get("iou_loss_vs_final"))
                     obs_run = observed[run.name]
                     stop = obs_run["by_decision"].get(did)
-                    if stop is not None:
+                    if stop is not None and math.isfinite(obs_run["final_observed_iou"]):
                         row["observed_iou_loss"] = obs_run["final_observed_iou"] - stop["observed_iou"]
                 all_results.append(row)
 
