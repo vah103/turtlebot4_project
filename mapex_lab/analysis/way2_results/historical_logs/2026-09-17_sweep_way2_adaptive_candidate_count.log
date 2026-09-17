@@ -1,0 +1,76 @@
+# HISTORICAL RECOVERED LOG
+# source_machine: com1
+# source_path: ~/turtlebot4_project
+# source_date: 2026-09-17
+# recovered_via: user-provided terminal transcript in ChatGPT
+# recomputed: false
+# data_class: development/tuning evidence
+# command:
+# git pull
+# python3 mapex_lab/scripts/sweep_way2_adaptive_candidate_count.py
+
+Way2 adaptive candidate-count sensitivity
+Rule: after two consecutive base-valid decisions, stop when candidate_count<=cutoff; otherwise require a third confirmation.
+=== lambda=0.3, guard_threshold=10 ===
+cutoff=0 (fixed K=3 equivalent)
+new_room: trigger=9/15, bad=0, worst=0.001605, median_loss=-0.000186, time_saved=8.21%, distance_saved=6.29%
+hospital: trigger=1/2, bad=0, worst=0.003713, median_loss=0.003713, time_saved=5.33%, distance_saved=4.18%
+mpx_009: d27 cand=1 loss=-0.000272 time=7.08% dist=5.75%
+hpx_001: no stop
+hpx_002: d44 cand=1 loss=0.003713 time=5.33% dist=4.18%
+cutoff=1
+new_room: trigger=11/15, bad=0, worst=0.001605, median_loss=-0.000186, time_saved=8.21%, distance_saved=6.29%
+hospital: trigger=2/2, bad=0, worst=0.003713, median_loss=0.001857, time_saved=3.38%, distance_saved=2.09%
+mpx_009: d27 cand=1 loss=-0.000272 time=7.08% dist=5.75%
+hpx_001: d51 cand=1 loss=0.000000 time=1.44% dist=0.00%
+hpx_002: d44 cand=1 loss=0.003713 time=5.33% dist=4.18%
+cutoff=2
+new_room: trigger=11/15, bad=1, worst=0.010516, median_loss=0.000117, time_saved=10.98%, distance_saved=10.40%
+hospital: trigger=2/2, bad=0, worst=0.000000, median_loss=-0.004374, time_saved=5.65%, distance_saved=4.54%
+mpx_009: d26 cand=2 loss=0.010516 time=11.68% dist=10.40%
+hpx_001: d51 cand=1 loss=0.000000 time=1.44% dist=0.00%
+hpx_002: d43 cand=2 loss=-0.008748 time=9.86% dist=9.08%
+cutoff=3
+new_room: trigger=11/15, bad=1, worst=0.010516, median_loss=0.001605, time_saved=11.68%, distance_saved=10.40%
+hospital: trigger=2/2, bad=0, worst=0.000000, median_loss=-0.004374, time_saved=5.65%, distance_saved=4.54%
+mpx_009: d26 cand=2 loss=0.010516 time=11.68% dist=10.40%
+hpx_001: d51 cand=1 loss=0.000000 time=1.44% dist=0.00%
+hpx_002: d43 cand=2 loss=-0.008748 time=9.86% dist=9.08%
+cutoff=999 (fixed K=2 equivalent)
+new_room: trigger=11/15, bad=1, worst=0.010516, median_loss=0.001605, time_saved=11.68%, distance_saved=10.40%
+hospital: trigger=2/2, bad=0, worst=0.000000, median_loss=-0.004374, time_saved=5.65%, distance_saved=4.54%
+mpx_009: d26 cand=2 loss=0.010516 time=11.68% dist=10.40%
+hpx_001: d51 cand=1 loss=0.000000 time=1.44% dist=0.00%
+hpx_002: d43 cand=2 loss=-0.008748 time=9.86% dist=9.08%
+=== lambda=0.4, guard_threshold=10 ===
+cutoff=0 (fixed K=3 equivalent)
+new_room: trigger=9/15, bad=0, worst=0.003416, median_loss=0.000000, time_saved=8.45%, distance_saved=7.07%
+hospital: trigger=1/2, bad=0, worst=0.003713, median_loss=0.003713, time_saved=5.33%, distance_saved=4.18%
+mpx_009: d27 cand=1 loss=-0.000272 time=7.08% dist=5.75%
+hpx_001: no stop
+hpx_002: d44 cand=1 loss=0.003713 time=5.33% dist=4.18%
+cutoff=1
+new_room: trigger=11/15, bad=0, worst=0.003416, median_loss=0.000000, time_saved=8.45%, distance_saved=7.07%
+hospital: trigger=2/2, bad=0, worst=0.003713, median_loss=0.001857, time_saved=3.38%, distance_saved=2.09%
+mpx_009: d27 cand=1 loss=-0.000272 time=7.08% dist=5.75%
+hpx_001: d51 cand=1 loss=0.000000 time=1.44% dist=0.00%
+hpx_002: d44 cand=1 loss=0.003713 time=5.33% dist=4.18%
+cutoff=2
+new_room: trigger=11/15, bad=1, worst=0.010516, median_loss=0.000117, time_saved=10.98%, distance_saved=10.40%
+hospital: trigger=2/2, bad=0, worst=0.000000, median_loss=-0.004374, time_saved=5.65%, distance_saved=4.54%
+mpx_009: d26 cand=2 loss=0.010516 time=11.68% dist=10.40%
+hpx_001: d51 cand=1 loss=0.000000 time=1.44% dist=0.00%
+hpx_002: d43 cand=2 loss=-0.008748 time=9.86% dist=9.08%
+cutoff=3
+new_room: trigger=11/15, bad=1, worst=0.010516, median_loss=0.001605, time_saved=13.33%, distance_saved=11.31%
+hospital: trigger=2/2, bad=0, worst=0.000000, median_loss=-0.004374, time_saved=5.65%, distance_saved=4.54%
+mpx_009: d26 cand=2 loss=0.010516 time=11.68% dist=10.40%
+hpx_001: d51 cand=1 loss=0.000000 time=1.44% dist=0.00%
+hpx_002: d43 cand=2 loss=-0.008748 time=9.86% dist=9.08%
+cutoff=999 (fixed K=2 equivalent)
+new_room: trigger=11/15, bad=1, worst=0.010516, median_loss=0.001605, time_saved=13.33%, distance_saved=11.31%
+hospital: trigger=2/2, bad=0, worst=0.000000, median_loss=-0.004374, time_saved=5.65%, distance_saved=4.54%
+mpx_009: d26 cand=2 loss=0.010516 time=11.68% dist=10.40%
+hpx_001: d51 cand=1 loss=0.000000 time=1.44% dist=0.00%
+hpx_002: d43 cand=2 loss=-0.008748 time=9.86% dist=9.08%
+Interpretation: cutoff=1 is credible only if nearby cutoffs show a sensible trade-off rather than a sharp one-off improvement. Do not freeze the cutoff from the 17 development runs alone.
