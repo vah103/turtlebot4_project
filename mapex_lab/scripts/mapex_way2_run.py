@@ -9,6 +9,7 @@ policy decisions through ``MapExWay2Explorer.exploration_step``.
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import time
 from pathlib import Path
@@ -31,6 +32,33 @@ WAY2_RULE_METADATA = {
     "rule_frozen": True,
 }
 
+WAY2_CHECK_FIELDS = [
+    "decision_id",
+    "mapex_policy_decision_id",
+    "sim_time_s",
+    "r_t",
+    "r_threshold",
+    "u_t_cells_per_m",
+    "u_threshold_cells_per_m",
+    "candidate_count",
+    "base_valid",
+    "valid_count",
+    "action",
+    "should_stop",
+    "r_argmax_x",
+    "r_argmax_y",
+    "r_argmax_distance_m",
+    "r_argmax_information_gain",
+    "r_argmax_score",
+    "r_argmax_visible_unknown_cells",
+    "u_argmax_x",
+    "u_argmax_y",
+    "u_argmax_distance_m",
+    "u_argmax_information_gain",
+    "u_argmax_score",
+    "u_argmax_visible_unknown_cells",
+]
+
 
 class MapExWay2Run(MapExRun):
     """MapEx recorder with the frozen Way2 policy inserted before next-goal issue."""
@@ -50,6 +78,7 @@ class MapExWay2Run(MapExRun):
         self.way2_valid_count = 0
         self._way2_last_selectable_execution_candidates = []
         self._way2_last_metrics = None
+        self._way2_history: list[dict] = []
         super().__init__(
             run_id,
             odom_topic,
@@ -73,6 +102,8 @@ class MapExWay2Run(MapExRun):
                 "canonical_policy": "mapex_way2.py",
                 "baseline_policy": "mapex.py",
                 "way2_rule": dict(WAY2_RULE_METADATA),
+                "way2_checks_file": "way2_checks.csv",
+                "way2_checks_write_semantics": "buffered_in_memory_written_at_finalize",
             }
         )
         scripts_dir = Path(__file__).resolve().parent
@@ -101,7 +132,68 @@ class MapExWay2Run(MapExRun):
             selectable_evaluations,
         )
         self._way2_last_metrics = dict(metrics)
+
+        # Keep the Way2 audit trail in memory during the experiment so recording
+        # never adds per-decision disk I/O to the benchmark critical path. The two
+        # argmax candidates make later visualization/replay self-contained: one
+        # explains R_t and the other explains U_t.
+        r_argmax = max(
+            selectable_evaluations,
+            key=lambda candidate: float(candidate["score"]),
+        )
+        u_argmax = max(
+            selectable_evaluations,
+            key=self._way2_u_value,
+        )
+        sim_time_s = (
+            float(self.compute_sim_t0)
+            if self.compute_sim_t0 is not None
+            else float(self.now_s())
+        )
+        self._way2_history.append(
+            {
+                "decision_id": int(self.decision_id),
+                "mapex_policy_decision_id": int(self.mapex_decision_id),
+                "sim_time_s": sim_time_s,
+                "r_t": float(metrics["r_t"]),
+                "r_threshold": float(mapex_way2.WAY2_R_THRESHOLD),
+                "u_t_cells_per_m": float(metrics["u_t_cells_per_m"]),
+                "u_threshold_cells_per_m": float(
+                    mapex_way2.WAY2_U_THRESHOLD_CELLS_PER_M
+                ),
+                "candidate_count": int(metrics["candidate_count"]),
+                "base_valid": bool(metrics["base_valid"]),
+                "valid_count": int(metrics["valid_count"]),
+                "action": str(metrics["action"]),
+                "should_stop": bool(should_stop),
+                "r_argmax_x": float(r_argmax["x"]),
+                "r_argmax_y": float(r_argmax["y"]),
+                "r_argmax_distance_m": float(r_argmax["distance_m"]),
+                "r_argmax_information_gain": float(r_argmax["information_gain"]),
+                "r_argmax_score": float(r_argmax["score"]),
+                "r_argmax_visible_unknown_cells": int(
+                    r_argmax["visible_unknown_cells"]
+                ),
+                "u_argmax_x": float(u_argmax["x"]),
+                "u_argmax_y": float(u_argmax["y"]),
+                "u_argmax_distance_m": float(u_argmax["distance_m"]),
+                "u_argmax_information_gain": float(u_argmax["information_gain"]),
+                "u_argmax_score": float(u_argmax["score"]),
+                "u_argmax_visible_unknown_cells": int(
+                    u_argmax["visible_unknown_cells"]
+                ),
+            }
+        )
         return should_stop, metrics
+
+    def _write_way2_checks(self) -> Path:
+        """Persist buffered evaluable Way2 states once, at run finalization."""
+        path = self.run / "way2_checks.csv"
+        with path.open("w", newline="", encoding="utf-8") as stream:
+            writer = csv.DictWriter(stream, fieldnames=WAY2_CHECK_FIELDS)
+            writer.writeheader()
+            writer.writerows(self._way2_history)
+        return path
 
     def exploration_step(self):
         """Keep MapExRun instrumentation but execute the Way2 policy decision."""
@@ -175,6 +267,7 @@ class MapExWay2Run(MapExRun):
             else reason
         )
         result = super().finalize(effective_reason)
+        way2_checks_path = self._write_way2_checks()
 
         summary_path = self.run / "summary.json"
         if summary_path.is_file():
@@ -186,6 +279,8 @@ class MapExWay2Run(MapExRun):
             summary["termination_reason"] = effective_reason
             summary["way2_rule"] = dict(WAY2_RULE_METADATA)
             summary["way2_last_metrics"] = self._way2_last_metrics
+            summary["way2_checks_file"] = way2_checks_path.name
+            summary["way2_checks_count"] = len(self._way2_history)
             summary_path.write_text(
                 json.dumps(summary, indent=2, allow_nan=True),
                 encoding="utf-8",
@@ -195,6 +290,8 @@ class MapExWay2Run(MapExRun):
         self.metadata["termination_reason"] = effective_reason
         self.metadata["way2_rule"] = dict(WAY2_RULE_METADATA)
         self.metadata["way2_last_metrics"] = self._way2_last_metrics
+        self.metadata["way2_checks_file"] = way2_checks_path.name
+        self.metadata["way2_checks_count"] = len(self._way2_history)
         self._write_metadata(self.metadata)
         return result
 
