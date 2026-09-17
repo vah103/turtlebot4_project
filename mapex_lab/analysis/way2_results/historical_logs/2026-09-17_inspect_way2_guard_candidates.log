@@ -1,0 +1,77 @@
+# HISTORICAL RECOVERED LOG
+# source_machine: com1
+# source_path: ~/turtlebot4_project
+# source_date: 2026-09-17
+# recovered_via: user-provided terminal transcript in ChatGPT
+# recomputed: false
+# data_class: development/tuning evidence
+# command:
+# git pull
+# python3 mapex_lab/scripts/inspect_way2_guard_candidates.py
+
+Way2 focused visible-unknown candidate inspection
+=== Rule A: lambda=0.3, K=2, max_visible_per_m<=10 ===
+new_room:
+mpx_001: d26 R=0.078 guard=2.273 obs_loss=0.000260 rec_loss=0.003273 time=18.34% dist=18.76%
+mpx_002: d26 R=0.195 guard=5.314 obs_loss=0.001969 rec_loss=0.005382 time=17.98% dist=17.79%
+mpx_003: no stop
+mpx_004: d28 R=0.008 guard=0.619 obs_loss=0.001605 rec_loss=-0.000032 time=8.82% dist=6.29%
+mpx_005: no stop
+mpx_006: no stop
+mpx_007: d28 R=0.144 guard=3.872 obs_loss=0.002507 rec_loss=-0.000150 time=5.48% dist=4.15%
+mpx_008: no stop
+mpx_009: d26 R=0.093 guard=2.102 obs_loss=0.010516 rec_loss=0.008473 time=11.68% dist=10.40% BAD
+mpx_010: d29 R=0.291 guard=6.880 obs_loss=-0.012965 rec_loss=-0.016677 time=14.56% dist=15.74%
+mpx_011: d30 R=0.203 guard=3.734 obs_loss=0.003416 rec_loss=0.001188 time=9.58% dist=9.20%
+mpx_012: d26 R=0.141 guard=1.580 obs_loss=-0.001258 rec_loss=-0.001842 time=13.33% dist=9.18%
+mpx_013: d30 R=0.037 guard=1.036 obs_loss=-0.001864 rec_loss=-0.002275 time=10.76% dist=11.31%
+mpx_014: d28 R=0.041 guard=2.249 obs_loss=0.000117 rec_loss=0.000082 time=5.07% dist=4.09%
+mpx_015: d24 R=0.148 guard=1.740 obs_loss=0.001657 rec_loss=0.000095 time=15.52% dist=15.46%
+hospital:
+hpx_001: d51 R=0.072 guard=8.732 obs_loss=0.000000 rec_loss=0.000000 time=1.44% dist=0.00%
+hpx_002: d43 R=0.036 guard=6.687 obs_loss=-0.008748 rec_loss=-0.005812 time=9.86% dist=9.08%
+=== Rule B: lambda=0.4, K=2, max_visible_per_m<=10 ===
+new_room:
+mpx_001: d26 R=0.078 guard=2.273 obs_loss=0.000260 rec_loss=0.003273 time=18.34% dist=18.76%
+mpx_002: d26 R=0.195 guard=5.314 obs_loss=0.001969 rec_loss=0.005382 time=17.98% dist=17.79%
+mpx_003: no stop
+mpx_004: d28 R=0.008 guard=0.619 obs_loss=0.001605 rec_loss=-0.000032 time=8.82% dist=6.29%
+mpx_005: no stop
+mpx_006: no stop
+mpx_007: d28 R=0.144 guard=3.872 obs_loss=0.002507 rec_loss=-0.000150 time=5.48% dist=4.15%
+mpx_008: no stop
+mpx_009: d26 R=0.093 guard=2.102 obs_loss=0.010516 rec_loss=0.008473 time=11.68% dist=10.40% BAD
+mpx_010: d29 R=0.291 guard=6.880 obs_loss=-0.012965 rec_loss=-0.016677 time=14.56% dist=15.74%
+mpx_011: d29 R=0.209 guard=2.334 obs_loss=0.004498 rec_loss=0.000659 time=14.41% dist=15.42%
+mpx_012: d26 R=0.141 guard=1.580 obs_loss=-0.001258 rec_loss=-0.001842 time=13.33% dist=9.18%
+mpx_013: d30 R=0.037 guard=1.036 obs_loss=-0.001864 rec_loss=-0.002275 time=10.76% dist=11.31%
+mpx_014: d28 R=0.041 guard=2.249 obs_loss=0.000117 rec_loss=0.000082 time=5.07% dist=4.09%
+mpx_015: d24 R=0.148 guard=1.740 obs_loss=0.001657 rec_loss=0.000095 time=15.52% dist=15.46%
+hospital:
+hpx_001: d51 R=0.072 guard=8.732 obs_loss=0.000000 rec_loss=0.000000 time=1.44% dist=0.00%
+hpx_002: d43 R=0.036 guard=6.687 obs_loss=-0.008748 rec_loss=-0.005812 time=9.86% dist=9.08%
+=== Runs where A and B differ ===
+mpx_011: A stop=30 obs_loss=0.003416 time=9.58%; B stop=29 obs_loss=0.004498 time=14.41%
+=== Focused local trajectories ===
+mpx_009:
+d22: R=0.979, max_visible/m=24.882, max_visible=415, candidates=7
+d23: R=0.997, max_visible/m=20.495, max_visible=221, candidates=3
+d24: R=0.291, max_visible/m=24.710, max_visible=221, candidates=2
+d25: R=0.067, max_visible/m=2.085, max_visible=36, candidates=2
+d26: R=0.093, max_visible/m=2.102, max_visible=20, candidates=2 STOP-A,STOP-B
+d27: R=0.047, max_visible/m=0.999, max_visible=14, candidates=1
+hpx_001:
+d47: R=0.090, max_visible/m=12.572, max_visible=169, candidates=2
+d48: R=0.008, max_visible/m=3.297, max_visible=41, candidates=1
+d49: R=0.172, max_visible/m=21.498, max_visible=164, candidates=2
+d50: R=0.051, max_visible/m=1.303, max_visible=27, candidates=1
+d51: R=0.072, max_visible/m=8.732, max_visible=166, candidates=1 STOP-A,STOP-B
+hpx_002:
+d39: R=0.546, max_visible/m=11.382, max_visible=188, candidates=5
+d40: R=0.227, max_visible/m=8.002, max_visible=188, candidates=4
+d41: R=0.615, max_visible/m=14.434, max_visible=147, candidates=4
+d42: R=0.112, max_visible/m=6.687, max_visible=50, candidates=3
+d43: R=0.036, max_visible/m=6.687, max_visible=50, candidates=2 STOP-A,STOP-B
+d44: R=0.077, max_visible/m=6.095, max_visible=43, candidates=1
+d45: R=0.721, max_visible/m=23.934, max_visible=47, candidates=1
+Interpretation: prefer a candidate only if its extra savings come from stable earlier stops rather than additional quality failures. The single development violation near 0.01 should be inspected, not tuned away by threshold search.
