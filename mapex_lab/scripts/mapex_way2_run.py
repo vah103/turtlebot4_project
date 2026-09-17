@@ -166,7 +166,15 @@ class MapExWay2Run(MapExRun):
                 self.record_decision([], None, "NO_SELECTION")
 
     def finalize(self, reason: str):
-        result = super().finalize(reason)
+        # The runner uses the generic label ``exploration_complete`` whenever a
+        # policy sets completed=True. Preserve Way2's policy-level terminal reason
+        # so summary/metadata distinguish an early stop from baseline completion.
+        effective_reason = (
+            "way2_early_stop"
+            if self.completion_reason == "way2_early_stop"
+            else reason
+        )
+        result = super().finalize(effective_reason)
 
         summary_path = self.run / "summary.json"
         if summary_path.is_file():
@@ -175,6 +183,7 @@ class MapExWay2Run(MapExRun):
             except Exception:
                 summary = {}
             summary["method"] = "mapex_way2"
+            summary["termination_reason"] = effective_reason
             summary["way2_rule"] = dict(WAY2_RULE_METADATA)
             summary["way2_last_metrics"] = self._way2_last_metrics
             summary_path.write_text(
@@ -183,6 +192,7 @@ class MapExWay2Run(MapExRun):
             )
 
         self.metadata["method"] = "mapex_way2"
+        self.metadata["termination_reason"] = effective_reason
         self.metadata["way2_rule"] = dict(WAY2_RULE_METADATA)
         self.metadata["way2_last_metrics"] = self._way2_last_metrics
         self._write_metadata(self.metadata)
