@@ -1,0 +1,37 @@
+# HISTORICAL RECOVERED LOG
+# source_machine: com1
+# source_path: ~/turtlebot4_project
+# source_date: 2026-09-17
+# recovered_via: user-provided terminal transcript in ChatGPT
+# recomputed: false
+# data_class: development/tuning evidence
+# command:
+# python3 mapex_lab/scripts/compare_way2_gain_definitions.py \
+#   mpx_001 mpx_002 mpx_003 mpx_004 mpx_005 \
+#   mpx_006 mpx_007 mpx_008 mpx_009 mpx_010 \
+#   mpx_011 mpx_012 mpx_013 mpx_014 mpx_015 \
+#   hpx_001 hpx_002
+
+WAY2 G COMPARE: run=mpx_001, env=new_room, n=28, agree=0.214, raw[first/post/late]=33.581053/4.027312/0.178868, norm[first/post/late]=0.031710/0.014696/0.004146
+WAY2 G COMPARE: run=mpx_002, env=new_room, n=28, agree=0.321, raw[first/post/late]=33.581053/1.774730/0.216712, norm[first/post/late]=0.031710/0.021763/0.018263
+WAY2 G COMPARE: run=mpx_003, env=new_room, n=32, agree=0.312, raw[first/post/late]=33.581053/2.599640/0.921331, norm[first/post/late]=0.031710/0.025208/0.017256
+WAY2 G COMPARE: run=mpx_004, env=new_room, n=29, agree=0.379, raw[first/post/late]=33.581053/2.456449/0.232305, norm[first/post/late]=0.031710/0.014589/0.005455
+WAY2 G COMPARE: run=mpx_005, env=new_room, n=26, agree=0.308, raw[first/post/late]=33.581053/3.773595/0.548081, norm[first/post/late]=0.031710/0.014023/0.008180
+WAY2 G COMPARE: run=mpx_006, env=new_room, n=28, agree=0.250, raw[first/post/late]=33.581053/3.704902/0.314583, norm[first/post/late]=0.031710/0.023647/0.007971
+WAY2 G COMPARE: run=mpx_007, env=new_room, n=29, agree=0.310, raw[first/post/late]=33.581053/1.689786/0.471748, norm[first/post/late]=0.031710/0.020639/0.009855
+WAY2 G COMPARE: run=mpx_008, env=new_room, n=27, agree=0.185, raw[first/post/late]=33.581053/3.343907/1.067136, norm[first/post/late]=0.031710/0.020325/0.010434
+WAY2 G COMPARE: run=mpx_009, env=new_room, n=27, agree=0.296, raw[first/post/late]=33.581053/2.883721/0.290825, norm[first/post/late]=0.031710/0.017299/0.006228
+WAY2 G COMPARE: run=mpx_010, env=new_room, n=31, agree=0.290, raw[first/post/late]=33.581053/3.045267/0.500587, norm[first/post/late]=0.031710/0.018367/0.006287
+WAY2 G COMPARE: run=mpx_011, env=new_room, n=31, agree=0.161, raw[first/post/late]=33.581053/3.591394/0.660349, norm[first/post/late]=0.031710/0.016785/0.006904
+WAY2 G COMPARE: run=mpx_012, env=new_room, n=28, agree=0.429, raw[first/post/late]=33.581053/2.147547/0.667350, norm[first/post/late]=0.031710/0.027890/0.022327
+WAY2 G COMPARE: run=mpx_013, env=new_room, n=31, agree=0.226, raw[first/post/late]=33.581053/6.114235/0.346659, norm[first/post/late]=0.031710/0.020051/0.007366
+WAY2 G COMPARE: run=mpx_014, env=new_room, n=28, agree=0.250, raw[first/post/late]=33.581053/3.686696/0.585213, norm[first/post/late]=0.031710/0.019713/0.007835
+WAY2 G COMPARE: run=mpx_015, env=new_room, n=25, agree=0.320, raw[first/post/late]=33.581053/2.195651/0.148179, norm[first/post/late]=0.031710/0.013752/0.004780
+WAY2 G COMPARE: run=hpx_001, env=hospital, n=51, agree=0.314, raw[first/post/late]=348.006926/1.239204/0.154310, norm[first/post/late]=0.033582/0.010231/0.003454
+WAY2 G COMPARE: run=hpx_002, env=hospital, n=45, agree=0.356, raw[first/post/late]=348.006926/3.221880/0.580453, norm[first/post/late]=0.033582/0.013069/0.012328
+WAY2 G COMPARE ENV: env=hospital, runs=2, agree=0.335, raw[first/post/late]=348.006926/2.230542/0.367381, raw_late/mid=0.049468, norm[first/post/late]=0.033582/0.011650/0.007891, norm_late/mid=0.564811
+WAY2 G COMPARE ENV: env=new_room, runs=15, agree=0.296, raw[first/post/late]=33.581053/3.045267/0.471748, raw_late/mid=0.071786, norm[first/post/late]=0.031710/0.019713/0.007835, norm_late/mid=0.308931
+WAY2 G CROSS-ENV: metric=raw.median_post_early_ratio, values={'hospital': 2.23054193225, 'new_room': 3.0452666725}, max/min=1.3652586523796788, spread=0.36525865237967886
+WAY2 G CROSS-ENV: metric=raw.median_late_ratio, values={'hospital': 0.36738146174999997, 'new_room': 0.47174761649999997}, max/min=1.2840811679850637, spread=0.2840811679850637
+WAY2 G CROSS-ENV: metric=visible_normalized.median_post_early_ratio, values={'hospital': 0.01165014775, 'new_room': 0.019712833}, max/min=1.6920672100489027, spread=0.6920672100489026
+WAY2 G CROSS-ENV: metric=visible_normalized.median_late_ratio, values={'hospital': 0.00789101975, 'new_room': 0.007835299}, max/min=1.0071115027007904, spread=0.007111502700790362
