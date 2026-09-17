@@ -1,0 +1,57 @@
+# HISTORICAL RECOVERED LOG
+# source_machine: com1
+# source_path: ~/turtlebot4_project
+# source_date: 2026-09-17
+# recovered_via: user-provided terminal transcript in ChatGPT
+# recomputed: false
+# data_class: development/tuning evidence
+# command:
+# git pull
+# python3 mapex_lab/scripts/compare_way2_guard_smoothing.py
+
+Way2 guard comparison: K=consecutive, M=trailing mean window
+=== lambda=0.4 ===
+K=2
+new_room: trigger=14/15, median time_saved=19.1%, median distance_saved=15.4%, rebound_runs=2/14
+rebounds: mpx_004(d24, maxR=4.316), mpx_012(d26, maxR=0.902)
+hospital: trigger=2/2, median time_saved=14.4%, median distance_saved=13.7%, rebound_runs=1/2
+rebounds: hpx_002(d43, maxR=0.721)
+K=3
+new_room: trigger=13/15, median time_saved=12.5%, median distance_saved=7.1%, rebound_runs=0/13
+hospital: trigger=2/2, median time_saved=10.9%, median distance_saved=9.9%, rebound_runs=1/2
+rebounds: hpx_002(d44, maxR=0.721)
+K=4
+new_room: trigger=7/15, median time_saved=14.2%, median distance_saved=5.1%, rebound_runs=0/7
+hospital: trigger=1/2, median time_saved=16.2%, median distance_saved=15.7%, rebound_runs=0/1
+meanW=3
+new_room: trigger=14/15, median time_saved=16.4%, median distance_saved=10.7%, rebound_runs=2/14
+rebounds: mpx_004(d25, maxR=4.316), mpx_012(d27, maxR=0.646)
+hospital: trigger=2/2, median time_saved=14.5%, median distance_saved=13.7%, rebound_runs=1/2
+rebounds: hpx_002(d42, maxR=0.721)
+meanW=4
+new_room: trigger=11/15, median time_saved=15.3%, median distance_saved=8.0%, rebound_runs=0/11
+hospital: trigger=2/2, median time_saved=14.5%, median distance_saved=13.7%, rebound_runs=1/2
+rebounds: hpx_002(d42, maxR=0.721)
+=== lambda=0.5 ===
+K=2
+new_room: trigger=14/15, median time_saved=19.1%, median distance_saved=15.4%, rebound_runs=2/14
+rebounds: mpx_004(d24, maxR=4.316), mpx_012(d26, maxR=0.902)
+hospital: trigger=2/2, median time_saved=15.0%, median distance_saved=14.1%, rebound_runs=1/2
+rebounds: hpx_002(d43, maxR=0.721)
+K=3
+new_room: trigger=13/15, median time_saved=12.5%, median distance_saved=7.1%, rebound_runs=0/13
+hospital: trigger=2/2, median time_saved=12.1%, median distance_saved=11.2%, rebound_runs=1/2
+rebounds: hpx_002(d44, maxR=0.721)
+K=4
+new_room: trigger=8/15, median time_saved=14.7%, median distance_saved=4.7%, rebound_runs=0/8
+hospital: trigger=1/2, median time_saved=16.4%, median distance_saved=15.7%, rebound_runs=0/1
+meanW=3
+new_room: trigger=14/15, median time_saved=20.0%, median distance_saved=13.6%, rebound_runs=2/14
+rebounds: mpx_004(d25, maxR=4.316), mpx_012(d27, maxR=0.646)
+hospital: trigger=2/2, median time_saved=20.5%, median distance_saved=19.6%, rebound_runs=1/2
+rebounds: hpx_002(d39, maxR=0.721)
+meanW=4
+new_room: trigger=12/15, median time_saved=14.7%, median distance_saved=9.8%, rebound_runs=0/12
+hospital: trigger=2/2, median time_saved=18.1%, median distance_saved=17.3%, rebound_runs=1/2
+rebounds: hpx_002(d40, maxR=0.721)
+Interpretation: smoothing is preferable only if it reduces rebound without collapsing trigger coverage. This is development-only; do not freeze from savings alone.
