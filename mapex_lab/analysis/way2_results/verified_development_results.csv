@@ -1,0 +1,44 @@
+stage,environment,configuration,metric,value,interpretation
+replay,all,raw information_gain / euclidean distance,score_mismatch,0,offline replay reproduces recorded MapEx score
+replay,all,raw information_gain / euclidean distance,selection_mismatch,0,offline replay reproduces recorded MapEx top-1 selection
+gain_definition,all,normalized gain vs raw gain,top1_agreement_fraction,~0.30,normalized gain changes ranking too heavily so raw information_gain was kept
+cost_audit,new_room,euclidean candidate distance,candidate_coverage_percent,100.0,euclidean distance available for every historical candidate
+cost_audit,new_room,planner path selected goals,selected_goal_coverage_percent,98.1,planner path mostly available only for selected goals
+cost_audit,new_room,planner path all candidates,all_candidate_upper_bound_percent,5.5,too sparse for fair historical all-candidate replay
+cost_audit,new_room,planner/euclidean ratio,median_ratio,1.413,planner paths are longer than euclidean but historical all-candidate coverage is inadequate
+cost_audit,hospital,euclidean candidate distance,candidate_coverage_percent,100.0,euclidean distance available for every historical candidate
+cost_audit,hospital,planner path selected goals,selected_goal_coverage_percent,89.6,planner path mostly available only for selected goals
+cost_audit,hospital,planner path all candidates,all_candidate_upper_bound_percent,6.7,too sparse for fair historical all-candidate replay
+cost_audit,hospital,planner/euclidean ratio,median_ratio,1.479,planner paths are longer than euclidean but historical all-candidate coverage is inadequate
+visible_unknown_guard,hospital,"R<=0.3/0.4 and U<=10",safe_runs,2/2,visible-unknown-per-distance guard removed the Hospital structural-loss failure in development audit
+adaptive_confirmation,new_room,"R<=0.3/0.4,U<=10,fixed K=2",known_failure_run,mpx_009,one near-threshold New Room failure remained
+adaptive_confirmation,new_room,mpx_009 decision 26,observed_iou_loss,0.010516,second confirmation at d26 is slightly too early
+adaptive_confirmation,new_room,mpx_009 decision 27,observed_iou_loss,-0.000272,one additional valid decision removes the failure
+candidate_cutoff,all,cutoff=0,hospital_trigger,1/2,behaves like fixed K=3 and becomes too conservative in Hospital
+candidate_cutoff,all,cutoff=1,new_room_trigger,11/15,zero observed-IoU violations greater than 0.01 in triggered development runs
+candidate_cutoff,all,cutoff=1,hospital_trigger,2/2,preserves Hospital development trigger coverage
+candidate_cutoff,all,cutoff>=2,new_room_failure,mpx_009_d26,restores the near-threshold New Room failure
+robustness,new_room,"R=0.25,U<=10,cutoff=1",trigger,11/15,inside zero-bad local plateau
+robustness,hospital,"R=0.25,U<=10,cutoff=1",trigger,2/2,inside zero-bad local plateau
+robustness,new_room,"R=0.30,U<=10,cutoff=1",trigger,11/15,chosen frozen point
+robustness,hospital,"R=0.30,U<=10,cutoff=1",trigger,2/2,chosen frozen point
+robustness,new_room,"R=0.35,U<=10,cutoff=1",trigger,11/15,inside zero-bad local plateau
+robustness,hospital,"R=0.35,U<=10,cutoff=1",trigger,2/2,inside zero-bad local plateau
+robustness,new_room,"R=0.40,U<=10,cutoff=1",trigger,11/15,inside zero-bad local plateau
+robustness,hospital,"R=0.40,U<=10,cutoff=1",trigger,2/2,inside zero-bad local plateau
+robustness,new_room,"R=0.25,U<=12.5,cutoff=1",trigger,12/15,wider but still zero-bad development region
+robustness,new_room,"R=0.30,U<=12.5,cutoff=1",trigger,12/15,wider but still zero-bad development region
+robustness,new_room,"R=0.35,U<=12.5,cutoff=1",trigger,13/15,wider but still zero-bad development region
+robustness,new_room,"R=0.40,U<=12.5,cutoff=1",trigger,13/15,wider but still zero-bad development region
+robustness,hospital,"U<=7.5",trigger,1/2,too conservative
+robustness,hospital,"U<=15",known_failure,observed_iou_loss_0.015491,too aggressive and reintroduces hpx_001 premature stop
+frozen_backtest,new_room,"R<=0.30,U<=10,cutoff=1,adaptive 2/3 confirmation",trigger,11/15,development-only backtest
+frozen_backtest,new_room,"R<=0.30,U<=10,cutoff=1,adaptive 2/3 confirmation",bad_observed_iou_loss_runs,0/11,no triggered development run exceeded 0.01 observed-IoU loss
+frozen_backtest,new_room,"R<=0.30,U<=10,cutoff=1,adaptive 2/3 confirmation",median_time_saved_percent,8.21,development-only estimate
+frozen_backtest,new_room,"R<=0.30,U<=10,cutoff=1,adaptive 2/3 confirmation",median_distance_saved_percent,6.29,development-only estimate
+frozen_backtest,new_room,"R<=0.30,U<=10,cutoff=1,adaptive 2/3 confirmation",worst_observed_iou_loss,0.001605,development-only audit
+frozen_backtest,hospital,"R<=0.30,U<=10,cutoff=1,adaptive 2/3 confirmation",trigger,2/2,development-only backtest
+frozen_backtest,hospital,"R<=0.30,U<=10,cutoff=1,adaptive 2/3 confirmation",bad_observed_iou_loss_runs,0/2,no triggered development run exceeded 0.01 observed-IoU loss
+frozen_backtest,hospital,"R<=0.30,U<=10,cutoff=1,adaptive 2/3 confirmation",median_time_saved_percent,3.38,development-only estimate
+frozen_backtest,hospital,"R<=0.30,U<=10,cutoff=1,adaptive 2/3 confirmation",median_distance_saved_percent,2.09,development-only estimate
+frozen_backtest,hospital,"R<=0.30,U<=10,cutoff=1,adaptive 2/3 confirmation",worst_observed_iou_loss,0.003713,development-only audit
