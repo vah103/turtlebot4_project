@@ -1,0 +1,113 @@
+# HISTORICAL RECOVERED LOG
+# source_machine: com1
+# source_path: ~/turtlebot4_project
+# source_date: 2026-09-17
+# recovered_via: user-provided terminal transcript in ChatGPT
+# recomputed: false
+# data_class: development/tuning evidence
+# command:
+# git pull
+# python3 mapex_lab/scripts/inspect_way2_rebounds.py
+
+=== mpx_004 ===
+lambda=0.4, K=2
+stop: d24 R=0.202; post decisions=5; rebounds=2
+first rebound: d25 R=0.699 (+1 decisions)
+max rebound:   d26 R=4.316 excess=3.916
+last rebound:  d26 R=4.316 (+2 decisions)
+rebound decisions:
+d25: R=0.699, best_candidate=2
+d26: R=4.316, best_candidate=2
+local trajectory (±4 evaluable decisions):
+d 20: R=1.368
+d 21: R=2.531
+d 22: R=1.650
+d 23: R=0.262
+d 24: R=0.202 STOP
+d 25: R=0.699 RB
+d 26: R=4.316 RB
+d 27: R=0.115
+d 28: R=0.008
+lambda=0.5, K=2
+stop: d24 R=0.202; post decisions=5; rebounds=2
+first rebound: d25 R=0.699 (+1 decisions)
+max rebound:   d26 R=4.316 excess=3.816
+last rebound:  d26 R=4.316 (+2 decisions)
+rebound decisions:
+d25: R=0.699, best_candidate=2
+d26: R=4.316, best_candidate=2
+local trajectory (±4 evaluable decisions):
+d 20: R=1.368
+d 21: R=2.531
+d 22: R=1.650
+d 23: R=0.262
+d 24: R=0.202 STOP
+d 25: R=0.699 RB
+d 26: R=4.316 RB
+d 27: R=0.115
+d 28: R=0.008
+=== mpx_012 ===
+lambda=0.4, K=2
+stop: d26 R=0.141; post decisions=2; rebounds=2
+first rebound: d27 R=0.902 (+1 decisions)
+max rebound:   d27 R=0.902 excess=0.502
+last rebound:  d28 R=0.646 (+2 decisions)
+rebound decisions:
+d27: R=0.902, best_candidate=0
+d28: R=0.646, best_candidate=0
+local trajectory (±4 evaluable decisions):
+d 22: R=1.594
+d 23: R=0.667
+d 24: R=2.188
+d 25: R=0.130
+d 26: R=0.141 STOP
+d 27: R=0.902 RB
+d 28: R=0.646 RB
+lambda=0.5, K=2
+stop: d26 R=0.141; post decisions=2; rebounds=2
+first rebound: d27 R=0.902 (+1 decisions)
+max rebound:   d27 R=0.902 excess=0.402
+last rebound:  d28 R=0.646 (+2 decisions)
+rebound decisions:
+d27: R=0.902, best_candidate=0
+d28: R=0.646, best_candidate=0
+local trajectory (±4 evaluable decisions):
+d 22: R=1.594
+d 23: R=0.667
+d 24: R=2.188
+d 25: R=0.130
+d 26: R=0.141 STOP
+d 27: R=0.902 RB
+d 28: R=0.646 RB
+=== hpx_002 ===
+lambda=0.4, K=2
+stop: d43 R=0.036; post decisions=2; rebounds=1
+first rebound: d45 R=0.721 (+2 decisions)
+max rebound:   d45 R=0.721 excess=0.321
+last rebound:  d45 R=0.721 (+2 decisions)
+rebound decisions:
+d45: R=0.721, best_candidate=0
+local trajectory (±4 evaluable decisions):
+d 39: R=0.546
+d 40: R=0.227
+d 41: R=0.615
+d 42: R=0.112
+d 43: R=0.036 STOP
+d 44: R=0.077
+d 45: R=0.721 RB
+lambda=0.5, K=2
+stop: d43 R=0.036; post decisions=2; rebounds=1
+first rebound: d45 R=0.721 (+2 decisions)
+max rebound:   d45 R=0.721 excess=0.221
+last rebound:  d45 R=0.721 (+2 decisions)
+rebound decisions:
+d45: R=0.721, best_candidate=0
+local trajectory (±4 evaluable decisions):
+d 39: R=0.546
+d 40: R=0.227
+d 41: R=0.615
+d 42: R=0.112
+d 43: R=0.036 STOP
+d 44: R=0.077
+d 45: R=0.721 RB
+Interpretation: an immediate rebound suggests local score fluctuation; a delayed/large rebound suggests the utility sequence is genuinely non-monotonic.
