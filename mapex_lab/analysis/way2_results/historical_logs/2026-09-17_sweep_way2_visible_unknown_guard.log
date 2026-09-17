@@ -1,0 +1,53 @@
+# HISTORICAL RECOVERED LOG
+# source_machine: com1
+# source_path: ~/turtlebot4_project
+# source_date: 2026-09-17
+# recovered_via: user-provided terminal transcript in ChatGPT
+# recomputed: false
+# data_class: development/tuning evidence
+# command:
+# git pull
+# python3 mapex_lab/scripts/sweep_way2_visible_unknown_guard.py
+
+Way2 visible-unknown guard sweep
+Rule: stop after K consecutive evaluable decisions satisfying R<=lambda AND guard<=threshold.
+=== Zero observed-IoU-loss violations (>0.01) ===
+#1: lambda=0.4 K=3 max_visible<=150 | NR trigger=11/15 bad=0 time=8.2% dist=6.3% | H trigger=1/2 bad=0 time=5.3% dist=4.2% | worst_loss=0.003713
+#2: lambda=0.4 K=3 max_visible<=100 | NR trigger=10/15 bad=0 time=8.3% dist=6.7% | H trigger=1/2 bad=0 time=5.3% dist=4.2% | worst_loss=0.003713
+#3: lambda=0.4 K=3 max_visible<=125 | NR trigger=10/15 bad=0 time=8.3% dist=6.7% | H trigger=1/2 bad=0 time=5.3% dist=4.2% | worst_loss=0.003713
+#4: lambda=0.3 K=3 max_visible<=150 | NR trigger=10/15 bad=0 time=7.8% dist=6.3% | H trigger=1/2 bad=0 time=5.3% dist=4.2% | worst_loss=0.003713
+#5: lambda=0.4 K=3 max_visible_per_m<=10 | NR trigger=9/15 bad=0 time=8.5% dist=7.1% | H trigger=1/2 bad=0 time=5.3% dist=4.2% | worst_loss=0.003713
+#6: lambda=0.3 K=3 max_visible<=75 | NR trigger=9/15 bad=0 time=8.2% dist=6.3% | H trigger=1/2 bad=0 time=5.3% dist=4.2% | worst_loss=0.003713
+#7: lambda=0.3 K=3 max_visible<=100 | NR trigger=9/15 bad=0 time=8.2% dist=6.3% | H trigger=1/2 bad=0 time=5.3% dist=4.2% | worst_loss=0.003713
+#8: lambda=0.3 K=3 max_visible<=125 | NR trigger=9/15 bad=0 time=8.2% dist=6.3% | H trigger=1/2 bad=0 time=5.3% dist=4.2% | worst_loss=0.003713
+#9: lambda=0.3 K=3 max_visible_per_m<=10 | NR trigger=9/15 bad=0 time=8.2% dist=6.3% | H trigger=1/2 bad=0 time=5.3% dist=4.2% | worst_loss=0.003713
+#10: lambda=0.4 K=3 max_visible<=75 | NR trigger=9/15 bad=0 time=8.2% dist=6.3% | H trigger=1/2 bad=0 time=5.3% dist=4.2% | worst_loss=0.003713
+#11: lambda=0.3 K=3 max_visible_per_m<=7.5 | NR trigger=9/15 bad=0 time=7.1% dist=5.8% | H trigger=1/2 bad=0 time=5.3% dist=4.2% | worst_loss=0.003713
+#12: lambda=0.4 K=3 max_visible_per_m<=7.5 | NR trigger=9/15 bad=0 time=7.1% dist=5.8% | H trigger=1/2 bad=0 time=5.3% dist=4.2% | worst_loss=0.003713
+#13: lambda=0.2 K=3 max_visible<=75 | NR trigger=5/15 bad=0 time=8.2% dist=6.3% | H trigger=1/2 bad=0 time=5.3% dist=4.2% | worst_loss=0.003713
+#14: lambda=0.2 K=3 max_visible<=100 | NR trigger=5/15 bad=0 time=8.2% dist=6.3% | H trigger=1/2 bad=0 time=5.3% dist=4.2% | worst_loss=0.003713
+#15: lambda=0.2 K=3 max_visible<=125 | NR trigger=5/15 bad=0 time=8.2% dist=6.3% | H trigger=1/2 bad=0 time=5.3% dist=4.2% | worst_loss=0.003713
+=== Cross-environment coverage candidates (Hospital 2/2, New Room >=10/15) ===
+#1: lambda=0.3 K=2 max_visible_per_m<=10 | NR trigger=11/15 bad=1 time=11.7% dist=10.4% | H trigger=2/2 bad=0 time=5.7% dist=4.5% | worst_loss=0.010516
+#2: lambda=0.4 K=2 max_visible_per_m<=10 | NR trigger=11/15 bad=1 time=13.3% dist=11.3% | H trigger=2/2 bad=0 time=5.7% dist=4.5% | worst_loss=0.010516
+#3: lambda=0.2 K=2 max_visible_per_m<=10 | NR trigger=10/15 bad=1 time=10.3% dist=7.7% | H trigger=2/2 bad=0 time=5.7% dist=4.5% | worst_loss=0.010516
+#4: lambda=0.4 K=3 max_visible_per_m<=20 | NR trigger=13/15 bad=0 time=7.8% dist=6.3% | H trigger=2/2 bad=1 time=8.9% dist=7.8% | worst_loss=0.015491
+#5: lambda=0.4 K=3 max_visible_per_m<=15 | NR trigger=12/15 bad=0 time=8.0% dist=6.6% | H trigger=2/2 bad=1 time=8.9% dist=7.8% | worst_loss=0.015491
+#6: lambda=0.3 K=3 max_visible_per_m<=15 | NR trigger=11/15 bad=0 time=7.3% dist=6.3% | H trigger=2/2 bad=1 time=8.9% dist=7.8% | worst_loss=0.015491
+#7: lambda=0.3 K=3 max_visible_per_m<=20 | NR trigger=11/15 bad=0 time=7.3% dist=6.3% | H trigger=2/2 bad=1 time=8.9% dist=7.8% | worst_loss=0.015491
+#8: lambda=0.4 K=3 max_visible<=175 | NR trigger=11/15 bad=0 time=8.2% dist=6.3% | H trigger=2/2 bad=1 time=10.9% dist=9.9% | worst_loss=0.028442
+#9: lambda=0.4 K=3 max_visible<=200 | NR trigger=11/15 bad=0 time=8.2% dist=6.3% | H trigger=2/2 bad=1 time=10.9% dist=9.9% | worst_loss=0.028442
+#10: lambda=0.3 K=3 max_visible<=175 | NR trigger=10/15 bad=0 time=7.8% dist=6.3% | H trigger=2/2 bad=1 time=10.7% dist=9.9% | worst_loss=0.028442
+#11: lambda=0.3 K=3 max_visible<=200 | NR trigger=10/15 bad=0 time=7.8% dist=6.3% | H trigger=2/2 bad=1 time=10.7% dist=9.9% | worst_loss=0.028442
+#12: lambda=0.4 K=2 max_visible_per_m<=15 | NR trigger=14/15 bad=1 time=12.4% dist=11.3% | H trigger=2/2 bad=1 time=13.0% dist=12.4% | worst_loss=0.028442
+#13: lambda=0.3 K=2 max_visible_per_m<=15 | NR trigger=13/15 bad=1 time=11.7% dist=10.4% | H trigger=2/2 bad=1 time=13.0% dist=12.4% | worst_loss=0.028442
+#14: lambda=0.2 K=2 max_visible<=175 | NR trigger=10/15 bad=1 time=10.3% dist=7.7% | H trigger=2/2 bad=1 time=13.1% dist=12.4% | worst_loss=0.028442
+#15: lambda=0.2 K=2 max_visible<=200 | NR trigger=10/15 bad=1 time=10.3% dist=7.7% | H trigger=2/2 bad=1 time=13.1% dist=12.4% | worst_loss=0.028442
+=== hpx_001 guarded stop examples ===
+lambda=0.4 K=2 max_visible<=30: no stop
+lambda=0.4 K=2 max_visible<=50: no stop
+lambda=0.4 K=2 max_visible<=100: no stop
+lambda=0.4 K=2 max_visible_per_m<=2: no stop
+lambda=0.4 K=2 max_visible_per_m<=3: no stop
+lambda=0.4 K=2 max_visible_per_m<=5: no stop
+Interpretation: a useful completion guard should reduce unsafe stops without collapsing cross-environment trigger coverage. Treat every result here as development-only; do not freeze a threshold until the trade-off is reviewed.
