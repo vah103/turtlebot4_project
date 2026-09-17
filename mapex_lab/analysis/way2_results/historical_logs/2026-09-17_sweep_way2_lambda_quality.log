@@ -1,0 +1,94 @@
+# HISTORICAL RECOVERED LOG
+# source_machine: com1
+# source_path: ~/turtlebot4_project
+# source_date: 2026-09-17
+# recovered_via: user-provided terminal transcript in ChatGPT
+# recomputed: false
+# data_class: development/tuning evidence
+# command:
+# git pull
+# python3 mapex_lab/scripts/sweep_way2_lambda_quality.py
+
+Way2 low-lambda quality sweep
+=== lambda=0.05 ===
+K=2
+new_room: trigger=3/15, time_saved=5.86%, distance_saved=5.05%, median_obs_loss=0.000343, worst_obs_loss=0.001605, obs>0.01=0, median_rec_loss=0.000082, worst_rec_loss=0.000298, rec>0.01=0
+hospital: trigger=0/2, time_saved=n/a, distance_saved=n/a, median_obs_loss=nan, worst_obs_loss=nan, obs>0.01=0, median_rec_loss=nan, worst_rec_loss=nan, rec>0.01=0
+hpx_001: no stop
+K=3
+new_room: trigger=0/15, time_saved=n/a, distance_saved=n/a, median_obs_loss=nan, worst_obs_loss=nan, obs>0.01=0, median_rec_loss=nan, worst_rec_loss=nan, rec>0.01=0
+hospital: trigger=0/2, time_saved=n/a, distance_saved=n/a, median_obs_loss=nan, worst_obs_loss=nan, obs>0.01=0, median_rec_loss=nan, worst_rec_loss=nan, rec>0.01=0
+hpx_001: no stop
+=== lambda=0.075 ===
+K=2
+new_room: trigger=3/15, time_saved=5.86%, distance_saved=5.05%, median_obs_loss=0.000343, worst_obs_loss=0.001605, obs>0.01=0, median_rec_loss=0.000082, worst_rec_loss=0.000298, rec>0.01=0
+hospital: trigger=1/2, time_saved=1.44%, distance_saved=0.00%, median_obs_loss=0.000000, worst_obs_loss=0.000000, obs>0.01=0, median_rec_loss=0.000000, worst_rec_loss=0.000000, rec>0.01=0
+hpx_001: stop=d51, obs_loss=0.000000, rec_loss=0.000000
+K=3
+new_room: trigger=0/15, time_saved=n/a, distance_saved=n/a, median_obs_loss=nan, worst_obs_loss=nan, obs>0.01=0, median_rec_loss=nan, worst_rec_loss=nan, rec>0.01=0
+hospital: trigger=0/2, time_saved=n/a, distance_saved=n/a, median_obs_loss=nan, worst_obs_loss=nan, obs>0.01=0, median_rec_loss=nan, worst_rec_loss=nan, rec>0.01=0
+hpx_001: no stop
+=== lambda=0.1 ===
+K=2
+new_room: trigger=4/15, time_saved=9.72%, distance_saved=8.35%, median_obs_loss=0.000861, worst_obs_loss=0.010516, obs>0.01=1, median_rec_loss=0.000203, worst_rec_loss=0.008473, rec>0.01=0
+hospital: trigger=2/2, time_saved=8.74%, distance_saved=7.83%, median_obs_loss=0.009661, worst_obs_loss=0.015608, obs>0.01=1, median_rec_loss=0.010013, worst_rec_loss=0.016043, rec>0.01=1
+hpx_001: stop=d48, obs_loss=0.015608, rec_loss=0.016043
+K=3
+new_room: trigger=2/15, time_saved=6.47%, distance_saved=5.40%, median_obs_loss=0.000035, worst_obs_loss=0.000343, obs>0.01=0, median_rec_loss=0.000695, worst_rec_loss=0.001092, rec>0.01=0
+hospital: trigger=0/2, time_saved=n/a, distance_saved=n/a, median_obs_loss=nan, worst_obs_loss=nan, obs>0.01=0, median_rec_loss=nan, worst_rec_loss=nan, rec>0.01=0
+hpx_001: no stop
+=== lambda=0.15 ===
+K=2
+new_room: trigger=9/15, time_saved=10.24%, distance_saved=9.18%, median_obs_loss=0.001232, worst_obs_loss=0.010516, obs>0.01=1, median_rec_loss=-0.000032, worst_rec_loss=0.008473, rec>0.01=0
+hospital: trigger=2/2, time_saved=11.13%, distance_saved=10.29%, median_obs_loss=0.003372, worst_obs_loss=0.015491, obs>0.01=1, median_rec_loss=0.005057, worst_rec_loss=0.015926, rec>0.01=1
+hpx_001: stop=d47, obs_loss=0.015491, rec_loss=0.015926
+K=3
+new_room: trigger=6/15, time_saved=6.47%, distance_saved=5.40%, median_obs_loss=0.000197, worst_obs_loss=0.001605, obs>0.01=0, median_rec_loss=0.000041, worst_rec_loss=0.001092, rec>0.01=0
+hospital: trigger=2/2, time_saved=8.74%, distance_saved=7.83%, median_obs_loss=0.009661, worst_obs_loss=0.015608, obs>0.01=1, median_rec_loss=0.010013, worst_rec_loss=0.016043, rec>0.01=1
+hpx_001: stop=d48, obs_loss=0.015608, rec_loss=0.016043
+=== lambda=0.2 ===
+K=2
+new_room: trigger=10/15, time_saved=10.96%, distance_saved=9.79%, median_obs_loss=0.001419, worst_obs_loss=0.010516, obs>0.01=1, median_rec_loss=0.000031, worst_rec_loss=0.008473, rec>0.01=0
+hospital: trigger=2/2, time_saved=13.14%, distance_saved=12.37%, median_obs_loss=0.009847, worst_obs_loss=0.028442, obs>0.01=1, median_rec_loss=0.010442, worst_rec_loss=0.026696, rec>0.01=1
+hpx_001: stop=d45, obs_loss=0.028442, rec_loss=0.026696
+K=3
+new_room: trigger=6/15, time_saved=7.65%, distance_saved=6.02%, median_obs_loss=0.000059, worst_obs_loss=0.001605, obs>0.01=0, median_rec_loss=0.000041, worst_rec_loss=0.001092, rec>0.01=0
+hospital: trigger=2/2, time_saved=10.75%, distance_saved=9.92%, median_obs_loss=0.016078, worst_obs_loss=0.028442, obs>0.01=1, median_rec_loss=0.015339, worst_rec_loss=0.026696, rec>0.01=1
+hpx_001: stop=d46, obs_loss=0.028442, rec_loss=0.026696
+=== lambda=0.25 ===
+K=2
+new_room: trigger=12/15, time_saved=9.91%, distance_saved=9.19%, median_obs_loss=0.001419, worst_obs_loss=0.010516, obs>0.01=1, median_rec_loss=0.000031, worst_rec_loss=0.008473, rec>0.01=0
+hospital: trigger=2/2, time_saved=13.14%, distance_saved=12.37%, median_obs_loss=0.009847, worst_obs_loss=0.028442, obs>0.01=1, median_rec_loss=0.010442, worst_rec_loss=0.026696, rec>0.01=1
+hpx_001: stop=d45, obs_loss=0.028442, rec_loss=0.026696
+K=3
+new_room: trigger=8/15, time_saved=7.65%, distance_saved=6.02%, median_obs_loss=-0.000093, worst_obs_loss=0.001605, obs>0.01=0, median_rec_loss=0.000041, worst_rec_loss=0.004582, rec>0.01=0
+hospital: trigger=2/2, time_saved=10.75%, distance_saved=9.92%, median_obs_loss=0.016078, worst_obs_loss=0.028442, obs>0.01=1, median_rec_loss=0.015339, worst_rec_loss=0.026696, rec>0.01=1
+hpx_001: stop=d46, obs_loss=0.028442, rec_loss=0.026696
+=== lambda=0.3 ===
+K=2
+new_room: trigger=13/15, time_saved=14.56%, distance_saved=14.73%, median_obs_loss=0.001376, worst_obs_loss=0.022178, obs>0.01=2, median_rec_loss=0.000095, worst_rec_loss=0.018840, rec>0.01=1
+hospital: trigger=2/2, time_saved=13.14%, distance_saved=12.37%, median_obs_loss=0.009847, worst_obs_loss=0.028442, obs>0.01=1, median_rec_loss=0.010442, worst_rec_loss=0.026696, rec>0.01=1
+hpx_001: stop=d45, obs_loss=0.028442, rec_loss=0.026696
+K=3
+new_room: trigger=11/15, time_saved=8.45%, distance_saved=7.07%, median_obs_loss=0.000000, worst_obs_loss=0.010516, obs>0.01=1, median_rec_loss=0.000000, worst_rec_loss=0.008473, rec>0.01=0
+hospital: trigger=2/2, time_saved=10.75%, distance_saved=9.92%, median_obs_loss=0.016078, worst_obs_loss=0.028442, obs>0.01=1, median_rec_loss=0.015339, worst_rec_loss=0.026696, rec>0.01=1
+hpx_001: stop=d46, obs_loss=0.028442, rec_loss=0.026696
+=== lambda=0.35 ===
+K=2
+new_room: trigger=14/15, time_saved=13.95%, distance_saved=13.57%, median_obs_loss=0.001304, worst_obs_loss=0.022178, obs>0.01=2, median_rec_loss=-0.000028, worst_rec_loss=0.018840, rec>0.01=1
+hospital: trigger=2/2, time_saved=13.14%, distance_saved=12.37%, median_obs_loss=0.009847, worst_obs_loss=0.028442, obs>0.01=1, median_rec_loss=0.010442, worst_rec_loss=0.026696, rec>0.01=1
+hpx_001: stop=d45, obs_loss=0.028442, rec_loss=0.026696
+K=3
+new_room: trigger=13/15, time_saved=8.21%, distance_saved=6.85%, median_obs_loss=-0.000186, worst_obs_loss=0.010516, obs>0.01=1, median_rec_loss=-0.000032, worst_rec_loss=0.008473, rec>0.01=0
+hospital: trigger=2/2, time_saved=10.75%, distance_saved=9.92%, median_obs_loss=0.016078, worst_obs_loss=0.028442, obs>0.01=1, median_rec_loss=0.015339, worst_rec_loss=0.026696, rec>0.01=1
+hpx_001: stop=d46, obs_loss=0.028442, rec_loss=0.026696
+=== lambda=0.4 ===
+K=2
+new_room: trigger=14/15, time_saved=14.48%, distance_saved=15.44%, median_obs_loss=0.001517, worst_obs_loss=0.022178, obs>0.01=2, median_rec_loss=-0.000028, worst_rec_loss=0.018840, rec>0.01=1
+hospital: trigger=2/2, time_saved=14.40%, distance_saved=13.67%, median_obs_loss=0.011358, worst_obs_loss=0.031463, obs>0.01=1, median_rec_loss=0.011586, worst_rec_loss=0.028983, rec>0.01=1
+hpx_001: stop=d44, obs_loss=0.031463, rec_loss=0.028983
+K=3
+new_room: trigger=13/15, time_saved=8.45%, distance_saved=7.07%, median_obs_loss=0.000000, worst_obs_loss=0.010516, obs>0.01=1, median_rec_loss=0.000000, worst_rec_loss=0.008473, rec>0.01=0
+hospital: trigger=2/2, time_saved=10.87%, distance_saved=9.92%, median_obs_loss=0.016078, worst_obs_loss=0.028442, obs>0.01=1, median_rec_loss=0.015339, worst_rec_loss=0.026696, rec>0.01=1
+hpx_001: stop=d45, obs_loss=0.028442, rec_loss=0.026696
+Interpretation: look for a single lambda/K with cross-environment trigger coverage and no systematic >0.01 observed-IoU loss. Development-only; do not freeze from these runs alone.
