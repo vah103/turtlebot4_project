@@ -8,7 +8,8 @@ The active thesis direction is **Way2: frontier-utility-based early stopping for
 
 - Way1 is closed.
 - Way2 candidate rule is now **FROZEN FOR PROSPECTIVE VALIDATION**.
-- Online MapEx has not yet been changed to stop early.
+- Online Way2 integration is implemented in `scripts/mapex_way2.py`; baseline `scripts/mapex.py` remains unchanged.
+- Online sanity testing is still pending; no prospective validation run has been collected yet.
 - `G` is frozen as raw `information_gain`.
 - Historical replay `C` is frozen as Euclidean `distance_m`.
 - The 17 existing runs remain development/diagnostic data only and must not be used as independent validation.
@@ -303,7 +304,21 @@ After 2 consecutive evaluable base_valid states:
 
 This rule is now frozen. Do not retune it using the 17 development runs after prospective validation begins.
 
-## 11. Evaluation caveats
+## 11. Online integration — IMPLEMENTED, SANITY TEST PENDING
+
+Implementation:
+
+- baseline `scripts/mapex.py` is preserved unchanged;
+- new variant `scripts/mapex_way2.py` inherits `MapExExplorer`;
+- Way2 is evaluated only after the same MapEx distance preference / near fallback and shared execution/planner suppression have produced the selectable frontier set;
+- `R_t`, `U_t`, selectable candidate count, `base_valid`, consecutive valid count, and the Way2 action are logged/published online;
+- Way2 does not alter MapEx frontier ranking when the decision is CONTINUE;
+- early stop publishes `/frontier_exploration_complete = true` and status reason `way2_early_stop` without issuing another Nav2 goal;
+- recovery retries, active-goal map updates, no-frontier terminal handling, and planner revalidation are not counted as Way2 evaluable decisions.
+
+The integration is implementation-complete but has not yet been sanity-tested on the robot. Sanity-test runs may be used only to fix implementation bugs, not to retune the frozen thresholds.
+
+## 12. Evaluation caveats
 
 - The 17 existing runs are development/tuning/audit data only.
 - Observed-only occupied IoU is used for quality auditing and is not an online stop input.
@@ -314,12 +329,11 @@ This rule is now frozen. Do not retune it using the 17 development runs after pr
 
 # Current next actions
 
-1. Integrate the frozen candidate rule into online MapEx without changing frontier ranking.
-2. Log all stop-signal components online: `R_t`, `Udmax_t`, selectable candidate count, persistence state, and termination reason.
-3. Sanity-test online integration without using new validation runs for retuning.
-4. Collect **new independent** New Room + Hospital validation runs with the rule frozen and no environment-specific retuning.
-5. Compare against the full MapEx baseline using time, distance, observed structural quality, reconstructed quality, and existing exploration metrics.
-6. Only after prospective validation decide whether Way2 is accepted or rejected as the thesis stopping rule.
+1. Sanity-test `scripts/mapex_way2.py` online and verify `R_t`, `U_t`, selectable candidate count, `base_valid`, persistence state, CONTINUE, and EARLY STOP logs.
+2. Fix implementation bugs only if the sanity test exposes them; do **not** retune `0.30`, `10.0`, cutoff `1`, or the 2/3-decision confirmation rule.
+3. Collect **new independent** New Room + Hospital validation runs with the rule frozen and no environment-specific retuning.
+4. Compare against the full MapEx baseline using time, distance, observed structural quality, reconstructed quality, and existing exploration metrics.
+5. Only after prospective validation decide whether Way2 is accepted or rejected as the thesis stopping rule.
 
 ## Analysis scripts
 
