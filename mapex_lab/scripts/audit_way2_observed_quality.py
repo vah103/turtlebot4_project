@@ -31,7 +31,7 @@ import evaluate_mapex_run as evaluator
 
 
 DEFAULT_GT_BY_ENVIRONMENT = {
-    "new_room": "ground_truth/new_room/generated/new_room_structural_gt_v1.npz",
+    "new_room": "ground_truth/new_room/generated/new_room_structural_gt_v2.npz",
     "hospital": "ground_truth/hospital/generated/hospital_structural_gt_v1.npz",
 }
 
