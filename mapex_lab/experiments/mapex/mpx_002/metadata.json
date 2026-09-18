@@ -16,11 +16,11 @@
   "runtime_map_resolution_m": 0.10000000149011612,
   "fixed_canvas_id": "hospital_canvas_v1",
   "fixed_canvas_resolution_m": 0.05,
-  "evaluation_roi_id": "new_room_connected_free_v1",
+  "evaluation_roi_id": "new_room_connected_free_v2",
   "evaluation_roi_denominator": 187690,
-  "evaluation_roi_file": "/home/com1/turtlebot4_project/mapex_lab/ground_truth/new_room/generated/new_room_connected_free_v1.npy",
-  "structural_ground_truth_id": "new_room_structural_gt_v1",
-  "structural_ground_truth_file": "/home/com1/turtlebot4_project/mapex_lab/ground_truth/new_room/generated/new_room_structural_gt_v1.npz",
+  "evaluation_roi_file": "ground_truth/new_room/generated/new_room_connected_free_v2.npy",
+  "structural_ground_truth_id": "new_room_structural_gt_v2",
+  "structural_ground_truth_file": "ground_truth/new_room/generated/new_room_structural_gt_v2.npz",
   "structural_ground_truth_exists_at_start": true,
   "evaluation_start_x": 2.290216687214194e-12,
   "evaluation_start_y": -4.7948537055790096e-24,
@@ -95,7 +95,7 @@
     "ground_truth_contract": "74671971348fe8a8f0eef5f6d98bccd4c7b36a9b12b15d7e6cfc1179d5d743af"
   },
   "termination_reason": "keyboard_interrupt",
-  "final_coverage": 0.8357824071607438,
+  "final_coverage": 0.999627045,
   "final_known_fraction": 0.06299044908349286,
   "total_distance_m": 313.46479055628674,
   "total_time_s": 1031.5931901931763,
@@ -104,5 +104,14 @@
   "planner_blocked_abandoned_total": 8,
   "selection_verification_failures": 0,
   "prediction_save_ms_mean": 11.189524080888274,
-  "prediction_save_ms_std": 3.5294866189313643
+  "prediction_save_ms_std": 3.5294866189313643,
+  "evaluation_profile_version": "new_room_v2",
+  "evaluation_migration": {
+    "evaluation_profile": "new_room_v2",
+    "source_evaluation_roi_id": "new_room_connected_free_v1",
+    "source_structural_ground_truth_id": "new_room_structural_gt_v1",
+    "reason": "correct Gazebo-world to SLAM-start frame alignment using spawn (0,3,0)",
+    "coverage_source": "saved canvas snapshots; metrics.csv uses latest-snapshot step hold",
+    "git_head_when_migrated": "055138ac24499336238cf9b862c9b514f042d63d"
+  }
 }

@@ -1,10 +1,10 @@
 {
   "status": "ok",
   "prediction_source": "alltrain",
-  "ground_truth": "/home/dell/turtlebot4_project/mapex_lab/ground_truth/new_room/generated/new_room_structural_gt_v1.npz",
-  "ground_truth_sha256": "42275a4cef55a3f8ec0b0041388fb50174109891d6d1b76e101adeb43a62043a",
+  "ground_truth": "ground_truth/new_room/generated/new_room_structural_gt_v2.npz",
+  "ground_truth_sha256": "89954e9e4d52f5277e786a0ff43075ba714c4aadc804b50a58520d9182ae1ad4",
   "evaluation_canvas": {
-    "id": "new_room_canvas_v1",
+    "id": "hospital_canvas_v1",
     "resolution_m": 0.05,
     "width": 1504,
     "height": 2123,
@@ -20,7 +20,7 @@
   "tu": {
     "goal_count": 100,
     "seed": 2025,
-    "goal_source": "/home/dell/turtlebot4_project/mapex_lab/ground_truth/new_room/generated/new_room_connected_free_v1.npy",
+    "goal_source": "ground_truth/new_room/generated/new_room_connected_free_v2.npy",
     "start_world_xy": [
       2.2902169067992184e-12,
       -4.794853686554954e-24
@@ -36,11 +36,12 @@
   "evaluated_decisions": 35,
   "metrics_csv_backfilled_step_hold": true,
   "final_decision_id": 35,
-  "final_occupied_iou": 0.126794381,
-  "final_tu": 0.03,
-  "occupied_iou_auc_time": 109.99319424946734,
-  "occupied_iou_auc_distance": 39.236490853590375,
-  "tu_auc_time": 28.221412584799996,
-  "tu_auc_distance": 9.930464472579999,
-  "errors": []
+  "final_occupied_iou": 0.483514817,
+  "final_tu": 0.51,
+  "occupied_iou_auc_time": 391.10355824457713,
+  "occupied_iou_auc_distance": 140.6867725991434,
+  "tu_auc_time": 477.834519515255,
+  "tu_auc_distance": 174.837673001945,
+  "errors": [],
+  "evaluation_profile_version": "new_room_v2"
 }

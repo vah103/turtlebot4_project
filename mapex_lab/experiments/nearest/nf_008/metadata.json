@@ -15,11 +15,11 @@
   "runtime_map_resolution_m": 0.10000000149011612,
   "fixed_canvas_id": "hospital_canvas_v1",
   "fixed_canvas_resolution_m": 0.05,
-  "evaluation_roi_id": "new_room_connected_free_v1",
+  "evaluation_roi_id": "new_room_connected_free_v2",
   "evaluation_roi_denominator": 187690,
-  "evaluation_roi_file": "/home/com1/turtlebot4_project/mapex_lab/ground_truth/new_room/generated/new_room_connected_free_v1.npy",
-  "structural_ground_truth_id": "new_room_structural_gt_v1",
-  "structural_ground_truth_file": "/home/com1/turtlebot4_project/mapex_lab/ground_truth/new_room/generated/new_room_structural_gt_v1.npz",
+  "evaluation_roi_file": "ground_truth/new_room/generated/new_room_connected_free_v2.npy",
+  "structural_ground_truth_id": "new_room_structural_gt_v2",
+  "structural_ground_truth_file": "ground_truth/new_room/generated/new_room_structural_gt_v2.npz",
   "structural_ground_truth_exists_at_start": true,
   "exploration_start_sim_s": 1789100479.9237623,
   "exploration_start_source": "first_policy_decision_before_compute",
@@ -53,7 +53,7 @@
   "termination_reason": "keyboard_interrupt",
   "evaluation_start_x": 2.290216722305153e-12,
   "evaluation_start_y": -4.794853702539151e-24,
-  "final_coverage": 0.8371410304225052,
+  "final_coverage": 0.997570462,
   "final_known_fraction": 0.06315956945711107,
   "total_distance_m": 244.01390632534114,
   "total_time_s": 890.5120463371277,
@@ -61,5 +61,14 @@
   "near_frontier_fallback_count": 0,
   "planner_blocked_abandoned_total": 11,
   "nf_run_core_file": "/home/com1/turtlebot4_project/mapex_lab/scripts/_nf_run_core.py",
-  "offline_evaluation_semantics": "post_run_observed_slam_iou_tu"
+  "offline_evaluation_semantics": "post_run_observed_slam_iou_tu",
+  "evaluation_profile_version": "new_room_v2",
+  "evaluation_migration": {
+    "evaluation_profile": "new_room_v2",
+    "source_evaluation_roi_id": "new_room_connected_free_v1",
+    "source_structural_ground_truth_id": "new_room_structural_gt_v1",
+    "reason": "correct Gazebo-world to SLAM-start frame alignment using spawn (0,3,0)",
+    "coverage_source": "saved canvas snapshots; metrics.csv uses latest-snapshot step hold",
+    "git_head_when_migrated": "055138ac24499336238cf9b862c9b514f042d63d"
+  }
 }

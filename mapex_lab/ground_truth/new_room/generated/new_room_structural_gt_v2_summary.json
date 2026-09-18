@@ -1,0 +1,49 @@
+{
+  "ground_truth_id": "new_room_structural_gt_v2",
+  "roi_id": "new_room_connected_free_v2",
+  "canvas_id": "hospital_canvas_v1",
+  "source_sdf": "/home/dell/turtlebot4_project/mapex_lab/map/new_room.sdf",
+  "source_sdf_sha256": "678c60172328183b42d2b26c15a8ed5a6faa8467a5b6e54f2564e2f7d974a735",
+  "source_model": "mini_hospital_structure",
+  "z_slice_m": 0.2,
+  "coordinate_frame": "slam_start",
+  "world_to_slam": {
+    "spawn_world_x": 0.0,
+    "spawn_world_y": 3.0,
+    "spawn_world_yaw": 0.0,
+    "rule": "R(-spawn_yaw) @ (p_world - p_spawn)"
+  },
+  "roi_seed_slam_xy": [
+    0.0,
+    0.0
+  ],
+  "spawn_cell_row_col": [
+    1202,
+    512
+  ],
+  "collision_boxes_rasterized": 66,
+  "building_bounds_m": {
+    "x_min": -13.09,
+    "x_max": 13.09,
+    "y_min": -13.09,
+    "y_max": 7.09,
+    "width": 26.18,
+    "height": 20.18
+  },
+  "canvas": {
+    "resolution_m": 0.05,
+    "width_cells": 1504,
+    "height_cells": 2123,
+    "origin_x": -25.6,
+    "origin_y": -60.1
+  },
+  "evaluation_mask_cells": 211696,
+  "occupied_cells": 23990,
+  "free_cells": 187706,
+  "connected_free_roi_cells": 187690,
+  "outputs": {
+    "ground_truth": "/home/dell/turtlebot4_project/mapex_lab/ground_truth/new_room/generated/new_room_structural_gt_v2.npz",
+    "connected_free_roi": "/home/dell/turtlebot4_project/mapex_lab/ground_truth/new_room/generated/new_room_connected_free_v2.npy",
+    "preview_pgm": "/home/dell/turtlebot4_project/mapex_lab/ground_truth/new_room/generated/new_room_structural_gt_v2.pgm"
+  }
+}
