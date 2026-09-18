@@ -24,11 +24,11 @@
     "experiments/mapex/mpx_007",
     "experiments/mapex/mpx_008",
     "experiments/mapex/mpx_009",
-    "experiments/mapex/mpx_010",
-    "experiments/mapex/mpx_w2_001",
-    "experiments/mapex/mpx_w2_002"
+    "experiments/mapex/mpx_010"
   ],
   "coverage_metrics_semantics": "snapshots exact; metrics.csv latest-snapshot step hold",
   "iou_tu_semantics": "recomputed by current profiled evaluators with v2 GT/ROI",
-  "raw_experiment_data_modified": false
+  "raw_experiment_data_modified": false,
+  "scope": "20 baseline New Room runs only: nf_001..nf_010 + mpx_001..mpx_010",
+  "way2_evidence_modified": false
 }
