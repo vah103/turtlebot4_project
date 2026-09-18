@@ -9,11 +9,14 @@ PYTHON_BIN="${PYTHON_BIN:-python3}"
 cd "$REPO_ROOT"
 
 "$PYTHON_BIN" "$SCRIPT_DIR/recompute_new_room_metrics_v2.py"
+"$PYTHON_BIN" "$SCRIPT_DIR/refresh_new_room_time_curves.py"
 
 echo
 echo "Migration finished for the 20 baseline New Room runs:"
 echo "  NF    nf_001..nf_010"
 echo "  MapEx mpx_001..mpx_010"
+echo "Time-based curves use summary.total_time_s as the canonical per-run exploration cutoff."
+echo "Raw snapshots.csv/metrics.csv recorder tails are retained for audit."
 echo "Way2 development/validation evidence is intentionally left untouched."
 echo "Raw experiment evidence was retained."
 echo
