@@ -42,3 +42,19 @@ Các run online sau khi rule đã frozen chỉ dùng để sanity/validation, kh
 ### Result preservation policy
 
 Một số analysis script cũ từng chỉ in bảng chi tiết ra terminal. Nếu một row chưa từng được commit thì không được phục hồi bằng cách đoán hoặc chép lại từ trí nhớ. Repo chỉ lưu các số đã có bằng chứng, còn bảng chi tiết được tái tạo từ experiment data + script bằng `way2_results/reproduce_way2_analysis.sh` rồi commit nguyên log/CSV mới.
+
+
+## New Room v2 evaluation migration
+
+New Room derived evaluation metrics are now maintained under the frame-correct
+`new_room_v2` profile. To replace all active v1-derived Coverage/IoU/TU values
+from saved experiment artifacts and refresh the dependent Way2 evidence, run:
+
+```bash
+bash mapex_lab/scripts/migrate_new_room_v2.sh
+```
+
+The migration rewrites derived CSV/JSON evaluation outputs in place, regenerates
+baseline aggregate tables/curves, removes the old active Way2 log archives, and
+reruns the quality-analysis chain. Raw maps, predictions, trajectories,
+decisions, goals, plans, and runtime configuration are retained unchanged.
