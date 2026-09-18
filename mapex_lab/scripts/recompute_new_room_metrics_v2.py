@@ -397,21 +397,6 @@ def update_status():
         "1. Generate and visually validate `new_room_connected_free_v2` against a saved New Room final canvas (recommended sanity run: `mpx_w2_002`), then backfill historical New Room coverage/coverage curves from saved canvas snapshots before interpreting absolute coverage.",
         "1. Treat `new_room_connected_free_v2` / `new_room_structural_gt_v2` as the canonical New Room evaluation profile and regenerate aggregates after adding new runs.",
     )
-    for run_id in ("mpx_w2_001", "mpx_w2_002"):
-        summary_path = ROOT / "experiments/mapex" / run_id / "summary.json"
-        if not summary_path.is_file():
-            continue
-        coverage = value(load_json(summary_path), "final_coverage")
-        lines = text.splitlines()
-        for i, line in enumerate(lines):
-            if f"`{run_id}`" not in line or not line.lstrip().startswith("|"):
-                continue
-            parts = line.split("|")
-            if len(parts) >= 9:
-                parts[4] = f" {coverage:.6f} "
-                lines[i] = "|".join(parts)
-            break
-        text = "\n".join(lines) + ("\n" if text.endswith("\n") else "")
     path.write_text(text, encoding="utf-8")
 
 
