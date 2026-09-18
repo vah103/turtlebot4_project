@@ -46,15 +46,17 @@ Một số analysis script cũ từng chỉ in bảng chi tiết ra terminal. N�
 
 ## New Room v2 evaluation migration
 
-New Room derived evaluation metrics are now maintained under the frame-correct
-`new_room_v2` profile. To replace all active v1-derived Coverage/IoU/TU values
-from saved experiment artifacts and refresh the dependent Way2 evidence, run:
+New Room baseline evaluation metrics are maintained under the frame-correct
+`new_room_v2` profile. To replace the active v1-derived Coverage/IoU/TU values
+for the 20 baseline runs (`nf_001..010` and `mpx_001..010`) from saved
+experiment artifacts, run:
 
 ```bash
 bash mapex_lab/scripts/migrate_new_room_v2.sh
 ```
 
-The migration rewrites derived CSV/JSON evaluation outputs in place, regenerates
-baseline aggregate tables/curves, removes the old active Way2 log archives, and
-reruns the quality-analysis chain. Raw maps, predictions, trajectories,
-decisions, goals, plans, and runtime configuration are retained unchanged.
+The migration rewrites derived CSV/JSON evaluation outputs in place and
+regenerates the baseline aggregate tables/curves. Way2 development/validation
+evidence is intentionally outside this migration. Raw maps, predictions,
+trajectories, decisions, goals, plans, and runtime configuration are retained
+unchanged.
