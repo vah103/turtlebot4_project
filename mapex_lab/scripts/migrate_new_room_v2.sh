@@ -10,18 +10,11 @@ cd "$REPO_ROOT"
 
 "$PYTHON_BIN" "$SCRIPT_DIR/recompute_new_room_metrics_v2.py"
 
-# Only after the run-level migration succeeds, remove v1-derived Way2 log
-# archives from the active branch. Git history still preserves them; the
-# current tree will contain only regenerated evidence.
-rm -rf "$MAPEX_ROOT/analysis/way2_results/historical_logs"
-rm -rf "$MAPEX_ROOT/analysis/way2_results/reproduced_logs"
-rm -f "$MAPEX_ROOT/analysis/way2_results/archive_manifest.csv"
-
-bash "$MAPEX_ROOT/analysis/way2_results/reproduce_way2_analysis.sh"
-"$PYTHON_BIN" "$SCRIPT_DIR/refresh_way2_v2_evidence.py"
-
 echo
-echo "Migration finished. Active New Room derived metrics are v2."
+echo "Migration finished for the 20 baseline New Room runs:"
+echo "  NF    nf_001..nf_010"
+echo "  MapEx mpx_001..mpx_010"
+echo "Way2 development/validation evidence is intentionally left untouched."
 echo "Raw experiment evidence was retained."
 echo
 echo "Review changes:"
