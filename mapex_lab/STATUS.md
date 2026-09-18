@@ -18,6 +18,7 @@ The active thesis direction is **Way2: frontier-utility-based early stopping for
 - The frozen thresholds must not be retuned from these online outcomes.
 - The 17 historical runs used to develop/audit Way2 remain development data only.
 - For New Room baseline comparison, `mpx_001` through `mpx_010` are one comparable runtime/setup cohort. Historical differences in `runtime_profile*` strings are provenance/naming artifacts and must not be used to split that cohort. See `experiments/mapex/RUN_CONTEXT.json`.
+- **New Room coverage evaluator correction:** `new_room_connected_free_v1` is superseded because it rasterized SDF world coordinates directly against SLAM-start canvases even though New Room spawns at world `(0,3,0)`. New runs use frame-correct `new_room_connected_free_v2`. Historical New Room coverage values remain recorded as v1 until offline backfill from saved canvases is validated; time, distance, trajectory, navigation outcomes, MapEx scoring, and Way2 R/U are unaffected.
 
 Frozen online rule:
 
@@ -203,6 +204,8 @@ Conclusion: Way1 works in New Room but does not transfer cleanly to Hospital wit
 
 # Evaluation caveats
 
+- Existing New Room run summaries/CSV coverage were produced with `new_room_connected_free_v1`, whose structural geometry was in Gazebo world coordinates rather than the SLAM-start frame. Treat those absolute coverage values as superseded/pending v2 backfill; do not compare v1 New Room coverage numerically with Hospital coverage.
+- The frame-correct `new_room_connected_free_v2` uses the launch spawn `(0,3,0)`, transforms SDF geometry into the SLAM-start frame, and seeds connected free space at SLAM `(0,0)`. Validate an overlay against a saved final canvas before bulk rewriting historical coverage.
 - Historical development runs must not be reused as independent validation evidence.
 - `mpx_w2_001` is an integration/sanity run, not a prospective validation sample.
 - Current simulator seed policy is intentionally uncontrolled Gazebo default; comparisons should therefore use multiple-run statistics rather than assume exact paired seeds.
@@ -216,16 +219,17 @@ Conclusion: Way1 works in New Room but does not transfer cleanly to Hospital wit
 
 # Current next actions
 
-1. Collect additional frozen-rule New Room runs beginning with `mpx_w2_003` and additional Hospital runs as needed.
-2. Keep pushing the **full run directories**, including decisions, prediction maps, maps, CSV/JSON metadata, goals/plans, and audit files, so replay and visualization remain possible.
-3. Do **not** change `R<=0.30`, `U<=10`, candidate cutoff `1`, or the 2/3-decision confirmation rule during this collection stage.
-4. Build a Way2 replay/visualization script that joins `observed_map_canvas.npz`, `policy_decisions.csv`, `candidates.csv`, and `way2_checks.csv` into per-decision annotated frames, then renders video offline.
-5. After enough independent runs are collected, compare Way2 against:
+1. Generate and visually validate `new_room_connected_free_v2` against a saved New Room final canvas (recommended sanity run: `mpx_w2_002`), then backfill historical New Room coverage/coverage curves from saved canvas snapshots before interpreting absolute coverage.
+2. Collect additional frozen-rule New Room runs beginning with `mpx_w2_003` and additional Hospital runs as needed.
+3. Keep pushing the **full run directories**, including decisions, prediction maps, maps, CSV/JSON metadata, goals/plans, and audit files, so replay and visualization remain possible.
+4. Do **not** change `R<=0.30`, `U<=10`, candidate cutoff `1`, or the 2/3-decision confirmation rule during this collection stage.
+5. Build a Way2 replay/visualization script that joins `observed_map_canvas.npz`, `policy_decisions.csv`, `candidates.csv`, and `way2_checks.csv` into per-decision annotated frames, then renders video offline.
+6. After enough independent runs are collected, compare Way2 against:
    - the full comparable New Room MapEx baseline cohort `mpx_001...mpx_010`;
    - the corresponding Hospital MapEx baseline data;
    - NF cohorts where applicable;
    using time, distance, coverage/structural quality, completion behavior, and run-to-run variability.
-6. Only after repeated frozen-rule evaluation decide whether Way2 is accepted or rejected as the thesis stopping rule.
+7. Only after repeated frozen-rule evaluation decide whether Way2 is accepted or rejected as the thesis stopping rule.
 
 ## Analysis scripts
 

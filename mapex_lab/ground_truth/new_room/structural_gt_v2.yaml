@@ -1,0 +1,65 @@
+ground_truth:
+  id: new_room_structural_gt_v2
+  source_sdf: map/new_room.sdf
+  source_model: mini_hospital_structure
+  generator: scripts/generate_new_room_ground_truth.py
+
+coordinate_frame:
+  artifact_frame: slam_start
+  source_geometry_frame: gazebo_world
+  spawn_world_xy: [0.0, 3.0]
+  spawn_world_yaw: 0.0
+  transform: R(-spawn_world_yaw) @ (p_world - p_spawn)
+  roi_seed_slam_xy: [0.0, 0.0]
+  note: >-
+    New Room simulation spawns at world (0,3,0), while SLAM starts at the
+    robot-relative map origin. Geometry is transformed before rasterization so
+    the structural ground truth and saved SLAM canvases share one frame.
+
+rasterization:
+  canvas_id: hospital_canvas_v1
+  resolution_m: 0.05
+  width_cells: 1504
+  height_cells: 2123
+  origin_x: -25.6
+  origin_y: -60.1
+  z_slice_m: 0.20
+  rule: cell_center_inside_projected_collision_box_after_world_to_slam_transform
+  include:
+    - all box collisions in mini_hospital_structure intersecting z_slice_m
+  exclude:
+    - new_room_ground plane
+    - visuals without collision geometry
+
+labels:
+  outside_unscored: -1
+  free: 0
+  occupied: 100
+
+evaluation_mask:
+  rule: axis_aligned_outer_bounds_of_all_transformed_structure_collisions
+  note: >-
+    Outer wall collisions define the evaluated building footprint after the
+    world-to-SLAM transform; door gaps and internal openings remain free.
+
+connected_free_roi:
+  id: new_room_connected_free_v2
+  seed_slam_xy: [0.0, 0.0]
+  connectivity: 4
+  source: structural_free_cells_inside_evaluation_mask
+  output: generated/new_room_connected_free_v2.npy
+
+generated_outputs:
+  ground_truth: generated/new_room_structural_gt_v2.npz
+  connected_free_roi: generated/new_room_connected_free_v2.npy
+  preview: generated/new_room_structural_gt_v2.pgm
+  summary: generated/new_room_structural_gt_v2_summary.json
+
+provenance:
+  source_sdf_sha256_saved_in_artifact: true
+  spawn_pose_saved_in_artifact: true
+  generated_artifacts_committed: false
+  supersedes: new_room_structural_gt_v1
+  supersession_reason: >-
+    v1 rasterized Gazebo-world geometry directly on the fixed SLAM canvas,
+    producing a frame offset equal to the New Room spawn pose.

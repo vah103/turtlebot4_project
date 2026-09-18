@@ -86,11 +86,11 @@ MAPEX_CANDIDATE_FIELDS = [
 
 ENVIRONMENT_PROFILES = {
     "new_room": {
-        "protocol_version": "new_room_v1",
-        "roi_id": "new_room_connected_free_v1",
-        "roi_relative": "ground_truth/new_room/generated/new_room_connected_free_v1.npy",
-        "ground_truth_id": "new_room_structural_gt_v1",
-        "ground_truth_relative": "ground_truth/new_room/generated/new_room_structural_gt_v1.npz",
+        "protocol_version": "new_room_v2",
+        "roi_id": "new_room_connected_free_v2",
+        "roi_relative": "ground_truth/new_room/generated/new_room_connected_free_v2.npy",
+        "ground_truth_id": "new_room_structural_gt_v2",
+        "ground_truth_relative": "ground_truth/new_room/generated/new_room_structural_gt_v2.npz",
         "auto_generate_ground_truth": True,
     },
     "hospital": {
@@ -107,9 +107,9 @@ ENVIRONMENT_PROFILES = {
 def _ensure_new_room_ground_truth(root: FilePath) -> None:
     sdf = root / "map" / "new_room.sdf"
     output_dir = root / "ground_truth" / "new_room" / "generated"
-    gt = output_dir / "new_room_structural_gt_v1.npz"
-    roi = output_dir / "new_room_connected_free_v1.npy"
-    summary = output_dir / "new_room_structural_gt_v1_summary.json"
+    gt = output_dir / "new_room_structural_gt_v2.npz"
+    roi = output_dir / "new_room_connected_free_v2.npy"
+    summary = output_dir / "new_room_structural_gt_v2_summary.json"
 
     current_sha = _sha256_file(sdf)
     generated_sha = None
@@ -129,7 +129,8 @@ def _ensure_new_room_ground_truth(root: FilePath) -> None:
         output_dir=output_dir.resolve(),
         z_slice_m=0.20,
         spawn_x=0.0,
-        spawn_y=0.0,
+        spawn_y=3.0,
+        spawn_yaw=0.0,
     )
 
 

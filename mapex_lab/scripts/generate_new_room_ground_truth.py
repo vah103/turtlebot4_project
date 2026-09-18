@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Generate structural ground truth + connected-free ROI for new_room.sdf.
+"""Generate frame-correct structural ground truth + connected-free ROI for new_room.sdf.
 
-The artifact is rasterized directly from collision boxes in the
-``mini_hospital_structure`` model. The fixed raster frame intentionally matches
-``nf_run.py`` / ``mapex_run.py`` (hospital_canvas_v1) so recorded prediction
-maps can be compared without another reprojection convention.
+Collision geometry is read in Gazebo/SDF world coordinates and transformed into
+the SLAM-start frame before rasterization. The fixed raster frame matches
+``nf_run.py`` / ``mapex_run.py`` (hospital_canvas_v1), so saved observed maps
+and the structural ROI share one coordinate convention.
 """
 from __future__ import annotations
 
@@ -25,12 +25,14 @@ CANVAS_H = 2123
 CANVAS_X = -25.6
 CANVAS_Y = -60.1
 
-GT_ID = "new_room_structural_gt_v1"
-ROI_ID = "new_room_connected_free_v1"
+GT_ID = "new_room_structural_gt_v2"
+ROI_ID = "new_room_connected_free_v2"
 STRUCTURE_MODEL = "mini_hospital_structure"
 DEFAULT_Z_SLICE_M = 0.20
+# Gazebo spawn used by hospital_flat_simulation.launch.py for world:=new_room.
 DEFAULT_SPAWN_X = 0.0
-DEFAULT_SPAWN_Y = 0.0
+DEFAULT_SPAWN_Y = 3.0
+DEFAULT_SPAWN_YAW = 0.0
 
 
 def _sha256(path: Path) -> str:
@@ -93,6 +95,48 @@ def _box_corners(
     s = math.sin(yaw)
     rotation = np.asarray([[c, -s], [s, c]], dtype=np.float64)
     return local @ rotation.T + np.asarray([x, y], dtype=np.float64)
+
+
+def _world_to_slam_xy(
+    xy: np.ndarray,
+    spawn_x: float,
+    spawn_y: float,
+    spawn_yaw: float,
+) -> np.ndarray:
+    """Transform Gazebo world XY coordinates into the SLAM-start frame."""
+    shifted = np.asarray(xy, dtype=np.float64) - np.asarray(
+        [spawn_x, spawn_y], dtype=np.float64
+    )
+    c = math.cos(-spawn_yaw)
+    s = math.sin(-spawn_yaw)
+    rotation = np.asarray([[c, -s], [s, c]], dtype=np.float64)
+    return shifted @ rotation.T
+
+
+def _boxes_world_to_slam(
+    boxes: list[dict],
+    spawn_x: float,
+    spawn_y: float,
+    spawn_yaw: float,
+) -> list[dict]:
+    """Return collision boxes expressed in the SLAM-start frame."""
+    transformed = []
+    for box in boxes:
+        center = _world_to_slam_xy(
+            np.asarray([[box["x"], box["y"]]], dtype=np.float64),
+            spawn_x,
+            spawn_y,
+            spawn_yaw,
+        )[0]
+        item = dict(box)
+        item["x"] = float(center[0])
+        item["y"] = float(center[1])
+        item["yaw"] = float(box["yaw"] - spawn_yaw)
+        item["corners"] = _world_to_slam_xy(
+            box["corners"], spawn_x, spawn_y, spawn_yaw
+        )
+        transformed.append(item)
+    return transformed
 
 
 def _load_collision_boxes(
@@ -264,8 +308,15 @@ def generate(
     z_slice_m: float,
     spawn_x: float,
     spawn_y: float,
+    spawn_yaw: float,
 ) -> dict:
-    boxes = _load_collision_boxes(sdf_path, STRUCTURE_MODEL, z_slice_m)
+    boxes_world = _load_collision_boxes(sdf_path, STRUCTURE_MODEL, z_slice_m)
+    boxes = _boxes_world_to_slam(
+        boxes_world,
+        spawn_x=spawn_x,
+        spawn_y=spawn_y,
+        spawn_yaw=spawn_yaw,
+    )
     occupied = _rasterize_boxes(boxes)
     evaluation_mask, bounds = _building_mask(boxes)
     occupied &= evaluation_mask
@@ -275,7 +326,8 @@ def generate(
     data[occupied] = 100
 
     free = evaluation_mask & ~occupied
-    connected, start_cell = _connected_free(free, spawn_x, spawn_y)
+    # The Gazebo spawn becomes the SLAM-frame origin after world->SLAM transform.
+    connected, start_cell = _connected_free(free, 0.0, 0.0)
 
     output_dir.mkdir(parents=True, exist_ok=True)
     gt_path = output_dir / f"{GT_ID}.npz"
@@ -299,6 +351,11 @@ def generate(
         source_sdf=np.asarray(str(sdf_path)),
         source_sdf_sha256=np.asarray(source_sha),
         z_slice_m=np.float64(z_slice_m),
+        spawn_world_x=np.float64(spawn_x),
+        spawn_world_y=np.float64(spawn_y),
+        spawn_world_yaw=np.float64(spawn_yaw),
+        roi_seed_slam_x=np.float64(0.0),
+        roi_seed_slam_y=np.float64(0.0),
     )
     np.save(roi_path, connected)
     _write_preview(preview_path, data)
@@ -312,7 +369,14 @@ def generate(
         "source_sdf_sha256": source_sha,
         "source_model": STRUCTURE_MODEL,
         "z_slice_m": z_slice_m,
-        "spawn_world_xy": [spawn_x, spawn_y],
+        "coordinate_frame": "slam_start",
+        "world_to_slam": {
+            "spawn_world_x": spawn_x,
+            "spawn_world_y": spawn_y,
+            "spawn_world_yaw": spawn_yaw,
+            "rule": "R(-spawn_yaw) @ (p_world - p_spawn)",
+        },
+        "roi_seed_slam_xy": [0.0, 0.0],
         "spawn_cell_row_col": [int(start_cell[0]), int(start_cell[1])],
         "collision_boxes_rasterized": len(boxes),
         "building_bounds_m": {
@@ -360,6 +424,7 @@ def main() -> None:
     parser.add_argument("--z-slice-m", type=float, default=DEFAULT_Z_SLICE_M)
     parser.add_argument("--spawn-x", type=float, default=DEFAULT_SPAWN_X)
     parser.add_argument("--spawn-y", type=float, default=DEFAULT_SPAWN_Y)
+    parser.add_argument("--spawn-yaw", type=float, default=DEFAULT_SPAWN_YAW)
     args = parser.parse_args()
 
     summary = generate(
@@ -368,6 +433,7 @@ def main() -> None:
         z_slice_m=args.z_slice_m,
         spawn_x=args.spawn_x,
         spawn_y=args.spawn_y,
+        spawn_yaw=args.spawn_yaw,
     )
     print(json.dumps(summary, indent=2))
 
