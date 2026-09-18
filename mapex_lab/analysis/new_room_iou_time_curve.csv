@@ -1,4 +1,4 @@
-time_s,evaluation_profile,common_support_exact_max,time_cutoff_source,nf_mean,nf_std,nf_n,mapex_mean,mapex_std,mapex_n
+time_s,evaluation_profile,common_support_exact_max,cutoff_source,nf_mean,nf_std,nf_n,mapex_mean,mapex_std,mapex_n
 0.0,new_room_v2,579.997535944,summary.total_time_s,0.06715227199999999,1.4628472785736255e-17,10,0.06715227199999999,1.4628472785736255e-17,10
 10.0,new_room_v2,579.997535944,summary.total_time_s,0.1334012272345456,0.00554943307741601,10,0.15724238422808018,0.006261648101507706,10
 20.0,new_room_v2,579.997535944,summary.total_time_s,0.16886829211541507,0.01290259117527411,10,0.19838225199554665,0.015024572997077375,10
