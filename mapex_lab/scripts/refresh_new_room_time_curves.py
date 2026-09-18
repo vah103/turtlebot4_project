@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regenerate canonical New Room baseline Coverage curves.
+"""Regenerate canonical New Room baseline Coverage and IoU curves.
 
 Historical recorder processes can remain alive after exploration has stopped, so
 ``snapshots.csv`` and ``metrics.csv`` may contain a stationary recorder tail.
@@ -8,10 +8,23 @@ Canonical run completion is taken from ``summary.json``:
 - time cutoff: ``total_time_s``
 - distance cutoff: ``total_distance_m``
 
-Raw run logs are intentionally preserved.  The canonical Coverage curves span
-the full baseline range; once a run completes, its final Coverage is held
-constant.  Strict common-support curves are retained under explicit
-``*_common_curve.csv`` names for analyses that require no post-completion hold.
+Raw run logs are intentionally preserved.
+
+Coverage semantics
+------------------
+Coverage is observed from the saved SLAM canvas.  Canonical main-figure curves
+span the full baseline range; after a run completes, its final Coverage is held
+constant.  Strict common-support variants are retained separately.
+
+IoU semantics
+-------------
+Occupied IoU is only available at evaluable policy decisions with an offline
+Big-LaMa prediction.  Canonical main-figure IoU curves also span the full
+baseline range, but they do not invent new predictions after the last evaluable
+decision.  Instead, each run holds its last evaluable/final IoU until its
+canonical exploration stop and after completion.  ``*_active_n`` records how
+many runs are still exploring at each x value.  Strict common-support IoU curves
+remain available separately with no post-evaluation hold.
 
 Outputs:
 - analysis/new_room_coverage_time_curve.csv
@@ -23,13 +36,19 @@ Outputs:
 - analysis/new_room_coverage_distance_common_curve.csv
   Strict common-support Coverage-vs-distance curve, no extrapolation.
 - analysis/new_room_iou_time_curve.csv
-  Decision-level IoU curve clipped at total_time_s, no extrapolation.
+  Canonical full IoU-vs-time curve; hold last evaluable IoU after each run's
+  last valid evaluation checkpoint.
+- analysis/new_room_iou_distance_curve.csv
+  Canonical full IoU-vs-distance curve with the same hold-last-evaluable rule.
+- analysis/new_room_iou_time_common_curve.csv
+  Strict common-support IoU-vs-time curve, no extrapolation.
+- analysis/new_room_iou_distance_common_curve.csv
+  Strict common-support IoU-vs-distance curve, no extrapolation.
 - analysis/new_room_time_cutoff_audit.csv
-  Per-run audit of raw recorder tails versus the canonical time cutoff.
+  Per-run audit of raw recorder/evaluation ends versus canonical stop time.
 
 The legacy ``new_room_coverage_time_full_curve.csv`` alias is removed when this
-script runs; ``new_room_coverage_time_curve.csv`` is now the canonical full
-visualization curve.
+script runs; ``new_room_coverage_time_curve.csv`` is the canonical full curve.
 """
 
 from __future__ import annotations
@@ -98,8 +117,13 @@ def baseline_infos() -> list[dict]:
             final_coverage = finite_float(
                 summary.get("final_coverage"), f"{run_id}.final_coverage"
             )
+            final_iou = finite_float(
+                summary.get("final_occupied_iou"), f"{run_id}.final_occupied_iou"
+            )
             if stop_s <= 0.0:
-                raise RuntimeError(f"non-positive exploration stop time for {run_id}: {stop_s}")
+                raise RuntimeError(
+                    f"non-positive exploration stop time for {run_id}: {stop_s}"
+                )
             if stop_m <= 0.0:
                 raise RuntimeError(
                     f"non-positive exploration stop distance for {run_id}: {stop_m}"
@@ -112,6 +136,7 @@ def baseline_infos() -> list[dict]:
                     "stop_s": stop_s,
                     "stop_m": stop_m,
                     "final_coverage": final_coverage,
+                    "final_iou": final_iou,
                 }
             )
     return infos
@@ -167,11 +192,13 @@ def common_curve(
     stop_key: str,
     step: float,
     cutoff_source: str,
-    endpoint_from_final_coverage: bool = False,
+    endpoint_info_key: str | None = None,
 ) -> list[dict]:
+    """Strict no-extrapolation common-support curve across all 20 runs."""
+
     series: dict[tuple[str, str], tuple[np.ndarray, np.ndarray]] = {}
     for info in infos:
-        endpoint_y = info["final_coverage"] if endpoint_from_final_coverage else None
+        endpoint_y = info[endpoint_info_key] if endpoint_info_key else None
         series[(info["method"], info["run_id"])] = series_from_csv(
             info["path"] / source_name,
             x_key,
@@ -194,13 +221,12 @@ def common_curve(
         }
         for method, ids in (("NF", BASELINE_NF), ("MapEx", BASELINE_MAPEX)):
             vals = [
-                float(np.interp(x, *series[(method, run_id)]))
-                for run_id in ids
+                float(np.interp(x, *series[(method, run_id)])) for run_id in ids
             ]
-            key = method.lower()
-            row[f"{key}_mean"] = float(np.mean(vals))
-            row[f"{key}_std"] = float(np.std(vals, ddof=1))
-            row[f"{key}_n"] = len(vals)
+            prefix = method.lower()
+            row[f"{prefix}_mean"] = float(np.mean(vals))
+            row[f"{prefix}_std"] = float(np.std(vals, ddof=1))
+            row[f"{prefix}_n"] = len(vals)
         output.append(row)
     return output
 
@@ -231,8 +257,8 @@ def full_coverage_curve(
     max_stop = max(float(info[stop_key]) for info in infos)
     grid_max = math.floor(max_stop / step) * step
     grid = np.arange(0.0, grid_max + step * 0.25, step)
-
     max_key = "max_stop_exact_s" if x_key == "time_s" else "max_stop_exact_m"
+
     output = []
     for x in grid:
         row = {
@@ -262,6 +288,89 @@ def full_coverage_curve(
     return output
 
 
+def full_iou_curve(
+    infos: list[dict],
+    *,
+    x_key: str,
+    stop_key: str,
+    step: float,
+    cutoff_source: str,
+) -> list[dict]:
+    """Completion-aware IoU curve without inventing post-evaluation predictions.
+
+    Each run is interpolated only between real evaluable decision checkpoints.
+    Once x passes that run's last evaluable checkpoint, the run's final IoU
+    (which is the last evaluable IoU stored in summary.json) is carried forward.
+    The x-axis still spans the canonical exploration range from summary.json.
+    """
+
+    series: dict[tuple[str, str], tuple[np.ndarray, np.ndarray]] = {}
+    info_by_key: dict[tuple[str, str], dict] = {}
+    last_eval_x: dict[tuple[str, str], float] = {}
+
+    for info in infos:
+        key = (info["method"], info["run_id"])
+        info_by_key[key] = info
+        xs, ys = series_from_csv(
+            info["path"] / "evaluation.csv",
+            x_key,
+            "occupied_iou",
+            max_x=info[stop_key],
+            endpoint_y=None,
+        )
+        # The summary final IoU must represent the last evaluable decision.
+        if not math.isclose(
+            float(ys[-1]), float(info["final_iou"]), rel_tol=1e-7, abs_tol=1e-9
+        ):
+            raise RuntimeError(
+                f"{info['run_id']} final_occupied_iou={info['final_iou']} does not "
+                f"match last evaluation {float(ys[-1])} for {x_key}"
+            )
+        series[key] = (xs, ys)
+        last_eval_x[key] = float(xs[-1])
+
+    max_stop = max(float(info[stop_key]) for info in infos)
+    grid_max = math.floor(max_stop / step) * step
+    grid = np.arange(0.0, grid_max + step * 0.25, step)
+    max_key = "max_stop_exact_s" if x_key == "time_s" else "max_stop_exact_m"
+    last_eval_key = (
+        "max_last_evaluable_exact_s" if x_key == "time_s" else "max_last_evaluable_exact_m"
+    )
+    max_last_eval = max(last_eval_x.values())
+
+    output = []
+    for x in grid:
+        row = {
+            x_key: float(x),
+            "evaluation_profile": EVAL_PROFILE,
+            max_key: max_stop,
+            last_eval_key: max_last_eval,
+            "cutoff_source": cutoff_source,
+            "post_evaluation_semantics": "hold_last_evaluable_iou",
+            "final_iou_source": "summary.final_occupied_iou",
+        }
+        for method, ids in (("NF", BASELINE_NF), ("MapEx", BASELINE_MAPEX)):
+            vals = []
+            active_n = 0
+            for run_id in ids:
+                key = (method, run_id)
+                info = info_by_key[key]
+                xs, ys = series[key]
+                if x <= last_eval_x[key] + EPS:
+                    vals.append(float(np.interp(x, xs, ys)))
+                else:
+                    vals.append(float(info["final_iou"]))
+                if x <= float(info[stop_key]) + EPS:
+                    active_n += 1
+            prefix = method.lower()
+            row[f"{prefix}_mean"] = float(np.mean(vals))
+            row[f"{prefix}_std"] = float(np.std(vals, ddof=1))
+            row[f"{prefix}_n"] = len(vals)
+            row[f"{prefix}_active_n"] = active_n
+        output.append(row)
+    return output
+
+
 def last_finite_x(path: Path, key: str) -> float:
     values = []
     for row in read_csv(path):
@@ -281,6 +390,9 @@ def cutoff_audit(infos: list[dict]) -> list[dict]:
         snapshot_last = last_finite_x(info["path"] / "snapshots.csv", "time_s")
         metrics_last = last_finite_x(info["path"] / "metrics.csv", "time_s")
         evaluation_last = last_finite_x(info["path"] / "evaluation.csv", "time_s")
+        evaluation_last_m = last_finite_x(
+            info["path"] / "evaluation.csv", "distance_m"
+        )
         output.append(
             {
                 "method": info["method"],
@@ -295,7 +407,9 @@ def cutoff_audit(infos: list[dict]) -> list[dict]:
                 "evaluation_last_time_s": evaluation_last,
                 "evaluation_tail_s": max(0.0, evaluation_last - stop_s),
                 "canonical_stop_distance_m": float(info["stop_m"]),
+                "evaluation_last_distance_m": evaluation_last_m,
                 "final_coverage": info["final_coverage"],
+                "final_occupied_iou": info["final_iou"],
             }
         )
     return output
@@ -317,7 +431,7 @@ def main() -> None:
         stop_key="stop_s",
         step=10.0,
         cutoff_source="summary.total_time_s",
-        endpoint_from_final_coverage=True,
+        endpoint_info_key="final_coverage",
     )
     coverage_distance_common = common_curve(
         infos,
@@ -327,7 +441,7 @@ def main() -> None:
         stop_key="stop_m",
         step=5.0,
         cutoff_source="summary.total_distance_m",
-        endpoint_from_final_coverage=True,
+        endpoint_info_key="final_coverage",
     )
     write_csv(
         analysis / "new_room_coverage_time_common_curve.csv", coverage_time_common
@@ -357,7 +471,7 @@ def main() -> None:
         analysis / "new_room_coverage_distance_curve.csv", coverage_distance_full
     )
 
-    # IoU time remains strict common-support and decision-level.
+    # Strict common-support IoU curves: real decision-level evaluations only.
     iou_time_common = common_curve(
         infos,
         source_name="evaluation.csv",
@@ -366,9 +480,38 @@ def main() -> None:
         stop_key="stop_s",
         step=10.0,
         cutoff_source="summary.total_time_s",
-        endpoint_from_final_coverage=False,
     )
-    write_csv(analysis / "new_room_iou_time_curve.csv", iou_time_common)
+    iou_distance_common = common_curve(
+        infos,
+        source_name="evaluation.csv",
+        x_key="distance_m",
+        y_key="occupied_iou",
+        stop_key="stop_m",
+        step=5.0,
+        cutoff_source="summary.total_distance_m",
+    )
+    write_csv(analysis / "new_room_iou_time_common_curve.csv", iou_time_common)
+    write_csv(
+        analysis / "new_room_iou_distance_common_curve.csv", iou_distance_common
+    )
+
+    # Canonical full IoU curves used for the main figures.
+    iou_time_full = full_iou_curve(
+        infos,
+        x_key="time_s",
+        stop_key="stop_s",
+        step=10.0,
+        cutoff_source="summary.total_time_s",
+    )
+    iou_distance_full = full_iou_curve(
+        infos,
+        x_key="distance_m",
+        stop_key="stop_m",
+        step=5.0,
+        cutoff_source="summary.total_distance_m",
+    )
+    write_csv(analysis / "new_room_iou_time_curve.csv", iou_time_full)
+    write_csv(analysis / "new_room_iou_distance_curve.csv", iou_distance_full)
 
     audit = cutoff_audit(infos)
     write_csv(analysis / "new_room_time_cutoff_audit.csv", audit)
@@ -377,7 +520,7 @@ def main() -> None:
     if legacy_full.exists():
         legacy_full.unlink()
 
-    print("Refreshed canonical New Room Coverage curves from 20 baseline runs.")
+    print("Refreshed canonical New Room Coverage and IoU curves from 20 baseline runs.")
     print(
         "Coverage time full: "
         f"0-{coverage_time_full[-1]['time_s']} s grid; exact max stop "
@@ -387,6 +530,16 @@ def main() -> None:
         "Coverage distance full: "
         f"0-{coverage_distance_full[-1]['distance_m']} m grid; exact max stop "
         f"{coverage_distance_full[-1]['max_stop_exact_m']} m"
+    )
+    print(
+        "IoU time full: "
+        f"0-{iou_time_full[-1]['time_s']} s grid; exact max stop "
+        f"{iou_time_full[-1]['max_stop_exact_s']} s"
+    )
+    print(
+        "IoU distance full: "
+        f"0-{iou_distance_full[-1]['distance_m']} m grid; exact max stop "
+        f"{iou_distance_full[-1]['max_stop_exact_m']} m"
     )
     print(
         "Coverage time common: "
@@ -404,8 +557,13 @@ def main() -> None:
         f"{iou_time_common[-1]['common_support_exact_max']} s"
     )
     print(
-        "Raw snapshots.csv/metrics.csv were not modified; recorder tails remain "
-        "available for audit."
+        "IoU distance common: "
+        f"0-{iou_distance_common[-1]['distance_m']} m grid; exact common support "
+        f"{iou_distance_common[-1]['common_support_exact_max']} m"
+    )
+    print(
+        "Raw snapshots.csv/metrics.csv/evaluation.csv were not modified; raw "
+        "evidence remains available for audit."
     )
 
 
