@@ -8,13 +8,14 @@ PYTHON_BIN="${PYTHON_BIN:-python3}"
 
 cd "$REPO_ROOT"
 
-# Remove v1-derived Way2 log archives from the active branch. Git history still
-# preserves them; the current tree should contain only regenerated evidence.
+"$PYTHON_BIN" "$SCRIPT_DIR/recompute_new_room_metrics_v2.py"
+
+# Only after the run-level migration succeeds, remove v1-derived Way2 log
+# archives from the active branch. Git history still preserves them; the
+# current tree will contain only regenerated evidence.
 rm -rf "$MAPEX_ROOT/analysis/way2_results/historical_logs"
 rm -rf "$MAPEX_ROOT/analysis/way2_results/reproduced_logs"
 rm -f "$MAPEX_ROOT/analysis/way2_results/archive_manifest.csv"
-
-"$PYTHON_BIN" "$SCRIPT_DIR/recompute_new_room_metrics_v2.py"
 
 bash "$MAPEX_ROOT/analysis/way2_results/reproduce_way2_analysis.sh"
 "$PYTHON_BIN" "$SCRIPT_DIR/refresh_way2_v2_evidence.py"
