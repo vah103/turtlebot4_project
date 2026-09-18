@@ -50,10 +50,7 @@ Some older analysis scripts originally printed detailed sweep tables only to the
 
 ## Evaluation-profile refresh
 
-After the New Room frame-alignment correction, quality evidence is regenerated
-from `new_room_structural_gt_v2` / `new_room_connected_free_v2`. The
-one-command migration removes old active log archives and recreates
-`reproduced_logs/`, `verified_development_results.csv`,
-`quality_failure_cases.csv`, `frozen_rule.json`, and the neighborhood/narrative
-evidence from the corrected evaluator. Git history remains the archive for the
-superseded v1-derived numbers.
+The 20-run NF-vs-MapEx baseline migration is intentionally separate from this
+Way2 evidence archive. `migrate_new_room_v2.sh` updates only
+`nf_001..010` and `mpx_001..010`; it does not delete or regenerate the
+historical Way2 development/validation evidence.
