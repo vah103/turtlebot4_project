@@ -91,21 +91,16 @@ def generate_v2_ground_truth():
     )
 
 
-def discover_new_room_runs():
-    runs = []
-    for parent in (ROOT / "experiments/nearest", ROOT / "experiments/mapex"):
-        if not parent.is_dir():
-            continue
-        for run in sorted(p for p in parent.iterdir() if p.is_dir()):
-            meta_path = run / "metadata.json"
-            if not meta_path.is_file():
-                continue
-            try:
-                meta = load_json(meta_path)
-            except Exception:
-                continue
-            if str(meta.get("environment") or "") == "new_room":
-                runs.append(run)
+def baseline_new_room_runs():
+    runs = [
+        *(ROOT / "experiments/nearest" / run_id for run_id in BASELINE_NF),
+        *(ROOT / "experiments/mapex" / run_id for run_id in BASELINE_MAPEX),
+    ]
+    missing = [str(run) for run in runs if not run.is_dir()]
+    if missing:
+        raise FileNotFoundError(
+            "missing required baseline New Room runs:\n" + "\n".join(missing)
+        )
     return runs
 
 
@@ -453,9 +448,9 @@ def main():
     if roi_n != int(gt_summary["connected_free_roi_cells"]):
         raise RuntimeError("ROI denominator mismatch after generation")
 
-    runs = discover_new_room_runs()
+    runs = baseline_new_room_runs()
     if not runs:
-        raise RuntimeError("no New Room runs found")
+        raise RuntimeError("no baseline New Room runs found")
 
     print(f"Migrating {len(runs)} New Room runs to {EVAL_PROFILE}")
     failures = []
