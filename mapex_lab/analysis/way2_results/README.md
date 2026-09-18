@@ -46,3 +46,14 @@ Historical development data and post-freeze online runs are intentionally separa
 Development/tuning results may explain **why the threshold was selected**. Post-freeze online runs may test the frozen rule, but must not be used to change `0.30`, `10.0`, cutoff `1`, or the `2/3` confirmation logic.
 
 Some older analysis scripts originally printed detailed sweep tables only to the terminal. Those exact historical terminal rows cannot be reconstructed from Git history when they were never committed. Therefore this archive does not invent missing rows. Instead, `reproduce_way2_analysis.sh` captures future reruns verbatim from the preserved experiment data and scripts so the complete output can then be committed.
+
+
+## Evaluation-profile refresh
+
+After the New Room frame-alignment correction, quality evidence is regenerated
+from `new_room_structural_gt_v2` / `new_room_connected_free_v2`. The
+one-command migration removes old active log archives and recreates
+`reproduced_logs/`, `verified_development_results.csv`,
+`quality_failure_cases.csv`, `frozen_rule.json`, and the neighborhood/narrative
+evidence from the corrected evaluator. Git history remains the archive for the
+superseded v1-derived numbers.
