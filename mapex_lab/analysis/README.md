@@ -61,7 +61,7 @@ evidence is intentionally outside this migration. Raw maps, predictions,
 trajectories, decisions, goals, plans, and runtime configuration are retained
 unchanged.
 
-### Canonical Coverage curves and exploration cutoffs
+### Canonical Coverage/IoU curves and exploration cutoffs
 
 Historical recorders can keep writing `metrics.csv` and `snapshots.csv` after
 the exploration policy has already stopped. Raw CSV end timestamps must not be
@@ -78,11 +78,15 @@ python3 mapex_lab/scripts/refresh_new_room_time_curves.py
 ```
 
 to regenerate the derived baseline curves without rerunning LaMa/evaluation.
-Raw experiment CSV files are preserved unchanged.
+Raw `snapshots.csv`, `metrics.csv`, and `evaluation.csv` files are preserved
+unchanged.
 
-Main figure curves are completion-aware and span the full baseline range. After
-a run completes, its final Coverage is held constant; `*_active_n` records how
-many of the 10 runs for that method are still exploring at each x value:
+#### Coverage
+
+Coverage is observed from the saved SLAM canvas. Main figure curves span the
+full baseline range. After a run completes, its final Coverage is held constant;
+`*_active_n` records how many of the 10 runs for that method are still exploring
+at each x value:
 
 - `new_room_coverage_time_curve.csv` — canonical full Coverage-vs-time curve.
 - `new_room_coverage_distance_curve.csv` — canonical full Coverage-vs-distance curve.
@@ -92,11 +96,31 @@ Strict no-extrapolation common-support variants are retained separately:
 - `new_room_coverage_time_common_curve.csv`
 - `new_room_coverage_distance_common_curve.csv`
 
-Other outputs:
+#### Occupied IoU
 
-- `new_room_iou_time_curve.csv` — decision-level IoU clipped at the canonical
-  exploration stop; strict common support, no synthetic endpoint.
-- `new_room_time_cutoff_audit.csv` — per-run raw-end vs canonical-stop audit.
+Occupied IoU is only evaluated at valid policy-decision checkpoints with an
+offline Big-LaMa prediction. The main IoU figures nevertheless use the full
+canonical exploration axis so that the final IoU corresponds to the run's final
+evaluable state near exploration completion. No synthetic prediction is added:
+once a run passes its last evaluable checkpoint, its last evaluable/final IoU is
+carried forward (`post_evaluation_semantics = hold_last_evaluable_iou`).
+`*_active_n` still refers to exploration activity from the canonical summary
+stop, not to generation of new IoU predictions.
+
+Canonical main-figure IoU curves:
+
+- `new_room_iou_time_curve.csv` — full IoU-vs-time curve through the longest run.
+- `new_room_iou_distance_curve.csv` — full IoU-vs-distance curve through the longest run.
+
+Strict common-support decision-level variants are retained separately:
+
+- `new_room_iou_time_common_curve.csv`
+- `new_room_iou_distance_common_curve.csv`
+
+Other output:
+
+- `new_room_time_cutoff_audit.csv` — per-run raw-end/evaluation-end versus
+  canonical-stop audit, including final Coverage and final occupied IoU.
 
 The former `new_room_coverage_time_full_curve.csv` alias is obsolete; the
 canonical full time curve now lives at `new_room_coverage_time_curve.csv`.
