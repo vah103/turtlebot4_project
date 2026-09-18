@@ -1,24 +1,35 @@
 #!/usr/bin/env python3
-"""Regenerate New Room baseline time curves with per-run exploration cutoffs.
+"""Regenerate canonical New Room baseline Coverage curves.
 
 Historical recorder processes can remain alive after exploration has stopped, so
 ``snapshots.csv`` and ``metrics.csv`` may contain a stationary recorder tail.
-The canonical exploration stop time is ``summary.json:total_time_s``.  Raw run
-logs are intentionally preserved; only derived time-based analysis is clipped.
+Canonical run completion is taken from ``summary.json``:
+
+- time cutoff: ``total_time_s``
+- distance cutoff: ``total_distance_m``
+
+Raw run logs are intentionally preserved.  The canonical Coverage curves span
+the full baseline range; once a run completes, its final Coverage is held
+constant.  Strict common-support curves are retained under explicit
+``*_common_curve.csv`` names for analyses that require no post-completion hold.
 
 Outputs:
 - analysis/new_room_coverage_time_curve.csv
-  Fair common-support curve.  Each run is clipped at total_time_s and coverage
-  gets an exact endpoint at (total_time_s, final_coverage).  No extrapolation.
+  Canonical full Coverage-vs-time curve through the longest baseline run.
+- analysis/new_room_coverage_distance_curve.csv
+  Canonical full Coverage-vs-distance curve through the longest baseline run.
+- analysis/new_room_coverage_time_common_curve.csv
+  Strict common-support Coverage-vs-time curve, no extrapolation.
+- analysis/new_room_coverage_distance_common_curve.csv
+  Strict common-support Coverage-vs-distance curve, no extrapolation.
 - analysis/new_room_iou_time_curve.csv
-  Decision-level IoU curve clipped at total_time_s.  No extrapolation and no
-  synthetic IoU endpoint is added.
-- analysis/new_room_coverage_time_full_curve.csv
-  Completion-aware visualization curve through the longest baseline run.  A
-  completed run holds its final coverage after total_time_s; active_n columns
-  show how many runs are still exploring at each time.
+  Decision-level IoU curve clipped at total_time_s, no extrapolation.
 - analysis/new_room_time_cutoff_audit.csv
-  Per-run audit of raw recorder tails versus the canonical stop time.
+  Per-run audit of raw recorder tails versus the canonical time cutoff.
+
+The legacy ``new_room_coverage_time_full_curve.csv`` alias is removed when this
+script runs; ``new_room_coverage_time_curve.csv`` is now the canonical full
+visualization curve.
 """
 
 from __future__ import annotations
@@ -81,17 +92,25 @@ def baseline_infos() -> list[dict]:
             path = run_dir(method, run_id)
             summary = read_json(path / "summary.json")
             stop_s = finite_float(summary.get("total_time_s"), f"{run_id}.total_time_s")
+            stop_m = finite_float(
+                summary.get("total_distance_m"), f"{run_id}.total_distance_m"
+            )
             final_coverage = finite_float(
                 summary.get("final_coverage"), f"{run_id}.final_coverage"
             )
             if stop_s <= 0.0:
                 raise RuntimeError(f"non-positive exploration stop time for {run_id}: {stop_s}")
+            if stop_m <= 0.0:
+                raise RuntimeError(
+                    f"non-positive exploration stop distance for {run_id}: {stop_m}"
+                )
             infos.append(
                 {
                     "method": method,
                     "run_id": run_id,
                     "path": path,
                     "stop_s": stop_s,
+                    "stop_m": stop_m,
                     "final_coverage": final_coverage,
                 }
             )
@@ -139,36 +158,39 @@ def series_from_csv(
     return xs, ys
 
 
-def common_time_curve(
+def common_curve(
     infos: list[dict],
     *,
     source_name: str,
+    x_key: str,
     y_key: str,
-    step_s: float = 10.0,
-    coverage_endpoint: bool = False,
+    stop_key: str,
+    step: float,
+    cutoff_source: str,
+    endpoint_from_final_coverage: bool = False,
 ) -> list[dict]:
     series: dict[tuple[str, str], tuple[np.ndarray, np.ndarray]] = {}
     for info in infos:
-        endpoint_y = info["final_coverage"] if coverage_endpoint else None
+        endpoint_y = info["final_coverage"] if endpoint_from_final_coverage else None
         series[(info["method"], info["run_id"])] = series_from_csv(
             info["path"] / source_name,
-            "time_s",
+            x_key,
             y_key,
-            max_x=info["stop_s"],
+            max_x=info[stop_key],
             endpoint_y=endpoint_y,
         )
 
     common_max = min(float(xs[-1]) for xs, _ in series.values())
-    grid_max = math.floor(common_max / step_s) * step_s
-    grid = np.arange(0.0, grid_max + step_s * 0.25, step_s)
+    grid_max = math.floor(common_max / step) * step
+    grid = np.arange(0.0, grid_max + step * 0.25, step)
 
     output = []
     for x in grid:
         row = {
-            "time_s": float(x),
+            x_key: float(x),
             "evaluation_profile": EVAL_PROFILE,
             "common_support_exact_max": common_max,
-            "time_cutoff_source": "summary.total_time_s",
+            "cutoff_source": cutoff_source,
         }
         for method, ids in (("NF", BASELINE_NF), ("MapEx", BASELINE_MAPEX)):
             vals = [
@@ -183,16 +205,15 @@ def common_time_curve(
     return output
 
 
-def full_coverage_time_curve(
-    infos: list[dict], step_s: float = 10.0
+def full_coverage_curve(
+    infos: list[dict],
+    *,
+    x_key: str,
+    stop_key: str,
+    step: float,
+    cutoff_source: str,
 ) -> list[dict]:
-    """Coverage-by-time for visualization through the longest completed run.
-
-    Before a run's stop time we interpolate only its clipped snapshot evidence.
-    After it completes, its final coverage is held constant.  This is not the
-    no-extrapolation common-support curve; the active_n columns make the
-    completion state explicit.
-    """
+    """Completion-aware Coverage curve through the longest completed run."""
 
     series: dict[tuple[str, str], tuple[np.ndarray, np.ndarray]] = {}
     info_by_key = {}
@@ -201,23 +222,24 @@ def full_coverage_time_curve(
         info_by_key[key] = info
         series[key] = series_from_csv(
             info["path"] / "snapshots.csv",
-            "time_s",
+            x_key,
             "coverage",
-            max_x=info["stop_s"],
+            max_x=info[stop_key],
             endpoint_y=info["final_coverage"],
         )
 
-    max_stop = max(float(info["stop_s"]) for info in infos)
-    grid_max = math.floor(max_stop / step_s) * step_s
-    grid = np.arange(0.0, grid_max + step_s * 0.25, step_s)
+    max_stop = max(float(info[stop_key]) for info in infos)
+    grid_max = math.floor(max_stop / step) * step
+    grid = np.arange(0.0, grid_max + step * 0.25, step)
 
+    max_key = "max_stop_exact_s" if x_key == "time_s" else "max_stop_exact_m"
     output = []
     for x in grid:
         row = {
-            "time_s": float(x),
+            x_key: float(x),
             "evaluation_profile": EVAL_PROFILE,
-            "max_stop_exact_s": max_stop,
-            "time_cutoff_source": "summary.total_time_s",
+            max_key: max_stop,
+            "cutoff_source": cutoff_source,
             "post_completion_semantics": "hold_final_coverage",
         }
         for method, ids in (("NF", BASELINE_NF), ("MapEx", BASELINE_MAPEX)):
@@ -226,7 +248,7 @@ def full_coverage_time_curve(
             for run_id in ids:
                 key = (method, run_id)
                 info = info_by_key[key]
-                if x <= float(info["stop_s"]) + EPS:
+                if x <= float(info[stop_key]) + EPS:
                     vals.append(float(np.interp(x, *series[key])))
                     active_n += 1
                 else:
@@ -272,6 +294,7 @@ def cutoff_audit(infos: list[dict]) -> list[dict]:
                 "metrics_tail_s": max(0.0, metrics_last - stop_s),
                 "evaluation_last_time_s": evaluation_last,
                 "evaluation_tail_s": max(0.0, evaluation_last - stop_s),
+                "canonical_stop_distance_m": float(info["stop_m"]),
                 "final_coverage": info["final_coverage"],
             }
         )
@@ -284,43 +307,101 @@ def main() -> None:
         raise RuntimeError(f"expected 20 baseline runs, found {len(infos)}")
 
     analysis = ROOT / "analysis"
-    write_csv(
-        analysis / "new_room_coverage_time_curve.csv",
-        common_time_curve(
-            infos,
-            source_name="snapshots.csv",
-            y_key="coverage",
-            coverage_endpoint=True,
-        ),
+
+    # Strict common-support Coverage curves.
+    coverage_time_common = common_curve(
+        infos,
+        source_name="snapshots.csv",
+        x_key="time_s",
+        y_key="coverage",
+        stop_key="stop_s",
+        step=10.0,
+        cutoff_source="summary.total_time_s",
+        endpoint_from_final_coverage=True,
+    )
+    coverage_distance_common = common_curve(
+        infos,
+        source_name="snapshots.csv",
+        x_key="distance_m",
+        y_key="coverage",
+        stop_key="stop_m",
+        step=5.0,
+        cutoff_source="summary.total_distance_m",
+        endpoint_from_final_coverage=True,
     )
     write_csv(
-        analysis / "new_room_iou_time_curve.csv",
-        common_time_curve(
-            infos,
-            source_name="evaluation.csv",
-            y_key="occupied_iou",
-            coverage_endpoint=False,
-        ),
+        analysis / "new_room_coverage_time_common_curve.csv", coverage_time_common
     )
     write_csv(
-        analysis / "new_room_coverage_time_full_curve.csv",
-        full_coverage_time_curve(infos),
+        analysis / "new_room_coverage_distance_common_curve.csv",
+        coverage_distance_common,
     )
+
+    # Canonical full Coverage curves used for the main figures.
+    coverage_time_full = full_coverage_curve(
+        infos,
+        x_key="time_s",
+        stop_key="stop_s",
+        step=10.0,
+        cutoff_source="summary.total_time_s",
+    )
+    coverage_distance_full = full_coverage_curve(
+        infos,
+        x_key="distance_m",
+        stop_key="stop_m",
+        step=5.0,
+        cutoff_source="summary.total_distance_m",
+    )
+    write_csv(analysis / "new_room_coverage_time_curve.csv", coverage_time_full)
+    write_csv(
+        analysis / "new_room_coverage_distance_curve.csv", coverage_distance_full
+    )
+
+    # IoU time remains strict common-support and decision-level.
+    iou_time_common = common_curve(
+        infos,
+        source_name="evaluation.csv",
+        x_key="time_s",
+        y_key="occupied_iou",
+        stop_key="stop_s",
+        step=10.0,
+        cutoff_source="summary.total_time_s",
+        endpoint_from_final_coverage=False,
+    )
+    write_csv(analysis / "new_room_iou_time_curve.csv", iou_time_common)
+
     audit = cutoff_audit(infos)
     write_csv(analysis / "new_room_time_cutoff_audit.csv", audit)
 
-    coverage_common = read_csv(analysis / "new_room_coverage_time_curve.csv")
-    iou_common = read_csv(analysis / "new_room_iou_time_curve.csv")
-    print("Refreshed New Room baseline time curves using summary.total_time_s cutoffs.")
+    legacy_full = analysis / "new_room_coverage_time_full_curve.csv"
+    if legacy_full.exists():
+        legacy_full.unlink()
+
+    print("Refreshed canonical New Room Coverage curves from 20 baseline runs.")
     print(
-        "Coverage common support: "
-        f"{coverage_common[-1]['time_s']} s grid; exact min stop "
-        f"{coverage_common[-1]['common_support_exact_max']} s"
+        "Coverage time full: "
+        f"0-{coverage_time_full[-1]['time_s']} s grid; exact max stop "
+        f"{coverage_time_full[-1]['max_stop_exact_s']} s"
     )
     print(
-        "IoU common support: "
-        f"{iou_common[-1]['time_s']} s grid; exact min evaluable "
-        f"{iou_common[-1]['common_support_exact_max']} s"
+        "Coverage distance full: "
+        f"0-{coverage_distance_full[-1]['distance_m']} m grid; exact max stop "
+        f"{coverage_distance_full[-1]['max_stop_exact_m']} m"
+    )
+    print(
+        "Coverage time common: "
+        f"0-{coverage_time_common[-1]['time_s']} s grid; exact common support "
+        f"{coverage_time_common[-1]['common_support_exact_max']} s"
+    )
+    print(
+        "Coverage distance common: "
+        f"0-{coverage_distance_common[-1]['distance_m']} m grid; exact common support "
+        f"{coverage_distance_common[-1]['common_support_exact_max']} m"
+    )
+    print(
+        "IoU time common: "
+        f"0-{iou_time_common[-1]['time_s']} s grid; exact common support "
+        f"{iou_time_common[-1]['common_support_exact_max']} s"
     )
     print(
         "Raw snapshots.csv/metrics.csv were not modified; recorder tails remain "
