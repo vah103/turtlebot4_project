@@ -688,7 +688,7 @@ def evaluate_run(
         "ground_truth": str(gt_path),
         "ground_truth_sha256": _sha256(gt_path),
         "evaluation_canvas": {
-            "id": gt_path.stem.replace("_structural_gt_v1", "_canvas_v1"),
+            "id": "hospital_canvas_v1",
             "resolution_m": CANVAS_RES,
             "width": CANVAS_W,
             "height": CANVAS_H,

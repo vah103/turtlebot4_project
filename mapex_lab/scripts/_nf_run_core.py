@@ -471,7 +471,7 @@ class Stage2Run(NearestEuclideanFrontier):
                 {
                     "environment_world": self.root / "map" / "new_room.sdf",
                     "ground_truth_generator": self.root / "scripts" / "generate_new_room_ground_truth.py",
-                    "ground_truth_contract": self.root / "ground_truth" / "new_room" / "structural_gt_v1.yaml",
+                    "ground_truth_contract": self.root / "ground_truth" / "new_room" / "structural_gt_v2.yaml",
                 }
             )
 
