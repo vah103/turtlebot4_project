@@ -61,12 +61,15 @@ evidence is intentionally outside this migration. Raw maps, predictions,
 trajectories, decisions, goals, plans, and runtime configuration are retained
 unchanged.
 
-### Exploration-time cutoff for baseline curves
+### Canonical Coverage curves and exploration cutoffs
 
 Historical recorders can keep writing `metrics.csv` and `snapshots.csv` after
-the exploration policy has already stopped. Therefore raw CSV end timestamps
-must not be interpreted as exploration duration. For every baseline run, the
-canonical stop time is `summary.json:total_time_s`.
+the exploration policy has already stopped. Raw CSV end timestamps must not be
+interpreted as exploration duration. Canonical run completion comes from
+`summary.json`:
+
+- time: `total_time_s`
+- distance: `total_distance_m`
 
 Run:
 
@@ -74,13 +77,26 @@ Run:
 python3 mapex_lab/scripts/refresh_new_room_time_curves.py
 ```
 
-to regenerate time-based baseline analysis without rerunning LaMa/evaluation.
-The script clips each run at its own `total_time_s`, preserves the raw recorder
-tail, and writes:
+to regenerate the derived baseline curves without rerunning LaMa/evaluation.
+Raw experiment CSV files are preserved unchanged.
 
-- `new_room_coverage_time_curve.csv` — no-extrapolation common-support curve.
-- `new_room_iou_time_curve.csv` — decision IoU clipped at the exploration stop.
-- `new_room_coverage_time_full_curve.csv` — full-duration visualization; after a
-  run completes, final coverage is held constant and `*_active_n` records how
-  many runs are still exploring.
-- `new_room_time_cutoff_audit.csv` — per-run raw-end vs exploration-stop audit.
+Main figure curves are completion-aware and span the full baseline range. After
+a run completes, its final Coverage is held constant; `*_active_n` records how
+many of the 10 runs for that method are still exploring at each x value:
+
+- `new_room_coverage_time_curve.csv` — canonical full Coverage-vs-time curve.
+- `new_room_coverage_distance_curve.csv` — canonical full Coverage-vs-distance curve.
+
+Strict no-extrapolation common-support variants are retained separately:
+
+- `new_room_coverage_time_common_curve.csv`
+- `new_room_coverage_distance_common_curve.csv`
+
+Other outputs:
+
+- `new_room_iou_time_curve.csv` — decision-level IoU clipped at the canonical
+  exploration stop; strict common support, no synthetic endpoint.
+- `new_room_time_cutoff_audit.csv` — per-run raw-end vs canonical-stop audit.
+
+The former `new_room_coverage_time_full_curve.csv` alias is obsolete; the
+canonical full time curve now lives at `new_room_coverage_time_curve.csv`.
