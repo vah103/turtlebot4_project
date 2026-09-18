@@ -60,3 +60,27 @@ regenerates the baseline aggregate tables/curves. Way2 development/validation
 evidence is intentionally outside this migration. Raw maps, predictions,
 trajectories, decisions, goals, plans, and runtime configuration are retained
 unchanged.
+
+### Exploration-time cutoff for baseline curves
+
+Historical recorders can keep writing `metrics.csv` and `snapshots.csv` after
+the exploration policy has already stopped. Therefore raw CSV end timestamps
+must not be interpreted as exploration duration. For every baseline run, the
+canonical stop time is `summary.json:total_time_s`.
+
+Run:
+
+```bash
+python3 mapex_lab/scripts/refresh_new_room_time_curves.py
+```
+
+to regenerate time-based baseline analysis without rerunning LaMa/evaluation.
+The script clips each run at its own `total_time_s`, preserves the raw recorder
+tail, and writes:
+
+- `new_room_coverage_time_curve.csv` — no-extrapolation common-support curve.
+- `new_room_iou_time_curve.csv` — decision IoU clipped at the exploration stop.
+- `new_room_coverage_time_full_curve.csv` — full-duration visualization; after a
+  run completes, final coverage is held constant and `*_active_n` records how
+  many runs are still exploring.
+- `new_room_time_cutoff_audit.csv` — per-run raw-end vs exploration-stop audit.
