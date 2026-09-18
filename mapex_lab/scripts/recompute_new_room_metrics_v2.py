@@ -423,13 +423,21 @@ def update_status():
 def audit_no_active_v1(runs):
     problems = []
     for run in runs:
-        for name in ("metadata.json", "summary.json", "evaluation.json"):
-            path = run / name
-            if not path.is_file():
+        metadata = load_json(run / "metadata.json")
+        summary = load_json(run / "summary.json")
+        evaluation = load_json(run / "evaluation.json")
+        checks = {
+            "metadata.evaluation_roi_id": metadata.get("evaluation_roi_id"),
+            "metadata.structural_ground_truth_id": metadata.get("structural_ground_truth_id"),
+            "summary.evaluation_roi_id": summary.get("evaluation_roi_id"),
+            "summary.structural_ground_truth_id": summary.get("structural_ground_truth_id"),
+            "evaluation.evaluation_profile_version": evaluation.get("evaluation_profile_version"),
+        }
+        for key, current in checks.items():
+            if current is None:
                 continue
-            content = path.read_text(encoding="utf-8", errors="replace")
-            if "new_room_connected_free_v1" in content or "new_room_structural_gt_v1" in content:
-                problems.append(str(path))
+            if "connected_free_v1" in str(current) or "structural_gt_v1" in str(current):
+                problems.append(f"{run.name}: {key}={current}")
     if problems:
         raise RuntimeError("active v1 references remain:\n" + "\n".join(problems))
 
