@@ -1,5 +1,14 @@
 # Experiment Notes
 
+## 2026-09-21 — Match Gate-P predictions to exact raw maps
+
+- What changed: Gate-P prediction loading now hard-checks shape, resolution, origin, source map timestamp and G1/G2/G3/mean member identity against the exact decision raw map.
+- Why: shape-only validation could miss a stale/wrong-decision prediction with identical map extent.
+- Environment policy: metadata/prediction environment mismatch is WARN-only; GT ID/canvas/resolution and prediction/raw spatial/source identity remain hard-fail.
+- Affected runs: no raw runs changed; offline analyzer only.
+- Does baseline need rerun?: no.
+- Next action: smoke test `mpx_001 --reference both --no-figures`, then run the full cohort if clean.
+
 ## 2026-09-21 — Harden D1 Gate P2 provenance before cohort run
 
 - What changed: added structural-GT provenance validation and expanded P1-vs-P2 class-specific/support comparison in `analysis/d1/d1_gate_p.py`.
