@@ -656,7 +656,17 @@ def aggregate_run(
             d for d in decision_rows
             if int(d["is_last_n"]) == 1 and int(d["evaluated_cell_count"]) > 0
         ]
-        for metric_name in ("accuracy", "macro_iou", "mae"):
+        for metric_name in (
+            "accuracy",
+            "free_precision",
+            "free_recall",
+            "occupied_precision",
+            "occupied_recall",
+            "free_iou",
+            "occupied_iou",
+            "macro_iou",
+            "mae",
+        ):
             row[f"{predictor}_late_{metric_name}_decision_macro"] = _nanmean(
                 d[f"{predictor}_{metric_name}"] for d in late_rows
             )
@@ -727,6 +737,9 @@ def build_summary(
         "notes": [
             "Primary targets are cells unknown at decision t that become known in a later policy-decision map.",
             "Each cell uses its first later known observation as the primary target.",
+            "The primary later-observed reference evaluates Unknown_t intersect EventuallyObserved, not all Unknown_t cells.",
+            "Therefore Gate P1 supports claims only on unknown cells that baseline exploration later observes.",
+            "Structural-GT analysis is required as a second reference to assess unknown regions that baseline never observes.",
             "The final raw map is retained only as a secondary diagnostic reference.",
             "Future data are offline targets only and are never runtime D1 inputs.",
             "Run directory names are canonical run IDs for this analysis.",
@@ -754,6 +767,24 @@ def build_summary(
         run_late_mae = [
             row[f"{predictor}_late_mae_decision_macro"] for row in run_rows
         ]
+        run_late_free_precision = [
+            row[f"{predictor}_late_free_precision_decision_macro"] for row in run_rows
+        ]
+        run_late_free_recall = [
+            row[f"{predictor}_late_free_recall_decision_macro"] for row in run_rows
+        ]
+        run_late_occupied_precision = [
+            row[f"{predictor}_late_occupied_precision_decision_macro"] for row in run_rows
+        ]
+        run_late_occupied_recall = [
+            row[f"{predictor}_late_occupied_recall_decision_macro"] for row in run_rows
+        ]
+        run_late_free_iou = [
+            row[f"{predictor}_late_free_iou_decision_macro"] for row in run_rows
+        ]
+        run_late_occupied_iou = [
+            row[f"{predictor}_late_occupied_iou_decision_macro"] for row in run_rows
+        ]
 
         tp = sum(int(row[f"{predictor}_tp_occ"]) for row in decision_rows)
         tn = sum(int(row[f"{predictor}_tn_free"]) for row in decision_rows)
@@ -774,6 +805,20 @@ def build_summary(
             "late_run_macro_macro_iou_std": _nanstd(run_late_iou),
             "late_run_macro_mae_mean": _nanmean(run_late_mae),
             "late_run_macro_mae_std": _nanstd(run_late_mae),
+            "late_class_metrics": {
+                "free_precision_mean": _nanmean(run_late_free_precision),
+                "free_precision_std": _nanstd(run_late_free_precision),
+                "free_recall_mean": _nanmean(run_late_free_recall),
+                "free_recall_std": _nanstd(run_late_free_recall),
+                "occupied_precision_mean": _nanmean(run_late_occupied_precision),
+                "occupied_precision_std": _nanstd(run_late_occupied_precision),
+                "occupied_recall_mean": _nanmean(run_late_occupied_recall),
+                "occupied_recall_std": _nanstd(run_late_occupied_recall),
+                "free_iou_mean": _nanmean(run_late_free_iou),
+                "free_iou_std": _nanstd(run_late_free_iou),
+                "occupied_iou_mean": _nanmean(run_late_occupied_iou),
+                "occupied_iou_std": _nanstd(run_late_occupied_iou),
+            },
             "overall_prediction_pair_micro": overall_micro,
             "final_reference_diagnostic": {
                 "run_macro_accuracy_mean": _nanmean(
@@ -801,6 +846,24 @@ def build_summary(
                 "decisions": len(stage_rows),
                 "accuracy_decision_macro": _nanmean(
                     row[f"{predictor}_accuracy"] for row in stage_rows
+                ),
+                "free_precision_decision_macro": _nanmean(
+                    row[f"{predictor}_free_precision"] for row in stage_rows
+                ),
+                "free_recall_decision_macro": _nanmean(
+                    row[f"{predictor}_free_recall"] for row in stage_rows
+                ),
+                "occupied_precision_decision_macro": _nanmean(
+                    row[f"{predictor}_occupied_precision"] for row in stage_rows
+                ),
+                "occupied_recall_decision_macro": _nanmean(
+                    row[f"{predictor}_occupied_recall"] for row in stage_rows
+                ),
+                "free_iou_decision_macro": _nanmean(
+                    row[f"{predictor}_free_iou"] for row in stage_rows
+                ),
+                "occupied_iou_decision_macro": _nanmean(
+                    row[f"{predictor}_occupied_iou"] for row in stage_rows
                 ),
                 "macro_iou_decision_macro": _nanmean(
                     row[f"{predictor}_macro_iou"] for row in stage_rows
@@ -895,6 +958,58 @@ def make_figures(decision_rows: list[dict], run_rows: list[dict], output_dir: Pa
     ax.grid(True, axis="y", alpha=0.25)
     fig.tight_layout()
     path = figure_dir / "late_stage_accuracy_by_run.png"
+    fig.savefig(path, dpi=160)
+    plt.close(fig)
+    written.append(str(path))
+
+    # Class-specific late-stage diagnostics for the ensemble mean. These are
+    # intentionally separate from overall accuracy because free/occupied class
+    # imbalance can hide safety-relevant errors.
+    x = np.arange(len(labels), dtype=np.float64)
+    width = 0.38
+
+    fig, ax = plt.subplots(figsize=(10.0, 5.2))
+    free_recall = [
+        float(row["mean_late_free_recall_decision_macro"])
+        for row in run_rows
+    ]
+    occupied_recall = [
+        float(row["mean_late_occupied_recall_decision_macro"])
+        for row in run_rows
+    ]
+    ax.bar(x - width / 2.0, free_recall, width, label="Free recall")
+    ax.bar(x + width / 2.0, occupied_recall, width, label="Occupied recall")
+    ax.set_xticks(x, labels, rotation=45)
+    ax.set_xlabel("Run")
+    ax.set_ylabel("Last-N recall")
+    ax.set_ylim(0.0, 1.0)
+    ax.grid(True, axis="y", alpha=0.25)
+    ax.legend()
+    fig.tight_layout()
+    path = figure_dir / "late_stage_class_recall_by_run.png"
+    fig.savefig(path, dpi=160)
+    plt.close(fig)
+    written.append(str(path))
+
+    fig, ax = plt.subplots(figsize=(10.0, 5.2))
+    free_iou = [
+        float(row["mean_late_free_iou_decision_macro"])
+        for row in run_rows
+    ]
+    occupied_iou = [
+        float(row["mean_late_occupied_iou_decision_macro"])
+        for row in run_rows
+    ]
+    ax.bar(x - width / 2.0, free_iou, width, label="Free IoU")
+    ax.bar(x + width / 2.0, occupied_iou, width, label="Occupied IoU")
+    ax.set_xticks(x, labels, rotation=45)
+    ax.set_xlabel("Run")
+    ax.set_ylabel("Last-N IoU")
+    ax.set_ylim(0.0, 1.0)
+    ax.grid(True, axis="y", alpha=0.25)
+    ax.legend()
+    fig.tight_layout()
+    path = figure_dir / "late_stage_class_iou_by_run.png"
     fig.savefig(path, dpi=160)
     plt.close(fig)
     written.append(str(path))
