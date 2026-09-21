@@ -760,16 +760,17 @@ def _structural_context(observed: RawGrid, gt: StructuralGT) -> dict:
             f"GT resolution {gt.resolution}"
         )
 
+    # Match the repository's canonical canvas reprojection exactly:
+    # quantize the runtime-map origin to the nearest GT-canvas cell. SLAM map
+    # origins are not guaranteed to land on an exact 0.05 m lattice.
     row0_f = (observed.origin_y - gt.origin_y) / gt.resolution
     col0_f = (observed.origin_x - gt.origin_x) / gt.resolution
     row0 = int(round(row0_f))
     col0 = int(round(col0_f))
-    if not math.isclose(row0_f, row0, abs_tol=1e-5) or not math.isclose(
-        col0_f, col0, abs_tol=1e-5
-    ):
-        raise ValueError(
-            "runtime map origin is not aligned to the structural-GT canvas"
-        )
+    aligned_origin_x = gt.origin_x + col0 * gt.resolution
+    aligned_origin_y = gt.origin_y + row0 * gt.resolution
+    origin_rounding_residual_x_m = observed.origin_x - aligned_origin_x
+    origin_rounding_residual_y_m = observed.origin_y - aligned_origin_y
 
     unknown_hi = np.repeat(
         np.repeat(observed.data < 0, ratio, axis=0),
@@ -796,6 +797,12 @@ def _structural_context(observed: RawGrid, gt: StructuralGT) -> dict:
             "evaluated_free_count": 0,
             "evaluated_occupied_count": 0,
             "evaluated_area_m2": 0.0,
+            "origin_rounding_residual_x_m": float(
+                origin_rounding_residual_x_m
+            ),
+            "origin_rounding_residual_y_m": float(
+                origin_rounding_residual_y_m
+            ),
         }
 
     src_slice = (
@@ -823,6 +830,12 @@ def _structural_context(observed: RawGrid, gt: StructuralGT) -> dict:
         "evaluated_free_count": count - occupied_count,
         "evaluated_occupied_count": occupied_count,
         "evaluated_area_m2": float(count * gt.resolution * gt.resolution),
+        "origin_rounding_residual_x_m": float(
+            origin_rounding_residual_x_m
+        ),
+        "origin_rounding_residual_y_m": float(
+            origin_rounding_residual_y_m
+        ),
     }
 
 
@@ -1040,6 +1053,8 @@ def analyze_decision_rows(
                 "first_vs_final_class_agreement": agreement,
                 "ground_truth_id": "",
                 "ground_truth_canvas_id": "",
+                "structural_origin_rounding_residual_x_m": "",
+                "structural_origin_rounding_residual_y_m": "",
             }
         )
 
@@ -1108,6 +1123,12 @@ def analyze_decision_rows(
                 "first_vs_final_class_agreement": math.nan,
                 "ground_truth_id": structural_gt.ground_truth_id,
                 "ground_truth_canvas_id": structural_gt.canvas_id,
+                "structural_origin_rounding_residual_x_m": float(
+                    context["origin_rounding_residual_x_m"]
+                ),
+                "structural_origin_rounding_residual_y_m": float(
+                    context["origin_rounding_residual_y_m"]
+                ),
             }
         )
 
@@ -1204,6 +1225,17 @@ def aggregate_run(
         ),
         "provenance_warning_count": len(provenance_warnings),
         "provenance_warnings": "; ".join(provenance_warnings),
+        "structural_origin_rounding_residual_max_abs_m": (
+            max(
+                max(
+                    abs(float(d["structural_origin_rounding_residual_x_m"])),
+                    abs(float(d["structural_origin_rounding_residual_y_m"])),
+                )
+                for d in decision_rows
+            )
+            if reference == "structural_gt" and decision_rows
+            else math.nan
+        ),
         "mean_decisions_until_reveal_decision_macro": _nanmean(
             d.get("mean_decisions_until_reveal", math.nan)
             for d in decision_rows
@@ -1559,7 +1591,8 @@ def build_summary(
             "P1 uses each cell's first later known policy-decision observation.",
             "P2 structural_gt evaluates decision-time unknown cells intersected with the structural-GT evaluation_mask.",
             "P2 uses the canonical GT canvas and preserves both free and occupied classes; the connected-free ROI is not used as the P2 classification mask.",
-            "Runtime prediction cells are nearest-neighbour expanded to the GT resolution before P2 scoring, matching the repo's canonical canvas semantics.",
+            "Runtime prediction cells are nearest-neighbour expanded to the GT resolution before P2 scoring; runtime-map origins are quantized with int(round((origin-canvas_origin)/GT_resolution)), matching the repo's canonical evaluator semantics.",
+            "P2 records the resulting x/y origin-rounding residuals for audit; these are reprojection quantization diagnostics, not a hard alignment requirement.",
             "Future/final data are offline targets only and are never runtime D1 inputs.",
             "Run directory names are canonical run IDs for this analysis.",
             "Gate P classifies prediction < 0.5 as free and prediction >= 0.5 as occupied; this differs only at the exact 0.5 boundary from the legacy evaluator's > 0.5 convention.",
