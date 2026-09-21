@@ -1,49 +1,48 @@
 # mapex_lab status
 
-_Last synchronized with `main`: 2026-09-17._
+_Last synchronized with `main`: 2026-09-21._
 
 ## Current focus
 
-The active thesis direction is **Way2: frontier-utility-based early stopping for MapEx**.
-
-- Way1 is closed.
-- Way2 is implemented online and the candidate rule is **FROZEN**.
-- Online sanity testing has been completed.
-- Five Way2 online runs are currently stored in the repository:
-  - New Room: `mpx_w2_001`, `mpx_w2_002`
-  - Hospital: `hpx_w2_001`, `hpx_w2_002`, `hpx_w2_003`
-- `mpx_w2_003` has not been collected yet.
-- `mpx_w2_001` is the integration/sanity run and must not be counted as independent prospective validation evidence.
-- Baseline `scripts/mapex.py` remains unchanged; Way2 is isolated in `scripts/mapex_way2.py`.
-- The frozen thresholds must not be retuned from these online outcomes.
-- The 17 historical runs used to develop/audit Way2 remain development data only.
-- For New Room baseline comparison, `mpx_001` through `mpx_010` are one comparable runtime/setup cohort. Historical differences in `runtime_profile*` strings are provenance/naming artifacts and must not be used to split that cohort. See `experiments/mapex/RUN_CONTEXT.json`.
-- **New Room coverage evaluator correction:** `new_room_connected_free_v1` is superseded because it rasterized SDF world coordinates directly against SLAM-start canvases even though New Room spawns at world `(0,3,0)`. New runs use frame-correct `new_room_connected_free_v2`. Historical New Room coverage values remain recorded as v1 until offline backfill from saved canvases is validated; time, distance, trajectory, navigation outcomes, MapEx scoring, and Way2 R/U are unaffected.
-
-Frozen online rule:
+The active thesis program is now **six MapEx early-stopping research directions (D1...D6)** defined canonically in:
 
 ```text
-For each evaluable decision t over selectable frontiers f:
-
-R_t = max_f information_gain(f) / distance_m(f)
-U_t = max_f visible_unknown_cells(f) / distance_m(f)
-
-base_valid_t := (R_t <= 0.30) AND (U_t <= 10.0)
-
-Persistence / confirmation:
-- any evaluable base-invalid state resets valid_count to 0;
-- 1st consecutive base-valid state: continue;
-- 2nd consecutive base-valid state:
-    - if selectable candidate_count <= 1: STOP;
-    - otherwise continue and require one more confirmation;
-- 3rd consecutive base-valid state: STOP regardless of candidate count.
+references/MAPEX_EARLY_STOPPING_DIRECTIONS.md
 ```
 
-The rule is frozen as a **candidate validation rule**, not yet claimed as a validated final method.
+Way1 and Way2 are both **closed historical branches**.
+
+- **Way1:** closed because the global unknown-variance threshold did not transfer robustly from New Room to Hospital without retuning.
+- **Way2:** closed as the primary research direction because the collected result was not sufficiently robust/compelling to justify continuing it as the thesis stopping rule.
+- Existing Way1/Way2 code, runs, logs and frozen constants remain in the repo for audit/history only.
+- Do **not** retune Way1 or Way2 and do not reuse their names for the new directions.
+- Baseline `scripts/mapex.py` remains unchanged and is the comparison baseline for D1...D6.
+
+The six active directions are:
+
+1. **D1 — Uncertainty-Aware Predicted Map Completeness**
+2. **D2 — Information-Gain Saturation**
+3. **D3 — Prediction + Stagnation Hybrid**
+4. **D4 — Prediction Reliability-Gated Stopping**
+5. **D5 — Ensemble Risk / Missing-Area Consensus**
+6. **D6 — Lightweight Learned Stop Predictor**
+
+Implementation order is controlled rather than winner-first:
+
+```text
+common stopping infrastructure
+→ D2 plumbing/baseline
+→ D1 first major prediction-aware method
+→ D3/D4 robustness extensions
+→ D5 ensemble-consensus extension
+→ D6 learned extension
+```
+
+No D1...D6 threshold is frozen yet. Threshold selection must use development data only; prospective validation begins only after each direction's parameter set is explicitly frozen.
 
 ---
 
-# Current online Way2 runs
+# Archived Way2 online runs
 
 | Run | Environment | Termination | Coverage | Distance | Time | Policy decisions | Notes |
 |---|---|---|---:|---:|---:|---:|---|
@@ -59,11 +58,11 @@ Important interpretation:
 - `mpx_w2_002` demonstrates the complementary behavior: if the confirmation sequence is not completed before frontiers disappear, Way2 does not force a stop and baseline completion remains responsible for termination.
 - `hpx_w2_001` and `hpx_w2_002` reached normal completion.
 - `hpx_w2_003` triggered Way2 using the third-consecutive-valid branch with final recorded values approximately `R_t=0.107752`, `U_t=1.09924 cells/m`, `candidate_count=1`, `valid_count=3`.
-- Five runs are not enough for a final thesis-level statistical conclusion. Continue collecting frozen-rule runs before judging Way2 against MapEx or NF.
+- These five runs are retained as historical evidence only. No further Way2 collection is planned under the new six-direction program.
 
 ---
 
-# Online implementation and recorder status
+# Archived Way2 implementation and recorder status
 
 ## Way2 policy
 
@@ -146,7 +145,7 @@ Runs recorded before `way2_checks.csv` was introduced can be backfilled from `ca
 
 ---
 
-# Development evidence used to freeze Way2
+# Archived development evidence used to freeze Way2
 
 The development backtest remains historical context only:
 
@@ -219,17 +218,20 @@ Conclusion: Way1 works in New Room but does not transfer cleanly to Hospital wit
 
 # Current next actions
 
-1. Generate and visually validate `new_room_connected_free_v2` against a saved New Room final canvas (recommended sanity run: `mpx_w2_002`), then backfill historical New Room coverage/coverage curves from saved canvas snapshots before interpreting absolute coverage.
-2. Collect additional frozen-rule New Room runs beginning with `mpx_w2_003` and additional Hospital runs as needed.
-3. Keep pushing the **full run directories**, including decisions, prediction maps, maps, CSV/JSON metadata, goals/plans, and audit files, so replay and visualization remain possible.
-4. Do **not** change `R<=0.30`, `U<=10`, candidate cutoff `1`, or the 2/3-decision confirmation rule during this collection stage.
-5. Build a Way2 replay/visualization script that joins `observed_map_canvas.npz`, `policy_decisions.csv`, `candidates.csv`, and `way2_checks.csv` into per-decision annotated frames, then renders video offline.
-6. After enough independent runs are collected, compare Way2 against:
-   - the full comparable New Room MapEx baseline cohort `mpx_001...mpx_010`;
-   - the corresponding Hospital MapEx baseline data;
-   - NF cohorts where applicable;
-   using time, distance, coverage/structural quality, completion behavior, and run-to-run variability.
-7. Only after repeated frozen-rule evaluation decide whether Way2 is accepted or rejected as the thesis stopping rule.
+1. Treat `references/MAPEX_EARLY_STOPPING_DIRECTIONS.md` as the canonical implementation specification for D1...D6.
+2. Build the shared early-stopping infrastructure first:
+   - crop P1/P2/P3, mean and variance back to runtime-map coordinates;
+   - compute the robot-seeded 8-connected predicted reachable regions `R_j`;
+   - compute `A_j_m2`, `A_mean_m2`, `R_union`, and `U_p95`;
+   - implement the shared K-consecutive confirmation state machine;
+   - implement a shared per-decision stopping log.
+3. Implement **D2** first only to validate STOP/CONTINUE plumbing against unchanged MapEx/Nav2 behavior.
+4. Implement **D1** next as the first major method, exactly following the fixed definitions in the specification.
+5. Use development data to choose and freeze each direction's thresholds before prospective validation. Do not reuse frozen Way1/Way2 constants by default.
+6. Add D3 and D4 only after D1 quantities are unit-tested and replayable offline.
+7. Add D5 using the current **three-member consensus rule**; do not describe it as a calibrated 5% tail probability.
+8. Build D6 only after D1-D5 feature logs exist and evaluator semantics for labels are reconciled.
+9. Preserve `scripts/mapex.py` unchanged as the baseline throughout this program.
 
 ## Analysis scripts
 
