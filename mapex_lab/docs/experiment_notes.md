@@ -1,5 +1,15 @@
 # Experiment Notes
 
+## 2026-09-21 — Fix Gate-P2 fractional origin reprojection
+
+- What changed: removed the exact integer-lattice origin assertion in `analysis/d1/d1_gate_p.py`; P2 now uses the same nearest-cell rounding reprojection as the canonical MapEx evaluator.
+- Why: the first `mpx_001 --reference both` smoke test failed because SLAM raw-map origins can have fractional 0.05 m canvas offsets.
+- Observation: this was an analyzer alignment bug, not a run-data provenance failure.
+- Audit: P2 records x/y origin-rounding residuals; for the original failing decision they are approximately +0.01523 m and -0.02458 m.
+- Affected runs: offline Gate-P2 analysis only; no raw run changed.
+- Does baseline need rerun?: no.
+- Next action: rerun the one-run smoke test, then full 10-run P1+P2 if clean.
+
 ## 2026-09-21 — Match Gate-P predictions to exact raw maps
 
 - What changed: Gate-P prediction loading now hard-checks shape, resolution, origin, source map timestamp and G1/G2/G3/mean member identity against the exact decision raw map.
