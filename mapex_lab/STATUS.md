@@ -51,6 +51,8 @@ No D1...D6 threshold is frozen yet. Threshold selection must use development dat
 - Default analysis mode is `both`.
 - P2 uses `new_room_structural_gt_v2.npz` and its structural `evaluation_mask`; runtime 0.10 m prediction cells are nearest-neighbour expanded onto the canonical 0.05 m GT canvas.
 - The connected-free ROI is intentionally not used as the P2 classification mask because it would remove occupied-class targets.
+- P2 now has per-run provenance guards: missing legacy fields warn; present GT/canvas/runtime contradictions fail.
+- The P1-vs-P2 summary now includes class-specific overall/last-10 differences plus support by area/fraction, not only accuracy/macro-IoU/MAE.
 
 **LATEST RESULT**
 - P1 ensemble-mean run-macro accuracy ≈ 0.8889 overall and ≈ 0.9079 over last-10 evaluable decisions.
