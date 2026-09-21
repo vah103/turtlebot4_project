@@ -709,6 +709,19 @@ def build_summary(
             int(row["evaluated_cell_count"]) for row in decision_rows
         ),
         "metadata_run_id_mismatches": metadata_mismatches,
+        "reveal_delay": {
+            "run_macro_mean_decisions_until_reveal": _nanmean(
+                row["mean_decisions_until_reveal_decision_macro"] for row in run_rows
+            ),
+            "run_macro_mean_time_until_reveal_s": _nanmean(
+                row["mean_time_until_reveal_s_decision_macro"] for row in run_rows
+            ),
+        },
+        "target_stability": {
+            "run_macro_first_vs_final_class_agreement": _nanmean(
+                row["first_vs_final_class_agreement_decision_macro"] for row in run_rows
+            ),
+        },
         "predictors": {},
         "stage_summary": {},
         "notes": [
@@ -762,6 +775,20 @@ def build_summary(
             "late_run_macro_mae_mean": _nanmean(run_late_mae),
             "late_run_macro_mae_std": _nanstd(run_late_mae),
             "overall_prediction_pair_micro": overall_micro,
+            "final_reference_diagnostic": {
+                "run_macro_accuracy_mean": _nanmean(
+                    row[f"finalref_{predictor}_accuracy_decision_macro"]
+                    for row in run_rows
+                ),
+                "run_macro_macro_iou_mean": _nanmean(
+                    row[f"finalref_{predictor}_macro_iou_decision_macro"]
+                    for row in run_rows
+                ),
+                "run_macro_mae_mean": _nanmean(
+                    row[f"finalref_{predictor}_mae_decision_macro"]
+                    for row in run_rows
+                ),
+            },
         }
     summary["predictors"] = predictor_summary
 
