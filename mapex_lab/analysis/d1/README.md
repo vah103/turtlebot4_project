@@ -2,6 +2,10 @@
 
 Thư mục dành riêng cho phân tích và phát triển Direction 1 (D1) — Uncertainty-Aware Predicted Map Completeness.
 
+## Research log
+
+- `D1_RESEARCH_LOG.md` — nhật ký nghiên cứu D1 chi tiết theo thời gian: quyết định, lý do, commit, protocol, kết quả định lượng, limitation và next action. Đây là nơi cần append mỗi khi D1 có thay đổi hoặc có thí nghiệm mới.
+
 ## Phase 0
 
 - `d1_gate_p.py` — Gate P: prediction fidelity.
