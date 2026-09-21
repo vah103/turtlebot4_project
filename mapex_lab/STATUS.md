@@ -40,6 +40,31 @@ common stopping infrastructure
 
 No D1...D6 threshold is frozen yet. Threshold selection must use development data only; prospective validation begins only after each direction's parameter set is explicitly frozen.
 
+
+## D1 Gate P status
+
+**DONE**
+- Gate P1 `later_observed` implemented and run on `mpx_001...mpx_010`.
+- P1 verdict remains **PRELIMINARY PASS** because late-stage support is right-censored.
+- `d1_gate_p.py` now implements Gate P2 `structural_gt` and supports:
+  `--reference later_observed|structural_gt|both`.
+- Default analysis mode is `both`.
+- P2 uses `new_room_structural_gt_v2.npz` and its structural `evaluation_mask`; runtime 0.10 m prediction cells are nearest-neighbour expanded onto the canonical 0.05 m GT canvas.
+- The connected-free ROI is intentionally not used as the P2 classification mask because it would remove occupied-class targets.
+
+**LATEST RESULT**
+- P1 ensemble-mean run-macro accuracy ≈ 0.8889 overall and ≈ 0.9079 over last-10 evaluable decisions.
+- First-later vs final-map class agreement ≈ 0.9615.
+- Late P1 evidence remains heavily right-censored, so Gate P is not complete.
+
+**IN PROGRESS**
+- Gate P2 code is implemented but has not yet been executed on the 10-run cohort after this code change.
+
+**NEXT ACTION**
+- Run `d1_gate_p.py --reference both` on `mpx_001...mpx_010`.
+- Compare P1 vs P2, then inspect `mpx_008` and member-vs-mean diagnostics as supporting analyses.
+- Move to Gate U only if P2 broadly supports the P1 conclusion.
+
 ---
 
 # Archived Way2 online runs
