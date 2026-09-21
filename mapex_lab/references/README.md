@@ -12,7 +12,7 @@ Thư mục này chứa bộ tài liệu tham chiếu tối thiểu để một p
 6. `UPEN.md` — uncertainty-driven prediction-based exploration baseline.
 7. `IG_HECTOR.md` — learned map prediction + information gain / Hector baseline.
 8. `RELATED_WORK.md` — bảng index để đối chiếu bottleneck với literature.
-9. `MAPEX_EARLY_STOPPING_DIRECTIONS.md` — đặc tả triển khai canonical cho chương trình 6 hướng early stopping D1...D6 sau khi Way1/Way2 đã đóng.
+9. `ES.md` — đặc tả triển khai canonical cho chương trình 6 hướng early stopping D1...D6 sau khi Way1/Way2 đã đóng.
 
 ## Nguồn chuẩn trong workspace
 
