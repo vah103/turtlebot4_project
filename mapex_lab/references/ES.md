@@ -268,30 +268,137 @@ Remaining-region support:
 R_union = R_1 OR R_2 OR R_3
 ```
 
-## 4.6 Primary uncertainty definition
 
-Reuse the existing MapEx `variance_map`; do not recompute a different ensemble variance.
+## 4.6 D1 uncertainty candidates and selection discipline
 
-The **primary D1 uncertainty metric** is:
+The current MapEx variance map is useful evidence, but **D1 must not assume in advance that one arbitrary summary statistic is the correct stopping uncertainty signal**.
 
-```text
-U_p95 = percentile_95(
-    variance_map_runtime[x]
-    for x in R_union
-)
-```
+For every evaluable decision, compute and log at least the following candidates over:
 
-If `R_union` is empty:
+~~~text
+R_union = R_1 OR R_2 OR R_3
+~~~
 
-```text
-U_p95 = 0.0
-```
+### Candidate U1 — P95 MapEx variance
 
-Mean variance, max variance, entropy or binary disagreement may be tested later as ablations, but they are **not** the primary D1 definition.
+~~~text
+U_p95 =
+    percentile_95(
+        variance_map_runtime[x]
+        for x in R_union
+    )
+~~~
 
-Important safety rule:
+### Candidate U2 — mean MapEx variance
 
-> Uncertainty is a separate gate. High uncertainty must never reduce a score in a way that makes STOP easier.
+~~~text
+U_mean =
+    mean(
+        variance_map_runtime[x]
+        for x in R_union
+    )
+~~~
+
+### Candidate U3 — ensemble binary disagreement
+
+For each cell x in R_union, count how many of the three ensemble members classify it as predicted free:
+
+~~~text
+free_votes(x) in {0, 1, 2, 3}
+
+cell_disagreement(x) =
+    min(free_votes(x), 3 - free_votes(x)) / 3
+~~~
+
+Then:
+
+~~~text
+U_disagreement =
+    mean(cell_disagreement(x) for x in R_union)
+~~~
+
+With N=3 this is intentionally coarse. It is still useful as a direct measure of ensemble class disagreement and must not be described as a calibrated probability.
+
+### Empty-support handling
+
+If all three members predict no reachable remaining region:
+
+~~~text
+R_union is empty
+AND
+A_1_m2 = A_2_m2 = A_3_m2 = 0
+~~~
+
+record:
+
+~~~text
+U_p95          = 0
+U_mean         = 0
+U_disagreement = 0
+~~~
+
+This means the ensemble has no remaining-region support to evaluate; it does **not** by itself prove that the map is complete. D1 still requires temporal confirmation and must pass the offline validation protocol in Section 6.
+
+If R_union is empty because of an invalid crop, invalid robot pose, missing prediction, or another data-integrity problem, the decision is **non-evaluable**. Never convert a data failure into zero uncertainty.
+
+### Which uncertainty statistic is primary?
+
+Before prospective online validation, D1 must select exactly one:
+
+~~~text
+U_primary in {
+    U_p95,
+    U_mean,
+    U_disagreement
+}
+~~~
+
+using **development data only**.
+
+Selection is based first on whether the statistic is informative about future prediction error, not on which statistic produces the largest time saving.
+
+At minimum, check:
+
+- prediction error as a function of uncertainty quantile;
+- rank correlation between uncertainty and later prediction error;
+- the rate of **low-uncertainty / high-error** cells or decisions;
+- stability across runs;
+- stability across New Room and Hospital when both are available.
+
+The selected statistic and the evidence used to select it must be written into the frozen D1 configuration before prospective validation.
+
+If none of the candidate uncertainty measures is meaningfully related to prediction error, then the uncertainty-aware D1 hypothesis has failed. In that case:
+
+- do **not** tune an uncertainty threshold until the result looks good;
+- retain remaining-area-only stopping only as an ablation/baseline;
+- do not claim that MapEx uncertainty makes stopping safer.
+
+### Safety rule
+
+Uncertainty is always a **separate caution gate**.
+
+Never use a construction such as:
+
+~~~text
+remaining_area * confidence
+~~~
+
+and then stop when that product is small, because high uncertainty could shrink the product and accidentally make stopping easier.
+
+The intended logic is always:
+
+~~~text
+small remaining-environment evidence
+AND
+low enough uncertainty
+~~~
+
+High uncertainty must force CONTINUE, not encourage STOP.
+
+
+---
+
+# 5. Shared state machine and parameter discipline
 
 ---
 
@@ -382,92 +489,1111 @@ Use these for software structure, not for novelty claims or threshold values.
 
 ---
 
+
 # 6. Direction 1 — Uncertainty-Aware Predicted Map Completeness
 
-## Reference anchors
+## 6.1 Status and role
 
-- **PRIMARY:** **[SRC-06]**, **[SRC-02]**, **[SRC-09]**
-  - [SRC-06]: strongest precedent for "predict what remains → stop when remaining useful area is small".
-  - [SRC-02]: strongest precedent for deciding that a partial map is already sufficiently complete.
-  - [SRC-09]: reinforces predicted-layout / expected-remaining-information early termination.
-- **SUPPORTING:** **[SRC-03]**, **[SRC-08]**
-  - [SRC-03]: motivates treating uncertainty as explicit evidence rather than ignoring it.
-  - [SRC-08]: useful for completeness reasoning and the failure mode of relying on a learned completeness estimate alone.
-- **IMPLEMENTATION:** **[SRC-10]**, **[SRC-11]**, **[SRC-12]**.
+D1 is the **main prediction-based early-stopping research direction**.
 
-**Do not claim D1 is copied from one source.** Its specific combination of MapEx ensemble-derived reachable remaining area + MapEx variance gate + K-confirmation is the definition in this file.
+Its purpose is not merely to invent a threshold. Its purpose is to test the following causal research hypothesis:
 
-## Question
+> If MapEx can reliably predict the still-unobserved reachable free space near the end of exploration, and if MapEx's uncertainty is informative about when those predictions can be trusted, then the same prediction pipeline can be reused to estimate map completeness and terminate exploration before exhaustive traversal.
 
-Does MapEx already predict that only a small amount of reachable environment remains, and is it sufficiently certain about that conclusion?
+D1 is therefore divided into two logically separate parts:
 
-## Reference tags
+~~~text
+D1 feasibility study
+    ↓
+prove the required signals are useful
+    ↓
+D1 rule development
+    ↓
+freeze the rule
+    ↓
+prospective online validation
+~~~
 
-- **Primary conceptual:** **[S6]**, **[S9]** — predicted layout / predicted remaining useful area as evidence for early stopping.
-- **Primary uncertainty support:** **[S3]** — uncertainty as an explicit exploration/stopping signal rather than ignoring confidence.
-- **Supporting completeness lineage:** **[S2]**, **[S8]** — direct estimation of whether a partial map is sufficiently complete.
-- **Implementation support shared across D1...D6:** **[S10]**, **[S11]**, **[S12]** — persistence counter, normal no-frontier fallback, explicit completion event / termination reason.
+Do **not** skip directly to threshold tuning.
 
-**Interpretation constraint:** D1 is a synthesis adapted to MapEx. No tagged source is claimed to contain this exact `A_mean_m2 + U_p95` rule.
-
-## Required inputs
-
-- `P_1_runtime, P_2_runtime, P_3_runtime`
-- `variance_map_runtime`
-- current ROS occupancy grid
-- robot runtime-grid cell
-
-## Derived inputs
-
-Use the shared definitions exactly:
-
-```text
-R_1, R_2, R_3
-A_1_m2, A_2_m2, A_3_m2
-A_mean_m2
-R_union
-U_p95
-```
-
-## Primary stop condition
-
-```text
-D1_base_valid :=
-    (A_mean_m2 < T_area_m2)
-    AND
-    (U_p95 < T_uncertainty)
-```
-
-STOP only after `K_confirm` consecutive evaluable D1-valid decisions.
-
-## Meaning
-
-The robot stops only when:
-
-> the ensemble predicts little reachable unknown free space remains **and** the relevant predicted remaining region is not highly uncertain.
-
-## Explicit non-goals
-
-D1 must not:
-- stop from global unknown-cell count;
-- stop from global variance alone;
-- multiply remaining area by confidence and threshold the product;
-- use ground truth online;
-- change MapEx frontier ranking.
-
-## Required ablation
-
-At minimum compare:
-
-```text
-MapEx baseline
-D1-area-only: A_mean_m2 < T_area_m2
-D1-full:      A_mean_m2 < T_area_m2 AND U_p95 < T_uncertainty
-```
-
-This isolates the value of the uncertainty gate.
+A threshold that happens to work on historical runs is not sufficient evidence that the underlying D1 idea is valid.
 
 ---
+
+## 6.2 Research ancestry
+
+### Primary references
+
+- **[SRC-06]** — predicted remaining useful/unexplored area can support early termination.
+- **[SRC-02]** — explicit estimation of whether a partial map is sufficiently complete.
+- **[SRC-09]** — predicted layout / expected remaining information as exploration-completion evidence.
+
+### Supporting references
+
+- **[SRC-03]** — uncertainty should affect whether prediction-based exploration evidence is trusted.
+- **[SRC-08]** — completeness reasoning and the generalization risk of learned completeness estimates.
+
+### Implementation references
+
+- **[SRC-10]** — persistence/confirmation patterns.
+- **[SRC-11]** — clean exploration-complete signalling.
+- **[SRC-12]** — explicit separation between early stop and ordinary no-frontier termination.
+
+### Novelty discipline
+
+D1 must not be described as:
+
+> "paper 6 but with LaMa."
+
+The research question is more specific:
+
+> Can the **existing MapEx ensemble** be used not only to rank frontiers, but also to estimate **how much reachable environment remains**, while using MapEx's own prediction uncertainty as a safety gate?
+
+The exact contribution claim must still be checked against the literature after the method is frozen.
+
+---
+
+## 6.3 What D1 is and is not
+
+D1 is a **global predicted-completeness supervisor**.
+
+It asks:
+
+> According to the full current MapEx ensemble, how much still-unobserved reachable environment plausibly remains, and is the prediction reliable enough to trust that estimate?
+
+D1 does **not** ask:
+
+> Is the currently best frontier still attractive?
+
+That is D2 / frontier-value saturation.
+
+D1 must therefore remain conceptually separate from:
+
+- IG thresholding;
+- IG/distance thresholding;
+- visible-unknown/distance thresholding;
+- candidate-count rules;
+- old Way2 constants;
+- global unknown variance alone;
+- ordinary no-frontier completion.
+
+When D1 returns CONTINUE, the original MapEx frontier ranking and Nav2 execution remain unchanged.
+
+---
+
+## 6.4 Required runtime inputs
+
+At each evaluable MapEx decision, D1 requires:
+
+~~~text
+current ROS occupancy grid
+robot pose / runtime-grid robot cell
+
+P_1_runtime
+P_2_runtime
+P_3_runtime
+
+mean_map_runtime
+variance_map_runtime
+
+map resolution
+crop/padding metadata
+~~~
+
+D1 may additionally use:
+
+~~~text
+robot footprint / inflation radius
+current connected observed-free component
+Nav2 footprint/costmap information
+~~~
+
+for a more realistic reachability mask.
+
+Ground truth, final maps, future observations and evaluation ROI masks are **offline-only evidence**. They must never enter the runtime STOP decision.
+
+---
+
+## 6.5 Data-integrity preconditions
+
+Before computing any D1 signal, verify:
+
+1. all three predictions exist;
+2. all three predictions crop to exactly the current runtime map shape;
+3. variance-map crop matches the same shape;
+4. robot grid cell is valid;
+5. map resolution is known;
+6. occupancy masks use the same decision-time map as the predictions;
+7. no stale prediction from a previous decision is mixed with the current map.
+
+If any precondition fails:
+
+~~~text
+D1 evaluable = False
+D1 must not increment or reset K-confirmation
+MapEx continues through baseline handling
+~~~
+
+A data-integrity failure must never be interpreted as low remaining area or low uncertainty.
+
+---
+
+## 6.6 Step 1 — crop LaMa output to the runtime map
+
+For each ensemble member j:
+
+~~~text
+P_j_runtime =
+    P_j[
+        pad_top : pad_top + H,
+        pad_left: pad_left + W
+    ]
+~~~
+
+where H and W are the exact current ROS occupancy-grid dimensions.
+
+Do the equivalent crop for:
+
+~~~text
+mean_map_runtime
+variance_map_runtime
+~~~
+
+The crop must be unit-tested.
+
+**Padding is not environment.** No stopping quantity may include padded cells.
+
+---
+
+## 6.7 Step 2 — construct the predicted navigable mask
+
+For each ensemble member j:
+
+~~~text
+predicted_free_j := P_j_runtime < 0.5
+~~~
+
+Observed occupancy always has priority over prediction:
+
+~~~text
+observed occupied
+    → BLOCKED
+
+observed free
+    → FREE
+
+observed unknown + predicted free
+    → PROVISIONAL FREE
+
+observed unknown + predicted occupied
+    → BLOCKED
+~~~
+
+Therefore:
+
+~~~text
+navigable_j =
+    observed_free
+    OR
+    (observed_unknown AND predicted_free_j)
+~~~
+
+Prediction must never overwrite an already observed occupied cell.
+
+---
+
+## 6.8 Step 3 — define reachability carefully
+
+A central D1 risk is confusing **pixel connectivity** with **robot reachability**.
+
+### Development variant R0 — raw 8-connected reachability
+
+The simplest implementation is:
+
+~~~text
+CC_j_raw =
+    8-connected component of navigable_j
+    containing robot_cell
+~~~
+
+then:
+
+~~~text
+R_j_raw =
+    CC_j_raw
+    AND observed_unknown
+~~~
+
+This is easy to reproduce and should be implemented first for debugging.
+
+### Development variant R1 — footprint-aware reachability
+
+Raw pixel connectivity can count narrow gaps that a TurtleBot/Nav2 stack cannot physically traverse.
+
+Therefore D1 must also test a footprint-aware variant in which predicted/observed obstacles are inflated by a fixed robot-clearance radius before the connected component is computed.
+
+Conceptually:
+
+~~~text
+blocked_j =
+    observed_occupied
+    OR
+    (observed_unknown AND NOT predicted_free_j)
+
+blocked_j_safe =
+    inflate(blocked_j, robot_clearance_radius)
+
+navigable_j_safe =
+    NOT blocked_j_safe
+    AND
+    (observed_free OR observed_unknown)
+
+CC_j_safe =
+    connected component containing robot_cell
+
+R_j_safe =
+    CC_j_safe
+    AND observed_unknown
+    AND predicted_free_j
+~~~
+
+The exact inflation radius must be tied to the robot footprint / Nav2 safety semantics and frozen before validation.
+
+### Reachability freeze rule
+
+Before threshold selection, choose exactly one canonical D1 reachability definition:
+
+~~~text
+reachability_mode = raw_8_connected
+# or
+reachability_mode = footprint_aware
+~~~
+
+based on development evidence.
+
+The choice must not be changed after seeing prospective validation results.
+
+The main question is not which variant saves more time. It is which one better represents **actually explorable remaining free space**.
+
+---
+
+## 6.9 Step 4 — per-member remaining area
+
+After the reachability mode is frozen, define for each member j:
+
+~~~text
+R_j =
+    currently unknown cells
+    that member j predicts as free
+    and that belong to the robot-reachable predicted component
+~~~
+
+Then:
+
+~~~text
+A_j_m2 =
+    count(R_j) * resolution_m^2
+~~~
+
+For the current MapEx ensemble:
+
+~~~text
+A_1_m2
+A_2_m2
+A_3_m2
+~~~
+
+and:
+
+~~~text
+A_mean_m2 =
+    (A_1_m2 + A_2_m2 + A_3_m2) / 3
+~~~
+
+Also log:
+
+~~~text
+A_min_m2 = min(A_1_m2, A_2_m2, A_3_m2)
+A_max_m2 = max(A_1_m2, A_2_m2, A_3_m2)
+A_range_m2 = A_max_m2 - A_min_m2
+~~~
+
+These extra quantities are diagnostics. They are not automatically part of the primary D1 rule.
+
+---
+
+## 6.10 Step 5 — also compute a scale-normalized completeness signal
+
+An absolute-area threshold can transfer poorly between differently sized environments.
+
+Therefore D1 must log a normalized remaining fraction in addition to A_mean_m2.
+
+First compute the currently observed robot-connected free area:
+
+~~~text
+KnownReachableFree_m2 =
+    count(
+        observed_free cells
+        in the current robot-connected observed-free component
+    )
+    * resolution_m^2
+~~~
+
+Then define:
+
+~~~text
+RemainingFraction =
+    A_mean_m2
+    /
+    max(
+        KnownReachableFree_m2 + A_mean_m2,
+        epsilon
+    )
+~~~
+
+Interpretation:
+
+~~~text
+RemainingFraction ≈ 0
+→ predicted exploration is nearly complete
+
+larger RemainingFraction
+→ a larger fraction of the predicted reachable environment is still unseen
+~~~
+
+### Why log both absolute and normalized remaining area?
+
+Absolute area A_mean_m2 is easy to interpret physically and is closest to the predicted-remaining-area literature.
+
+Normalized RemainingFraction is more likely to transfer between New Room and Hospital because it is less tied to map scale.
+
+### Primary completeness-signal selection
+
+Before prospective validation, D1 must choose one primary completeness signal:
+
+~~~text
+C_primary =
+    A_mean_m2
+# or
+    RemainingFraction
+~~~
+
+The selection must be based on development-data stability and cross-environment transfer, not merely on maximum saving.
+
+The non-selected quantity remains a required ablation and diagnostic.
+
+---
+
+## 6.11 Step 6 — uncertainty over the relevant remaining region
+
+Define:
+
+~~~text
+R_union = R_1 OR R_2 OR R_3
+~~~
+
+Compute all uncertainty candidates defined in Section 4.6:
+
+~~~text
+U_p95
+U_mean
+U_disagreement
+~~~
+
+Then, using development data only, freeze:
+
+~~~text
+U_primary_name
+U_primary_value(t)
+~~~
+
+where U_primary_value(t) is the selected statistic at decision t.
+
+### Critical requirement
+
+The uncertainty statistic must be selected because it provides evidence about **prediction error**, not because one threshold on it happens to create attractive early-stopping numbers.
+
+If low uncertainty frequently coexists with large prediction error, the uncertainty gate is unsafe.
+
+---
+
+## 6.12 Phase 0 — mandatory feasibility study before online D1
+
+D1 is not allowed to become an online stopping method until three gates are evaluated.
+
+### Gate P — prediction fidelity
+
+Question:
+
+> When a cell is unknown at decision t, does the MapEx prediction meaningfully predict what that cell later turns out to be?
+
+Evaluate predictions only on cells that were unknown at t.
+
+Use two offline references when available.
+
+#### P1 — later-observed reference
+
+Compare prediction at t against cells that become observed later in the same completed baseline run.
+
+Advantages:
+
+- uses the robot's own future observations;
+- does not require structural ground-truth alignment.
+
+Limitation:
+
+- only evaluates cells the baseline eventually observes.
+
+#### P2 — structural-GT reference
+
+When a frame-correct structural ground truth exists, compare the decision-time prediction against GT on the valid canonical ROI.
+
+Advantages:
+
+- can evaluate still-unobserved regions directly.
+
+Limitation:
+
+- depends on correct frame alignment and evaluator semantics.
+
+At minimum report:
+
+- free/occupied classification accuracy on unknown-at-t cells;
+- free-class precision and recall;
+- occupied-class precision and recall where class support is sufficient;
+- IoU on the evaluated unknown region;
+- absolute prediction error if continuous prediction values are meaningful;
+- performance by exploration stage;
+- performance specifically over the last N decisions before normal completion.
+
+Visual inspection is required for representative success and failure cases, but images alone are not sufficient evidence.
+
+### Gate U — uncertainty informativeness
+
+Question:
+
+> Does higher MapEx uncertainty actually correspond to less reliable prediction?
+
+At minimum evaluate:
+
+~~~text
+prediction error vs uncertainty quantile
+Spearman rank correlation:
+    uncertainty ↔ prediction error
+
+low-uncertainty / high-error rate
+cross-run stability
+cross-environment stability
+~~~
+
+The most dangerous failure mode is:
+
+~~~text
+low uncertainty
+AND
+large prediction error
+~~~
+
+because D1 could confidently stop for the wrong reason.
+
+If no uncertainty statistic provides useful separation, D1-full must not be promoted as an uncertainty-aware method.
+
+### Gate R — remaining-area informativeness
+
+Question:
+
+> Does the predicted remaining area at decision t actually tell us how much useful mapping remains after t?
+
+For each completed baseline run and each recorded decision t, compute offline targets such as:
+
+~~~text
+FutureCoverageGain_t =
+    final_coverage - coverage_t
+
+FutureObservedAreaGain_t =
+    final_known_area - known_area_t
+
+FutureIoUGain_t =
+    final_observed_iou - observed_iou_t
+~~~
+
+when the corresponding metrics are valid.
+
+Then test whether A_mean_m2 and/or RemainingFraction decrease as the actual future gain decreases.
+
+At minimum report:
+
+- rank correlation with future coverage gain;
+- rank correlation with future known-area gain;
+- error of predicted remaining area against any valid GT-derived remaining-area target;
+- curves over the final exploration stage;
+- failure cases where D1 predicts "little remains" but large useful map gain still occurs later.
+
+### D1 go/no-go rule after Phase 0
+
+Proceed to D1 threshold development only if:
+
+1. prediction has useful late-stage fidelity;
+2. at least one uncertainty statistic is informative enough to act as a caution gate;
+3. at least one completeness signal is meaningfully associated with actual remaining exploration gain.
+
+If one of these fails, diagnose the failure before implementing online stopping.
+
+Do not rescue a failed signal by threshold overfitting.
+
+---
+
+## 6.13 Phase 1 — offline counterfactual replay
+
+Once Phase 0 passes, replay D1 over completed baseline MapEx runs.
+
+For every decision t, reconstruct exactly what would have been known online:
+
+~~~text
+C_primary(t)
+U_primary(t)
+warmup state
+K-confirm state
+~~~
+
+No future information may enter the runtime replay rule.
+
+Future/final information is used only to score the counterfactual consequence of stopping at t.
+
+For a hypothetical stop at decision t, compute:
+
+~~~text
+time_saved_fraction
+distance_saved_fraction
+
+coverage_loss
+occupied_iou_loss
+known_area_loss
+
+stop_decision_id
+remaining baseline goals avoided
+~~~
+
+where metric semantics are valid.
+
+The primary counterfactual question is:
+
+> How much exploration cost would D1 save if it stopped here, and what map quality would be sacrificed?
+
+---
+
+## 6.14 Phase 2 — threshold and rule selection
+
+### Do not optimize saving alone
+
+A threshold that maximizes time saving can trivially stop too early.
+
+D1 must be treated as a constrained optimization problem:
+
+~~~text
+maximize:
+    time/distance saving
+
+subject to:
+    map-quality loss <= pre-declared tolerance
+    premature-stop rate <= pre-declared tolerance
+~~~
+
+### Search a robust region, not one lucky point
+
+Sweep development parameters around candidate values and inspect the neighborhood.
+
+A candidate is stronger when nearby thresholds produce similar behavior.
+
+Avoid selecting an isolated parameter combination that works only at one exact point.
+
+### Grouped development/holdout discipline
+
+Do not let decision rows from the same run act as independent train/test evidence.
+
+Threshold selection must be grouped by run.
+
+When enough data exist:
+
+~~~text
+development runs
+    → choose signal definition + thresholds
+
+held-out historical runs
+    → audit robustness
+
+prospective online runs
+    → final validation
+~~~
+
+Environment transfer should be tested explicitly.
+
+For example:
+
+~~~text
+develop mainly on New Room
+freeze
+evaluate on Hospital without retuning
+~~~
+
+or the reverse, depending on the available evidence.
+
+---
+
+## 6.15 Candidate D1 stop rules
+
+D1 has two pre-declared rule families.
+
+### D1-A — absolute predicted remaining area
+
+~~~text
+D1_A_valid :=
+    (A_mean_m2 < T_area_m2)
+    AND
+    (U_primary < T_uncertainty)
+~~~
+
+### D1-B — normalized predicted remaining fraction
+
+~~~text
+D1_B_valid :=
+    (RemainingFraction < T_remaining_fraction)
+    AND
+    (U_primary < T_uncertainty)
+~~~
+
+The development phase must choose one as the **primary frozen D1 rule**.
+
+The other remains an ablation.
+
+Do not combine both simply because doing so improves one dataset unless that combined rule was pre-declared and evaluated separately.
+
+---
+
+## 6.16 Temporal confirmation
+
+The chosen D1 base condition must hold for K_confirm consecutive **evaluable** decisions.
+
+~~~text
+if decision is non-evaluable:
+    preserve valid_count
+    CONTINUE baseline handling
+
+elif D1_base_valid:
+    valid_count += 1
+
+else:
+    valid_count = 0
+
+if valid_count >= K_confirm:
+    STOP_D1_COMPLETENESS
+else:
+    CONTINUE
+~~~
+
+K-confirm protects against transient prediction fluctuations.
+
+It does **not** protect against a systematic prediction error that persists over many decisions. That is why Phase 0 and the uncertainty gate are mandatory.
+
+---
+
+## 6.17 Warm-up
+
+D1 uses the shared decision-count warm-up.
+
+During warm-up:
+
+~~~text
+D1 diagnostics are still computed and logged
+but stopping is disabled
+~~~
+
+This is important: warm-up should prevent STOP, not prevent data collection.
+
+The warm-up threshold must be frozen on development data before prospective validation.
+
+---
+
+## 6.18 Recommended online decision flow
+
+At an evaluable MapEx decision:
+
+~~~text
+current observed map
+        ↓
+3 LaMa predictions
+        ↓
+runtime crop validation
+        ↓
+per-member predicted-free masks
+        ↓
+per-member reachable predicted free space
+        ↓
+R_1, R_2, R_3
+        ↓
+A_1, A_2, A_3
+        ↓
+A_mean + RemainingFraction
+        ↓
+R_union
+        ↓
+U_p95 + U_mean + U_disagreement
+        ↓
+select frozen C_primary + U_primary
+        ↓
+warm-up check
+        ↓
+D1 base condition
+        ↓
+K-confirm
+   ↓             ↓
+STOP          CONTINUE
+                 ↓
+        unchanged MapEx frontier selection
+                 ↓
+              Nav2 goal
+~~~
+
+D1 decides only:
+
+> send another exploration goal, or stop?
+
+It does not decide:
+
+> which frontier should MapEx choose?
+
+---
+
+## 6.19 Required offline ablations
+
+Before claiming D1 works, compare at least:
+
+1. **MapEx baseline** — no early stopping.
+2. **Absolute-area only** — A_mean_m2 threshold.
+3. **Normalized-fraction only** — RemainingFraction threshold.
+4. **Primary completeness signal + uncertainty**.
+5. **K = 1** diagnostic only.
+6. **Frozen K_confirm > 1**.
+7. **raw 8-connected reachability**.
+8. **footprint-aware reachability**.
+9. uncertainty candidates:
+   - U_p95;
+   - U_mean;
+   - U_disagreement.
+
+The purpose of these ablations is to answer:
+
+- Does prediction-based completeness help?
+- Does normalization improve transfer?
+- Does uncertainty reduce unsafe stops?
+- Does realistic reachability matter?
+- Does temporal confirmation reduce transient false stops?
+
+Do not report only the best variant.
+
+---
+
+## 6.20 Required prospective online comparison
+
+After the full D1 configuration is frozen, run:
+
+~~~text
+original MapEx
+vs
+MapEx + frozen D1
+~~~
+
+under the same experimental conditions.
+
+At minimum report:
+
+~~~text
+trigger rate
+time saved
+distance saved
+final coverage difference
+final map-quality difference
+premature-stop rate
+run-to-run variance
+termination reason
+environment
+~~~
+
+D1 thresholds must not be changed from prospective outcomes.
+
+A run where D1 does not trigger is still valid evidence.
+
+---
+
+## 6.21 Premature-stop definition
+
+Before prospective validation, declare acceptable map-quality tolerances.
+
+For a run stopped by D1, mark it unsafe/premature if the counterfactual/final-quality loss exceeds a frozen tolerance.
+
+Examples of possible quality constraints:
+
+~~~text
+coverage_loss <= delta_coverage_max
+occupied_iou_loss <= delta_iou_max
+~~~
+
+The exact metrics and tolerances must be chosen before validation.
+
+Never redefine "safe" after seeing D1 results.
+
+---
+
+## 6.22 Logging contract specific to D1
+
+Every evaluable decision must log:
+
+~~~text
+decision_id
+sim_time_s
+map_shape
+resolution_m
+robot_cell
+evaluable
+non_evaluable_reason
+warmup_active
+
+reachability_mode
+robot_clearance_radius_m
+
+A_1_m2
+A_2_m2
+A_3_m2
+A_min_m2
+A_max_m2
+A_range_m2
+A_mean_m2
+
+KnownReachableFree_m2
+RemainingFraction
+
+R_1_cell_count
+R_2_cell_count
+R_3_cell_count
+R_union_cell_count
+
+U_p95
+U_mean
+U_disagreement
+U_primary_name
+U_primary_value
+
+C_primary_name
+C_primary_value
+
+T_area_m2
+T_remaining_fraction
+T_uncertainty
+
+base_valid
+valid_count
+K_confirm
+should_stop
+stop_reason
+~~~
+
+For development/offline analysis also preserve:
+
+~~~text
+observed map at decision t
+P1/P2/P3 runtime crop
+mean map
+variance map
+R1/R2/R3 masks
+R_union mask
+robot pose
+final/future evaluation references
+~~~
+
+This logging is required so every STOP can be explained after the run.
+
+---
+
+## 6.23 Unit tests required before online experiments
+
+At minimum add tests for:
+
+### Crop tests
+
+- no padding;
+- symmetric padding;
+- asymmetric padding;
+- runtime shape changes;
+- crop mismatch must become non-evaluable.
+
+### Occupancy-priority tests
+
+- prediction cannot turn observed occupied into free;
+- observed free remains traversable;
+- unknown predicted occupied is blocked;
+- unknown predicted free is provisional free.
+
+### Reachability tests
+
+- one connected predicted room;
+- disconnected predicted room;
+- one-cell diagonal connection under 8-connectivity;
+- narrow corridor rejected by footprint-aware mode when appropriate;
+- robot outside grid;
+- robot on invalid seed cell.
+
+### Area tests
+
+- exact cell-count-to-m2 conversion;
+- empty R_j;
+- three members with different remaining areas;
+- RemainingFraction bounds in [0,1].
+
+### Uncertainty tests
+
+- empty support;
+- all members agree;
+- one member disagrees;
+- high variance localized inside R_union;
+- high variance outside R_union must not affect D1 uncertainty.
+
+### State-machine tests
+
+- one-frame valid condition does not stop when K>1;
+- invalid evaluable decision resets valid_count;
+- non-evaluable decision preserves valid_count;
+- warm-up disables STOP but keeps diagnostics;
+- STOP prevents a new exploration goal.
+
+---
+
+## 6.24 Main failure modes to actively search for
+
+D1 is not considered validated until these cases are inspected.
+
+### F1 — confident hallucination
+
+~~~text
+prediction wrong
+AND
+uncertainty low
+~~~
+
+This is the most dangerous failure.
+
+### F2 — map-size dependence
+
+A fixed T_area_m2 works in New Room but not Hospital.
+
+This motivates RemainingFraction.
+
+### F3 — unreachable predicted free space
+
+Prediction creates a large free region connected only through a gap the robot cannot traverse.
+
+This motivates footprint-aware reachability.
+
+### F4 — hidden large room behind a bottleneck
+
+D1 predicts little remains immediately before exploration reveals a large new region.
+
+These cases must be explicitly counted as false/premature-stop risks.
+
+### F5 — late-stage oscillation
+
+A_mean or uncertainty alternates around the threshold.
+
+This motivates K-confirmation and threshold-neighborhood analysis.
+
+### F6 — stable systematic error
+
+The wrong prediction persists for many decisions.
+
+K-confirmation does not solve this failure.
+
+### F7 — evaluator leakage
+
+A runtime feature accidentally uses final map, structural GT or future observation.
+
+This invalidates the experiment.
+
+### F8 — threshold overfitting
+
+A threshold is chosen because one or two historical runs look impressive.
+
+Use grouped runs and robust threshold neighborhoods instead.
+
+---
+
+## 6.25 D1 success criteria
+
+D1 should be considered a credible thesis candidate only if all of the following are true:
+
+1. **Prediction evidence** — late-stage predictions contain useful information about still-unobserved cells.
+2. **Uncertainty evidence** — the chosen U_primary provides meaningful caution about prediction error.
+3. **Completeness evidence** — the chosen C_primary is associated with actual future exploration gain.
+4. **Offline replay** — there exists a non-trivial threshold region that saves exploration cost while respecting frozen quality tolerances.
+5. **Transfer** — the frozen signal/rule behaves reasonably across multiple runs and does not require per-environment retuning for every map.
+6. **Prospective validation** — online D1 reproduces the expected trade-off without using future information.
+7. **Interpretability** — each STOP can be explained from logged predicted remaining area, uncertainty and confirmation history.
+
+If these conditions are not met, D1 should be rejected or downgraded rather than repeatedly retuned.
+
+---
+
+## 6.26 Minimum thesis figures/tables for D1
+
+If D1 survives validation, prepare at least:
+
+1. pipeline diagram showing observed map → ensemble → remaining area → uncertainty → confirmation → STOP/CONTINUE;
+2. representative late-stage maps showing observed map, P1/P2/P3, R1/R2/R3, variance/disagreement and final/GT reference offline;
+3. uncertainty calibration plot: uncertainty quantile vs prediction error;
+4. remaining-completeness plot: C_primary(t) vs actual future coverage/known-area gain;
+5. threshold-neighborhood / Pareto table: time saved, distance saved, quality loss, premature-stop rate;
+6. final baseline comparison: MapEx vs MapEx + D1;
+7. failure-case table.
+
+These figures provide evidence for **why** D1 works, not only whether it happened to stop earlier.
+
+---
+
+## 6.27 Final concise definition after freezing
+
+Only after Phases 0–2 are completed should D1 be summarized in a short runtime form.
+
+The frozen rule will have the structure:
+
+~~~text
+At each evaluable MapEx decision:
+
+1. Estimate the still-unknown, predicted-free, robot-reachable area
+   from each of the three MapEx completions.
+
+2. Aggregate the three members into a frozen completeness signal
+   C_primary.
+
+3. Evaluate a frozen uncertainty statistic U_primary over the
+   predicted remaining region.
+
+4. Require:
+       C_primary < T_completeness
+       AND
+       U_primary < T_uncertainty
+
+5. Require the condition for K_confirm consecutive evaluable decisions.
+
+6. If true:
+       STOP_D1_COMPLETENESS
+   else:
+       keep original MapEx planning unchanged.
+~~~
+
+Until the signal definitions and thresholds are frozen from development evidence, D1 remains a **research hypothesis under evaluation**, not a validated stopping rule.
+
+
+---
+
+# 7. Direction 2 — Information-Gain Saturation
 
 # 7. Direction 2 — Information-Gain Saturation
 
@@ -575,7 +1701,7 @@ Can false early stops be reduced by requiring both:
 
 ## Required inputs
 
-- D1 quantities `A_mean_m2` and `U_p95`
+- D1 quantities `C_primary` / `A_mean_m2` and `U_primary`
 - absolute known area
 - cumulative executed trajectory distance
 - history over `W_progress` evaluable decisions
@@ -618,7 +1744,7 @@ This avoids treating a stationary/recovery period as mapping stagnation.
 D3_base_valid :=
     (A_mean_m2 < T_area_m2)
     AND
-    (U_p95 < T_uncertainty)
+    (U_primary < T_uncertainty)
     AND
     (Progress_m2_per_m < T_progress_m2_per_m)
 ```
@@ -703,7 +1829,7 @@ pairs are available.
 D4_base_valid :=
     (A_mean_m2 < T_area_m2)
     AND
-    (U_p95 < T_uncertainty)
+    (U_primary < T_uncertainty)
     AND
     (Brier < T_brier)
 ```
@@ -846,7 +1972,7 @@ Primary initial feature vector:
 ```text
 X_t = [
     A_mean_m2,
-    U_p95,
+    U_primary_value,
     IG_max,
     Score_max,
     selectable_candidate_count
@@ -956,7 +2082,14 @@ A_1_m2
 A_2_m2
 A_3_m2
 A_mean_m2
+KnownReachableFree_m2
+RemainingFraction
+
 U_p95
+U_mean
+U_disagreement
+U_primary_name
+U_primary_value
 
 IG_max
 Score_max
@@ -1050,9 +2183,21 @@ connectivity = 8
 ## D1
 
 ```text
-T_area_m2
+reachability_mode
+robot_clearance_radius_m            # if footprint-aware mode is frozen
+
+completeness_statistic              # A_mean_m2 or RemainingFraction
+T_area_m2                           # if absolute-area D1 is frozen
+T_remaining_fraction                # if normalized D1 is frozen
+
+uncertainty_statistic               # U_p95, U_mean, or U_disagreement
 T_uncertainty
-uncertainty_statistic = p95
+
+warmup_decisions
+K_confirm
+development_run_ids
+heldout_audit_run_ids
+quality_tolerances
 ```
 
 ## D2
@@ -1114,7 +2259,7 @@ Conceptual structure:
 ```text
 mapex.py                         # unchanged baseline
 early_stopping/
-    common.py                    # runtime crop, R_j, A_j, U_p95, state machine
+    common.py                    # runtime crop, reachability, R_j/A_j, completeness + uncertainty candidates, state machine
     direction1.py
     direction2.py
     direction3.py
@@ -1164,11 +2309,16 @@ The six directions are the active research program, but they should be implement
 Implement and unit-test:
 - prediction crop;
 - robot-cell conversion;
-- `R_j`;
-- `A_j_m2`;
-- `A_mean_m2`;
-- `R_union`;
-- `U_p95`;
+- raw and footprint-aware reachability masks;
+- R_j;
+- A_j_m2;
+- A_mean_m2;
+- KnownReachableFree_m2;
+- RemainingFraction;
+- R_union;
+- U_p95;
+- U_mean;
+- U_disagreement;
 - generic K-confirmation state machine;
 - shared logging.
 
@@ -1179,9 +2329,23 @@ Implement D2 first because it uses existing frontier metrics and validates that:
 - STOP prevents a new Nav2 goal;
 - normal no-frontier completion is still separate.
 
-## Stage C — D1 main global-completeness method
+## Stage C — D1 feasibility and global-completeness method
 
-Implement D1 exactly from Sections 4 and 6.
+Do **not** begin with online threshold tuning.
+
+Follow Section 6 in this order:
+
+```text
+Gate P: prediction fidelity
+→ Gate U: uncertainty informativeness
+→ Gate R: remaining-area informativeness
+→ offline counterfactual replay
+→ freeze reachability/completeness/uncertainty definitions
+→ freeze thresholds and K
+→ prospective online validation
+```
+
+Only after the three feasibility gates pass should D1 be enabled as an online stopping method.
 
 This is the first major new prediction-aware method.
 
