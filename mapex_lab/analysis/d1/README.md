@@ -84,6 +84,20 @@ Trước khi chấm structural GT, script kiểm tra theo từng run:
 
 Field legacy bị thiếu → WARN. Field tồn tại nhưng mâu thuẫn → FAIL.
 
+Riêng `metadata.environment` chỉ là provenance mô tả: missing/mismatch → `WARN`, không hard-fail.
+
+Prediction NPZ được ghép với exact raw map của decision bằng hard integrity checks:
+
+```text
+source_height / source_width
+resolution
+origin_x / origin_y
+source_map_stamp_s
+member = G1 / G2 / G3 / mean
+```
+
+Chỉ khi toàn bộ spatial/source identity khớp thì prediction mới được dùng. Prediction `environment` mismatch chỉ WARN.
+
 ## Cách chạy
 
 ### Phân tích chính — P1 + P2
