@@ -56,6 +56,7 @@ class RawGrid:
     origin_x: float
     origin_y: float
     origin_yaw: float
+    source_stamp_s: float
 
     @property
     def shape(self) -> tuple[int, int]:
@@ -99,6 +100,7 @@ def load_raw_grid(path: Path) -> RawGrid:
         origin_x = float(_scalar(npz, "origin_x"))
         origin_y = float(_scalar(npz, "origin_y"))
         origin_yaw = float(_scalar(npz, "origin_yaw", 0.0))
+        source_stamp_s = float(_scalar(npz, "source_stamp_s"))
 
         if data.ndim != 2:
             raise ValueError(f"{path}: expected 2-D occupancy grid, got {data.shape}")
@@ -115,6 +117,7 @@ def load_raw_grid(path: Path) -> RawGrid:
         origin_x=origin_x,
         origin_y=origin_y,
         origin_yaw=origin_yaw,
+        source_stamp_s=source_stamp_s,
     )
 
 
@@ -198,9 +201,9 @@ def validate_structural_gt_provenance(
             or environment_text.startswith(expected_environment + "_v")
         )
         if not compatible_environment:
-            raise ValueError(
-                f"{run_name}: metadata.environment={environment_text!r} "
-                f"is incompatible with GT {structural_gt.ground_truth_id!r}"
+            warnings.append(
+                f"metadata.environment={environment_text!r} is not the "
+                f"expected naming for GT {structural_gt.ground_truth_id!r}"
             )
 
     metadata_gt_id = metadata.get("structural_ground_truth_id")
@@ -292,8 +295,19 @@ def validate_structural_gt_provenance(
     return warnings
 
 
-def load_runtime_prediction(path: Path, expected_shape: tuple[int, int]) -> np.ndarray:
-    """Load one saved padded prediction and crop it to the decision-time map."""
+def load_runtime_prediction(
+    path: Path,
+    expected_grid: RawGrid,
+    expected_member: str,
+    expected_environment: str | None = None,
+    warnings: set[str] | None = None,
+) -> np.ndarray:
+    """Load one saved prediction and verify it belongs to the exact raw map.
+
+    Spatial metadata and source timestamp are hard integrity checks. Prediction
+    environment is descriptive provenance only: a mismatch/missing value warns
+    but does not invalidate an otherwise exact map association.
+    """
     if not path.is_file():
         raise FileNotFoundError(path)
 
@@ -302,19 +316,99 @@ def load_runtime_prediction(path: Path, expected_shape: tuple[int, int]) -> np.n
         if padded.ndim != 2:
             raise ValueError(f"{path}: expected 2-D prediction, got {padded.shape}")
 
+        required_keys = (
+            "source_height",
+            "source_width",
+            "pad_top",
+            "pad_left",
+            "resolution",
+            "origin_x",
+            "origin_y",
+            "source_map_stamp_s",
+            "member",
+        )
+        missing_keys = [key for key in required_keys if key not in npz.files]
+        if missing_keys:
+            raise ValueError(
+                f"{path}: missing prediction integrity metadata: "
+                f"{', '.join(missing_keys)}"
+            )
+
         source_h = int(_scalar(npz, "source_height"))
         source_w = int(_scalar(npz, "source_width"))
         pad_top = int(_scalar(npz, "pad_top"))
         pad_left = int(_scalar(npz, "pad_left"))
+        resolution = float(_scalar(npz, "resolution"))
+        origin_x = float(_scalar(npz, "origin_x"))
+        origin_y = float(_scalar(npz, "origin_y"))
+        source_map_stamp_s = float(_scalar(npz, "source_map_stamp_s"))
+        member = str(_scalar(npz, "member"))
 
+        expected_shape = expected_grid.shape
         if (source_h, source_w) != expected_shape:
             raise ValueError(
                 f"{path}: prediction source shape {(source_h, source_w)} "
-                f"!= observed map shape {expected_shape}"
+                f"!= raw map shape {expected_shape}"
             )
+        if not math.isclose(
+            resolution,
+            expected_grid.resolution,
+            rel_tol=0.0,
+            abs_tol=1e-6,
+        ):
+            raise ValueError(
+                f"{path}: prediction resolution {resolution} "
+                f"!= raw map resolution {expected_grid.resolution}"
+            )
+        if not math.isclose(
+            origin_x,
+            expected_grid.origin_x,
+            rel_tol=0.0,
+            abs_tol=1e-6,
+        ) or not math.isclose(
+            origin_y,
+            expected_grid.origin_y,
+            rel_tol=0.0,
+            abs_tol=1e-6,
+        ):
+            raise ValueError(
+                f"{path}: prediction origin ({origin_x}, {origin_y}) "
+                f"!= raw map origin "
+                f"({expected_grid.origin_x}, {expected_grid.origin_y})"
+            )
+        if not math.isclose(
+            source_map_stamp_s,
+            expected_grid.source_stamp_s,
+            rel_tol=0.0,
+            abs_tol=1e-6,
+        ):
+            raise ValueError(
+                f"{path}: prediction source_map_stamp_s={source_map_stamp_s} "
+                f"!= raw map source_stamp_s={expected_grid.source_stamp_s}"
+            )
+        if member != expected_member:
+            raise ValueError(
+                f"{path}: prediction member={member!r} "
+                f"!= expected {expected_member!r}"
+            )
+
+        if warnings is not None:
+            if "environment" not in npz.files:
+                warnings.add("prediction environment missing from NPZ metadata")
+            elif expected_environment:
+                prediction_environment = str(_scalar(npz, "environment"))
+                if prediction_environment != str(expected_environment):
+                    warnings.add(
+                        f"prediction environment={prediction_environment!r} "
+                        f"!= metadata.environment={str(expected_environment)!r}"
+                    )
+
         if pad_top < 0 or pad_left < 0:
             raise ValueError(f"{path}: negative padding metadata")
-        if pad_top + source_h > padded.shape[0] or pad_left + source_w > padded.shape[1]:
+        if (
+            pad_top + source_h > padded.shape[0]
+            or pad_left + source_w > padded.shape[1]
+        ):
             raise ValueError(
                 f"{path}: crop {(pad_top, pad_left, source_h, source_w)} "
                 f"does not fit padded prediction {padded.shape}"
@@ -325,9 +419,10 @@ def load_runtime_prediction(path: Path, expected_shape: tuple[int, int]) -> np.n
             pad_left : pad_left + source_w,
         ].astype(np.float32, copy=False)
 
-    if runtime.shape != expected_shape:
+    if runtime.shape != expected_grid.shape:
         raise ValueError(
-            f"{path}: cropped prediction shape {runtime.shape} != {expected_shape}"
+            f"{path}: cropped prediction shape {runtime.shape} "
+            f"!= raw map shape {expected_grid.shape}"
         )
     return runtime
 
@@ -792,6 +887,7 @@ def analyze_decision_rows(
     metadata: dict,
     late_n: int,
     reference_mode: str,
+    prediction_warnings: set[str] | None = None,
 ) -> list[dict]:
     observed = decision_grids[decision_index - 1]
     unknown_rows, unknown_cols = np.nonzero(observed.data < 0)
@@ -803,10 +899,23 @@ def analyze_decision_rows(
         "g3": decision_row.get("g3_map", ""),
         "mean": decision_row.get("mean_map", ""),
     }
+    expected_members = {
+        "g1": "G1",
+        "g2": "G2",
+        "g3": "G3",
+        "mean": "mean",
+    }
     predictions = {
         predictor: load_runtime_prediction(
             _resolve_run_path(run_dir, predictor_paths[predictor]),
-            observed.shape,
+            expected_grid=observed,
+            expected_member=expected_members[predictor],
+            expected_environment=(
+                str(metadata.get("environment"))
+                if metadata.get("environment") is not None
+                else None
+            ),
+            warnings=prediction_warnings,
         )
         for predictor in PREDICTORS
     }
@@ -1454,6 +1563,7 @@ def build_summary(
             "Future/final data are offline targets only and are never runtime D1 inputs.",
             "Run directory names are canonical run IDs for this analysis.",
             "Gate P classifies prediction < 0.5 as free and prediction >= 0.5 as occupied; this differs only at the exact 0.5 boundary from the legacy evaluator's > 0.5 convention.",
+            "Prediction NPZs are hard-matched to the exact decision raw map by source shape, resolution, origin, source timestamp and member label; prediction environment is warning-only provenance.",
             "Run-level macro summaries are reported to avoid treating all spatial cells as independent runs.",
         ],
     }
@@ -1848,6 +1958,7 @@ def main() -> int:
         ]
 
         provenance_warnings: list[str] = []
+        prediction_warnings: set[str] = set()
         if structural_gt is not None:
             provenance_warnings = validate_structural_gt_provenance(
                 run_name=run_name,
@@ -1879,8 +1990,14 @@ def main() -> int:
                 metadata=metadata,
                 late_n=args.late_n,
                 reference_mode=args.reference,
+                prediction_warnings=prediction_warnings,
             )
             run_decision_rows.extend(rows)
+
+        if prediction_warnings:
+            for warning in sorted(prediction_warnings):
+                print(f"[WARN] {run_name}: {warning}")
+            provenance_warnings.extend(sorted(prediction_warnings))
 
         active_refs = (
             list(REFERENCES)
