@@ -4,14 +4,16 @@
 This script evaluates whether MapEx's decision-time LaMa predictions are useful
 for early stopping before any online D1 stop rule is implemented.
 
-Primary reference implemented here: ``later-observed``.
+Primary reference implemented here: ``first-later-observed``.
 For each policy decision t:
   1. load the exact ROS OccupancyGrid used by MapEx at t;
   2. keep only cells that were unknown at t;
   3. crop G1/G2/G3/mean predictions back to the runtime grid;
-  4. map those cell centers into the run's final raw OccupancyGrid;
-  5. keep only cells that are known in the final map (therefore observed later);
-  6. compare prediction at t against that later observation.
+  4. map those cell centers into later policy-decision OccupancyGrids;
+  5. use the first later decision where each cell becomes known as its target;
+  6. compare prediction at t against that first later observation.
+
+The final raw map is retained only as a secondary diagnostic reference.
 
 No final/future information is used as an online feature. Future information is
 used only as the offline Gate-P target.
@@ -365,9 +367,96 @@ def _add_prefixed_metrics(row: dict, prefix: str, metrics: dict) -> None:
         row[f"{prefix}_{key}"] = value
 
 
+def _float_or_nan(value) -> float:
+    try:
+        result = float(value)
+    except (TypeError, ValueError):
+        return math.nan
+    return result if math.isfinite(result) else math.nan
+
+
+def _percentile_or_nan(values: np.ndarray, percentile: float) -> float:
+    values = np.asarray(values, dtype=np.float64)
+    values = values[np.isfinite(values)]
+    if values.size == 0:
+        return math.nan
+    return float(np.percentile(values, percentile))
+
+
+def first_later_observation_targets(
+    observed: RawGrid,
+    unknown_rows: np.ndarray,
+    unknown_cols: np.ndarray,
+    decision_index: int,
+    decision_table: list[dict[str, str]],
+    decision_grids: list[RawGrid],
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Find the first later policy-decision map where each source cell is known.
+
+    decision_index is 1-based. A target is never taken from the current
+    decision. Cells that remain unknown through all later policy decisions keep
+    label/reveal metadata at the sentinel values.
+    """
+    count = int(unknown_rows.size)
+    labels = np.full(count, -1, dtype=np.int16)
+    reveal_decision_ids = np.full(count, -1, dtype=np.int64)
+    decisions_until_reveal = np.full(count, -1, dtype=np.int64)
+    time_until_reveal_s = np.full(count, np.nan, dtype=np.float64)
+
+    if count == 0 or decision_index >= len(decision_table):
+        return labels, reveal_decision_ids, decisions_until_reveal, time_until_reveal_s
+
+    world_x, world_y = _cell_centers_world(observed, unknown_rows, unknown_cols)
+    unresolved = np.ones(count, dtype=bool)
+    current_time_s = _float_or_nan(decision_table[decision_index - 1].get("time_s"))
+
+    # decision_index is 1-based, therefore list position decision_index is the
+    # immediately following policy decision.
+    for future_pos in range(decision_index, len(decision_table)):
+        future_grid = decision_grids[future_pos]
+        future_rows, future_cols, inside = _world_to_cells(
+            future_grid,
+            world_x,
+            world_y,
+        )
+
+        candidate_mask = unresolved & inside
+        if not np.any(candidate_mask):
+            continue
+
+        candidate_indices = np.flatnonzero(candidate_mask)
+        candidate_labels = future_grid.data[
+            future_rows[candidate_indices],
+            future_cols[candidate_indices],
+        ]
+        known_local = candidate_labels >= 0
+        if not np.any(known_local):
+            continue
+
+        revealed_indices = candidate_indices[known_local]
+        revealed_labels = candidate_labels[known_local]
+        labels[revealed_indices] = revealed_labels
+
+        future_row = decision_table[future_pos]
+        reveal_decision_ids[revealed_indices] = int(future_row["decision_id"])
+        decisions_until_reveal[revealed_indices] = (future_pos + 1) - decision_index
+
+        future_time_s = _float_or_nan(future_row.get("time_s"))
+        if math.isfinite(current_time_s) and math.isfinite(future_time_s):
+            time_until_reveal_s[revealed_indices] = future_time_s - current_time_s
+
+        unresolved[revealed_indices] = False
+        if not np.any(unresolved):
+            break
+
+    return labels, reveal_decision_ids, decisions_until_reveal, time_until_reveal_s
+
+
 def analyze_decision(
     run_dir: Path,
     decision_row: dict[str, str],
+    decision_table: list[dict[str, str]],
+    decision_grids: list[RawGrid],
     final_grid: RawGrid,
     decision_index: int,
     total_decisions: int,
@@ -376,24 +465,64 @@ def analyze_decision(
 ) -> dict:
     decision_id = int(decision_row["decision_id"])
     raw_map_path = _resolve_run_path(run_dir, decision_row["raw_map"])
-    observed = load_raw_grid(raw_map_path)
+    observed = decision_grids[decision_index - 1]
 
     unknown_mask = observed.data < 0
     unknown_rows, unknown_cols = np.nonzero(unknown_mask)
     unknown_count = int(unknown_rows.size)
 
-    world_x, world_y = _cell_centers_world(observed, unknown_rows, unknown_cols)
-    final_rows, final_cols, inside = _world_to_cells(final_grid, world_x, world_y)
+    (
+        first_labels,
+        reveal_decision_ids,
+        decisions_until_reveal,
+        time_until_reveal_s,
+    ) = first_later_observation_targets(
+        observed=observed,
+        unknown_rows=unknown_rows,
+        unknown_cols=unknown_cols,
+        decision_index=decision_index,
+        decision_table=decision_table,
+        decision_grids=decision_grids,
+    )
 
-    reference_labels = np.full(unknown_count, -1, dtype=np.int16)
-    if np.any(inside):
-        reference_labels[inside] = final_grid.data[final_rows[inside], final_cols[inside]]
-
-    later_observed = inside & (reference_labels >= 0)
-    eval_rows = unknown_rows[later_observed]
-    eval_cols = unknown_cols[later_observed]
-    truth_labels = reference_labels[later_observed]
+    first_observed = first_labels >= 0
+    eval_rows = unknown_rows[first_observed]
+    eval_cols = unknown_cols[first_observed]
+    truth_labels = first_labels[first_observed]
     truth_occupied = truth_labels > 0
+
+    reveal_steps_eval = decisions_until_reveal[first_observed]
+    reveal_time_eval = time_until_reveal_s[first_observed]
+    reveal_ids_eval = reveal_decision_ids[first_observed]
+
+    # Secondary diagnostic only: compare the same decision-time unknown cells
+    # against the final raw map. This is not the primary Gate-P target.
+    world_x, world_y = _cell_centers_world(observed, unknown_rows, unknown_cols)
+    final_rows, final_cols, final_inside = _world_to_cells(
+        final_grid,
+        world_x,
+        world_y,
+    )
+    final_labels = np.full(unknown_count, -1, dtype=np.int16)
+    if np.any(final_inside):
+        final_labels[final_inside] = final_grid.data[
+            final_rows[final_inside],
+            final_cols[final_inside],
+        ]
+    final_observed = final_inside & (final_labels >= 0)
+    final_eval_rows = unknown_rows[final_observed]
+    final_eval_cols = unknown_cols[final_observed]
+    final_truth_labels = final_labels[final_observed]
+    final_truth_occupied = final_truth_labels > 0
+
+    both_known = first_observed & final_observed
+    first_vs_final_count = int(np.count_nonzero(both_known))
+    if first_vs_final_count:
+        first_vs_final_agreement = float(
+            np.mean((first_labels[both_known] > 0) == (final_labels[both_known] > 0))
+        )
+    else:
+        first_vs_final_agreement = math.nan
 
     progress = float(decision_index / max(total_decisions, 1))
     row: dict[str, object] = {
@@ -410,11 +539,36 @@ def analyze_decision(
         "is_last_n": int((total_decisions - decision_index) < late_n),
         "sim_time_s": decision_row.get("time_s", ""),
         "observed_unknown_cells": unknown_count,
-        "unknown_cells_inside_final_extent": int(np.count_nonzero(inside)),
         "evaluated_cell_count": int(truth_labels.size),
         "evaluated_free_count": int(np.count_nonzero(truth_labels == 0)),
         "evaluated_occupied_count": int(np.count_nonzero(truth_labels > 0)),
-        "future_observed_fraction_of_unknown": _safe_div(int(truth_labels.size), unknown_count),
+        "future_observed_fraction_of_unknown": _safe_div(
+            int(truth_labels.size),
+            unknown_count,
+        ),
+        "first_reveal_decision_id": (
+            int(np.min(reveal_ids_eval)) if reveal_ids_eval.size else ""
+        ),
+        "last_reveal_decision_id": (
+            int(np.max(reveal_ids_eval)) if reveal_ids_eval.size else ""
+        ),
+        "mean_decisions_until_reveal": (
+            float(np.mean(reveal_steps_eval)) if reveal_steps_eval.size else math.nan
+        ),
+        "median_decisions_until_reveal": (
+            float(np.median(reveal_steps_eval)) if reveal_steps_eval.size else math.nan
+        ),
+        "p90_decisions_until_reveal": _percentile_or_nan(reveal_steps_eval, 90.0),
+        "mean_time_until_reveal_s": _nanmean(reveal_time_eval),
+        "median_time_until_reveal_s": _percentile_or_nan(reveal_time_eval, 50.0),
+        "p90_time_until_reveal_s": _percentile_or_nan(reveal_time_eval, 90.0),
+        "revealed_next_decision_fraction": _safe_div(
+            int(np.count_nonzero(reveal_steps_eval == 1)),
+            int(reveal_steps_eval.size),
+        ),
+        "finalref_evaluated_cell_count": int(final_truth_labels.size),
+        "first_vs_final_common_cell_count": first_vs_final_count,
+        "first_vs_final_class_agreement": first_vs_final_agreement,
         "raw_map": str(raw_map_path.relative_to(run_dir)),
     }
 
@@ -427,12 +581,16 @@ def analyze_decision(
     for predictor in PREDICTORS:
         path = _resolve_run_path(run_dir, predictor_paths[predictor])
         runtime_prediction = load_runtime_prediction(path, observed.shape)
-        values = runtime_prediction[eval_rows, eval_cols]
-        metrics = classification_metrics(values, truth_occupied)
-        _add_prefixed_metrics(row, predictor, metrics)
+
+        primary_values = runtime_prediction[eval_rows, eval_cols]
+        primary_metrics = classification_metrics(primary_values, truth_occupied)
+        _add_prefixed_metrics(row, predictor, primary_metrics)
+
+        final_values = runtime_prediction[final_eval_rows, final_eval_cols]
+        final_metrics = classification_metrics(final_values, final_truth_occupied)
+        _add_prefixed_metrics(row, f"finalref_{predictor}", final_metrics)
 
     return row
-
 
 def aggregate_run(
     run_dir: Path,
@@ -455,6 +613,15 @@ def aggregate_run(
         "late_decisions_evaluated": sum(
             int(d["evaluated_cell_count"]) > 0 and int(d["is_last_n"]) == 1
             for d in decision_rows
+        ),
+        "mean_decisions_until_reveal_decision_macro": _nanmean(
+            d["mean_decisions_until_reveal"] for d in decision_rows
+        ),
+        "mean_time_until_reveal_s_decision_macro": _nanmean(
+            d["mean_time_until_reveal_s"] for d in decision_rows
+        ),
+        "first_vs_final_class_agreement_decision_macro": _nanmean(
+            d["first_vs_final_class_agreement"] for d in decision_rows
         ),
         "final_reference_map": str(final_map.relative_to(run_dir)),
     }
@@ -494,8 +661,14 @@ def aggregate_run(
                 d[f"{predictor}_{metric_name}"] for d in late_rows
             )
 
-    return row
+        # Secondary final-map reference is summarized separately so it cannot be
+        # confused with the primary first-later-observed Gate-P result.
+        for metric_name in ("accuracy", "macro_iou", "mae"):
+            row[f"finalref_{predictor}_{metric_name}_decision_macro"] = _nanmean(
+                d[f"finalref_{predictor}_{metric_name}"] for d in decision_rows
+            )
 
+    return row
 
 def _json_number(value):
     if isinstance(value, (np.integer,)):
@@ -523,7 +696,7 @@ def build_summary(
 
     summary: dict[str, object] = {
         "gate": "D1 Phase 0 / Gate P",
-        "reference": "later_observed_final_raw",
+        "reference": "first_later_policy_decision_observation",
         "prediction_threshold": PREDICTION_THRESHOLD,
         "late_n_decisions": late_n,
         "requested_runs": requested_runs,
@@ -539,8 +712,10 @@ def build_summary(
         "predictors": {},
         "stage_summary": {},
         "notes": [
-            "Only cells unknown at decision t and known in the run's final raw map are evaluated.",
-            "Final/future data are offline targets only and are never runtime D1 inputs.",
+            "Primary targets are cells unknown at decision t that become known in a later policy-decision map.",
+            "Each cell uses its first later known observation as the primary target.",
+            "The final raw map is retained only as a secondary diagnostic reference.",
+            "Future data are offline targets only and are never runtime D1 inputs.",
             "Run directory names are canonical run IDs for this analysis.",
             "Run-level macro summaries are reported to avoid treating all spatial cells as independent runs.",
         ],
@@ -637,7 +812,7 @@ def make_figures(decision_rows: list[dict], run_rows: list[dict], output_dir: Pa
         print("[WARN] matplotlib not installed; skipping figures")
         return []
 
-    figure_dir = output_dir / "figures"
+    figure_dir = output_dir / "gate_p_plots"
     figure_dir.mkdir(parents=True, exist_ok=True)
     written: list[str] = []
 
@@ -758,7 +933,7 @@ def main() -> int:
     print(f"[Gate P] output dir:       {output_dir}")
     print(f"[Gate P] runs:             {', '.join(args.runs)}")
     print(f"[Gate P] threshold:        {PREDICTION_THRESHOLD}")
-    print("[Gate P] reference:        later-observed cells from final raw map")
+    print("[Gate P] reference:        first later policy-decision observation")
 
     for run_name in args.runs:
         run_dir = experiments_root / run_name
@@ -784,12 +959,22 @@ def main() -> int:
         final_map_path = find_final_raw_map(run_dir)
         final_grid = load_raw_grid(final_map_path)
 
+        # Preload exact decision-time raw grids once per run. Gate P then uses
+        # future policy-decision maps to find the first saved observation where
+        # each decision-time unknown cell becomes known.
+        decision_grids = [
+            load_raw_grid(_resolve_run_path(run_dir, row["raw_map"]))
+            for row in decision_table
+        ]
+
         run_decisions: list[dict] = []
         total = len(decision_table)
         for index, decision_row in enumerate(decision_table, start=1):
             result = analyze_decision(
                 run_dir=run_dir,
                 decision_row=decision_row,
+                decision_table=decision_table,
+                decision_grids=decision_grids,
                 final_grid=final_grid,
                 decision_index=index,
                 total_decisions=total,
