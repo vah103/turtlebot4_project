@@ -1611,8 +1611,6 @@ Until the signal definitions and thresholds are frozen from development evidence
 
 # 7. Direction 2 — Information-Gain Saturation
 
-# 7. Direction 2 — Information-Gain Saturation
-
 ## Reference anchors
 
 - **PRIMARY:** **[SRC-05]**, **[SRC-07]**
