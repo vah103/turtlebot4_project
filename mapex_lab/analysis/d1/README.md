@@ -70,6 +70,14 @@ mặc định.
 
 Runtime map/prediction `0.10 m` được nearest-neighbour expand lên canonical structural-GT canvas `0.05 m` theo đúng semantics của evaluator hiện có trong repo.
 
+Origin của raw SLAM map **không bắt buộc** nằm chính xác trên lattice `0.05 m`. P2 dùng cùng rule với evaluator canonical:
+
+```text
+canvas_index = int(round((runtime_origin - canvas_origin) / 0.05))
+```
+
+và ghi residual lượng tử hóa origin theo x/y để audit. Không hard-fail chỉ vì origin lệch fractional-cell.
+
 P2 **không dùng** `new_room_connected_free_v2.npy` làm classification mask vì connected-free ROI chỉ biểu diễn free-space ROI và sẽ loại mất occupied class. P2 cần giữ cả free và occupied target.
 
 ### Provenance guard cho P2
