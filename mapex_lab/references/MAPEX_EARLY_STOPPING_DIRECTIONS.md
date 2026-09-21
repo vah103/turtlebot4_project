@@ -60,7 +60,7 @@ Use these tags inside D1...D6. The tags indicate **research ancestry / implement
 | Tag | Source | Type / role |
 |---|---|---|
 | **[SRC-01]** | *Enough is Enough: Towards Autonomous Uncertainty-driven Stopping Criteria* | Saturation / repeated low-improvement stopping |
-| **[SRC-02]** | *Estimating Map Completeness in Robot Exploration* | Learned map-completeness stopping; companion code: \`aislabunimi/exploration-aware\` |
+| **[SRC-02]** | *Estimating Map Completeness in Robot Exploration* | Learned map-completeness stopping; companion code: `aislabunimi/exploration-aware` |
 | **[SRC-03]** | *Optimizing Exploration with a New Uncertainty Framework for Active SLAM Systems* | Uncertainty as exploration/completion evidence |
 | **[SRC-04]** | *PUL-SLAM: Path-Uncertainty Co-Optimization with Lightweight Stagnation Detection for Efficient Robotic Exploration* | Stagnation detection |
 | **[SRC-05]** | *A Novel Stop Criterion to Support Efficient Multi-Robot Mapping* | Expected-vs-actual information stopping |
@@ -68,11 +68,11 @@ Use these tags inside D1...D6. The tags indicate **research ancestry / implement
 | **[SRC-07]** | *Sampling-based Incremental Information Gathering with Applications to Robotic Exploration and Environmental Monitoring* | Information/entropy saturation |
 | **[SRC-08]** | Valerii Stakanov MSc thesis — *A frontier-based exploration strategy informed by an estimation of map completeness* | Map-completeness model + Grad-CAM/frontier guidance; same research lineage as SRC-02 |
 | **[SRC-09]** | Zhuoqi Zheng PhD thesis — *Autonomous Exploration of Mobile Robots in Complex Environments* | Predicted layout / expected remaining information / early termination |
-| **[SRC-10]** | \`Leety09/autonomous-frontier-explorer\` | Practical threshold + repeated/fallback completion pattern |
-| **[SRC-11]** | \`mertgulerx/frontier_exploration_ros2\` | ROS2 exploration-complete event / termination integration |
-| **[SRC-12]** | \`cvg/OpenFrontier\` | Termination guards, no-frontier handling, timeout/completion separation |
-| **[SRC-13]** | \`Incomprehensible/RRT_exploration\` | Frontier-detection-rate / late-stage stagnation idea; proposed rather than completed stopping implementation |
-| **[SRC-14]** | \`geo-179/autonomous_exploration_of_unknown_environments\` | Entropy-boundary + coverage completion heuristic; completion function exists but was not wired into runtime loop when inspected |
+| **[SRC-10]** | `Leety09/autonomous-frontier-explorer` | Practical threshold + repeated/fallback completion pattern |
+| **[SRC-11]** | `mertgulerx/frontier_exploration_ros2` | ROS2 exploration-complete event / termination integration |
+| **[SRC-12]** | `cvg/OpenFrontier` | Termination guards, no-frontier handling, timeout/completion separation |
+| **[SRC-13]** | `Incomprehensible/RRT_exploration` | Frontier-detection-rate / late-stage stagnation idea; proposed rather than completed stopping implementation |
+| **[SRC-14]** | `geo-179/autonomous_exploration_of_unknown_environments` | Entropy-boundary + coverage completion heuristic; completion function exists but was not wired into runtime loop when inspected |
 
 ### How to use the tags
 
@@ -759,7 +759,7 @@ With the current N=3 implementation, the consensus rule above is canonical.
 ## Reference anchors
 
 - **PRIMARY:** **[SRC-02]**, **[SRC-08]**
-  - [SRC-02]: direct learned map-completeness / stop-decision precedent; inspect its companion \`aislabunimi/exploration-aware\` implementation for dataset/evaluation patterns.
+  - [SRC-02]: direct learned map-completeness / stop-decision precedent; inspect its companion `aislabunimi/exploration-aware` implementation for dataset/evaluation patterns.
   - [SRC-08]: extends the same research lineage and is useful for learned completeness features and interpretation.
 - **SUPPORTING:** **[SRC-01]**, **[SRC-03]**, **[SRC-04]**
   - These motivate candidate input features representing saturation, uncertainty and stagnation.
@@ -1157,11 +1157,11 @@ This matrix is only a navigation aid; the detailed role labels above are authori
 
 Legend:
 
-\`\`\`text
+```text
 P = PRIMARY methodological reference
 S = SUPPORTING reference
 I = IMPLEMENTATION reference
-\`\`\`
+```
 
 ---
 
