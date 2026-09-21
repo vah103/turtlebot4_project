@@ -370,6 +370,18 @@ STOP_MAX_DISTANCE
 
 ---
 
+# 5.5 Shared implementation references
+
+The following small repositories are mainly **implementation-pattern references**, not evidence that the six research rules are already solved elsewhere:
+
+- **[S10] Leety09/autonomous-frontier-explorer:** simple threshold + repeated/fallback termination pattern.
+- **[S11] mertgulerx/frontier_exploration_ros2:** ROS2 completion event / mission-level exploration-complete publication pattern.
+- **[S12] cvg/OpenFrontier:** explicit no-frontier termination and clear termination-reason separation.
+
+Use these for software structure, not for novelty claims or threshold values.
+
+---
+
 # 6. Direction 1 — Uncertainty-Aware Predicted Map Completeness
 
 ## Reference anchors
@@ -388,6 +400,15 @@ STOP_MAX_DISTANCE
 ## Question
 
 Does MapEx already predict that only a small amount of reachable environment remains, and is it sufficiently certain about that conclusion?
+
+## Reference tags
+
+- **Primary conceptual:** **[S6]**, **[S9]** — predicted layout / predicted remaining useful area as evidence for early stopping.
+- **Primary uncertainty support:** **[S3]** — uncertainty as an explicit exploration/stopping signal rather than ignoring confidence.
+- **Supporting completeness lineage:** **[S2]**, **[S8]** — direct estimation of whether a partial map is sufficiently complete.
+- **Implementation support shared across D1...D6:** **[S10]**, **[S11]**, **[S12]** — persistence counter, normal no-frontier fallback, explicit completion event / termination reason.
+
+**Interpretation constraint:** D1 is a synthesis adapted to MapEx. No tagged source is claimed to contain this exact `A_mean_m2 + U_p95` rule.
 
 ## Required inputs
 
@@ -465,6 +486,15 @@ D2 is deliberately a simple MapEx-native saturation baseline; it is not old Way2
 
 Even though a valid next frontier exists, has the expected information value of the best remaining frontier become too small?
 
+## Reference tags
+
+- **Primary conceptual:** **[S7]** — information/entropy saturation as a principled termination concept.
+- **Supporting expected-information comparison:** **[S5]** — stopping logic based on the relationship between expected and realized information gain.
+- **Supporting prototype:** **[S14]** — entropy-boundary/completion heuristic showing how low remaining information structure can be used in a completion test.
+- **Implementation support:** **[S10]**, **[S12]** — threshold persistence and explicit separation between early stopping and ordinary frontier exhaustion.
+
+**Interpretation constraint:** D2 is deliberately simpler than the cited systems and is not old Way2.
+
 ## Required inputs
 
 From current `selectable_evaluations`:
@@ -532,6 +562,16 @@ The key D3 distinction is that stagnation alone must never trigger STOP; predict
 Can false early stops be reduced by requiring both:
 1. D1 says little predicted environment remains; and
 2. recent real exploration is producing very little new known area per metre travelled?
+
+## Reference tags
+
+- **Primary stagnation references:** **[S1]**, **[S4]** — stop only after progress/improvement remains small over a temporal window or repeated decisions.
+- **Supporting progress-rate idea:** **[S13]** — frontier-detection-rate slowdown as a stagnation signal; note that S13 proposes switching search mode, not an implemented stop rule.
+- **Supporting multi-signal completion prototype:** **[S14]** — combines global completion evidence with remaining boundary structure.
+- **Prediction component inherited from D1:** **[S6]**, **[S9]**, **[S3]**.
+- **Implementation support:** **[S10]**, **[S12]**.
+
+**Interpretation constraint:** stagnation is only a guard combined with prediction; low progress alone must never be sufficient for the primary D3 STOP.
 
 ## Required inputs
 
@@ -605,6 +645,15 @@ Frontier discovery rate may be logged and later tested, but it is **not** part o
 ## Question
 
 Before trusting D1, have recent MapEx predictions actually matched cells that the robot later observed?
+
+## Reference tags
+
+- **Primary motivation:** **[S2]**, **[S8]** — learned completeness/prediction methods expose a generalization/reliability problem when deciding that a partial map is "complete enough".
+- **Uncertainty motivation:** **[S3]** — confidence/uncertainty must be considered before trusting a stopping signal.
+- **Prediction-based stopping context:** **[S6]**, **[S9]** — stopping decisions based on predicted unseen structure motivate validating whether prediction can be trusted.
+- **Implementation support:** **[S10]**, **[S12]**.
+
+**Important provenance note:** the exact online scheme "old prediction vs later observation → rolling Brier gate" is a **new synthesis for this project**, not a direct algorithm copied from S2/S3/S6/S8/S9.
 
 ## Required inputs
 
@@ -703,6 +752,16 @@ An empirical tail probability based only on three members can take only:
 
 Therefore statements such as "stop when miss probability < 5%" are misleading with the current ensemble size.
 
+## Reference tags
+
+- **Primary predicted-remaining-area lineage:** **[S6]**, **[S9]** — predicted unseen layout/remaining useful area determines whether further exploration is worthwhile.
+- **Supporting uncertainty perspective:** **[S3]** — disagreement/uncertainty should affect whether prediction-based stopping is trusted.
+- **Implementation support:** **[S10]**, **[S12]**.
+
+**MapEx-specific step:** the 3-member consensus rule comes from the existing MapEx ensemble structure. MapEx itself is the system substrate and is **not counted as one of [S1]...[S14]**.
+
+**Important provenance note:** no source among S1...S14 is claimed to use the exact `max(A_1,A_2,A_3) <= A_critical` rule.
+
 ## Required inputs
 
 Use the same per-member remaining areas as D1:
@@ -770,6 +829,15 @@ D6 must remain distinct from SRC-02: the first implementation learns from **inte
 ## Question
 
 Can a lightweight model learn when stopping is safe from interpretable MapEx-native features, without training another raw-map CNN?
+
+## Reference tags
+
+- **Primary learned-completeness lineage:** **[S2]**, **[S8]** — learn whether exploration/map completeness is sufficient from partial-map evidence.
+- **Feature motivation from the rule-based directions:** **[S1]**, **[S3]**, **[S6]**, **[S7]**, **[S9]** — progress, uncertainty, predicted remaining area and information saturation provide interpretable candidate features.
+- **Evaluation pattern associated with the S2/S8 lineage:** the `exploration-aware` implementation is useful for saved-time and false-positive/false-negative accounting, but it is not counted as an additional conceptual source beyond S2/S8.
+- **Implementation support:** **[S10]**, **[S11]**, **[S12]**.
+
+**Interpretation constraint:** D6 learns from MapEx-native scalar features; it is not a reimplementation of the raw-map CNN used in S2/S8.
 
 ## Runtime feature contract
 
@@ -1192,3 +1260,50 @@ All six are now active research candidates.
 For implementation order, **D1 is the first major method**, D2 is the plumbing/baseline method, D3-D5 are principled robustness/probabilistic extensions, and D6 is the final learned extension.
 
 This ordering is an engineering/research plan, not a claim that D1 will necessarily be the final winning method.
+
+
+---
+
+# 18. Source tag index — S1...S14
+
+These tags refer to the 14 sources reviewed before defining D1...D6.
+
+| Tag | Source | Main idea relevant here | Evidence role |
+|---|---|---|---|
+| **S1** | **Enough is Enough: Towards Autonomous Uncertainty-driven Stopping Criteria** (2022) | Repeated small change / saturation before stopping | D3 |
+| **S2** | **Estimating Map Completeness in Robot Exploration** | Learned map-completeness / safe stopping from partial maps | D1, D4, D6 |
+| **S3** | **Optimizing Exploration with a New Uncertainty Framework for Active SLAM Systems** | Uncertainty as an exploration/termination signal | D1, D4, D5 |
+| **S4** | **PUL-SLAM** | Lightweight stagnation detection | D3 |
+| **S5** | **A Novel Stop Criterion to Support Efficient Multi-Robot Mapping** | Expected-vs-actual information gain for stopping | D2 |
+| **S6** | **Exploration of Indoor Environments through Predicting the Layout of Partially Observed Rooms** (AAMAS 2021) | Predicted remaining visible/unexplored area; early stopping | D1, D4, D5 |
+| **S7** | **Sampling-based Incremental Information Gathering (IIG)** | Information/entropy convergence and saturation | D2, D6 feature motivation |
+| **S8** | **Valerii Stakanov master thesis — A frontier-based exploration strategy informed by an estimation of map completeness** | Completeness CNN + Grad-CAM / incomplete-region reasoning | D1, D4, D6 |
+| **S9** | **Zhuoqi Zheng PhD thesis — Autonomous Exploration of Mobile Robots in Complex Environments** | Predicted layout / remaining useful information; crowd-flow extension | D1, D4, D5 |
+| **S10** | **Leety09/autonomous-frontier-explorer** | Simple threshold stop, fallback, counter-style control pattern | Shared implementation |
+| **S11** | **mertgulerx/frontier_exploration_ros2** | ROS2 exploration-complete event / mission integration | Shared implementation |
+| **S12** | **cvg/OpenFrontier** | No-frontier termination and explicit termination reasons | Shared implementation |
+| **S13** | **Incomprehensible/RRT_exploration** | Proposed frontier-detection-rate slowdown; not an implemented stop algorithm | D3 supporting signal |
+| **S14** | **geo-179/autonomous_exploration_of_unknown_environments** | Prototype completion heuristic combining explored fraction + entropy-boundary density + sanity check; not wired into runtime | D2/D3 supporting prototype |
+
+## Lineage / non-independence notes
+
+- **S8 is closely tied to the same research lineage as S2**. Do not count S2 and S8 as fully independent evidence for novelty.
+- **S9 is conceptually very close to the predicted-layout line represented by S6**. Treat them as one related family when making novelty claims.
+- **S13 is not an implemented early-stopping method**; its frontier-rate idea is only supporting inspiration for D3.
+- **S14 contains a candidate completion function but it is not integrated into the runtime exploration loop**.
+- The `exploration-aware` repository is implementation/evaluation support for the **S2/S8 lineage**, not a separate conceptual source in the 14-source count.
+
+## Quick direction-to-source map
+
+```text
+D1 ← S6, S9, S3   + S2, S8
+D2 ← S7, S5, S14
+D3 ← S1, S4, S13, S14 + D1 lineage
+D4 ← S2, S8, S3   + S6, S9
+D5 ← S6, S9, S3   + MapEx ensemble substrate
+D6 ← S2, S8       + features motivated by S1/S3/S6/S7/S9
+
+Shared software patterns ← S10, S11, S12
+```
+
+The tags are for traceability and implementation reference. They **do not mean that a direction is already published exactly as specified here**.
