@@ -71,7 +71,9 @@ mapex_lab/analysis/d1/results/gate_p/
     ├── accuracy_vs_decision_progress.png
     ├── macro_iou_vs_decision_progress.png
     ├── mae_vs_decision_progress.png
-    └── late_stage_accuracy_by_run.png
+    ├── late_stage_accuracy_by_run.png
+    ├── late_stage_class_recall_by_run.png
+    └── late_stage_class_iou_by_run.png
 ```
 
 ### gate_p_decisions.csv
@@ -96,7 +98,14 @@ Một dòng cho mỗi MapEx decision, gồm:
 
 ### gate_p_runs.csv
 
-Aggregate theo run, gồm micro metrics và decision-macro metrics, cộng riêng late-stage metrics.
+Aggregate theo run, gồm micro metrics và decision-macro metrics. Late-stage (`last-N`) có riêng:
+
+- accuracy / macro IoU / MAE;
+- free precision / recall;
+- occupied precision / recall;
+- free IoU / occupied IoU.
+
+`occupied_recall` đặc biệt quan trọng với D1 vì false-free prediction trên obstacle/tường có thể làm sai predicted reachability.
 
 ### gate_p_summary.json
 
@@ -115,5 +124,19 @@ first later policy-decision map where that cell becomes known
 Tức là target của mỗi cell là observation đầu tiên được lưu ở một decision sau `t`, không phải mặc định label ở cuối run.
 
 Final raw map vẫn được so sánh riêng với prefix `finalref_` để kiểm tra xem label đầu tiên có ổn định tới cuối run hay không.
+
+### Limitation của later-observed reference
+
+Gate P1 này chỉ đánh giá:
+
+```text
+Unknown_t ∩ EventuallyObserved
+```
+
+Nó **không** đánh giá toàn bộ `Unknown_t`. Các vùng baseline không bao giờ quan sát sẽ không có later-observed target.
+
+Vì vậy kết luận hợp lệ của Gate P1 là prediction fidelity trên các vùng đang unknown tại `t` mà baseline exploration về sau thực sự quan sát được. Không dùng Gate P1 một mình để khẳng định prediction tốt trên toàn bộ unknown space.
+
+Structural-GT sẽ là reference thứ hai để kiểm tra các vùng unknown mà baseline không reveal.
 
 Mọi future/final observation chỉ dùng để đánh giá fidelity offline, không được dùng làm feature của D1 runtime.
