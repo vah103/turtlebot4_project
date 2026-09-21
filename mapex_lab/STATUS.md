@@ -53,6 +53,7 @@ No D1...D6 threshold is frozen yet. Threshold selection must use development dat
 - The connected-free ROI is intentionally not used as the P2 classification mask because it would remove occupied-class targets.
 - P2 now has per-run provenance guards: missing legacy fields warn; GT/canvas/runtime contradictions fail. Environment naming mismatch is warning-only.
 - Saved prediction NPZs are hard-matched to the exact decision raw map by source shape, resolution, origin, source timestamp and member label; prediction-environment mismatch is warning-only.
+- The first P2 smoke test exposed an overly strict origin-lattice assertion. It has been fixed to use the same nearest-cell `round` reprojection as the canonical evaluator; origin rounding residual is logged for audit.
 - The P1-vs-P2 summary now includes class-specific overall/last-10 differences plus support by area/fraction, not only accuracy/macro-IoU/MAE.
 
 **LATEST RESULT**
