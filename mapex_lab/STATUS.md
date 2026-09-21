@@ -7,7 +7,7 @@ _Last synchronized with `main`: 2026-09-21._
 The active thesis program is now **six MapEx early-stopping research directions (D1...D6)** defined canonically in:
 
 ```text
-references/MAPEX_EARLY_STOPPING_DIRECTIONS.md
+references/ES.md
 ```
 
 Way1 and Way2 are both **closed historical branches**.
@@ -218,7 +218,7 @@ Conclusion: Way1 works in New Room but does not transfer cleanly to Hospital wit
 
 # Current next actions
 
-1. Treat `references/MAPEX_EARLY_STOPPING_DIRECTIONS.md` as the canonical implementation specification for D1...D6.
+1. Treat `references/ES.md` as the canonical implementation specification for D1...D6.
 2. Build the shared early-stopping infrastructure first:
    - crop P1/P2/P3, mean and variance back to runtime-map coordinates;
    - compute the robot-seeded 8-connected predicted reachable regions `R_j`;
