@@ -1,5 +1,17 @@
 # Experiment Notes
 
+## 2026-09-21 — D1 Gate P2 structural-GT reference added
+
+- What changed: extended `analysis/d1/d1_gate_p.py` with `later_observed|structural_gt|both` modes; default is `both`.
+- Why: Gate P1 is right-censored because it only evaluates `Unknown_t ∩ EventuallyObserved`; P2 must evaluate the broader valid structural-GT unknown region.
+- Structural target domain: `Unknown_t ∩ structural_gt.evaluation_mask`.
+- Alignment: runtime 0.10 m cells are nearest-neighbour expanded to the canonical 0.05 m structural-GT canvas using the existing evaluation-grid convention.
+- Important methodological decision: connected-free ROI is not the P2 classification mask because it contains free-space support and would discard occupied targets.
+- Affected runs: no raw runs changed; offline analysis only.
+- Does baseline need rerun?: no.
+- Observation: code implemented; P2 numerical execution is still pending on local NPZ artifacts.
+- Next action: run Gate P with `--reference both` on `mpx_001...mpx_010` and compare P1 vs P2 before Gate U.
+
 ## 2026-09-09 — All-training evaluation moved offline
 
 - Restored three-model online config/worker/bridge/recorder; removed alltrain startup, saving and metadata requirements.
