@@ -162,6 +162,136 @@ def load_structural_gt(path: Path) -> StructuralGT:
     )
 
 
+def _expected_environment_from_gt_id(ground_truth_id: str) -> str | None:
+    marker = "_structural_gt_"
+    if marker not in ground_truth_id:
+        return None
+    return ground_truth_id.split(marker, 1)[0]
+
+
+def validate_structural_gt_provenance(
+    run_name: str,
+    metadata: dict,
+    structural_gt: StructuralGT,
+    decision_grids: list[RawGrid],
+) -> list[str]:
+    """Validate run/GT provenance without penalizing genuinely missing legacy fields.
+
+    Missing metadata fields produce warnings. Present fields that contradict the
+    selected GT/canvas/runtime artifacts are treated as hard errors.
+    """
+    warnings: list[str] = []
+
+    def missing(field: str) -> None:
+        warnings.append(f"{field} missing from metadata")
+
+    expected_environment = _expected_environment_from_gt_id(
+        structural_gt.ground_truth_id
+    )
+    environment = metadata.get("environment")
+    if environment is None or str(environment).strip() == "":
+        missing("environment")
+    elif expected_environment is not None:
+        environment_text = str(environment).strip()
+        compatible_environment = (
+            environment_text == expected_environment
+            or environment_text.startswith(expected_environment + "_v")
+        )
+        if not compatible_environment:
+            raise ValueError(
+                f"{run_name}: metadata.environment={environment_text!r} "
+                f"is incompatible with GT {structural_gt.ground_truth_id!r}"
+            )
+
+    metadata_gt_id = metadata.get("structural_ground_truth_id")
+    if metadata_gt_id is None or str(metadata_gt_id).strip() == "":
+        missing("structural_ground_truth_id")
+    elif str(metadata_gt_id) != structural_gt.ground_truth_id:
+        raise ValueError(
+            f"{run_name}: metadata.structural_ground_truth_id="
+            f"{metadata_gt_id!r} != loaded GT "
+            f"{structural_gt.ground_truth_id!r}"
+        )
+
+    metadata_gt_file = metadata.get("structural_ground_truth_file")
+    if metadata_gt_file:
+        metadata_gt_stem = Path(str(metadata_gt_file)).stem
+        if metadata_gt_stem != structural_gt.ground_truth_id:
+            raise ValueError(
+                f"{run_name}: metadata.structural_ground_truth_file="
+                f"{metadata_gt_file!r} does not match loaded GT id "
+                f"{structural_gt.ground_truth_id!r}"
+            )
+    else:
+        missing("structural_ground_truth_file")
+
+    metadata_canvas_id = metadata.get("fixed_canvas_id")
+    if metadata_canvas_id is None or str(metadata_canvas_id).strip() == "":
+        missing("fixed_canvas_id")
+    elif structural_gt.canvas_id and str(metadata_canvas_id) != structural_gt.canvas_id:
+        raise ValueError(
+            f"{run_name}: metadata.fixed_canvas_id={metadata_canvas_id!r} "
+            f"!= GT canvas_id={structural_gt.canvas_id!r}"
+        )
+
+    metadata_canvas_res = metadata.get("fixed_canvas_resolution_m")
+    if metadata_canvas_res is None:
+        missing("fixed_canvas_resolution_m")
+    elif not math.isclose(
+        float(metadata_canvas_res),
+        structural_gt.resolution,
+        rel_tol=0.0,
+        abs_tol=1e-6,
+    ):
+        raise ValueError(
+            f"{run_name}: metadata.fixed_canvas_resolution_m="
+            f"{metadata_canvas_res} != GT resolution "
+            f"{structural_gt.resolution}"
+        )
+
+    if not decision_grids:
+        raise ValueError(f"{run_name}: no decision grids for provenance check")
+    runtime_resolutions = np.asarray(
+        [grid.resolution for grid in decision_grids],
+        dtype=np.float64,
+    )
+    runtime_resolution = float(runtime_resolutions[0])
+    if not np.allclose(
+        runtime_resolutions,
+        runtime_resolution,
+        rtol=0.0,
+        atol=1e-6,
+    ):
+        raise ValueError(
+            f"{run_name}: decision raw-map resolution changes within the run"
+        )
+
+    metadata_runtime_res = metadata.get("runtime_map_resolution_m")
+    if metadata_runtime_res is None:
+        missing("runtime_map_resolution_m")
+    elif not math.isclose(
+        float(metadata_runtime_res),
+        runtime_resolution,
+        rel_tol=0.0,
+        abs_tol=1e-6,
+    ):
+        raise ValueError(
+            f"{run_name}: metadata.runtime_map_resolution_m="
+            f"{metadata_runtime_res} != decision-map resolution "
+            f"{runtime_resolution}"
+        )
+
+    ratio_f = runtime_resolution / structural_gt.resolution
+    ratio = int(round(ratio_f))
+    if ratio < 1 or not math.isclose(ratio_f, ratio, abs_tol=1e-6):
+        raise ValueError(
+            f"{run_name}: runtime resolution {runtime_resolution} is not an "
+            f"integer multiple of GT resolution {structural_gt.resolution}"
+        )
+
+    return warnings
+
+
 def load_runtime_prediction(path: Path, expected_shape: tuple[int, int]) -> np.ndarray:
     """Load one saved padded prediction and crop it to the decision-time map."""
     if not path.is_file():
@@ -747,13 +877,22 @@ def analyze_decision_rows(
             metadata, late_n, "later_observed",
         )
         evaluated_count = int(truth_labels.size)
+        evaluated_free_count = int(np.count_nonzero(truth_labels == 0))
+        evaluated_occupied_count = int(np.count_nonzero(truth_labels > 0))
+        runtime_cell_area_m2 = observed.resolution * observed.resolution
         row.update(
             {
                 "evaluated_cell_count": evaluated_count,
-                "evaluated_free_count": int(np.count_nonzero(truth_labels == 0)),
-                "evaluated_occupied_count": int(np.count_nonzero(truth_labels > 0)),
+                "evaluated_free_count": evaluated_free_count,
+                "evaluated_occupied_count": evaluated_occupied_count,
                 "evaluated_area_m2": float(
-                    evaluated_count * observed.resolution * observed.resolution
+                    evaluated_count * runtime_cell_area_m2
+                ),
+                "evaluated_free_area_m2": float(
+                    evaluated_free_count * runtime_cell_area_m2
+                ),
+                "evaluated_occupied_area_m2": float(
+                    evaluated_occupied_count * runtime_cell_area_m2
                 ),
                 "reference_fraction_of_unknown_area": _safe_div(
                     evaluated_count,
@@ -825,12 +964,23 @@ def analyze_decision_rows(
             run_dir, decision_row, observed, decision_index, total_decisions,
             metadata, late_n, "structural_gt",
         )
+        structural_cell_area_m2 = (
+            structural_gt.resolution * structural_gt.resolution
+        )
         row.update(
             {
                 "evaluated_cell_count": int(context["evaluated_cell_count"]),
                 "evaluated_free_count": int(context["evaluated_free_count"]),
                 "evaluated_occupied_count": int(context["evaluated_occupied_count"]),
                 "evaluated_area_m2": evaluated_area,
+                "evaluated_free_area_m2": float(
+                    int(context["evaluated_free_count"])
+                    * structural_cell_area_m2
+                ),
+                "evaluated_occupied_area_m2": float(
+                    int(context["evaluated_occupied_count"])
+                    * structural_cell_area_m2
+                ),
                 "reference_fraction_of_unknown_area": _safe_div(
                     evaluated_area,
                     unknown_area,
@@ -875,7 +1025,13 @@ def aggregate_run(
     final_map: Path | None,
     late_n: int,
     reference: str,
+    provenance_warnings: list[str] | None = None,
 ) -> dict:
+    late_support_rows = [
+        d for d in decision_rows if int(d["is_last_n"]) == 1
+    ]
+    provenance_warnings = provenance_warnings or []
+
     row: dict[str, object] = {
         "run_id": run_dir.name,
         "metadata_run_id": metadata.get("run_id", ""),
@@ -893,17 +1049,52 @@ def aggregate_run(
         "prediction_target_pairs": sum(
             int(d["evaluated_cell_count"]) for d in decision_rows
         ),
+        "evaluated_free_count_decision_sum": sum(
+            int(d["evaluated_free_count"]) for d in decision_rows
+        ),
+        "evaluated_occupied_count_decision_sum": sum(
+            int(d["evaluated_occupied_count"]) for d in decision_rows
+        ),
         "evaluated_area_m2_decision_sum": float(
             sum(float(d["evaluated_area_m2"]) for d in decision_rows)
+        ),
+        "evaluated_free_area_m2_decision_sum": float(
+            sum(float(d["evaluated_free_area_m2"]) for d in decision_rows)
+        ),
+        "evaluated_occupied_area_m2_decision_sum": float(
+            sum(float(d["evaluated_occupied_area_m2"]) for d in decision_rows)
         ),
         "reference_fraction_of_unknown_area_decision_macro": _nanmean(
             d["reference_fraction_of_unknown_area"] for d in decision_rows
         ),
         "late_n": late_n,
         "late_decisions_evaluated": sum(
-            int(d["evaluated_cell_count"]) > 0 and int(d["is_last_n"]) == 1
-            for d in decision_rows
+            int(d["evaluated_cell_count"]) > 0
+            for d in late_support_rows
         ),
+        "late_prediction_target_pairs": sum(
+            int(d["evaluated_cell_count"]) for d in late_support_rows
+        ),
+        "late_evaluated_free_count_decision_sum": sum(
+            int(d["evaluated_free_count"]) for d in late_support_rows
+        ),
+        "late_evaluated_occupied_count_decision_sum": sum(
+            int(d["evaluated_occupied_count"]) for d in late_support_rows
+        ),
+        "late_evaluated_area_m2_decision_sum": float(
+            sum(float(d["evaluated_area_m2"]) for d in late_support_rows)
+        ),
+        "late_evaluated_free_area_m2_decision_sum": float(
+            sum(float(d["evaluated_free_area_m2"]) for d in late_support_rows)
+        ),
+        "late_evaluated_occupied_area_m2_decision_sum": float(
+            sum(float(d["evaluated_occupied_area_m2"]) for d in late_support_rows)
+        ),
+        "late_reference_fraction_of_unknown_area_decision_macro": _nanmean(
+            d["reference_fraction_of_unknown_area"] for d in late_support_rows
+        ),
+        "provenance_warning_count": len(provenance_warnings),
+        "provenance_warnings": "; ".join(provenance_warnings),
         "mean_decisions_until_reveal_decision_macro": _nanmean(
             d.get("mean_decisions_until_reveal", math.nan)
             for d in decision_rows
@@ -948,8 +1139,8 @@ def aggregate_run(
             )
 
         late_rows = [
-            d for d in decision_rows
-            if int(d["is_last_n"]) == 1 and int(d["evaluated_cell_count"]) > 0
+            d for d in late_support_rows
+            if int(d["evaluated_cell_count"]) > 0
         ]
         for metric_name in (
             "accuracy",
@@ -1009,6 +1200,70 @@ def _reference_summary(
             row["reference_fraction_of_unknown_area_decision_macro"]
             for row in run_rows
         ),
+        "support": {
+            "evaluated_cell_count_decision_sum": sum(
+                int(row["prediction_target_pairs"]) for row in run_rows
+            ),
+            "evaluated_free_count_decision_sum": sum(
+                int(row["evaluated_free_count_decision_sum"]) for row in run_rows
+            ),
+            "evaluated_occupied_count_decision_sum": sum(
+                int(row["evaluated_occupied_count_decision_sum"]) for row in run_rows
+            ),
+            "evaluated_area_m2_decision_sum": float(
+                sum(float(row["evaluated_area_m2_decision_sum"]) for row in run_rows)
+            ),
+            "evaluated_free_area_m2_decision_sum": float(
+                sum(
+                    float(row["evaluated_free_area_m2_decision_sum"])
+                    for row in run_rows
+                )
+            ),
+            "evaluated_occupied_area_m2_decision_sum": float(
+                sum(
+                    float(row["evaluated_occupied_area_m2_decision_sum"])
+                    for row in run_rows
+                )
+            ),
+            "last_n": {
+                "decisions_evaluated": sum(
+                    int(row["late_decisions_evaluated"]) for row in run_rows
+                ),
+                "evaluated_cell_count_decision_sum": sum(
+                    int(row["late_prediction_target_pairs"]) for row in run_rows
+                ),
+                "evaluated_free_count_decision_sum": sum(
+                    int(row["late_evaluated_free_count_decision_sum"])
+                    for row in run_rows
+                ),
+                "evaluated_occupied_count_decision_sum": sum(
+                    int(row["late_evaluated_occupied_count_decision_sum"])
+                    for row in run_rows
+                ),
+                "evaluated_area_m2_decision_sum": float(
+                    sum(
+                        float(row["late_evaluated_area_m2_decision_sum"])
+                        for row in run_rows
+                    )
+                ),
+                "evaluated_free_area_m2_decision_sum": float(
+                    sum(
+                        float(row["late_evaluated_free_area_m2_decision_sum"])
+                        for row in run_rows
+                    )
+                ),
+                "evaluated_occupied_area_m2_decision_sum": float(
+                    sum(
+                        float(row["late_evaluated_occupied_area_m2_decision_sum"])
+                        for row in run_rows
+                    )
+                ),
+                "reference_fraction_of_unknown_area_run_macro": _nanmean(
+                    row["late_reference_fraction_of_unknown_area_decision_macro"]
+                    for row in run_rows
+                ),
+            },
+        },
         "predictors": {},
         "stage_summary": {},
     }
@@ -1173,6 +1428,19 @@ def build_summary(
         "late_n_decisions": late_n,
         "requested_runs": requested_runs,
         "metadata_run_id_mismatches": metadata_mismatches,
+        "structural_gt_provenance_warnings": [
+            {
+                "run_id": row["run_id"],
+                "warnings": [
+                    item
+                    for item in str(row.get("provenance_warnings", "")).split("; ")
+                    if item
+                ],
+            }
+            for row in run_rows
+            if row["reference"] == "structural_gt"
+            and int(row.get("provenance_warning_count", 0)) > 0
+        ],
         "structural_ground_truth": (
             str(structural_gt_path) if structural_gt_path is not None else None
         ),
@@ -1185,6 +1453,7 @@ def build_summary(
             "Runtime prediction cells are nearest-neighbour expanded to the GT resolution before P2 scoring, matching the repo's canonical canvas semantics.",
             "Future/final data are offline targets only and are never runtime D1 inputs.",
             "Run directory names are canonical run IDs for this analysis.",
+            "Gate P classifies prediction < 0.5 as free and prediction >= 0.5 as occupied; this differs only at the exact 0.5 boundary from the legacy evaluator's > 0.5 convention.",
             "Run-level macro summaries are reported to avoid treating all spatial cells as independent runs.",
         ],
     }
@@ -1217,8 +1486,32 @@ def build_summary(
             if row["reference"] == "structural_gt"
         }
         common = sorted(set(p1_runs) & set(p2_runs))
-        comparison = {"runs_compared": common, "mean_predictor_p2_minus_p1": {}}
-        for metric in ("accuracy", "macro_iou", "mae"):
+        comparison = {
+            "runs_compared": common,
+            "mean_predictor_p2_minus_p1": {},
+            "support": {
+                "later_observed": summary["references"]["later_observed"]["support"],
+                "structural_gt": summary["references"]["structural_gt"]["support"],
+            },
+            "support_by_run": [],
+            "support_note": (
+                "P1 and P2 have different cell resolutions; compare evaluated "
+                "area and unknown-area fraction rather than raw cell counts."
+            ),
+        }
+
+        comparison_metrics = (
+            "accuracy",
+            "macro_iou",
+            "mae",
+            "free_precision",
+            "free_recall",
+            "free_iou",
+            "occupied_precision",
+            "occupied_recall",
+            "occupied_iou",
+        )
+        for metric in comparison_metrics:
             overall_diffs = [
                 float(p2_runs[run][f"mean_{metric}_decision_macro"])
                 - float(p1_runs[run][f"mean_{metric}_decision_macro"])
@@ -1235,6 +1528,36 @@ def build_summary(
                 "late_run_macro_mean_difference": _nanmean(late_diffs),
                 "late_run_macro_std_difference": _nanstd(late_diffs),
             }
+
+        support_fields = (
+            "prediction_target_pairs",
+            "evaluated_free_count_decision_sum",
+            "evaluated_occupied_count_decision_sum",
+            "evaluated_area_m2_decision_sum",
+            "evaluated_free_area_m2_decision_sum",
+            "evaluated_occupied_area_m2_decision_sum",
+            "reference_fraction_of_unknown_area_decision_macro",
+            "late_decisions_evaluated",
+            "late_prediction_target_pairs",
+            "late_evaluated_free_count_decision_sum",
+            "late_evaluated_occupied_count_decision_sum",
+            "late_evaluated_area_m2_decision_sum",
+            "late_evaluated_free_area_m2_decision_sum",
+            "late_evaluated_occupied_area_m2_decision_sum",
+            "late_reference_fraction_of_unknown_area_decision_macro",
+        )
+        for run in common:
+            comparison["support_by_run"].append(
+                {
+                    "run_id": run,
+                    "later_observed": {
+                        field: p1_runs[run][field] for field in support_fields
+                    },
+                    "structural_gt": {
+                        field: p2_runs[run][field] for field in support_fields
+                    },
+                }
+            )
         summary["p1_vs_p2"] = comparison
 
     def clean(value):
@@ -1524,6 +1847,17 @@ def main() -> int:
             for row in decision_table
         ]
 
+        provenance_warnings: list[str] = []
+        if structural_gt is not None:
+            provenance_warnings = validate_structural_gt_provenance(
+                run_name=run_name,
+                metadata=metadata,
+                structural_gt=structural_gt,
+                decision_grids=decision_grids,
+            )
+            for warning in provenance_warnings:
+                print(f"[WARN] {run_name}: {warning}")
+
         final_map_path: Path | None = None
         final_grid: RawGrid | None = None
         if args.reference in ("later_observed", "both"):
@@ -1568,6 +1902,11 @@ def main() -> int:
                 ),
                 late_n=args.late_n,
                 reference=reference,
+                provenance_warnings=(
+                    provenance_warnings
+                    if reference == "structural_gt"
+                    else []
+                ),
             )
             run_aggregates.append(run_row)
             print(
