@@ -1,5 +1,16 @@
 # Experiment Notes
 
+## 2026-09-21 — Harden D1 Gate P2 provenance before cohort run
+
+- What changed: added structural-GT provenance validation and expanded P1-vs-P2 class-specific/support comparison in `analysis/d1/d1_gate_p.py`.
+- Provenance policy: missing legacy metadata warns; present contradiction in environment/GT ID/GT file/canvas/resolution/runtime resolution fails.
+- Comparison policy: overall + last-10 now include free/occupied precision/recall/IoU in addition to accuracy/macro-IoU/MAE.
+- Support policy: compare P1/P2 primarily by evaluated area and unknown-area fraction because their cell resolutions differ.
+- Threshold unchanged: Gate P uses `<0.5 free`, `>=0.5 occupied`; legacy evaluator boundary semantics are documented separately.
+- Affected runs: no raw runs changed; offline analyzer only.
+- Does baseline need rerun?: no.
+- Next action: smoke test then execute `--reference both` on `mpx_001...mpx_010`.
+
 ## 2026-09-21 — D1 Gate P2 structural-GT reference added
 
 - What changed: extended `analysis/d1/d1_gate_p.py` with `later_observed|structural_gt|both` modes; default is `both`.
