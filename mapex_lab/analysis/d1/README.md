@@ -38,6 +38,8 @@ prediction < 0.5   → predicted free
 prediction >= 0.5  → predicted occupied
 ```
 
+Đây là **Gate-P convention**. Evaluator legacy dùng `prediction > 0.5` cho occupied; khác biệt chỉ tại đúng boundary `0.5`.
+
 ### P1 — later_observed
 
 Domain:
@@ -69,6 +71,18 @@ mặc định.
 Runtime map/prediction `0.10 m` được nearest-neighbour expand lên canonical structural-GT canvas `0.05 m` theo đúng semantics của evaluator hiện có trong repo.
 
 P2 **không dùng** `new_room_connected_free_v2.npy` làm classification mask vì connected-free ROI chỉ biểu diễn free-space ROI và sẽ loại mất occupied class. P2 cần giữ cả free và occupied target.
+
+### Provenance guard cho P2
+
+Trước khi chấm structural GT, script kiểm tra theo từng run:
+
+- environment tương thích với GT ID;
+- structural_ground_truth_id / structural_ground_truth_file;
+- fixed_canvas_id / fixed_canvas_resolution_m;
+- runtime_map_resolution_m so với exact decision raw maps;
+- runtime resolution phải là integer multiple của GT resolution.
+
+Field legacy bị thiếu → WARN. Field tồn tại nhưng mâu thuẫn → FAIL.
 
 ## Cách chạy
 
@@ -132,6 +146,7 @@ Khi dùng `--reference both`:
 - `gate_p_decisions.csv`: hai row/reference cho mỗi decision, cột `reference` là `later_observed` hoặc `structural_gt`;
 - `gate_p_runs.csv`: hai row/reference cho mỗi run;
 - `gate_p_summary.json`: kết quả tách dưới `references.later_observed` và `references.structural_gt`, cộng block `p1_vs_p2`;
+- `p1_vs_p2` so P2-minus-P1 cho overall và last-10: accuracy, macro IoU, MAE, free/occupied precision/recall/IoU; đồng thời lưu support P1/P2 theo toàn cohort và từng run;
 - plot có prefix theo reference, ví dụ `later_observed_...` và `structural_gt_...`.
 
 Cả P1 và P2 đều có:
