@@ -4,67 +4,120 @@ Thư mục dành riêng cho phân tích và phát triển Direction 1 (D1) — U
 
 ## Research log
 
-- `D1_RESEARCH_LOG.md` — nhật ký nghiên cứu D1 chi tiết theo thời gian: quyết định, lý do, commit, protocol, kết quả định lượng, limitation và next action. Đây là nơi cần append mỗi khi D1 có thay đổi hoặc có thí nghiệm mới.
+- `D1_RESEARCH_LOG.md` — nhật ký nghiên cứu D1 theo thời gian: quyết định, protocol, kết quả, limitation và next action.
 
 ## Phase 0
 
-- `d1_gate_p.py` — Gate P: prediction fidelity.
+- `d1_gate_p.py` — Gate P: prediction fidelity, gồm P1 later-observed và P2 structural GT.
 - `d1_gate_u.py` — Gate U: uncertainty informativeness (chưa triển khai).
 - `d1_gate_r.py` — Gate R: remaining-area informativeness (chưa triển khai).
 
 Code trong thư mục này phục vụ phân tích offline và không thay đổi MapEx runtime baseline.
 
-## Gate P hiện tại
+## Gate P
 
-`d1_gate_p.py` dùng cohort baseline New Room mặc định:
+Cohort New Room mặc định:
 
 ```text
 mpx_001 ... mpx_010
 ```
 
-Với mỗi decision, script:
-
-1. đọc exact observed raw map tại decision đó;
-2. lấy các cell còn unknown;
-3. crop G1/G2/G3/mean prediction về đúng runtime grid;
-4. chuyển cell center qua world coordinates;
-5. duyệt các policy-decision map sau `t`;
-6. với mỗi cell, lấy **decision đầu tiên** mà cell đó trở thành known;
-7. dùng observation đầu tiên đó làm target chính;
-8. tính prediction fidelity cho G1/G2/G3 và ensemble mean;
-9. dùng final raw map chỉ như diagnostic phụ để kiểm tra độ ổn định của target.
-
-Primary classification threshold:
+Prediction được đánh giá riêng cho:
 
 ```text
-predicted free     : prediction < 0.5
-predicted occupied : prediction >= 0.5
+mean
+G1
+G2
+G3
 ```
 
-### Chạy mặc định
+Classification convention của D1:
 
-Từ repo root:
+```text
+prediction < 0.5   → predicted free
+prediction >= 0.5  → predicted occupied
+```
+
+### P1 — later_observed
+
+Domain:
+
+```text
+Unknown_t ∩ EventuallyObserved
+```
+
+Với mỗi cell unknown tại decision `t`, script tìm policy-decision đầu tiên sau `t` nơi cell trở thành known và dùng class đầu tiên đó làm target.
+
+Final raw map chỉ là diagnostic phụ để tính `first_vs_final_class_agreement`.
+
+### P2 — structural_gt
+
+Domain:
+
+```text
+Unknown_t ∩ StructuralGT.evaluation_mask
+```
+
+P2 dùng:
+
+```text
+ground_truth/new_room/generated/new_room_structural_gt_v2.npz
+```
+
+mặc định.
+
+Runtime map/prediction `0.10 m` được nearest-neighbour expand lên canonical structural-GT canvas `0.05 m` theo đúng semantics của evaluator hiện có trong repo.
+
+P2 **không dùng** `new_room_connected_free_v2.npy` làm classification mask vì connected-free ROI chỉ biểu diễn free-space ROI và sẽ loại mất occupied class. P2 cần giữ cả free và occupied target.
+
+## Cách chạy
+
+### Phân tích chính — P1 + P2
 
 ```bash
 python3 mapex_lab/analysis/d1/d1_gate_p.py
 ```
 
-Hoặc chỉ chạy một số run:
+Tương đương:
+
+```bash
+python3 mapex_lab/analysis/d1/d1_gate_p.py --reference both
+```
+
+### Chỉ P1
 
 ```bash
 python3 mapex_lab/analysis/d1/d1_gate_p.py \
-  --runs mpx_001 mpx_002 mpx_003
+  --reference later_observed
 ```
 
-Bỏ figure nếu chỉ muốn CSV/JSON:
+### Chỉ P2
 
 ```bash
-python3 mapex_lab/analysis/d1/d1_gate_p.py --no-figures
+python3 mapex_lab/analysis/d1/d1_gate_p.py \
+  --reference structural_gt
+```
+
+Có thể override GT:
+
+```bash
+python3 mapex_lab/analysis/d1/d1_gate_p.py \
+  --reference structural_gt \
+  --ground-truth /path/to/structural_gt.npz
+```
+
+Smoke test một run:
+
+```bash
+python3 mapex_lab/analysis/d1/d1_gate_p.py \
+  --runs mpx_001 \
+  --reference both \
+  --no-figures
 ```
 
 ## Output
 
-Mặc định ghi vào:
+Mặc định:
 
 ```text
 mapex_lab/analysis/d1/results/gate_p/
@@ -72,75 +125,50 @@ mapex_lab/analysis/d1/results/gate_p/
 ├── gate_p_runs.csv
 ├── gate_p_summary.json
 └── gate_p_plots/
-    ├── accuracy_vs_decision_progress.png
-    ├── macro_iou_vs_decision_progress.png
-    ├── mae_vs_decision_progress.png
-    ├── late_stage_accuracy_by_run.png
-    ├── late_stage_class_recall_by_run.png
-    └── late_stage_class_iou_by_run.png
 ```
 
-### gate_p_decisions.csv
+Khi dùng `--reference both`:
 
-Một dòng cho mỗi MapEx decision, gồm:
+- `gate_p_decisions.csv`: hai row/reference cho mỗi decision, cột `reference` là `later_observed` hoặc `structural_gt`;
+- `gate_p_runs.csv`: hai row/reference cho mỗi run;
+- `gate_p_summary.json`: kết quả tách dưới `references.later_observed` và `references.structural_gt`, cộng block `p1_vs_p2`;
+- plot có prefix theo reference, ví dụ `later_observed_...` và `structural_gt_...`.
 
-- số cell unknown;
-- số cell có later-observed target;
-- free/occupied class support;
+Cả P1 và P2 đều có:
+
 - accuracy;
-- free precision/recall;
-- occupied precision/recall;
-- free/occupied IoU;
-- macro IoU;
-- MAE;
-- các metric riêng cho mean, G1, G2, G3;
-- progress/stage và last-N marker;
-- first/last reveal decision;
-- mean/median/p90 số decision và thời gian tới lúc reveal;
-- độ đồng thuận giữa first-later observation và final-map label;
-- final-map fidelity metrics với prefix `finalref_` như diagnostic phụ.
-
-### gate_p_runs.csv
-
-Aggregate theo run, gồm micro metrics và decision-macro metrics. Late-stage (`last-N`) có riêng:
-
-- accuracy / macro IoU / MAE;
 - free precision / recall;
 - occupied precision / recall;
-- free IoU / occupied IoU.
+- free IoU / occupied IoU;
+- macro IoU;
+- MAE;
+- early / mid / late;
+- last-N, mặc định last 10;
+- mean / G1 / G2 / G3.
 
-`occupied_recall` đặc biệt quan trọng với D1 vì false-free prediction trên obstacle/tường có thể làm sai predicted reachability.
+Ngoài raw cell support, script ghi `evaluated_area_m2` và `reference_fraction_of_unknown_area`. Điều này quan trọng vì P1 chấm trên runtime cells `0.10 m`, còn P2 chấm trên canonical GT cells `0.05 m`; không so trực tiếp raw cell count giữa P1 và P2.
 
-### gate_p_summary.json
+## P1 limitation
 
-Tổng hợp toàn cohort, stage early/mid/late, run-macro mean/std và cảnh báo provenance như metadata run-id mismatch.
-
-## Reference semantics
-
-Gate P hiện dùng primary target:
-
-```text
-unknown at decision t
-AND
-first later policy-decision map where that cell becomes known
-```
-
-Tức là target của mỗi cell là observation đầu tiên được lưu ở một decision sau `t`, không phải mặc định label ở cuối run.
-
-Final raw map vẫn được so sánh riêng với prefix `finalref_` để kiểm tra xem label đầu tiên có ổn định tới cuối run hay không.
-
-### Limitation của later-observed reference
-
-Gate P1 này chỉ đánh giá:
+P1 chỉ chứng minh fidelity trên:
 
 ```text
 Unknown_t ∩ EventuallyObserved
 ```
 
-Nó **không** đánh giá toàn bộ `Unknown_t`. Các vùng baseline không bao giờ quan sát sẽ không có later-observed target.
+Nó không đánh giá vùng baseline không bao giờ reveal. Late-stage P1 vì vậy bị right-censoring mạnh.
 
-Vì vậy kết luận hợp lệ của Gate P1 là prediction fidelity trên các vùng đang unknown tại `t` mà baseline exploration về sau thực sự quan sát được. Không dùng Gate P1 một mình để khẳng định prediction tốt trên toàn bộ unknown space.
+## Vai trò của P2
 
-Structural-GT sẽ là reference thứ hai để kiểm tra các vùng unknown mà baseline không reveal.
+P2 kiểm tra xem kết luận P1 có còn giữ khi bỏ selection bias `EventuallyObserved` hay không.
 
-Mọi future/final observation chỉ dùng để đánh giá fidelity offline, không được dùng làm feature của D1 runtime.
+Mục tiêu sau khi chạy `both`:
+
+```text
+P1 vs P2
+→ xem mpx_008 như case study
+→ mean vs G1/G2/G3
+→ nếu nhất quán → Gate U
+```
+
+Structural GT, final map và future observations chỉ là **offline evaluation targets**, không được dùng làm runtime feature của D1.
