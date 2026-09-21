@@ -1341,3 +1341,111 @@ One concrete next step.
 At the end of the first D1 Gate P1 cycle:
 
 > MapEx/LaMa predictions show useful fidelity on later-observed unknown cells, and the first-later-observed target is sufficiently stable to keep. However, late-stage P1 evidence is strongly right-censored and biased toward cells the baseline still has time to observe. Free-space prediction near termination is also much more variable than headline accuracy suggests. Therefore P1 is only a preliminary pass. The next required experiment is Gate P2 using the corrected structural ground truth over the valid unknown region. Only if P2 broadly supports P1 should D1 move to Gate U.
+
+
+---
+
+# 31. 2026-09-21 — Gate P2 structural-GT implementation added
+
+## Question
+
+How should Gate P remove the major P1 selection bias caused by evaluating only cells that baseline exploration later observes?
+
+## Decision
+
+Extend the existing `d1_gate_p.py` rather than create a second metric script.
+
+The CLI now supports:
+
+```bash
+--reference later_observed
+--reference structural_gt
+--reference both
+```
+
+Default:
+
+```bash
+--reference both
+```
+
+## P2 evaluation domain
+
+P2 evaluates:
+
+```text
+Unknown_t ∩ StructuralGT.evaluation_mask
+```
+
+using the corrected:
+
+```text
+ground_truth/new_room/generated/new_room_structural_gt_v2.npz
+```
+
+The connected-free ROI is **not** used as the classification mask because that ROI represents free-space connectivity and would remove occupied-class targets. Gate P needs both free and occupied fidelity.
+
+## Alignment semantics
+
+The saved MapEx runtime prediction is first cropped to the exact decision-time raw map.
+
+For P2:
+
+```text
+runtime map / prediction: 0.10 m
+structural GT canvas:     0.05 m
+```
+
+Each runtime prediction/unknown cell is nearest-neighbour expanded onto the canonical GT canvas, matching the repository's existing evaluation reprojection semantics.
+
+Only cells that are:
+
+```text
+unknown at t
+AND
+inside StructuralGT.evaluation_mask
+```
+
+are scored.
+
+## Output format
+
+When using `--reference both`:
+
+- `gate_p_decisions.csv` contains one row per decision/reference;
+- `gate_p_runs.csv` contains one row per run/reference;
+- `gate_p_summary.json` stores separate `references.later_observed` and `references.structural_gt` blocks;
+- `p1_vs_p2` reports ensemble-mean P2-minus-P1 differences for overall and late accuracy / macro IoU / MAE;
+- figures are prefixed with the reference name.
+
+Because P1 uses 0.10 m runtime cells while P2 evaluates on 0.05 m canonical cells, raw cell counts must not be compared directly. The analyzer therefore also reports evaluated area in square metres.
+
+## Evidence / results
+
+Implementation completed.
+
+No P2 numerical result has been claimed yet. The updated analyzer still needs to be executed against the local binary NPZ artifacts.
+
+## Status
+
+```text
+Gate P1 = PRELIMINARY PASS
+Gate P2 code = DONE
+Gate P2 experiment = PENDING
+Gate P = NOT YET COMPLETE
+```
+
+## Next action
+
+Run:
+
+```bash
+python3 mapex_lab/analysis/d1/d1_gate_p.py --reference both
+```
+
+on `mpx_001...mpx_010`, then compare P1 and P2 before moving to Gate U.
+
+## Relevant commits
+
+- `0d9559322fe054f69d61d47c276a1e8721322ba4` — add structural-GT reference to D1 Gate P.
+- `e73d753ae1e5c21fecabd35cc367326cceed2825` — document D1 Gate P structural-GT modes.
