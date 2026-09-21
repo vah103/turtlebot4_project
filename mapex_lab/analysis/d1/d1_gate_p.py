@@ -22,7 +22,7 @@ Outputs:
   gate_p_decisions.csv
   gate_p_runs.csv
   gate_p_summary.json
-  figures/*.png
+  gate_p_plots/*.png
 
 The canonical run identifier is the run directory name (mpx_001, ...), not the
 historical ``metadata.json`` run_id field, because older metadata may contain a
