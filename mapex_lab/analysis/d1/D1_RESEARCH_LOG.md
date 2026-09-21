@@ -1574,3 +1574,57 @@ Run one-run smoke test, then the full `mpx_001...mpx_010 --reference both` cohor
 ## Relevant commit
 
 - `d522ab56582f2eec055a748d4f0968b35b175157` — verify D1 Gate P predictions against exact raw maps.
+
+
+---
+
+# 34. 2026-09-21 — Fix Gate P2 origin alignment semantics
+
+## Trigger
+
+The first `mpx_001 --reference both` smoke test failed at P2 with:
+
+```text
+ValueError: runtime map origin is not aligned to the structural-GT canvas
+```
+
+The failing decision was `mpx_001`, decision 1. The raw map origin is not an exact integer multiple of the 0.05 m canonical canvas lattice.
+
+## Diagnosis
+
+This was a Gate-P2 implementation error, not evidence of bad run data. The repository's canonical MapEx evaluator does not require exact lattice alignment. It reprojects by:
+
+```text
+int(round((runtime_origin - canvas_origin) / canvas_resolution))
+```
+
+After nearest-neighbour expansion to the canonical resolution.
+
+## Fix
+
+Removed the exact-integer origin requirement from `_structural_context()` and matched the canonical evaluator semantics exactly. P2 now records x/y origin-rounding residuals for audit rather than rejecting fractional-cell offsets.
+
+For the original failing `mpx_001` decision 1, the implied residuals are approximately:
+
+```text
+x: +0.01523 m
+y: -0.02458 m
+```
+
+Both are within half a 0.05 m GT cell, as expected from nearest-cell rounding.
+
+## Status
+
+```text
+smoke failure cause = FIXED IN CODE
+P2 cohort execution = PENDING RE-RUN
+Gate P              = NOT YET COMPLETE
+```
+
+## Next action
+
+Re-run the same one-run smoke test. If clean, run the full 10-run `--reference both` analysis.
+
+## Relevant commit
+
+- `39125de88ace6defd07d202ccd8172d6ea1b5e19` — match D1 Gate P2 canvas reprojection semantics.
