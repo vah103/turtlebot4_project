@@ -219,33 +219,52 @@ Exactly `0.5` is **not** treated as predicted free.
 
 This threshold is part of the method definition. If another threshold is tested, it is an explicit ablation and must not silently replace the primary definition.
 
-## 4.4 Reachable predicted free space
 
-For ensemble member `j`, build:
+## 4.4 Reachability primitives
 
-```text
-navigable_j =
+For ensemble member j, the shared **raw predicted navigable mask** is:
+
+~~~text
+navigable_j_raw =
     observed_free
     OR
     (observed_unknown AND predicted_free_j)
-```
+~~~
 
 Observed occupied cells are always blocked, regardless of prediction.
 
-Find the **8-connected component** of `navigable_j` containing the robot's current runtime-grid cell.
+The shared raw connected component is:
 
-If the robot cell is outside the map or is not in `observed_free`, the stopping decision is non-evaluable and MapEx continues normally. Do not invent a nearest seed inside stopping code.
+~~~text
+CC_j_raw =
+    8-connected component of navigable_j_raw
+    containing robot_cell
 
-Define the predicted remaining region:
+R_j_raw =
+    CC_j_raw
+    AND observed_unknown
+    AND predicted_free_j
+~~~
 
-```text
-R_j = connected_component_8(navigable_j, robot_cell)
-      AND observed_unknown
-```
+If the robot cell is outside the map, the crop is invalid, or the robot seed cannot be represented consistently, the stopping decision is non-evaluable. Do not invent a nearest seed inside stopping code.
 
-This is the canonical meaning of **predicted reachable remaining area** in D1, D3, D4 and D5.
+### Important: raw connectivity is not automatically the final D1 reachability definition
+
+An 8-connected pixel path can pass through gaps that the real robot cannot traverse.
+
+Therefore:
+
+- D1 must evaluate both raw and footprint-aware reachability as specified in Section 6.8;
+- D3 and D4 inherit the **frozen D1 reachability mode** because they extend D1;
+- D5 uses the same frozen per-member remaining-area construction when it reuses A_1...A_3;
+- no direction may silently switch reachability semantics between development and validation.
+
+The exact meaning of predicted reachable remaining area is therefore:
+
+> currently unknown cells predicted free by a given ensemble member and belonging to the robot-reachable predicted component under the direction's frozen reachability mode.
 
 It deliberately does **not** mean:
+
 - all unknown cells;
 - all predicted-free cells anywhere in the canvas;
 - sum of per-frontier visibility with overlap counted repeatedly.
@@ -400,10 +419,6 @@ High uncertainty must force CONTINUE, not encourage STOP.
 
 # 5. Shared state machine and parameter discipline
 
----
-
-# 5. Shared state machine and parameter discipline
-
 ## 5.1 No one-decision stopping
 
 Every rule must be true for `K_confirm` consecutive **evaluable** decisions before STOP.
@@ -444,6 +459,7 @@ Thresholds such as:
 
 ```text
 T_area_m2
+T_remaining_fraction
 T_uncertainty
 T_ig
 T_score
@@ -1701,7 +1717,7 @@ Can false early stops be reduced by requiring both:
 
 ## Required inputs
 
-- D1 quantities `C_primary` / `A_mean_m2` and `U_primary`
+- frozen D1 completeness signal `C_primary`, threshold `T_completeness`, and `U_primary`
 - absolute known area
 - cumulative executed trajectory distance
 - history over `W_progress` evaluable decisions
@@ -1742,7 +1758,7 @@ This avoids treating a stationary/recovery period as mapping stagnation.
 
 ```text
 D3_base_valid :=
-    (A_mean_m2 < T_area_m2)
+    (C_primary < T_completeness)
     AND
     (U_primary < T_uncertainty)
     AND
@@ -1786,7 +1802,7 @@ Before trusting D1, have recent MapEx predictions actually matched cells that th
 - previous runtime-sized ensemble mean prediction;
 - previous observed-unknown mask;
 - current observed map;
-- D1 quantities;
+- frozen D1 completeness/uncertainty quantities and thresholds;
 - rolling reliability buffer.
 
 ## Exact prediction-to-observation pairing
@@ -1827,7 +1843,7 @@ pairs are available.
 
 ```text
 D4_base_valid :=
-    (A_mean_m2 < T_area_m2)
+    (C_primary < T_completeness)
     AND
     (U_primary < T_uncertainty)
     AND
@@ -2210,8 +2226,9 @@ T_ig
 ## D3
 
 ```text
-T_area_m2
-T_uncertainty
+inherit frozen D1 reachability_mode
+inherit frozen D1 completeness_statistic + T_completeness
+inherit frozen D1 uncertainty_statistic + T_uncertainty
 W_progress
 D_window_min_m
 T_progress_m2_per_m
@@ -2220,8 +2237,9 @@ T_progress_m2_per_m
 ## D4
 
 ```text
-T_area_m2
-T_uncertainty
+inherit frozen D1 reachability_mode
+inherit frozen D1 completeness_statistic + T_completeness
+inherit frozen D1 uncertainty_statistic + T_uncertainty
 N_reliability_cells
 N_reliability_min
 T_brier
