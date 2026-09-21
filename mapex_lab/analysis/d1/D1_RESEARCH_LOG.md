@@ -1449,3 +1449,70 @@ on `mpx_001...mpx_010`, then compare P1 and P2 before moving to Gate U.
 
 - `0d9559322fe054f69d61d47c276a1e8721322ba4` — add structural-GT reference to D1 Gate P.
 - `e73d753ae1e5c21fecabd35cc367326cceed2825` — document D1 Gate P structural-GT modes.
+
+
+---
+
+# 32. 2026-09-21 — Gate P2 provenance and comparison hardening
+
+## Decision
+
+Before the 10-run P1+P2 execution, harden two parts of `d1_gate_p.py` without changing Gate-P methodology or threshold.
+
+### Structural-GT provenance guard
+
+For P2, validate per run:
+
+```text
+environment compatibility
+structural_ground_truth_id
+structural_ground_truth_file
+fixed_canvas_id
+fixed_canvas_resolution_m
+runtime_map_resolution_m
+decision raw-map resolution consistency
+runtime/GT integer resolution ratio
+```
+
+Missing legacy metadata fields produce WARN. Present fields that contradict the selected GT/canvas/runtime artifacts produce a hard failure.
+
+### P1-vs-P2 comparison
+
+The `p1_vs_p2` block now compares ensemble-mean P2-minus-P1 for overall and last-10:
+
+```text
+accuracy
+macro IoU
+MAE
+free precision / recall / IoU
+occupied precision / recall / IoU
+```
+
+Support is recorded globally and by run, including target counts, free/occupied support, evaluated area and fraction of unknown area. Because P1 and P2 use different cell resolutions, evaluated area/fraction is preferred over direct raw-cell-count comparison.
+
+## Threshold note
+
+Gate P remains:
+
+```text
+prediction < 0.5  -> free
+prediction >= 0.5 -> occupied
+```
+
+The legacy evaluator uses `>0.5` for occupied; this difference is documented and affects only the exact boundary value.
+
+## Status
+
+```text
+P2 code hardening = DONE
+10-run P1+P2 execution = PENDING
+Gate P = NOT YET COMPLETE
+```
+
+## Next action
+
+Smoke test one run with `--reference both --no-figures`, then run `mpx_001...mpx_010`.
+
+## Relevant commit
+
+- `614f5e96ad553815d4bda27916f9966cd911863d` — harden D1 Gate P2 provenance and P1/P2 comparison.
