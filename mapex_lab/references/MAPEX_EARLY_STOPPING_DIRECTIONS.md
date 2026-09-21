@@ -52,6 +52,43 @@ for the six new directions. Do not reuse "Way1" or "Way2" for new implementation
 
 ---
 
+
+# Source tag index — 14 stopping references
+
+Use these tags inside D1...D6. The tags indicate **research ancestry / implementation inspiration**, not a claim that the new direction is identical to the cited source.
+
+| Tag | Source | Type / role |
+|---|---|---|
+| **[SRC-01]** | *Enough is Enough: Towards Autonomous Uncertainty-driven Stopping Criteria* | Saturation / repeated low-improvement stopping |
+| **[SRC-02]** | *Estimating Map Completeness in Robot Exploration* | Learned map-completeness stopping; companion code: \`aislabunimi/exploration-aware\` |
+| **[SRC-03]** | *Optimizing Exploration with a New Uncertainty Framework for Active SLAM Systems* | Uncertainty as exploration/completion evidence |
+| **[SRC-04]** | *PUL-SLAM: Path-Uncertainty Co-Optimization with Lightweight Stagnation Detection for Efficient Robotic Exploration* | Stagnation detection |
+| **[SRC-05]** | *A Novel Stop Criterion to Support Efficient Multi-Robot Mapping* | Expected-vs-actual information stopping |
+| **[SRC-06]** | *Exploration of Indoor Environments through Predicting the Layout of Partially Observed Rooms* | Predicted remaining useful area → early termination |
+| **[SRC-07]** | *Sampling-based Incremental Information Gathering with Applications to Robotic Exploration and Environmental Monitoring* | Information/entropy saturation |
+| **[SRC-08]** | Valerii Stakanov MSc thesis — *A frontier-based exploration strategy informed by an estimation of map completeness* | Map-completeness model + Grad-CAM/frontier guidance; same research lineage as SRC-02 |
+| **[SRC-09]** | Zhuoqi Zheng PhD thesis — *Autonomous Exploration of Mobile Robots in Complex Environments* | Predicted layout / expected remaining information / early termination |
+| **[SRC-10]** | \`Leety09/autonomous-frontier-explorer\` | Practical threshold + repeated/fallback completion pattern |
+| **[SRC-11]** | \`mertgulerx/frontier_exploration_ros2\` | ROS2 exploration-complete event / termination integration |
+| **[SRC-12]** | \`cvg/OpenFrontier\` | Termination guards, no-frontier handling, timeout/completion separation |
+| **[SRC-13]** | \`Incomprehensible/RRT_exploration\` | Frontier-detection-rate / late-stage stagnation idea; proposed rather than completed stopping implementation |
+| **[SRC-14]** | \`geo-179/autonomous_exploration_of_unknown_environments\` | Entropy-boundary + coverage completion heuristic; completion function exists but was not wired into runtime loop when inspected |
+
+### How to use the tags
+
+- **PRIMARY**: closest methodological precedent; read first before modifying the direction.
+- **SUPPORTING**: informs a component, safety guard, or failure mode.
+- **IMPLEMENTATION**: useful for software/state-machine integration, not evidence that the research algorithm itself is novel or validated.
+- A tag does **not** mean "copy this method". Each D1...D6 definition below remains authoritative.
+
+Shared implementation references for all six directions:
+
+- **[SRC-10]** — threshold / persistence / fallback patterns.
+- **[SRC-11]** — ROS2 completion signalling and clean mission termination.
+- **[SRC-12]** — keep early-stop, no-frontier completion, timeout and other termination reasons distinct.
+
+---
+
 # 1. Shared research objective
 
 The common objective is:
@@ -335,6 +372,19 @@ STOP_MAX_DISTANCE
 
 # 6. Direction 1 — Uncertainty-Aware Predicted Map Completeness
 
+## Reference anchors
+
+- **PRIMARY:** **[SRC-06]**, **[SRC-02]**, **[SRC-09]**
+  - [SRC-06]: strongest precedent for "predict what remains → stop when remaining useful area is small".
+  - [SRC-02]: strongest precedent for deciding that a partial map is already sufficiently complete.
+  - [SRC-09]: reinforces predicted-layout / expected-remaining-information early termination.
+- **SUPPORTING:** **[SRC-03]**, **[SRC-08]**
+  - [SRC-03]: motivates treating uncertainty as explicit evidence rather than ignoring it.
+  - [SRC-08]: useful for completeness reasoning and the failure mode of relying on a learned completeness estimate alone.
+- **IMPLEMENTATION:** **[SRC-10]**, **[SRC-11]**, **[SRC-12]**.
+
+**Do not claim D1 is copied from one source.** Its specific combination of MapEx ensemble-derived reachable remaining area + MapEx variance gate + K-confirmation is the definition in this file.
+
 ## Question
 
 Does MapEx already predict that only a small amount of reachable environment remains, and is it sufficiently certain about that conclusion?
@@ -400,6 +450,17 @@ This isolates the value of the uncertainty gate.
 
 # 7. Direction 2 — Information-Gain Saturation
 
+## Reference anchors
+
+- **PRIMARY:** **[SRC-05]**, **[SRC-07]**
+  - [SRC-05]: stopping from diminishing information value.
+  - [SRC-07]: stopping when information/entropy gain saturates.
+- **SUPPORTING:** **[SRC-14]**
+  - [SRC-14]: practical entropy/boundary-completion heuristic showing how low remaining information structure can be used as a completion signal.
+- **IMPLEMENTATION:** **[SRC-10]**, **[SRC-11]**, **[SRC-12]**.
+
+D2 is deliberately a simple MapEx-native saturation baseline; it is not old Way2.
+
 ## Question
 
 Even though a valid next frontier exists, has the expected information value of the best remaining frontier become too small?
@@ -452,6 +513,19 @@ Do not import:
 ---
 
 # 8. Direction 3 — Prediction + Stagnation Hybrid
+
+## Reference anchors
+
+- **PRIMARY:** **[SRC-01]**, **[SRC-04]**
+  - [SRC-01]: repeated low improvement / saturation over consecutive checks.
+  - [SRC-04]: explicit stagnation detection during exploration.
+- **SUPPORTING:** **[SRC-13]**, **[SRC-14]**, **[SRC-06]**
+  - [SRC-13]: frontier-detection-rate as a late-stage progress signal; note that this was future-work style logic, not a completed stopping implementation.
+  - [SRC-14]: combines global progress/completion with remaining entropy-boundary structure.
+  - [SRC-06]: provides the prediction-based "little remains" half of the hybrid.
+- **IMPLEMENTATION:** **[SRC-10]**, **[SRC-11]**, **[SRC-12]**.
+
+The key D3 distinction is that stagnation alone must never trigger STOP; prediction and uncertainty must agree first.
 
 ## Question
 
@@ -518,6 +592,15 @@ Frontier discovery rate may be logged and later tested, but it is **not** part o
 ---
 
 # 9. Direction 4 — Prediction Reliability-Gated Stopping
+
+## Reference anchors
+
+- **FOUNDATIONAL / SUPPORTING:** **[SRC-02]**, **[SRC-03]**, **[SRC-08]**
+  - [SRC-02] and [SRC-08]: show that map-completeness decisions depend on how well a predictor generalizes from partial maps.
+  - [SRC-03]: motivates explicit treatment of uncertainty/reliability rather than treating predictions as ground truth.
+- **IMPLEMENTATION:** **[SRC-10]**, **[SRC-11]**, **[SRC-12]**.
+
+**Important provenance note:** none of the 14 sources is a direct precedent for the exact D4 rule "validate previous MapEx predictions against cells later observed, compute an online Brier error, then gate D1". D4 is a synthesis motivated by the failure mode exposed by the literature. This distinction must be preserved when writing novelty/related-work text.
 
 ## Question
 
@@ -589,6 +672,16 @@ Recently revealed cells may not represent the still-unobserved region. D4 theref
 ---
 
 # 10. Direction 5 — Ensemble Risk / Missing-Area Consensus
+
+## Reference anchors
+
+- **PRIMARY:** **[SRC-06]**, **[SRC-09]**
+  - Both support the high-level principle "predicted remaining useful environment becomes small → early termination".
+- **SUPPORTING:** **[SRC-03]**
+  - Supports treating disagreement/uncertainty as meaningful evidence rather than relying on one deterministic completion.
+- **IMPLEMENTATION:** **[SRC-10]**, **[SRC-11]**, **[SRC-12]**.
+
+**MapEx-specific step:** the 3-member consensus rule is derived from the existing MapEx ensemble. It is not taken directly from SRC-06 or SRC-09. With N=3, use consensus/votes as specified below rather than claiming a finely calibrated tail probability.
 
 ## Question
 
@@ -662,6 +755,17 @@ With the current N=3 implementation, the consensus rule above is canonical.
 ---
 
 # 11. Direction 6 — Lightweight Learned Stop Predictor
+
+## Reference anchors
+
+- **PRIMARY:** **[SRC-02]**, **[SRC-08]**
+  - [SRC-02]: direct learned map-completeness / stop-decision precedent; inspect its companion \`aislabunimi/exploration-aware\` implementation for dataset/evaluation patterns.
+  - [SRC-08]: extends the same research lineage and is useful for learned completeness features and interpretation.
+- **SUPPORTING:** **[SRC-01]**, **[SRC-03]**, **[SRC-04]**
+  - These motivate candidate input features representing saturation, uncertainty and stagnation.
+- **IMPLEMENTATION:** **[SRC-10]**, **[SRC-11]**, **[SRC-12]**.
+
+D6 must remain distinct from SRC-02: the first implementation learns from **interpretable MapEx-native scalar features**, not from a new raw occupancy-map CNN.
 
 ## Question
 
@@ -1029,7 +1133,39 @@ Only after stable D1-D5 features and logs exist should D6 training data be gener
 
 ---
 
-# 17. How the six directions relate
+
+# 17. Source-to-direction quick matrix
+
+This matrix is only a navigation aid; the detailed role labels above are authoritative.
+
+| Source | D1 | D2 | D3 | D4 | D5 | D6 |
+|---|---:|---:|---:|---:|---:|---:|
+| [SRC-01] Enough is Enough |  |  | **P** |  |  | S |
+| [SRC-02] Map Completeness | **P** |  |  | S |  | **P** |
+| [SRC-03] Uncertainty Framework | S |  |  | S | S | S |
+| [SRC-04] PUL-SLAM |  |  | **P** |  |  | S |
+| [SRC-05] Multi-Robot Stop Criterion |  | **P** |  |  |  |  |
+| [SRC-06] Predicted Room Layout | **P** |  | S |  | **P** |  |
+| [SRC-07] IIG |  | **P** |  |  |  |  |
+| [SRC-08] Stakanov thesis | S |  |  | S |  | **P** |
+| [SRC-09] Zheng thesis | **P** |  |  |  | **P** |  |
+| [SRC-10] Leety09 repo | I | I | I | I | I | I |
+| [SRC-11] ROS2 frontier-exploration repo | I | I | I | I | I | I |
+| [SRC-12] OpenFrontier | I | I | I | I | I | I |
+| [SRC-13] RRT_exploration |  |  | S |  |  |  |
+| [SRC-14] geo-179 exploration |  | S | S |  |  |  |
+
+Legend:
+
+\`\`\`text
+P = PRIMARY methodological reference
+S = SUPPORTING reference
+I = IMPLEMENTATION reference
+\`\`\`
+
+---
+
+# 18. How the six directions relate
 
 They are not six arbitrary unrelated ideas.
 
