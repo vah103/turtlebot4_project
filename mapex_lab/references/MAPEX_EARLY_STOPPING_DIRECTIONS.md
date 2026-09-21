@@ -4,7 +4,7 @@
 >
 > **Purpose:** this file is the canonical implementation specification for the six new MapEx early-stopping directions. It is deliberately stricter than a brainstorming note. A future implementation must follow the definitions here unless an explicit experiment changes one definition and records that change.
 >
-> Related literature review: \`STOPPING_CRITERIA_RESEARCH.md\`.
+> Related literature review: `STOPPING_CRITERIA_RESEARCH.md`.
 >
 > These are candidate research directions, not novelty claims. Novelty must still be checked against the literature before writing a thesis/paper contribution statement.
 
@@ -18,9 +18,9 @@ Way1 and Way2 are **finished historical branches**. Their code, runs and logs st
 
 Historical rule:
 
-\`\`\`text
+```text
 unknown_variance_p95 <= 0.23
-\`\`\`
+```
 
 Reason for closing: it did not transfer robustly from New Room to Hospital without retuning.
 
@@ -30,11 +30,11 @@ Reason for closing: it did not transfer robustly from New Room to Hospital witho
 
 Historical rule used frontier-level quantities including:
 
-\`\`\`text
+```text
 R_t = max information_gain / distance
 U_t = max visible_unknown_cells / distance
 + confirmation logic
-\`\`\`
+```
 
 Reason for closing as the main research branch: the collected outcome was not sufficiently robust/compelling to continue as the primary thesis direction.
 
@@ -44,9 +44,9 @@ Reason for closing as the main research branch: the collected outcome was not su
 
 From this point onward use:
 
-\`\`\`text
+```text
 D1 ... D6
-\`\`\`
+```
 
 for the six new directions. Do not reuse "Way1" or "Way2" for new implementations.
 
@@ -66,9 +66,9 @@ A successful method is therefore not merely one that stops early. It must show m
 
 # 2. Verified MapEx runtime contract
 
-The current MapEx implementation in \`scripts/mapex.py\` already provides the required core signals:
+The current MapEx implementation in `scripts/mapex.py` already provides the required core signals:
 
-\`\`\`text
+```text
 Observed ROS occupancy grid
 → 3 LaMa ensemble predictions
 → ensemble mean map
@@ -81,11 +81,11 @@ Observed ROS occupancy grid
 → selectable frontier filtering
 → choose argmax(score)
 → send Nav2 goal
-\`\`\`
+```
 
 Current fixed runtime facts:
 
-\`\`\`text
+```text
 ensemble size          N = 3
 runtime map resolution   = 0.10 m/cell
 prediction resolution    = 0.10 m/cell
@@ -94,9 +94,9 @@ observed unknown         = 0.5 in MapEx representation
 observed occupied        = 1
 frontier connectivity    = 8-neighbour
 MapEx score              = IG / Euclidean distance
-\`\`\`
+```
 
-The new stopping code must reuse the current \`predictions\`, \`mean_map\`, \`variance_map\`, \`padded_observed\`, frontier evaluations and selection filters rather than recomputing a parallel version with different semantics.
+The new stopping code must reuse the current `predictions`, `mean_map`, `variance_map`, `padded_observed`, frontier evaluations and selection filters rather than recomputing a parallel version with different semantics.
 
 ---
 
@@ -108,7 +108,7 @@ For **all six directions**, an early-stop decision is evaluated only at an **eva
 2. there is no active navigation goal;
 3. the decision is not a recovery retry;
 4. LaMa prediction and MapEx scoring completed successfully;
-5. a non-empty \`selectable_evaluations\` set remains after:
+5. a non-empty `selectable_evaluations` set remains after:
    - frontier extraction,
    - 1 m distance preference / all-near fallback,
    - planner-blocking suppression;
@@ -116,7 +116,7 @@ For **all six directions**, an early-stop decision is evaluated only at an **eva
 
 Therefore:
 
-\`\`\`text
+```text
 prediction + scoring
 → execution/selectability filtering
 → if selectable_evaluations is empty:
@@ -126,7 +126,7 @@ prediction + scoring
      evaluate D1...D6
      ├── CONTINUE → unchanged MapEx argmax(score) → Nav2
      └── STOP     → no new exploration goal is sent
-\`\`\`
+```
 
 A non-evaluable state must **neither increment nor reset** a K-consecutive confirmation counter.
 
@@ -140,15 +140,15 @@ This keeps early stopping counterfactual and interpretable: the rule only stops 
 
 LaMa predictions are padded. Every global stopping metric must first crop each ensemble member back to the exact current runtime occupancy-grid shape.
 
-For runtime grid height \`H\`, width \`W\`:
+For runtime grid height `H`, width `W`:
 
-\`\`\`text
+```text
 P_j_runtime =
     P_j[pad_top : pad_top + H,
         pad_left: pad_left + W]
-\`\`\`
+```
 
-Do the same crop for \`mean_map\` and \`variance_map\` when a stopping metric is defined in runtime-map coordinates.
+Do the same crop for `mean_map` and `variance_map` when a stopping metric is defined in runtime-map coordinates.
 
 **Never count padded cells as remaining environment.**
 
@@ -156,55 +156,55 @@ Do the same crop for \`mean_map\` and \`variance_map\` when a stopping metric is
 
 From the current ROS occupancy grid:
 
-\`\`\`text
+```text
 observed_free     = grid == 0
 observed_unknown  = grid < 0
 observed_occupied = grid > 0
-\`\`\`
+```
 
 Cell area:
 
-\`\`\`text
+```text
 cell_area_m2 = resolution_m * resolution_m
              = 0.10 * 0.10
              = 0.01 m2 under hospital_v2
-\`\`\`
+```
 
 ## 4.3 Predicted-free threshold
 
 For the six-direction program, the primary binary interpretation of a LaMa member is fixed as:
 
-\`\`\`text
+```text
 predicted_free_j(x) := P_j_runtime(x) < 0.5
-\`\`\`
+```
 
-Exactly \`0.5\` is **not** treated as predicted free.
+Exactly `0.5` is **not** treated as predicted free.
 
 This threshold is part of the method definition. If another threshold is tested, it is an explicit ablation and must not silently replace the primary definition.
 
 ## 4.4 Reachable predicted free space
 
-For ensemble member \`j\`, build:
+For ensemble member `j`, build:
 
-\`\`\`text
+```text
 navigable_j =
     observed_free
     OR
     (observed_unknown AND predicted_free_j)
-\`\`\`
+```
 
 Observed occupied cells are always blocked, regardless of prediction.
 
-Find the **8-connected component** of \`navigable_j\` containing the robot's current runtime-grid cell.
+Find the **8-connected component** of `navigable_j` containing the robot's current runtime-grid cell.
 
-If the robot cell is outside the map or is not in \`observed_free\`, the stopping decision is non-evaluable and MapEx continues normally. Do not invent a nearest seed inside stopping code.
+If the robot cell is outside the map or is not in `observed_free`, the stopping decision is non-evaluable and MapEx continues normally. Do not invent a nearest seed inside stopping code.
 
 Define the predicted remaining region:
 
-\`\`\`text
+```text
 R_j = connected_component_8(navigable_j, robot_cell)
       AND observed_unknown
-\`\`\`
+```
 
 This is the canonical meaning of **predicted reachable remaining area** in D1, D3, D4 and D5.
 
@@ -215,40 +215,40 @@ It deliberately does **not** mean:
 
 ## 4.5 Remaining area per ensemble member
 
-\`\`\`text
+```text
 A_j_m2 = count(R_j) * cell_area_m2
-\`\`\`
+```
 
 Ensemble mean remaining area:
 
-\`\`\`text
+```text
 A_mean_m2 = (A_1_m2 + A_2_m2 + A_3_m2) / 3
-\`\`\`
+```
 
 Remaining-region support:
 
-\`\`\`text
+```text
 R_union = R_1 OR R_2 OR R_3
-\`\`\`
+```
 
 ## 4.6 Primary uncertainty definition
 
-Reuse the existing MapEx \`variance_map\`; do not recompute a different ensemble variance.
+Reuse the existing MapEx `variance_map`; do not recompute a different ensemble variance.
 
 The **primary D1 uncertainty metric** is:
 
-\`\`\`text
+```text
 U_p95 = percentile_95(
     variance_map_runtime[x]
     for x in R_union
 )
-\`\`\`
+```
 
-If \`R_union\` is empty:
+If `R_union` is empty:
 
-\`\`\`text
+```text
 U_p95 = 0.0
-\`\`\`
+```
 
 Mean variance, max variance, entropy or binary disagreement may be tested later as ablations, but they are **not** the primary D1 definition.
 
@@ -262,11 +262,11 @@ Important safety rule:
 
 ## 5.1 No one-decision stopping
 
-Every rule must be true for \`K_confirm\` consecutive **evaluable** decisions before STOP.
+Every rule must be true for `K_confirm` consecutive **evaluable** decisions before STOP.
 
 Pseudo-code:
 
-\`\`\`python
+```python
 if not evaluable:
     # preserve counter
     return CONTINUE_BASELINE_HANDLING
@@ -279,26 +279,26 @@ else:
 if valid_count >= K_confirm:
     return STOP
 return CONTINUE
-\`\`\`
+```
 
 ## 5.2 Warm-up
 
 All directions use exactly one warm-up mechanism:
 
-\`\`\`text
+```text
 mapex_decision_id < warmup_decisions
 → early stopping disabled
-\`\`\`
+```
 
 Do not mix time-, distance- and coverage-based warm-up in the main implementation.
 
-The numerical value of \`warmup_decisions\` is a tunable development parameter that must be frozen before prospective validation.
+The numerical value of `warmup_decisions` is a tunable development parameter that must be frozen before prospective validation.
 
 ## 5.3 Parameters are not results
 
 Thresholds such as:
 
-\`\`\`text
+```text
 T_area_m2
 T_uncertainty
 T_ig
@@ -308,7 +308,7 @@ T_brier
 A_critical_m2
 K_confirm
 warmup_decisions
-\`\`\`
+```
 
 must be selected on development data only, then frozen.
 
@@ -318,7 +318,7 @@ Do not retune them from the prospective validation runs.
 
 Record explicit reasons:
 
-\`\`\`text
+```text
 STOP_D1_COMPLETENESS
 STOP_D2_IG_SATURATION
 STOP_D3_PREDICTION_STAGNATION
@@ -329,7 +329,7 @@ STOP_NO_FRONTIER
 STOP_BASELINE_REVALIDATION
 STOP_TIMEOUT
 STOP_MAX_DISTANCE
-\`\`\`
+```
 
 ---
 
@@ -341,8 +341,8 @@ Does MapEx already predict that only a small amount of reachable environment rem
 
 ## Required inputs
 
-- \`P_1_runtime, P_2_runtime, P_3_runtime\`
-- \`variance_map_runtime\`
+- `P_1_runtime, P_2_runtime, P_3_runtime`
+- `variance_map_runtime`
 - current ROS occupancy grid
 - robot runtime-grid cell
 
@@ -350,24 +350,24 @@ Does MapEx already predict that only a small amount of reachable environment rem
 
 Use the shared definitions exactly:
 
-\`\`\`text
+```text
 R_1, R_2, R_3
 A_1_m2, A_2_m2, A_3_m2
 A_mean_m2
 R_union
 U_p95
-\`\`\`
+```
 
 ## Primary stop condition
 
-\`\`\`text
+```text
 D1_base_valid :=
     (A_mean_m2 < T_area_m2)
     AND
     (U_p95 < T_uncertainty)
-\`\`\`
+```
 
-STOP only after \`K_confirm\` consecutive evaluable D1-valid decisions.
+STOP only after `K_confirm` consecutive evaluable D1-valid decisions.
 
 ## Meaning
 
@@ -388,11 +388,11 @@ D1 must not:
 
 At minimum compare:
 
-\`\`\`text
+```text
 MapEx baseline
 D1-area-only: A_mean_m2 < T_area_m2
 D1-full:      A_mean_m2 < T_area_m2 AND U_p95 < T_uncertainty
-\`\`\`
+```
 
 This isolates the value of the uncertainty gate.
 
@@ -406,30 +406,30 @@ Even though a valid next frontier exists, has the expected information value of 
 
 ## Required inputs
 
-From current \`selectable_evaluations\`:
+From current `selectable_evaluations`:
 
-\`\`\`text
+```text
 IG_max    = max(candidate["information_gain"])
 Score_max = max(candidate["score"])
-\`\`\`
+```
 
 ## Primary stop condition
 
 The primary D2 baseline uses raw MapEx IG:
 
-\`\`\`text
+```text
 D2_base_valid := IG_max < T_ig
-\`\`\`
+```
 
-STOP after \`K_confirm\` consecutive evaluable decisions.
+STOP after `K_confirm` consecutive evaluable decisions.
 
 ## Cost-aware ablation
 
 A separate ablation may use:
 
-\`\`\`text
+```text
 Score_max < T_score
-\`\`\`
+```
 
 Do not mix both thresholds in the primary D2 rule.
 
@@ -444,8 +444,8 @@ D2 asks:
 D2 is a **new simple baseline**, not old Way2.
 
 Do not import:
-- Way2 threshold \`R<=0.30\`;
-- \`visible_unknown_cells / distance\`;
+- Way2 threshold `R<=0.30`;
+- `visible_unknown_cells / distance`;
 - candidate-count confirmation;
 - any Way2 frozen constants.
 
@@ -461,23 +461,23 @@ Can false early stops be reduced by requiring both:
 
 ## Required inputs
 
-- D1 quantities \`A_mean_m2\` and \`U_p95\`
+- D1 quantities `A_mean_m2` and `U_p95`
 - absolute known area
 - cumulative executed trajectory distance
-- history over \`W_progress\` evaluable decisions
+- history over `W_progress` evaluable decisions
 
 ## Known area
 
-\`\`\`text
+```text
 KnownArea_t_m2 =
     count(grid >= 0) * cell_area_m2
-\`\`\`
+```
 
 ## Primary progress metric
 
-Let \`t0\` be the evaluable decision \`W_progress\` decisions earlier:
+Let `t0` be the evaluable decision `W_progress` decisions earlier:
 
-\`\`\`text
+```text
 delta_known_m2 =
     KnownArea_t_m2 - KnownArea_t0_m2
 
@@ -486,13 +486,13 @@ delta_distance_m =
 
 Progress_m2_per_m =
     delta_known_m2 / max(delta_distance_m, 1e-6)
-\`\`\`
+```
 
 D3 progress is evaluable only when:
 
-\`\`\`text
+```text
 delta_distance_m >= D_window_min_m
-\`\`\`
+```
 
 If this is not satisfied, D3 cannot stop.
 
@@ -500,16 +500,16 @@ This avoids treating a stationary/recovery period as mapping stagnation.
 
 ## Primary stop condition
 
-\`\`\`text
+```text
 D3_base_valid :=
     (A_mean_m2 < T_area_m2)
     AND
     (U_p95 < T_uncertainty)
     AND
     (Progress_m2_per_m < T_progress_m2_per_m)
-\`\`\`
+```
 
-STOP after \`K_confirm\` consecutive evaluable D3-valid decisions.
+STOP after `K_confirm` consecutive evaluable D3-valid decisions.
 
 ## Optional ablation only
 
@@ -535,13 +535,13 @@ Before trusting D1, have recent MapEx predictions actually matched cells that th
 
 For each pair of consecutive evaluable decisions:
 
-1. keep the **immediately previous** runtime-sized \`mean_map\`;
+1. keep the **immediately previous** runtime-sized `mean_map`;
 2. find cells that were unknown at the previous evaluable decision and are known now;
 3. for those newly revealed cells:
-   - old prediction = previous \`mean_map_runtime[x]\`;
+   - old prediction = previous `mean_map_runtime[x]`;
    - observed target:
-     - free -> \`0.0\`
-     - occupied -> \`1.0\`;
+     - free -> `0.0`
+     - occupied -> `1.0`;
 4. append these pairs to a rolling cell buffer.
 
 Do not choose an arbitrary older prediction for the same cell. The canonical pairing is the **most recent prediction made while that cell was still unknown**.
@@ -550,33 +550,33 @@ Do not choose an arbitrary older prediction for the same cell. The canonical pai
 
 Use Brier error:
 
-\`\`\`text
+```text
 Brier =
     mean((old_prediction - observed_target)^2)
-\`\`\`
+```
 
-over the most recent \`N_reliability_cells\` valid revealed-cell pairs.
+over the most recent `N_reliability_cells` valid revealed-cell pairs.
 
 D4 is non-evaluable until at least:
 
-\`\`\`text
+```text
 N_reliability_min
-\`\`\`
+```
 
 pairs are available.
 
 ## Primary stop condition
 
-\`\`\`text
+```text
 D4_base_valid :=
     (A_mean_m2 < T_area_m2)
     AND
     (U_p95 < T_uncertainty)
     AND
     (Brier < T_brier)
-\`\`\`
+```
 
-STOP after \`K_confirm\` consecutive evaluable D4-valid decisions.
+STOP after `K_confirm` consecutive evaluable D4-valid decisions.
 
 ## Meaning
 
@@ -598,15 +598,15 @@ Do all three current MapEx ensemble members agree that no materially large reach
 
 Current MapEx has exactly:
 
-\`\`\`text
+```text
 N = 3 ensemble members
-\`\`\`
+```
 
 An empirical tail probability based only on three members can take only:
 
-\`\`\`text
+```text
 0, 1/3, 2/3, 1
-\`\`\`
+```
 
 Therefore statements such as "stop when miss probability < 5%" are misleading with the current ensemble size.
 
@@ -614,36 +614,36 @@ Therefore statements such as "stop when miss probability < 5%" are misleading wi
 
 Use the same per-member remaining areas as D1:
 
-\`\`\`text
+```text
 A_1_m2
 A_2_m2
 A_3_m2
-\`\`\`
+```
 
 Choose a development parameter:
 
-\`\`\`text
+```text
 A_critical_m2
-\`\`\`
+```
 
 meaning "a remaining region this large would still be materially important."
 
 ## Primary conservative rule for N=3
 
-\`\`\`text
+```text
 MissVotes =
     count(A_j_m2 > A_critical_m2 for j in {1,2,3})
 
 D5_base_valid := MissVotes == 0
-\`\`\`
+```
 
 Equivalent:
 
-\`\`\`text
+```text
 max(A_1_m2, A_2_m2, A_3_m2) <= A_critical_m2
-\`\`\`
+```
 
-STOP after \`K_confirm\` consecutive evaluable D5-valid decisions.
+STOP after `K_confirm` consecutive evaluable D5-valid decisions.
 
 ## Meaning
 
@@ -653,9 +653,9 @@ All three completion hypotheses must agree that the remaining reachable unknown 
 
 Only if ensemble size is increased substantially may D5 be generalized to an empirical tail-risk threshold such as:
 
-\`\`\`text
+```text
 P_hat(A_remaining > A_critical) < epsilon
-\`\`\`
+```
 
 With the current N=3 implementation, the consensus rule above is canonical.
 
@@ -671,7 +671,7 @@ Can a lightweight model learn when stopping is safe from interpretable MapEx-nat
 
 Primary initial feature vector:
 
-\`\`\`text
+```text
 X_t = [
     A_mean_m2,
     U_p95,
@@ -679,15 +679,15 @@ X_t = [
     Score_max,
     selectable_candidate_count
 ]
-\`\`\`
+```
 
 Extension features may later add:
 
-\`\`\`text
+```text
 Progress_m2_per_m
 Brier
 best_frontier_distance_m
-\`\`\`
+```
 
 Do not use ground-truth values as runtime features.
 
@@ -697,21 +697,21 @@ Do not feed raw occupancy images in the first D6 implementation.
 
 D6 labels are generated only from completed baseline MapEx runs.
 
-For each recorded decision \`t\`, compare the map state at that decision with the final baseline reference from the same run.
+For each recorded decision `t`, compare the map state at that decision with the final baseline reference from the same run.
 
-Define \`SAFE_STOP_t = 1\` only if **both** pre-declared quality losses are within tolerance:
+Define `SAFE_STOP_t = 1` only if **both** pre-declared quality losses are within tolerance:
 
-\`\`\`text
+```text
 final_coverage - coverage_t <= delta_coverage
 AND
 final_observed_occupied_iou - occupied_iou_t <= delta_iou
-\`\`\`
+```
 
 Otherwise:
 
-\`\`\`text
+```text
 SAFE_STOP_t = 0
-\`\`\`
+```
 
 Ground truth/future information is used only to create offline labels, never at runtime.
 
@@ -721,9 +721,9 @@ If occupied-IoU semantics differ across old run cohorts, those cohorts must not 
 
 Start with:
 
-\`\`\`text
+```text
 logistic regression
-\`\`\`
+```
 
 Then compare with a shallow tree-based model.
 
@@ -735,30 +735,30 @@ Never randomly split individual decision rows from the same run across train and
 
 Use group splitting at least by:
 
-\`\`\`text
+```text
 run_id
-\`\`\`
+```
 
 and, for generalization claims, evaluate on held-out environments.
 
 ## Runtime stop condition
 
-\`\`\`text
+```text
 p_safe_stop = model.predict_proba(X_t)
 
 D6_base_valid := p_safe_stop >= T_probability
-\`\`\`
+```
 
-STOP after \`K_confirm\` consecutive evaluable decisions.
+STOP after `K_confirm` consecutive evaluable decisions.
 
 ## Critical error metric
 
 The most dangerous error is:
 
-\`\`\`text
+```text
 predicted SAFE_STOP
 but stopping would exceed the allowed map-quality loss
-\`\`\`
+```
 
 Report this false-STOP rate separately. Overall classification accuracy is not sufficient.
 
@@ -770,7 +770,7 @@ Every evaluable decision must record enough information to replay the stop decis
 
 Minimum shared log:
 
-\`\`\`text
+```text
 decision_id
 sim_time_s
 termination_method
@@ -801,7 +801,7 @@ MissVotes
 A_critical_m2
 
 D6_probability
-\`\`\`
+```
 
 Fields unavailable for a direction are recorded as null, not silently omitted when a shared schema is used.
 
@@ -820,19 +820,19 @@ Also preserve the existing MapEx per-decision artifacts:
 
 ## Baseline
 
-Original \`scripts/mapex.py\` with its normal completion machinery.
+Original `scripts/mapex.py` with its normal completion machinery.
 
 The baseline file should remain unchanged.
 
 ## Primary efficiency metrics
 
-\`\`\`text
+```text
 time_saved_fraction =
     (T_baseline - T_stop) / T_baseline
 
 distance_saved_fraction =
     (D_baseline - D_stop) / D_baseline
-\`\`\`
+```
 
 ## Primary quality metrics
 
@@ -868,58 +868,58 @@ Before any D1...D6 prospective validation run, the implementation must record a 
 
 ## Shared
 
-\`\`\`text
+```text
 warmup_decisions
 K_confirm
 predicted_free_threshold = 0.5
 connectivity = 8
-\`\`\`
+```
 
 ## D1
 
-\`\`\`text
+```text
 T_area_m2
 T_uncertainty
 uncertainty_statistic = p95
-\`\`\`
+```
 
 ## D2
 
-\`\`\`text
+```text
 T_ig
 # or T_score for the separate cost-aware ablation
-\`\`\`
+```
 
 ## D3
 
-\`\`\`text
+```text
 T_area_m2
 T_uncertainty
 W_progress
 D_window_min_m
 T_progress_m2_per_m
-\`\`\`
+```
 
 ## D4
 
-\`\`\`text
+```text
 T_area_m2
 T_uncertainty
 N_reliability_cells
 N_reliability_min
 T_brier
-\`\`\`
+```
 
 ## D5
 
-\`\`\`text
+```text
 A_critical_m2
 MissVotes_required = 0
-\`\`\`
+```
 
 ## D6
 
-\`\`\`text
+```text
 feature_list
 model artifact/hash
 T_probability
@@ -927,19 +927,19 @@ delta_coverage used for labels
 delta_iou used for labels
 training-run IDs
 validation-run IDs
-\`\`\`
+```
 
 ---
 
 # 15. Implementation architecture
 
-Do not copy the full \`mapex.py\` six times.
+Do not copy the full `mapex.py` six times.
 
 Implement one reusable stopping layer that consumes a snapshot of already-computed MapEx state.
 
 Conceptual structure:
 
-\`\`\`text
+```text
 mapex.py                         # unchanged baseline
 early_stopping/
     common.py                    # runtime crop, R_j, A_j, U_p95, state machine
@@ -951,11 +951,11 @@ early_stopping/
     direction6.py
 
 mapex_early_stop.py              # MapEx subclass / integration point
-\`\`\`
+```
 
 A conceptual snapshot:
 
-\`\`\`text
+```text
 StopSnapshot:
     decision_id
     grid
@@ -966,18 +966,18 @@ StopSnapshot:
     selectable_evaluations
     cumulative_trajectory_distance
     history
-\`\`\`
+```
 
 A conceptual result:
 
-\`\`\`text
+```text
 StopDecision:
     stop: bool
     direction: D1...D6
     reason: string
     valid_count: int
     diagnostics: dict
-\`\`\`
+```
 
 Do not expose a generic "confidence" field unless the direction has a quantity with a defensible meaning. D5 consensus and D6 model probability are not automatically calibrated confidence.
 
@@ -992,11 +992,11 @@ The six directions are the active research program, but they should be implement
 Implement and unit-test:
 - prediction crop;
 - robot-cell conversion;
-- \`R_j\`;
-- \`A_j_m2\`;
-- \`A_mean_m2\`;
-- \`R_union\`;
-- \`U_p95\`;
+- `R_j`;
+- `A_j_m2`;
+- `A_mean_m2`;
+- `R_union`;
+- `U_p95`;
 - generic K-confirmation state machine;
 - shared logging.
 
@@ -1021,7 +1021,7 @@ Add:
 
 ## Stage E — D5 consensus risk
 
-Reuse D1's already-tested per-member \`A_j_m2\`.
+Reuse D1's already-tested per-member `A_j_m2`.
 
 ## Stage F — D6 learned extension
 
@@ -1033,7 +1033,7 @@ Only after stable D1-D5 features and logs exist should D6 training data be gener
 
 They are not six arbitrary unrelated ideas.
 
-\`\`\`text
+```text
 D2
 simple MapEx-native saturation baseline
         ↓
@@ -1049,7 +1049,7 @@ conservative ensemble consensus about missed area
         ↓
 D6
 learned combination of interpretable MapEx-native signals
-\`\`\`
+```
 
 All six are now active research candidates.
 
