@@ -1516,3 +1516,61 @@ Smoke test one run with `--reference both --no-figures`, then run `mpx_001...mpx
 ## Relevant commit
 
 - `614f5e96ad553815d4bda27916f9966cd911863d` — harden D1 Gate P2 provenance and P1/P2 comparison.
+
+
+---
+
+# 33. 2026-09-21 — Exact prediction-to-raw integrity checks
+
+## Decision
+
+Before the P1+P2 cohort run, strengthen artifact identity checks and relax only environment naming.
+
+### Environment provenance
+
+`metadata.environment` mismatch is now **WARN**, not FAIL. Environment naming is descriptive and may vary historically.
+
+Hard failures remain for contradictions in:
+
+```text
+structural_ground_truth_id / file
+fixed_canvas_id / resolution
+runtime map resolution
+runtime-to-GT resolution compatibility
+```
+
+### Prediction-to-raw identity
+
+Each saved G1/G2/G3/mean NPZ must match the exact decision raw map on:
+
+```text
+source_height / source_width
+resolution
+origin_x / origin_y
+source_map_stamp_s
+member identity
+```
+
+The raw-map `source_stamp_s` and prediction `source_map_stamp_s` come from the same source OccupancyGrid when recorded, so timestamp mismatch is treated as a hard artifact-association failure.
+
+Prediction environment metadata is warning-only.
+
+## Why
+
+Shape alone cannot detect a stale or wrong-decision prediction when adjacent decisions share the same grid extent. Source timestamp plus spatial metadata gives a much stronger association to the exact raw map.
+
+## Status
+
+```text
+prediction/raw integrity guard = DONE
+environment naming policy      = WARN-only
+10-run P1+P2 execution         = PENDING
+```
+
+## Next action
+
+Run one-run smoke test, then the full `mpx_001...mpx_010 --reference both` cohort if clean.
+
+## Relevant commit
+
+- `d522ab56582f2eec055a748d4f0968b35b175157` — verify D1 Gate P predictions against exact raw maps.
