@@ -463,8 +463,21 @@ def _select_seed(
     if not candidates:
         return None, "invalid"
 
-    candidates.sort(key=lambda item: (item[0], item[1], item[2]))
-    _, rr, cc = candidates[0]
+    # Floating-point roundoff can make geometrically equal distances differ by
+    # a few ulps. Preserve the frozen rule literally: minimum Euclidean
+    # distance first, then lexicographic (row, col) only among distance ties.
+    min_distance = min(item[0] for item in candidates)
+    tied = [
+        item
+        for item in candidates
+        if math.isclose(
+            item[0],
+            min_distance,
+            rel_tol=0.0,
+            abs_tol=1e-12,
+        )
+    ]
+    _, rr, cc = min(tied, key=lambda item: (item[1], item[2]))
     return (rr, cc), "fallback"
 
 
