@@ -1,6 +1,6 @@
 # mapex_lab status
 
-_Last synchronized with `main`: 2026-09-21._
+_Last synchronized with `main`: 2026-09-22._
 
 ## Current focus
 
@@ -43,31 +43,43 @@ No D1...D6 threshold is frozen yet. Threshold selection must use development dat
 
 ## D1 Gate P status
 
-**DONE**
-- Gate P1 `later_observed` implemented and run on `mpx_001...mpx_010`.
-- P1 verdict remains **PRELIMINARY PASS** because late-stage support is right-censored.
-- `d1_gate_p.py` now implements Gate P2 `structural_gt` and supports:
-  `--reference later_observed|structural_gt|both`.
-- Default analysis mode is `both`.
-- P2 uses `new_room_structural_gt_v2.npz` and its structural `evaluation_mask`; runtime 0.10 m prediction cells are nearest-neighbour expanded onto the canonical 0.05 m GT canvas.
-- The connected-free ROI is intentionally not used as the P2 classification mask because it would remove occupied-class targets.
-- P2 now has per-run provenance guards: missing legacy fields warn; GT/canvas/runtime contradictions fail. Environment naming mismatch is warning-only.
-- Saved prediction NPZs are hard-matched to the exact decision raw map by source shape, resolution, origin, source timestamp and member label; prediction-environment mismatch is warning-only.
-- The first P2 smoke test exposed an overly strict origin-lattice assertion. It has been fixed to use the same nearest-cell `round` reprojection as the canonical evaluator; origin rounding residual is logged for audit.
-- The P1-vs-P2 summary now includes class-specific overall/last-10 differences plus support by area/fraction, not only accuracy/macro-IoU/MAE.
+**COMPLETE — DOES NOT PASS under the current direct predicted-remaining-free-space formulation**
+
+- Gate P1 `later_observed` remains a **PRELIMINARY PASS**, but its late-stage evidence is heavily right-censored.
+- Gate P2 `structural_gt` has now been executed on the full `mpx_001...mpx_010` cohort with `--reference both`, ensemble-mean prediction and threshold `0.5`.
+- Smoke test and full 10-run execution both completed with exit code 0.
+- P2 evaluated 365 decisions and passed the implemented prediction/raw-map identity and provenance hard checks.
 
 **LATEST RESULT**
-- P1 ensemble-mean run-macro accuracy ≈ 0.8889 overall and ≈ 0.9079 over last-10 evaluable decisions.
-- First-later vs final-map class agreement ≈ 0.9615.
-- Late P1 evidence remains heavily right-censored, so Gate P is not complete.
+- P1 ensemble-mean run-macro accuracy ≈ **0.8889** overall and ≈ **0.9079** over last-10 evaluable decisions.
+- P2 ensemble-mean run-macro accuracy ≈ **0.7120** overall and ≈ **0.5573** over the last 10 decisions.
+- P2 macro IoU ≈ **0.4688** overall and ≈ **0.2817** over the last 10 decisions.
+- P2 MAE ≈ **0.2893** overall and ≈ **0.4327** over the last 10 decisions.
+- Most important for direct D1 completeness: last-10 P2 free recall ≈ **0.1360** and free IoU ≈ **0.0076**.
+- Late P2 support is strongly occupied-dominated, so class-specific free-space metrics are more informative for D1 than headline accuracy.
 
-**IN PROGRESS**
-- Gate P2 code is implemented but has not yet been executed on the 10-run cohort after this code change.
+**INTERPRETATION**
+- Gate P2 provides **strong negative evidence for late-stage free-space fidelity** over the broader structural unknown region.
+- The positive P1 result does not generalize to the region D1 would need for direct predicted-remaining-free-space completeness.
+- Under the current direct formulation, Gate P therefore **does not pass**.
+- Preserve this as a negative result; do not tune it away.
+
+**CURRENT DECISION**
+- Gate U: **DO NOT START YET**.
+- Gate R: not started.
+- Online D1 stopping: not implemented.
+- Before deciding whether D1 should be revised or stopped, perform the focused diagnostic already recorded in `analysis/d1/D1_RESEARCH_LOG.md`.
 
 **NEXT ACTION**
-- Run `d1_gate_p.py --reference both` on `mpx_001...mpx_010`.
-- Compare P1 vs P2, then inspect `mpx_008` and member-vs-mean diagnostics as supporting analyses.
-- Move to Gate U only if P2 broadly supports the P1 conclusion.
+1. Visually inspect representative late decisions `mpx_001`, `mpx_009`, and `mpx_010` comparing observed maps with ensemble-mean predictions.
+2. Inspect prediction-value mass at `0.5` and within `[0.45, 0.55]`, separated by structural-GT free vs occupied targets.
+3. Compute pooled last-10 confusion counts and convert true-free → predicted-occupied error into evaluated square metres.
+4. If these checks do not reveal an evaluation artifact, keep the current direct D1 remaining-free formulation unsupported and do not proceed to Gate U threshold development.
+
+Canonical evidence and full numerical detail are recorded in:
+- `mapex_lab/analysis/d1/D1_RESEARCH_LOG.md`
+- result commit `e14807bbd66bc26f437b2b31c4c40b498cc239df`
+- research-log commit `564af0c7c81e501f5e1fb7def669a105e260a2c0`
 
 ---
 
@@ -247,17 +259,12 @@ Conclusion: Way1 works in New Room but does not transfer cleanly to Hospital wit
 
 # Current next actions
 
-1. Treat `references/ES.md` as the canonical implementation specification for D1...D6.
-2. Build the shared early-stopping infrastructure first:
-   - crop P1/P2/P3, mean and variance back to runtime-map coordinates;
-   - compute the robot-seeded 8-connected predicted reachable regions `R_j`;
-   - compute `A_j_m2`, `A_mean_m2`, `R_union`, and `U_p95`;
-   - implement the shared K-consecutive confirmation state machine;
-   - implement a shared per-decision stopping log.
-3. Implement **D2** first only to validate STOP/CONTINUE plumbing against unchanged MapEx/Nav2 behavior.
-4. Implement **D1** next as the first major method, exactly following the fixed definitions in the specification.
-5. Use development data to choose and freeze each direction's thresholds before prospective validation. Do not reuse frozen Way1/Way2 constants by default.
-6. Add D3 and D4 only after D1 quantities are unit-tested and replayable offline.
+1. Treat `references/ES.md` as the canonical implementation specification for D1...D6, while respecting the newer Gate P2 evidence recorded above.
+2. Complete the focused D1 Gate P2 diagnostic before any Gate U threshold work or online direct-D1 implementation.
+3. Shared stopping infrastructure and D2 plumbing may continue where they are independent of the failed direct D1 free-space assumption.
+4. Do not implement the current direct D1 remaining-free stopping rule unless the diagnostic reveals a concrete evaluation artifact or USER approves a revised formulation.
+5. Use development data to choose and freeze any surviving/revised direction's thresholds before prospective validation. Do not reuse frozen Way1/Way2 constants by default.
+6. Add D3/D4 only after their required inputs and methodology are explicitly defined and approved; do not silently reinterpret the failed D1 signal as a new canonical method.
 7. Add D5 using the current **three-member consensus rule**; do not describe it as a calibrated 5% tail probability.
 8. Build D6 only after D1-D5 feature logs exist and evaluator semantics for labels are reconciled.
 9. Preserve `scripts/mapex.py` unchanged as the baseline throughout this program.
