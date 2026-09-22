@@ -1,5 +1,16 @@
 # Experiment Notes
 
+## 2026-09-22 — Coverage GT/ROI semantics differ from original MapEx
+
+- Observation: the current project Coverage denominator is based on connected-free ROI masks such as `hospital_connected_free_v1` / `new_room_connected_free_v2`, i.e. reachable/free-space support only.
+- Original MapEx behavior: the public MapEx evaluator computes Coverage inside `valid_space.npy`, and counts a cell as covered when the observed map is no longer unknown. The MapEx `valid_space` mask is not equivalent to free-space-only occupancy GT; it can include both free and occupied cells inside the valid evaluation region.
+- Practical meaning: our current Coverage asks approximately "how much of the reachable free-space ROI has become known", while original MapEx asks approximately "how much of the valid environment region has become known".
+- Consequence: current absolute Coverage values are **not metric-semantics-equivalent to original MapEx Coverage** and should not be described as an exact reproduction of the paper metric without qualification.
+- Scope: this note does **not** invalidate within-project Nearest-vs-MapEx comparisons when both methods use the same frozen ROI; it affects cross-paper comparability and interpretation of the absolute Coverage number.
+- No protocol change yet: do not replace the existing ROI automatically. If exact MapEx-style metric reproduction is required, define and validate a separate MapEx-style valid-space mask for New Room/Hospital, version the metric/ROI, and decide whether historical values need backfill.
+- Evidence checked: original `castacks/MapEx` coverage code uses `known & valid_space` divided by `valid_space`; inspection of an original KTH test-map pair confirms `valid_space` is not identical to free-only occupancy support.
+- Next action: USER/WORK decides whether to keep current connected-free Coverage as the project metric, add a separate MapEx-style Coverage metric, or migrate under a new protocol/metric version.
+
 ## 2026-09-22 — Canonicalize reviewed R002 GT-semantics diagnostic
 
 - What changed: synced the independently ACCEPTED R002 evaluator and toy tests into technical `main` byte-identically from accepted implementation `feb94eaa9c1ba5aa4f9993792dae454bc4edcd60`; updated D1 STATUS/README/research log with the reviewed one-run `mpx_001` evidence.
