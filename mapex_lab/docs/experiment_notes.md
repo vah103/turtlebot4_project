@@ -1,5 +1,15 @@
 # Experiment Notes
 
+## 2026-09-22 — TU goal-domain differs from original MapEx
+
+- Original MapEx TU samples 100 goal cells directly from `valid_space == 1` for each map/start condition, stores those coordinates, and reuses the same goal set across methods/timesteps.
+- The public implementation does not additionally require the sampled goal cell to be GT-free at the sampling step. Because `valid_space` and occupancy are downsampled with different rules, some valid-space cells can overlap GT-occupied cells; such goals are effectively predisposed to TU failure.
+- This project intentionally uses a different goal domain for New Room / Hospital TU: 100 deterministic goals are sampled from the connected structural GT-free ROI (fixed seed), so every goal is a physically traversable free-space location in the scored environment.
+- Consequence: this project's TU is **MapEx-style but not byte-for-byte equivalent** to the original paper implementation. Absolute TU values should not be compared directly with the paper without noting this goal-domain difference.
+- Rationale: restricting goals to connected GT-free space is more meaningful for navigation because the metric then asks whether predicted topology supports valid robot destinations, rather than allowing goals that may lie inside walls/obstacles due to raster/downsampling semantics.
+- Fairness within this project is preserved because the same frozen goal set is reused across compared methods on the same environment/evaluation profile.
+- No metric change is made by this note; it documents the current intentional adaptation and its interpretation.
+
 ## 2026-09-22 — MapEx fixed-horizon vs project completion mismatch
 
 - Observation: the original MapEx paper evaluates exploration under a fixed budget of **1000 timesteps**. The reported Coverage curves therefore measure how much of the environment is observed within that fixed horizon, not the final Coverage after exhaustive exploration.
