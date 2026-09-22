@@ -97,6 +97,38 @@ class BoundaryMatchingTests(unittest.TestCase):
         self.assertEqual(first["pairs"][0]["pred_row"], 5)
         self.assertEqual(first["pairs"][0]["pred_col"], 4)
 
+    def test_equal_cardinality_equal_distance_uses_global_lex_matching(self):
+        # Two perfect matchings have identical total Euclidean distance:
+        #   A: (0,0)->(0,1), (0,2)->(1,1)
+        #   B: (0,0)->(1,1), (0,2)->(0,1)
+        # Frozen V2 requires A because its first differing pair is
+        # lexicographically smaller.
+        gt = np.asarray([[0, 0], [0, 2]], dtype=np.int32)
+        pred = np.asarray([[0, 1], [1, 1]], dtype=np.int32)
+        result = r002._boundary_matching(
+            gt,
+            pred,
+            0.05,
+            0.10,
+        )
+        self.assertEqual(result["matched"], 2)
+        self.assertEqual(
+            [
+                (
+                    item["gt_row"],
+                    item["gt_col"],
+                    item["pred_row"],
+                    item["pred_col"],
+                )
+                for item in result["pairs"]
+            ],
+            [
+                (0, 0, 0, 1),
+                (0, 2, 1, 1),
+            ],
+        )
+
+
     def test_empty_support_rules(self):
         empty = np.empty((0, 2), dtype=np.int32)
         one = np.asarray([[0, 0]], dtype=np.int32)
