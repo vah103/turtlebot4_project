@@ -80,6 +80,94 @@ và ghi residual lượng tử hóa origin theo x/y để audit. Không hard-fai
 
 P2 **không dùng** `new_room_connected_free_v2.npy` làm classification mask vì connected-free ROI chỉ biểu diễn free-space ROI và sẽ loại mất occupied class. P2 cần giữ cả free và occupied target.
 
+## R002 — Task-aligned GT semantics diagnostic
+
+R002 is a reviewed **post-hoc diagnostic/reformulation** after the negative Gate P2 result. It preserves Reference A / Gate P2 unchanged and adds two task-aligned diagnostics:
+
+```text
+A = existing structural-solid Gate P2 reference
+B = occupancy-surface structural diagnostic
+C0 = point-connected remaining-free diagnostic
+```
+
+Implementation:
+
+```text
+analysis/d1/r002_gt_semantics.py
+analysis/d1/test_r002_gt_semantics.py
+```
+
+Accepted implementation source:
+
+```text
+feb94eaa9c1ba5aa4f9993792dae454bc4edcd60
+```
+
+### Frozen R002 semantics
+
+Shared scoring universe:
+
+```text
+U_t = Unknown_t ∩ StructuralGT.evaluation_mask
+```
+
+Reference B:
+
+```text
+F_conn = new_room_connected_free_v2
+GT_surface = StructuralOccupied ∩ Adjacent8(F_conn)
+B_GT_t = GT_surface ∩ U_t
+B_PRED_t = PredictedOccupiedBoundary_t ∩ U_t
+```
+
+Boundary matching is frozen as maximum-cardinality one-to-one, then minimum total Euclidean distance, then lexicographic `(GT_row, GT_col, Pred_row, Pred_col)` tie-break.
+
+Fixed tolerances: primary `0.10 m`; sensitivities `0.05 m` and exact.
+
+Reference C0:
+
+```text
+C0_TopologyDomain_t =
+StructuralGT.evaluation_mask ∩ DecisionMapSupport_t
+
+C0_GT_positive_t =
+U_t ∩ new_room_connected_free_v2
+
+C0_PRED_positive_t =
+U_t ∩ PredictedFree_t ∩ PredPointConnectedFree_t
+```
+
+C0 uses canonical `0.05 m` topology, 4-connectivity, the exact projected robot cell only when observed-known-free, otherwise nearest observed-known-free seed within Euclidean `0.10 m`; no valid seed is recorded as `topology_invalid`.
+
+Prediction threshold remains:
+
+```text
+prediction < 0.5  -> predicted free
+prediction >= 0.5 -> predicted occupied
+```
+
+### First reviewed execution
+
+Only `mpx_001` was authorized and executed.
+
+Validation: Python compile PASS; 12/12 unit tests PASS; run exit code 0; 35/35 decisions; Gate-P / DecisionMapSupport parity = True; topology-invalid = 0; preregistered visual decisions = 6 / 18 / 29.
+
+One-run summary: overall A free IoU ≈ 0.5001; overall B F1 @ 0.10 m ≈ 0.4178; overall C0 free IoU ≈ 0.5065; late C0 free IoU ≈ 0.0445; last-10 C0 free IoU ≈ 0.0335; last-10 B F1 @ 0.10 m ≈ 0.3725.
+
+Independent implementation review verdict: **ACCEPT**.
+
+This ACCEPT means implementation fidelity/evidence integrity passed review. It does **not** mean R002 scientifically rescues D1.
+
+### Reproduce the approved one-run evaluator
+
+```bash
+python3 mapex_lab/analysis/d1/r002_gt_semantics.py \
+  --run mpx_001 \
+  --output-dir mapex_lab/analysis/d1/results/r002_mpx_001
+```
+
+Do not automatically run `mpx_002...mpx_010`. No threshold, tolerance, connectivity, seed or matching rule may be retuned from the `mpx_001` result while retaining that run as confirmatory data.
+
 ### Provenance guard cho P2
 
 Trước khi chấm structural GT, script kiểm tra theo từng run:
