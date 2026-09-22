@@ -1,7 +1,6 @@
 {
-  "decisions_analyzed": 365,
-  "decisions_with_later_observed_targets": 286,
   "gate": "D1 Phase 0 / Gate P",
+  "gt_occupied_threshold": 50,
   "late_n_decisions": 10,
   "metadata_run_id_mismatches": [
     {
@@ -42,193 +41,1194 @@
     }
   ],
   "notes": [
-    "Primary targets are cells unknown at decision t that become known in a later policy-decision map.",
-    "Each cell uses its first later known observation as the primary target.",
-    "The primary later-observed reference evaluates Unknown_t intersect EventuallyObserved, not all Unknown_t cells.",
-    "Therefore Gate P1 supports claims only on unknown cells that baseline exploration later observes.",
-    "Structural-GT analysis is required as a second reference to assess unknown regions that baseline never observes.",
-    "The final raw map is retained only as a secondary diagnostic reference.",
-    "Future data are offline targets only and are never runtime D1 inputs.",
+    "P1 later_observed evaluates Unknown_t intersect EventuallyObserved.",
+    "P1 uses each cell's first later known policy-decision observation.",
+    "P2 structural_gt evaluates decision-time unknown cells intersected with the structural-GT evaluation_mask.",
+    "P2 uses the canonical GT canvas and preserves both free and occupied classes; the connected-free ROI is not used as the P2 classification mask.",
+    "Runtime prediction cells are nearest-neighbour expanded to the GT resolution before P2 scoring; runtime-map origins are quantized with int(round((origin-canvas_origin)/GT_resolution)), matching the repo's canonical evaluator semantics.",
+    "P2 records the resulting x/y origin-rounding residuals for audit; these are reprojection quantization diagnostics, not a hard alignment requirement.",
+    "Future/final data are offline targets only and are never runtime D1 inputs.",
     "Run directory names are canonical run IDs for this analysis.",
+    "Gate P classifies prediction < 0.5 as free and prediction >= 0.5 as occupied; this differs only at the exact 0.5 boundary from the legacy evaluator's > 0.5 convention.",
+    "Prediction NPZs are hard-matched to the exact decision raw map by source shape, resolution, origin, source timestamp and member label; prediction environment is warning-only provenance.",
     "Run-level macro summaries are reported to avoid treating all spatial cells as independent runs."
   ],
-  "prediction_target_pairs": 2647324,
+  "p1_vs_p2": {
+    "mean_predictor_p2_minus_p1": {
+      "accuracy": {
+        "late_run_macro_mean_difference": -0.3506990209722237,
+        "late_run_macro_std_difference": 0.07549448913972452,
+        "overall_run_macro_mean_difference": -0.1769615016607488,
+        "overall_run_macro_std_difference": 0.020566623035861636
+      },
+      "free_iou": {
+        "late_run_macro_mean_difference": -0.4960118740825317,
+        "late_run_macro_std_difference": 0.19039168799830494,
+        "overall_run_macro_mean_difference": -0.325587712391418,
+        "overall_run_macro_std_difference": 0.035512210813964544
+      },
+      "free_precision": {
+        "late_run_macro_mean_difference": -0.7073091281787904,
+        "late_run_macro_std_difference": 0.2951760982757326,
+        "overall_run_macro_mean_difference": -0.36932334556522567,
+        "overall_run_macro_std_difference": 0.028438169435301294
+      },
+      "free_recall": {
+        "late_run_macro_mean_difference": -0.4838912813961597,
+        "late_run_macro_std_difference": 0.26274793102516164,
+        "overall_run_macro_mean_difference": -0.2121540840182024,
+        "overall_run_macro_std_difference": 0.05487450342343844
+      },
+      "macro_iou": {
+        "late_run_macro_mean_difference": -0.4305128388539603,
+        "late_run_macro_std_difference": 0.118253822155982,
+        "overall_run_macro_mean_difference": -0.22462665646817276,
+        "overall_run_macro_std_difference": 0.031589006213307874
+      },
+      "mae": {
+        "late_run_macro_mean_difference": 0.33662208692959444,
+        "late_run_macro_std_difference": 0.07759900523245353,
+        "overall_run_macro_mean_difference": 0.16637652045350654,
+        "overall_run_macro_std_difference": 0.02162902973472572
+      },
+      "occupied_iou": {
+        "late_run_macro_mean_difference": -0.3316804702920556,
+        "late_run_macro_std_difference": 0.10267995446018827,
+        "overall_run_macro_mean_difference": -0.12233240093093985,
+        "overall_run_macro_std_difference": 0.042203548543046684
+      },
+      "occupied_precision": {
+        "late_run_macro_mean_difference": 0.04158663812674546,
+        "late_run_macro_std_difference": 0.03488578064722171,
+        "overall_run_macro_mean_difference": 0.05123257324824025,
+        "overall_run_macro_std_difference": 0.03398321518560907
+      },
+      "occupied_recall": {
+        "late_run_macro_mean_difference": -0.3783167444780095,
+        "late_run_macro_std_difference": 0.09926860195459511,
+        "overall_run_macro_mean_difference": -0.19071165451737526,
+        "overall_run_macro_std_difference": 0.023018192003558653
+      }
+    },
+    "runs_compared": [
+      "mpx_001",
+      "mpx_002",
+      "mpx_003",
+      "mpx_004",
+      "mpx_005",
+      "mpx_006",
+      "mpx_007",
+      "mpx_008",
+      "mpx_009",
+      "mpx_010"
+    ],
+    "support": {
+      "later_observed": {
+        "evaluated_area_m2_decision_sum": 26473.240788964038,
+        "evaluated_cell_count_decision_sum": 2647324,
+        "evaluated_free_area_m2_decision_sum": 22661.02067535103,
+        "evaluated_free_count_decision_sum": 2266102,
+        "evaluated_occupied_area_m2_decision_sum": 3812.22011361301,
+        "evaluated_occupied_count_decision_sum": 381222,
+        "last_n": {
+          "decisions_evaluated": 21,
+          "evaluated_area_m2_decision_sum": 27.580000821948058,
+          "evaluated_cell_count_decision_sum": 2758,
+          "evaluated_free_area_m2_decision_sum": 6.560000195503235,
+          "evaluated_free_count_decision_sum": 656,
+          "evaluated_occupied_area_m2_decision_sum": 21.02000062644482,
+          "evaluated_occupied_count_decision_sum": 2102,
+          "reference_fraction_of_unknown_area_run_macro": 0.015608403074217464
+        }
+      },
+      "structural_gt": {
+        "evaluated_area_m2_decision_sum": 31177.1025,
+        "evaluated_cell_count_decision_sum": 12470841,
+        "evaluated_free_area_m2_decision_sum": 23532.310000000005,
+        "evaluated_free_count_decision_sum": 9412924,
+        "evaluated_occupied_area_m2_decision_sum": 7644.792500000001,
+        "evaluated_occupied_count_decision_sum": 3057917,
+        "last_n": {
+          "decisions_evaluated": 100,
+          "evaluated_area_m2_decision_sum": 1626.17,
+          "evaluated_cell_count_decision_sum": 650468,
+          "evaluated_free_area_m2_decision_sum": 24.330000000000005,
+          "evaluated_free_count_decision_sum": 9732,
+          "evaluated_occupied_area_m2_decision_sum": 1601.8400000000001,
+          "evaluated_occupied_count_decision_sum": 640736,
+          "reference_fraction_of_unknown_area_run_macro": 0.9999999701976782
+        }
+      }
+    },
+    "support_by_run": [
+      {
+        "later_observed": {
+          "evaluated_area_m2_decision_sum": 2898.7100863882906,
+          "evaluated_free_area_m2_decision_sum": 2503.4100746074323,
+          "evaluated_free_count_decision_sum": 250341,
+          "evaluated_occupied_area_m2_decision_sum": 395.30001178085814,
+          "evaluated_occupied_count_decision_sum": 39530,
+          "late_decisions_evaluated": 3,
+          "late_evaluated_area_m2_decision_sum": 3.3000000983476645,
+          "late_evaluated_free_area_m2_decision_sum": 0.7300000217556954,
+          "late_evaluated_free_count_decision_sum": 73,
+          "late_evaluated_occupied_area_m2_decision_sum": 2.570000076591969,
+          "late_evaluated_occupied_count_decision_sum": 257,
+          "late_prediction_target_pairs": 330,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.01941145691420767,
+          "prediction_target_pairs": 289871,
+          "reference_fraction_of_unknown_area_decision_macro": 0.5620635413525022
+        },
+        "run_id": "mpx_001",
+        "structural_gt": {
+          "evaluated_area_m2_decision_sum": 3357.7400000000002,
+          "evaluated_free_area_m2_decision_sum": 2625.2675000000004,
+          "evaluated_free_count_decision_sum": 1050107,
+          "evaluated_occupied_area_m2_decision_sum": 732.4725000000002,
+          "evaluated_occupied_count_decision_sum": 292989,
+          "late_decisions_evaluated": 10,
+          "late_evaluated_area_m2_decision_sum": 167.48000000000002,
+          "late_evaluated_free_area_m2_decision_sum": 7.627500000000001,
+          "late_evaluated_free_count_decision_sum": 3051,
+          "late_evaluated_occupied_area_m2_decision_sum": 159.85250000000002,
+          "late_evaluated_occupied_count_decision_sum": 63941,
+          "late_prediction_target_pairs": 66992,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.9999999701976783,
+          "prediction_target_pairs": 1343096,
+          "reference_fraction_of_unknown_area_decision_macro": 0.9999999701976784
+        }
+      },
+      {
+        "later_observed": {
+          "evaluated_area_m2_decision_sum": 2342.600069814921,
+          "evaluated_free_area_m2_decision_sum": 1995.5000594705348,
+          "evaluated_free_count_decision_sum": 199550,
+          "evaluated_occupied_area_m2_decision_sum": 347.1000103443862,
+          "evaluated_occupied_count_decision_sum": 34710,
+          "late_decisions_evaluated": 3,
+          "late_evaluated_area_m2_decision_sum": 0.5900000175833704,
+          "late_evaluated_free_area_m2_decision_sum": 0.16000000476837162,
+          "late_evaluated_free_count_decision_sum": 16,
+          "late_evaluated_occupied_area_m2_decision_sum": 0.4300000128149987,
+          "late_evaluated_occupied_count_decision_sum": 43,
+          "late_prediction_target_pairs": 59,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.0033593347171357924,
+          "prediction_target_pairs": 234260,
+          "reference_fraction_of_unknown_area_decision_macro": 0.5002847405323279
+        },
+        "run_id": "mpx_002",
+        "structural_gt": {
+          "evaluated_area_m2_decision_sum": 2825.1400000000003,
+          "evaluated_free_area_m2_decision_sum": 2067.5850000000005,
+          "evaluated_free_count_decision_sum": 827034,
+          "evaluated_occupied_area_m2_decision_sum": 757.5550000000002,
+          "evaluated_occupied_count_decision_sum": 303022,
+          "late_decisions_evaluated": 10,
+          "late_evaluated_area_m2_decision_sum": 172.25000000000003,
+          "late_evaluated_free_area_m2_decision_sum": 2.1725000000000003,
+          "late_evaluated_free_count_decision_sum": 869,
+          "late_evaluated_occupied_area_m2_decision_sum": 170.07750000000001,
+          "late_evaluated_occupied_count_decision_sum": 68031,
+          "late_prediction_target_pairs": 68900,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.9999999701976782,
+          "prediction_target_pairs": 1130056,
+          "reference_fraction_of_unknown_area_decision_macro": 0.9999999701976782
+        }
+      },
+      {
+        "later_observed": {
+          "evaluated_area_m2_decision_sum": 3119.450092966855,
+          "evaluated_free_area_m2_decision_sum": 2718.650081022084,
+          "evaluated_free_count_decision_sum": 271865,
+          "evaluated_occupied_area_m2_decision_sum": 400.8000119447709,
+          "evaluated_occupied_count_decision_sum": 40080,
+          "late_decisions_evaluated": 1,
+          "late_evaluated_area_m2_decision_sum": 0.32000000953674324,
+          "late_evaluated_free_area_m2_decision_sum": 0.07000000208616258,
+          "late_evaluated_free_count_decision_sum": 7,
+          "late_evaluated_occupied_area_m2_decision_sum": 0.25000000745058065,
+          "late_evaluated_occupied_count_decision_sum": 25,
+          "late_prediction_target_pairs": 32,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.0019595835884874463,
+          "prediction_target_pairs": 311945,
+          "reference_fraction_of_unknown_area_decision_macro": 0.5374726015763733
+        },
+        "run_id": "mpx_003",
+        "structural_gt": {
+          "evaluated_area_m2_decision_sum": 3641.2400000000002,
+          "evaluated_free_area_m2_decision_sum": 2812.5800000000004,
+          "evaluated_free_count_decision_sum": 1125032,
+          "evaluated_occupied_area_m2_decision_sum": 828.6600000000002,
+          "evaluated_occupied_count_decision_sum": 331464,
+          "late_decisions_evaluated": 10,
+          "late_evaluated_area_m2_decision_sum": 161.50000000000003,
+          "late_evaluated_free_area_m2_decision_sum": 1.0000000000000002,
+          "late_evaluated_free_count_decision_sum": 400,
+          "late_evaluated_occupied_area_m2_decision_sum": 160.50000000000003,
+          "late_evaluated_occupied_count_decision_sum": 64200,
+          "late_prediction_target_pairs": 64600,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.9999999701976783,
+          "prediction_target_pairs": 1456496,
+          "reference_fraction_of_unknown_area_decision_macro": 0.9999999701976783
+        }
+      },
+      {
+        "later_observed": {
+          "evaluated_area_m2_decision_sum": 2527.4400753235823,
+          "evaluated_free_area_m2_decision_sum": 2133.4500635817653,
+          "evaluated_free_count_decision_sum": 213345,
+          "evaluated_occupied_area_m2_decision_sum": 393.99001174181706,
+          "evaluated_occupied_count_decision_sum": 39399,
+          "late_decisions_evaluated": 3,
+          "late_evaluated_area_m2_decision_sum": 1.8500000551342968,
+          "late_evaluated_free_area_m2_decision_sum": 0.12000000357627871,
+          "late_evaluated_free_count_decision_sum": 12,
+          "late_evaluated_occupied_area_m2_decision_sum": 1.730000051558018,
+          "late_evaluated_occupied_count_decision_sum": 173,
+          "late_prediction_target_pairs": 185,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.012400591783316265,
+          "prediction_target_pairs": 252744,
+          "reference_fraction_of_unknown_area_decision_macro": 0.5117596656687049
+        },
+        "run_id": "mpx_004",
+        "structural_gt": {
+          "evaluated_area_m2_decision_sum": 2937.3,
+          "evaluated_free_area_m2_decision_sum": 2209.3975000000005,
+          "evaluated_free_count_decision_sum": 883759,
+          "evaluated_occupied_area_m2_decision_sum": 727.9025000000001,
+          "evaluated_occupied_count_decision_sum": 291161,
+          "late_decisions_evaluated": 10,
+          "late_evaluated_area_m2_decision_sum": 144.46,
+          "late_evaluated_free_area_m2_decision_sum": 0.6200000000000001,
+          "late_evaluated_free_count_decision_sum": 248,
+          "late_evaluated_occupied_area_m2_decision_sum": 143.84000000000003,
+          "late_evaluated_occupied_count_decision_sum": 57536,
+          "late_prediction_target_pairs": 57784,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.9999999701976782,
+          "prediction_target_pairs": 1174920,
+          "reference_fraction_of_unknown_area_decision_macro": 0.9999999701976784
+        }
+      },
+      {
+        "later_observed": {
+          "evaluated_area_m2_decision_sum": 2487.710074139536,
+          "evaluated_free_area_m2_decision_sum": 2082.8400620734697,
+          "evaluated_free_count_decision_sum": 208284,
+          "evaluated_occupied_area_m2_decision_sum": 404.87001206606635,
+          "evaluated_occupied_count_decision_sum": 40487,
+          "late_decisions_evaluated": 2,
+          "late_evaluated_area_m2_decision_sum": 14.470000431239608,
+          "late_evaluated_free_area_m2_decision_sum": 4.460000132918358,
+          "late_evaluated_free_count_decision_sum": 446,
+          "late_evaluated_occupied_area_m2_decision_sum": 10.010000298321248,
+          "late_evaluated_occupied_count_decision_sum": 1001,
+          "late_prediction_target_pairs": 1447,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.07590425261013496,
+          "prediction_target_pairs": 248771,
+          "reference_fraction_of_unknown_area_decision_macro": 0.5779751519424396
+        },
+        "run_id": "mpx_005",
+        "structural_gt": {
+          "evaluated_area_m2_decision_sum": 2869.5400000000004,
+          "evaluated_free_area_m2_decision_sum": 2172.4175000000005,
+          "evaluated_free_count_decision_sum": 868967,
+          "evaluated_occupied_area_m2_decision_sum": 697.1225000000002,
+          "evaluated_occupied_count_decision_sum": 278849,
+          "late_decisions_evaluated": 10,
+          "late_evaluated_area_m2_decision_sum": 158.84,
+          "late_evaluated_free_area_m2_decision_sum": 4.755000000000001,
+          "late_evaluated_free_count_decision_sum": 1902,
+          "late_evaluated_occupied_area_m2_decision_sum": 154.08500000000004,
+          "late_evaluated_occupied_count_decision_sum": 61634,
+          "late_prediction_target_pairs": 63536,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.9999999701976782,
+          "prediction_target_pairs": 1147816,
+          "reference_fraction_of_unknown_area_decision_macro": 0.9999999701976785
+        }
+      },
+      {
+        "later_observed": {
+          "evaluated_area_m2_decision_sum": 2782.2900829187042,
+          "evaluated_free_area_m2_decision_sum": 2376.4200708228354,
+          "evaluated_free_count_decision_sum": 237642,
+          "evaluated_occupied_area_m2_decision_sum": 405.8700120958687,
+          "evaluated_occupied_count_decision_sum": 40587,
+          "late_decisions_evaluated": 2,
+          "late_evaluated_area_m2_decision_sum": 0.9400000280141833,
+          "late_evaluated_free_area_m2_decision_sum": 0.040000001192092904,
+          "late_evaluated_free_count_decision_sum": 4,
+          "late_evaluated_occupied_area_m2_decision_sum": 0.9000000268220903,
+          "late_evaluated_occupied_count_decision_sum": 90,
+          "late_prediction_target_pairs": 94,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.0058823529411764705,
+          "prediction_target_pairs": 278229,
+          "reference_fraction_of_unknown_area_decision_macro": 0.525323205711937
+        },
+        "run_id": "mpx_006",
+        "structural_gt": {
+          "evaluated_area_m2_decision_sum": 3245.9275000000002,
+          "evaluated_free_area_m2_decision_sum": 2465.4525000000003,
+          "evaluated_free_count_decision_sum": 986181,
+          "evaluated_occupied_area_m2_decision_sum": 780.4750000000001,
+          "evaluated_occupied_count_decision_sum": 312190,
+          "late_decisions_evaluated": 10,
+          "late_evaluated_area_m2_decision_sum": 160.92000000000002,
+          "late_evaluated_free_area_m2_decision_sum": 0.9100000000000003,
+          "late_evaluated_free_count_decision_sum": 364,
+          "late_evaluated_occupied_area_m2_decision_sum": 160.01000000000002,
+          "late_evaluated_occupied_count_decision_sum": 64004,
+          "late_prediction_target_pairs": 64368,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.9999999701976782,
+          "prediction_target_pairs": 1298371,
+          "reference_fraction_of_unknown_area_decision_macro": 0.9729225568432197
+        }
+      },
+      {
+        "later_observed": {
+          "evaluated_area_m2_decision_sum": 2360.630070352257,
+          "evaluated_free_area_m2_decision_sum": 2044.9500609442596,
+          "evaluated_free_count_decision_sum": 204495,
+          "evaluated_occupied_area_m2_decision_sum": 315.6800094079972,
+          "evaluated_occupied_count_decision_sum": 31568,
+          "late_decisions_evaluated": 3,
+          "late_evaluated_area_m2_decision_sum": 3.3800001007318503,
+          "late_evaluated_free_area_m2_decision_sum": 0.29000000864267356,
+          "late_evaluated_free_count_decision_sum": 29,
+          "late_evaluated_occupied_area_m2_decision_sum": 3.090000092089177,
+          "late_evaluated_occupied_count_decision_sum": 309,
+          "late_prediction_target_pairs": 338,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.021213075871061998,
+          "prediction_target_pairs": 236063,
+          "reference_fraction_of_unknown_area_decision_macro": 0.5256651565474947
+        },
+        "run_id": "mpx_007",
+        "structural_gt": {
+          "evaluated_area_m2_decision_sum": 2825.7400000000002,
+          "evaluated_free_area_m2_decision_sum": 2134.2300000000005,
+          "evaluated_free_count_decision_sum": 853692,
+          "evaluated_occupied_area_m2_decision_sum": 691.5100000000001,
+          "evaluated_occupied_count_decision_sum": 276604,
+          "late_decisions_evaluated": 10,
+          "late_evaluated_area_m2_decision_sum": 152.85000000000002,
+          "late_evaluated_free_area_m2_decision_sum": 0.8450000000000002,
+          "late_evaluated_free_count_decision_sum": 338,
+          "late_evaluated_occupied_area_m2_decision_sum": 152.00500000000002,
+          "late_evaluated_occupied_count_decision_sum": 60802,
+          "late_prediction_target_pairs": 61140,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.9999999701976782,
+          "prediction_target_pairs": 1130296,
+          "reference_fraction_of_unknown_area_decision_macro": 0.9999999701976784
+        }
+      },
+      {
+        "later_observed": {
+          "evaluated_area_m2_decision_sum": 2552.4400760686403,
+          "evaluated_free_area_m2_decision_sum": 2208.200065809489,
+          "evaluated_free_count_decision_sum": 220820,
+          "evaluated_occupied_area_m2_decision_sum": 344.2400102591515,
+          "evaluated_occupied_count_decision_sum": 34424,
+          "late_decisions_evaluated": 2,
+          "late_evaluated_area_m2_decision_sum": 1.2900000384449961,
+          "late_evaluated_free_area_m2_decision_sum": 0.5300000157952309,
+          "late_evaluated_free_count_decision_sum": 53,
+          "late_evaluated_occupied_area_m2_decision_sum": 0.7600000226497652,
+          "late_evaluated_occupied_count_decision_sum": 76,
+          "late_prediction_target_pairs": 129,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.007360010968038698,
+          "prediction_target_pairs": 255244,
+          "reference_fraction_of_unknown_area_decision_macro": 0.5547633594756182
+        },
+        "run_id": "mpx_008",
+        "structural_gt": {
+          "evaluated_area_m2_decision_sum": 3029.28,
+          "evaluated_free_area_m2_decision_sum": 2285.4500000000003,
+          "evaluated_free_count_decision_sum": 914180,
+          "evaluated_occupied_area_m2_decision_sum": 743.8300000000002,
+          "evaluated_occupied_count_decision_sum": 297532,
+          "late_decisions_evaluated": 10,
+          "late_evaluated_area_m2_decision_sum": 170.28000000000003,
+          "late_evaluated_free_area_m2_decision_sum": 2.7600000000000007,
+          "late_evaluated_free_count_decision_sum": 1104,
+          "late_evaluated_occupied_area_m2_decision_sum": 167.52000000000004,
+          "late_evaluated_occupied_count_decision_sum": 67008,
+          "late_prediction_target_pairs": 68112,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.9999999701976783,
+          "prediction_target_pairs": 1211712,
+          "reference_fraction_of_unknown_area_decision_macro": 0.9999999701976784
+        }
+      },
+      {
+        "later_observed": {
+          "evaluated_area_m2_decision_sum": 2598.0500774279244,
+          "evaluated_free_area_m2_decision_sum": 2235.070066610277,
+          "evaluated_free_count_decision_sum": 223507,
+          "evaluated_occupied_area_m2_decision_sum": 362.98001081764704,
+          "evaluated_occupied_count_decision_sum": 36298,
+          "late_decisions_evaluated": 1,
+          "late_evaluated_area_m2_decision_sum": 1.150000034272671,
+          "late_evaluated_free_area_m2_decision_sum": 0.10000000298023226,
+          "late_evaluated_free_count_decision_sum": 10,
+          "late_evaluated_occupied_area_m2_decision_sum": 1.0500000312924387,
+          "late_evaluated_occupied_count_decision_sum": 105,
+          "late_prediction_target_pairs": 115,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.0068944844124700245,
+          "prediction_target_pairs": 259805,
+          "reference_fraction_of_unknown_area_decision_macro": 0.5282374755657515
+        },
+        "run_id": "mpx_009",
+        "structural_gt": {
+          "evaluated_area_m2_decision_sum": 3089.05,
+          "evaluated_free_area_m2_decision_sum": 2322.4675000000007,
+          "evaluated_free_count_decision_sum": 928987,
+          "evaluated_occupied_area_m2_decision_sum": 766.5825000000001,
+          "evaluated_occupied_count_decision_sum": 306633,
+          "late_decisions_evaluated": 10,
+          "late_evaluated_area_m2_decision_sum": 165.63,
+          "late_evaluated_free_area_m2_decision_sum": 2.6200000000000006,
+          "late_evaluated_free_count_decision_sum": 1048,
+          "late_evaluated_occupied_area_m2_decision_sum": 163.01000000000002,
+          "late_evaluated_occupied_count_decision_sum": 65204,
+          "late_prediction_target_pairs": 66252,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.9999999701976783,
+          "prediction_target_pairs": 1235620,
+          "reference_fraction_of_unknown_area_decision_macro": 0.9999999701976784
+        }
+      },
+      {
+        "later_observed": {
+          "evaluated_area_m2_decision_sum": 2803.9200835633283,
+          "evaluated_free_area_m2_decision_sum": 2362.5300704088813,
+          "evaluated_free_count_decision_sum": 236253,
+          "evaluated_occupied_area_m2_decision_sum": 441.39001315444716,
+          "evaluated_occupied_count_decision_sum": 44139,
+          "late_decisions_evaluated": 1,
+          "late_evaluated_area_m2_decision_sum": 0.29000000864267356,
+          "late_evaluated_free_area_m2_decision_sum": 0.06000000178813936,
+          "late_evaluated_free_count_decision_sum": 6,
+          "late_evaluated_occupied_area_m2_decision_sum": 0.2300000068545342,
+          "late_evaluated_occupied_count_decision_sum": 23,
+          "late_prediction_target_pairs": 29,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.001698886936145284,
+          "prediction_target_pairs": 280392,
+          "reference_fraction_of_unknown_area_decision_macro": 0.532936014233351
+        },
+        "run_id": "mpx_010",
+        "structural_gt": {
+          "evaluated_area_m2_decision_sum": 3356.1450000000004,
+          "evaluated_free_area_m2_decision_sum": 2437.4625000000005,
+          "evaluated_free_count_decision_sum": 974985,
+          "evaluated_occupied_area_m2_decision_sum": 918.6825000000002,
+          "evaluated_occupied_count_decision_sum": 367473,
+          "late_decisions_evaluated": 10,
+          "late_evaluated_area_m2_decision_sum": 171.96000000000004,
+          "late_evaluated_free_area_m2_decision_sum": 1.0200000000000002,
+          "late_evaluated_free_count_decision_sum": 408,
+          "late_evaluated_occupied_area_m2_decision_sum": 170.94000000000003,
+          "late_evaluated_occupied_count_decision_sum": 68376,
+          "late_prediction_target_pairs": 68784,
+          "late_reference_fraction_of_unknown_area_decision_macro": 0.9999999701976783,
+          "prediction_target_pairs": 1342458,
+          "reference_fraction_of_unknown_area_decision_macro": 0.9722705003774521
+        }
+      }
+    ],
+    "support_note": "P1 and P2 have different cell resolutions; compare evaluated area and unknown-area fraction rather than raw cell counts."
+  },
   "prediction_threshold": 0.5,
-  "predictors": {
-    "g1": {
-      "final_reference_diagnostic": {
-        "run_macro_accuracy_mean": 0.8878592832576748,
-        "run_macro_macro_iou_mean": 0.6877380648537733,
-        "run_macro_mae_mean": 0.11271983852964089
+  "reference_mode": "both",
+  "references": {
+    "later_observed": {
+      "decisions_analyzed": 365,
+      "decisions_with_targets": 286,
+      "prediction_target_pairs": 2647324,
+      "predictors": {
+        "g1": {
+          "final_reference_diagnostic": {
+            "run_macro_accuracy_mean": 0.8878592832576748,
+            "run_macro_macro_iou_mean": 0.6877380648537733,
+            "run_macro_mae_mean": 0.11271983852964089
+          },
+          "late_class_metrics": {
+            "free_iou_mean": 0.5068928713418467,
+            "free_iou_std": 0.19826278907988654,
+            "free_precision_mean": 0.758076472808962,
+            "free_precision_std": 0.290010911983433,
+            "free_recall_mean": 0.6053364449022526,
+            "free_recall_std": 0.20739553262374602,
+            "occupied_iou_mean": 0.8866680026769285,
+            "occupied_iou_std": 0.09463249853839169,
+            "occupied_precision_mean": 0.9367118612577414,
+            "occupied_precision_std": 0.03314444427246359,
+            "occupied_recall_mean": 0.9424938076733802,
+            "occupied_recall_std": 0.09656989818975228
+          },
+          "late_run_macro_accuracy_mean": 0.9066908408705405,
+          "late_run_macro_accuracy_std": 0.06619585509056998,
+          "late_run_macro_macro_iou_mean": 0.7097433999723506,
+          "late_run_macro_macro_iou_std": 0.12979646508056533,
+          "late_run_macro_mae_mean": 0.09502439603051491,
+          "late_run_macro_mae_std": 0.06545837740440028,
+          "overall_prediction_pair_micro": {
+            "accuracy": 0.8859002524813736,
+            "free_iou": 0.874283828316906,
+            "free_precision": 0.9389411380305562,
+            "free_recall": 0.9269869582216511,
+            "macro_iou": 0.6608736606925124,
+            "occupied_iou": 0.44746349306811883,
+            "occupied_precision": 0.5965230580896572,
+            "occupied_recall": 0.6416681093955753
+          },
+          "run_macro_accuracy_mean": 0.8854044739066558,
+          "run_macro_accuracy_std": 0.013401406685264341,
+          "run_macro_macro_iou_mean": 0.6869429527720361,
+          "run_macro_macro_iou_std": 0.032202014511260216,
+          "run_macro_mae_mean": 0.11503595215236213,
+          "run_macro_mae_std": 0.013277746188218826
+        },
+        "g2": {
+          "final_reference_diagnostic": {
+            "run_macro_accuracy_mean": 0.8625704005761807,
+            "run_macro_macro_iou_mean": 0.6536463506417054,
+            "run_macro_mae_mean": 0.1377482641710961
+          },
+          "late_class_metrics": {
+            "free_iou_mean": 0.5044030265233951,
+            "free_iou_std": 0.1984281358158543,
+            "free_precision_mean": 0.7154928724093352,
+            "free_precision_std": 0.30376312749119067,
+            "free_recall_mean": 0.6176039462183931,
+            "free_recall_std": 0.20014863947975486,
+            "occupied_iou_mean": 0.8925657207851577,
+            "occupied_iou_std": 0.06918790117026576,
+            "occupied_precision_mean": 0.9387184889529238,
+            "occupied_precision_std": 0.0279938687225064,
+            "occupied_recall_mean": 0.946169535335839,
+            "occupied_recall_std": 0.06923501064814287
+          },
+          "late_run_macro_accuracy_mean": 0.9099716267820114,
+          "late_run_macro_accuracy_std": 0.04994483002813625,
+          "late_run_macro_macro_iou_mean": 0.7151510403209429,
+          "late_run_macro_macro_iou_std": 0.11738953311474017,
+          "late_run_macro_mae_mean": 0.09141572632449327,
+          "late_run_macro_mae_std": 0.05012611958342782,
+          "overall_prediction_pair_micro": {
+            "accuracy": 0.8545795678957316,
+            "free_iou": 0.8389066196103965,
+            "free_precision": 0.9419008865140767,
+            "free_recall": 0.8846856849338645,
+            "macro_iou": 0.6198786556223976,
+            "occupied_iou": 0.4008506916343987,
+            "occupied_precision": 0.4963835220428812,
+            "occupied_recall": 0.6756194553304898
+          },
+          "run_macro_accuracy_mean": 0.8633170082531227,
+          "run_macro_accuracy_std": 0.01296438095564204,
+          "run_macro_macro_iou_mean": 0.6590905866730545,
+          "run_macro_macro_iou_std": 0.02937170645655556,
+          "run_macro_mae_mean": 0.1370730133689107,
+          "run_macro_mae_std": 0.012902590462676016
+        },
+        "g3": {
+          "final_reference_diagnostic": {
+            "run_macro_accuracy_mean": 0.8847413754639477,
+            "run_macro_macro_iou_mean": 0.6784236382919031,
+            "run_macro_mae_mean": 0.11623258628891309
+          },
+          "late_class_metrics": {
+            "free_iou_mean": 0.4864219304876616,
+            "free_iou_std": 0.19077198177814925,
+            "free_precision_mean": 0.6808134808008306,
+            "free_precision_std": 0.286329686950602,
+            "free_recall_mean": 0.6193901993111456,
+            "free_recall_std": 0.2023213743494752,
+            "occupied_iou_mean": 0.880924324231031,
+            "occupied_iou_std": 0.08942553596142548,
+            "occupied_precision_mean": 0.9385112813722442,
+            "occupied_precision_std": 0.02857547618382167,
+            "occupied_recall_mean": 0.9331563443569338,
+            "occupied_recall_std": 0.08935051841630652
+          },
+          "late_run_macro_accuracy_mean": 0.9022949783340897,
+          "late_run_macro_accuracy_std": 0.059925187152634105,
+          "late_run_macro_macro_iou_mean": 0.7010644317071724,
+          "late_run_macro_macro_iou_std": 0.11813134769720234,
+          "late_run_macro_mae_mean": 0.1016990354761708,
+          "late_run_macro_mae_std": 0.06124030914577195,
+          "overall_prediction_pair_micro": {
+            "accuracy": 0.8795715975830688,
+            "free_iou": 0.8681139617686735,
+            "free_precision": 0.9327772441403723,
+            "free_recall": 0.9260501071884673,
+            "macro_iou": 0.6435932418172814,
+            "occupied_iou": 0.4190725218658892,
+            "occupied_precision": 0.5784890521046873,
+            "occupied_recall": 0.603288897282948
+          },
+          "run_macro_accuracy_mean": 0.8842190612159756,
+          "run_macro_accuracy_std": 0.012520789484307245,
+          "run_macro_macro_iou_mean": 0.6823892151226423,
+          "run_macro_macro_iou_std": 0.03343964625238045,
+          "run_macro_mae_mean": 0.11665060367234818,
+          "run_macro_mae_std": 0.012699404365789861
+        },
+        "mean": {
+          "final_reference_diagnostic": {
+            "run_macro_accuracy_mean": 0.8898553995052817,
+            "run_macro_macro_iou_mean": 0.6908514616689421,
+            "run_macro_mae_mean": 0.12223356304489597
+          },
+          "late_class_metrics": {
+            "free_iou_mean": 0.5036164668465177,
+            "free_iou_std": 0.19562200070264543,
+            "free_precision_mean": 0.7152679518480595,
+            "free_precision_std": 0.2966474650111266,
+            "free_recall_mean": 0.6198387741306093,
+            "free_recall_std": 0.20288805609292063,
+            "occupied_iou_mean": 0.88737756304246,
+            "occupied_iou_std": 0.09115067936295268,
+            "occupied_precision_mean": 0.9392078264626335,
+            "occupied_precision_std": 0.028395011555344397,
+            "occupied_recall_mean": 0.9399461648213274,
+            "occupied_recall_std": 0.09206192588430286
+          },
+          "late_run_macro_accuracy_mean": 0.9079452515992517,
+          "late_run_macro_accuracy_std": 0.06127350663335682,
+          "late_run_macro_macro_iou_mean": 0.7121636816111555,
+          "late_run_macro_macro_iou_std": 0.12154288310751632,
+          "late_run_macro_mae_mean": 0.09604638595918141,
+          "late_run_macro_mae_std": 0.057968130698047834,
+          "overall_prediction_pair_micro": {
+            "accuracy": 0.8871131754178937,
+            "free_iou": 0.8756256216679638,
+            "free_precision": 0.9389878920144421,
+            "free_recall": 0.9284498226469947,
+            "macro_iou": 0.6628138230505152,
+            "occupied_iou": 0.4500020244330667,
+            "occupied_precision": 0.601282662902615,
+            "occupied_recall": 0.6413953024746736
+          },
+          "run_macro_accuracy_mean": 0.888927054686895,
+          "run_macro_accuracy_std": 0.01327532785741497,
+          "run_macro_macro_iou_mean": 0.6934529158240569,
+          "run_macro_macro_iou_std": 0.034464749633850024,
+          "run_macro_mae_mean": 0.12291985638445287,
+          "run_macro_mae_std": 0.012394224124432866
+        }
       },
-      "late_class_metrics": {
-        "free_iou_mean": 0.5068928713418467,
-        "free_iou_std": 0.19826278907988654,
-        "free_precision_mean": 0.758076472808962,
-        "free_precision_std": 0.290010911983433,
-        "free_recall_mean": 0.6053364449022526,
-        "free_recall_std": 0.20739553262374602,
-        "occupied_iou_mean": 0.8866680026769285,
-        "occupied_iou_std": 0.09463249853839169,
-        "occupied_precision_mean": 0.9367118612577414,
-        "occupied_precision_std": 0.03314444427246359,
-        "occupied_recall_mean": 0.9424938076733802,
-        "occupied_recall_std": 0.09656989818975228
+      "reference": "later_observed",
+      "reference_fraction_of_unknown_area_run_macro": 0.53564809126065,
+      "reveal_delay": {
+        "run_macro_mean_decisions_until_reveal": 4.2236585371528585,
+        "run_macro_mean_time_until_reveal_s": 130.6930834761331
       },
-      "late_run_macro_accuracy_mean": 0.9066908408705405,
-      "late_run_macro_accuracy_std": 0.06619585509056998,
-      "late_run_macro_macro_iou_mean": 0.7097433999723506,
-      "late_run_macro_macro_iou_std": 0.12979646508056533,
-      "late_run_macro_mae_mean": 0.09502439603051491,
-      "late_run_macro_mae_std": 0.06545837740440028,
-      "overall_prediction_pair_micro": {
-        "accuracy": 0.8859002524813736,
-        "free_iou": 0.874283828316906,
-        "free_precision": 0.9389411380305562,
-        "free_recall": 0.9269869582216511,
-        "macro_iou": 0.6608736606925124,
-        "occupied_iou": 0.44746349306811883,
-        "occupied_precision": 0.5965230580896572,
-        "occupied_recall": 0.6416681093955753
+      "runs_analyzed": 10,
+      "stage_summary": {
+        "early": {
+          "g1": {
+            "accuracy_decision_macro": 0.8864338181815914,
+            "decisions": 115,
+            "free_iou_decision_macro": 0.8773027834324332,
+            "free_precision_decision_macro": 0.940325914392553,
+            "free_recall_decision_macro": 0.9291347708862457,
+            "macro_iou_decision_macro": 0.6319268231657765,
+            "mae_decision_macro": 0.11374721810303494,
+            "occupied_iou_decision_macro": 0.3865508628991201,
+            "occupied_precision_decision_macro": 0.532646959026433,
+            "occupied_recall_decision_macro": 0.5731371530986326
+          },
+          "g2": {
+            "accuracy_decision_macro": 0.8527946100209676,
+            "decisions": 115,
+            "free_iou_decision_macro": 0.8400675455802598,
+            "free_precision_decision_macro": 0.9432666831447979,
+            "free_recall_decision_macro": 0.8848922030532381,
+            "macro_iou_decision_macro": 0.591364879908313,
+            "mae_decision_macro": 0.14733555522170597,
+            "occupied_iou_decision_macro": 0.34266221423636617,
+            "occupied_precision_decision_macro": 0.4300343967879895,
+            "occupied_recall_decision_macro": 0.6107536112619888
+          },
+          "g3": {
+            "accuracy_decision_macro": 0.8766900685952923,
+            "decisions": 115,
+            "free_iou_decision_macro": 0.8679199269197589,
+            "free_precision_decision_macro": 0.9334417222310083,
+            "free_recall_decision_macro": 0.9252166914627254,
+            "macro_iou_decision_macro": 0.6101659676736544,
+            "mae_decision_macro": 0.12359693963474283,
+            "occupied_iou_decision_macro": 0.3524120084275499,
+            "occupied_precision_decision_macro": 0.5028139182791096,
+            "occupied_recall_decision_macro": 0.5267488100606745
+          },
+          "mean": {
+            "accuracy_decision_macro": 0.8859719210797714,
+            "decisions": 115,
+            "free_iou_decision_macro": 0.8770003707690587,
+            "free_precision_decision_macro": 0.9401409248375017,
+            "free_recall_decision_macro": 0.9289115629820744,
+            "macro_iou_decision_macro": 0.6317933143203429,
+            "mae_decision_macro": 0.12822657116434674,
+            "occupied_iou_decision_macro": 0.38658625787162704,
+            "occupied_precision_decision_macro": 0.5311633167044326,
+            "occupied_recall_decision_macro": 0.5709433845504548
+          }
+        },
+        "late": {
+          "g1": {
+            "accuracy_decision_macro": 0.8955620285569321,
+            "decisions": 128,
+            "free_iou_decision_macro": 0.5121667971977767,
+            "free_precision_decision_macro": 0.7016903513016275,
+            "free_recall_decision_macro": 0.6184829831958275,
+            "macro_iou_decision_macro": 0.6972176042525197,
+            "mae_decision_macro": 0.10567044517029463,
+            "occupied_iou_decision_macro": 0.8623568520092126,
+            "occupied_precision_decision_macro": 0.9191116795323864,
+            "occupied_recall_decision_macro": 0.9314235404189382
+          },
+          "g2": {
+            "accuracy_decision_macro": 0.8874602490556114,
+            "decisions": 128,
+            "free_iou_decision_macro": 0.500619834316512,
+            "free_precision_decision_macro": 0.6695822131060407,
+            "free_recall_decision_macro": 0.6198334516452448,
+            "macro_iou_decision_macro": 0.6871443455734757,
+            "mae_decision_macro": 0.1125041752417506,
+            "occupied_iou_decision_macro": 0.8532859929249905,
+            "occupied_precision_decision_macro": 0.9161272697594783,
+            "occupied_recall_decision_macro": 0.9228303426719737
+          },
+          "g3": {
+            "accuracy_decision_macro": 0.8852514848360751,
+            "decisions": 128,
+            "free_iou_decision_macro": 0.4937148135833434,
+            "free_precision_decision_macro": 0.6531499483512145,
+            "free_recall_decision_macro": 0.6223987199371793,
+            "macro_iou_decision_macro": 0.6818407241394151,
+            "mae_decision_macro": 0.11584491234060412,
+            "occupied_iou_decision_macro": 0.8493019332090929,
+            "occupied_precision_decision_macro": 0.9195646016531247,
+            "occupied_recall_decision_macro": 0.9153672677291907
+          },
+          "mean": {
+            "accuracy_decision_macro": 0.8918356796393159,
+            "decisions": 128,
+            "free_iou_decision_macro": 0.5052172374194666,
+            "free_precision_decision_macro": 0.6731387858514515,
+            "free_recall_decision_macro": 0.6243901633151302,
+            "macro_iou_decision_macro": 0.6915487229967382,
+            "mae_decision_macro": 0.11133984454893658,
+            "occupied_iou_decision_macro": 0.8576849937748044,
+            "occupied_precision_decision_macro": 0.9216879830416441,
+            "occupied_recall_decision_macro": 0.9231141932037944
+          }
+        },
+        "mid": {
+          "g1": {
+            "accuracy_decision_macro": 0.8803252813513686,
+            "decisions": 122,
+            "free_iou_decision_macro": 0.8303544566999164,
+            "free_precision_decision_macro": 0.923522774723818,
+            "free_recall_decision_macro": 0.8885945944571998,
+            "macro_iou_decision_macro": 0.7347215840254544,
+            "mae_decision_macro": 0.12005143419428192,
+            "occupied_iou_decision_macro": 0.6390887113509922,
+            "occupied_precision_decision_macro": 0.7393873612145558,
+            "occupied_recall_decision_macro": 0.8154414660803904
+          },
+          "g2": {
+            "accuracy_decision_macro": 0.8630330422047141,
+            "decisions": 122,
+            "free_iou_decision_macro": 0.8064658032561746,
+            "free_precision_decision_macro": 0.9219228244620795,
+            "free_recall_decision_macro": 0.8609318636369115,
+            "macro_iou_decision_macro": 0.7111003280503371,
+            "mae_decision_macro": 0.13777827853992325,
+            "occupied_iou_decision_macro": 0.6157348528444994,
+            "occupied_precision_decision_macro": 0.6965563903656189,
+            "occupied_recall_decision_macro": 0.8315087028049113
+          },
+          "g3": {
+            "accuracy_decision_macro": 0.890941964021188,
+            "decisions": 122,
+            "free_iou_decision_macro": 0.8441898389409179,
+            "free_precision_decision_macro": 0.9198692583175072,
+            "free_recall_decision_macro": 0.9076334487932857,
+            "macro_iou_decision_macro": 0.750888286951802,
+            "mae_decision_macro": 0.11042975815961091,
+            "occupied_iou_decision_macro": 0.6575867349626862,
+            "occupied_precision_decision_macro": 0.7786513673397651,
+            "occupied_recall_decision_macro": 0.8027498269526989
+          },
+          "mean": {
+            "accuracy_decision_macro": 0.8903442635004849,
+            "decisions": 122,
+            "free_iou_decision_macro": 0.8433545977227657,
+            "free_precision_decision_macro": 0.9246596284988265,
+            "free_recall_decision_macro": 0.9017571596312661,
+            "macro_iou_decision_macro": 0.7521124725963891,
+            "mae_decision_macro": 0.12275315668576288,
+            "occupied_iou_decision_macro": 0.6608703474700127,
+            "occupied_precision_decision_macro": 0.766084284148052,
+            "occupied_recall_decision_macro": 0.8195363642498312
+          }
+        }
       },
-      "run_macro_accuracy_mean": 0.8854044739066558,
-      "run_macro_accuracy_std": 0.013401406685264341,
-      "run_macro_macro_iou_mean": 0.6869429527720361,
-      "run_macro_macro_iou_std": 0.032202014511260216,
-      "run_macro_mae_mean": 0.11503595215236213,
-      "run_macro_mae_std": 0.013277746188218826
+      "support": {
+        "evaluated_area_m2_decision_sum": 26473.240788964038,
+        "evaluated_cell_count_decision_sum": 2647324,
+        "evaluated_free_area_m2_decision_sum": 22661.02067535103,
+        "evaluated_free_count_decision_sum": 2266102,
+        "evaluated_occupied_area_m2_decision_sum": 3812.22011361301,
+        "evaluated_occupied_count_decision_sum": 381222,
+        "last_n": {
+          "decisions_evaluated": 21,
+          "evaluated_area_m2_decision_sum": 27.580000821948058,
+          "evaluated_cell_count_decision_sum": 2758,
+          "evaluated_free_area_m2_decision_sum": 6.560000195503235,
+          "evaluated_free_count_decision_sum": 656,
+          "evaluated_occupied_area_m2_decision_sum": 21.02000062644482,
+          "evaluated_occupied_count_decision_sum": 2102,
+          "reference_fraction_of_unknown_area_run_macro": 0.015608403074217464
+        }
+      },
+      "target_stability": {
+        "run_macro_first_vs_final_class_agreement": 0.9615012372522005
+      }
     },
-    "g2": {
-      "final_reference_diagnostic": {
-        "run_macro_accuracy_mean": 0.8625704005761807,
-        "run_macro_macro_iou_mean": 0.6536463506417054,
-        "run_macro_mae_mean": 0.1377482641710961
+    "structural_gt": {
+      "decisions_analyzed": 365,
+      "decisions_with_targets": 365,
+      "prediction_target_pairs": 12470841,
+      "predictors": {
+        "g1": {
+          "late_class_metrics": {
+            "free_iou_mean": 0.007568955773685104,
+            "free_iou_std": 0.012211466643163305,
+            "free_precision_mean": 0.00792504947878328,
+            "free_precision_std": 0.012913839159120186,
+            "free_recall_mean": 0.12961159804046124,
+            "free_recall_std": 0.09395390460876757,
+            "occupied_iou_mean": 0.5670970709779619,
+            "occupied_iou_std": 0.03416725121548763,
+            "occupied_precision_mean": 0.9810079687319133,
+            "occupied_precision_std": 0.02111516212856581,
+            "occupied_recall_mean": 0.5731598301901799,
+            "occupied_recall_std": 0.030825693878048597
+          },
+          "late_run_macro_accuracy_mean": 0.5686001392212718,
+          "late_run_macro_accuracy_std": 0.03353151154709751,
+          "late_run_macro_macro_iou_mean": 0.2873330133758235,
+          "late_run_macro_macro_iou_std": 0.016645885641915818,
+          "late_run_macro_mae_mean": 0.422187530119072,
+          "late_run_macro_mae_std": 0.033607512984102306,
+          "overall_prediction_pair_micro": {
+            "accuracy": 0.8199706820093369,
+            "free_iou": 0.7918061392381763,
+            "free_precision": 0.8616626373767209,
+            "free_recall": 0.907121315331984,
+            "macro_iou": 0.6104229144785642,
+            "occupied_iou": 0.4290396897189521,
+            "occupied_precision": 0.6586681867162244,
+            "occupied_recall": 0.5517023516334812
+          },
+          "run_macro_accuracy_mean": 0.716795212729325,
+          "run_macro_accuracy_std": 0.012338149058383001,
+          "run_macro_macro_iou_mean": 0.4717446886538051,
+          "run_macro_macro_iou_std": 0.01486255252543239,
+          "run_macro_mae_mean": 0.279469787953309,
+          "run_macro_mae_std": 0.012474352355859395
+        },
+        "g2": {
+          "late_class_metrics": {
+            "free_iou_mean": 0.007172012343414446,
+            "free_iou_std": 0.012377531605349613,
+            "free_precision_mean": 0.007561362801909671,
+            "free_precision_std": 0.013191922493018189,
+            "free_recall_mean": 0.11832296846197325,
+            "free_recall_std": 0.1009137100951195,
+            "occupied_iou_mean": 0.5408006128318614,
+            "occupied_iou_std": 0.04121142480130652,
+            "occupied_precision_mean": 0.9798373443379715,
+            "occupied_precision_std": 0.021970250941222434,
+            "occupied_recall_mean": 0.5466991659275073,
+            "occupied_recall_std": 0.03887030164712082
+          },
+          "late_run_macro_accuracy_mean": 0.542240409689124,
+          "late_run_macro_accuracy_std": 0.04082754140511748,
+          "late_run_macro_macro_iou_mean": 0.27398631258763795,
+          "late_run_macro_macro_iou_std": 0.020656541674440615,
+          "late_run_macro_mae_mean": 0.451003627593181,
+          "late_run_macro_mae_std": 0.04020415262662001,
+          "overall_prediction_pair_micro": {
+            "accuracy": 0.7897015926993216,
+            "free_iou": 0.7561629204091587,
+            "free_precision": 0.8583079012016828,
+            "free_recall": 0.8640180245798224,
+            "macro_iou": 0.5757929130833307,
+            "occupied_iou": 0.3954229057575028,
+            "occupied_precision": 0.5726671329535155,
+            "occupied_recall": 0.5609396854133059
+          },
+          "run_macro_accuracy_mean": 0.6905459028475329,
+          "run_macro_accuracy_std": 0.014501450154470422,
+          "run_macro_macro_iou_mean": 0.44974666867776536,
+          "run_macro_macro_iou_std": 0.01646527801924942,
+          "run_macro_mae_mean": 0.3065341353209514,
+          "run_macro_mae_std": 0.014190559538434478
+        },
+        "g3": {
+          "late_class_metrics": {
+            "free_iou_mean": 0.008051808183791568,
+            "free_iou_std": 0.01182344483115259,
+            "free_precision_mean": 0.008413830750253828,
+            "free_precision_std": 0.012500430401410422,
+            "free_recall_mean": 0.15854945321085698,
+            "free_recall_std": 0.11024629261013234,
+            "occupied_iou_mean": 0.5624633671727951,
+            "occupied_iou_std": 0.03606928966420688,
+            "occupied_precision_mean": 0.9813602288080869,
+            "occupied_precision_std": 0.021159839274707663,
+            "occupied_recall_mean": 0.5683861142414097,
+            "occupied_recall_std": 0.03382403842515976
+          },
+          "late_run_macro_accuracy_mean": 0.5640822462571414,
+          "late_run_macro_accuracy_std": 0.03568012232366924,
+          "late_run_macro_macro_iou_mean": 0.28525758767829335,
+          "late_run_macro_macro_iou_std": 0.018275061893034406,
+          "late_run_macro_mae_mean": 0.4248142626587087,
+          "late_run_macro_mae_std": 0.035634017797222604,
+          "overall_prediction_pair_micro": {
+            "accuracy": 0.8169301492978701,
+            "free_iou": 0.7893427326433022,
+            "free_precision": 0.8572306666809628,
+            "free_recall": 0.908818556274331,
+            "macro_iou": 0.6031854339090911,
+            "occupied_iou": 0.41702813517487997,
+            "occupied_precision": 0.655508238174557,
+            "occupied_recall": 0.5340779360590886
+          },
+          "run_macro_accuracy_mean": 0.7133639718480078,
+          "run_macro_accuracy_std": 0.015988214481742525,
+          "run_macro_macro_iou_mean": 0.4681055694666134,
+          "run_macro_macro_iou_std": 0.017779524968371558,
+          "run_macro_mae_mean": 0.2818852079028516,
+          "run_macro_mae_std": 0.015412678637368527
+        },
+        "mean": {
+          "late_class_metrics": {
+            "free_iou_mean": 0.007604592763986037,
+            "free_iou_std": 0.012101782414317643,
+            "free_precision_mean": 0.007958823669269099,
+            "free_precision_std": 0.012797976539945133,
+            "free_recall_mean": 0.13594749273444948,
+            "free_recall_std": 0.09430951571341487,
+            "occupied_iou_mean": 0.5556970927504044,
+            "occupied_iou_std": 0.03596233603298475,
+            "occupied_precision_mean": 0.9807944645893789,
+            "occupied_precision_std": 0.02127398603214037,
+            "occupied_recall_mean": 0.561629420343318,
+            "occupied_recall_std": 0.0333104230905759
+          },
+          "late_run_macro_accuracy_mean": 0.557246230627028,
+          "late_run_macro_accuracy_std": 0.035406613214886196,
+          "late_run_macro_macro_iou_mean": 0.2816508427571952,
+          "late_run_macro_macro_iou_std": 0.017700868833038362,
+          "late_run_macro_mae_mean": 0.43266847288877586,
+          "late_run_macro_mae_std": 0.0357390995869477,
+          "overall_prediction_pair_micro": {
+            "accuracy": 0.8186714913613284,
+            "free_iou": 0.7908245907849076,
+            "free_precision": 0.859484547493437,
+            "free_recall": 0.9082529509427676,
+            "macro_iou": 0.6070909153171005,
+            "occupied_iou": 0.4233572398492933,
+            "occupied_precision": 0.657816305005044,
+            "occupied_recall": 0.5429205567057576
+          },
+          "run_macro_accuracy_mean": 0.7119655530261462,
+          "run_macro_accuracy_std": 0.01369119362188004,
+          "run_macro_macro_iou_mean": 0.468826259355884,
+          "run_macro_macro_iou_std": 0.016652952826346896,
+          "run_macro_mae_mean": 0.2892963768379594,
+          "run_macro_mae_std": 0.013630673798430444
+        }
       },
-      "late_class_metrics": {
-        "free_iou_mean": 0.5044030265233951,
-        "free_iou_std": 0.1984281358158543,
-        "free_precision_mean": 0.7154928724093352,
-        "free_precision_std": 0.30376312749119067,
-        "free_recall_mean": 0.6176039462183931,
-        "free_recall_std": 0.20014863947975486,
-        "occupied_iou_mean": 0.8925657207851577,
-        "occupied_iou_std": 0.06918790117026576,
-        "occupied_precision_mean": 0.9387184889529238,
-        "occupied_precision_std": 0.0279938687225064,
-        "occupied_recall_mean": 0.946169535335839,
-        "occupied_recall_std": 0.06923501064814287
+      "reference": "structural_gt",
+      "reference_fraction_of_unknown_area_run_macro": 0.9945192818802097,
+      "runs_analyzed": 10,
+      "stage_summary": {
+        "early": {
+          "g1": {
+            "accuracy_decision_macro": 0.8565707097725083,
+            "decisions": 115,
+            "free_iou_decision_macro": 0.8447293413800039,
+            "free_precision_decision_macro": 0.9189486796958625,
+            "free_recall_decision_macro": 0.9126191212560931,
+            "macro_iou_decision_macro": 0.5808958812511116,
+            "mae_decision_macro": 0.14344318491541974,
+            "occupied_iou_decision_macro": 0.3170624211222195,
+            "occupied_precision_decision_macro": 0.4684740114561324,
+            "occupied_recall_decision_macro": 0.49019389411648023
+          },
+          "g2": {
+            "accuracy_decision_macro": 0.8230360134422843,
+            "decisions": 115,
+            "free_iou_decision_macro": 0.8074971996850934,
+            "free_precision_decision_macro": 0.9208146353763803,
+            "free_recall_decision_macro": 0.8675682790526817,
+            "macro_iou_decision_macro": 0.5480197312305487,
+            "mae_decision_macro": 0.17699304105364572,
+            "occupied_iou_decision_macro": 0.2885422627760041,
+            "occupied_precision_decision_macro": 0.3860276259591712,
+            "occupied_recall_decision_macro": 0.5245496883672666
+          },
+          "g3": {
+            "accuracy_decision_macro": 0.8515500146450666,
+            "decisions": 115,
+            "free_iou_decision_macro": 0.8403089889012111,
+            "free_precision_decision_macro": 0.9153393682248079,
+            "free_recall_decision_macro": 0.9114435039138121,
+            "macro_iou_decision_macro": 0.5705543601905777,
+            "mae_decision_macro": 0.1486280472923453,
+            "occupied_iou_decision_macro": 0.3007997314799447,
+            "occupied_precision_decision_macro": 0.45456465725965317,
+            "occupied_recall_decision_macro": 0.46507039151228297
+          },
+          "mean": {
+            "accuracy_decision_macro": 0.8553283273268657,
+            "decisions": 115,
+            "free_iou_decision_macro": 0.8436523558890452,
+            "free_precision_decision_macro": 0.9183906924926581,
+            "free_recall_decision_macro": 0.9120889864437641,
+            "macro_iou_decision_macro": 0.5784669245422756,
+            "mae_decision_macro": 0.15635475794442424,
+            "occupied_iou_decision_macro": 0.3132814931955061,
+            "occupied_precision_decision_macro": 0.4639155208256319,
+            "occupied_recall_decision_macro": 0.48431911296510144
+          }
+        },
+        "late": {
+          "g1": {
+            "accuracy_decision_macro": 0.5756462346428122,
+            "decisions": 128,
+            "free_iou_decision_macro": 0.02992780196030076,
+            "free_precision_decision_macro": 0.03160096193992776,
+            "free_recall_decision_macro": 0.22746780144642953,
+            "macro_iou_decision_macro": 0.29982108406181335,
+            "mae_decision_macro": 0.41577329373928823,
+            "occupied_iou_decision_macro": 0.5697143661633259,
+            "occupied_precision_decision_macro": 0.9764610750927335,
+            "occupied_recall_decision_macro": 0.5774913130016031
+          },
+          "g2": {
+            "accuracy_decision_macro": 0.5497878983097111,
+            "decisions": 128,
+            "free_iou_decision_macro": 0.028464327928263592,
+            "free_precision_decision_macro": 0.030109688091707765,
+            "free_recall_decision_macro": 0.21885228298577164,
+            "macro_iou_decision_macro": 0.28606037252225613,
+            "mae_decision_macro": 0.443602209944831,
+            "occupied_iou_decision_macro": 0.5436564171162486,
+            "occupied_precision_decision_macro": 0.9750055992343836,
+            "occupied_recall_decision_macro": 0.5512333555818196
+          },
+          "g3": {
+            "accuracy_decision_macro": 0.5686538848888917,
+            "decisions": 128,
+            "free_iou_decision_macro": 0.029994380223535608,
+            "free_precision_decision_macro": 0.0315150334566705,
+            "free_recall_decision_macro": 0.25460649457917295,
+            "macro_iou_decision_macro": 0.29619237740481286,
+            "mae_decision_macro": 0.4204678951454899,
+            "occupied_iou_decision_macro": 0.5623903745860901,
+            "occupied_precision_decision_macro": 0.9768749618058941,
+            "occupied_recall_decision_macro": 0.5698445671654365
+          },
+          "mean": {
+            "accuracy_decision_macro": 0.5636374824810044,
+            "decisions": 128,
+            "free_iou_decision_macro": 0.029597592938932618,
+            "free_precision_decision_macro": 0.03108675011129115,
+            "free_recall_decision_macro": 0.23517908728303671,
+            "macro_iou_decision_macro": 0.2934961250525526,
+            "mae_decision_macro": 0.4266144657472412,
+            "occupied_iou_decision_macro": 0.5573946571661725,
+            "occupied_precision_decision_macro": 0.9764199610211928,
+            "occupied_recall_decision_macro": 0.5648368325402291
+          }
+        },
+        "mid": {
+          "g1": {
+            "accuracy_decision_macro": 0.7339360970927757,
+            "decisions": 122,
+            "free_iou_decision_macro": 0.5926205211857298,
+            "free_precision_decision_macro": 0.6604440850958755,
+            "free_recall_decision_macro": 0.8406649507703531,
+            "macro_iou_decision_macro": 0.5494932118526396,
+            "mae_decision_macro": 0.26389416770569496,
+            "occupied_iou_decision_macro": 0.5063659025195493,
+            "occupied_precision_decision_macro": 0.7695701069420109,
+            "occupied_recall_decision_macro": 0.5984347224975174
+          },
+          "g2": {
+            "accuracy_decision_macro": 0.713822004007533,
+            "decisions": 122,
+            "free_iou_decision_macro": 0.5702440061224702,
+            "free_precision_decision_macro": 0.652621980371392,
+            "free_recall_decision_macro": 0.8123372899933903,
+            "macro_iou_decision_macro": 0.5288253414854059,
+            "mae_decision_macro": 0.28424989483721164,
+            "occupied_iou_decision_macro": 0.487406676848342,
+            "occupied_precision_decision_macro": 0.7345756414489579,
+            "occupied_recall_decision_macro": 0.5982751162696374
+          },
+          "g3": {
+            "accuracy_decision_macro": 0.7354446088553135,
+            "decisions": 122,
+            "free_iou_decision_macro": 0.6006895101482405,
+            "free_precision_decision_macro": 0.6569452477447503,
+            "free_recall_decision_macro": 0.8611411338892594,
+            "macro_iou_decision_macro": 0.5518959797532527,
+            "mae_decision_macro": 0.2615588100291825,
+            "occupied_iou_decision_macro": 0.5031024493582651,
+            "occupied_precision_decision_macro": 0.7924108718006037,
+            "occupied_recall_decision_macro": 0.580523424885638
+          },
+          "mean": {
+            "accuracy_decision_macro": 0.7330155768157345,
+            "decisions": 122,
+            "free_iou_decision_macro": 0.5963407035528163,
+            "free_precision_decision_macro": 0.6574059355000762,
+            "free_recall_decision_macro": 0.8525361136964877,
+            "macro_iou_decision_macro": 0.5494186569759398,
+            "mae_decision_macro": 0.2699009572335696,
+            "occupied_iou_decision_macro": 0.5024966103990635,
+            "occupied_precision_decision_macro": 0.7808226226014704,
+            "occupied_recall_decision_macro": 0.5865609462465956
+          }
+        }
       },
-      "late_run_macro_accuracy_mean": 0.9099716267820114,
-      "late_run_macro_accuracy_std": 0.04994483002813625,
-      "late_run_macro_macro_iou_mean": 0.7151510403209429,
-      "late_run_macro_macro_iou_std": 0.11738953311474017,
-      "late_run_macro_mae_mean": 0.09141572632449327,
-      "late_run_macro_mae_std": 0.05012611958342782,
-      "overall_prediction_pair_micro": {
-        "accuracy": 0.8545795678957316,
-        "free_iou": 0.8389066196103965,
-        "free_precision": 0.9419008865140767,
-        "free_recall": 0.8846856849338645,
-        "macro_iou": 0.6198786556223976,
-        "occupied_iou": 0.4008506916343987,
-        "occupied_precision": 0.4963835220428812,
-        "occupied_recall": 0.6756194553304898
-      },
-      "run_macro_accuracy_mean": 0.8633170082531227,
-      "run_macro_accuracy_std": 0.01296438095564204,
-      "run_macro_macro_iou_mean": 0.6590905866730545,
-      "run_macro_macro_iou_std": 0.02937170645655556,
-      "run_macro_mae_mean": 0.1370730133689107,
-      "run_macro_mae_std": 0.012902590462676016
-    },
-    "g3": {
-      "final_reference_diagnostic": {
-        "run_macro_accuracy_mean": 0.8847413754639477,
-        "run_macro_macro_iou_mean": 0.6784236382919031,
-        "run_macro_mae_mean": 0.11623258628891309
-      },
-      "late_class_metrics": {
-        "free_iou_mean": 0.4864219304876616,
-        "free_iou_std": 0.19077198177814925,
-        "free_precision_mean": 0.6808134808008306,
-        "free_precision_std": 0.286329686950602,
-        "free_recall_mean": 0.6193901993111456,
-        "free_recall_std": 0.2023213743494752,
-        "occupied_iou_mean": 0.880924324231031,
-        "occupied_iou_std": 0.08942553596142548,
-        "occupied_precision_mean": 0.9385112813722442,
-        "occupied_precision_std": 0.02857547618382167,
-        "occupied_recall_mean": 0.9331563443569338,
-        "occupied_recall_std": 0.08935051841630652
-      },
-      "late_run_macro_accuracy_mean": 0.9022949783340897,
-      "late_run_macro_accuracy_std": 0.059925187152634105,
-      "late_run_macro_macro_iou_mean": 0.7010644317071724,
-      "late_run_macro_macro_iou_std": 0.11813134769720234,
-      "late_run_macro_mae_mean": 0.1016990354761708,
-      "late_run_macro_mae_std": 0.06124030914577195,
-      "overall_prediction_pair_micro": {
-        "accuracy": 0.8795715975830688,
-        "free_iou": 0.8681139617686735,
-        "free_precision": 0.9327772441403723,
-        "free_recall": 0.9260501071884673,
-        "macro_iou": 0.6435932418172814,
-        "occupied_iou": 0.4190725218658892,
-        "occupied_precision": 0.5784890521046873,
-        "occupied_recall": 0.603288897282948
-      },
-      "run_macro_accuracy_mean": 0.8842190612159756,
-      "run_macro_accuracy_std": 0.012520789484307245,
-      "run_macro_macro_iou_mean": 0.6823892151226423,
-      "run_macro_macro_iou_std": 0.03343964625238045,
-      "run_macro_mae_mean": 0.11665060367234818,
-      "run_macro_mae_std": 0.012699404365789861
-    },
-    "mean": {
-      "final_reference_diagnostic": {
-        "run_macro_accuracy_mean": 0.8898553995052817,
-        "run_macro_macro_iou_mean": 0.6908514616689421,
-        "run_macro_mae_mean": 0.12223356304489597
-      },
-      "late_class_metrics": {
-        "free_iou_mean": 0.5036164668465177,
-        "free_iou_std": 0.19562200070264543,
-        "free_precision_mean": 0.7152679518480595,
-        "free_precision_std": 0.2966474650111266,
-        "free_recall_mean": 0.6198387741306093,
-        "free_recall_std": 0.20288805609292063,
-        "occupied_iou_mean": 0.88737756304246,
-        "occupied_iou_std": 0.09115067936295268,
-        "occupied_precision_mean": 0.9392078264626335,
-        "occupied_precision_std": 0.028395011555344397,
-        "occupied_recall_mean": 0.9399461648213274,
-        "occupied_recall_std": 0.09206192588430286
-      },
-      "late_run_macro_accuracy_mean": 0.9079452515992517,
-      "late_run_macro_accuracy_std": 0.06127350663335682,
-      "late_run_macro_macro_iou_mean": 0.7121636816111555,
-      "late_run_macro_macro_iou_std": 0.12154288310751632,
-      "late_run_macro_mae_mean": 0.09604638595918141,
-      "late_run_macro_mae_std": 0.057968130698047834,
-      "overall_prediction_pair_micro": {
-        "accuracy": 0.8871131754178937,
-        "free_iou": 0.8756256216679638,
-        "free_precision": 0.9389878920144421,
-        "free_recall": 0.9284498226469947,
-        "macro_iou": 0.6628138230505152,
-        "occupied_iou": 0.4500020244330667,
-        "occupied_precision": 0.601282662902615,
-        "occupied_recall": 0.6413953024746736
-      },
-      "run_macro_accuracy_mean": 0.888927054686895,
-      "run_macro_accuracy_std": 0.01327532785741497,
-      "run_macro_macro_iou_mean": 0.6934529158240569,
-      "run_macro_macro_iou_std": 0.034464749633850024,
-      "run_macro_mae_mean": 0.12291985638445287,
-      "run_macro_mae_std": 0.012394224124432866
+      "support": {
+        "evaluated_area_m2_decision_sum": 31177.1025,
+        "evaluated_cell_count_decision_sum": 12470841,
+        "evaluated_free_area_m2_decision_sum": 23532.310000000005,
+        "evaluated_free_count_decision_sum": 9412924,
+        "evaluated_occupied_area_m2_decision_sum": 7644.792500000001,
+        "evaluated_occupied_count_decision_sum": 3057917,
+        "last_n": {
+          "decisions_evaluated": 100,
+          "evaluated_area_m2_decision_sum": 1626.17,
+          "evaluated_cell_count_decision_sum": 650468,
+          "evaluated_free_area_m2_decision_sum": 24.330000000000005,
+          "evaluated_free_count_decision_sum": 9732,
+          "evaluated_occupied_area_m2_decision_sum": 1601.8400000000001,
+          "evaluated_occupied_count_decision_sum": 640736,
+          "reference_fraction_of_unknown_area_run_macro": 0.9999999701976782
+        }
+      }
     }
   },
-  "reference": "first_later_policy_decision_observation",
   "requested_runs": [
     "mpx_001",
     "mpx_002",
@@ -241,164 +1241,6 @@
     "mpx_009",
     "mpx_010"
   ],
-  "reveal_delay": {
-    "run_macro_mean_decisions_until_reveal": 4.2236585371528585,
-    "run_macro_mean_time_until_reveal_s": 130.6930834761331
-  },
-  "runs_analyzed": 10,
-  "stage_summary": {
-    "early": {
-      "g1": {
-        "accuracy_decision_macro": 0.8864338181815914,
-        "decisions": 115,
-        "free_iou_decision_macro": 0.8773027834324332,
-        "free_precision_decision_macro": 0.940325914392553,
-        "free_recall_decision_macro": 0.9291347708862457,
-        "macro_iou_decision_macro": 0.6319268231657765,
-        "mae_decision_macro": 0.11374721810303494,
-        "occupied_iou_decision_macro": 0.3865508628991201,
-        "occupied_precision_decision_macro": 0.532646959026433,
-        "occupied_recall_decision_macro": 0.5731371530986326
-      },
-      "g2": {
-        "accuracy_decision_macro": 0.8527946100209676,
-        "decisions": 115,
-        "free_iou_decision_macro": 0.8400675455802598,
-        "free_precision_decision_macro": 0.9432666831447979,
-        "free_recall_decision_macro": 0.8848922030532381,
-        "macro_iou_decision_macro": 0.591364879908313,
-        "mae_decision_macro": 0.14733555522170597,
-        "occupied_iou_decision_macro": 0.34266221423636617,
-        "occupied_precision_decision_macro": 0.4300343967879895,
-        "occupied_recall_decision_macro": 0.6107536112619888
-      },
-      "g3": {
-        "accuracy_decision_macro": 0.8766900685952923,
-        "decisions": 115,
-        "free_iou_decision_macro": 0.8679199269197589,
-        "free_precision_decision_macro": 0.9334417222310083,
-        "free_recall_decision_macro": 0.9252166914627254,
-        "macro_iou_decision_macro": 0.6101659676736544,
-        "mae_decision_macro": 0.12359693963474283,
-        "occupied_iou_decision_macro": 0.3524120084275499,
-        "occupied_precision_decision_macro": 0.5028139182791096,
-        "occupied_recall_decision_macro": 0.5267488100606745
-      },
-      "mean": {
-        "accuracy_decision_macro": 0.8859719210797714,
-        "decisions": 115,
-        "free_iou_decision_macro": 0.8770003707690587,
-        "free_precision_decision_macro": 0.9401409248375017,
-        "free_recall_decision_macro": 0.9289115629820744,
-        "macro_iou_decision_macro": 0.6317933143203429,
-        "mae_decision_macro": 0.12822657116434674,
-        "occupied_iou_decision_macro": 0.38658625787162704,
-        "occupied_precision_decision_macro": 0.5311633167044326,
-        "occupied_recall_decision_macro": 0.5709433845504548
-      }
-    },
-    "late": {
-      "g1": {
-        "accuracy_decision_macro": 0.8955620285569321,
-        "decisions": 128,
-        "free_iou_decision_macro": 0.5121667971977767,
-        "free_precision_decision_macro": 0.7016903513016275,
-        "free_recall_decision_macro": 0.6184829831958275,
-        "macro_iou_decision_macro": 0.6972176042525197,
-        "mae_decision_macro": 0.10567044517029463,
-        "occupied_iou_decision_macro": 0.8623568520092126,
-        "occupied_precision_decision_macro": 0.9191116795323864,
-        "occupied_recall_decision_macro": 0.9314235404189382
-      },
-      "g2": {
-        "accuracy_decision_macro": 0.8874602490556114,
-        "decisions": 128,
-        "free_iou_decision_macro": 0.500619834316512,
-        "free_precision_decision_macro": 0.6695822131060407,
-        "free_recall_decision_macro": 0.6198334516452448,
-        "macro_iou_decision_macro": 0.6871443455734757,
-        "mae_decision_macro": 0.1125041752417506,
-        "occupied_iou_decision_macro": 0.8532859929249905,
-        "occupied_precision_decision_macro": 0.9161272697594783,
-        "occupied_recall_decision_macro": 0.9228303426719737
-      },
-      "g3": {
-        "accuracy_decision_macro": 0.8852514848360751,
-        "decisions": 128,
-        "free_iou_decision_macro": 0.4937148135833434,
-        "free_precision_decision_macro": 0.6531499483512145,
-        "free_recall_decision_macro": 0.6223987199371793,
-        "macro_iou_decision_macro": 0.6818407241394151,
-        "mae_decision_macro": 0.11584491234060412,
-        "occupied_iou_decision_macro": 0.8493019332090929,
-        "occupied_precision_decision_macro": 0.9195646016531247,
-        "occupied_recall_decision_macro": 0.9153672677291907
-      },
-      "mean": {
-        "accuracy_decision_macro": 0.8918356796393159,
-        "decisions": 128,
-        "free_iou_decision_macro": 0.5052172374194666,
-        "free_precision_decision_macro": 0.6731387858514515,
-        "free_recall_decision_macro": 0.6243901633151302,
-        "macro_iou_decision_macro": 0.6915487229967382,
-        "mae_decision_macro": 0.11133984454893658,
-        "occupied_iou_decision_macro": 0.8576849937748044,
-        "occupied_precision_decision_macro": 0.9216879830416441,
-        "occupied_recall_decision_macro": 0.9231141932037944
-      }
-    },
-    "mid": {
-      "g1": {
-        "accuracy_decision_macro": 0.8803252813513686,
-        "decisions": 122,
-        "free_iou_decision_macro": 0.8303544566999164,
-        "free_precision_decision_macro": 0.923522774723818,
-        "free_recall_decision_macro": 0.8885945944571998,
-        "macro_iou_decision_macro": 0.7347215840254544,
-        "mae_decision_macro": 0.12005143419428192,
-        "occupied_iou_decision_macro": 0.6390887113509922,
-        "occupied_precision_decision_macro": 0.7393873612145558,
-        "occupied_recall_decision_macro": 0.8154414660803904
-      },
-      "g2": {
-        "accuracy_decision_macro": 0.8630330422047141,
-        "decisions": 122,
-        "free_iou_decision_macro": 0.8064658032561746,
-        "free_precision_decision_macro": 0.9219228244620795,
-        "free_recall_decision_macro": 0.8609318636369115,
-        "macro_iou_decision_macro": 0.7111003280503371,
-        "mae_decision_macro": 0.13777827853992325,
-        "occupied_iou_decision_macro": 0.6157348528444994,
-        "occupied_precision_decision_macro": 0.6965563903656189,
-        "occupied_recall_decision_macro": 0.8315087028049113
-      },
-      "g3": {
-        "accuracy_decision_macro": 0.890941964021188,
-        "decisions": 122,
-        "free_iou_decision_macro": 0.8441898389409179,
-        "free_precision_decision_macro": 0.9198692583175072,
-        "free_recall_decision_macro": 0.9076334487932857,
-        "macro_iou_decision_macro": 0.750888286951802,
-        "mae_decision_macro": 0.11042975815961091,
-        "occupied_iou_decision_macro": 0.6575867349626862,
-        "occupied_precision_decision_macro": 0.7786513673397651,
-        "occupied_recall_decision_macro": 0.8027498269526989
-      },
-      "mean": {
-        "accuracy_decision_macro": 0.8903442635004849,
-        "decisions": 122,
-        "free_iou_decision_macro": 0.8433545977227657,
-        "free_precision_decision_macro": 0.9246596284988265,
-        "free_recall_decision_macro": 0.9017571596312661,
-        "macro_iou_decision_macro": 0.7521124725963891,
-        "mae_decision_macro": 0.12275315668576288,
-        "occupied_iou_decision_macro": 0.6608703474700127,
-        "occupied_precision_decision_macro": 0.766084284148052,
-        "occupied_recall_decision_macro": 0.8195363642498312
-      }
-    }
-  },
-  "target_stability": {
-    "run_macro_first_vs_final_class_agreement": 0.9615012372522005
-  }
+  "structural_ground_truth": "/home/dell/turtlebot4_project/mapex_lab/ground_truth/new_room/generated/new_room_structural_gt_v2.npz",
+  "structural_gt_provenance_warnings": []
 }
