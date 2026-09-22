@@ -13,15 +13,16 @@ from __future__ import annotations
 
 import argparse
 import csv
+import heapq
 import json
 import math
 from collections import defaultdict
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
 import numpy as np
 from scipy import ndimage
-from scipy.optimize import linear_sum_assignment
 from scipy.spatial import cKDTree
 
 import d1_gate_p as gate_p
@@ -188,20 +189,239 @@ def _coords(mask: np.ndarray) -> np.ndarray:
     return np.argwhere(mask).astype(np.int32, copy=False)
 
 
+
+def _sqrt2_linear_sign(axial: int, diagonal: int) -> int:
+    """Exact sign of axial + diagonal*sqrt(2), for integer coefficients."""
+    if axial == 0:
+        return (diagonal > 0) - (diagonal < 0)
+    if diagonal == 0:
+        return (axial > 0) - (axial < 0)
+    if axial > 0 and diagonal > 0:
+        return 1
+    if axial < 0 and diagonal < 0:
+        return -1
+
+    axial_sq = axial * axial
+    diagonal_sq_twice = 2 * diagonal * diagonal
+    if axial > 0:
+        return 1 if axial_sq > diagonal_sq_twice else -1
+    return 1 if diagonal_sq_twice > axial_sq else -1
+
+
+@dataclass(frozen=True)
+class _MatchCost:
+    """Ordered additive matching cost.
+
+    On the frozen 0.05 m canonical grid with tolerances 0, 0.05 and 0.10 m,
+    eligible offsets have distances 0, 1, sqrt(2), or 2 canonical cells.
+    The axial/diagonal pair therefore represents total Euclidean distance
+    exactly up to the common resolution factor.
+    """
+
+    axial: int = 0
+    diagonal: int = 0
+    lex: int = 0
+
+    def __add__(self, other: "_MatchCost") -> "_MatchCost":
+        return _MatchCost(
+            self.axial + other.axial,
+            self.diagonal + other.diagonal,
+            self.lex + other.lex,
+        )
+
+    def __sub__(self, other: "_MatchCost") -> "_MatchCost":
+        return _MatchCost(
+            self.axial - other.axial,
+            self.diagonal - other.diagonal,
+            self.lex - other.lex,
+        )
+
+    def __neg__(self) -> "_MatchCost":
+        return _MatchCost(-self.axial, -self.diagonal, -self.lex)
+
+    def __lt__(self, other: "_MatchCost") -> bool:
+        primary = _sqrt2_linear_sign(
+            self.axial - other.axial,
+            self.diagonal - other.diagonal,
+        )
+        if primary:
+            return primary < 0
+        return self.lex < other.lex
+
+
+_ZERO_MATCH_COST = _MatchCost()
+
+
+def _edge_primary_cost(
+    gt_cell: np.ndarray,
+    pred_cell: np.ndarray,
+) -> tuple[int, int]:
+    dr = int(gt_cell[0]) - int(pred_cell[0])
+    dc = int(gt_cell[1]) - int(pred_cell[1])
+    squared = dr * dr + dc * dc
+    if squared == 0:
+        return 0, 0
+    if squared == 1:
+        return 1, 0
+    if squared == 2:
+        return 0, 1
+    if squared == 4:
+        return 2, 0
+    raise AssertionError(
+        "Frozen R002 boundary tolerances produced an unsupported canonical "
+        f"offset: dr={dr}, dc={dc}, squared={squared}"
+    )
+
+
+def _min_cost_component_matching(
+    comp_g: list[int],
+    comp_p: list[int],
+    eligible_pairs: list[tuple[int, int, float]],
+    gt_sorted: np.ndarray,
+    pred_sorted: np.ndarray,
+) -> list[tuple[int, int, float]]:
+    """Exact frozen matching for one connected bipartite component.
+
+    Successive shortest augmenting paths maximize cardinality by augmenting
+    until no path remains. Edge cost then minimizes exact Euclidean distance;
+    among equal-cardinality/equal-distance matchings, a superincreasing binary
+    weight selects the lexicographically smallest set of
+    (GT_row, GT_col, Pred_row, Pred_col) pairs.
+    """
+    if not eligible_pairs:
+        return []
+
+    g_local = {global_i: local_i for local_i, global_i in enumerate(comp_g)}
+    p_local = {global_i: local_i for local_i, global_i in enumerate(comp_p)}
+
+    eligible_pairs = sorted(
+        eligible_pairs,
+        key=lambda item: (
+            int(gt_sorted[item[0], 0]),
+            int(gt_sorted[item[0], 1]),
+            int(pred_sorted[item[1], 0]),
+            int(pred_sorted[item[1], 1]),
+        ),
+    )
+    edge_count = len(eligible_pairs)
+    lex_base = 1 << edge_count
+
+    source = 0
+    gt_offset = 1
+    pred_offset = gt_offset + len(comp_g)
+    sink = pred_offset + len(comp_p)
+    node_count = sink + 1
+
+    graph: list[list[list]] = [[] for _ in range(node_count)]
+
+    def add_edge(u: int, v: int, cost: _MatchCost) -> list:
+        forward = [v, len(graph[v]), 1, cost]
+        reverse = [u, len(graph[u]), 0, -cost]
+        graph[u].append(forward)
+        graph[v].append(reverse)
+        return forward
+
+    for gi in comp_g:
+        add_edge(source, gt_offset + g_local[gi], _ZERO_MATCH_COST)
+    for pj in comp_p:
+        add_edge(pred_offset + p_local[pj], sink, _ZERO_MATCH_COST)
+
+    pair_edges: list[tuple[int, int, float, list]] = []
+    for rank, (gi, pj, distance) in enumerate(eligible_pairs):
+        axial, diagonal = _edge_primary_cost(
+            gt_sorted[gi],
+            pred_sorted[pj],
+        )
+        lex_weight = 1 << (edge_count - rank - 1)
+        lex_penalty = lex_base - lex_weight
+        forward = add_edge(
+            gt_offset + g_local[gi],
+            pred_offset + p_local[pj],
+            _MatchCost(axial, diagonal, lex_penalty),
+        )
+        pair_edges.append((gi, pj, distance, forward))
+
+    potentials = [_ZERO_MATCH_COST for _ in range(node_count)]
+
+    while True:
+        distances: list[_MatchCost | None] = [None] * node_count
+        previous: list[tuple[int, int] | None] = [None] * node_count
+        distances[source] = _ZERO_MATCH_COST
+        heap: list[tuple[_MatchCost, int]] = [(_ZERO_MATCH_COST, source)]
+
+        while heap:
+            current_cost, u = heapq.heappop(heap)
+            if distances[u] != current_cost:
+                continue
+            for edge_index, edge in enumerate(graph[u]):
+                v, _, capacity, edge_cost = edge
+                if capacity <= 0:
+                    continue
+                reduced = edge_cost + potentials[u] - potentials[v]
+                if reduced < _ZERO_MATCH_COST:
+                    raise AssertionError(
+                        "negative reduced cost in exact R002 matching"
+                    )
+                candidate = current_cost + reduced
+                old = distances[v]
+                predecessor_key = (u, edge_index)
+                if (
+                    old is None
+                    or candidate < old
+                    or (
+                        candidate == old
+                        and (
+                            previous[v] is None
+                            or predecessor_key < previous[v]
+                        )
+                    )
+                ):
+                    distances[v] = candidate
+                    previous[v] = predecessor_key
+                    heapq.heappush(heap, (candidate, v))
+
+        if distances[sink] is None:
+            break
+
+        for node, distance in enumerate(distances):
+            if distance is not None:
+                potentials[node] = potentials[node] + distance
+
+        v = sink
+        while v != source:
+            pred = previous[v]
+            if pred is None:
+                raise AssertionError("broken augmenting path in R002 matching")
+            u, edge_index = pred
+            edge = graph[u][edge_index]
+            reverse_index = edge[1]
+            edge[2] -= 1
+            graph[v][reverse_index][2] += 1
+            v = u
+
+    matched: list[tuple[int, int, float]] = []
+    for gi, pj, distance, edge in pair_edges:
+        if edge[2] == 0:
+            matched.append((gi, pj, distance))
+
+    matched.sort(
+        key=lambda item: (
+            int(gt_sorted[item[0], 0]),
+            int(gt_sorted[item[0], 1]),
+            int(pred_sorted[item[1], 0]),
+            int(pred_sorted[item[1], 1]),
+        )
+    )
+    return matched
+
+
 def _boundary_matching(
     gt_coords: np.ndarray,
     pred_coords: np.ndarray,
     resolution_m: float,
     tolerance_m: float,
 ) -> dict:
-    """Deterministic maximum-cardinality, minimum-distance one-to-one matching.
-
-    Eligible graph is decomposed into connected bipartite components. Each
-    component is solved with an assignment containing explicit unmatched
-    dummies. GT/pred coordinates are sorted lexicographically before assignment;
-    a tiny rank perturbation is used only to make exact equal-distance optima
-    deterministic in lexicographic pair order.
-    """
+    """Frozen deterministic maximum-cardinality one-to-one boundary matching."""
     gt_coords = np.asarray(gt_coords, dtype=np.int32).reshape((-1, 2))
     pred_coords = np.asarray(pred_coords, dtype=np.int32).reshape((-1, 2))
 
@@ -266,8 +486,8 @@ def _boundary_matching(
     components: list[tuple[list[int], list[int]]] = []
 
     while unvisited_gt:
-        start = min(unvisited_gt)
-        stack: list[tuple[str, int]] = [("g", start)]
+        start_gt = min(unvisited_gt)
+        stack: list[tuple[str, int]] = [("g", start_gt)]
         comp_g: set[int] = set()
         comp_p: set[int] = set()
         while stack:
@@ -290,72 +510,23 @@ def _boundary_matching(
         components.append((sorted(comp_g), sorted(comp_p)))
 
     matched_pairs: list[tuple[int, int, float]] = []
-
     for comp_g, comp_p in components:
-        g = len(comp_g)
-        p = len(comp_p)
-        size = g + p
-        # One fewer real match creates two unmatched assignments. Choose a
-        # penalty larger than the maximum possible total eligible distance in
-        # this component so cardinality is optimized before distance.
-        max_pairs = min(g, p)
-        unmatched_penalty = (
-            (max_pairs + 1)
-            * (float(tolerance_m) + float(resolution_m) + 1.0)
+        comp_p_set = set(comp_p)
+        component_edges = [
+            (gi, pj, edge_distance[(gi, pj)])
+            for gi in comp_g
+            for pj in gt_adj[gi]
+            if pj in comp_p_set
+        ]
+        matched_pairs.extend(
+            _min_cost_component_matching(
+                comp_g,
+                comp_p,
+                component_edges,
+                gt_sorted,
+                pred_sorted,
+            )
         )
-        forbidden = unmatched_penalty * (size + 1) * 1000.0
-        cost = np.full((size, size), forbidden, dtype=np.float64)
-
-        g_local = {
-            global_i: local_i
-            for local_i, global_i in enumerate(comp_g)
-        }
-        p_local = {
-            global_i: local_i
-            for local_i, global_i in enumerate(comp_p)
-        }
-
-        eligible_pairs = sorted(
-            (
-                (gi, pj, edge_distance[(gi, pj)])
-                for gi in comp_g
-                for pj in gt_adj[gi]
-                if pj in p_local
-            ),
-            key=lambda item: (
-                int(gt_sorted[item[0], 0]),
-                int(gt_sorted[item[0], 1]),
-                int(pred_sorted[item[1], 0]),
-                int(pred_sorted[item[1], 1]),
-            ),
-        )
-        pair_count = max(len(eligible_pairs), 1)
-        # Eligible pairs are already sorted by frozen lexicographic key.
-        # This perturbation only resolves exactly equal-distance optima; its
-        # total magnitude is kept many orders below a canonical-cell distance.
-        tie_unit = (
-            np.finfo(np.float64).eps
-            * max(float(resolution_m), 1.0)
-            / float(pair_count * pair_count + 1)
-        )
-        for rank, (gi, pj, distance) in enumerate(eligible_pairs):
-            cost[g_local[gi], p_local[pj]] = distance + tie_unit * rank
-
-        cost[:g, p:] = unmatched_penalty
-        cost[g:, :p] = unmatched_penalty
-        cost[g:, p:] = 0.0
-
-        row_ind, col_ind = linear_sum_assignment(cost)
-        for rr, cc in zip(row_ind.tolist(), col_ind.tolist()):
-            if rr < g and cc < p:
-                gi = comp_g[rr]
-                pj = comp_p[cc]
-                key = (gi, pj)
-                if key not in edge_distance:
-                    raise AssertionError(
-                        "assignment selected an ineligible boundary pair"
-                    )
-                matched_pairs.append((gi, pj, edge_distance[key]))
 
     matched_pairs.sort(
         key=lambda item: (
