@@ -1,5 +1,15 @@
 # Experiment Notes
 
+## 2026-09-22 — Canonicalize reviewed R002 GT-semantics diagnostic
+
+- What changed: synced the independently ACCEPTED R002 evaluator and toy tests into technical `main` byte-identically from accepted implementation `feb94eaa9c1ba5aa4f9993792dae454bc4edcd60`; updated D1 STATUS/README/research log with the reviewed one-run `mpx_001` evidence.
+- Validation: pre-score compile PASS; 12/12 unit tests PASS; `mpx_001` exit code 0 with 35/35 decisions, Gate-P support parity True, topology-invalid 0; independent H010 code review verdict ACCEPT.
+- Scientific scope: R002 remains a post-hoc diagnostic. Reference A / negative Gate P2 are preserved. One-run evidence is mixed/negative late and does not rescue direct D1.
+- No methodology changes: threshold 0.5, B tolerances, one-to-one matching order, C0 0.05 m / 4-connectivity, topology domain and seed rule remain frozen.
+- No cohort expansion: `mpx_002...mpx_010` were not run; further expansion requires explicit USER/WORK authorization.
+- Raw first-score artifacts remain local/untracked; canonical repo stores accepted evaluator/tests plus reviewed summary/reproducibility notes.
+- Next action: USER verifies fetched `origin/main` and local status without overwriting unrelated work; then close R002-SYNC if verification passes.
+
 ## 2026-09-21 — Fix Gate-P2 fractional origin reprojection
 
 - What changed: removed the exact integer-lattice origin assertion in `analysis/d1/d1_gate_p.py`; P2 now uses the same nearest-cell rounding reprojection as the canonical MapEx evaluator.
