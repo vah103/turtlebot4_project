@@ -132,6 +132,18 @@ Detailed chronology and reproducibility notes are in:
 - `analysis/d1/D1_RESEARCH_LOG.md`
 - `analysis/d1/README.md`.
 
+### Metric-calibration caveat — 2026-09-22
+
+USER ran the existing observed-only structural audit on final `mpx_001`:
+
+- final observed occupied IoU vs `new_room_structural_gt_v2` = **0.3886051561**;
+- final coverage = **0.998540146**;
+- decisions 31..35 returned the same final observed IoU/map state.
+
+Current conclusion: raw pixel-wise structural occupied IoU remains useful as a strict diagnostic, but should **not be used alone as an absolute claim that MapEx prediction is good or bad** until the metric is calibrated against observed-map reproducibility. This is a limitation on interpretation, not a reversal of Gate P2 or Reference A.
+
+Further calibration is **paused by USER**. Do not automatically run a Reference-B final-observed "ceiling" test or multi-run expansion.
+
 **NEXT ACTION**
 - preserve the reviewed R002 implementation and one-run result as canonical technical evidence;
 - USER/WORK decides whether to authorize a frozen confirmatory expansion or stop/reframe D1;
@@ -306,6 +318,7 @@ Conclusion: Way1 works in New Room but does not transfer cleanly to Hospital wit
 - `mpx_w2_001` is an integration/sanity run, not a prospective validation sample.
 - Current simulator seed policy is intentionally uncontrolled Gazebo default; comparisons should therefore use multiple-run statistics rather than assume exact paired seeds.
 - Observed-only occupied IoU is useful for structural-quality auditing and is not an online stop input.
+- New `mpx_001` calibration evidence: the nearly-complete final observed SLAM map (final coverage `0.998540146`) scores only **0.3886051561 occupied IoU** against `new_room_structural_gt_v2` under the existing observed-only audit. Therefore raw structural-GT occupied IoU is not yet calibrated well enough to be used alone as an absolute prediction-quality verdict; it may mix prediction error with SLAM/alignment/discretization/wall-thickness/GT-semantic mismatch. This does not invalidate Reference A or erase Gate P2.
 - Offline `final_occupied_iou` from the current evaluator is a prediction-map-vs-structural-GT metric and should not be compared numerically as if it were the same metric as historical observed-only IoU loss.
 - Way2 runs currently use `prediction_source = mean_map`; older MapEx/NF evaluation records may use `alltrain`. Check evaluator semantics before cross-method IoU comparisons.
 - TU remains weakly discriminative and is not a primary stop signal.
@@ -316,7 +329,7 @@ Conclusion: Way1 works in New Room but does not transfer cleanly to Hospital wit
 # Current next actions
 
 1. Treat `references/ES.md` as the canonical implementation specification for D1...D6, while respecting the newer Gate P2 evidence recorded above.
-2. Complete the focused D1 Gate P2 diagnostic before any Gate U threshold work or online direct-D1 implementation.
+2. The focused D1 diagnostic has now identified a structural-IoU calibration caveat: final observed `mpx_001` itself scores only `0.3886051561` occupied IoU vs structural GT despite `0.998540146` final coverage. Further calibration (for example final-observed Reference-B boundary F1 and multi-run replication) is **paused by USER**; do not start it automatically. Gate U remains blocked for the current direct-D1 formulation.
 3. Shared stopping infrastructure and D2 plumbing may continue where they are independent of the failed direct D1 free-space assumption.
 4. Do not implement the current direct D1 remaining-free stopping rule unless the diagnostic reveals a concrete evaluation artifact or USER approves a revised formulation.
 5. Use development data to choose and freeze any surviving/revised direction's thresholds before prospective validation. Do not reuse frozen Way1/Way2 constants by default.
