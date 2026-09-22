@@ -132,6 +132,122 @@ class BoundaryMatchingTests(unittest.TestCase):
         self.assertEqual(pred_empty["f1"], 0.0)
 
 
+    def test_large_component_keeps_maximum_cardinality_before_distance(self):
+        # Full matching costs 0.05 m per pair. Dropping the first GT would
+        # allow all remaining pairs to match exactly, so this catches any
+        # implementation that trades cardinality for a lower total distance.
+        n = 500
+        gt = np.column_stack(
+            (
+                np.zeros(n, dtype=np.int32),
+                np.arange(n, dtype=np.int32),
+            )
+        )
+        pred = np.column_stack(
+            (
+                np.zeros(n, dtype=np.int32),
+                np.arange(1, n + 1, dtype=np.int32),
+            )
+        )
+        result = r002._boundary_matching(
+            gt,
+            pred,
+            0.05,
+            0.10,
+        )
+        self.assertEqual(result["matched"], n)
+
+    def test_runtime_projection_uses_zero_free_positive_occupied(self):
+        observed = r002.gate_p.RawGrid(
+            data=np.asarray(
+                [[-1, 0], [10, 100]],
+                dtype=np.int16,
+            ),
+            resolution=0.10,
+            origin_x=0.0,
+            origin_y=0.0,
+            origin_yaw=0.0,
+            source_stamp_s=1.0,
+        )
+        gt = r002.gate_p.StructuralGT(
+            data=np.zeros((4, 4), dtype=np.int16),
+            evaluation_mask=np.ones((4, 4), dtype=bool),
+            resolution=0.05,
+            origin_x=0.0,
+            origin_y=0.0,
+            ground_truth_id="toy",
+            canvas_id="toy",
+        )
+        projection = r002._canonical_projection(observed, gt)
+        self.assertEqual(
+            int(np.count_nonzero(projection["unknown"])),
+            4,
+        )
+        self.assertEqual(
+            int(np.count_nonzero(projection["observed_free"])),
+            4,
+        )
+        self.assertEqual(
+            int(np.count_nonzero(projection["observed_occupied"])),
+            8,
+        )
+        self.assertTrue(
+            np.array_equal(
+                projection["universe"],
+                projection["unknown"],
+            )
+        )
+
+
+class C0SeedTests(unittest.TestCase):
+    def _toy_gt(self):
+        return r002.gate_p.StructuralGT(
+            data=np.zeros((7, 7), dtype=np.int16),
+            evaluation_mask=np.ones((7, 7), dtype=bool),
+            resolution=0.05,
+            origin_x=0.0,
+            origin_y=0.0,
+            ground_truth_id="toy",
+            canvas_id="toy",
+        )
+
+    def test_seed_fallback_uses_observed_free_and_lexicographic_tie(self):
+        gt = self._toy_gt()
+        observed_free = np.zeros(gt.shape, dtype=bool)
+        topology_domain = np.ones(gt.shape, dtype=bool)
+
+        # Robot lies at the center of cell (3,3), but that cell is not observed
+        # free. Two observed-free candidates are equally distant at 0.05 m.
+        observed_free[3, 2] = True
+        observed_free[3, 4] = True
+        robot_x, robot_y = r002._cell_center(3, 3, gt)
+
+        seed, kind = r002._select_seed(
+            robot_x,
+            robot_y,
+            observed_free,
+            topology_domain,
+            gt,
+        )
+        self.assertEqual(kind, "fallback")
+        self.assertEqual(seed, (3, 2))
+
+    def test_seed_invalid_without_observed_known_free(self):
+        gt = self._toy_gt()
+        observed_free = np.zeros(gt.shape, dtype=bool)
+        topology_domain = np.ones(gt.shape, dtype=bool)
+        robot_x, robot_y = r002._cell_center(3, 3, gt)
+        seed, kind = r002._select_seed(
+            robot_x,
+            robot_y,
+            observed_free,
+            topology_domain,
+            gt,
+        )
+        self.assertIsNone(seed)
+        self.assertEqual(kind, "invalid")
+
+
 class C0MetricTests(unittest.TestCase):
     def test_empty_positive_support_is_undefined_not_perfect(self):
         empty = np.zeros((2, 2), dtype=bool)
