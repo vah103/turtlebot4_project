@@ -1628,3 +1628,458 @@ Re-run the same one-run smoke test. If clean, run the full 10-run `--reference b
 ## Relevant commit
 
 - `39125de88ace6defd07d202ccd8172d6ea1b5e19` — match D1 Gate P2 canvas reprojection semantics.
+
+
+---
+
+# 35. 2026-09-22 — Gate P2 full structural-GT experiment exposes weak late free-space fidelity
+
+## Question
+
+Does the positive Gate P1 conclusion survive when MapEx prediction is evaluated over the broader decision-time unknown region using structural ground truth, rather than only cells that the baseline later happens to observe?
+
+The key D1-specific question is:
+
+> Near exploration completion, can the ensemble-mean prediction reliably identify the remaining true free space that D1 would use to estimate map completeness?
+
+## Decision
+
+Run the finalized Gate P analyzer unchanged on the full New Room baseline cohort:
+
+```text
+mpx_001 ... mpx_010
+```
+
+using:
+
+```text
+--reference both
+prediction threshold = 0.5
+ensemble mean as the primary reported predictor
+```
+
+No methodology, threshold or analysis code was changed after pulling the tested revision.
+
+The smoke test and full cohort both completed with exit code 0.
+
+Based on the resulting P2 evidence:
+
+```text
+Gate P1 = PRELIMINARY PASS
+
+Gate P2 = STRONG NEGATIVE EVIDENCE
+          for late-stage free-space fidelity
+
+Gate P  = DOES NOT PASS
+          under the current direct predicted-remaining-free-space formulation
+```
+
+Do **not** proceed to Gate U yet.
+
+Before deciding whether D1 should be revised or stopped, perform a focused diagnostic check to verify that the observed P2 failure reflects real prediction behavior rather than an evaluation artifact.
+
+## Reason
+
+P1 had already shown useful prediction fidelity on:
+
+```text
+Unknown_t ∩ EventuallyObserved
+```
+
+but the last-10 P1 analysis was heavily right-censored.
+
+P2 removes this main selection bias by evaluating nearly all valid decision-time unknown space against structural ground truth.
+
+This broader reference is especially important because D1 ultimately depends on correctly identifying remaining **free** space, not merely achieving high overall accuracy.
+
+## Implementation
+
+Tested repository revision before committing result artifacts:
+
+```text
+6e57a40cf0dd5cef6d544533956e65e2ba8c1797
+```
+
+Smoke test:
+
+```text
+mpx_001
+reference = both
+exit code = 0
+```
+
+Full cohort:
+
+```text
+mpx_001 ... mpx_010
+reference = both
+exit code = 0
+```
+
+The run produced:
+
+```text
+P1 decision rows = 365
+P2 decision rows = 365
+
+gate_p_decisions.csv rows = 730
+gate_p_runs.csv rows      = 20
+
+references present:
+- later_observed
+- structural_gt
+
+result artifacts:
+- 2 CSV
+- 1 JSON
+- 12 figures
+```
+
+All prediction/raw-map integrity checks passed.
+
+There was:
+
+```text
+no traceback
+no provenance hard failure
+no prediction/raw identity failure
+```
+
+The experiment used the existing prediction convention:
+
+```text
+prediction < 0.5  -> free
+prediction >= 0.5 -> occupied
+```
+
+Result artifacts were committed in:
+
+```text
+e14807bbd66bc26f437b2b31c4c40b498cc239df
+```
+
+with commit message:
+
+```text
+Add D1 Gate P structural GT results
+```
+
+## Evidence / results
+
+All primary values below are ensemble-mean metrics summarized as run-macro mean ± standard deviation across the 10 runs.
+
+### Overall P1 vs P2
+
+```text
+                         P1 later_observed      P2 structural_gt
+
+accuracy                 0.88893 ± 0.01328     0.71197 ± 0.01369
+macro IoU                0.69345 ± 0.03446     0.46883 ± 0.01665
+MAE                      0.12292 ± 0.01239     0.28930 ± 0.01363
+```
+
+P2 is materially worse than P1 over the broader structural reference.
+
+### Last-10 P1 vs P2
+
+```text
+                         P1 later_observed      P2 structural_gt
+
+accuracy                 0.90795 ± 0.06127     0.55725 ± 0.03541
+macro IoU                0.71216 ± 0.12154     0.28165 ± 0.01770
+MAE                      0.09605 ± 0.05797     0.43267 ± 0.03574
+
+free precision           0.71527 ± 0.29665     0.00796 ± 0.01280
+free recall              0.61984 ± 0.20289     0.13595 ± 0.09431
+free IoU                 0.50362 ± 0.19562     0.00760 ± 0.01210
+
+occupied precision       0.93921 ± 0.02840     0.98079 ± 0.02127
+occupied recall          0.93995 ± 0.09206     0.56163 ± 0.03331
+occupied IoU             0.88738 ± 0.09115     0.55570 ± 0.03596
+```
+
+The most important D1-specific observations are:
+
+```text
+last-10 free recall:
+0.61984 -> 0.13595
+```
+
+and:
+
+```text
+last-10 free IoU:
+0.50362 -> 0.00760
+```
+
+when changing from P1 to P2.
+
+This means that the positive P1 result does not transfer to the broader late-stage unknown region.
+
+### P1-versus-P2 run-level differences
+
+Mean P2-minus-P1 difference across runs:
+
+```text
+                         overall                 last-10
+
+accuracy                 -0.17696 ± 0.02057     -0.35070 ± 0.07549
+macro IoU                -0.22463 ± 0.03159     -0.43051 ± 0.11825
+MAE                      +0.16638 ± 0.02163     +0.33662 ± 0.07760
+
+free precision           -0.36932 ± 0.02844     -0.70731 ± 0.29518
+free recall              -0.21215 ± 0.05487     -0.48389 ± 0.26275
+free IoU                 -0.32559 ± 0.03551     -0.49601 ± 0.19039
+
+occupied precision       +0.05123 ± 0.03398     +0.04159 ± 0.03489
+occupied recall          -0.19071 ± 0.02302     -0.37832 ± 0.09927
+occupied IoU             -0.12233 ± 0.04220     -0.33168 ± 0.10268
+```
+
+The degradation is therefore not explained by one isolated run.
+
+## Reference support
+
+P1 and P2 use different cell resolutions:
+
+```text
+P1 runtime cells ≈ 0.10 m
+P2 structural-GT cells = 0.05 m
+```
+
+Therefore support should be compared primarily using area and unknown-area fraction rather than raw cell count.
+
+### Overall support
+
+```text
+                              P1                  P2
+
+runs                          10                  10
+decisions analyzed            365                 365
+decisions with targets        286                 365
+
+prediction-target pairs       2,647,324           12,470,841
+
+evaluated area decision-sum   26,473.24 m²        31,177.10 m²
+
+free area decision-sum        22,661.02 m²        23,532.31 m²
+occupied area decision-sum    3,812.22 m²         7,644.79 m²
+
+reference fraction
+of unknown area               0.53565             0.99452
+```
+
+These area values are sums over decisions and may count the same physical region repeatedly at different times. They are not unique physical map area.
+
+### Last-10 support
+
+```text
+                              P1                  P2
+
+possible decisions            100                 100
+decisions with targets        21                  100
+
+prediction-target pairs       2,758               650,468
+
+evaluated area decision-sum   27.58 m²            1,626.17 m²
+
+free area decision-sum        6.56 m²             24.33 m²
+occupied area decision-sum    21.02 m²            1,601.84 m²
+
+reference fraction
+of unknown area               0.01561             ≈ 1.00000
+```
+
+This resolves the main P1 right-censoring concern:
+
+> P1's apparently strong last-10 result was based on only a very small subset of the late unknown region, whereas P2 evaluates essentially the complete valid structural unknown region.
+
+## Run-level cases for diagnostic inspection
+
+### mpx_009
+
+Lowest P2 last-10 accuracy and macro IoU:
+
+```text
+accuracy  = 0.50318
+macro IoU = 0.25230
+MAE       = 0.47849
+
+support:
+10 / 10 last decisions
+165.63 m² evaluated area decision-sum
+```
+
+### mpx_010
+
+Lowest P2 last-10 free recall and free IoU:
+
+```text
+free recall = 0.01667
+free IoU    = 0.00028944
+```
+
+Free support:
+
+```text
+1.02 m²
+```
+
+Total evaluated support:
+
+```text
+171.96 m²
+```
+
+### mpx_001
+
+Highest P2 last-10 MAE:
+
+```text
+MAE = 0.48954
+```
+
+These runs should be prioritized for visual diagnosis.
+
+## Interpretation
+
+The P2 result materially changes the Gate P conclusion.
+
+P1 had established only that:
+
+> MapEx predictions are useful on the subset of unknown cells that the baseline later happens to observe.
+
+P2 now shows that this does not generalize to the broader decision-time unknown region near termination.
+
+This distinction is particularly important for D1 because D1's intended completeness signal depends on:
+
+```text
+predicted remaining free space
+```
+
+The weak P2 late-stage free recall means that many structurally free cells are not classified as free by the ensemble-mean prediction.
+
+Conceptually, this creates the dangerous D1 failure mode:
+
+```text
+true free space remains
+        ↓
+prediction does not identify it as free
+        ↓
+predicted remaining-free area becomes too small
+        ↓
+D1 could interpret the map as more complete than it really is
+        ↓
+risk of premature STOP
+```
+
+Therefore the current P2 evidence does **not** support using direct predicted remaining free area as a stopping signal.
+
+The high P1 last-10 accuracy should no longer be used as evidence that late unknown-space prediction is generally strong.
+
+## Limitations / anomalies
+
+### 1. Late P2 is strongly occupied-dominated
+
+Last-10 P2 support is:
+
+```text
+free     = 24.33 m²
+occupied = 1,601.84 m²
+```
+
+Therefore overall accuracy is heavily influenced by occupied structure.
+
+For D1, class-specific free metrics are more informative than headline accuracy.
+
+### 2. P2 structural reference must still be visually sanity-checked
+
+Although all hard integrity and provenance checks passed, the magnitude of the P1-to-P2 difference warrants direct visual inspection of representative late decisions.
+
+This is a diagnostic safeguard, not a reason to discard the P2 result.
+
+### 3. Metadata run-ID warnings
+
+The full run emitted 9 warnings of the known historical form:
+
+```text
+directory mpx_00X
+metadata  mpx_10X
+```
+
+The analyzer used the directory name as the canonical run ID.
+
+These were warnings only and did not affect artifact selection or metric computation.
+
+### 4. Matplotlib cache warning
+
+Matplotlib could not write its default configuration directory and used a temporary `/tmp` cache.
+
+All 12 figures were successfully generated and readable.
+
+This has no known effect on numerical results.
+
+## Status
+
+```text
+Gate P1 = PRELIMINARY PASS
+
+Gate P2 =
+STRONG NEGATIVE EVIDENCE
+for late-stage free-space fidelity
+
+Gate P =
+DOES NOT PASS
+under the current direct predicted-remaining-free-space formulation
+
+Gate U = DO NOT START YET
+Gate R = NOT STARTED
+online D1 stopping = NOT IMPLEMENTED
+```
+
+This is a negative research result and must be preserved rather than tuned away.
+
+## Next action
+
+Before making a final decision to revise or stop D1, perform a focused diagnostic analysis.
+
+Priority checks:
+
+1. Visually inspect late prediction maps for:
+
+   ```text
+   mpx_001
+   mpx_009
+   mpx_010
+   ```
+
+   comparing:
+
+   ```text
+   observed map
+   vs
+   ensemble-mean predicted map
+   ```
+
+2. Check the prediction-value distribution around the `0.5` threshold, especially:
+
+   ```text
+   prediction == 0.5
+   prediction in [0.45, 0.55]
+   ```
+
+   separately for structural-GT free and occupied cells.
+
+3. Compute pooled last-10 confusion counts and convert:
+
+   ```text
+   true free -> predicted occupied
+   ```
+
+   into evaluated square metres.
+
+If these diagnostics confirm the current P2 behavior and do not reveal an evaluation artifact, then the current direct D1 remaining-free formulation should be considered unsupported and should not proceed to Gate U threshold development.
+
+## Relevant commits
+
+- `e14807bbd66bc26f437b2b31c4c40b498cc239df` — add D1 Gate P structural GT results.
