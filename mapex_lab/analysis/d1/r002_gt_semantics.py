@@ -130,10 +130,10 @@ def _canonical_projection(
         canonical_observed[gt_slice] = expanded[src_slice]
 
     unknown = support & (canonical_observed < 0)
-    observed_free = support & (canonical_observed >= 0) & (
-        canonical_observed <= GT_OCC_THRESHOLD
-    )
-    observed_occupied = support & (canonical_observed > GT_OCC_THRESHOLD)
+    # Runtime OccupancyGrid semantics used by Gate P / MapEx:
+    # unknown < 0, known free == 0, known occupied > 0.
+    observed_free = support & (canonical_observed == 0)
+    observed_occupied = support & (canonical_observed > 0)
     universe = unknown & gt.evaluation_mask
 
     gate_p_universe = np.zeros(gt.shape, dtype=bool)
@@ -295,8 +295,15 @@ def _boundary_matching(
         g = len(comp_g)
         p = len(comp_p)
         size = g + p
-        unmatched_penalty = 10.0
-        forbidden = 1e9
+        # One fewer real match creates two unmatched assignments. Choose a
+        # penalty larger than the maximum possible total eligible distance in
+        # this component so cardinality is optimized before distance.
+        max_pairs = min(g, p)
+        unmatched_penalty = (
+            (max_pairs + 1)
+            * (float(tolerance_m) + float(resolution_m) + 1.0)
+        )
+        forbidden = unmatched_penalty * (size + 1) * 1000.0
         cost = np.full((size, size), forbidden, dtype=np.float64)
 
         g_local = {
@@ -323,7 +330,14 @@ def _boundary_matching(
             ),
         )
         pair_count = max(len(eligible_pairs), 1)
-        tie_unit = 1e-14 / float(pair_count * pair_count + 1)
+        # Eligible pairs are already sorted by frozen lexicographic key.
+        # This perturbation only resolves exactly equal-distance optima; its
+        # total magnitude is kept many orders below a canonical-cell distance.
+        tie_unit = (
+            np.finfo(np.float64).eps
+            * max(float(resolution_m), 1.0)
+            / float(pair_count * pair_count + 1)
+        )
         for rank, (gi, pj, distance) in enumerate(eligible_pairs):
             cost[g_local[gi], p_local[pj]] = distance + tie_unit * rank
 
@@ -389,8 +403,13 @@ def _project_robot_cell(
     robot_y: float,
     gt: gate_p.StructuralGT,
 ) -> tuple[int, int]:
-    col = int(math.floor((robot_x - gt.origin_x) / gt.resolution))
-    row = int(math.floor((robot_y - gt.origin_y) / gt.resolution))
+    eps = 1e-10
+    col = int(
+        math.floor((robot_x - gt.origin_x) / gt.resolution + eps)
+    )
+    row = int(
+        math.floor((robot_y - gt.origin_y) / gt.resolution + eps)
+    )
     return row, col
 
 
@@ -1303,6 +1322,22 @@ def analyze_run(
     return rows, summary
 
 
+def _json_clean(value):
+    if isinstance(value, dict):
+        return {
+            key: _json_clean(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [_json_clean(item) for item in value]
+    if isinstance(value, (float, np.floating)):
+        numeric = float(value)
+        return numeric if math.isfinite(numeric) else None
+    if isinstance(value, (np.integer,)):
+        return int(value)
+    return value
+
+
 def parse_args() -> argparse.Namespace:
     script_path = Path(__file__).resolve()
     mapex_lab_root = script_path.parents[2]
@@ -1421,10 +1456,10 @@ def main() -> int:
     _write_csv(decision_csv, rows)
     summary_json.write_text(
         json.dumps(
-            summary,
+            _json_clean(summary),
             indent=2,
             sort_keys=True,
-            allow_nan=True,
+            allow_nan=False,
         )
         + "\n",
         encoding="utf-8",
