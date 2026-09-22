@@ -2216,3 +2216,101 @@ USER/WORK must explicitly decide whether to:
 2. stop/reframe the direct D1 line based on the reviewed one-run evidence.
 
 Gate U remains blocked for the current direct D1 formulation unless a separately approved revised direction is defined.
+
+
+---
+
+# 2026-09-22 — Structural-IoU fairness calibration checkpoint
+
+## Question
+
+Can raw pixel-wise occupied IoU against `new_room_structural_gt_v2` be used by itself as a fair absolute measure of MapEx prediction quality when the runtime occupancy map is produced by SLAM?
+
+The concern is that a prediction may be penalized not only for prediction error, but also for residual SLAM/GT registration error, rasterization/resolution effects, wall-thickness differences, and structural-solid-vs-occupancy-surface semantics.
+
+## Diagnostic executed
+
+Use the existing observed-only structural audit in:
+
+```text
+scripts/audit_way2_observed_quality.py
+```
+
+This evaluator scores the recorded observed SLAM canvas without filling unknown space from MapEx prediction:
+
+```text
+observed occupied (>0) -> occupied
+known free / unknown    -> non-occupied
+```
+
+and computes occupied IoU against the structural GT with the existing evaluator function.
+
+USER executed this audit on `mpx_001` and returned:
+
+```text
+decision = 35
+final observed IoU = 0.3886051561209823
+final known fraction = 0.06330363496056364
+
+Last 5 decisions:
+31 IoU = 0.3886051561209823 known = 0.06330363496056364
+32 IoU = 0.3886051561209823 known = 0.06330363496056364
+33 IoU = 0.3886051561209823 known = 0.06330363496056364
+34 IoU = 0.3886051561209823 known = 0.06330363496056364
+35 IoU = 0.3886051561209823 known = 0.06330363496056364
+```
+
+The canonical run summary records:
+
+```text
+mpx_001 final coverage = 0.998540146
+policy decisions       = 35
+structural GT           = new_room_structural_gt_v2
+```
+
+## Interpretation
+
+This is one-run diagnostic evidence, not a formal metric-validation experiment.
+
+The important observation is that the nearly-complete final observed SLAM map itself scores only:
+
+```text
+occupied IoU ≈ 0.3886
+```
+
+against the strict structural GT under this raw pixel-wise occupied audit.
+
+Therefore:
+
+1. raw structural occupied IoU should **not be used alone as an absolute verdict of MapEx prediction quality**;
+2. a low prediction-vs-structural-GT IoU may contain both genuine prediction error and evaluation mismatch from SLAM/registration, discretization, wall thickness, or structural-solid semantics;
+3. this does **not** invalidate Reference A or erase the existing negative Gate P2 evidence;
+4. this result also does **not** prove that MapEx prediction is accurate;
+5. Reference A remains useful as a strict physical/structural fidelity diagnostic, but its absolute value needs calibration against what the observed SLAM pipeline itself can reproduce.
+
+Do not call 0.3886 a formal statistical ceiling. It is currently only the final observed-map score for one run.
+
+## Deferred calibration
+
+If this issue is resumed, the next useful checks are:
+
+1. score the final observed map with the same tolerance-aware Reference-B boundary metric;
+2. compare final-observed B-F1 against prediction B-F1;
+3. repeat the final-observed calibration across multiple runs;
+4. optionally quantify sensitivity to small alignment offsets;
+5. retain later-observed comparison as a complementary within-run prediction reference.
+
+## Status
+
+USER explicitly paused this investigation on 2026-09-22.
+
+```text
+raw-IoU fairness issue = RECORDED
+further calibration    = PAUSED BY USER
+Reference-B ceiling    = NOT YET MEASURED
+Gate P2                = PRESERVED
+Reference A            = PRESERVED
+Gate U                 = STILL BLOCKED for current direct D1 formulation
+```
+
+Resume only on explicit USER instruction. No new threshold, tolerance, GT semantics, or prediction rule is authorized by this checkpoint.
