@@ -1,5 +1,14 @@
 # Experiment Notes
 
+## 2026-09-22 — MapEx fixed-horizon vs project completion mismatch
+
+- Observation: the original MapEx paper evaluates exploration under a fixed budget of **1000 timesteps**. The reported Coverage curves therefore measure how much of the environment is observed within that fixed horizon, not the final Coverage after exhaustive exploration.
+- Current project behavior: New Room / Hospital runs are generally allowed to continue until the shared exploration-completion condition (or an explicit early-stop rule) is reached. Final Coverage values from these runs therefore represent near-completion/completion behavior rather than Coverage@1000.
+- Consequence: directly comparing paper MapEx final plotted Coverage (about 82–83% at the 1000-timestep horizon) with this project's near-completion values (often close to 100%) is misleading because the stopping horizon is different.
+- Important interpretation: the paper's lower final Coverage does **not** by itself mean MapEx cannot explore the remaining area; it mainly reflects the fixed evaluation budget. Conversely, this project's near-100% final Coverage does **not** demonstrate a better exploration policy unless compared at a matched budget/horizon.
+- Reporting rule: distinguish at least **Coverage@fixed-budget** from **final/completion Coverage**. Do not present them as directly comparable metrics without matching the exploration horizon.
+- No protocol change yet: this note records the mismatch only. Any future reproduction study should either evaluate this project at the same 1000-timestep horizon or explicitly justify another matched time/distance budget.
+
 ## 2026-09-22 — Coverage GT/ROI semantics differ from original MapEx
 
 - Observation: the current project Coverage denominator is based on connected-free ROI masks such as `hospital_connected_free_v1` / `new_room_connected_free_v2`, i.e. reachable/free-space support only.
