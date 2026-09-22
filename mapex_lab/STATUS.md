@@ -81,6 +81,62 @@ Canonical evidence and full numerical detail are recorded in:
 - result commit `e14807bbd66bc26f437b2b31c4c40b498cc239df`
 - research-log commit `564af0c7c81e501f5e1fb7def669a105e260a2c0`
 
+
+## D1 R002 task-aligned GT-semantics diagnostic
+
+**IMPLEMENTATION REVIEWED / ACCEPTED — ONE-RUN EVIDENCE ONLY**
+
+R002 is a post-hoc diagnostic/reformulation motivated by the negative Gate P2 result. It does **not** replace Reference A or erase the existing Gate P2 finding.
+
+Canonical implementation:
+- `analysis/d1/r002_gt_semantics.py`
+- `analysis/d1/test_r002_gt_semantics.py`
+- accepted source commit: `feb94eaa9c1ba5aa4f9993792dae454bc4edcd60`
+- independent implementation review: **ACCEPT**
+- pre-score validation: Python compile PASS, **12/12 unit tests PASS**
+
+Frozen semantics preserved:
+- prediction threshold = `0.5`;
+- Reference B primary tolerance = `0.10 m`, sensitivities = `0.05 m` and exact;
+- deterministic maximum-cardinality one-to-one B matching, then minimum total Euclidean distance, then lexicographic tie-break;
+- C0 canonical topology grid = `0.05 m`;
+- C0 connectivity = 4-neighbor;
+- C0 seed fallback = observed-known-free only, Euclidean radius <= `0.10 m`;
+- `U_t = Unknown_t ∩ StructuralGT.evaluation_mask`;
+- `C0_TopologyDomain_t = StructuralGT.evaluation_mask ∩ DecisionMapSupport_t`.
+
+**FIRST EXECUTION — `mpx_001` ONLY**
+- exit code: `0`;
+- decisions: `35/35`;
+- Gate-P / DecisionMapSupport parity: `True`;
+- topology-invalid decisions: `0`;
+- preregistered overlays: decisions `6 / 18 / 29`.
+
+Key one-run metrics:
+- overall A free IoU ≈ **0.5001**;
+- overall B F1 @ 0.10 m ≈ **0.4178**;
+- overall C0 free IoU ≈ **0.5065**;
+- overall C0 signed area error ≈ **-5.9140 m²**;
+- late C0 free IoU ≈ **0.0445**;
+- last-10 C0 free IoU ≈ **0.0335**;
+- last-10 B F1 @ 0.10 m ≈ **0.3725**.
+
+Interpretation:
+- the one-run evidence is **mixed/negative late**;
+- R002 confirms that a large share of Reference-A false-free error lies in structural interior, but C0 classification quality still collapses late;
+- this does **not** rescue the current direct D1 stopping formulation;
+- do not tune methodology using `mpx_001` while retaining it as confirmatory data;
+- do not automatically expand to `mpx_002...mpx_010`; further expansion requires an explicit USER/WORK decision.
+
+Detailed chronology and reproducibility notes are in:
+- `analysis/d1/D1_RESEARCH_LOG.md`
+- `analysis/d1/README.md`.
+
+**NEXT ACTION**
+- preserve the reviewed R002 implementation and one-run result as canonical technical evidence;
+- USER/WORK decides whether to authorize a frozen confirmatory expansion or stop/reframe D1;
+- Gate U remains blocked under the current direct D1 formulation unless a separately approved revised direction is defined.
+
 ---
 
 # Archived Way2 online runs
