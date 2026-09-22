@@ -2083,3 +2083,136 @@ If these diagnostics confirm the current P2 behavior and do not reveal an evalua
 ## Relevant commits
 
 - `e14807bbd66bc26f437b2b31c4c40b498cc239df` — add D1 Gate P structural GT results.
+
+---
+
+# 2026-09-22 — R002 task-aligned GT-semantics diagnostic canonicalized
+
+## Question
+
+Could the strong negative Gate P2 result be partly explained by a mismatch between full-solid structural GT and the task-aligned occupancy/free-space questions relevant to D1, without changing or erasing Reference A?
+
+## Decision
+
+Use the USER-approved frozen R002 V2 as a post-hoc diagnostic with three references:
+
+```text
+A  = original structural-solid Gate P2 reference
+B  = occupancy-surface structural diagnostic
+C0 = point-connected remaining-free diagnostic
+```
+
+Reference A and the existing negative Gate P2 result remain unchanged.
+
+## Frozen implementation
+
+Accepted implementation source:
+
+```text
+feb94eaa9c1ba5aa4f9993792dae454bc4edcd60
+```
+
+Canonical files:
+
+```text
+analysis/d1/r002_gt_semantics.py
+analysis/d1/test_r002_gt_semantics.py
+```
+
+Key frozen rules include threshold `0.5`; B primary tolerance `0.10 m` with `0.05 m` and exact sensitivities; deterministic maximum-cardinality one-to-one matching followed by minimum total Euclidean distance and lexicographic tie-break; C0 canonical `0.05 m` grid, 4-connectivity, fixed topology domain, and observed-known-free-only seed fallback within `0.10 m`.
+
+## Validation before scoring
+
+USER terminal evidence:
+
+```text
+Python compile: PASS
+unit tests: 12 / 12 PASS
+```
+
+The tests explicitly cover duplicate/parallel boundary credit, maximum-cardinality-before-distance, global equal-cardinality/equal-distance lexicographic matching, runtime occupancy projection, C0 empty-support semantics, seed provenance, deterministic seed ties, and invalid seed handling.
+
+All implementation fixes were completed before first R002 scoring of `mpx_001`.
+
+## First execution
+
+Only the pre-approved run was executed:
+
+```text
+run = mpx_001
+exit code = 0
+decisions = 35 / 35
+Gate-P / DecisionMapSupport parity = True
+topology_invalid = 0
+preregistered overlays = decisions 6 / 18 / 29
+```
+
+Primary one-run results:
+
+```text
+overall A free IoU              ≈ 0.5001
+overall B F1 @ 0.10 m           ≈ 0.4178
+overall C0 free IoU             ≈ 0.5065
+overall C0 signed area error    ≈ -5.9140 m^2
+
+late C0 free IoU                ≈ 0.0445
+last-10 C0 free IoU             ≈ 0.0335
+last-10 B F1 @ 0.10 m           ≈ 0.3725
+
+overall A false-free interior fraction ≈ 0.8480
+last-10 A false-free interior fraction ≈ 0.9848
+```
+
+## Independent implementation review
+
+Chat 2 / independent code review verdict:
+
+```text
+ACCEPT
+```
+
+The review verified preservation of Reference A / Gate P2, prediction-independent `U_t`, B unknown-only provenance, one-to-one matching semantics, exact C0 topology domain and seed rule, explicit topology-invalid reporting, targeted unit tests, and absence of post-score tuning.
+
+## Interpretation
+
+The accepted code-review verdict is an implementation-fidelity verdict, not a scientific success verdict.
+
+The one-run result is mixed/negative late:
+
+- B surface fidelity is moderate rather than near-perfect.
+- C0 is substantially stronger early but collapses late and in the last 10 decisions.
+- Much of Reference-A false-free error lies in structural interior, so GT semantics explain part of the mismatch.
+- However, the late C0 collapse means the current one-run evidence does not rescue the direct D1 stopping formulation.
+
+No threshold, tolerance, connectivity, seed or matching rule was changed after viewing `mpx_001`.
+
+## Canonical sync
+
+Accepted implementation was copied byte-identically into current technical `main`:
+
+```text
+e66e26539f8a7634b314438f5c47c2b617891dc8  r002_gt_semantics.py
+036e48e60d4feb73c354e50535ea4a1bb6737ab5  test_r002_gt_semantics.py
+```
+
+Blob identity against accepted `feb94eaa...` was verified for both files.
+
+Canonical status/documentation sync:
+
+```text
+a81948432f93ff685c16658d403884475591a6ff  STATUS.md
+5da670524589f0d2b65677cb68aefafcdaa2cf8b  analysis/d1/README.md
+```
+
+Raw first-score artifacts remain local/untracked evidence; the technical repo records the reviewed numerical summary and reproducibility contract rather than committing raw experiment outputs automatically.
+
+## Next action
+
+Do not automatically expand R002 to `mpx_002...mpx_010`.
+
+USER/WORK must explicitly decide whether to:
+
+1. authorize frozen confirmatory expansion with unchanged methodology; or
+2. stop/reframe the direct D1 line based on the reviewed one-run evidence.
+
+Gate U remains blocked for the current direct D1 formulation unless a separately approved revised direction is defined.
