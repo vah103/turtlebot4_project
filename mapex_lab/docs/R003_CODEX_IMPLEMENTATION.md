@@ -30,8 +30,10 @@ Canonical contract: `docs/R003_PAPER500_PROTOCOL_V1.md`
 
 - Runner and watchdog children receive one shared effective ROS domain and
   localhost-only environment.
-- The deadlock no-progress window starts at the first valid odometry sample;
-  time with missing odometry is never counted retroactively.
+- Each active-action transition clears any pre-action odometry baseline. The
+  deadlock no-progress window starts at the first valid odometry sample for
+  that action, so missing time and stale samples are never counted
+  retroactively.
 - Blocked and interrupted state is durable across restart; only an explicit
   `retry_pending_same_id` state can resume automatically.
 - Every invalid attempt is checkpointed before deletion with run ID, host,

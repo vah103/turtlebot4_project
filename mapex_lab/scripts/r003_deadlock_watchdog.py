@@ -40,7 +40,9 @@ class DeadlockDetector:
         active = bool(active)
         if active != self.action_active:
             self.progress_m = 0.0
-            self.window_started_at = float(now) if active else None
+            self.window_started_at = None
+            if active:
+                self.last_xy = None
         self.action_active = active
 
     def observe_odom(self, x: float, y: float, now: float) -> None:

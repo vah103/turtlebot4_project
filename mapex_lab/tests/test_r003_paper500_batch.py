@@ -57,6 +57,15 @@ class Paper500BatchTests(unittest.TestCase):
         detector.set_action_active(False, 31)
         self.assertIsNone(detector.check(100))
 
+    def test_watchdog_requires_current_action_odom_baseline(self):
+        detector = watchdog.DeadlockDetector(window_s=10, startup_grace_s=0)
+        detector.observe_odom(4, 5, 0)
+        detector.set_action_active(True, 1)
+        self.assertIsNone(detector.check(20))
+        detector.observe_odom(4, 5, 20)
+        self.assertIsNone(detector.check(29.9))
+        self.assertIsNotNone(detector.check(30))
+
     def test_runner_and_watchdog_share_effective_ros_isolation(self):
         env = batch.effective_ros_env({
             "MAPEX_SIM_ROS_DOMAIN_ID": "77",
