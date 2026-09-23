@@ -379,6 +379,9 @@ class Stage2Run(NearestEuclideanFrontier):
         (self.run / "maps").mkdir(parents=True)
         (self.run / "decisions").mkdir()
 
+        # Initial provenance records paper1000 budget integrity limits, so the
+        # budget object must exist before provenance is written.
+        self.paper1000_budget = OdomProgressBudget() if self.paper1000_enabled else None
         self.metadata = self._write_initial_provenance(run_id)
 
         if self.roi is None or self.roi_n <= 0:
@@ -416,7 +419,6 @@ class Stage2Run(NearestEuclideanFrontier):
         self.policy_compute_ms = []
         self.near_frontier_fallback_count = 0
         self.snapshot_id = 0
-        self.paper1000_budget = OdomProgressBudget() if self.paper1000_enabled else None
         self.paper1000_lock = threading.RLock()
         self.paper1000_latest_odom = None
         self.paper1000_latest_map = None
