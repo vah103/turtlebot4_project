@@ -13,6 +13,35 @@ CODEX may implement and test this contract. Generated masks/counts/hash/visual v
 
 Historical Hospital EXPERIMENT_PROTOCOL.md remains applicable to Hospital. This file is the authoritative R003 New Room profile supplement; record effective current runtime configuration as specified below.
 
+## USER-approved amendment A2 — invalid technical attempt reuses the official run ID
+
+Approved by USER on 2026-09-23 before any accepted R003 official run-1 result.
+
+This amendment supersedes the A1 retry-ID rule only.
+
+For an attempt that is determined to be **technically/infrastructure invalid**
+(for example wrong launch/setup, broken capture/provenance, corrupted runtime,
+or another condition that means the attempt is not a valid execution of the
+frozen protocol):
+
+- stop and diagnose the attempt before rerunning;
+- record the invalidity reason in the management/runtime checkpoint;
+- the invalid run directory may then be deleted;
+- rerun using the **same official run ID**, e.g. `nf_p1000_001` again rather
+  than `nf_p1000_001_retry01`;
+- the official ID always refers to the valid attempt ultimately retained for
+  that slot.
+
+This does **not** permit performance-based replacement. A protocol-valid run
+with poor Coverage/IoU/TU/AUC, natural early completion, or an algorithmic /
+navigation failure remains an official outcome and must not be deleted merely
+to obtain a better result.
+
+The decision to delete/retry must be based on technical validity, not metric
+quality. The reason for each deleted invalid attempt must be checkpointed before
+deletion so the intervention remains auditable even though the raw invalid run
+directory is removed.
+
 ## USER-approved amendment A1 — qualification runs may become official run 1
 
 Approved by USER on 2026-09-23 before any R003 ROS/Gazebo runtime attempt under this profile.
@@ -34,9 +63,9 @@ for official run 1**, rather than disposable smoke-only runs:
   corruption, missing required data, broken capture/provenance, or evaluator
   impossibility caused by infrastructure) may be rerun for the same official
   slot;
-- every infrastructure-invalid attempt remains retained/auditable and the retry
-  uses a new non-overwriting attempt ID such as `nf_p1000_001_retry01` or
-  `mpx_p1000_001_retry01`;
+- A2 supersedes the historical new-retry-ID wording: after the invalidity reason
+  is checkpointed, the invalid run directory may be deleted and the same
+  official run ID reused;
 - acceptance/retry decisions must be based only on preregistered runtime
   integrity criteria, never on Coverage/IoU/TU/AUC values;
 - the independent checker reviews the qualification evidence before runs 2..10
