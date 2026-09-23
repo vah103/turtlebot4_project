@@ -13,6 +13,45 @@ CODEX may implement and test this contract. Generated masks/counts/hash/visual v
 
 Historical Hospital EXPERIMENT_PROTOCOL.md remains applicable to Hospital. This file is the authoritative R003 New Room profile supplement; record effective current runtime configuration as specified below.
 
+## USER-approved amendment A3 — physical-deadlock watchdog for unattended bulk
+
+Approved by USER on 2026-09-23 before R003 bulk execution.
+
+A distinct **technical deadlock** class is added for unattended COM1 bulk runs.
+This is narrower than an ordinary algorithmic/navigation failure.
+
+Technical-deadlock intent:
+- the robot becomes physically wedged/stuck (for example after trying to enter a
+  passage that is too narrow);
+- an exploration/navigation action remains active or repeatedly attempts to
+  continue;
+- odometry shows no meaningful translational progress for a preregistered
+  watchdog interval;
+- the run would otherwise remain stuck indefinitely rather than reaching a
+  normal protocol terminal outcome.
+
+When the frozen watchdog declares this technical deadlock:
+1. stop the run and clean up ROS/Gazebo normally;
+2. checkpoint the run ID, host, source SHA, watchdog evidence and invalidity
+   reason;
+3. classify the attempt as technically/infrastructure invalid;
+4. delete that invalid run directory;
+5. rerun with the **same official run ID** under A2.
+
+This rule must not convert ordinary algorithmic outcomes into retryable
+infrastructure failures. In particular:
+- a Nav2/action failure that terminates normally under the existing policy is an
+  official algorithmic/navigation outcome;
+- poor metric values are never a retry reason;
+- natural completion is never a retry reason;
+- a finite recoverable stall is not a retry reason.
+
+Before any 002..010 bulk run, the watchdog detector and its exact quantitative
+criteria (progress measure, tolerance, time window, action-state requirement,
+and reset conditions) must be explicitly frozen and independently reviewed.
+Codex must not use subjective visual judgment or change the watchdog threshold
+after seeing run metrics.
+
 ## USER-approved amendment A2 — invalid technical attempt reuses the official run ID
 
 Approved by USER on 2026-09-23 before any accepted R003 official run-1 result.
