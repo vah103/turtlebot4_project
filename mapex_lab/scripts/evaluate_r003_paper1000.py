@@ -258,12 +258,14 @@ def evaluate(run_dir: Path, profile_path: Path, goals_path: Path) -> dict:
         tu_auc = trapezoidal_auc(curve_rows, "tu")
         tu_auc["project_added"] = True
 
-        raw_ids = {int(row["sample_id"]) for row in raw_support}
+        final_sample_id = int(final_row["sample_id"])
+        raw_record_count_through_terminal = sum(
+            1 for row in output
+            if int(row["sample_id"]) <= final_sample_id
+        )
         post_terminal_audit_count = sum(
-            1
-            for row in output
-            if isinstance(row["sample_id"], int)
-            and int(row["sample_id"]) not in raw_ids
+            1 for row in output
+            if int(row["sample_id"]) > final_sample_id
         )
 
         payload = {
@@ -273,6 +275,7 @@ def evaluate(run_dir: Path, profile_path: Path, goals_path: Path) -> dict:
             "checkpoint": manifest["checkpoint"],
             "sample_count": len(output),
             "raw_support_count": len(raw_support),
+            "raw_record_count_through_terminal": raw_record_count_through_terminal,
             "held_support_count": len(held_support),
             "curve_support_count": len(curve_rows),
             "post_terminal_audit_count": post_terminal_audit_count,
@@ -287,6 +290,7 @@ def evaluate(run_dir: Path, profile_path: Path, goals_path: Path) -> dict:
                 "common_step_spacing": COMMON_STEP_SPACING,
                 "steps": [int(row["progress_step"]) for row in curve_rows],
                 "raw_support_count": len(raw_support),
+                "raw_record_count_through_terminal": raw_record_count_through_terminal,
                 "held_support_count": len(held_support),
                 "duplicate_step_policy": "last_recorded_sample_wins",
                 "post_terminal_samples": "audit_only_excluded_from_curve",
