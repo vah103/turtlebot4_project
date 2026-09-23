@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Evaluate R003 common paper1000 samples with fixed masks/goals."""
+"""Evaluate R003 common paper500 samples with fixed masks/goals."""
 from __future__ import annotations
 
 import argparse
@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 
 from predict_alltrain_offline import sha256
-from r003_paper1000 import (
+from r003_paper500 import (
     EVAL_ID,
     MAX_STEPS,
     coverage,
@@ -72,7 +72,7 @@ def build_curve_support(
 
     Post-cancellation audit samples are never part of the metric curve. When a
     run legitimately completes early, the final metric is explicitly held at
-    subsequent common k=10 support through k=1000. Failed runs never hold.
+    subsequent common k=10 support through k=500. Failed runs never hold.
     """
     final_id = int(final_row["sample_id"])
     terminal_prefix: list[dict] = []
@@ -137,7 +137,7 @@ def trapezoidal_auc(rows: list[dict], metric: str) -> dict:
     }
 
 
-def _endpoint_at_1000(curve_rows: list[dict]) -> dict | None:
+def _endpoint_at_500(curve_rows: list[dict]) -> dict | None:
     if not curve_rows or int(curve_rows[-1]["progress_step"]) != MAX_STEPS:
         return None
     row = curve_rows[-1]
@@ -152,12 +152,12 @@ def _endpoint_at_1000(curve_rows: list[dict]) -> dict | None:
 
 
 def evaluate(run_dir: Path, profile_path: Path, goals_path: Path) -> dict:
-    samples_path = run_dir / "paper1000_snapshots.csv"
+    samples_path = run_dir / "paper500_snapshots.csv"
     prediction_manifest_path = run_dir / "evaluation" / "alltrain_snapshots" / "manifest.json"
     samples = _rows(samples_path)
     final = select_final_sample(samples)
     manifest = json.loads(prediction_manifest_path.read_text(encoding="utf-8"))
-    if manifest.get("source_kind") != "paper1000_snapshots":
+    if manifest.get("source_kind") != "paper500_snapshots":
         raise ValueError("alltrain manifest is not snapshot-backed")
     if manifest.get("decisions_sha256") != sha256(samples_path):
         raise ValueError("snapshot manifest changed after inference")
@@ -295,7 +295,7 @@ def evaluate(run_dir: Path, profile_path: Path, goals_path: Path) -> dict:
                 "duplicate_step_policy": "last_recorded_sample_wins",
                 "post_terminal_samples": "audit_only_excluded_from_curve",
                 "natural_completion_hold": (
-                    "explicit_k10_hold_to_1000"
+                    "explicit_k10_hold_to_500"
                     if held_support
                     else "not_applied"
                 ),
@@ -306,12 +306,12 @@ def evaluate(run_dir: Path, profile_path: Path, goals_path: Path) -> dict:
                 "occupied_iou": occupied_iou_auc,
                 "tu_project_added": tu_auc,
             },
-            "endpoint_at_1000": _endpoint_at_1000(curve_rows),
+            "endpoint_at_500": _endpoint_at_500(curve_rows),
             "final": final_row,
             "errors": [],
         }
 
-    evaluation_dir = run_dir / "evaluation" / "paper1000"
+    evaluation_dir = run_dir / "evaluation" / "paper500"
     evaluation_dir.mkdir(parents=True, exist_ok=True)
     (evaluation_dir / "evaluation.json").write_text(
         json.dumps(payload, indent=2) + "\n",
@@ -344,7 +344,7 @@ def main() -> None:
         / "ground_truth"
         / "new_room"
         / "generated"
-        / "r003_paper1000"
+        / "r003_paper500"
     )
     parser = argparse.ArgumentParser()
     parser.add_argument("run_dir", type=Path)

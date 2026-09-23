@@ -4,22 +4,45 @@ set -Eeuo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT_DIR"
 
-PAPER1000=0
+PAPER500=0
+METHOD_ARG=""
+ENVIRONMENT_ARG=""
+RECORD_ARG=""
+RUN_ID_ARG=""
 
 usage() {
   cat <<'EOF'
-Usage: ./run [--paper1000]
+Usage: ./run [--paper500] [--method nf|mapex] [--environment new_room]
+             [--record yes|no] [--run-id ID]
 
-  --paper1000   Enable the approved R003 New Room paper1000 recorder profile.
+  --paper500   Enable the approved R003 New Room paper500 recorder profile.
                 Requires New Room + record=yes + method NF or MapEx.
+  --method, --environment, --record, --run-id
+               Optional non-interactive selections for batch execution.
 EOF
 }
 
 while (( $# > 0 )); do
   case "$1" in
-    --paper1000)
-      PAPER1000=1
+    --paper500)
+      PAPER500=1
       shift
+      ;;
+    --method)
+      METHOD_ARG="${2:?--method requires a value}"
+      shift 2
+      ;;
+    --environment)
+      ENVIRONMENT_ARG="${2:?--environment requires a value}"
+      shift 2
+      ;;
+    --record)
+      RECORD_ARG="${2:?--record requires a value}"
+      shift 2
+      ;;
+    --run-id)
+      RUN_ID_ARG="${2:?--run-id requires a value}"
+      shift 2
       ;;
     -h|--help)
       usage
@@ -259,6 +282,14 @@ configure_mapex_environment() {
 }
 
 choose_method() {
+  if [[ -n "$METHOD_ARG" ]]; then
+    case "$METHOD_ARG" in
+      nf) METHOD="nf"; METHOD_LABEL="NF" ;;
+      mapex) METHOD="mapex"; METHOD_LABEL="MapEx" ;;
+      *) echo "ERROR: --method must be nf or mapex."; exit 2 ;;
+    esac
+    return
+  fi
   while true; do
     echo ""
     echo "Chon phuong phap:"
@@ -288,6 +319,20 @@ choose_method() {
 }
 
 choose_map() {
+  if [[ -n "$ENVIRONMENT_ARG" ]]; then
+    case "$ENVIRONMENT_ARG" in
+      new_room)
+        ENVIRONMENT="new_room"; WORLD_SELECTOR="new_room"
+        RUNTIME_PROFILE="slam"; MAP_LABEL="New Room"
+        ;;
+      hospital)
+        ENVIRONMENT="hospital"; WORLD_SELECTOR="hospital"
+        RUNTIME_PROFILE="hospital_slam"; MAP_LABEL="Hospital"
+        ;;
+      *) echo "ERROR: --environment must be new_room or hospital."; exit 2 ;;
+    esac
+    return
+  fi
   while true; do
     echo ""
     echo "Chon map:"
@@ -315,6 +360,13 @@ choose_map() {
 }
 
 choose_record() {
+  if [[ -n "$RECORD_ARG" ]]; then
+    case "$RECORD_ARG" in
+      yes|no) RECORD="$RECORD_ARG" ;;
+      *) echo "ERROR: --record must be yes or no."; exit 2 ;;
+    esac
+    return
+  fi
   while true; do
     echo ""
     echo "Co luu record khong?"
@@ -342,7 +394,11 @@ ask_run_id() {
 
   while true; do
     echo ""
-    read -r -p "Ten run [${default_id}]: " RUN_ID
+    if [[ -n "$RUN_ID_ARG" ]]; then
+      RUN_ID="$RUN_ID_ARG"
+    else
+      read -r -p "Ten run [${default_id}]: " RUN_ID
+    fi
     RUN_ID="${RUN_ID:-$default_id}"
 
     if [[ ! "$RUN_ID" =~ ^[A-Za-z0-9._-]+$ ]]; then
@@ -359,8 +415,8 @@ ask_run_id() {
     if [[ -e "$run_dir" ]]; then
       echo "Run da ton tai: $run_dir"
 
-      if [[ "$PAPER1000" -eq 1 ]]; then
-        echo "R003 paper1000 khong cho phep xoa hoac tai su dung run ID cu."
+      if [[ "$PAPER500" -eq 1 ]]; then
+        echo "R003 paper500 khong cho phep xoa hoac tai su dung run ID cu."
         while true; do
           echo "  1) Chon ten khac"
           echo "  2) Huy"
@@ -547,17 +603,17 @@ if [[ "$METHOD" == "mapex" || "$METHOD" == "mapex_way2" ]]; then
 fi
 choose_record
 
-if [[ "$PAPER1000" -eq 1 ]]; then
+if [[ "$PAPER500" -eq 1 ]]; then
   if [[ "$ENVIRONMENT" != "new_room" ]]; then
-    echo "ERROR: --paper1000 is only valid for New Room."
+    echo "ERROR: --paper500 is only valid for New Room."
     exit 3
   fi
   if [[ "$RECORD" != "yes" ]]; then
-    echo "ERROR: --paper1000 requires record=yes."
+    echo "ERROR: --paper500 requires record=yes."
     exit 4
   fi
   if [[ "$METHOD" != "nf" && "$METHOD" != "mapex" ]]; then
-    echo "ERROR: --paper1000 supports only NF or MapEx."
+    echo "ERROR: --paper500 supports only NF or MapEx."
     exit 5
   fi
 fi
@@ -574,8 +630,8 @@ echo "Record : $RECORD"
 if [[ "$RECORD" == "yes" ]]; then
   echo "Run ID : $RUN_ID"
 fi
-if [[ "$PAPER1000" -eq 1 ]]; then
-  echo "Profile: R003 paper1000"
+if [[ "$PAPER500" -eq 1 ]]; then
+  echo "Profile: R003 paper500"
 fi
 echo "Python : $ROS_PYTHON"
 if [[ "$METHOD" == "mapex" || "$METHOD" == "mapex_way2" ]]; then
@@ -611,8 +667,8 @@ else
   exit 1
 fi
 
-if [[ "$PAPER1000" -eq 1 ]]; then
-  EXPLORE_CMD+=(--paper1000)
+if [[ "$PAPER500" -eq 1 ]]; then
+  EXPLORE_CMD+=(--paper500)
   if [[ "$METHOD" == "mapex" ]]; then
     EXPLORE_CMD+=(--save-predictions)
   fi

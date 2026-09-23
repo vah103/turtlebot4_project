@@ -10,9 +10,9 @@ from pathlib import Path
 
 import numpy as np
 
-import r003_paper1000 as r003
+import r003_paper500 as r003
 import predict_alltrain_offline as alltrain
-import evaluate_r003_paper1000 as evaluator
+import evaluate_r003_paper500 as evaluator
 
 
 class R003GridTests(unittest.TestCase):
@@ -83,6 +83,15 @@ class R003GridTests(unittest.TestCase):
 
 
 class R003BudgetTests(unittest.TestCase):
+    def test_frozen_paper500_horizon_and_crossings(self):
+        self.assertEqual(r003.MAX_STEPS, 500)
+        self.assertAlmostEqual(r003.BUDGET_METERS, 150.0)
+        self.assertEqual(r003.PROFILE_ID, "new_room_mapex_paper500_v1")
+        self.assertEqual(r003.BUDGET_ID, "odom_progress_0p30m_500step_v1")
+        crossings = r003.common_crossings(range(1, 501))
+        self.assertEqual(crossings[-1], 500)
+        self.assertEqual(len(crossings), 50)
+
     def test_residual_carries_across_goal_and_recovery_motion(self):
         budget = r003.OdomProgressBudget(step_m=0.3, max_steps=10)
         budget.start(0.0, 0.0, 1.0, "odom")
@@ -208,7 +217,7 @@ class R003CurveTests(unittest.TestCase):
         self.assertEqual(result["end_step"], 15)
         self.assertEqual(result["point_count"], 3)
 
-    def test_natural_completion_holds_to_1000_and_marks_rows(self):
+    def test_natural_completion_holds_to_500_and_marks_rows(self):
         rows = [
             self._row(1, "initial", 0, 0.0),
             self._row(2, "progress", 10, 1.0),
@@ -217,7 +226,7 @@ class R003CurveTests(unittest.TestCase):
         ]
         raw, held, curve = evaluator.build_curve_support(rows, rows[2])
         self.assertEqual([row["progress_step"] for row in raw], [0, 10, 15])
-        self.assertEqual(curve[-1]["progress_step"], 1000)
+        self.assertEqual(curve[-1]["progress_step"], 500)
         self.assertTrue(all(row["held"] for row in held))
         self.assertTrue(
             all(row["event"] == "natural_completion_hold" for row in held)
@@ -227,7 +236,7 @@ class R003CurveTests(unittest.TestCase):
         )
         self.assertAlmostEqual(
             evaluator.trapezoidal_auc(curve, "coverage")["area"],
-            501.25,
+            251.25,
         )
 
     def test_algorithmic_failure_stops_support_without_hold(self):
@@ -257,7 +266,7 @@ class R003CurveTests(unittest.TestCase):
         self.assertEqual(raw[-1]["sample_id"], 3)
         self.assertEqual(raw[-1]["coverage"], 0.7)
         self.assertTrue(held)
-        self.assertEqual(curve[-1]["progress_step"], 1000)
+        self.assertEqual(curve[-1]["progress_step"], 500)
 
 
 class R003ProfileTests(unittest.TestCase):
@@ -268,6 +277,9 @@ class R003ProfileTests(unittest.TestCase):
                 root / "map" / "new_room.sdf", Path(directory), git_commit="test"
             )
             self.assertEqual(manifest["reduced_canvas"]["shape"], [1062, 752])
+            self.assertEqual(manifest["budget"]["max_steps"], 500)
+            self.assertEqual(manifest["budget"]["budget_m"], 150.0)
+            self.assertEqual(manifest["budget"]["common_step_spacing"], 10)
             self.assertEqual(manifest["tu"]["goal_count"], 100)
             self.assertEqual(manifest["tu"]["seed"], 3001)
             self.assertEqual(
@@ -290,7 +302,7 @@ class R003ProfileTests(unittest.TestCase):
                 origin_x=np.float64(r003.CANVAS_X), origin_y=np.float64(r003.CANVAS_Y),
                 origin_yaw=np.float64(0.0),
             )
-            samples = run / "paper1000_snapshots.csv"
+            samples = run / "paper500_snapshots.csv"
             fields = [
                 "sample_id", "event", "progress_step", "distance_m", "residual_m",
                 "receive_time_s", "source_map_stamp_s", "map_age_s", "repeated_sample",
@@ -335,12 +347,12 @@ class R003ProfileTests(unittest.TestCase):
             self.assertEqual(result["termination"]["kind"], "natural_completion")
             self.assertEqual(result["raw_support_count"], 1)
             self.assertEqual(result["raw_record_count_through_terminal"], 2)
-            self.assertEqual(result["held_support_count"], 100)
-            self.assertEqual(result["curve_support_count"], 101)
-            self.assertEqual(result["endpoint_at_1000"]["progress_step"], 1000)
-            self.assertTrue(result["endpoint_at_1000"]["held"])
+            self.assertEqual(result["held_support_count"], 50)
+            self.assertEqual(result["curve_support_count"], 51)
+            self.assertEqual(result["endpoint_at_500"]["progress_step"], 500)
+            self.assertTrue(result["endpoint_at_500"]["held"])
             self.assertTrue(
-                (run / "evaluation" / "paper1000" / "curve.csv").is_file()
+                (run / "evaluation" / "paper500" / "curve.csv").is_file()
             )
 
 

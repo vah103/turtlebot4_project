@@ -1,4 +1,4 @@
-"""ROS-free regression checks for R003 paper1000 constructor ordering."""
+"""ROS-free regression checks for R003 paper500 constructor ordering."""
 
 import ast
 from pathlib import Path
@@ -45,7 +45,7 @@ def _self_method_call_line(init: ast.FunctionDef, method_name: str) -> int:
     return min(lines)
 
 
-class Paper1000InitializationOrderTest(unittest.TestCase):
+class Paper500InitializationOrderTest(unittest.TestCase):
     def _assert_budget_before_provenance(self, filename: str, class_name: str):
         tree = ast.parse((SCRIPTS / filename).read_text(encoding="utf-8"))
         cls = next(
@@ -58,12 +58,12 @@ class Paper1000InitializationOrderTest(unittest.TestCase):
             for node in cls.body
             if isinstance(node, ast.FunctionDef) and node.name == "__init__"
         )
-        budget_line = _self_attr_assignment_line(init, "paper1000_budget")
+        budget_line = _self_attr_assignment_line(init, "paper500_budget")
         provenance_line = _self_method_call_line(init, "_write_initial_provenance")
         self.assertLess(
             budget_line,
             provenance_line,
-            f"{filename}: paper1000_budget must exist before initial provenance",
+            f"{filename}: paper500_budget must exist before initial provenance",
         )
 
     def test_nf_budget_exists_before_initial_provenance(self):

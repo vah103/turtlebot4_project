@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate R003 paper1000 masks, fixed TU goals, manifest and audit overlays."""
+"""Generate R003 paper500 masks, fixed TU goals, manifest and audit overlays."""
 from __future__ import annotations
 
 import argparse
@@ -10,7 +10,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 
-from r003_paper1000 import EVAL_ID, build_profile, reduce_observed
+from r003_paper500 import EVAL_ID, build_profile, reduce_observed
 
 
 def _git_commit(repo: Path) -> str:
@@ -70,7 +70,7 @@ def main() -> None:
     parser.add_argument("--sdf", type=Path, default=root / "map" / "new_room.sdf")
     parser.add_argument(
         "--output-dir", type=Path,
-        default=root / "ground_truth" / "new_room" / "generated" / "r003_paper1000",
+        default=root / "ground_truth" / "new_room" / "generated" / "r003_paper500",
     )
     parser.add_argument("--observed-map", type=Path)
     args = parser.parse_args()

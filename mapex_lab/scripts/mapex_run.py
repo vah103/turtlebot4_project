@@ -50,8 +50,9 @@ from nf_run import (
     RUNTIME_PROFILES,
     SIM_SEED_POLICY,
     SNAPSHOT_FIELDS,
-    PAPER1000_EVAL_ID,
-    PAPER1000_PROFILE_ID,
+    PAPER500_BUDGET_ID,
+    PAPER500_EVAL_ID,
+    PAPER500_PROFILE_ID,
     Stage2Run,
     _deep_merge,
     _git_value,
@@ -147,7 +148,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         save_predictions: bool,
         environment: str,
         runtime_profile: str | None = None,
-        paper1000: bool = False,
+        paper500: bool = False,
     ):
         root = FilePath(__file__).resolve().parents[1]
         if environment not in ENVIRONMENT_PROFILES:
@@ -167,9 +168,9 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         self.repo_root = root.parent
         self.environment = environment
         self.environment_profile = dict(ENVIRONMENT_PROFILES[environment])
-        self.paper1000_enabled = bool(paper1000)
-        if self.paper1000_enabled and environment != "new_room":
-            raise RuntimeError("R003 paper1000 is New Room only")
+        self.paper500_enabled = bool(paper500)
+        if self.paper500_enabled and environment != "new_room":
+            raise RuntimeError("R003 paper500 is New Room only")
         if self.environment_profile["auto_generate_ground_truth"]:
             _ensure_new_room_ground_truth(root)
 
@@ -177,24 +178,24 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         self.ground_truth_path = root / self.environment_profile["ground_truth_relative"]
         self.roi = np.load(self.roi_path).astype(bool) if self.roi_path.is_file() else None
         self.roi_n = int(np.count_nonzero(self.roi)) if self.roi is not None else 0
-        self.paper1000_profile_path = (
-            root / "ground_truth" / "new_room" / "generated" / "r003_paper1000"
-            / f"{PAPER1000_EVAL_ID}.npz"
+        self.paper500_profile_path = (
+            root / "ground_truth" / "new_room" / "generated" / "r003_paper500"
+            / f"{PAPER500_EVAL_ID}.npz"
         )
-        self.paper1000_profile = None
-        if self.paper1000_enabled:
-            if not self.paper1000_profile_path.is_file():
+        self.paper500_profile = None
+        if self.paper500_enabled:
+            if not self.paper500_profile_path.is_file():
                 raise RuntimeError(
                     "R003 profile is missing; generate masks and obtain WORK review first"
                 )
-            self.paper1000_profile = np.load(self.paper1000_profile_path)
-            self.roi = self.paper1000_profile["valid_space"].astype(bool)
+            self.paper500_profile = np.load(self.paper500_profile_path)
+            self.roi = self.paper500_profile["valid_space"].astype(bool)
             self.roi_n = int(self.roi.sum())
-            self.ground_truth_path = self.paper1000_profile_path
+            self.ground_truth_path = self.paper500_profile_path
             self.environment_profile.update(
-                protocol_version=PAPER1000_PROFILE_ID,
-                roi_id=PAPER1000_EVAL_ID,
-                ground_truth_id=PAPER1000_EVAL_ID,
+                protocol_version=PAPER500_PROFILE_ID,
+                roi_id=PAPER500_EVAL_ID,
+                ground_truth_id=PAPER500_EVAL_ID,
             )
 
         run = root / "experiments" / "mapex" / run_id
@@ -215,10 +216,10 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         if self.save_predictions:
             (self.run / "predictions").mkdir()
 
-        # Initial provenance records paper1000 budget integrity limits, so the
+        # Initial provenance records paper500 budget integrity limits, so the
         # budget object must exist before provenance is written.
-        from r003_paper1000 import OdomProgressBudget
-        self.paper1000_budget = OdomProgressBudget() if self.paper1000_enabled else None
+        from r003_paper500 import OdomProgressBudget
+        self.paper500_budget = OdomProgressBudget() if self.paper500_enabled else None
         self.metadata = self._write_initial_provenance(run_id)
         if self.roi is None or self.roi_n <= 0:
             self.get_logger().warn(
@@ -243,21 +244,21 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         self.startup_gate_open = False
         self.startup_wait_logged = False
         self.snapshot_id = 0
-        # State required by the shared Stage2Run paper1000 callbacks.
+        # State required by the shared Stage2Run paper500 callbacks.
         import threading
-        self.paper1000_lock = threading.RLock()
-        self.paper1000_latest_odom = None
-        self.paper1000_latest_map = None
-        self.paper1000_latest_map_receive_s = None
-        self.paper1000_sample_id = 0
-        self.paper1000_last_raw_sha256 = None
-        self.paper1000_cutoff_requested = False
-        self.paper1000_cutoff_wall_t0 = None
-        self.paper1000_active_goal_handle = None
-        self.paper1000_post_cancel_distance_m = None
-        self.paper1000_cutoff_detection_overshoot_m = None
-        self.paper1000_cutoff_map_age_s = None
-        self.paper1000_shutdown_requested = False
+        self.paper500_lock = threading.RLock()
+        self.paper500_latest_odom = None
+        self.paper500_latest_map = None
+        self.paper500_latest_map_receive_s = None
+        self.paper500_sample_id = 0
+        self.paper500_last_raw_sha256 = None
+        self.paper500_cutoff_requested = False
+        self.paper500_cutoff_wall_t0 = None
+        self.paper500_active_goal_handle = None
+        self.paper500_post_cancel_distance_m = None
+        self.paper500_cutoff_detection_overshoot_m = None
+        self.paper500_cutoff_map_age_s = None
+        self.paper500_shutdown_requested = False
 
         self.decision_id = 0
         self.active_decision = None
@@ -286,18 +287,18 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         q = QoSProfile(depth=100)
         q.reliability = ReliabilityPolicy.BEST_EFFORT
         self.create_subscription(Odometry, odom_topic, self.odom_cb, q)
-        if self.paper1000_enabled:
+        if self.paper500_enabled:
             responsive_group = ReentrantCallbackGroup()
             self.create_subscription(
-                Odometry, odom_topic, self.paper1000_odom_cb, q,
+                Odometry, odom_topic, self.paper500_odom_cb, q,
                 callback_group=responsive_group,
             )
             self.create_subscription(
-                OccupancyGrid, "/map", self.paper1000_map_cb, 20,
+                OccupancyGrid, "/map", self.paper500_map_cb, 20,
                 callback_group=responsive_group,
             )
             self.create_timer(
-                0.2, self.paper1000_control_tick,
+                0.2, self.paper500_control_tick,
                 callback_group=responsive_group,
             )
         self._open_files()
@@ -389,15 +390,15 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                     "ground_truth_contract": self.root / "ground_truth" / "new_room" / "structural_gt_v1.yaml",
                 }
             )
-        if self.paper1000_enabled:
+        if self.paper500_enabled:
             hash_paths.update(
                 {
-                    "r003_protocol": self.root / "docs" / "R003_PAPER1000_PROTOCOL_V1.md",
-                    "r003_core": self.root / "scripts" / "r003_paper1000.py",
-                    "r003_evaluator": self.root / "scripts" / "evaluate_r003_paper1000.py",
-                    "r003_profile": self.paper1000_profile_path,
-                    "r003_profile_manifest": self.paper1000_profile_path.with_name(
-                        f"{PAPER1000_EVAL_ID}_manifest.json"
+                    "r003_protocol": self.root / "docs" / "R003_PAPER500_PROTOCOL_V1.md",
+                    "r003_core": self.root / "scripts" / "r003_paper500.py",
+                    "r003_evaluator": self.root / "scripts" / "evaluate_r003_paper500.py",
+                    "r003_profile": self.paper500_profile_path,
+                    "r003_profile_manifest": self.paper500_profile_path.with_name(
+                        f"{PAPER500_EVAL_ID}_manifest.json"
                     ),
                 }
             )
@@ -476,11 +477,11 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "sim_seed_policy": SIM_SEED_POLICY,
             "config_sha256": config_sha256,
             "termination_reason": None,
-            "evaluation_profile": PAPER1000_PROFILE_ID if self.paper1000_enabled else None,
-            "budget_semantics": "odom_progress_0p30m_v1" if self.paper1000_enabled else None,
-            "paper1000_profile_file": str(self.paper1000_profile_path) if self.paper1000_enabled else None,
-            "paper1000_max_odom_gap_s": self.paper1000_budget.max_gap_s if self.paper1000_enabled else None,
-            "paper1000_max_odom_increment_m": self.paper1000_budget.max_increment_m if self.paper1000_enabled else None,
+            "evaluation_profile": PAPER500_PROFILE_ID if self.paper500_enabled else None,
+            "budget_semantics": PAPER500_BUDGET_ID if self.paper500_enabled else None,
+            "paper500_profile_file": str(self.paper500_profile_path) if self.paper500_enabled else None,
+            "paper500_max_odom_gap_s": self.paper500_budget.max_gap_s if self.paper500_enabled else None,
+            "paper500_max_odom_increment_m": self.paper500_budget.max_increment_m if self.paper500_enabled else None,
         }
         self._write_metadata(metadata)
         return metadata
@@ -532,10 +533,10 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                 "endpoint_error_m", "usable",
             ],
         )
-        if self.paper1000_enabled:
-            from nf_run import PAPER1000_SNAPSHOT_FIELDS
+        if self.paper500_enabled:
+            from nf_run import PAPER500_SNAPSHOT_FIELDS
             self.fpaper, self.wpaper = self._open(
-                "paper1000_snapshots.csv", PAPER1000_SNAPSHOT_FIELDS
+                "paper500_snapshots.csv", PAPER500_SNAPSHOT_FIELDS
             )
 
     # ----- benchmark gate / policy decision instrumentation -----
@@ -592,7 +593,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         return result
 
     def exploration_step(self):
-        if self.paper1000_cutoff_requested:
+        if self.paper500_cutoff_requested:
             return
         if not self.startup_ready():
             return
@@ -626,13 +627,13 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                     evaluation_start_y=float(robot_pose[1]),
                     runtime_map_resolution_m=float(self.map_msg.info.resolution),
                 )
-                self._start_paper1000_if_needed()
+                self._start_paper500_if_needed()
 
         # A successful MapEx selection publishes markers and dispatches
         # NavigateToPose inside this call. Recorder I/O is intentionally deferred
         # until control returns here, so disk writes cannot delay goal dispatch.
         mapex.MapExExplorer.exploration_step(self)
-        if self.paper1000_cutoff_requested:
+        if self.paper500_cutoff_requested:
             self.compute_t0 = None
             self.compute_sim_t0 = None
             self.pending_decision_selection = None
@@ -978,11 +979,11 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
     def finalize(self, reason):
         if self.finalized:
             return
-        if self.paper1000_enabled and reason != "budget_1000_reached":
+        if self.paper500_enabled and reason != "budget_500_reached":
             event = "natural_completion" if reason == "exploration_complete_before_budget" else "abnormal_final"
-            if self.paper1000_budget.started:
-                self._record_paper1000_sample(
-                    event, self.paper1000_budget.step, False, 0.0
+            if self.paper500_budget.started:
+                self._record_paper500_sample(
+                    event, self.paper500_budget.step, False, 0.0
                 )
         if self.active_goal is not None:
             self.finish_goal("interrupted", "", "", "run_interrupted")
@@ -1048,13 +1049,13 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "prediction_maps_saved": self.save_predictions,
             "prediction_members_saved": 3 if self.save_predictions else 0,
             "prediction_save_semantics": "post_goal_dispatch",
-            "paper1000_profile": PAPER1000_PROFILE_ID if self.paper1000_enabled else None,
-            "paper1000_progress_step": self.paper1000_budget.step if self.paper1000_enabled else None,
-            "paper1000_distance_m": self.paper1000_budget.distance_m if self.paper1000_enabled else None,
-            "paper1000_post_cancellation_distance_m": self.paper1000_post_cancel_distance_m if self.paper1000_enabled else None,
-            "paper1000_cutoff_detection_overshoot_m": self.paper1000_cutoff_detection_overshoot_m if self.paper1000_enabled else None,
-            "paper1000_cutoff_map_age_s": self.paper1000_cutoff_map_age_s if self.paper1000_enabled else None,
-            "paper1000_integrity_faults": list(self.paper1000_budget.integrity_faults) if self.paper1000_enabled else [],
+            "paper500_profile": PAPER500_PROFILE_ID if self.paper500_enabled else None,
+            "paper500_progress_step": self.paper500_budget.step if self.paper500_enabled else None,
+            "paper500_distance_m": self.paper500_budget.distance_m if self.paper500_enabled else None,
+            "paper500_post_cancellation_distance_m": self.paper500_post_cancel_distance_m if self.paper500_enabled else None,
+            "paper500_cutoff_detection_overshoot_m": self.paper500_cutoff_detection_overshoot_m if self.paper500_enabled else None,
+            "paper500_cutoff_map_age_s": self.paper500_cutoff_map_age_s if self.paper500_enabled else None,
+            "paper500_integrity_faults": list(self.paper500_budget.integrity_faults) if self.paper500_enabled else [],
         }
         (self.run / "summary.json").write_text(
             json.dumps(summary, indent=2, allow_nan=True), encoding="utf-8"
@@ -1074,18 +1075,18 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             selection_verification_failures=self.selection_verification_failures,
             prediction_save_ms_mean=self._mean(self.prediction_save_ms),
             prediction_save_ms_std=self._std(self.prediction_save_ms),
-            paper1000_progress_step=self.paper1000_budget.step if self.paper1000_enabled else None,
-            paper1000_distance_m=self.paper1000_budget.distance_m if self.paper1000_enabled else None,
-            paper1000_post_cancellation_distance_m=self.paper1000_post_cancel_distance_m if self.paper1000_enabled else None,
-            paper1000_cutoff_detection_overshoot_m=self.paper1000_cutoff_detection_overshoot_m if self.paper1000_enabled else None,
-            paper1000_cutoff_map_age_s=self.paper1000_cutoff_map_age_s if self.paper1000_enabled else None,
+            paper500_progress_step=self.paper500_budget.step if self.paper500_enabled else None,
+            paper500_distance_m=self.paper500_budget.distance_m if self.paper500_enabled else None,
+            paper500_post_cancellation_distance_m=self.paper500_post_cancel_distance_m if self.paper500_enabled else None,
+            paper500_cutoff_detection_overshoot_m=self.paper500_cutoff_detection_overshoot_m if self.paper500_enabled else None,
+            paper500_cutoff_map_age_s=self.paper500_cutoff_map_age_s if self.paper500_enabled else None,
         )
         self.get_logger().warn(
             f"MAPEX SAVED: env={self.environment}, profile={self.runtime_profile_name}, "
             f"coverage={self.fmt(self.coverage)}, distance={self.distance:.2f}m, output={self.run}"
         )
-        if self.paper1000_enabled:
-            self.paper1000_shutdown_requested = True
+        if self.paper500_enabled:
+            self.paper500_shutdown_requested = True
 
     def close_recorder_files(self):
         """Flush/close CSVs before the offline evaluator rewrites metrics.csv."""
@@ -1121,7 +1122,7 @@ def main():
             "files after goal dispatch (disable with --no-save-predictions to reduce disk use)."
         ),
     )
-    parser.add_argument("--paper1000", action="store_true", help="enable approved R003 New Room paper1000 profile")
+    parser.add_argument("--paper500", action="store_true", help="enable approved R003 New Room paper500 profile")
     args, ros_args = parser.parse_known_args()
 
     rclpy.init(args=mapex._mapex_init_args(ros_args))
@@ -1136,7 +1137,7 @@ def main():
             args.save_predictions,
             args.environment,
             args.runtime_profile,
-            args.paper1000,
+            args.paper500,
         )
         executor = MultiThreadedExecutor(num_threads=4)
         executor.add_node(node)
@@ -1158,7 +1159,7 @@ def main():
         if rclpy.ok():
             rclpy.shutdown()
 
-    if run_dir is not None and ground_truth_path is not None and roi_path is not None and not args.paper1000:
+    if run_dir is not None and ground_truth_path is not None and roi_path is not None and not args.paper500:
         result = evaluate_run(run_dir, ground_truth_path, roi_path)
         status = result.get("status", "unknown")
         if status == "ok":

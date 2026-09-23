@@ -30,9 +30,9 @@ def sha256(path):
 def _decision_log(run, snapshots=False):
     """Return (path, id_field, raw-field) for decisions or R003 samples."""
     if snapshots:
-        path = run / 'paper1000_snapshots.csv'
+        path = run / 'paper500_snapshots.csv'
         if not path.is_file():
-            raise FileNotFoundError('Run lacks paper1000_snapshots.csv: {}'.format(run))
+            raise FileNotFoundError('Run lacks paper500_snapshots.csv: {}'.format(run))
         return path, 'sample_id', 'raw_map_file'
     mapex_path = run / 'decisions.csv'
     nf_path = run / 'policy_decisions.csv'
@@ -126,7 +126,7 @@ def generate(run, checkpoint, predict, overwrite=False, snapshots=False):
     payload = dict(prediction_source='alltrain',
                    decision_log=decisions_path.name,
                    decision_id_field=id_field,
-                   source_kind='paper1000_snapshots' if snapshots else 'policy_decisions',
+                   source_kind='paper500_snapshots' if snapshots else 'policy_decisions',
                    raw_map_field=raw_field,
                    decisions_sha256=source_hash,
                    checkpoint=dict(path=str(checkpoint), sha256=sha256(checkpoint)),
@@ -155,8 +155,8 @@ def main():
         help='replace an existing evaluation/alltrain directory for this run',
     )
     parser.add_argument(
-        '--paper1000-snapshots', action='store_true',
-        help='infer the common initial/k=10..1000/final R003 snapshot manifest',
+        '--paper500-snapshots', action='store_true',
+        help='infer the common initial/k=10..500/final R003 snapshot manifest',
     )
     args = parser.parse_args()
     root = Path(args.mapex_root).expanduser().resolve()
@@ -188,7 +188,7 @@ def main():
     print(generate(
         args.run_dir, checkpoint, predict,
         overwrite=args.overwrite_alltrain,
-        snapshots=args.paper1000_snapshots,
+        snapshots=args.paper500_snapshots,
     ))
 
 

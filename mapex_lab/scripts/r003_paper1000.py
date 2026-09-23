@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Frozen R003 New Room paper1000 construction and evaluation primitives.
+"""Frozen R003 New Room paper500 construction and evaluation primitives.
 
 This module is deliberately ROS-free.  The online recorders use the budget and
 snapshot helpers, while the offline generator/evaluator uses the grid helpers.
@@ -40,17 +40,17 @@ from generate_new_room_ground_truth import (
     _world_to_cell,
 )
 
-PROFILE_ID = "new_room_mapex_paper1000_v1"
-BUDGET_ID = "odom_progress_0p30m_v1"
+PROFILE_ID = "new_room_mapex_paper500_v1"
+BUDGET_ID = "odom_progress_0p30m_500step_v1"
 STRUCTURAL_ID = "new_room_mapex_structural_v1"
 VALID_SPACE_ID = "new_room_mapex_valid_space_v1"
 EVAL_ID = "new_room_mapex_eval_010_v1"
-PROTOCOL_RELATIVE = "docs/R003_PAPER1000_PROTOCOL_V1.md"
+PROTOCOL_RELATIVE = "docs/R003_PAPER500_PROTOCOL_V1.md"
 REDUCED_RES = 0.10
 REDUCED_W = 752
 REDUCED_H = 1062
 STEP_METERS = 0.30
-MAX_STEPS = 1000
+MAX_STEPS = 500
 BUDGET_METERS = STEP_METERS * MAX_STEPS
 TU_GOAL_COUNT = 100
 TU_SEED = 3001
@@ -240,6 +240,12 @@ def build_profile(sdf_path: Path, output_dir: Path, *, git_commit: str) -> dict:
     manifest = {
         "profile_id": PROFILE_ID,
         "budget_id": BUDGET_ID,
+        "budget": {
+            "step_m": STEP_METERS,
+            "max_steps": MAX_STEPS,
+            "budget_m": BUDGET_METERS,
+            "common_step_spacing": 10,
+        },
         "structural_id": STRUCTURAL_ID,
         "valid_space_id": VALID_SPACE_ID,
         "evaluation_id": EVAL_ID,
@@ -284,8 +290,8 @@ def build_profile(sdf_path: Path, output_dir: Path, *, git_commit: str) -> dict:
             "tu_goals_file_sha256": sha256(goals_path),
         },
         "generation_command": (
-            "python3 mapex_lab/scripts/generate_r003_paper1000_profile.py "
-            "--output-dir mapex_lab/ground_truth/new_room/generated/r003_paper1000"
+            "python3 mapex_lab/scripts/generate_r003_paper500_profile.py "
+            "--output-dir mapex_lab/ground_truth/new_room/generated/r003_paper500"
         ),
     }
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")

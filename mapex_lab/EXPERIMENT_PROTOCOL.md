@@ -1,8 +1,13 @@
 # Experiment Protocol
 
-## New Room R003 profile supplement — USER-approved 2026-09-23
+## New Room R003 paper500 supplement — USER-approved 2026-09-23
 
-The New Room `new_room_mapex_paper1000_v1` protocol is defined in [docs/R003_PAPER1000_PROTOCOL_V1.md](docs/R003_PAPER1000_PROTOCOL_V1.md). Its ROS odometry-progress adaptation, GT/valid-space, common alltrain evaluation, cutoff capture and staged acceptance gates are frozen by USER approval. The Hospital protocol below is historical/current Hospital context and must not be copied as the effective R003 New Room runtime configuration.
+The current New Room `new_room_mapex_paper500_v1` protocol is defined in
+[docs/R003_PAPER500_PROTOCOL_V1.md](docs/R003_PAPER500_PROTOCOL_V1.md). It uses
+500 adapted 0.30 m odometry-progress steps (150.0 m), common k=10 support and
+the unchanged approved GT/valid-space/evaluation semantics. The earlier
+paper1000 document is historical. Official runtime remains gated on independent
+review of the exact implementation SHA.
 
 
 Mọi phương pháp so sánh phải dùng cùng protocol, trừ khi thay đổi đó chính là biến thí nghiệm và được ghi rõ.

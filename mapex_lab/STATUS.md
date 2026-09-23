@@ -1,15 +1,20 @@
 # mapex_lab status
 
-## R003 — New Room paper1000: implementation ready for mask review
+## R003 — New Room paper500: implementation ready for independent review
 
-USER approved R003 v1 on 2026-09-23. Canonical contract: [R003_PAPER1000_PROTOCOL_V1.md](docs/R003_PAPER1000_PROTOCOL_V1.md).
+USER reset the official R003 horizon on 2026-09-23. Canonical contract:
+[R003_PAPER500_PROTOCOL_V1.md](docs/R003_PAPER500_PROTOCOL_V1.md).
 
-- Profile: `new_room_mapex_paper1000_v1`; one ROS adapted progress step = 0.30 m accumulated odometry, maximum 1000.
+- Profile: `new_room_mapex_paper500_v1`; one ROS adapted progress step = 0.30 m accumulated odometry, maximum 500 (150.0 m).
 - Versioned structural GT/valid-space at 0.10 m; common alltrain IoU/TU evaluation for NF and MapEx.
-- CODEX implemented the isolated R003 mask/evaluator/budget path and common-snapshot alltrain extension on branch `r003-paper1000-implementation`.
-- Focused R003 tests pass, along with the existing alltrain recorder and R002 suites. Candidate masks, 100 fixed TU goals, counts/hashes and visual overlays are generated under `ground_truth/new_room/generated/r003_paper1000/`.
-- Current gate: WORK reviews implementation + masks/overlays. No 1+1 smoke, 10+10 bulk run or workbook update has been performed.
-- Smoke must verify real cutoff responsiveness, detection overshoot <=0.10 m, cutoff-map age <=2 sim seconds, action cancellation and NF/MapEx evaluator parity before bulk.
+- CODEX implemented the paper500 budget/evaluator/provenance path, public
+  `--paper500` runner mode, and resume-safe 20-run batch/watchdog on branch
+  `r003-paper500-h031`.
+- Profile masks and 100 fixed TU goals remain unchanged; paper500 artifacts are
+  under `ground_truth/new_room/generated/r003_paper500/`.
+- Official cohort is `nf_p500_001..010` + `mpx_p500_001..010`.
+- Current gate: H030 Stage-B independent review of the exact branch SHA. No
+  official paper500 run or workbook update has been performed.
 - Existing historical metrics remain auditable. R002 fairness investigation remains paused.
 
 
