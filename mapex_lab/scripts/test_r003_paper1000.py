@@ -54,6 +54,33 @@ class R003GridTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             r003.project_runtime_observed(raw, 0.1, 0.0, 0.0, 0.1)
 
+    def test_prediction_projection_preserves_float_probabilities(self):
+        probability = np.asarray(
+            [[0.49, 0.50], [0.51, 0.80]],
+            dtype=np.float32,
+        )
+        projected, support = r003.project_runtime_prediction(
+            probability,
+            0.1,
+            r003.CANVAS_X,
+            r003.CANVAS_Y,
+            0.0,
+        )
+        self.assertTrue(np.all(support[:4, :4]))
+        self.assertFalse(support[-1, -1])
+        self.assertAlmostEqual(float(projected[0, 0]), 0.49, places=6)
+        self.assertAlmostEqual(float(projected[0, 2]), 0.50, places=6)
+        self.assertAlmostEqual(float(projected[2, 0]), 0.51, places=6)
+        self.assertAlmostEqual(float(projected[2, 2]), 0.80, places=6)
+
+        reduced = r003.reduce_prediction(projected)
+        np.testing.assert_allclose(
+            reduced[:2, :2],
+            probability,
+            rtol=0.0,
+            atol=1e-6,
+        )
+
 
 class R003BudgetTests(unittest.TestCase):
     def test_residual_carries_across_goal_and_recovery_motion(self):
@@ -137,6 +164,101 @@ class R003TUTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             r003.select_final_sample(rows + [{"event": "natural_completion"}])
 
+    def test_abnormal_final_is_authoritative_failure_support(self):
+        rows = [
+            {"event": "initial", "sample_id": "1"},
+            {"event": "progress", "sample_id": "2"},
+            {"event": "abnormal_final", "sample_id": "3"},
+        ]
+        self.assertEqual(r003.select_final_sample(rows)["sample_id"], "3")
+
+
+class R003CurveTests(unittest.TestCase):
+    @staticmethod
+    def _row(sample_id, event, step, value):
+        return {
+            "sample_id": sample_id,
+            "event": event,
+            "progress_step": step,
+            "distance_m": step * r003.STEP_METERS,
+            "coverage": value,
+            "known_fraction": value,
+            "occupied_iou": value,
+            "empty_iou_union": False,
+            "tu": value,
+            "tu_success": 0,
+            "tu_predicted_occupied": 0,
+            "tu_no_path": 0,
+            "tu_gt_collision": 0,
+            "observed_support_fraction": 1.0,
+            "prediction_support_fraction": 1.0,
+            "held": False,
+            "held_from_sample_id": "",
+        }
+
+    def test_trapezoid_known_area(self):
+        rows = [
+            self._row(1, "initial", 0, 0.0),
+            self._row(2, "progress", 10, 1.0),
+            self._row(3, "abnormal_final", 15, 0.5),
+        ]
+        result = evaluator.trapezoidal_auc(rows, "coverage")
+        self.assertAlmostEqual(result["area"], 8.75)
+        self.assertEqual(result["start_step"], 0)
+        self.assertEqual(result["end_step"], 15)
+        self.assertEqual(result["point_count"], 3)
+
+    def test_natural_completion_holds_to_1000_and_marks_rows(self):
+        rows = [
+            self._row(1, "initial", 0, 0.0),
+            self._row(2, "progress", 10, 1.0),
+            self._row(3, "natural_completion", 15, 0.5),
+            self._row(4, "post_cancellation", 16, 0.1),
+        ]
+        raw, held, curve = evaluator.build_curve_support(rows, rows[2])
+        self.assertEqual([row["progress_step"] for row in raw], [0, 10, 15])
+        self.assertEqual(curve[-1]["progress_step"], 1000)
+        self.assertTrue(all(row["held"] for row in held))
+        self.assertTrue(
+            all(row["event"] == "natural_completion_hold" for row in held)
+        )
+        self.assertTrue(
+            all(row["held_from_sample_id"] == 3 for row in held)
+        )
+        self.assertAlmostEqual(
+            evaluator.trapezoidal_auc(curve, "coverage")["area"],
+            501.25,
+        )
+
+    def test_algorithmic_failure_stops_support_without_hold(self):
+        rows = [
+            self._row(1, "initial", 0, 0.0),
+            self._row(2, "progress", 10, 1.0),
+            self._row(3, "abnormal_final", 15, 0.5),
+            self._row(4, "post_cancellation", 20, 0.9),
+        ]
+        raw, held, curve = evaluator.build_curve_support(rows, rows[2])
+        self.assertEqual([row["progress_step"] for row in raw], [0, 10, 15])
+        self.assertEqual(held, [])
+        self.assertEqual(curve[-1]["progress_step"], 15)
+        self.assertAlmostEqual(
+            evaluator.trapezoidal_auc(curve, "coverage")["area"],
+            8.75,
+        )
+
+    def test_same_step_final_replaces_earlier_progress_sample(self):
+        rows = [
+            self._row(1, "initial", 0, 0.0),
+            self._row(2, "progress", 10, 0.2),
+            self._row(3, "natural_completion", 10, 0.7),
+        ]
+        raw, held, curve = evaluator.build_curve_support(rows, rows[2])
+        self.assertEqual(len(raw), 2)
+        self.assertEqual(raw[-1]["sample_id"], 3)
+        self.assertEqual(raw[-1]["coverage"], 0.7)
+        self.assertTrue(held)
+        self.assertEqual(curve[-1]["progress_step"], 1000)
+
 
 class R003ProfileTests(unittest.TestCase):
     def test_generated_profile_contract(self):
@@ -210,6 +332,16 @@ class R003ProfileTests(unittest.TestCase):
             self.assertEqual(result["status"], "ok")
             self.assertEqual(result["sample_count"], 2)
             self.assertEqual(result["final"]["sample_id"], 2)
+            self.assertEqual(result["termination"]["kind"], "natural_completion")
+            self.assertEqual(result["raw_support_count"], 1)
+            self.assertEqual(result["raw_record_count_through_terminal"], 2)
+            self.assertEqual(result["held_support_count"], 100)
+            self.assertEqual(result["curve_support_count"], 101)
+            self.assertEqual(result["endpoint_at_1000"]["progress_step"], 1000)
+            self.assertTrue(result["endpoint_at_1000"]["held"])
+            self.assertTrue(
+                (run / "evaluation" / "paper1000" / "curve.csv").is_file()
+            )
 
 
 if __name__ == "__main__":
