@@ -32,19 +32,37 @@ def pbin(x):
 def read_csv(p):
     with p.open(newline="",encoding="utf-8") as f:return list(csv.DictReader(f))
 def scalar(z,k): return np.asarray(z[k]).reshape(()).item()
+def artifact_path(run,value):
+    p=(run/value).resolve(); base=run.resolve()
+    if p!=base and base not in p.parents: raise ValueError(f"artifact escapes run directory: {value}")
+    return p
+def load_canvas(run,value,expected=None):
+    p=artifact_path(run,value)
+    if not p.is_file(): raise ValueError(f"missing canvas: {value}")
+    try:
+        with np.load(p,allow_pickle=False) as z:
+            required=("data","resolution","origin_x","origin_y","canvas_id")
+            if any(k not in z.files for k in required): raise ValueError("missing fixed-canvas metadata")
+            data=np.asarray(z["data"],dtype=np.int16); meta=(data.shape,float(scalar(z,"resolution")),float(scalar(z,"origin_x")),float(scalar(z,"origin_y")),str(scalar(z,"canvas_id")))
+    except Exception as exc: raise ValueError(f"invalid canvas {value}: {exc}") from exc
+    if data.ndim!=2 or not all(math.isfinite(x) for x in meta[1:4]) or meta[1]<=0 or not meta[4]: raise ValueError(f"invalid fixed-canvas semantics: {value}")
+    if expected is not None and meta!=expected: raise ValueError(f"fixed-canvas mismatch: {value}")
+    return data,meta,str(p.relative_to(run.resolve()))
 def final_snapshot(run):
     rows=read_csv(run/"snapshots.csv"); finals=[(i,r) for i,r in enumerate(rows) if r.get("event","").lower()=="final"]
     if len(finals)!=1: raise ValueError(f"{run.name}: expected one final row, got {len(finals)}")
-    i,r=finals[0]; p=run/r["canvas_map_file"]
-    fallback=False
-    if not p.is_file():
-        valid=[]
-        for j,x in enumerate(rows[:i]):
-            q=run/x.get("canvas_map_file","")
-            if q.is_file(): valid.append((j,x,q))
-        if not valid: raise ValueError(f"{run.name}: no defensible final observed snapshot")
-        j,r,p=valid[-1]; fallback=True
-    with np.load(p) as z:return np.asarray(z["data"],dtype=np.int16),str(p.relative_to(run)),fallback
+    decisions=read_csv(run/"decisions.csv")
+    if not decisions: raise ValueError(f"{run.name}: no decision canvas for canonical grid")
+    _,canonical,_=load_canvas(run,decisions[0]["canvas_map"])
+    i,r=finals[0]
+    try:
+        data,_,rel=load_canvas(run,r["canvas_map_file"],canonical); return data,rel,False
+    except ValueError:
+        for x in reversed(rows[:i]):
+            try:
+                data,_,rel=load_canvas(run,x.get("canvas_map_file",""),canonical); return data,rel,True
+            except ValueError: continue
+    raise ValueError(f"{run.name}: no valid canonical final/fallback snapshot")
 
 def prediction_canvas(run,row,shape):
     with np.load(run/row["raw_map"]) as z:
@@ -52,13 +70,18 @@ def prediction_canvas(run,row,shape):
     with np.load(run/row["canvas_map"]) as z:
         obs=np.asarray(z["data"],dtype=np.int16); cr=float(scalar(z,"resolution")); cx=float(scalar(z,"origin_x")); cy=float(scalar(z,"origin_y"))
     with np.load(run/row["mean_map"]) as z:
-        a=np.asarray(z["data"],dtype=np.float32); h=int(scalar(z,"source_height")); w=int(scalar(z,"source_width")); top=int(scalar(z,"pad_top")); left=int(scalar(z,"pad_left"))
+        required=("data","source_height","source_width","pad_top","pad_left","resolution","origin_x","origin_y")
+        if any(k not in z.files for k in required): raise ValueError("prediction artifact missing geometry")
+        a=np.asarray(z["data"],dtype=np.float32); h=int(scalar(z,"source_height")); w=int(scalar(z,"source_width")); top=int(scalar(z,"pad_top")); left=int(scalar(z,"pad_left")); pr=float(scalar(z,"resolution")); px=float(scalar(z,"origin_x")); py=float(scalar(z,"origin_y"))
         if (h,w)!=raw.shape: raise ValueError("prediction/raw shape mismatch")
+        if top<0 or left<0 or top+h>a.shape[0] or left+w>a.shape[1]: raise ValueError("prediction crop outside padded artifact")
         pred=a[top:top+h,left:left+w]
-    ratio=round(rr/cr)
-    if ratio<1 or not math.isclose(rr/cr,ratio,abs_tol=1e-6): raise ValueError("incompatible grids")
+    if not np.all(np.isfinite(pred)): raise ValueError("prediction contains non-finite values")
+    if not (math.isclose(pr,rr,abs_tol=1e-6) and math.isclose(px,rx,abs_tol=1e-6) and math.isclose(py,ry,abs_tol=1e-6)): raise ValueError("raw/prediction geometry provenance mismatch")
+    ratio=round(pr/cr)
+    if ratio<1 or not math.isclose(pr/cr,ratio,abs_tol=1e-6): raise ValueError("incompatible grids")
     expanded=np.repeat(np.repeat(pred,ratio,0),ratio,1); out=np.full(shape,np.nan,np.float32); support=np.zeros(shape,bool)
-    r0=round((ry-cy)/cr); c0=round((rx-cx)/cr); sr=max(0,-r0); sc=max(0,-c0); dr=max(0,r0); dc=max(0,c0)
+    r0=round((py-cy)/cr); c0=round((px-cx)/cr); sr=max(0,-r0); sc=max(0,-c0); dr=max(0,r0); dc=max(0,c0)
     nr=min(expanded.shape[0]-sr,shape[0]-dr); nc=min(expanded.shape[1]-sc,shape[1]-dc)
     if nr>0 and nc>0: out[dr:dr+nr,dc:dc+nc]=expanded[sr:sr+nr,sc:sc+nc]; support[dr:dr+nr,dc:dc+nc]=True
     return obs,out,support
@@ -92,6 +115,8 @@ def corr(x,y):
     a=np.asarray(x,float); b=np.asarray(y,float); ok=np.isfinite(a)&np.isfinite(b)
     if np.sum(ok)<2 or len(np.unique(a[ok]))<2 or len(np.unique(b[ok]))<2:return math.nan
     return float(spearmanr(a[ok],b[ok]).statistic)
+def unsupported_fraction(coverage):
+    return 1.0-float(coverage) if math.isfinite(float(coverage)) else math.nan
 
 def sensitivity_rows(run_id,samples,kind):
     eligible=[s for s in samples if len(s[1])>0]
@@ -177,8 +202,14 @@ def plot_lines(rows,out,macrobin):
         ax.set(xlabel="Normalized decision progress",ylabel="IoU",title=f"{rid} conditional quality"); ax.grid(alpha=.25); ax.legend(); fig.tight_layout(); fig.savefig(plots/f"{rid}_quality_vs_progress.png",dpi=160); plt.close(fig)
     fig,ax=plt.subplots(figsize=(7,4)); x=np.arange(len(macrobin)); y=[z["macro_iou_mean"] for z in macrobin]; e=[z["macro_iou_std"] for z in macrobin]
     ax.errorbar(x,y,yerr=e,marker="o",capsize=4); ax.set_xticks(x,[z["progress_bin"] for z in macrobin],rotation=15); ax.set(xlabel="Normalized decision-progress bin",ylabel="Run-macro IoU mean ± std",title="10-run macro conditional quality"); ax.grid(alpha=.25); fig.tight_layout(); fig.savefig(plots/"run_macro_quality_vs_progress.png",dpi=160); plt.close(fig)
-    one("support_coverage_vs_progress.png",[("support_coverage","Overall","-"),("free_support_coverage","Free","--"),("occupied_support_coverage","Occupied",":")],"Prediction support coverage","Coverage")
-    one("unsupported_fraction_vs_progress.png",[("support_coverage","Support coverage","-")],"Support coverage (unsupported = 1 - curve)","Coverage")
+    one("per_run_support_coverage_vs_progress.png",[("support_coverage","Overall","-"),("free_support_coverage","Free","--"),("occupied_support_coverage","Occupied",":")],"Per-run prediction support coverage","Coverage")
+    x=np.arange(len(macrobin)); labels=[z["progress_bin"] for z in macrobin]
+    fig,ax=plt.subplots(figsize=(7,4))
+    for key,label,style in (("support_coverage","Overall","o-"),("free_support_coverage","Free","s--"),("occupied_support_coverage","Occupied","^:")):
+        ax.errorbar(x,[z[key+"_mean"] for z in macrobin],yerr=[z[key+"_std"] for z in macrobin],fmt=style,capsize=3,label=label)
+    ax.set_xticks(x,labels,rotation=15); ax.set(xlabel="Normalized decision-progress bin",ylabel="Run-macro support coverage mean ± std",title="10-run macro prediction support coverage"); ax.grid(alpha=.25); ax.legend(); fig.tight_layout(); fig.savefig(plots/"support_coverage_vs_progress.png",dpi=160); plt.close(fig)
+    fig,ax=plt.subplots(figsize=(7,4)); means=[unsupported_fraction(z["support_coverage_mean"]) for z in macrobin]; stds=[z["support_coverage_std"] for z in macrobin]
+    ax.errorbar(x,means,yerr=stds,marker="o",capsize=4); ax.set_xticks(x,labels,rotation=15); ax.set(xlabel="Normalized decision-progress bin",ylabel="Run-macro unsupported fraction mean ± std",title="Unsupported future-observed fraction (1 - C)"); ax.grid(alpha=.25); fig.tight_layout(); fig.savefig(plots/"unsupported_fraction_vs_progress.png",dpi=160); plt.close(fig)
     one("support_size_vs_progress.png",[("E_count","Scoreable E","-"),("F_count","Target F","--")],"Support size","Cells")
     one("class_balance_vs_progress.png",[("E_occupied_fraction","Occupied fraction E","-"),("F_occupied_fraction","Occupied fraction F","--")],"Class balance","Occupied fraction")
     one("free_iou_vs_progress.png",[("free_iou","Free IoU","-")],"Free IoU","IoU")
@@ -200,16 +231,21 @@ def overlays(data_root,out):
 
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument("data_root",type=Path); ap.add_argument("--output",type=Path,required=True); ap.add_argument("--inventory-only",action="store_true"); a=ap.parse_args()
-    inventory=[]; allrows=[]; sample_map={}
+    inventory=[]; allrows=[]; sample_map={}; exclusions=[]
     for rid in RUNS:
         run=a.data_root/"mapex_lab/experiments/mapex"/rid
-        rows,samples=analyze_run(run); inventory.append(dict(run_id=rid,decisions=len(rows),partial_support=sum(r["unsupported_count"]>0 for r in rows)))
-        allrows.extend(rows); sample_map[rid]=samples
+        try:
+            rows,samples=analyze_run(run); inventory.append(dict(run_id=rid,status="included",decisions=len(rows),partial_support=sum(r["unsupported_count"]>0 for r in rows)))
+            allrows.extend(rows); sample_map[rid]=samples
+        except Exception as exc:
+            exclusions.append(dict(run_id=rid,reason=str(exc))); inventory.append(dict(run_id=rid,status="excluded",reason=str(exc),decisions=0,partial_support=0)); sample_map[rid]=[]
     if a.inventory_only: print(json.dumps(inventory,indent=2)); return
     out=a.output; write_csv(out/"prediction_vs_final_observed_decisions.csv",allrows)
     runrows=[]
     for rid in RUNS:
-        rr=[x for x in allrows if x["run_id"]==rid]; q=dict(run_id=rid,decisions=len(rr),partial_support_decisions=sum(x["unsupported_count"]>0 for x in rr))
+        rr=[x for x in allrows if x["run_id"]==rid]
+        if not rr: continue
+        q=dict(run_id=rid,decisions=len(rr),partial_support_decisions=sum(x["unsupported_count"]>0 for x in rr))
         for m in ("support_coverage","free_support_coverage","occupied_support_coverage")+METRICS:
             v=np.array([x[m] for x in rr],float); v=v[np.isfinite(v)]; q[m+"_mean"]=float(v.mean()) if v.size else math.nan; q[m+"_n"]=int(v.size)
         q.update(spearman_macro_iou_vs_progress=corr([x["decision_progress"] for x in rr],[x["macro_iou"] for x in rr]),spearman_macro_iou_vs_log_support=corr([math.log(max(1,x["E_count"])) for x in rr],[x["macro_iou"] for x in rr]),spearman_macro_iou_vs_occupied_fraction=corr([x["E_occupied_fraction"] for x in rr],[x["macro_iou"] for x in rr]))
@@ -221,10 +257,10 @@ def main():
         total.extend(sensitivity_rows(rid,sample_map[rid],"total")); composition.extend(sensitivity_rows(rid,sample_map[rid],"class"))
     write_csv(out/"total_support_sensitivity.csv",total); write_csv(out/"class_composition_sensitivity.csv",composition)
     sper,smacro=sensitivity_bin_summary(total+composition); write_csv(out/"sensitivity_run_bin_medians.csv",sper); write_csv(out/"sensitivity_progress_bins.csv",smacro)
-    summary={"schema":"r004_prediction_vs_final_observed_v4","runs":len(runrows),"included_runs":list(RUNS),"excluded_runs":[],"decisions":len(allrows),"partial_support_decisions":sum(x["unsupported_count"]>0 for x in allrows),"zero_support_decisions":sum(x["E_count"]==0 and x["F_count"]>0 for x in allrows),"F_count":sum(x["F_count"] for x in allrows),"E_count":sum(x["E_count"] for x in allrows),"unsupported_count":sum(x["unsupported_count"] for x in allrows),"support_coverage_pooled":div(sum(x["E_count"] for x in allrows),sum(x["F_count"] for x in allrows)),"method":"V3+V4","threshold":"occupied iff p > 0.5","total_sensitivity_rows":len(total),"class_sensitivity_rows":len(composition)}
+    summary={"schema":"r004_prediction_vs_final_observed_v4","runs":len(runrows),"included_runs":[x["run_id"] for x in runrows],"excluded_runs":exclusions,"decisions":len(allrows),"partial_support_decisions":sum(x["unsupported_count"]>0 for x in allrows),"zero_support_decisions":sum(x["E_count"]==0 and x["F_count"]>0 for x in allrows),"F_count":sum(x["F_count"] for x in allrows),"E_count":sum(x["E_count"] for x in allrows),"unsupported_count":sum(x["unsupported_count"] for x in allrows),"support_coverage_pooled":div(sum(x["E_count"] for x in allrows),sum(x["F_count"] for x in allrows)),"method":"V3+V4","threshold":"occupied iff p > 0.5","total_sensitivity_rows":len(total),"class_sensitivity_rows":len(composition)}
     (out/"prediction_vs_final_observed_summary.json").write_text(json.dumps(summary,indent=2)+"\n")
     write_csv(out/"partial_zero_support_inventory.csv",[x for x in allrows if x["unsupported_count"]>0 or x["E_count"]==0])
-    provenance={"schema":"r004_provenance_v1","data_root":str(a.data_root.resolve()),"runs":list(RUNS),"final_snapshot_fallbacks":[x["run_id"] for x in runrows if any(z["fallback_final_snapshot"] for z in allrows if z["run_id"]==x["run_id"])],"exclusions":[],"method":"R004 V3 + accepted V4 support amendment","prediction_support":"artifact geometry only","seed":"SHA256 deterministic","resamples":100,"overlay_legend":{"gray":"already observed","blue":"future-observed target without prediction support","green":"supported correct class","red":"supported incorrect class","white":"outside displayed evidence"}}
+    provenance={"schema":"r004_provenance_v1","data_root":str(a.data_root.resolve()),"runs":list(RUNS),"final_snapshot_fallbacks":[x["run_id"] for x in runrows if any(z["fallback_final_snapshot"] for z in allrows if z["run_id"]==x["run_id"])],"exclusions":exclusions,"method":"R004 V3 + accepted V4 support amendment","prediction_support":"prediction-artifact geometry with raw-geometry provenance validation","seed":"SHA256 deterministic","resamples":100,"overlay_legend":{"gray":"already observed","blue":"future-observed target without prediction support","green":"supported correct class","red":"supported incorrect class","white":"outside displayed evidence"}}
     (out/"provenance_exclusions_fallbacks.json").write_text(json.dumps(provenance,indent=2)+"\n")
     plot_lines(allrows,out,macrobin); overlays(a.data_root,out)
     print(json.dumps(summary,indent=2))

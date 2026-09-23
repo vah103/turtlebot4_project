@@ -16,7 +16,7 @@
   "final_snapshot_fallbacks": [],
   "exclusions": [],
   "method": "R004 V3 + accepted V4 support amendment",
-  "prediction_support": "artifact geometry only",
+  "prediction_support": "prediction-artifact geometry with raw-geometry provenance validation",
   "seed": "SHA256 deterministic",
   "resamples": 100,
   "overlay_legend": {

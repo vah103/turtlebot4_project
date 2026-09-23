@@ -1,7 +1,7 @@
 # R004 CODEX offline evaluator completion
 
 Date: 2026-09-23
-Task: R004-OFFLINE / H039
+Task: R004-OFFLINE / H039 + H040 review rework
 Maker: CODEX / W017
 Status: COMPLETE_PENDING_REVIEW
 Method: accepted V3 plus independently accepted V4 support amendment
@@ -19,16 +19,34 @@ Result root: `mapex_lab/analysis/r004/results/prediction_vs_final_observed_v1/`
 ## Validation
 
 - Python compile: PASS.
-- Focused evaluator suite: 10/10 PASS.
+- Focused evaluator suite: 13/13 PASS, including prediction/raw geometry
+  mismatch, corrupt-final fallback, invalid-fallback rejection, and `1-C`.
 - Dry-run inventory: 10 runs / 365 decisions.
 - Full execution: exit 0; all ten runs included; no exclusions or final-snapshot fallbacks.
-- Deterministic bounded rerun: `mpx_001` 35 decision records and 21 total-support sensitivity records byte/value equivalent in memory.
+- Determinism checks remain covered by the focused suite; the corrected full
+  rerun reproduced the prior decisions, runs, and summary hashes exactly.
 - Output count checks: 365 decision rows, 10 run rows, 40 run-bin rows,
   4 run-macro bins, 214 total-support sensitivity rows, 212 class-matched
-  sensitivity rows, 8 sensitivity-bin summaries, 17 figures, 30 overlays.
+  sensitivity rows, 8 sensitivity-bin summaries, 18 figures, 30 overlays.
 - `git diff --check`: PASS.
-- Visual QA: run-macro figure and early overlay inspected; overlay was cropped
-  to the evidence extent after QA exposed excessive fixed-canvas whitespace.
+- Visual QA: corrected run-macro support coverage and unsupported-fraction
+  figures inspected; overlay was cropped to the evidence extent after QA
+  exposed excessive fixed-canvas whitespace.
+
+## H040 corrections
+
+- Prediction support placement now uses geometry stored in each prediction
+  artifact and rejects any raw/prediction geometry mismatch.
+- FinalObserved now validates canonical path, 2-D shape, resolution, origin,
+  and canvas ID. A corrupt/invalid final snapshot falls back only to the latest
+  earlier snapshot that passes the same canonical validation; otherwise the run
+  is recorded as a technical exclusion.
+- Cohort figures now plot actual run-macro support coverage and actual
+  unsupported fraction (`1-C`). The earlier per-run curves remain separately
+  labelled.
+- Corrected full execution still includes 10/10 runs and 365 decisions. The
+  three core data artifacts below are byte-identical to the pre-review run;
+  provenance changed only to record the corrected geometry/validation method.
 
 ## V4 support inventory recomputed by final evaluator
 
@@ -65,7 +83,7 @@ Core hashes:
 - decisions CSV: `a6a5e84fc62aa8a94b848e88a65a0781d585c65c5a42beb20931b076bacac59a`
 - runs CSV: `43cc74f263810b8d5bbf871dd66227e757ad557f205e9e654a688832b8f19348`
 - summary JSON: `7ea7ead173cbc5c30c92e2a7f8ef203dd7926991fd74708d40c7e67715f1a785`
-- provenance JSON: `58d386b0ad30d135f2aace6ef04778586797630810ce6fd3b926eaa4ffcf38cc`
+- provenance JSON: `f5036a395d2a9e7747653d3f648b845f68733f30560ea4d2278049e0e3a011dc`
 
 ## Review notes / limitations
 
