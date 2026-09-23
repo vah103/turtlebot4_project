@@ -4,7 +4,7 @@ Date: 2026-09-23
 Task: R004-OFFLINE / H037
 Owner: CODEX maker
 Criticality: HIGH; independent review required
-Status: ACTIVE — implementation not yet complete
+Status: BLOCKED — frozen V3 scoring domain exceeds saved prediction support
 
 ## Frozen authority
 
@@ -48,3 +48,22 @@ evidence until the completion checkpoint records validation and exact counts.
 After CODEX delivery, hand code and outputs to Chat 2 / W016 / CHAT-CRITIC for
 independent implementation and result-integrity review. Scientific
 interpretation by Chat 1 occurs only after that review.
+
+## Pickup blocker discovered
+
+The frozen domain is `UnknownAtDecision ∩ KnownInFinalObserved`, but each
+historical prediction is saved only over that decision's dynamic raw-map
+footprint. The fixed canvas contains cells outside that footprint which are
+unknown at the decision and known in the final snapshot, but have no saved
+decision-time prediction value.
+
+Across `mpx_001..010`, 199 of 365 decisions have this mismatch. The frozen
+domain contains 14,589,701 decision-cell pairs, of which 4,170,941 (28.5883%)
+have no prediction support. For `mpx_001` decision 1, 197,712 cells belong to
+the frozen domain but only 63,516 have saved prediction support.
+
+Silently intersecting with prediction support, excluding affected decisions,
+or inventing predictions outside the saved footprint would each change the
+frozen methodology and the progress/support selection process. H037 explicitly
+requires CODEX to stop rather than improvise when V3 cannot be implemented
+exactly. No scoring code or result was produced.
