@@ -1,0 +1,38 @@
+PRECHECK_START 2026-09-23T15:25:08+07:00
+host=com1
+repo=/home/com1/turtlebot4_project_r003_h031
+branch=main
+sha=867337e69daa8146e08238b952347c5bca05c389
+tree=55c74fdb68f63a1ff2fc9e6ce2a105cdbfb56008
+ubuntu=Ubuntu 24.04.4 LTS
+kernel=6.12.0-061200-generic
+/bin/bash: line 21: ros2_ws/install/setup.bash: No such file or directory
+PRECHECK_RETRY_START 2026-09-23T15:42:40+07:00
+host=com1
+repo=/home/com1/turtlebot4_project_r003_h031
+branch=main
+sha=867337e69daa8146e08238b952347c5bca05c389
+tree=55c74fdb68f63a1ff2fc9e6ce2a105cdbfb56008
+ubuntu=Ubuntu 24.04.4 LTS
+kernel=6.12.0-061200-generic
+ros_distro=jazzy
+gz_version=Gazebo Sim, version 8.11.0
+ros_python=PASS
+runner_help=PASS
+big_lama_checkpoint_sha256=58c1841c10d4d97bc1f894ec8fe5b015b165277ddb2b9bb29eb688b21d4363b5
+big_lama_config_sha256=bc1208d4ffe133ffe8d5783f108304a48a3a14a4eaea461d1ee72bcae573e411
+torch=1.10.2
+cuda_available=False
+Detectron v2 is not installed
+big_lama_cpu_load=PASS
+official_ids_and_state_unused=PASS
+PRECHECK_REMAINDER_START 2026-09-23T15:43:24+07:00
+profile_sha256=3233d9bae62a7dfb52d3f9248c9932218d06bb5e2a2bea3516c57c5074481124
+manifest_sha256=2a06aa4d2dc044f5c5ab83e1e8d56c6f38ae40b57897aef89019e64311d5c4e4
+tu_goals_sha256=d6b587196e6c964e679be0e660b08b39c97398aca51b46f0e7e35a19fbb81471
+paper500_profile_assets=PASS
+stale_stack=NONE
+official_ids_and_state_unused=PASS
+/dev/nvme0n1p3   46G   41G  2.4G  95% /
+/dev/nvme0n1p7  320G  175G  129G  58% /work
+PRECHECK_PASS 2026-09-23T15:43:25+07:00

@@ -1,0 +1,444 @@
+{
+  "prediction_source": "alltrain",
+  "decision_log": "paper500_snapshots.csv",
+  "decision_id_field": "sample_id",
+  "source_kind": "paper500_snapshots",
+  "raw_map_field": "raw_map_file",
+  "decisions_sha256": "15a43db8ffdf79985a31311d27eaa9fec6fac60235ca5eea4785824c1a13c559",
+  "checkpoint": {
+    "path": "/work/com1/mapex_weights/weights/big_lama/models/best.ckpt",
+    "sha256": "58c1841c10d4d97bc1f894ec8fe5b015b165277ddb2b9bb29eb688b21d4363b5"
+  },
+  "model_config": {
+    "path": "/work/com1/mapex_weights/weights/big_lama/config.yaml",
+    "sha256": "bc1208d4ffe133ffe8d5783f108304a48a3a14a4eaea461d1ee72bcae573e411"
+  },
+  "preprocessing": "default_map_eval_512x512_observed_occ1_free0_unknown0p5",
+  "unique_inference_count": 52,
+  "decisions": [
+    {
+      "sample_id": 1,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000001_alltrain.npz",
+      "raw_map": "maps/paper500_0001_initial_k0000_raw.npz",
+      "raw_sha256": "0eea7a9fa6bb84cd344b508b90a690fa1d8d470c79999875db60c48056ef5d01",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 2,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000002_alltrain.npz",
+      "raw_map": "maps/paper500_0002_progress_k0010_raw.npz",
+      "raw_sha256": "fb6fb1b63e15e75054eee3656dadd958d93d889e5f0754dc56ed4b6e8176c330",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 3,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000003_alltrain.npz",
+      "raw_map": "maps/paper500_0003_progress_k0020_raw.npz",
+      "raw_sha256": "83602ee2740f28bcf30e4d06c86eb1cc1b35b89b089cf508ef38272ef7d9b9a9",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 4,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000004_alltrain.npz",
+      "raw_map": "maps/paper500_0004_progress_k0030_raw.npz",
+      "raw_sha256": "b715484f9597220a04708b59078ad39e75317ac4954de86fcfc9fae3a2b6b627",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 5,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000005_alltrain.npz",
+      "raw_map": "maps/paper500_0005_progress_k0040_raw.npz",
+      "raw_sha256": "c64653eed01c2108f638a1f22db1256a42dc066b088667ed4fc0e4504f30e788",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 6,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000006_alltrain.npz",
+      "raw_map": "maps/paper500_0006_progress_k0050_raw.npz",
+      "raw_sha256": "d2bf595fc9cae295634c7a9b4bfe0fd36fada9e82c7b18520e52aa3fa6cdc9ac",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 7,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000007_alltrain.npz",
+      "raw_map": "maps/paper500_0007_progress_k0060_raw.npz",
+      "raw_sha256": "aef9eddded9d13087f35adc9b30bb95bf69ad5ca3788a0c2645b9d37a6ea6452",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 8,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000008_alltrain.npz",
+      "raw_map": "maps/paper500_0008_progress_k0070_raw.npz",
+      "raw_sha256": "43492c07cca4a4b5f3367366f853427f4f8527abe39f152b13d267ce38fd6ae8",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 9,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000009_alltrain.npz",
+      "raw_map": "maps/paper500_0009_progress_k0080_raw.npz",
+      "raw_sha256": "8c802038dd6c8b0078e7a5268d3a59db19eac8880efcc4de3d88d4ece4437a93",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 10,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000010_alltrain.npz",
+      "raw_map": "maps/paper500_0010_progress_k0090_raw.npz",
+      "raw_sha256": "93bbd38e091009d0368108297f87061e3d3aa90029ab804cbb3639a053d4c777",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 11,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000011_alltrain.npz",
+      "raw_map": "maps/paper500_0011_progress_k0100_raw.npz",
+      "raw_sha256": "06a781e4c71407a34d88a041455d2e991554bea0c66402b2c88a857437461694",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 12,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000012_alltrain.npz",
+      "raw_map": "maps/paper500_0012_progress_k0110_raw.npz",
+      "raw_sha256": "161b8ab643285a337e66ef7fef1d5f7666123509aed2f1c0f3976d8c4f4bff8c",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 13,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000013_alltrain.npz",
+      "raw_map": "maps/paper500_0013_progress_k0120_raw.npz",
+      "raw_sha256": "c2ca9f6b4b3fd7e44d068e6eb52d59e2e05d6b0ea0985d29236c6c6bdd66ce05",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 14,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000014_alltrain.npz",
+      "raw_map": "maps/paper500_0014_progress_k0130_raw.npz",
+      "raw_sha256": "28f053ced219a9dc4eb878e9986fb98f7f5104fa107ac2fc0542094de8711750",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 15,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000015_alltrain.npz",
+      "raw_map": "maps/paper500_0015_progress_k0140_raw.npz",
+      "raw_sha256": "03d65e36bb52ca52c09a87cf90a2570cacb34a59cec6853d3422fe32fad32af6",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 16,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000016_alltrain.npz",
+      "raw_map": "maps/paper500_0016_progress_k0150_raw.npz",
+      "raw_sha256": "6aeaecdfa3ec4a91a9a731a85664e02dfbc6e8d611e7a002d9accec6b3b2ae0e",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 17,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000017_alltrain.npz",
+      "raw_map": "maps/paper500_0017_progress_k0160_raw.npz",
+      "raw_sha256": "8fef8e941cf672f5afd50d5b104cec3017826d0b49590f476802df6d9062cd75",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 18,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000018_alltrain.npz",
+      "raw_map": "maps/paper500_0018_progress_k0170_raw.npz",
+      "raw_sha256": "cda16e2f17a967e477856040321e1e0302365e677d208d3073934f294401cfc1",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 19,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000019_alltrain.npz",
+      "raw_map": "maps/paper500_0019_progress_k0180_raw.npz",
+      "raw_sha256": "a5d25f4581f4e3ad170699483557cd9971e7f491ebcf0b9f2ef600f848154792",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 20,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000020_alltrain.npz",
+      "raw_map": "maps/paper500_0020_progress_k0190_raw.npz",
+      "raw_sha256": "e1a4d87c52e9db0e506d2696e340a318a6a3b28b70951ba65525e8656936031c",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 21,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000021_alltrain.npz",
+      "raw_map": "maps/paper500_0021_progress_k0200_raw.npz",
+      "raw_sha256": "96910da6a516199b4cacc5ad9a1c6a423bbb8ca89bb0b949c7b282d3c835153a",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 22,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000022_alltrain.npz",
+      "raw_map": "maps/paper500_0022_progress_k0210_raw.npz",
+      "raw_sha256": "897ce783d13366e0d8adee92d6925415768c75e80e66d01ac9102f9c66896ef9",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 23,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000023_alltrain.npz",
+      "raw_map": "maps/paper500_0023_progress_k0220_raw.npz",
+      "raw_sha256": "3ea50aef905ddc9e73072d7f340b991911de93f2e69e316b68dc47cb9c7f61fc",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 24,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000024_alltrain.npz",
+      "raw_map": "maps/paper500_0024_progress_k0230_raw.npz",
+      "raw_sha256": "756c1c87b852ce287657bb9974904bf38a3c36d45309123bdd4272ad56587a8a",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 25,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000025_alltrain.npz",
+      "raw_map": "maps/paper500_0025_progress_k0240_raw.npz",
+      "raw_sha256": "053ee5f3018241ef8add22ff92f5cf722ef614b080ef4f51e2f3a0ace7f40387",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 26,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000026_alltrain.npz",
+      "raw_map": "maps/paper500_0026_progress_k0250_raw.npz",
+      "raw_sha256": "fe3dce9da0a1980f7e7fed145243df11ffb2dbd53064a09bc614e97b66e24624",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 27,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000027_alltrain.npz",
+      "raw_map": "maps/paper500_0027_progress_k0260_raw.npz",
+      "raw_sha256": "5645ad1815e3809e973ede9efe2eac56154ba3e7e6b873e86948755c9d319a1f",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 28,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000028_alltrain.npz",
+      "raw_map": "maps/paper500_0028_progress_k0270_raw.npz",
+      "raw_sha256": "47c0b0e14f37dfaa8cb9aac29e43f5af696e28c764bb77b38918711fd2cbc61e",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 29,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000029_alltrain.npz",
+      "raw_map": "maps/paper500_0029_progress_k0280_raw.npz",
+      "raw_sha256": "393272a97d61eb9c0daa92988a25b5978fa69079ef730b7127576bb829255fba",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 30,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000030_alltrain.npz",
+      "raw_map": "maps/paper500_0030_progress_k0290_raw.npz",
+      "raw_sha256": "fd9f2eece92bdefee3c2d33089f447c2f0b1879f1376993a6f9bcd45dedc03ca",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 31,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000031_alltrain.npz",
+      "raw_map": "maps/paper500_0031_progress_k0300_raw.npz",
+      "raw_sha256": "9e9356c0be6fc177130a284b1a21923f1b2f920320a7733b6f84dc707c1e3904",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 32,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000032_alltrain.npz",
+      "raw_map": "maps/paper500_0032_progress_k0310_raw.npz",
+      "raw_sha256": "7c1e450ccb03e5a449b17cade21c843f9f7c6b7e8324f606cbfd3517bdf72211",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 33,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000033_alltrain.npz",
+      "raw_map": "maps/paper500_0033_progress_k0320_raw.npz",
+      "raw_sha256": "b4194cd341cd0b35efcdbce20f6a04174ef8783c0ef8f5ad7ed566ad58f58e6e",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 34,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000034_alltrain.npz",
+      "raw_map": "maps/paper500_0034_progress_k0330_raw.npz",
+      "raw_sha256": "a14d6b9ffb31c467bf5aa424d2b9ddeb0632529d616ff4e08ea778f1207d6248",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 35,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000035_alltrain.npz",
+      "raw_map": "maps/paper500_0035_progress_k0340_raw.npz",
+      "raw_sha256": "329e1f185106fa641c75cd695dd32ebd968674be1dba7dd644f175e42302a266",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 36,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000036_alltrain.npz",
+      "raw_map": "maps/paper500_0036_progress_k0350_raw.npz",
+      "raw_sha256": "581da912a573f565d9d1994130331d4a83c713f2c810d9a7074245b42e620291",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 37,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000037_alltrain.npz",
+      "raw_map": "maps/paper500_0037_progress_k0360_raw.npz",
+      "raw_sha256": "3106544eaf7e1deda983288008f186792191226b348d49ff820e417c51adc4d6",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 38,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000038_alltrain.npz",
+      "raw_map": "maps/paper500_0038_progress_k0370_raw.npz",
+      "raw_sha256": "57290aaae709b31247c6f2e6766f3de00ef51d6cb4a72a8d3b2dfdc053ca9ac5",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 39,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000039_alltrain.npz",
+      "raw_map": "maps/paper500_0039_progress_k0380_raw.npz",
+      "raw_sha256": "1955882f40c13a4dd688c522683847d176292c36e303204a6286661b664686e4",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 40,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000040_alltrain.npz",
+      "raw_map": "maps/paper500_0040_progress_k0390_raw.npz",
+      "raw_sha256": "66d9bc28531bd8b83c96b77690b2fc3172fad1c53519de3357e60bc1c5f2a79a",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 41,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000041_alltrain.npz",
+      "raw_map": "maps/paper500_0041_progress_k0400_raw.npz",
+      "raw_sha256": "7b6610413f92fa849db66343c16cb091ad748e4c3afba708996aec10cc23c53d",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 42,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000042_alltrain.npz",
+      "raw_map": "maps/paper500_0042_progress_k0410_raw.npz",
+      "raw_sha256": "2eff7c4727e9ccc3bf6013f4086c4fc8ea3cd65417d99282920d23ba080e07e3",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 43,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000043_alltrain.npz",
+      "raw_map": "maps/paper500_0043_progress_k0420_raw.npz",
+      "raw_sha256": "773f7311152785b620e47faa0d76571c5ffe5ade015e8007ebabd87c7bda2e02",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 44,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000044_alltrain.npz",
+      "raw_map": "maps/paper500_0044_progress_k0430_raw.npz",
+      "raw_sha256": "02e3d08c4334dae6d725ebfdab1edb8adc2ae5f3730953236f1fa91d347f36c3",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 45,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000045_alltrain.npz",
+      "raw_map": "maps/paper500_0045_progress_k0440_raw.npz",
+      "raw_sha256": "3ae7c4cd0a4465597aa05725564a8d82778f611c87ff171636a3a68d3f03789a",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 46,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000046_alltrain.npz",
+      "raw_map": "maps/paper500_0046_progress_k0450_raw.npz",
+      "raw_sha256": "d69c89e101d74a24a6cc44b00feae17374065323c8ade3b42a02396cd64c155c",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 47,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000047_alltrain.npz",
+      "raw_map": "maps/paper500_0047_progress_k0460_raw.npz",
+      "raw_sha256": "ad13cf4ff06ffd8e714fcced2349a3ca02b885a709a6568fc08f53e81367500c",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 48,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000048_alltrain.npz",
+      "raw_map": "maps/paper500_0048_progress_k0470_raw.npz",
+      "raw_sha256": "dc8bc99b965d549692ff60e3d22f98696be263ee1d596d422ea18c324ca538e5",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 49,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000049_alltrain.npz",
+      "raw_map": "maps/paper500_0049_progress_k0480_raw.npz",
+      "raw_sha256": "cd5e15e1941998c21d08ba7b9efeab70d3a6b3cf8f2d5ddac0ed25be7b3b6216",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 50,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000050_alltrain.npz",
+      "raw_map": "maps/paper500_0050_progress_k0490_raw.npz",
+      "raw_sha256": "03df43eb0ea5f925bdff9722f3920eda93c2c27d47ce3a19806bb99d7ab016fe",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 51,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000051_alltrain.npz",
+      "raw_map": "maps/paper500_0051_progress_k0500_raw.npz",
+      "raw_sha256": "9e92e346180d45bb4dc716150e0ce3da85c018626fc7653863d569a8e3612e03",
+      "duplicate_of_id": null
+    },
+    {
+      "sample_id": 52,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000051_alltrain.npz",
+      "raw_map": "maps/paper500_0052_budget_cutoff_k0500_raw.npz",
+      "raw_sha256": "9e92e346180d45bb4dc716150e0ce3da85c018626fc7653863d569a8e3612e03",
+      "duplicate_of_id": 51
+    },
+    {
+      "sample_id": 53,
+      "decision_id": null,
+      "alltrain_map": "evaluation/alltrain_snapshots/sample_000053_alltrain.npz",
+      "raw_map": "maps/paper500_0053_post_cancellation_k0500_raw.npz",
+      "raw_sha256": "df34bc02e2f4377ce3fddf935b68452d30572abe2e2230e87bb2b38bba37f159",
+      "duplicate_of_id": null
+    }
+  ]
+}

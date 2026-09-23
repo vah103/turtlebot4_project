@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/home/com1/turtlebot4_project_r003_h031/mapex_lab/scripts/run_r003_paper500_batch.py", line 418, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/home/com1/turtlebot4_project_r003_h031/mapex_lab/scripts/run_r003_paper500_batch.py", line 346, in main
+    outcome, log, watchdog_evidence = run_one(
+                                      ~~~~~~~^
+        root, item, record["attempts"], evidence_dir
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/com1/turtlebot4_project_r003_h031/mapex_lab/scripts/run_r003_paper500_batch.py", line 144, in run_one
+    raise RuntimeError(f"watchdog failed with status {watcher_status}")
+RuntimeError: watchdog failed with status 1

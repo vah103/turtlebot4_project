@@ -1,0 +1,119 @@
+{
+  "schema": "r003_paper500_batch_v2",
+  "matrix": [
+    {
+      "method": "nf",
+      "run_id": "nf_p500_001"
+    },
+    {
+      "method": "nf",
+      "run_id": "nf_p500_002"
+    },
+    {
+      "method": "nf",
+      "run_id": "nf_p500_003"
+    },
+    {
+      "method": "nf",
+      "run_id": "nf_p500_004"
+    },
+    {
+      "method": "nf",
+      "run_id": "nf_p500_005"
+    },
+    {
+      "method": "nf",
+      "run_id": "nf_p500_006"
+    },
+    {
+      "method": "nf",
+      "run_id": "nf_p500_007"
+    },
+    {
+      "method": "nf",
+      "run_id": "nf_p500_008"
+    },
+    {
+      "method": "nf",
+      "run_id": "nf_p500_009"
+    },
+    {
+      "method": "nf",
+      "run_id": "nf_p500_010"
+    },
+    {
+      "method": "mapex",
+      "run_id": "mpx_p500_001"
+    },
+    {
+      "method": "mapex",
+      "run_id": "mpx_p500_002"
+    },
+    {
+      "method": "mapex",
+      "run_id": "mpx_p500_003"
+    },
+    {
+      "method": "mapex",
+      "run_id": "mpx_p500_004"
+    },
+    {
+      "method": "mapex",
+      "run_id": "mpx_p500_005"
+    },
+    {
+      "method": "mapex",
+      "run_id": "mpx_p500_006"
+    },
+    {
+      "method": "mapex",
+      "run_id": "mpx_p500_007"
+    },
+    {
+      "method": "mapex",
+      "run_id": "mpx_p500_008"
+    },
+    {
+      "method": "mapex",
+      "run_id": "mpx_p500_009"
+    },
+    {
+      "method": "mapex",
+      "run_id": "mpx_p500_010"
+    }
+  ],
+  "execution_host": "com1",
+  "source_sha": "867337e69daa8146e08238b952347c5bca05c389",
+  "runs": {
+    "nf_p500_001": {
+      "attempts": 2,
+      "status": "complete",
+      "invalidity_classification": "pre_runtime_stack_bootstrap_interruption",
+      "invalidity_reason": "Gazebo/SLAM bootstrap received SIGINT before stack readiness; NF recorder/exploration did not start and no run directory was created",
+      "invalidity_evidence": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/results/r003_paper500/invalid_attempts/nf_p500_001_attempt01_checkpoint.json",
+      "invalidity_evidence_sha256": "dd1abe57274b947f06fa2da25f9f0d661102ee92b8e124df6bdf10068c52dfed",
+      "deletion_decision": "no_run_dir_created_retry_same_official_id",
+      "deletion_completed": true,
+      "manual_executor": "H033_W014_USER",
+      "manual_started_at": 1790153845.6087656,
+      "log": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/results/r003_paper500/logs/nf_p500_001_attempt02_manual.log",
+      "runtime_exit_code": 0,
+      "runtime_finished_at": 1790154396.8948083,
+      "last_outcome": "runtime_complete",
+      "completed_at": 1790154853.588559,
+      "postprocess": "complete",
+      "evaluation": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/nearest/nf_p500_001/evaluation/paper500/evaluation.json",
+      "evaluation_status": "ok"
+    },
+    "mpx_p500_001": {
+      "attempts": 1,
+      "status": "manual_postprocess_pending",
+      "manual_executor": "H033_W014_USER",
+      "manual_started_at": 1790156331.7113695,
+      "runtime_exit_code": 0,
+      "runtime_finished_at": 1790156959.2448704,
+      "log": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/results/r003_paper500/logs/mpx_p500_001_attempt01_manual.log",
+      "last_outcome": "runtime_complete"
+    }
+  }
+}

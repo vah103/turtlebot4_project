@@ -1,0 +1,86 @@
+[0.262s] WARNING:colcon.colcon_core.package_selection:Some selected packages are already built in one or more underlay workspaces:
+	'slam_toolbox' is in: /opt/ros/jazzy
+If a package in a merged underlay workspace is overridden and it installs headers, then all packages in the overlay must sort their include directories by workspace order. Failure to do so may result in build failures or undefined behavior at run time.
+If the overridden package is used by another package in any underlay, then the overriding package in the overlay must be API and ABI compatible or undefined behavior at run time may occur.
+
+If you understand the risks and want to override a package anyways, add the following to the command line:
+	--allow-overriding slam_toolbox
+
+This may be promoted to an error in a future release of colcon-override-check.
+Starting >>> slam_toolbox
+Starting >>> tb4_project_tools
+Finished <<< tb4_project_tools [1.27s]
+--- stderr: slam_toolbox
+CMake Error at /opt/ros/jazzy/share/rosidl_adapter/cmake/rosidl_adapt_interfaces.cmake:57 (message):
+  execute_process(/home/com1/miniconda3/bin/python3 -m rosidl_adapter
+  --package-name slam_toolbox --arguments-file
+  /home/com1/turtlebot4_project_r003_h031/ros2_ws/build/slam_toolbox/rosidl_adapter__arguments__slam_toolbox.json
+  --output-dir
+  /home/com1/turtlebot4_project_r003_h031/ros2_ws/build/slam_toolbox/rosidl_adapter/slam_toolbox
+  --output-file
+  /home/com1/turtlebot4_project_r003_h031/ros2_ws/build/slam_toolbox/rosidl_adapter/slam_toolbox.idls)
+  returned error code 1:
+
+  Traceback (most recent call last):
+
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "/opt/ros/jazzy/lib/python3.12/site-packages/rosidl_adapter/__main__.py", line 19, in <module>
+      sys.exit(main())
+               ~~~~^^
+    File "/opt/ros/jazzy/lib/python3.12/site-packages/rosidl_adapter/main.py", line 53, in main
+      abs_idl_file = convert_to_idl(
+          pathlib.Path(basepath), args.package_name,
+          pathlib.Path(relative_path), output_dir)
+    File "/opt/ros/jazzy/lib/python3.12/site-packages/rosidl_adapter/__init__.py", line 23, in convert_to_idl
+      from rosidl_adapter.srv import convert_srv_to_idl
+    File "/opt/ros/jazzy/lib/python3.12/site-packages/rosidl_adapter/srv/__init__.py", line 16, in <module>
+      from rosidl_adapter.resource import expand_template
+    File "/opt/ros/jazzy/lib/python3.12/site-packages/rosidl_adapter/resource/__init__.py", line 19, in <module>
+      import em
+
+  ModuleNotFoundError: No module named 'em'
+
+Call Stack (most recent call first):
+  /opt/ros/jazzy/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:132 (rosidl_adapt_interfaces)
+  CMakeLists.txt:114 (rosidl_generate_interfaces)
+
+
+---
+Failed   <<< slam_toolbox [3.38s, exited with code 1]
+
+Summary: 1 package finished [3.56s]
+  1 package failed: slam_toolbox
+  1 package had stderr output: slam_toolbox
+  1 package not processed
+[0.148s] WARNING:colcon.colcon_core.package_selection:Some selected packages are already built in one or more underlay workspaces:
+	'slam_toolbox' is in: /opt/ros/jazzy
+If a package in a merged underlay workspace is overridden and it installs headers, then all packages in the overlay must sort their include directories by workspace order. Failure to do so may result in build failures or undefined behavior at run time.
+If the overridden package is used by another package in any underlay, then the overriding package in the overlay must be API and ABI compatible or undefined behavior at run time may occur.
+
+If you understand the risks and want to override a package anyways, add the following to the command line:
+	--allow-overriding slam_toolbox
+
+This may be promoted to an error in a future release of colcon-override-check.
+Starting >>> slam_toolbox
+Starting >>> tb4_project_tools
+Finished <<< tb4_project_tools [1.09s]
+[0.299s] WARNING:colcon.colcon_core.package_selection:Some selected packages are already built in one or more underlay workspaces:
+	'slam_toolbox' is in: /opt/ros/jazzy
+If a package in a merged underlay workspace is overridden and it installs headers, then all packages in the overlay must sort their include directories by workspace order. Failure to do so may result in build failures or undefined behavior at run time.
+If the overridden package is used by another package in any underlay, then the overriding package in the overlay must be API and ABI compatible or undefined behavior at run time may occur.
+
+If you understand the risks and want to override a package anyways, add the following to the command line:
+	--allow-overriding slam_toolbox
+
+This may be promoted to an error in a future release of colcon-override-check.
+Starting >>> slam_toolbox
+Starting >>> tb4_project_tools
+Finished <<< tb4_project_tools [1.12s]
+[Processing: slam_toolbox]
+[Processing: slam_toolbox]
+Finished <<< slam_toolbox [1min 26s]
+Starting >>> frontier_exploration
+Finished <<< frontier_exploration [1.51s]
+
+Summary: 3 packages finished [1min 27s]
