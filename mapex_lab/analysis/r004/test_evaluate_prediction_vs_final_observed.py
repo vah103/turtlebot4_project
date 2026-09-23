@@ -1,4 +1,4 @@
-import importlib.util, math, unittest
+import csv, importlib.util, math, tempfile, unittest
 from pathlib import Path
 import numpy as np
 P=Path(__file__).with_name("evaluate_prediction_vs_final_observed.py"); S=importlib.util.spec_from_file_location("r004",P); r=S.loader.load_module()
@@ -12,4 +12,23 @@ class Tests(unittest.TestCase):
  def test_seed(self): self.assertEqual(r.seed("total","x",1,2),r.seed("total","x",1,2)); self.assertNotEqual(r.seed("total","x",1,2),r.seed("class","x",1,2))
  def test_support_independent_zero(self):
   values=np.array([0.,1.]); support=np.array([True,False]); F=np.array([True,True]); self.assertTrue((F&support)[0]); self.assertEqual(values[0],0)
+ def test_geometric_support_includes_zero_prediction(self):
+  with tempfile.TemporaryDirectory() as td:
+   d=Path(td); (d/"raw.npz").touch()
+   np.savez(d/"raw.npz",data=np.full((1,1),-1),resolution=.1,origin_x=0.,origin_y=0.)
+   np.savez(d/"canvas.npz",data=np.full((3,3),-1),resolution=.05,origin_x=0.,origin_y=0.)
+   np.savez(d/"mean.npz",data=np.zeros((1,1),np.float32),source_height=1,source_width=1,pad_top=0,pad_left=0)
+   obs,pred,support=r.prediction_canvas(d,{"raw_map":"raw.npz","canvas_map":"canvas.npz","mean_map":"mean.npz"},(3,3))
+   self.assertEqual(int(support.sum()),4); self.assertTrue(np.all(pred[support]==0))
+ def test_sensitivity_samples_only_scoreable_vectors(self):
+  rec={"run_id":"x","decision_id":1,"decision_progress":0.,"progress_bin":"[0.00,0.25)","F_count":10,"E_count":4,"support_coverage":.4}
+  rows=r.sensitivity_rows("x",[(rec,np.array([0.,.2,.8,1.]),np.array([0,0,1,1],bool))],"total")
+  self.assertEqual(rows[0]["sample_size"],4); self.assertEqual(rows[0]["replicates"],100)
+ def test_zero_support_coverage_retained(self): self.assertEqual(r.div(0,5),0); self.assertTrue(math.isnan(r.div(0,0)))
+ def test_final_snapshot_fallback(self):
+  with tempfile.TemporaryDirectory() as td:
+   d=Path(td); (d/"maps").mkdir(); np.savez(d/"maps/periodic.npz",data=np.zeros((1,1),int))
+   with (d/"snapshots.csv").open("w",newline="") as f:
+    w=csv.DictWriter(f,fieldnames=["event","canvas_map_file"]); w.writeheader(); w.writerow({"event":"periodic","canvas_map_file":"maps/periodic.npz"}); w.writerow({"event":"final","canvas_map_file":"maps/missing.npz"})
+   _,p,fb=r.final_snapshot(d); self.assertTrue(fb); self.assertEqual(p,"maps/periodic.npz")
 if __name__=="__main__": unittest.main()
