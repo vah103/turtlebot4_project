@@ -144,13 +144,30 @@ def project_runtime_prediction(
     origin_y: float,
     origin_yaw: float = 0.0,
 ) -> tuple[np.ndarray, np.ndarray]:
+    """Project float prediction probabilities without integer quantization."""
     probability = np.asarray(probability, dtype=np.float32)
+    if probability.ndim != 2:
+        raise ValueError("runtime prediction must be two-dimensional")
     if not np.isfinite(probability).all():
         raise ValueError("prediction contains nonfinite values")
-    observed, support = project_runtime_observed(
-        probability, resolution, origin_x, origin_y, origin_yaw
-    )
-    return np.where(support, observed.astype(np.float32), 0.0), support
+    if not math.isfinite(origin_yaw) or abs(origin_yaw) > 1e-6:
+        raise ValueError("rotated runtime prediction grid is unsupported")
+    if not math.isfinite(resolution) or resolution <= 0:
+        raise ValueError("invalid runtime prediction resolution")
+
+    xs = CANVAS_X + (np.arange(CANVAS_W) + 0.5) * CANVAS_RES
+    ys = CANVAS_Y + (np.arange(CANVAS_H) + 0.5) * CANVAS_RES
+    cols = np.floor((xs - origin_x) / resolution).astype(np.int64)
+    rows = np.floor((ys - origin_y) / resolution).astype(np.int64)
+    valid_cols = (cols >= 0) & (cols < probability.shape[1])
+    valid_rows = (rows >= 0) & (rows < probability.shape[0])
+    support = valid_rows[:, None] & valid_cols[None, :]
+
+    result = np.zeros((CANVAS_H, CANVAS_W), dtype=np.float32)
+    rr = rows[valid_rows]
+    cc = cols[valid_cols]
+    result[np.ix_(valid_rows, valid_cols)] = probability[np.ix_(rr, cc)]
+    return result, support
 
 
 def build_profile(sdf_path: Path, output_dir: Path, *, git_commit: str) -> dict:
@@ -463,8 +480,14 @@ def common_crossings(crossed_steps: Iterable[int]) -> tuple[int, ...]:
 
 
 def select_final_sample(records: list[dict]) -> dict:
-    """Prefer the explicit cutoff/natural final record, never the last decision."""
-    finals = [row for row in records if row.get("event") in {"budget_cutoff", "natural_completion"}]
+    """Return the single authoritative terminal sample for curve support.
+
+    Budget cutoff and legitimate natural completion are valid terminal outcomes.
+    abnormal_final is also authoritative for a failed run so the evaluator can
+    preserve partial support through the failure sample without holding it.
+    """
+    terminal_events = {"budget_cutoff", "natural_completion", "abnormal_final"}
+    finals = [row for row in records if row.get("event") in terminal_events]
     if len(finals) != 1:
         raise ValueError(f"expected exactly one authoritative final sample, got {len(finals)}")
     return finals[0]
