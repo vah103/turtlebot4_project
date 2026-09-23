@@ -1,5 +1,16 @@
 # mapex_lab status
 
+## R003 — New Room paper1000: approved, awaiting engineering
+
+USER approved R003 v1 on 2026-09-23. Canonical contract: [R003_PAPER1000_PROTOCOL_V1.md](docs/R003_PAPER1000_PROTOCOL_V1.md).
+
+- Profile: `new_room_mapex_paper1000_v1`; one ROS adapted progress step = 0.30 m accumulated odometry, maximum 1000.
+- Versioned structural GT/valid-space at 0.10 m; common alltrain IoU/TU evaluation for NF and MapEx.
+- WORK manages; CODEX implements/tests next. Generated mask/overlay review precedes 1+1 smoke; WORK smoke acceptance precedes 10+10.
+- No R003 implementation, test, smoke, bulk or workbook outcome has been claimed.
+- Existing historical metrics remain auditable. R002 fairness investigation remains paused.
+
+
 _Last synchronized with `main`: 2026-09-22._
 
 ## Current focus
