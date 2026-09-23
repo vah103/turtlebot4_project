@@ -4,7 +4,7 @@ Date: 2026-09-23
 Task: R004-OFFLINE / H037
 Owner: CODEX maker
 Criticality: HIGH; independent review required
-Status: BLOCKED — frozen V3 scoring domain exceeds saved prediction support
+Status: ACTIVE — V4 support amendment independently accepted; implementation resumed
 
 ## Frozen authority
 
@@ -67,3 +67,19 @@ or inventing predictions outside the saved footprint would each change the
 frozen methodology and the progress/support selection process. H037 explicitly
 requires CODEX to stop rather than improvise when V3 cannot be implemented
 exactly. No scoring code or result was produced.
+
+## Resume checkpoint — accepted V4 amendment
+
+H039 reopened this task after Chat 1 froze V4 and Chat 2/W016 independently
+returned ACCEPT. Resume authority:
+
+- target universe `F = UnknownAtDecision ∩ KnownInFinalObserved`;
+- geometric prediction support `P`, independent of prediction values;
+- scoreable domain `E = F ∩ P`;
+- accuracy only on E; overall and class-specific support coverage relative to F;
+- unsupported cells remain visible and are neither imputed nor errors;
+- all other V3 progress, aggregation, sensitivity and provenance rules remain.
+
+Resume begins from technical HEAD `bd7de0b734a85fa749beb900ec40605ea163993a`.
+Usage snapshot at resume: NORMAL (72% five-hour and 33% weekly remaining).
+Next milestone: focused evaluator tests pass before full ten-run scoring.
