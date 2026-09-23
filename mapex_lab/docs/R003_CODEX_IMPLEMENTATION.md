@@ -26,6 +26,22 @@ Canonical contract: `docs/R003_PAPER500_PROTOCOL_V1.md`
 - `r003_deadlock_watchdog.py` applies the same objective action-plus-odometry
   detector to NF and MapEx.
 
+## Stage-B bounded corrections
+
+- Runner and watchdog children receive one shared effective ROS domain and
+  localhost-only environment.
+- The deadlock no-progress window starts at the first valid odometry sample;
+  time with missing odometry is never counted retroactively.
+- Blocked and interrupted state is durable across restart; only an explicit
+  `retry_pending_same_id` state can resume automatically.
+- Every invalid attempt is checkpointed before deletion with run ID, host,
+  exact source SHA, classification/reason, deletion decision and bound
+  watchdog evidence when applicable.
+- Non-empty `paper500_integrity_faults` from either NF or MapEx is routed to
+  technical-invalid handling before post-processing or official completion.
+- The protocol preserves the broader approved A2 manual technical-invalid
+  path while identifying watchdog deadlock as an objective automatic case.
+
 ## Frozen watchdog
 
 - action status required active;
@@ -74,6 +90,9 @@ PYTHONPATH=mapex_lab/scripts python3 -m unittest \
   mapex_lab.scripts.test_r003_paper500 \
   mapex_lab.tests.test_r003_paper500_initialization \
   mapex_lab.tests.test_r003_paper500_batch
+
+PYTHONPATH=mapex_lab/scripts python3 \
+  mapex_lab/analysis/d1/test_r002_gt_semantics.py
 
 bash -n run .run_core
 ./run --help

@@ -25,10 +25,19 @@ remain unchanged except for the explicit amendments below.
 ## Runtime and retry gate
 
 Official runtime is blocked until independent H030 Stage-B review ACCEPTS the
-exact implementation SHA. A technically invalid physical-deadlock attempt may
-be removed and repeated under the same run ID only when the frozen watchdog
-fires. Poor metrics, normal completion, and ordinary algorithmic/navigation
-outcomes are never retry reasons.
+exact implementation SHA. An attempt independently determined to be
+technical/infrastructure invalid (including wrong setup, broken capture or
+provenance, corruption, or recorder-integrity failure) may be removed and
+repeated under the same run ID only after the invalidity classification,
+evidence and deletion decision are durably checkpointed. A manual technical-
+invalid classification requires a separate explicit checkpoint and decision;
+the unattended batch does not infer it from poor outcomes.
+
+A frozen-watchdog physical deadlock is one objective case eligible for an
+automatic same-ID retry. The batch may likewise route machine-reported
+recorder-integrity faults through its checkpointed technical-invalid path.
+Poor metrics, natural completion, and ordinary valid algorithmic/navigation
+failures are never retry reasons.
 
 The watchdog is symmetric for NF and MapEx:
 
@@ -40,7 +49,8 @@ The watchdog is symmetric for NF and MapEx:
 - progress or inactive action state resets the window;
 - missing odometry cannot declare deadlock.
 
-The batch driver persists state atomically after every transition, resumes at
-the first unfinished ID, allows at most one automatic retry per ID, and stops
-on repeated or ambiguous technical invalidity.
-
+The batch driver binds execution host and exact source SHA, persists state
+atomically after every transition, verifies invalid-attempt evidence before
+deletion, resumes only explicitly retry-pending IDs, allows at most one
+automatic retry per ID, and keeps blocked/recovery states terminal across
+restart.

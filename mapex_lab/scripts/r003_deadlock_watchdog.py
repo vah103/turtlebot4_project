@@ -45,7 +45,13 @@ class DeadlockDetector:
 
     def observe_odom(self, x: float, y: float, now: float) -> None:
         xy = (float(x), float(y))
-        if self.last_xy is not None and self.action_active:
+        if self.last_xy is None:
+            self.last_xy = xy
+            if self.action_active:
+                self.progress_m = 0.0
+                self.window_started_at = float(now)
+            return
+        if self.action_active:
             self.progress_m += math.hypot(xy[0] - self.last_xy[0], xy[1] - self.last_xy[1])
             if self.progress_m >= self.min_progress_m:
                 self.progress_m = 0.0
@@ -127,4 +133,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-

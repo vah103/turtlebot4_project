@@ -3,17 +3,26 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
 import shutil
 import signal
+import socket
 import subprocess
 import sys
 import time
 
 
 WATCHDOG_EXIT_CODE = 42
+TERMINAL_BLOCKED_STATUSES = {
+    "blocked_repeated_technical_invalidity",
+    "blocked_ambiguous_failure",
+    "blocked_postprocess_failure",
+    "blocked_manual_technical_invalidity",
+    "recovery_required",
+}
 
 
 def official_matrix() -> list[dict[str, str]]:
@@ -29,6 +38,39 @@ def atomic_json(path: Path, payload: dict) -> None:
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     os.replace(temporary, path)
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def source_sha(root: Path) -> str:
+    return subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=root, check=True,
+        capture_output=True, text=True,
+    ).stdout.strip()
+
+
+def effective_ros_env(base: dict[str, str] | None = None) -> dict[str, str]:
+    env = dict(os.environ if base is None else base)
+    env["ROS_DOMAIN_ID"] = env.get("MAPEX_SIM_ROS_DOMAIN_ID", "42")
+    env["ROS_LOCALHOST_ONLY"] = env.get("MAPEX_SIM_LOCALHOST_ONLY", "1")
+    return env
+
+
+def resume_blocker(record: dict) -> str | None:
+    status = record.get("status")
+    if status in {None, "complete", "retry_pending_same_id"}:
+        return None
+    if status in TERMINAL_BLOCKED_STATUSES:
+        return str(status)
+    if status in {"running", "technical_invalid"}:
+        return "recovery_required"
+    return "recovery_required"
 
 
 def first_unfinished(matrix: list[dict], state: dict) -> dict | None:
@@ -56,7 +98,9 @@ def delete_invalid_run(path: Path, root: Path, expected_id: str) -> None:
         shutil.rmtree(path)
 
 
-def run_one(root: Path, item: dict, attempt: int, evidence_dir: Path) -> tuple[str, Path]:
+def run_one(
+    root: Path, item: dict, attempt: int, evidence_dir: Path,
+) -> tuple[str, Path, Path]:
     run_id = item["run_id"]
     log = evidence_dir / "logs" / f"{run_id}_attempt{attempt:02d}.log"
     watchdog_evidence = evidence_dir / "invalid_attempts" / f"{run_id}_attempt{attempt:02d}.json"
@@ -69,16 +113,17 @@ def run_one(root: Path, item: dict, attempt: int, evidence_dir: Path) -> tuple[s
         "/usr/bin/python3", str(root / "mapex_lab" / "scripts" / "r003_deadlock_watchdog.py"),
         "--run-id", run_id, "--evidence", str(watchdog_evidence),
     ]
+    ros_env = effective_ros_env()
     with log.open("a", encoding="utf-8") as stream:
         stream.write("COMMAND " + " ".join(command) + "\n")
         stream.flush()
         runner = subprocess.Popen(
             command, cwd=root, stdout=stream, stderr=subprocess.STDOUT,
-            start_new_session=True,
+            start_new_session=True, env=ros_env,
         )
         watcher = subprocess.Popen(
             watchdog, cwd=root, stdout=stream, stderr=subprocess.STDOUT,
-            start_new_session=True,
+            start_new_session=True, env=ros_env,
         )
         technical_deadlock = False
         try:
@@ -101,10 +146,118 @@ def run_one(root: Path, item: dict, attempt: int, evidence_dir: Path) -> tuple[s
                 except subprocess.TimeoutExpired:
                     os.killpg(watcher.pid, signal.SIGKILL)
         if technical_deadlock:
-            return "technical_deadlock", log
+            return "technical_deadlock", log, watchdog_evidence
         if runner_status != 0:
-            return f"ambiguous_runner_failure:{runner_status}", log
-    return "runtime_complete", log
+            return f"ambiguous_runner_failure:{runner_status}", log, watchdog_evidence
+    return "runtime_complete", log, watchdog_evidence
+
+
+def paper500_integrity_faults(target: Path) -> list[str]:
+    for filename in ("summary.json", "metadata.json"):
+        path = target / filename
+        if not path.is_file():
+            continue
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        faults = payload.get("paper500_integrity_faults", [])
+        if faults:
+            return [str(item) for item in faults]
+    return []
+
+
+def checkpoint_invalid_attempt(
+    *,
+    path: Path,
+    run_id: str,
+    method: str,
+    attempt: int,
+    host: str,
+    git_sha: str,
+    classification: str,
+    reason: str,
+    log: Path,
+    watchdog_evidence: Path | None,
+    runtime_dir: Path,
+    details: dict | None = None,
+) -> dict:
+    watchdog = None
+    if watchdog_evidence is not None:
+        if not watchdog_evidence.is_file():
+            raise RuntimeError("watchdog evidence missing before invalid-run deletion")
+        watchdog = {
+            "path": str(watchdog_evidence),
+            "sha256": sha256(watchdog_evidence),
+        }
+    payload = {
+        "schema": "r003_paper500_invalid_attempt_v1",
+        "run_id": run_id,
+        "method": method,
+        "attempt": int(attempt),
+        "execution_host": host,
+        "source_sha": git_sha,
+        "classification": classification,
+        "reason": reason,
+        "log": str(log),
+        "watchdog_evidence": watchdog,
+        "runtime_dir": str(runtime_dir),
+        "deletion_decision": "delete_exact_run_dir_then_retry_same_official_id",
+        "checkpointed_at": time.time(),
+    }
+    if details:
+        payload["details"] = details
+    atomic_json(path, payload)
+    if not path.is_file():
+        raise RuntimeError("invalid-attempt checkpoint missing before deletion")
+    return payload
+
+
+def invalidate_and_delete(
+    *,
+    state: dict,
+    state_path: Path,
+    record: dict,
+    item: dict,
+    target: Path,
+    root: Path,
+    evidence_dir: Path,
+    log: Path,
+    classification: str,
+    reason: str,
+    watchdog_evidence: Path | None,
+    details: dict | None = None,
+) -> Path:
+    attempt = int(record["attempts"])
+    evidence_path = (
+        evidence_dir / "invalid_attempts" /
+        f"{item['run_id']}_attempt{attempt:02d}_checkpoint.json"
+    )
+    payload = checkpoint_invalid_attempt(
+        path=evidence_path,
+        run_id=item["run_id"],
+        method=item["method"],
+        attempt=attempt,
+        host=state["execution_host"],
+        git_sha=state["source_sha"],
+        classification=classification,
+        reason=reason,
+        log=log,
+        watchdog_evidence=watchdog_evidence,
+        runtime_dir=target,
+        details=details,
+    )
+    record.update(
+        status="technical_invalid",
+        invalidity_classification=classification,
+        invalidity_reason=reason,
+        invalidity_evidence=str(evidence_path),
+        invalidity_evidence_sha256=sha256(evidence_path),
+        deletion_decision=payload["deletion_decision"],
+        deletion_completed=False,
+    )
+    atomic_json(state_path, state)
+    delete_invalid_run(target, root, item["run_id"])
+    record["deletion_completed"] = True
+    atomic_json(state_path, state)
+    return evidence_path
 
 
 def postprocess(root: Path, item: dict, checkpoint: Path, inference_python: str, device: str) -> None:
@@ -148,26 +301,57 @@ def main() -> int:
         parser.error(f"checkpoint does not exist: {checkpoint}")
 
     state_path = args.state.resolve()
+    current_sha = source_sha(root)
+    current_host = socket.gethostname()
     state = json.loads(state_path.read_text()) if state_path.is_file() else {
-        "schema": "r003_paper500_batch_v1", "matrix": matrix, "runs": {},
+        "schema": "r003_paper500_batch_v2",
+        "matrix": matrix,
+        "execution_host": current_host,
+        "source_sha": current_sha,
+        "runs": {},
     }
+    if state.get("schema") != "r003_paper500_batch_v2":
+        raise RuntimeError("unsupported batch state schema; manual recovery required")
     if state.get("matrix") != matrix:
         raise RuntimeError("batch matrix differs from persisted state")
+    if state.get("execution_host") != current_host:
+        raise RuntimeError("batch execution host differs from persisted state")
+    if state.get("source_sha") != current_sha:
+        raise RuntimeError("batch source SHA differs from persisted state")
     evidence_dir = state_path.parent
     while (item := first_unfinished(matrix, state)) is not None:
         run_id = item["run_id"]
         record = state["runs"].setdefault(run_id, {"attempts": 0})
+        blocker = resume_blocker(record)
+        if blocker:
+            if blocker == "recovery_required":
+                record["status"] = blocker
+                atomic_json(state_path, state)
+            print(f"batch blocked at {run_id}: {blocker}", file=sys.stderr)
+            return 5
         target = run_dir(root, item)
         if target.exists():
             raise RuntimeError(f"unfinished run directory requires manual inspection: {target}")
         record.update(status="running", attempts=int(record["attempts"]) + 1)
         atomic_json(state_path, state)
-        outcome, log = run_one(root, item, record["attempts"], evidence_dir)
+        outcome, log, watchdog_evidence = run_one(
+            root, item, record["attempts"], evidence_dir
+        )
         record.update(last_outcome=outcome, log=str(log))
         if outcome == "technical_deadlock":
-            record["status"] = "technical_invalid"
-            atomic_json(state_path, state)
-            delete_invalid_run(target, root, run_id)
+            invalidate_and_delete(
+                state=state,
+                state_path=state_path,
+                record=record,
+                item=item,
+                target=target,
+                root=root,
+                evidence_dir=evidence_dir,
+                log=log,
+                classification="watchdog_confirmed_physical_deadlock",
+                reason="frozen watchdog exited with technical-deadlock status",
+                watchdog_evidence=watchdog_evidence,
+            )
             if record["attempts"] > args.max_technical_retries:
                 record["status"] = "blocked_repeated_technical_invalidity"
                 atomic_json(state_path, state)
@@ -179,6 +363,29 @@ def main() -> int:
             record["status"] = "blocked_ambiguous_failure"
             atomic_json(state_path, state)
             return 4
+        integrity_faults = paper500_integrity_faults(target)
+        if integrity_faults:
+            invalidate_and_delete(
+                state=state,
+                state_path=state_path,
+                record=record,
+                item=item,
+                target=target,
+                root=root,
+                evidence_dir=evidence_dir,
+                log=log,
+                classification="recorder_integrity_fault",
+                reason="paper500 runtime reported integrity faults",
+                watchdog_evidence=None,
+                details={"paper500_integrity_faults": integrity_faults},
+            )
+            if record["attempts"] > args.max_technical_retries:
+                record["status"] = "blocked_repeated_technical_invalidity"
+                atomic_json(state_path, state)
+                return 3
+            record["status"] = "retry_pending_same_id"
+            atomic_json(state_path, state)
+            continue
         try:
             postprocess(root, item, checkpoint, args.inference_python, args.device)
         except Exception as exc:
@@ -192,4 +399,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-
