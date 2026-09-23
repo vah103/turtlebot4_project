@@ -1,0 +1,17 @@
+{
+  "schema": "r003_paper500_invalid_attempt_v1",
+  "run_id": "nf_p500_001",
+  "method": "nf",
+  "attempt": 1,
+  "execution_host": "com1",
+  "source_sha": "867337e69daa8146e08238b952347c5bca05c389",
+  "classification": "pre_runtime_stack_bootstrap_interruption",
+  "reason": "Gazebo/SLAM bootstrap received SIGINT before stack readiness; NF recorder/exploration did not start and no run directory was created",
+  "log": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/results/r003_paper500/logs/nf_p500_001_attempt01.log",
+  "log_sha256": "25cbd7884e5caa735045ba5fc361a8959d3a99fb9383cd1ef3ee5a6412cf8154",
+  "watchdog_evidence": null,
+  "runtime_dir": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/nearest/nf_p500_001",
+  "runtime_dir_existed": false,
+  "deletion_decision": "no_run_dir_created_retry_same_official_id",
+  "checkpointed_at": 1790153845.5899146
+}
