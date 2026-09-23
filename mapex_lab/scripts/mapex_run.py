@@ -215,6 +215,10 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         if self.save_predictions:
             (self.run / "predictions").mkdir()
 
+        # Initial provenance records paper1000 budget integrity limits, so the
+        # budget object must exist before provenance is written.
+        from r003_paper1000 import OdomProgressBudget
+        self.paper1000_budget = OdomProgressBudget() if self.paper1000_enabled else None
         self.metadata = self._write_initial_provenance(run_id)
         if self.roi is None or self.roi_n <= 0:
             self.get_logger().warn(
@@ -240,9 +244,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         self.startup_wait_logged = False
         self.snapshot_id = 0
         # State required by the shared Stage2Run paper1000 callbacks.
-        from r003_paper1000 import OdomProgressBudget
         import threading
-        self.paper1000_budget = OdomProgressBudget() if self.paper1000_enabled else None
         self.paper1000_lock = threading.RLock()
         self.paper1000_latest_odom = None
         self.paper1000_latest_map = None
