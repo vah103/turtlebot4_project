@@ -83,3 +83,20 @@ returned ACCEPT. Resume authority:
 Resume begins from technical HEAD `bd7de0b734a85fa749beb900ec40605ea163993a`.
 Usage snapshot at resume: NORMAL (72% five-hour and 33% weekly remaining).
 Next milestone: focused evaluator tests pass before full ten-run scoring.
+
+## H040 bounded rework checkpoint
+
+Independent review of `b69d209a3b3854a038fa28087345209a063c66a4`
+returned REVISE with exactly three bounded corrections:
+
+1. place/validate support from prediction-artifact geometry and enforce the
+   raw/prediction geometry provenance invariant;
+2. validate final/fallback fixed-canvas artifacts, including corrupt/invalid
+   final fallback and invalid-fallback rejection;
+3. render actual run-macro support coverage and actual `1-C` unsupported
+   fraction figures.
+
+Usage at rework start: LOW (46% five-hour, 29% weekly remaining). SAVE-FIRST
+applies. No V3/V4 rule, threshold, bin, sensitivity or interpretation change is
+authorized. Next milestone: focused regressions pass, then rerun the same ten
+historical runs and compare against the reviewed result set.
