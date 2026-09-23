@@ -49,6 +49,12 @@ match the accepted prior profile:
 - TU goals: 100, seed 3001;
 - TU goal array SHA-256:
   `b6e805e5f78d0fd95fd435b7b06edb693d638127fe6b1727d1a5898dda6f505e`.
+- profile NPZ SHA-256:
+  `3233d9bae62a7dfb52d3f9248c9932218d06bb5e2a2bea3516c57c5074481124`;
+- TU-goal file SHA-256:
+  `d6b587196e6c964e679be0e660b08b39c97398aca51b46f0e7e35a19fbb81471`;
+- GT/valid overlay SHA-256:
+  `73c0c3826c038bf052c742f3249e81e9861433fa69aeeaf27479cce0cb317132`.
 
 Only horizon/provenance changed; GT, valid-space, E10/V10, threshold, TU and
 prediction semantics did not.
