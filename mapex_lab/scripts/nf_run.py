@@ -14,7 +14,7 @@ import argparse
 from pathlib import Path as FilePath
 
 import rclpy
-from rclpy.executors import ExternalShutdownException
+from rclpy.executors import ExternalShutdownException, MultiThreadedExecutor
 
 # Re-export the existing recorder API because mapex_run.py imports the shared
 # constants, Stage2Run, and helper functions from nf_run.py.
@@ -81,6 +81,10 @@ def main():
         default=None,
         help="Runtime provenance profile.",
     )
+    parser.add_argument(
+        "--paper1000", action="store_true",
+        help="enable approved R003 New Room paper1000 profile",
+    )
     args, ros_args = parser.parse_known_args()
 
     rclpy.init(args=ros_args)
@@ -94,8 +98,11 @@ def main():
             args.odom_topic,
             args.environment,
             args.runtime_profile,
+            args.paper1000,
         )
-        rclpy.spin(node)
+        executor = MultiThreadedExecutor(num_threads=4)
+        executor.add_node(node)
+        executor.spin()
     except (KeyboardInterrupt, ExternalShutdownException):
         pass
     finally:
@@ -130,7 +137,7 @@ def main():
     # observed-map evaluation as an explicitly-labelled diagnostic. Running
     # predict_alltrain_offline.py and then evaluate_nf_profiled.py replaces it
     # with the paper-style primary metrics.
-    if run_dir is not None and ground_truth_path is not None and roi_path is not None:
+    if run_dir is not None and ground_truth_path is not None and roi_path is not None and not args.paper1000:
         result = evaluate_run(
             run_dir,
             ground_truth_path,

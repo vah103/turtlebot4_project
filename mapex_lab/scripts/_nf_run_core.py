@@ -13,12 +13,14 @@ legacy benchmark profile.
 from __future__ import annotations
 
 import argparse
+import copy
 import csv
 import hashlib
 import json
 import math
 import statistics
 import subprocess
+import threading
 import time
 from collections import Counter
 from pathlib import Path as FilePath
@@ -26,12 +28,24 @@ from pathlib import Path as FilePath
 import numpy as np
 import rclpy
 import yaml
+from action_msgs.msg import GoalStatus
 from ament_index_python.packages import get_package_share_directory
-from nav_msgs.msg import Odometry, Path as NavPath
+from nav_msgs.msg import OccupancyGrid, Odometry, Path as NavPath
+from rclpy.callback_groups import ReentrantCallbackGroup
+from rclpy.executors import MultiThreadedExecutor
 from rclpy.executors import ExternalShutdownException
 from rclpy.qos import QoSProfile, ReliabilityPolicy
 
 from generate_new_room_ground_truth import generate as generate_new_room_ground_truth
+from r003_paper1000 import (
+    BUDGET_ID as PAPER1000_BUDGET_ID,
+    EVAL_ID as PAPER1000_EVAL_ID,
+    PROFILE_ID as PAPER1000_PROFILE_ID,
+    OdomProgressBudget,
+    common_crossings,
+    coverage as paper1000_coverage,
+    reduce_observed as paper1000_reduce_observed,
+)
 from nf_basic import (
     GOAL_OCCUPIED_ERROR_CODE,
     MAIN_PLAN_ENDPOINT_TOLERANCE_M,
@@ -124,6 +138,12 @@ SNAPSHOT_FIELDS = [
     "canvas_map_file",
     "source_map_stamp_s",
     "canvas_id",
+]
+
+PAPER1000_SNAPSHOT_FIELDS = [
+    "sample_id", "event", "progress_step", "distance_m", "residual_m",
+    "receive_time_s", "source_map_stamp_s", "map_age_s", "repeated_sample",
+    "raw_map_file", "raw_map_sha256", "cutoff_detection_overshoot_m",
 ]
 
 
@@ -290,6 +310,7 @@ class Stage2Run(NearestEuclideanFrontier):
         odom_topic: str,
         environment: str,
         runtime_profile: str | None = None,
+        paper1000: bool = False,
     ):
         root = FilePath(__file__).resolve().parents[1]
         if environment not in ENVIRONMENT_PROFILES:
@@ -309,6 +330,9 @@ class Stage2Run(NearestEuclideanFrontier):
         self.repo_root = root.parent
         self.environment = environment
         self.environment_profile = dict(ENVIRONMENT_PROFILES[environment])
+        self.paper1000_enabled = bool(paper1000)
+        if self.paper1000_enabled and environment != "new_room":
+            raise RuntimeError("R003 paper1000 is New Room only")
 
         if self.environment_profile["auto_generate_ground_truth"]:
             self._ensure_new_room_ground_truth(root)
@@ -323,6 +347,25 @@ class Stage2Run(NearestEuclideanFrontier):
             else None
         )
         self.roi_n = int(np.count_nonzero(self.roi)) if self.roi is not None else 0
+        self.paper1000_profile_path = (
+            root / "ground_truth" / "new_room" / "generated" / "r003_paper1000"
+            / f"{PAPER1000_EVAL_ID}.npz"
+        )
+        self.paper1000_profile = None
+        if self.paper1000_enabled:
+            if not self.paper1000_profile_path.is_file():
+                raise RuntimeError(
+                    "R003 profile is missing; run generate_r003_paper1000_profile.py and obtain WORK mask review first"
+                )
+            self.paper1000_profile = np.load(self.paper1000_profile_path)
+            self.roi = self.paper1000_profile["valid_space"].astype(bool)
+            self.roi_n = int(self.roi.sum())
+            self.ground_truth_path = self.paper1000_profile_path
+            self.environment_profile.update(
+                protocol_version=PAPER1000_PROFILE_ID,
+                roi_id=PAPER1000_EVAL_ID,
+                ground_truth_id=PAPER1000_EVAL_ID,
+            )
 
         run = root / "experiments" / "nearest" / run_id
         if run.exists():
@@ -373,10 +416,38 @@ class Stage2Run(NearestEuclideanFrontier):
         self.policy_compute_ms = []
         self.near_frontier_fallback_count = 0
         self.snapshot_id = 0
+        self.paper1000_budget = OdomProgressBudget() if self.paper1000_enabled else None
+        self.paper1000_lock = threading.RLock()
+        self.paper1000_latest_odom = None
+        self.paper1000_latest_map = None
+        self.paper1000_latest_map_receive_s = None
+        self.paper1000_sample_id = 0
+        self.paper1000_last_raw_sha256 = None
+        self.paper1000_cutoff_requested = False
+        self.paper1000_cutoff_wall_t0 = None
+        self.paper1000_active_goal_handle = None
+        self.paper1000_post_cancel_distance_m = None
+        self.paper1000_cutoff_detection_overshoot_m = None
+        self.paper1000_cutoff_map_age_s = None
+        self.paper1000_shutdown_requested = False
 
         q = QoSProfile(depth=100)
         q.reliability = ReliabilityPolicy.BEST_EFFORT
         self.create_subscription(Odometry, odom_topic, self.odom_cb, q)
+        if self.paper1000_enabled:
+            responsive_group = ReentrantCallbackGroup()
+            self.create_subscription(
+                Odometry, odom_topic, self.paper1000_odom_cb, q,
+                callback_group=responsive_group,
+            )
+            self.create_subscription(
+                OccupancyGrid, "/map", self.paper1000_map_cb, 20,
+                callback_group=responsive_group,
+            )
+            self.create_timer(
+                0.2, self.paper1000_control_tick,
+                callback_group=responsive_group,
+            )
         self._open_files()
         self.create_timer(1.0, self.metric_tick)
 
@@ -474,6 +545,18 @@ class Stage2Run(NearestEuclideanFrontier):
                     "ground_truth_contract": self.root / "ground_truth" / "new_room" / "structural_gt_v2.yaml",
                 }
             )
+        if self.paper1000_enabled:
+            hash_paths.update(
+                {
+                    "r003_protocol": self.root / "docs" / "R003_PAPER1000_PROTOCOL_V1.md",
+                    "r003_core": self.root / "scripts" / "r003_paper1000.py",
+                    "r003_evaluator": self.root / "scripts" / "evaluate_r003_paper1000.py",
+                    "r003_profile": self.paper1000_profile_path,
+                    "r003_profile_manifest": self.paper1000_profile_path.with_name(
+                        f"{PAPER1000_EVAL_ID}_manifest.json"
+                    ),
+                }
+            )
 
         config_sha256 = {
             name: _sha256_file(path)
@@ -520,6 +603,11 @@ class Stage2Run(NearestEuclideanFrontier):
             "sim_seed_policy": SIM_SEED_POLICY,
             "config_sha256": config_sha256,
             "termination_reason": None,
+            "evaluation_profile": PAPER1000_PROFILE_ID if self.paper1000_enabled else None,
+            "budget_semantics": PAPER1000_BUDGET_ID if self.paper1000_enabled else None,
+            "paper1000_profile_file": str(self.paper1000_profile_path) if self.paper1000_enabled else None,
+            "paper1000_max_odom_gap_s": self.paper1000_budget.max_gap_s if self.paper1000_enabled else None,
+            "paper1000_max_odom_increment_m": self.paper1000_budget.max_increment_m if self.paper1000_enabled else None,
         }
         self._write_metadata(metadata)
         return metadata
@@ -547,6 +635,10 @@ class Stage2Run(NearestEuclideanFrontier):
             "endpoint_x", "endpoint_y", "frontier_x", "frontier_y",
             "endpoint_error_m", "usable",
         ])
+        if self.paper1000_enabled:
+            self.fpaper, self.wpaper = self._open(
+                "paper1000_snapshots.csv", PAPER1000_SNAPSHOT_FIELDS
+            )
 
     def startup_ready(self):
         if self.startup_gate_open:
@@ -610,8 +702,20 @@ class Stage2Run(NearestEuclideanFrontier):
                 evaluation_start_y=float(ready_pose[1]),
                 runtime_map_resolution_m=float(self.map_msg.info.resolution),
             )
+            self._start_paper1000_if_needed()
+
+    def _start_paper1000_if_needed(self):
+        if not self.paper1000_enabled or self.paper1000_budget.started:
+            return
+        if self.paper1000_latest_odom is None:
+            raise RuntimeError("R003 requires a pre-start odometry sample")
+        x, y, stamp_s, frame_id = self.paper1000_latest_odom
+        self.paper1000_budget.start(x, y, stamp_s, frame_id)
+        self._record_paper1000_sample("initial", 0, False, 0.0)
 
     def exploration_step(self):
+        if self.paper1000_cutoff_requested:
+            return
         if not self.startup_ready():
             return
         ready = (
@@ -624,6 +728,11 @@ class Stage2Run(NearestEuclideanFrontier):
             self._begin_policy_decision(ready_pose)
         super().exploration_step()
         self.capture_policy_robot = False
+        if self.paper1000_cutoff_requested:
+            self.compute_t0 = None
+            self.compute_sim_t0 = None
+            self.pending_decision_selection = None
+            return
         if self.compute_t0 is not None:
             if self.pending_decision_selection is not None:
                 candidates, selected = self.pending_decision_selection
@@ -657,6 +766,117 @@ class Stage2Run(NearestEuclideanFrontier):
             self.ft.flush()
             self.last_traj = self.elapsed()
 
+    def paper1000_map_cb(self, msg: OccupancyGrid):
+        with self.paper1000_lock:
+            self.paper1000_latest_map = copy.deepcopy(msg)
+            self.paper1000_latest_map_receive_s = self.now_s()
+
+    def paper1000_odom_cb(self, msg: Odometry):
+        stamp_s = _stamp_s(msg)
+        frame_id = str(msg.header.frame_id or "odom")
+        x = float(msg.pose.pose.position.x)
+        y = float(msg.pose.pose.position.y)
+        self.paper1000_latest_odom = (x, y, stamp_s, frame_id)
+        budget = self.paper1000_budget
+        if budget is None or not budget.started or self.finalized:
+            return
+        try:
+            update = budget.update(x, y, stamp_s, frame_id)
+        except ValueError as exc:
+            self._update_metadata(paper1000_integrity_faults=list(budget.integrity_faults))
+            self.get_logger().error(f"R003 odometry integrity fault: {exc}")
+            self.paper1000_cutoff_requested = True
+            self.finalize("abnormal_termination")
+            return
+        for index, step in enumerate(common_crossings(update.crossed_steps)):
+            self._record_paper1000_sample(
+                "progress", step, index > 0,
+                update.detection_overshoot_m,
+            )
+        if update.cutoff_crossed:
+            self.paper1000_cutoff_requested = True
+            self.paper1000_cutoff_wall_t0 = time.monotonic()
+            self._record_paper1000_sample(
+                "budget_cutoff", update.step, False,
+                update.detection_overshoot_m,
+            )
+            handle = self.paper1000_active_goal_handle
+            if handle is not None:
+                try:
+                    handle.cancel_goal_async()
+                except Exception as exc:  # noqa: BLE001
+                    self.get_logger().error(f"R003 goal cancellation request failed: {exc}")
+            elif not self.goal_active:
+                self._complete_paper1000_cancellation()
+
+    def paper1000_control_tick(self):
+        if self.paper1000_shutdown_requested:
+            self.paper1000_shutdown_requested = False
+            try:
+                self.context.try_shutdown()
+            except Exception as exc:  # noqa: BLE001
+                self.get_logger().error(f"R003 shutdown request failed: {exc}")
+            return
+        if (
+            self.paper1000_cutoff_requested
+            and not self.finalized
+            and self.paper1000_cutoff_wall_t0 is not None
+            and time.monotonic() - self.paper1000_cutoff_wall_t0 > 15.0
+        ):
+            self._update_metadata(paper1000_cancellation_watchdog_timeout=True)
+            self._complete_paper1000_cancellation()
+
+    def _complete_paper1000_cancellation(self):
+        with self.paper1000_lock:
+            if self.finalized:
+                return
+            self.paper1000_post_cancel_distance_m = self.paper1000_budget.distance_m
+            self._record_paper1000_sample(
+                "post_cancellation", self.paper1000_budget.step, False,
+                max(0.0, self.paper1000_budget.distance_m - self.paper1000_budget.limit_m),
+            )
+            self.finalize("budget_1000_reached")
+
+    def _record_paper1000_sample(self, event, step, repeated, overshoot):
+        if not self.paper1000_enabled or not hasattr(self, "wpaper"):
+            return
+        with self.paper1000_lock:
+            msg = copy.deepcopy(self.paper1000_latest_map or self.map_msg)
+            receive_s = self.paper1000_latest_map_receive_s
+        if msg is None:
+            raise RuntimeError(f"R003 cannot record {event}: no map available")
+        self.paper1000_sample_id += 1
+        base = self.run / "maps" / f"paper1000_{self.paper1000_sample_id:04d}_{event}_k{int(step):04d}"
+        raw_rel, _canvas_rel = self.save_map_pair(base, msg=msg)
+        raw_path = self.run / raw_rel
+        raw_sha = _sha256_file(raw_path)
+        repeated = bool(repeated or raw_sha == self.paper1000_last_raw_sha256)
+        self.paper1000_last_raw_sha256 = raw_sha
+        source_stamp = _stamp_s(msg)
+        now_s = self.now_s()
+        map_age_s = max(0.0, now_s - source_stamp)
+        if event == "budget_cutoff":
+            self.paper1000_cutoff_detection_overshoot_m = float(overshoot)
+            self.paper1000_cutoff_map_age_s = float(map_age_s)
+        self.wpaper.writerow({
+            "sample_id": self.paper1000_sample_id,
+            "event": event,
+            "progress_step": int(step),
+            "distance_m": self.fmt(self.paper1000_budget.distance_m),
+            "residual_m": self.fmt(
+                self.paper1000_budget.distance_m
+                - self.paper1000_budget.step * self.paper1000_budget.step_m
+            ),
+            "receive_time_s": self.fmt(receive_s if receive_s is not None else now_s),
+            "source_map_stamp_s": self.fmt(source_stamp),
+            "map_age_s": self.fmt(map_age_s),
+            "repeated_sample": int(bool(repeated)),
+            "raw_map_file": raw_rel,
+            "raw_map_sha256": raw_sha,
+            "cutoff_detection_overshoot_m": self.fmt(overshoot),
+        })
+        self.fpaper.flush()
+
     def elapsed(self, now: float | None = None):
         if self.t0 is None:
             return 0.0
@@ -678,6 +898,10 @@ class Stage2Run(NearestEuclideanFrontier):
         canvas = self.fixed_canvas(self.map_msg)
         if canvas is None:
             return math.nan, math.nan
+        if self.paper1000_enabled:
+            reduced = paper1000_reduce_observed(canvas)
+            values = paper1000_coverage(reduced, self.roi)
+            return values["known_fraction"], values["coverage"]
         known = canvas >= 0
         known_fraction = np.count_nonzero(known) / known.size
         coverage = np.count_nonzero(known & self.roi) / self.roi_n if self.roi is not None and self.roi_n > 0 else math.nan
@@ -907,6 +1131,9 @@ class Stage2Run(NearestEuclideanFrontier):
             self.active_decision = None
 
     def send_navigation_goal(self, x, y, mode="main"):
+        if self.paper1000_cutoff_requested:
+            self.get_logger().warn("R003 cutoff latched; navigation dispatch suppressed")
+            return
         previous_goal_id = self.active_goal
         super().send_navigation_goal(x, y, mode)
         if not self.goal_active or self.current_goal_mode != mode:
@@ -925,6 +1152,12 @@ class Stage2Run(NearestEuclideanFrontier):
             "result": "", "status": "", "error_code": "", "error_msg": "",
         })
         self.fg.flush()
+
+    def mark_exploration_complete(self):
+        already_complete = self.completed
+        super().mark_exploration_complete()
+        if self.paper1000_enabled and not already_complete and not self.finalized:
+            self.finalize("exploration_complete_before_budget")
 
     def plan_callback(self, msg: NavPath):
         super().plan_callback(msg)
@@ -961,11 +1194,17 @@ class Stage2Run(NearestEuclideanFrontier):
         accepted = False; response_error = ""
         try:
             goal_handle = future.result(); accepted = bool(goal_handle.accepted)
+            if accepted and self.paper1000_enabled:
+                self.paper1000_active_goal_handle = goal_handle
+                if self.paper1000_cutoff_requested:
+                    goal_handle.cancel_goal_async()
         except Exception as exc:
             response_error = str(exc)
         super().goal_response_callback(future, mode)
         if not accepted:
             self.finish_goal("rejected", "", "", response_error or "goal_rejected", goal_id=goal_id)
+            if self.paper1000_enabled and self.paper1000_cutoff_requested:
+                self._complete_paper1000_cancellation()
 
     def goal_result_callback(self, future, mode):
         completed_goal_id = self.active_goal
@@ -976,20 +1215,33 @@ class Stage2Run(NearestEuclideanFrontier):
         except Exception as exc:
             message = str(exc)
         super().goal_result_callback(future, mode)
+        if self.paper1000_enabled:
+            self.paper1000_active_goal_handle = None
         if mode == "main":
             self.count["main_attempts"] += 1
             if code == GOAL_OCCUPIED_ERROR_CODE: self.count["abandoned_206"] += 1
             if code == NO_VALID_PATH_ERROR_CODE: self.count["abandoned_208"] += 1
             if status == 4: self.count["main_succeeded"] += 1
+            elif self.paper1000_enabled and self.paper1000_cutoff_requested and status == GoalStatus.STATUS_CANCELED:
+                self.count["main_interrupted"] += 1
             else: self.count["main_failed"] += 1
         else:
             self.count["subgoal_attempts"] += 1
             if status == 4: self.count["subgoal_succeeded"] += 1
+            elif self.paper1000_enabled and self.paper1000_cutoff_requested and status == GoalStatus.STATUS_CANCELED:
+                self.count["subgoal_interrupted"] += 1
             else: self.count["subgoal_failed"] += 1
         if code is not None: self.errors[str(code)] += 1
-        self.finish_goal("succeeded" if status == 4 else "failed", status, code, message, goal_id=completed_goal_id)
+        result_label = "succeeded" if status == 4 else (
+            "interrupted"
+            if self.paper1000_enabled and self.paper1000_cutoff_requested and status == GoalStatus.STATUS_CANCELED
+            else "failed"
+        )
+        self.finish_goal(result_label, status, code, message, goal_id=completed_goal_id)
         if self.main_goal is None and not self.goal_active:
             self.active_decision = None
+        if self.paper1000_enabled and self.paper1000_cutoff_requested:
+            self._complete_paper1000_cancellation()
 
     def finish_goal(self, result, status, code, message, goal_id=None):
         if goal_id is None: goal_id = self.active_goal
@@ -1011,6 +1263,13 @@ class Stage2Run(NearestEuclideanFrontier):
 
     def finalize(self, reason):
         if self.finalized: return
+        if self.paper1000_enabled and reason != "budget_1000_reached":
+            event = "natural_completion" if reason == "exploration_complete_before_budget" else "abnormal_final"
+            existing_final = self.paper1000_cutoff_requested and reason == "budget_1000_reached"
+            if not existing_final and self.paper1000_budget.started:
+                self._record_paper1000_sample(
+                    event, self.paper1000_budget.step, False, 0.0
+                )
         if self.active_goal is not None: self.finish_goal("interrupted", "", "", "run_interrupted")
         self.finalized = True
         self.known, self.coverage = self.map_metrics()
@@ -1038,19 +1297,33 @@ class Stage2Run(NearestEuclideanFrontier):
             "subgoal_failed": self.count["subgoal_failed"], "subgoal_interrupted": self.count["subgoal_interrupted"],
             "error_code_counts": dict(self.errors), "termination_reason": reason,
             "nav2_startup_stable_s": NAV2_READY_STABLE_S, "occupied_iou_online": None, "tu_online": None,
+            "paper1000_profile": PAPER1000_PROFILE_ID if self.paper1000_enabled else None,
+            "paper1000_progress_step": self.paper1000_budget.step if self.paper1000_enabled else None,
+            "paper1000_distance_m": self.paper1000_budget.distance_m if self.paper1000_enabled else None,
+            "paper1000_post_cancellation_distance_m": self.paper1000_post_cancel_distance_m if self.paper1000_enabled else None,
+            "paper1000_cutoff_detection_overshoot_m": self.paper1000_cutoff_detection_overshoot_m if self.paper1000_enabled else None,
+            "paper1000_cutoff_map_age_s": self.paper1000_cutoff_map_age_s if self.paper1000_enabled else None,
+            "paper1000_integrity_faults": list(self.paper1000_budget.integrity_faults) if self.paper1000_enabled else [],
         }
         (self.run / "summary.json").write_text(json.dumps(summary, indent=2, allow_nan=True), encoding="utf-8")
         self._update_metadata(
             termination_reason=reason, final_coverage=self.coverage, final_known_fraction=self.known,
             total_distance_m=self.distance, total_time_s=total_time, policy_decisions=decision_count,
             near_frontier_fallback_count=self.near_frontier_fallback_count, planner_blocked_abandoned_total=blocked_total,
+            paper1000_progress_step=self.paper1000_budget.step if self.paper1000_enabled else None,
+            paper1000_distance_m=self.paper1000_budget.distance_m if self.paper1000_enabled else None,
+            paper1000_post_cancellation_distance_m=self.paper1000_post_cancel_distance_m if self.paper1000_enabled else None,
+            paper1000_cutoff_detection_overshoot_m=self.paper1000_cutoff_detection_overshoot_m if self.paper1000_enabled else None,
+            paper1000_cutoff_map_age_s=self.paper1000_cutoff_map_age_s if self.paper1000_enabled else None,
         )
         self.get_logger().warn(
             f"NEAREST SAVED: env={self.environment}, profile={self.runtime_profile_name}, coverage={self.fmt(self.coverage)}, distance={self.distance:.2f}m, output={self.run}"
         )
+        if self.paper1000_enabled:
+            self.paper1000_shutdown_requested = True
 
     def close_recorder_files(self):
-        for name in ("fm", "ft", "fpd", "fc", "fs", "fg", "fp"):
+        for name in ("fm", "ft", "fpd", "fc", "fs", "fg", "fp", "fpaper"):
             stream = getattr(self, name, None)
             if stream is not None and not stream.closed:
                 stream.flush(); stream.close()
@@ -1064,11 +1337,14 @@ def main():
                         help="Evaluation environment/profile. Default is new_room; use --environment hospital for Hospital.")
     parser.add_argument("--runtime-profile", choices=sorted(RUNTIME_PROFILES), default=None,
                         help="Runtime provenance profile. New Room defaults to submap.")
+    parser.add_argument("--paper1000", action="store_true", help="enable approved R003 New Room paper1000 profile")
     args, ros_args = parser.parse_known_args()
     rclpy.init(args=ros_args)
-    node = Stage2Run(args.run_id, args.odom_topic, args.environment, args.runtime_profile)
+    node = Stage2Run(args.run_id, args.odom_topic, args.environment, args.runtime_profile, args.paper1000)
     try:
-        rclpy.spin(node)
+        executor = MultiThreadedExecutor(num_threads=4)
+        executor.add_node(node)
+        executor.spin()
     except (KeyboardInterrupt, ExternalShutdownException):
         pass
     finally:

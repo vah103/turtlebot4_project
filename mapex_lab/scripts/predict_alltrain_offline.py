@@ -27,14 +27,19 @@ def sha256(path):
     return digest.hexdigest()
 
 
-def _decision_log(run):
-    """Return (path, id_field) for a supported recorded-run decision log."""
+def _decision_log(run, snapshots=False):
+    """Return (path, id_field, raw-field) for decisions or R003 samples."""
+    if snapshots:
+        path = run / 'paper1000_snapshots.csv'
+        if not path.is_file():
+            raise FileNotFoundError('Run lacks paper1000_snapshots.csv: {}'.format(run))
+        return path, 'sample_id', 'raw_map_file'
     mapex_path = run / 'decisions.csv'
     nf_path = run / 'policy_decisions.csv'
     if mapex_path.is_file():
-        return mapex_path, 'decision_id'
+        return mapex_path, 'decision_id', 'raw_map'
     if nf_path.is_file():
-        return nf_path, 'policy_decision_id'
+        return nf_path, 'policy_decision_id', 'raw_map'
     raise FileNotFoundError(
         'Run has neither decisions.csv nor policy_decisions.csv: {}'.format(run)
     )
@@ -57,10 +62,10 @@ def load_observed(path):
     return observed, geometry
 
 
-def generate(run, checkpoint, predict, overwrite=False):
+def generate(run, checkpoint, predict, overwrite=False, snapshots=False):
     """predict(observed) returns the padded all-training occupancy prediction."""
     run = Path(run).resolve()
-    decisions_path, id_field = _decision_log(run)
+    decisions_path, id_field, raw_field = _decision_log(run, snapshots=snapshots)
     source_hash = sha256(decisions_path)
     with decisions_path.open(newline='') as stream:
         rows = list(csv.DictReader(stream))
@@ -74,7 +79,7 @@ def generate(run, checkpoint, predict, overwrite=False):
     if len(set(ids)) != len(ids):
         raise ValueError('Duplicate decision IDs')
 
-    output = run / 'evaluation' / 'alltrain'
+    output = run / 'evaluation' / ('alltrain_snapshots' if snapshots else 'alltrain')
     if output.exists():
         if not overwrite:
             raise FileExistsError(
@@ -85,34 +90,52 @@ def generate(run, checkpoint, predict, overwrite=False):
     output.mkdir(parents=True, exist_ok=False)
 
     records = []
+    inference_cache = {}
     for row in rows:
         decision_id = int(row[id_field])
-        raw_rel = row.get('raw_map', '').strip()
+        raw_rel = row.get(raw_field, '').strip()
         if not raw_rel:
             raise ValueError('Decision {} lacks raw_map'.format(decision_id))
         raw_path = run / raw_rel
-        observed, geometry = load_observed(raw_path)
-        prediction = np.asarray(predict(observed), dtype=np.float32)
-        h, w = observed.shape
-        if (prediction.ndim != 2 or prediction.shape[0] < h
-                or prediction.shape[1] < w or not np.isfinite(prediction).all()):
-            raise ValueError('Invalid prediction shape or non-finite values')
-        name = 'decision_{:06d}_alltrain.npz'.format(decision_id)
-        target = output / name
-        np.savez_compressed(str(target), data=np.clip(prediction, 0., 1.),
-                            member='alltrain', pad_top=(prediction.shape[0]-h)//2,
-                            pad_left=(prediction.shape[1]-w)//2, **geometry)
-        records.append(dict(decision_id=decision_id,
+        raw_hash = sha256(raw_path)
+        duplicate_of = inference_cache.get(raw_hash)
+        if duplicate_of is None:
+            observed, geometry = load_observed(raw_path)
+            prediction = np.asarray(predict(observed), dtype=np.float32)
+            h, w = observed.shape
+            if (prediction.ndim != 2 or prediction.shape[0] < h
+                    or prediction.shape[1] < w or not np.isfinite(prediction).all()):
+                raise ValueError('Invalid prediction shape or non-finite values')
+            name = '{}_{:06d}_alltrain.npz'.format('sample' if snapshots else 'decision', decision_id)
+            target = output / name
+            np.savez_compressed(str(target), data=np.clip(prediction, 0., 1.),
+                                member='alltrain', pad_top=(prediction.shape[0]-h)//2,
+                                pad_left=(prediction.shape[1]-w)//2, **geometry)
+            inference_cache[raw_hash] = (decision_id, target)
+        else:
+            _original_id, target = duplicate_of
+        records.append(dict(sample_id=decision_id if snapshots else None,
+                            decision_id=None if snapshots else decision_id,
                             alltrain_map=str(target.relative_to(run)),
-                            raw_map=raw_rel, raw_sha256=sha256(raw_path)))
+                            raw_map=raw_rel, raw_sha256=raw_hash,
+                            duplicate_of_id=None if duplicate_of is None else duplicate_of[0]))
     if sha256(decisions_path) != source_hash:
         raise RuntimeError('{} changed during inference; manifest not published'.format(
             decisions_path.name))
+    config_path = checkpoint.parent.parent / 'config.yaml'
     payload = dict(prediction_source='alltrain',
                    decision_log=decisions_path.name,
                    decision_id_field=id_field,
+                   source_kind='paper1000_snapshots' if snapshots else 'policy_decisions',
+                   raw_map_field=raw_field,
                    decisions_sha256=source_hash,
                    checkpoint=dict(path=str(checkpoint), sha256=sha256(checkpoint)),
+                   model_config=dict(
+                       path=str(config_path),
+                       sha256=sha256(config_path) if config_path.is_file() else None,
+                   ),
+                   preprocessing='default_map_eval_512x512_observed_occ1_free0_unknown0p5',
+                   unique_inference_count=len(inference_cache),
                    decisions=records)
     temporary = output / 'manifest.tmp'
     temporary.write_text(json.dumps(payload, indent=2) + '\n')
@@ -130,6 +153,10 @@ def main():
         '--overwrite-alltrain',
         action='store_true',
         help='replace an existing evaluation/alltrain directory for this run',
+    )
+    parser.add_argument(
+        '--paper1000-snapshots', action='store_true',
+        help='infer the common initial/k=10..1000/final R003 snapshot manifest',
     )
     args = parser.parse_args()
     root = Path(args.mapex_root).expanduser().resolve()
@@ -158,7 +185,11 @@ def main():
                 np.stack([observed]*3, axis=2), transform, args.device)
             return model(batch)['inpainted'][0, 0].detach().float().cpu().numpy()
 
-    print(generate(args.run_dir, checkpoint, predict, overwrite=args.overwrite_alltrain))
+    print(generate(
+        args.run_dir, checkpoint, predict,
+        overwrite=args.overwrite_alltrain,
+        snapshots=args.paper1000_snapshots,
+    ))
 
 
 if __name__ == '__main__':

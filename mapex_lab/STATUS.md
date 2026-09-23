@@ -1,13 +1,15 @@
 # mapex_lab status
 
-## R003 — New Room paper1000: approved, awaiting engineering
+## R003 — New Room paper1000: implementation ready for mask review
 
 USER approved R003 v1 on 2026-09-23. Canonical contract: [R003_PAPER1000_PROTOCOL_V1.md](docs/R003_PAPER1000_PROTOCOL_V1.md).
 
 - Profile: `new_room_mapex_paper1000_v1`; one ROS adapted progress step = 0.30 m accumulated odometry, maximum 1000.
 - Versioned structural GT/valid-space at 0.10 m; common alltrain IoU/TU evaluation for NF and MapEx.
-- WORK manages; CODEX implements/tests next. Generated mask/overlay review precedes 1+1 smoke; WORK smoke acceptance precedes 10+10.
-- No R003 implementation, test, smoke, bulk or workbook outcome has been claimed.
+- CODEX implemented the isolated R003 mask/evaluator/budget path and common-snapshot alltrain extension on branch `r003-paper1000-implementation`.
+- Focused R003 tests pass, along with the existing alltrain recorder and R002 suites. Candidate masks, 100 fixed TU goals, counts/hashes and visual overlays are generated under `ground_truth/new_room/generated/r003_paper1000/`.
+- Current gate: WORK reviews implementation + masks/overlays. No 1+1 smoke, 10+10 bulk run or workbook update has been performed.
+- Smoke must verify real cutoff responsiveness, detection overshoot <=0.10 m, cutoff-map age <=2 sim seconds, action cancellation and NF/MapEx evaluator parity before bulk.
 - Existing historical metrics remain auditable. R002 fairness investigation remains paused.
 
 
