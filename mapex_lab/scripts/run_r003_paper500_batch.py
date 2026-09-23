@@ -73,6 +73,12 @@ def resume_blocker(record: dict) -> str | None:
     return "recovery_required"
 
 
+def invalid_deletion_decision(attempt: int, max_technical_retries: int) -> str:
+    if int(attempt) <= int(max_technical_retries):
+        return "delete_exact_run_dir_then_retry_same_official_id"
+    return "delete_exact_run_dir_then_block_repeated_invalidity"
+
+
 def first_unfinished(matrix: list[dict], state: dict) -> dict | None:
     complete = {
         run_id for run_id, item in state.get("runs", {}).items()
@@ -177,6 +183,7 @@ def checkpoint_invalid_attempt(
     log: Path,
     watchdog_evidence: Path | None,
     runtime_dir: Path,
+    deletion_decision: str,
     details: dict | None = None,
 ) -> dict:
     watchdog = None
@@ -199,7 +206,7 @@ def checkpoint_invalid_attempt(
         "log": str(log),
         "watchdog_evidence": watchdog,
         "runtime_dir": str(runtime_dir),
-        "deletion_decision": "delete_exact_run_dir_then_retry_same_official_id",
+        "deletion_decision": deletion_decision,
         "checkpointed_at": time.time(),
     }
     if details:
@@ -223,6 +230,7 @@ def invalidate_and_delete(
     classification: str,
     reason: str,
     watchdog_evidence: Path | None,
+    deletion_decision: str,
     details: dict | None = None,
 ) -> Path:
     attempt = int(record["attempts"])
@@ -242,6 +250,7 @@ def invalidate_and_delete(
         log=log,
         watchdog_evidence=watchdog_evidence,
         runtime_dir=target,
+        deletion_decision=deletion_decision,
         details=details,
     )
     record.update(
@@ -339,6 +348,7 @@ def main() -> int:
         )
         record.update(last_outcome=outcome, log=str(log))
         if outcome == "technical_deadlock":
+            retry_allowed = record["attempts"] <= args.max_technical_retries
             invalidate_and_delete(
                 state=state,
                 state_path=state_path,
@@ -351,8 +361,11 @@ def main() -> int:
                 classification="watchdog_confirmed_physical_deadlock",
                 reason="frozen watchdog exited with technical-deadlock status",
                 watchdog_evidence=watchdog_evidence,
+                deletion_decision=invalid_deletion_decision(
+                    record["attempts"], args.max_technical_retries
+                ),
             )
-            if record["attempts"] > args.max_technical_retries:
+            if not retry_allowed:
                 record["status"] = "blocked_repeated_technical_invalidity"
                 atomic_json(state_path, state)
                 return 3
@@ -365,6 +378,7 @@ def main() -> int:
             return 4
         integrity_faults = paper500_integrity_faults(target)
         if integrity_faults:
+            retry_allowed = record["attempts"] <= args.max_technical_retries
             invalidate_and_delete(
                 state=state,
                 state_path=state_path,
@@ -377,9 +391,12 @@ def main() -> int:
                 classification="recorder_integrity_fault",
                 reason="paper500 runtime reported integrity faults",
                 watchdog_evidence=None,
+                deletion_decision=invalid_deletion_decision(
+                    record["attempts"], args.max_technical_retries
+                ),
                 details={"paper500_integrity_faults": integrity_faults},
             )
-            if record["attempts"] > args.max_technical_retries:
+            if not retry_allowed:
                 record["status"] = "blocked_repeated_technical_invalidity"
                 atomic_json(state_path, state)
                 return 3

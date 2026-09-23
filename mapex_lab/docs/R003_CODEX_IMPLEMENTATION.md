@@ -39,6 +39,9 @@ Canonical contract: `docs/R003_PAPER500_PROTOCOL_V1.md`
 - Every invalid attempt is checkpointed before deletion with run ID, host,
   exact source SHA, classification/reason, deletion decision and bound
   watchdog evidence when applicable.
+- The deletion decision is computed before checkpointing and truthfully records
+  whether the exact directory will be followed by a same-ID retry or a
+  repeated-invalidity block after retry exhaustion.
 - Non-empty `paper500_integrity_faults` from either NF or MapEx is routed to
   technical-invalid handling before post-processing or official completion.
 - The protocol preserves the broader approved A2 manual technical-invalid

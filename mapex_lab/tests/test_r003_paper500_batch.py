@@ -138,12 +138,59 @@ class Paper500BatchTests(unittest.TestCase):
                     classification="watchdog_confirmed_physical_deadlock",
                     reason="test",
                     watchdog_evidence=watchdog_path,
+                    deletion_decision=batch.invalid_deletion_decision(1, 1),
                 )
             payload = json.loads(evidence_path.read_text(encoding="utf-8"))
             self.assertEqual(payload["execution_host"], socket.gethostname())
             self.assertEqual(payload["source_sha"], "a" * 40)
             self.assertIsNotNone(payload["watchdog_evidence"]["sha256"])
+            self.assertEqual(
+                payload["deletion_decision"],
+                "delete_exact_run_dir_then_retry_same_official_id",
+            )
             self.assertTrue(record["deletion_completed"])
+
+    def test_exhausted_retry_checkpoint_records_block_decision(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            target = root / "mapex_lab/experiments/mapex/mpx_p500_001"
+            target.mkdir(parents=True)
+            evidence_dir = root / "results"
+            log = evidence_dir / "logs/run.log"
+            log.parent.mkdir(parents=True)
+            log.write_text("log\n", encoding="utf-8")
+            state_path = evidence_dir / "batch_state.json"
+            record = {"attempts": 2}
+            state = {
+                "execution_host": socket.gethostname(),
+                "source_sha": "b" * 40,
+                "runs": {"mpx_p500_001": record},
+            }
+            item = {"method": "mapex", "run_id": "mpx_p500_001"}
+            decision = batch.invalid_deletion_decision(2, 1)
+
+            with mock.patch.object(batch, "delete_invalid_run"):
+                evidence_path = batch.invalidate_and_delete(
+                    state=state,
+                    state_path=state_path,
+                    record=record,
+                    item=item,
+                    target=target,
+                    root=root,
+                    evidence_dir=evidence_dir,
+                    log=log,
+                    classification="recorder_integrity_fault",
+                    reason="test exhausted retry",
+                    watchdog_evidence=None,
+                    deletion_decision=decision,
+                )
+
+            payload = json.loads(evidence_path.read_text(encoding="utf-8"))
+            self.assertEqual(
+                payload["deletion_decision"],
+                "delete_exact_run_dir_then_block_repeated_invalidity",
+            )
+            self.assertEqual(record["deletion_decision"], payload["deletion_decision"])
 
     def test_integrity_faults_are_rejected_symmetrically(self):
         with tempfile.TemporaryDirectory() as directory:
