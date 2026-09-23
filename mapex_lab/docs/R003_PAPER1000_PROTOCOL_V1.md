@@ -13,6 +13,41 @@ CODEX may implement and test this contract. Generated masks/counts/hash/visual v
 
 Historical Hospital EXPERIMENT_PROTOCOL.md remains applicable to Hospital. This file is the authoritative R003 New Room profile supplement; record effective current runtime configuration as specified below.
 
+## USER-approved amendment A1 — qualification runs may become official run 1
+
+Approved by USER on 2026-09-23 before any R003 ROS/Gazebo runtime attempt under this profile.
+
+This amendment changes only the run-sequencing/inclusion rule. GT, valid-space,
+budget, sampling, prediction, metric, threshold, TU, AUC, and aggregation
+semantics are unchanged.
+
+The first NF and first MapEx runtime attempts are now **qualification attempts
+for official run 1**, rather than disposable smoke-only runs:
+
+- first IDs are `nf_p1000_001` and `mpx_p1000_001`;
+- if an attempt is **runtime-valid** under the preregistered integrity/provenance
+  checks, it is retained as official run 1 regardless of metric quality,
+  completion time, or whether the algorithm succeeds or fails;
+- an algorithmic/navigation failure is an official outcome and must not be
+  discarded or replaced merely because performance is poor;
+- only an **infrastructure-invalid** attempt (for example launch/runtime
+  corruption, missing required data, broken capture/provenance, or evaluator
+  impossibility caused by infrastructure) may be rerun for the same official
+  slot;
+- every infrastructure-invalid attempt remains retained/auditable and the retry
+  uses a new non-overwriting attempt ID such as `nf_p1000_001_retry01` or
+  `mpx_p1000_001_retry01`;
+- acceptance/retry decisions must be based only on preregistered runtime
+  integrity criteria, never on Coverage/IoU/TU/AUC values;
+- the independent checker reviews the qualification evidence before runs 2..10
+  proceed;
+- if both first attempts are accepted, the remaining bulk is **9 NF + 9 MapEx**
+  official attempts, completing 10+10 total.
+
+This amendment supersedes the historical section-9 wording that required a
+separate disposable smoke namespace followed by a fresh 10+10 namespace.
+The historical proposal text below is retained for audit.
+
 ---
 
 # R003-METHOD — New Room paper1000 proposal v1
