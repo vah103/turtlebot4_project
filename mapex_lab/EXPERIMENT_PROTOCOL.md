@@ -1,5 +1,10 @@
 # Experiment Protocol
 
+## New Room R003 profile supplement — USER-approved 2026-09-23
+
+The New Room `new_room_mapex_paper1000_v1` protocol is defined in [docs/R003_PAPER1000_PROTOCOL_V1.md](docs/R003_PAPER1000_PROTOCOL_V1.md). Its ROS odometry-progress adaptation, GT/valid-space, common alltrain evaluation, cutoff capture and staged acceptance gates are frozen by USER approval. The Hospital protocol below is historical/current Hospital context and must not be copied as the effective R003 New Room runtime configuration.
+
+
 Mọi phương pháp so sánh phải dùng cùng protocol, trừ khi thay đổi đó chính là biến thí nghiệm và được ghi rõ.
 
 ## Protocol identity
