@@ -156,11 +156,32 @@ After USER approval:
 4. Simulation 1 NF + 1 MapEx smoke in separate smoke namespace. Verify actual launch world/spawn, runtime params, model/checkpoint, 100 goals, cutoff responsiveness, map freshness, outcome and evaluator parity.
 5. WORK reviews smoke. Only then 10 NF + 10 MapEx in new namespace nf_p1000_001..010 / mpx_p1000_001..010.
 6. Alternate method order across repetitions; simulator seed remains explicitly uncontrolled unless separately changed before freeze.
-7. Aggregate run-macro mean ± sample std (ddof=1), counts/failures and curves. No pixel-pooled substitute for run-macro.
-8. WORK approves aggregates/labels before appending P1000 sheets to the current Experimental Results.xlsx.
+7. Aggregate run-macro mean ± sample std (ddof=1), counts/failures and **full common-step metric curves**. No pixel-pooled substitute for run-macro.
+8. Curve-first comparison is required:
+   - Coverage(t), occupied-IoU(t), and TU(t) over the common adapted-step axis are primary outputs;
+   - compute per-run Coverage AUC and occupied-IoU AUC, then report run-macro mean ± sample std;
+   - compute TU AUC as an additional project-side scalar summary of the TU curve, clearly labeled as such unless an original-paper TU-AUC statement is separately verified;
+   - `Coverage@1000`, `IoU@1000`, and `TU@1000` are secondary endpoint summaries only and must not replace curve/AUC analysis;
+   - use deterministic trapezoidal integration on the recorded common-step samples and record support/integration provenance;
+   - legitimate natural completion may use explicit post-completion hold; algorithmic failure may not.
+9. WORK approves aggregates/labels before appending P1000 sheets to the current Experimental Results.xlsx.
 
 Record effective New Room launcher, SLAM parameters, Nav2 merged YAML, policy/config/checkpoint, simulator version and clean technical commit. All code/config/grid choices identical across methods except selection policy.
 Old v2 results and sheets retained. Hospital, D1 threshold work and paused R002 fairness investigation remain outside this scope.
+
+### Curve/AUC reporting contract
+
+The R003 result package must preserve MapEx's curve-oriented evaluation style.
+
+Required canonical outputs:
+- per-run Coverage(t), occupied-IoU(t), TU(t);
+- aggregate mean ± sample std curves across official runs at common adapted-step support;
+- per-run and aggregate Coverage AUC;
+- per-run and aggregate occupied-IoU AUC;
+- per-run and aggregate TU AUC as an explicitly project-added summary scalar;
+- secondary endpoint summaries at budget/legitimate early completion.
+
+Do not present a single final metric as the primary performance comparison. If a curve row is held after legitimate natural completion, mark it. If a run terminates by algorithmic failure, stop support at failure and report available n rather than holding the last value.
 
 ## 10. Completion / limits / routing
 
