@@ -1,0 +1,111 @@
+{
+  "profile_id": "new_room_mapex_paper1000_v1",
+  "budget_id": "odom_progress_0p30m_v1",
+  "structural_id": "new_room_mapex_structural_v1",
+  "valid_space_id": "new_room_mapex_valid_space_v1",
+  "evaluation_id": "new_room_mapex_eval_010_v1",
+  "git_commit": "bf3aed7ce71987c566011173f5a0d0deed3a2099",
+  "source_sdf": "/home/dell/Documents/Codex/2026-09-23/c-mapex-hub-v-nh-n/work/turtlebot4-r003/mapex_lab/map/new_room.sdf",
+  "source_sdf_sha256": "678c60172328183b42d2b26c15a8ed5a6faa8467a5b6e54f2564e2f7d974a735",
+  "protocol": "docs/R003_PAPER1000_PROTOCOL_V1.md",
+  "coordinate_frame": "slam_start",
+  "world_to_slam": {
+    "spawn_world_xyz_yaw": [
+      0.0,
+      3.0,
+      0.0,
+      0.0
+    ],
+    "rule": "R(-spawn_yaw) @ (p_world - p_spawn)"
+  },
+  "source_canvas": {
+    "id": "hospital_canvas_v1",
+    "shape": [
+      2123,
+      1504
+    ],
+    "resolution_m": 0.05,
+    "origin_xy": [
+      -25.6,
+      -60.1
+    ]
+  },
+  "reduced_canvas": {
+    "shape": [
+      1062,
+      752
+    ],
+    "resolution_m": 0.1,
+    "origin_xy": [
+      -25.6,
+      -60.1
+    ],
+    "block_anchor": [
+      0,
+      0
+    ],
+    "odd_row_padding": "occupied=1, valid=0, evaluation=0"
+  },
+  "bounds_m": [
+    -13.09,
+    13.09,
+    -13.09,
+    7.09
+  ],
+  "counts": {
+    "source": {
+      "occupied": 23990,
+      "free": 187706,
+      "valid": 211696,
+      "valid_and_occupied": 23990
+    },
+    "reduced": {
+      "occupied": 7179,
+      "free": 46497,
+      "valid": 52924,
+      "valid_and_occupied": 6427,
+      "evaluation": 52924
+    }
+  },
+  "start_row_col": [
+    601,
+    256
+  ],
+  "tu": {
+    "goal_count": 100,
+    "seed": 3001,
+    "rng": "python.random.Random.sample",
+    "python_version": "3.12.3",
+    "neighbour_order": [
+      [
+        -1,
+        0
+      ],
+      [
+        0,
+        -1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ]
+    ],
+    "goals_sha256": "b6e805e5f78d0fd95fd435b7b06edb693d638127fe6b1727d1a5898dda6f505e"
+  },
+  "hashes": {
+    "profile_file_sha256": "2925b93e68c435d292919303f54ca451fdebd4dc955d23e12874f9c2040298a9",
+    "occupied": "7904f2f286152e21839970d77cf19dcbd0c4d91c4c3ba63b16578e4676ba2b5b",
+    "valid_space": "3b42e1ae9b58940540477f4e4e903e68d48cb8249de875c7d8e070e4fecc29a6",
+    "evaluation_mask": "3b42e1ae9b58940540477f4e4e903e68d48cb8249de875c7d8e070e4fecc29a6",
+    "tu_goals_file_sha256": "d6b587196e6c964e679be0e660b08b39c97398aca51b46f0e7e35a19fbb81471"
+  },
+  "generation_command": "python3 mapex_lab/scripts/generate_r003_paper1000_profile.py --output-dir mapex_lab/ground_truth/new_room/generated/r003_paper1000",
+  "audit_overlays": [
+    "/home/dell/Documents/Codex/2026-09-23/c-mapex-hub-v-nh-n/work/turtlebot4-r003/mapex_lab/ground_truth/new_room/generated/r003_paper1000/r003_gt_valid_overlay.png",
+    "/home/dell/Documents/Codex/2026-09-23/c-mapex-hub-v-nh-n/work/turtlebot4-r003/mapex_lab/ground_truth/new_room/generated/r003_paper1000/r003_gt_vs_observed.png"
+  ]
+}

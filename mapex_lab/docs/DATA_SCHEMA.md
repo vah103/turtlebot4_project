@@ -4,6 +4,29 @@ Schema này mô tả recorder hiện dùng chung cho Nearest Frontier và MapEx.
 
 ## Run layout
 
+### R003 paper1000 common samples
+
+Runs started with `--paper1000` add `paper1000_snapshots.csv`. This is the
+authoritative input for the R003 common-sample evaluator; policy decision maps
+remain separate diagnostics and are not substituted for the budget final map.
+
+```text
+sample_id,event,progress_step,distance_m,residual_m,
+receive_time_s,source_map_stamp_s,map_age_s,repeated_sample,
+raw_map_file,raw_map_sha256,cutoff_detection_overshoot_m
+```
+
+Events are `initial`, `progress` at each crossed `k=10,20,...,1000`, exactly
+one authoritative final event (`budget_cutoff` or `natural_completion`), and a
+separate `post_cancellation` record after a budget cutoff. Multiple step
+crossings may reference the same immutable raw map and must set
+`repeated_sample=1`; identical consecutive raw-map hashes are also marked.
+
+Primary R003 inference is stored under `evaluation/alltrain_snapshots/` and is
+generated with `predict_alltrain_offline.py --paper1000-snapshots`. Identical
+raw-map hashes reuse one inference result. R003 IoU/TU results are written under
+`evaluation/paper1000/` by `evaluate_r003_paper1000.py`.
+
 ### Shared layout
 
 ```text
@@ -45,6 +68,12 @@ experiments/mapex/<run_id>/
 ```
 
 ## Canonical grids
+
+For `new_room_mapex_paper1000_v1`, the fixed source canvas remains
+`hospital_canvas_v1` at 0.05 m, while scoring uses the frozen 752 x 1062 grid at
+0.10 m in `new_room_mapex_eval_010_v1`. `evaluation_mask` is the fixed IoU/TU
+domain and `valid_space` is the fixed Coverage/TU-goal domain. See
+`docs/R003_PAPER1000_PROTOCOL_V1.md` and the generated profile manifest.
 
 Đối với `hospital_v2`:
 

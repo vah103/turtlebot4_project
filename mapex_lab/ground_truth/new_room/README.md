@@ -82,3 +82,16 @@ The v1 contract remains in `structural_gt_v1.yaml` so old run provenance can
 still be interpreted. Existing v1 coverage values must be recomputed from saved
 canvas snapshots against v2 before using absolute New Room coverage or
 cross-environment New Room-vs-Hospital coverage comparisons.
+
+# R003 paper1000 profile
+
+`generated/r003_paper1000/` contains the candidate
+`new_room_mapex_eval_010_v1` construction for WORK review. It is generated from
+`map/new_room.sdf` by `scripts/generate_r003_paper1000_profile.py`; it does not
+replace the historical v1/v2 New Room files.
+
+The directory contains the 0.10 m structural/valid/evaluation masks, the 100
+fixed TU goals, a hash/count manifest, an SDF-derived structural preview and an
+aligned overlay against the saved final `mpx_001` observed canvas. Smoke and
+bulk execution remain gated by WORK review under
+`docs/R003_PAPER1000_PROTOCOL_V1.md`.
