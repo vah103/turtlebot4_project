@@ -100,3 +100,32 @@ Usage at rework start: LOW (46% five-hour, 29% weekly remaining). SAVE-FIRST
 applies. No V3/V4 rule, threshold, bin, sensitivity or interpretation change is
 authorized. Next milestone: focused regressions pass, then rerun the same ten
 historical runs and compare against the reviewed result set.
+
+## H044 free-error diagnostic start checkpoint
+
+Date: 2026-09-24
+Task: R004-FREE-ERROR-OFFLINE / H044
+Owner/session role: CODEX maker
+Status: ACTIVE; HIGH criticality; independent W016 review required
+
+- Branch: `r004-free-error-diagnostic`.
+- Base/accepted source SHA: `550fa35a082041972133700f9688130bc73fd6f3`.
+- Frozen authorities: accepted R004 V3+V4 and
+  `R004_FREE_ERROR_DIAGNOSTIC_METHOD_V3.md`.
+- Base decisions/runs/summary hashes were verified byte-for-byte against H044.
+- Usage at pickup: HIGH_PRESSURE (99% five-hour remaining, 26% weekly
+  remaining); SAVE-FIRST applies and no reset credit is used.
+- Input: read-only historical `mpx_001..mpx_010` under
+  `/home/dell/turtlebot4_project_r003_p500_backup`.
+- Planned code/tests: a distinct free-error evaluator and focused synthetic
+  suite under `mapex_lab/analysis/r004/`; the accepted evaluator/results remain
+  unchanged.
+- Planned result/log root:
+  `mapex_lab/analysis/r004/results/free_error_diagnostic_v1/`.
+- Next milestone: synthetic tests for decomposition, threshold, support,
+  Euclidean depth bands, run-macro aggregation, and deep-occupied sensitivity
+  all pass before any full-cohort execution.
+- Stop condition: if fixed-canvas occupancy semantics or Euclidean depth cannot
+  satisfy the frozen method, record a blocker and do not improvise.
+- Resume rule: inspect branch/HEAD, status, this checkpoint, tests, and the
+  distinct result/log root before rerunning any command.
