@@ -1,4 +1,5 @@
 import math
+import json
 import unittest
 from pathlib import Path
 
@@ -99,6 +100,8 @@ class TopologyTraversabilityTests(unittest.TestCase):
         records = t.component_inventory(labels, source, (5, 7))
         self.assertEqual([record["label"] for record in records], [2, 1, 3])
         self.assertEqual(records[0]["minimum_cell"], [5, 7])
+        json.dumps([{key: value for key, value in record.items() if key != "local_cells"}
+                    for record in records])
 
     def test_representative_prefers_clearance_then_row_col(self):
         clearance = np.array([[1.0, 3.0], [3.0, 2.0]])

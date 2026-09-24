@@ -319,9 +319,9 @@ def component_inventory(labels, source_set, offset):
     records = []
     total = int(source_set.sum())
     for label in np.unique(labels[source_set & (labels > 0)]):
-        cells = list(zip(*np.nonzero(source_set & (labels == label))))
+        cells = [(int(row), int(col)) for row, col in zip(*np.nonzero(source_set & (labels == label)))]
         records.append({"label": int(label), "size": len(cells), "fraction": div(len(cells), total),
-                        "minimum_cell": [min(cells)[0] + offset[0], min(cells)[1] + offset[1]],
+                        "minimum_cell": [int(min(cells)[0] + offset[0]), int(min(cells)[1] + offset[1])],
                         "local_cells": cells})
     records.sort(key=lambda item: (-item["size"], item["minimum_cell"]))
     return records
