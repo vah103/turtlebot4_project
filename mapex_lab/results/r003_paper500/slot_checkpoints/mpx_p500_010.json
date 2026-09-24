@@ -1,0 +1,37 @@
+{
+  "schema": "r003_paper500_slot_checkpoint_v1",
+  "run_id": "mpx_p500_010",
+  "method": "mapex",
+  "frozen_order_index": 15,
+  "host": "com1",
+  "source_sha": "867337e69daa8146e08238b952347c5bca05c389",
+  "runtime_outcome": "runtime_complete",
+  "attempt": 1,
+  "checks": {
+    "runtime_complete": true,
+    "accepted_integrity_primitive_empty": true,
+    "summary_integrity_empty": true,
+    "evaluation_ok": true,
+    "errors_empty": true,
+    "sample_count_53": true,
+    "profile": true,
+    "checkpoint": true,
+    "source": true,
+    "protocol": true,
+    "budget": true
+  },
+  "accepted_integrity_faults": [],
+  "evaluation": {
+    "path": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/mapex/mpx_p500_010/evaluation/paper500/evaluation.json",
+    "sha256": "46cc74c7e8d59fc546aa375b4c3924fb075f08025495df3b79ff987e3cdb5a22",
+    "status": "ok",
+    "errors": [],
+    "sample_count": 53,
+    "endpoint_step": 500
+  },
+  "metadata_sha256": "4711654219f46aaf3026231521ca141de7f513a8e7493431a81ffb0ece0ccb91",
+  "summary_sha256": "5358d9e5a36393e56ffa80c58c3eab698fd3e61bdab8ab61a028c315cf814383",
+  "state_sha256": "9d880da29350b3a7e0337a9c316f3b95f22ce5393cea1c46e2552ef34115bc8b",
+  "next_frozen_id": "nf_p500_010",
+  "checkpointed_at": 1790235148.955091
+}
