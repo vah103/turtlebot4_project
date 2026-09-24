@@ -1,0 +1,23 @@
+{
+  "schema": "r003_paper500_invalid_attempt_v1",
+  "run_id": "nf_p500_006",
+  "method": "nf",
+  "attempt": 1,
+  "execution_host": "com1",
+  "source_sha": "867337e69daa8146e08238b952347c5bca05c389",
+  "classification": "recorder_integrity_fault",
+  "reason": "paper500 runtime reported integrity faults",
+  "log": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/results/r003_paper500/logs/nf_p500_006_attempt01.log",
+  "watchdog_evidence": null,
+  "runtime_dir": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/nearest/nf_p500_006",
+  "deletion_decision": "delete_exact_run_dir_then_retry_same_official_id",
+  "checkpointed_at": 1790229918.8660629,
+  "details": {
+    "paper500_integrity_faults": [
+      "odom_gap_s:2.000000000>1.000000000",
+      "odom_gap_s:2.020000000>1.000000000",
+      "odom_gap_s:2.040000000>1.000000000",
+      "odom_gap_s:2.100000000>1.000000000"
+    ]
+  }
+}

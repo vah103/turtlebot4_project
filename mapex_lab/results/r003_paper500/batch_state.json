@@ -211,6 +211,19 @@
       "postprocess": "complete",
       "evaluation": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/mapex/mpx_p500_006/evaluation/paper500/evaluation.json",
       "evaluation_status": "ok"
+    },
+    "nf_p500_006": {
+      "attempts": 1,
+      "status": "retry_pending_same_id",
+      "frozen_order_index": 8,
+      "last_outcome": "runtime_complete",
+      "log": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/results/r003_paper500/logs/nf_p500_006_attempt01.log",
+      "invalidity_classification": "recorder_integrity_fault",
+      "invalidity_reason": "paper500 runtime reported integrity faults",
+      "invalidity_evidence": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/results/r003_paper500/invalid_attempts/nf_p500_006_attempt01_checkpoint.json",
+      "invalidity_evidence_sha256": "b33a512bd0e2aee547006fbf8abe7e815244eaae8e40603ebc9d2812e4d1cf0b",
+      "deletion_decision": "delete_exact_run_dir_then_retry_same_official_id",
+      "deletion_completed": true
     }
   },
   "reconciliation": {

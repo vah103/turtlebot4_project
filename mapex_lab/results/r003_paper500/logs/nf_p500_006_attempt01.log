@@ -1,0 +1,1270 @@
+COMMAND /home/com1/turtlebot4_project_r003_h031/run --paper500 --method nf --environment new_room --record yes --run-id nf_p500_006
+ROS isolation: domain=42, localhost_only=1
+[WARN] [1790229686.746092071] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[WARN] [1790229686.746107703] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+
+
+==============================
+Method : NF
+Map    : New Room
+Record : yes
+Run ID : nf_p500_006
+Profile: R003 paper500
+Python : /usr/bin/python3
+Launch : mapex_lab/launch/slam.launch.py
+==============================
+
+
+Dang cho /map, Nav2 lifecycle active va /clock on dinh...
+[INFO] [launch]: All log files can be found below /home/com1/.ros/log/2026-09-24-13-01-28-295210-com1-41996
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [launch.user]: Simulation world: new_room; path=/home/com1/turtlebot4_project_r003_h031/mapex_lab/map/new_room.sdf; spawn=(0.0, 3.0, 0.0)
+[INFO] [xacro-1]: process started with pid [42016]
+[INFO] [parameter_bridge-2]: process started with pid [42017]
+[INFO] [image_bridge-3]: process started with pid [42018]
+[INFO] [image_bridge-4]: process started with pid [42019]
+[INFO] [create-5]: process started with pid [42020]
+[INFO] [robot_state_publisher-6]: process started with pid [42021]
+[INFO] [rviz2-7]: process started with pid [42022]
+[robot_state_publisher-6] [WARN] [1790229688.585223559] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[robot_state_publisher-6] [WARN] [1790229688.585235347] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[create-5] [WARN] [1790229688.600729009] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[create-5] [WARN] [1790229688.600739849] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[robot_state_publisher-6] [WARN] [1790229688.609188805] [kdl_parser]: The root link base_link has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF.
+[robot_state_publisher-6] [INFO] [1790229688.609322613] [robot_state_publisher]: Robot initialized
+[create-5] [INFO] [1790229688.613986518] [ros_gz_sim]: Requesting list of world names.
+[image_bridge-4] [WARN] [1790229688.621403193] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[image_bridge-4] [WARN] [1790229688.621417859] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[image_bridge-3] [WARN] [1790229688.622798100] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[image_bridge-3] [WARN] [1790229688.622811229] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[parameter_bridge-2] [WARN] [1790229688.623003546] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[parameter_bridge-2] [WARN] [1790229688.623016831] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[rviz2-7] [WARN] [1790229688.686799576] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[rviz2-7] [WARN] [1790229688.686829194] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[INFO] [xacro-1]: process has finished cleanly [pid 42016]
+[INFO] [gz-8]: process started with pid [42139]
+[INFO] [gz-9]: process started with pid [42140]
+[rviz2-7] [INFO] [1790229688.789437435] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-7] [INFO] [1790229688.789559377] [rviz2]: OpenGl version: 4.5 (GLSL 4.5)
+[rviz2-7] [INFO] [1790229688.816237746] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-7] [INFO] [1790229688.881441951] [rviz2]: Subscribing to: /frontier/frontier_points
+[rviz2-7] 
+[rviz2-7] [INFO] [1790229688.881888498] [rviz2]: Subscribing to: /map_cloud
+[rviz2-7] 
+[rviz2-7] [INFO] [1790229688.882171680] [rviz2]: Subscribing to: /map_cloud
+[rviz2-7] 
+[rviz2-7] [INFO] [1790229688.882408624] [rviz2]: Subscribing to: /map_cloud
+[rviz2-7] 
+[rviz2-7] [INFO] [1790229688.898730440] [rviz2]: Subscribing to: /frontier/frontier_points
+[rviz2-7] 
+[rviz2-7] [INFO] [1790229688.899009669] [rviz2]: Subscribing to: /map_cloud
+[rviz2-7] 
+[gz-9] [1;33m[GUI] [Wrn] [Application.cc:908] [0m[1;33m[QT] file:///usr/lib/x86_64-linux-gnu/qt5/qml/QtQuick/Dialogs/DefaultFileDialog.qml:413:17: QML ToolButton: Binding loop detected for property "implicitHeight"[0m[1;33m[0m
+[gz-9] [1;33m[GUI] [Wrn] [Application.cc:908] [0m[1;33m[QT] file:///usr/lib/x86_64-linux-gnu/qt5/qml/QtQuick/Dialogs/DefaultFileDialog.qml:309:21: QML Button: Binding loop detected for property "implicitHeight"[0m[1;33m[0m
+[gz-9] [1;33m[GUI] [Wrn] [Application.cc:908] [0m[1;33m[QT] file:///usr/lib/x86_64-linux-gnu/qt5/qml/QtQuick/Dialogs/DefaultFileDialog.qml:309:21: QML Button: Binding loop detected for property "implicitHeight"[0m[1;33m[0m
+[gz-9] [1;33m[GUI] [Wrn] [Application.cc:908] [0m[1;33m[QT] file:///usr/lib/x86_64-linux-gnu/qt5/qml/QtQuick/Dialogs/DefaultFileDialog.qml:413:17: QML ToolButton: Binding loop detected for property "implicitHeight"[0m[1;33m[0m
+[gz-9] [1;33m[GUI] [Wrn] [Application.cc:908] [0m[1;33m[QT] file:///usr/lib/x86_64-linux-gnu/qt5/qml/QtQuick/Dialogs/DefaultFileDialog.qml:309:21: QML Button: Binding loop detected for property "implicitHeight"[0m[1;33m[0m
+[gz-9] [1;33m[GUI] [Wrn] [Application.cc:908] [0m[1;33m[QT] file:///usr/lib/x86_64-linux-gnu/qt5/qml/QtQuick/Dialogs/DefaultFileDialog.qml:309:21: QML Button: Binding loop detected for property "implicitHeight"[0m[1;33m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mGazebo Sim Server v[0m[1;32m8.11.0[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mLoading SDF world file[[0m[1;32m/tmp/nav2_96io_53t.sdf[0m[1;32m].[0m
+[gz-8] [1;32m[Msg] [0m[1;32mServing entity system service on [[0m[1;32m/[0m[1;32mentity/system/add[0m[1;32m][0m[1;32m[0m
+[gz-8] [1;36m[Dbg] [Physics.cc:906] [0m[1;36mLoaded [[0m[1;36mgz::physics::dartsim::Plugin[0m[1;36m] from library [[0m[1;36m/opt/ros/jazzy/opt/gz_physics_vendor/lib/gz-physics-7/engine-plugins/libgz-physics-dartsim-plugin.so[0m[1;36m][0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Physics[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/new_room_world/create_multiple[0m[1;32m] (async)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/new_room_world/create_multiple/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/new_room_world/remove[0m[1;32m] (async)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/new_room_world/remove/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/new_room_world/set_pose[0m[1;32m] (async)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/new_room_world/set_pose/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/new_room_world/set_pose_vector[0m[1;32m] (async)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/new_room_world/set_pose_vector/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/new_room_world/light_config[0m[1;32m] (async)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/new_room_world/light_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/new_room_world/set_physics[0m[1;32m] (async)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/new_room_world/set_physics/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/new_room_world/set_spherical_coordinates[0m[1;32m] (async)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/new_room_world/set_spherical_coordinates/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/new_room_world/enable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/new_room_world/enable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/new_room_world/disable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/new_room_world/disable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/new_room_world/visual_config[0m[1;32m] (async)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/new_room_world/visual_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/new_room_world/wheel_slip[0m[1;32m] (async)[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/new_room_world/wheel_slip/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-9] [1;33m[GUI] [Wrn] [Application.cc:908] [0m[1;33m[QT] file:///usr/lib/x86_64-linux-gnu/qt5/qml/QtQuick/Dialogs/DefaultFileDialog.qml:413:17: QML ToolButton: Binding loop detected for property "implicitHeight"[0m[1;33m[0m
+[gz-9] [1;33m[GUI] [Wrn] [Application.cc:908] [0m[1;33m[QT] file:///usr/lib/x86_64-linux-gnu/qt5/qml/QtQuick/Dialogs/DefaultFileDialog.qml:309:21: QML Button: Binding loop detected for property "implicitHeight"[0m[1;33m[0m
+[gz-9] [1;33m[GUI] [Wrn] [Application.cc:908] [0m[1;33m[QT] file:///usr/lib/x86_64-linux-gnu/qt5/qml/QtQuick/Dialogs/DefaultFileDialog.qml:309:21: QML Button: Binding loop detected for property "implicitHeight"[0m[1;33m[0m
+[create-5] [INFO] [1790229689.203245158] [ros_gz_sim]: Waiting messages on topic [robot_description].
+[create-5] [INFO] [1790229689.302487777] [ros_gz_sim]: Entity creation successful.
+[INFO] [create-5]: process has finished cleanly [pid 42020]
+[gz-9] [1;32m[Msg] [0m[1;32mGazebo Sim GUI    v[0m[1;32m8.11.0[0m[1;32m[0m
+[gz-9] [1;32m[Msg] [0m[1;32mDetected Wayland. Setting Qt to use the xcb plugin: [0m[1;32m'QT_QPA_PLATFORM=xcb'.[0m[1;32m[0m
+[gz-9] [1;36m[Dbg] [Application.cc:96] [0m[1;36mInitializing application.[0m[1;36m[0m
+[gz-9] [1;36m[Dbg] [Application.cc:170] [0m[1;36mQt using OpenGL graphics interface[0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:657] [0m[1;36mCreate main window[0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [PathManager.cc:68] [0m[1;36mRequesting resource paths through [[0m[1;36m/gazebo/resource_paths/get[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Gui.cc:355] [0m[1;36mGUI requesting list of world names. The server may be busy [0m[1;36mdownloading resources. Please be patient.[0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [PathManager.cc:57] [0m[1;36mReceived resource paths.[0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Gui.cc:413] [0m[1;36mRequesting GUI from [[0m[1;36m/world/new_room_world/gui/info[0m[1;36m]...[0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [GuiRunner.cc:149] [0m[1;36mRequesting initial state from [[0m[1;36m/world/new_room_world/state[0m[1;36m]...[0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoading config [[0m[1;32m/home/com1/.gz/sim/8/gui.config[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mMinimalScene[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [MinimalScene.cc:802] [0m[1;36mCreating gz-rendering interface for OpenGL[0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [MinimalScene.cc:802] [0m[1;36mCreating gz-rendering interface for OpenGL[0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [MinimalScene.cc:986] [0m[1;36mCreating render thread interface for OpenGL[0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [MinimalScene.cc:802] [0m[1;36mCreating gz-rendering interface for OpenGL[0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [MinimalScene.cc:986] [0m[1;36mCreating render thread interface for OpenGL[0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32m3D View[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mMinimalScene[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_gui_vendor/lib/gz-gui-8/plugins/libMinimalScene.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mEntityContextMenuPlugin[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mCurrently tracking topic on [[0m[1;32m/gui/currently_tracked[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mEntity Context Menu[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mEntityContextMenuPlugin[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_sim_vendor/lib/gz-sim-8/plugins/gui/libEntityContextMenuPlugin.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mGzSceneManager[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mScene Manager[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mGzSceneManager[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_sim_vendor/lib/gz-sim-8/plugins/gui/libGzSceneManager.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mInteractiveViewControl[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mCamera view controller topic advertised on [[0m[1;32m/gui/camera/view_control[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mCamera reference visual topic advertised on [[0m[1;32m/gui/camera/view_control/reference_visual[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mCamera view control sensitivity advertised on [[0m[1;32m/gui/camera/view_control/sensitivity[0m[1;32m][0m[1;32m[0m
+[parameter_bridge-2] [INFO] [1790229689.641349579] [bridge_ros_gz]: Creating GZ->ROS Bridge: [/clock (gz.msgs.Clock) -> clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1790229689.642496643] [bridge_ros_gz]: Creating GZ->ROS Bridge: [joint_states (gz.msgs.Model) -> joint_states (sensor_msgs/msg/JointState)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1790229689.645784499] [bridge_ros_gz]: Creating GZ->ROS Bridge: [/odom (gz.msgs.Odometry) -> odom (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1790229689.647342421] [bridge_ros_gz]: Creating GZ->ROS Bridge: [/tf (gz.msgs.Pose_V) -> tf (tf2_msgs/msg/TFMessage)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1790229689.648831187] [bridge_ros_gz]: Creating GZ->ROS Bridge: [/imu (gz.msgs.IMU) -> imu (sensor_msgs/msg/Imu)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1790229689.650035859] [bridge_ros_gz]: Creating GZ->ROS Bridge: [/scan (gz.msgs.LaserScan) -> scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1790229689.650756018] [bridge_ros_gz]: Creating ROS->GZ Bridge: [cmd_vel (geometry_msgs/msg/Twist) -> /cmd_vel (gz.msgs.Twist)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1790229689.652094125] [bridge_ros_gz]: Creating GZ->ROS Bridge: [/rgbd_camera/camera_info (gz.msgs.CameraInfo) -> /rgbd_camera/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mInteractive view control[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mInteractiveViewControl[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_gui_vendor/lib/gz-gui-8/plugins/libInteractiveViewControl.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mCameraTracking[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mCamera tracking[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mCameraTracking[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_gui_vendor/lib/gz-gui-8/plugins/libCameraTracking.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mMarkerManager[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mListening to stats on [[0m[1;32m/world/new_room_world/stats[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mMarker Manager[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mMarkerManager[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_gui_vendor/lib/gz-gui-8/plugins/libMarkerManager.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mSelectEntities[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mSelect entities[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mSelectEntities[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_sim_vendor/lib/gz-sim-8/plugins/gui/libSelectEntities.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mSpawn[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mSpawn[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mSpawn[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_sim_vendor/lib/gz-sim-8/plugins/gui/libSpawn.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mVisualizationCapabilities[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mView as transparent service on [[0m[1;32m/gui/view/transparent[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mView as wireframes service on [[0m[1;32m/gui/view/wireframes[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mView center of mass service on [[0m[1;32m/gui/view/com[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mView inertia service on [[0m[1;32m/gui/view/inertia[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mView collisions service on [[0m[1;32m/gui/view/collisions[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mView joints service on [[0m[1;32m/gui/view/joints[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mView frames service on [[0m[1;32m/gui/view/frames[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mVisualization capabilities[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mVisualizationCapabilities[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_sim_vendor/lib/gz-sim-8/plugins/gui/libVisualizationCapabilities.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mWorldControl[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mUsing world control service [[0m[1;32m/world/new_room_world/control[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mListening to stats on [[0m[1;32m/world/new_room_world/stats[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [WorldControl.cc:237] [0m[1;36mUsing an event to share WorldControl msgs with the server[0m
+[gz-9] [1;33m[GUI] [Wrn] [Application.cc:908] [0m[1;33m[QT] file:///usr/lib/x86_64-linux-gnu/qt5/qml/QtQuick/Dialogs/DefaultFileDialog.qml:413:17: QML ToolButton: Binding loop detected for property "implicitHeight"[0m[1;33m[0m
+[gz-9] [1;33m[GUI] [Wrn] [Application.cc:908] [0m[1;33m[QT] file:///usr/lib/x86_64-linux-gnu/qt5/qml/QtQuick/Dialogs/DefaultFileDialog.qml:309:21: QML Button: Binding loop detected for property "implicitHeight"[0m[1;33m[0m
+[gz-9] [1;33m[GUI] [Wrn] [Application.cc:908] [0m[1;33m[QT] file:///usr/lib/x86_64-linux-gnu/qt5/qml/QtQuick/Dialogs/DefaultFileDialog.qml:309:21: QML Button: Binding loop detected for property "implicitHeight"[0m[1;33m[0m
+[gz-9] [1;33m[GUI] [Wrn] [Application.cc:908] [0m[1;33m[QT] file::/ComponentInspector/ComponentInspector.qml:251:3: QML Dialog: Binding loop detected for property "implicitHeight"[0m[1;33m[0m
+[gz-9] [1;33m[GUI] [Wrn] [Application.cc:908] [0m[1;33m[QT] file:///usr/lib/x86_64-linux-gnu/qt5/qml/QtQuick/Dialogs/DefaultFileDialog.qml:413:17: QML ToolButton: Binding loop detected for property "implicitHeight"[0m[1;33m[0m
+[gz-9] [1;33m[GUI] [Wrn] [Application.cc:908] [0m[1;33m[QT] file:///usr/lib/x86_64-linux-gnu/qt5/qml/QtQuick/Dialogs/DefaultFileDialog.qml:309:21: QML Button: Binding loop detected for property "implicitHeight"[0m[1;33m[0m
+[gz-9] [1;33m[GUI] [Wrn] [Application.cc:908] [0m[1;33m[QT] file:///usr/lib/x86_64-linux-gnu/qt5/qml/QtQuick/Dialogs/DefaultFileDialog.qml:309:21: QML Button: Binding loop detected for property "implicitHeight"[0m[1;33m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mWorld control[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mWorldControl[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_gui_vendor/lib/gz-gui-8/plugins/libWorldControl.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mWorldStats[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mListening to stats on [[0m[1;32m/world/new_room_world/stats[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mWorld stats[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mWorldStats[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_gui_vendor/lib/gz-gui-8/plugins/libWorldStats.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mShapes[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mShapes[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mShapes[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_sim_vendor/lib/gz-sim-8/plugins/gui/libShapes.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mLights[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mLights[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mLights[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_sim_vendor/lib/gz-sim-8/plugins/gui/libLights.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mTransformControl[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mTransform control[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mTransformControl[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_sim_vendor/lib/gz-sim-8/plugins/gui/libTransformControl.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mScreenshot[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mScreenshot service on [[0m[1;32m/gui/screenshot[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mScreenshot[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mScreenshot[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_gui_vendor/lib/gz-gui-8/plugins/libScreenshot.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mCopyPaste[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mCopy/Paste[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mCopyPaste[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_sim_vendor/lib/gz-sim-8/plugins/gui/libCopyPaste.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mComponentInspector[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mComponent inspector[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mComponentInspector[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_sim_vendor/lib/gz-sim-8/plugins/gui/libComponentInspector.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:528] [0m[1;36mLoading plugin [[0m[1;36mEntityTree[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mCurrently tracking topic on [[0m[1;32m/gui/currently_tracked[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;33m[GUI] [Wrn] [Application.cc:908] [0m[1;33m[QT] file::/WorldStats/WorldStats.qml:53:3: QML RowLayout: Binding loop detected for property "x"[0m[1;33m[0m
+[gz-9] libEGL warning: failed to open /dev/dri/renderD128: Permission denied
+[gz-9] 
+[gz-9] libEGL warning: failed to open /dev/dri/renderD128: Permission denied
+[gz-9] 
+[gz-9] libEGL warning: failed to open /dev/dri/card1: Permission denied
+[gz-9] 
+[gz-9] [1;33m[GUI] [Wrn] [Ogre2RenderTarget.cc:668] [0m[1;33mAnti-aliasing level of '[0m[1;33m[0m[1;33m' [0m[1;33mis not supported; valid FSAA levels are: [0m[1;33m[ 0 ][0m[1;33m. Setting to 1[0m[1;33m[0m
+[gz-8] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::UserCommands[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::SceneBroadcaster[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [Sensors.cc:697] [0m[1;36mConfiguring Sensors system[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [Sensors.cc:557] [0m[1;36mSensorsPrivate::Run[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Sensors[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [Sensors.cc:532] [0m[1;36mSensorsPrivate::RenderThread started[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [Sensors.cc:337] [0m[1;36mWaiting for init[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Imu[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mLoaded level [[0m[1;32mdefault[0m[1;32m][0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mServing world controls on [[0m[1;32m/world/new_room_world[0m[1;32m/control], [[0m[1;32m/world/new_room_world[0m[1;32m/control/state] and [[0m[1;32m/world/new_room_world[0m[1;32m/playback/control][0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mServing GUI information on [[0m[1;32m/world/new_room_world[0m[1;32m/[0m[1;32mgui/info[0m[1;32m][0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mWorld [[0m[1;32mnew_room_world[0m[1;32m] initialized with [[0m[1;32mnew_room_realtime[0m[1;32m] physics profile.[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mServing world SDF generation service on [[0m[1;32m/world/new_room_world[0m[1;32m/[0m[1;32mgenerate_world_sdf[0m[1;32m][0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mServing world names on [[0m[1;32m/gazebo/worlds[0m[1;32m][0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mResource path add service on [[0m[1;32m/gazebo/resource_paths/add[0m[1;32m].[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mResource path get service on [[0m[1;32m/gazebo/resource_paths/get[0m[1;32m].[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mResource path resolve service on [[0m[1;32m/gazebo/resource_paths/resolve[0m[1;32m].[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mResource paths published on [[0m[1;32m/gazebo/resource_paths[0m[1;32m].[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mServer control service on [[0m[1;32m/server_control[0m[1;32m].[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mFound no publishers on /stats, adding root stats topic[0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mFound no publishers on /clock, adding root clock topic[0m[1;32m[0m
+[gz-8] [1;36m[Dbg] [SimulationRunner.cc:551] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m4[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SimulationRunner.cc:562] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SimulationRunner.cc:562] [0m[1;36mCreating postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SimulationRunner.cc:562] [0m[1;36mCreating postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gz-8] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="turtlebot4"]/link[@name="rplidar_link"]/sensor[@name="rplidar"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gz-8] [1;33m[Wrn] [SdfEntityCreator.cc:933] [0m[1;33mGazebo does not support Ogre material scripts. See [0m[1;33mhttps://gazebosim.org/api/sim/8/migrationsdf.html#:~:text=Materials [0m[1;33mfor details.[0m[1;33m[0m
+[gz-8] [1;33m[Wrn] [SdfEntityCreator.cc:949] [0m[1;33mUsing an internal gazebo.material to parse [0m[1;33mGazebo/DarkGrey[0m[1;33m[0m
+[gz-8] [1;33m[Wrn] [SdfEntityCreator.cc:933] [0m[1;33mGazebo does not support Ogre material scripts. See [0m[1;33mhttps://gazebosim.org/api/sim/8/migrationsdf.html#:~:text=Materials [0m[1;33mfor details.[0m[1;33m[0m
+[gz-8] [1;33m[Wrn] [SdfEntityCreator.cc:949] [0m[1;33mUsing an internal gazebo.material to parse [0m[1;33mGazebo/DarkGrey[0m[1;33m[0m
+[gz-8] [1;33m[Wrn] [SdfEntityCreator.cc:933] [0m[1;33mGazebo does not support Ogre material scripts. See [0m[1;33mhttps://gazebosim.org/api/sim/8/migrationsdf.html#:~:text=Materials [0m[1;33mfor details.[0m[1;33m[0m
+[gz-8] [1;33m[Wrn] [SdfEntityCreator.cc:949] [0m[1;33mUsing an internal gazebo.material to parse [0m[1;33mGazebo/DarkGrey[0m[1;33m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mDiffDrive subscribing to twist messages on [[0m[1;32m/cmd_vel[0m[1;32m][0m[1;32m[0m
+[gz-8] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::DiffDrive[0m[1;36m] for entity [[0m[1;36m144[0m[1;36m][0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::JointStatePublisher[0m[1;36m] for entity [[0m[1;36m144[0m[1;36m][0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [UserCommands.cc:1094] [0m[1;36mCreated entity [[0m[1;36m144[0m[1;36m] named [[0m[1;36mturtlebot4[0m[1;36m][0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SDFFeatures.cc:332] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gz-8] [1;36m[Dbg] [SDFFeatures.cc:864] [0m[1;36mThe geometry element of collision [[0m[1;36mbase_link_fixed_joint_lump__bumper_collision_1[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gz-8] [1;36m[Dbg] [SDFFeatures.cc:332] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gz-8] [1;36m[Dbg] [SDFFeatures.cc:864] [0m[1;36mThe geometry element of collision [[0m[1;36mbase_link_fixed_joint_lump__shell_collision_collision_2[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gz-8] [1;36m[Dbg] [Sensors.cc:953] [0m[1;36mInitialization needed[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [Sensors.cc:349] [0m[1;36mInitializing render context[0m[1;36m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mgz-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[gz-8] [1;36m[Dbg] [ImuSensor.cc:150] [0m[1;36mIMU data for [[0m[1;36mturtlebot4::imu_link::imu[0m[1;36m] advertised on [[0m[1;36mimu[0m[1;36m][0m[1;36m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mServing scene information on [[0m[1;32m/world/new_room_world[0m[1;32m/[0m[1;32mscene/info[0m[1;32m][0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mServing graph information on [[0m[1;32m/world/new_room_world[0m[1;32m/[0m[1;32mscene/graph[0m[1;32m][0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mServing full state on [[0m[1;32m/world/new_room_world[0m[1;32m/[0m[1;32mstate[0m[1;32m][0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mServing full state (async) on [[0m[1;32m/world/new_room_world[0m[1;32m/[0m[1;32mstate_async[0m[1;32m][0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mPublishing scene information on [[0m[1;32m/world/new_room_world/scene/info[0m[1;32m][0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mPublishing entity deletions on [[0m[1;32m/world/new_room_world/scene/deletion[0m[1;32m][0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mPublishing state changes on [[0m[1;32m/world/new_room_world/state[0m[1;32m][0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mPublishing pose messages on [[0m[1;32m/world/new_room_world[0m[1;32m/[0m[1;32mpose/info[0m[1;32m][0m[1;32m[0m
+[gz-8] [1;32m[Msg] [0m[1;32mPublishing dynamic pose messages on [[0m[1;32m/world/new_room_world[0m[1;32m/[0m[1;32mdynamic_pose/info[0m[1;32m][0m[1;32m[0m
+[gz-8] [1;36m[Dbg] [EntityComponentManager.cc:1656] [0m[1;36mUpdated state thread iterators: [0m[1;36m16[0m[1;36m threads processing around [0m[1;36m15[0m[1;36m entities each.[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SimulationRunner.cc:578] [0m[1;36mExiting postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SimulationRunner.cc:578] [0m[1;36mExiting postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gz-8] [1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m)[0m[1;36m[Dbg] [SimulationRunner.cc:551] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m6[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SimulationRunner.cc:562] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SimulationRunner.cc:562] [0m[1;36mCreating postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SimulationRunner.cc:562] [0m[1;36mCreating postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gz-8] libEGL warning: failed to open /dev/dri/renderD128: Permission denied
+[gz-8] 
+[gz-8] libEGL warning: failed to open /dev/dri/renderD128: Permission denied
+[gz-8] 
+[gz-8] libEGL warning: failed to open /dev/dri/card1: Permission denied
+[gz-8] 
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mEntity tree[0m[1;32m] to main window[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mEntityTree[0m[1;32m] from path [[0m[1;32m/opt/ros/jazzy/opt/gz_sim_vendor/lib/gz-sim-8/plugins/gui/libEntityTree.so[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:398] [0m[1;36mLoading window config[0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mUsing server control service [[0m[1;32m/server_control[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:671] [0m[1;36mApplying config[0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [MinimalScene.cc:802] [0m[1;36mCreating gz-rendering interface for OpenGL[0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [MinimalScene.cc:986] [0m[1;36mCreating render thread interface for OpenGL[0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mgz-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [MinimalScene.cc:749] [0m[1;36mCreate scene [[0m[1;36mscene[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [MinimalScene.cc:1037] [0m[1;36mCreating texture node render interface for OpenGL[0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [TransformControl.cc:453] [0m[1;36mTransformControl plugin is using camera [[0m[1;36mscene::Camera(65527)[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Spawn.cc:308] [0m[1;36mSpawn plugin is using camera [[0m[1;36mscene::Camera(65527)[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [SelectEntities.cc:452] [0m[1;36mSelectEntities plugin is using camera [[0m[1;36mscene::Camera(65527)[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [MarkerManager.cc:169] [0m[1;36mAdvertise [0m[1;36m/marker[0m[1;36m/list service.[0m
+[gz-9] [1;36m[GUI] [Dbg] [MarkerManager.cc:179] [0m[1;36mAdvertise [0m[1;36m/marker[0m[1;36m/list.[0m
+[gz-9] [1;36m[GUI] [Dbg] [MarkerManager.cc:189] [0m[1;36mAdvertise [0m[1;36m/marker[0m[1;36m_array.[0m
+[gz-9] [1;36m[GUI] [Dbg] [CameraTracking.cc:205] [0m[1;36mCameraTrackingPrivate plugin is moving camera [[0m[1;36mscene::Camera(65527)[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mMove to service on [[0m[1;32m/gui/move_to[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mFollow service on [[0m[1;32m/gui/follow[0m[1;32m] (deprecated)[0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mTracking topic on [[0m[1;32m/gui/track[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mTracking status topic on [[0m[1;32m/gui/currently_tracked[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mMove to pose service on [[0m[1;32m/gui/move_to/pose[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mCamera pose topic advertised on [[0m[1;32m/gui/camera/pose[0m[1;32m][0m[1;32m[0m
+[gz-9] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mFollow offset service on [[0m[1;32m/gui/follow/offset[0m[1;32m] (deprecated)[0m[1;32m[0m
+[gz-9] [1;36m[GUI] [Dbg] [InteractiveViewControl.cc:176] [0m[1;36mInteractiveViewControl plugin is moving camera [[0m[1;36mscene::Camera(65527)[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [EntityContextMenuPlugin.cc:79] [0m[1;36mEntity context menu plugin is using camera [[0m[1;36mscene::Camera(65527)[0m[1;36m][0m[1;36m[0m
+[gz-9] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="turtlebot4"]/link[@name="rplidar_link"]/sensor[@name="rplidar"]/gz_frame_id:<data-string>:L1399]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[WARN] [1790229698.622484976] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[WARN] [1790229698.622516351] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[INFO] [async_slam_toolbox_node-10]: process started with pid [42541]
+[async_slam_toolbox_node-10] [WARN] [1790229698.825187154] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[async_slam_toolbox_node-10] [WARN] [1790229698.825199554] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[async_slam_toolbox_node-10] [INFO] [1790229698.845359371] [slam_toolbox]: Node using stack size 40000000
+[async_slam_toolbox_node-10] [INFO] [1790229699.034223148] [slam_toolbox]: Configuring
+[async_slam_toolbox_node-10] [INFO] [1790229699.034593954] [slam_toolbox]: Old-map sequential matcher: enabled=false, min_conf=0.25, decay=70.0, keep_first=true, keyframe_dist=1.00, history_radius=1.50, history_max=6
+[async_slam_toolbox_node-10] [INFO] [1790229699.041592330] [slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[async_slam_toolbox_node-10] [INFO] [1790229699.041782439] [slam_toolbox]: CeresSolver adaptive anchor V1: enabled=true, weight=5.00->1.00, decay=70.0, local_gap<=5, loop_gap>=30, evidence=3, mahal_sq>=9.00, release=1.00->1.00
+[async_slam_toolbox_node-10] [INFO] [1790229699.041964221] [slam_toolbox]: CeresSolver: Using SCHUR_JACOBI preconditioner.
+[INFO] [launch.user]: [LifecycleLaunch] Slamtoolbox node is activating.
+[async_slam_toolbox_node-10] [INFO] [1790229699.056955237] [slam_toolbox]: Activating
+[async_slam_toolbox_node-10] Registering sensor: [Custom Described Lidar]
+[rviz2-7] [INFO] [1790229702.107411550] [rviz2]: Trying to create a map of size 222 x 77 using 1 swatches
+[rviz2-7] [ERROR] [1790229702.117737386] [rviz2]: rviz/glsl120/indexed_8bit_image.vert
+[rviz2-7] rviz/glsl120/indexed_8bit_image.frag
+[rviz2-7]  GLSL link result : 
+[rviz2-7] active samplers with a different type refer to the same texture image unit
+[INFO] [controller_server-11]: process started with pid [42650]
+[INFO] [smoother_server-12]: process started with pid [42651]
+[INFO] [planner_server-13]: process started with pid [42652]
+[INFO] [route_server-14]: process started with pid [42653]
+[INFO] [behavior_server-15]: process started with pid [42654]
+[INFO] [bt_navigator-16]: process started with pid [42655]
+[INFO] [waypoint_follower-17]: process started with pid [42656]
+[INFO] [velocity_smoother-18]: process started with pid [42657]
+[INFO] [collision_monitor-19]: process started with pid [42658]
+[INFO] [opennav_docking-20]: process started with pid [42659]
+[INFO] [lifecycle_manager-21]: process started with pid [42660]
+[velocity_smoother-18] [WARN] [1790229708.703276716] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[velocity_smoother-18] [WARN] [1790229708.703293228] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[lifecycle_manager-21] [WARN] [1790229708.708168608] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[lifecycle_manager-21] [WARN] [1790229708.708191503] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[planner_server-13] [WARN] [1790229708.709600548] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[planner_server-13] [WARN] [1790229708.709614046] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[bt_navigator-16] [WARN] [1790229708.709839840] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[bt_navigator-16] [WARN] [1790229708.709853406] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[controller_server-11] [WARN] [1790229708.713456168] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[controller_server-11] [WARN] [1790229708.713481463] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[waypoint_follower-17] [WARN] [1790229708.713791972] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[waypoint_follower-17] [WARN] [1790229708.713808945] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[smoother_server-12] [WARN] [1790229708.714096468] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[smoother_server-12] [WARN] [1790229708.714109884] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[route_server-14] [WARN] [1790229708.717949706] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[route_server-14] [WARN] [1790229708.717975355] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[opennav_docking-20] [WARN] [1790229708.719859499] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[opennav_docking-20] [WARN] [1790229708.719883237] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[collision_monitor-19] [WARN] [1790229708.719860638] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[collision_monitor-19] [WARN] [1790229708.719883192] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[behavior_server-15] [WARN] [1790229708.719885296] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[behavior_server-15] [WARN] [1790229708.719898679] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[lifecycle_manager-21] [INFO] [1790229708.745506037] [lifecycle_manager_navigation]: Creating
+[lifecycle_manager-21] [INFO] [1790229708.753203884] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[smoother_server-12] [INFO] [1790229708.755024429] [smoother_server]: 
+[smoother_server-12] 	smoother_server lifecycle node launched. 
+[smoother_server-12] 	Waiting on external lifecycle transitions to activate
+[smoother_server-12] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-13] [INFO] [1790229708.759570230] [planner_server]: 
+[planner_server-13] 	planner_server lifecycle node launched. 
+[planner_server-13] 	Waiting on external lifecycle transitions to activate
+[planner_server-13] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-13] [INFO] [1790229708.764743938] [planner_server]: Creating
+[smoother_server-12] [INFO] [1790229708.764738873] [smoother_server]: Creating smoother server
+[velocity_smoother-18] [INFO] [1790229708.769648424] [velocity_smoother]: 
+[velocity_smoother-18] 	velocity_smoother lifecycle node launched. 
+[velocity_smoother-18] 	Waiting on external lifecycle transitions to activate
+[velocity_smoother-18] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-11] [INFO] [1790229708.770448197] [controller_server]: 
+[controller_server-11] 	controller_server lifecycle node launched. 
+[controller_server-11] 	Waiting on external lifecycle transitions to activate
+[controller_server-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[route_server-14] [INFO] [1790229708.771803982] [route_server]: 
+[route_server-14] 	route_server lifecycle node launched. 
+[route_server-14] 	Waiting on external lifecycle transitions to activate
+[route_server-14] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-11] [INFO] [1790229708.773886402] [controller_server]: Creating controller server
+[opennav_docking-20] [INFO] [1790229708.775241214] [docking_server]: 
+[opennav_docking-20] 	docking_server lifecycle node launched. 
+[opennav_docking-20] 	Waiting on external lifecycle transitions to activate
+[opennav_docking-20] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[opennav_docking-20] [INFO] [1790229708.775348663] [docking_server]: Creating docking_server
+[waypoint_follower-17] [INFO] [1790229708.776781077] [waypoint_follower]: 
+[waypoint_follower-17] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-17] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-17] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-17] [INFO] [1790229708.778948348] [waypoint_follower]: Creating
+[behavior_server-15] [INFO] [1790229708.781470281] [behavior_server]: 
+[behavior_server-15] 	behavior_server lifecycle node launched. 
+[behavior_server-15] 	Waiting on external lifecycle transitions to activate
+[behavior_server-15] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[collision_monitor-19] [INFO] [1790229708.782727253] [collision_monitor]: 
+[collision_monitor-19] 	collision_monitor lifecycle node launched. 
+[collision_monitor-19] 	Waiting on external lifecycle transitions to activate
+[collision_monitor-19] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-16] [INFO] [1790229708.786165896] [bt_navigator]: 
+[bt_navigator-16] 	bt_navigator lifecycle node launched. 
+[bt_navigator-16] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-16] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-16] [INFO] [1790229708.787265732] [bt_navigator]: Creating
+[controller_server-11] [INFO] [1790229708.796322656] [local_costmap.local_costmap]: 
+[controller_server-11] 	local_costmap lifecycle node launched. 
+[controller_server-11] 	Waiting on external lifecycle transitions to activate
+[controller_server-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-13] [INFO] [1790229708.796322371] [global_costmap.global_costmap]: 
+[planner_server-13] 	global_costmap lifecycle node launched. 
+[planner_server-13] 	Waiting on external lifecycle transitions to activate
+[planner_server-13] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-11] [INFO] [1790229708.797635715] [local_costmap.local_costmap]: Creating Costmap
+[planner_server-13] [INFO] [1790229708.797707688] [global_costmap.global_costmap]: Creating Costmap
+[lifecycle_manager-21] [INFO] [1790229708.867169631] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-21] [INFO] [1790229708.867232788] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-11] [INFO] [1790229708.867791893] [controller_server]: Configuring controller interface
+[controller_server-11] [INFO] [1790229708.867814520] [controller_server]: getting progress checker plugins..
+[controller_server-11] [INFO] [1790229708.868021774] [controller_server]: getting goal checker plugins..
+[controller_server-11] [INFO] [1790229708.868094741] [controller_server]: Controller frequency set to 15.0000Hz
+[controller_server-11] [INFO] [1790229708.868123449] [local_costmap.local_costmap]: Configuring
+[controller_server-11] [INFO] [1790229708.878433762] [local_costmap.local_costmap]: Using plugin "static_layer"
+[controller_server-11] [INFO] [1790229708.883818520] [local_costmap.local_costmap]: Subscribing to the map topic (/map) with transient local durability
+[controller_server-11] [INFO] [1790229708.886181916] [local_costmap.local_costmap]: Initialized plugin "static_layer"
+[controller_server-11] [INFO] [1790229708.886251283] [local_costmap.local_costmap]: Using plugin "voxel_layer"
+[controller_server-11] [INFO] [1790229708.887684336] [local_costmap.local_costmap]: Subscribed to Topics: scan
+[controller_server-11] [INFO] [1790229708.902287484] [local_costmap.local_costmap]: Initialized plugin "voxel_layer"
+[controller_server-11] [INFO] [1790229708.902351083] [local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-11] [INFO] [1790229708.903935350] [local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-11] [INFO] [1790229708.928537653] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 222 X 77 at 0.100000 m/pix
+[controller_server-11] [INFO] [1790229708.928734935] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-11] [INFO] [1790229708.929113451] [controller_server]: Controller Server has progress_checker  progress checkers available.
+[controller_server-11] [INFO] [1790229708.929644547] [controller_server]: Created goal checker : general_goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-11] [INFO] [1790229708.930098263] [controller_server]: Controller Server has general_goal_checker  goal checkers available.
+[controller_server-11] [INFO] [1790229708.933099144] [controller_server]: Created controller : FollowPath of type nav2_mppi_controller::MPPIController
+[controller_server-11] [INFO] [1790229708.935237842] [controller_server]: Controller period is equal to model dt. Control sequence shifting is ON
+[controller_server-11] [INFO] [1790229708.938590794] [controller_server]: ConstraintCritic instantiated with 1 power and 4.000000 weight.
+[controller_server-11] [INFO] [1790229708.938668153] [controller_server]: Critic loaded : mppi::critics::ConstraintCritic
+[controller_server-11] [INFO] [1790229708.939476746] [controller_server]: InflationCostCritic instantiated with 1 power and 300.000000 / 0.015000 weights. Critic will collision check based on footprint cost.
+[controller_server-11] [INFO] [1790229708.939512728] [controller_server]: Critic loaded : mppi::critics::CostCritic
+[controller_server-11] [INFO] [1790229708.939862736] [controller_server]: GoalCritic instantiated with 1 power and 5.000000 weight.
+[controller_server-11] [INFO] [1790229708.939884483] [controller_server]: Critic loaded : mppi::critics::GoalCritic
+[controller_server-11] [INFO] [1790229708.940238176] [controller_server]: GoalAngleCritic instantiated with 1 power, 3.000000 weight, 0.500000 angular threshold and symmetric_yaw_tolerance disabled
+[controller_server-11] [INFO] [1790229708.940259459] [controller_server]: Critic loaded : mppi::critics::GoalAngleCritic
+[controller_server-11] [INFO] [1790229708.940914224] [controller_server]: ReferenceTrajectoryCritic instantiated with 1 power and 20.000000 weight
+[controller_server-11] [INFO] [1790229708.940940886] [controller_server]: Critic loaded : mppi::critics::PathAlignCritic
+[controller_server-11] [INFO] [1790229708.941418080] [controller_server]: Critic loaded : mppi::critics::PathFollowCritic
+[controller_server-11] [INFO] [1790229708.942009435] [controller_server]: PathAngleCritic instantiated with 1 power and 4.000000 weight. Mode set to: Forward Preference
+[controller_server-11] [INFO] [1790229708.942077116] [controller_server]: Critic loaded : mppi::critics::PathAngleCritic
+[controller_server-11] [INFO] [1790229708.942407459] [controller_server]: PreferForwardCritic instantiated with 1 power and 5.000000 weight.
+[controller_server-11] [INFO] [1790229708.942425540] [controller_server]: Critic loaded : mppi::critics::PreferForwardCritic
+[controller_server-11] [INFO] [1790229708.943378431] [controller_server]: Optimizer reset
+[controller_server-11] [INFO] [1790229708.947651996] [MPPIController]: Configured MPPI Controller: FollowPath
+[controller_server-11] [INFO] [1790229708.947697573] [controller_server]: Controller Server has FollowPath  controllers available.
+[lifecycle_manager-21] [INFO] [1790229708.959614206] [lifecycle_manager_navigation]: [34m[1mConfiguring smoother_server[0m[0m
+[smoother_server-12] [INFO] [1790229708.960066427] [smoother_server]: Configuring smoother server
+[smoother_server-12] [INFO] [1790229708.976333820] [smoother_server]: Created smoother : simple_smoother of type nav2_smoother::SimpleSmoother
+[smoother_server-12] [INFO] [1790229708.976836690] [smoother_server]: Smoother Server has simple_smoother  smoothers available.
+[lifecycle_manager-21] [INFO] [1790229708.983292909] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-13] [INFO] [1790229708.983476093] [planner_server]: Configuring
+[planner_server-13] [INFO] [1790229708.983498863] [global_costmap.global_costmap]: Configuring
+[planner_server-13] [INFO] [1790229708.993706975] [global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-13] [INFO] [1790229708.997210954] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[planner_server-13] [INFO] [1790229708.999533677] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-13] [INFO] [1790229708.999587011] [global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[planner_server-13] [INFO] [1790229708.999945696] [global_costmap.global_costmap]: Subscribed to Topics: scan
+[planner_server-13] [INFO] [1790229709.003985940] [global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[planner_server-13] [INFO] [1790229709.004029216] [global_costmap.global_costmap]: Using plugin "inflation_layer"
+[planner_server-13] [INFO] [1790229709.004354872] [global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[planner_server-13] [INFO] [1790229709.027012750] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 222 X 77 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229709.027490609] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner
+[planner_server-13] [INFO] [1790229709.027516385] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[planner_server-13] [INFO] [1790229709.028158238] [planner_server]: Planner Server has GridBased  planners available.
+[lifecycle_manager-21] [INFO] [1790229709.041702477] [lifecycle_manager_navigation]: [34m[1mConfiguring route_server[0m[0m
+[route_server-14] [INFO] [1790229709.042011374] [route_server]: Configuring
+[route_server-14] [INFO] [1790229709.071042211] [route_server]: Created GraphFileLoader GeoJsonGraphFileLoader of type nav2_route::GeoJsonGraphFileLoader
+[route_server-14] [INFO] [1790229709.071085056] [route_server]: Configuring geojson graph file loader
+[route_server-14] [INFO] [1790229709.071095922] [route_server]: No graph file provided to load yet.
+[route_server-14] [INFO] [1790229709.072832451] [route_server]: Created edge cost function plugin DistanceScorer of type nav2_route::DistanceScorer
+[route_server-14] [INFO] [1790229709.072863554] [route_server]: Configuring distance scorer.
+[route_server-14] [INFO] [1790229709.073047566] [route_server]: Created edge cost function plugin DynamicEdgesScorer of type nav2_route::DynamicEdgesScorer
+[route_server-14] [INFO] [1790229709.073058179] [route_server]: Configuring adjust edges scorer.
+[route_server-14] [INFO] [1790229709.076242877] [route_server]: Created route operation AdjustSpeedLimit of type nav2_route::AdjustSpeedLimit
+[route_server-14] [INFO] [1790229709.076270343] [route_server]: Configuring Adjust speed limit operation.
+[route_server-14] [INFO] [1790229709.077186958] [route_server]: Created route operation ReroutingService of type nav2_route::ReroutingService
+[route_server-14] [INFO] [1790229709.077218348] [route_server]: Configuring Rerouting service operation.
+[lifecycle_manager-21] [INFO] [1790229709.079599859] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[behavior_server-15] [INFO] [1790229709.079867320] [behavior_server]: Configuring
+[behavior_server-15] [INFO] [1790229709.084369154] [behavior_server]: Creating behavior plugin spin of type nav2_behaviors::Spin
+[behavior_server-15] [INFO] [1790229709.085427313] [behavior_server]: Creating behavior plugin backup of type nav2_behaviors::BackUp
+[behavior_server-15] [INFO] [1790229709.086055479] [behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors::DriveOnHeading
+[behavior_server-15] [INFO] [1790229709.086882933] [behavior_server]: Creating behavior plugin assisted_teleop of type nav2_behaviors::AssistedTeleop
+[behavior_server-15] [INFO] [1790229709.088439114] [behavior_server]: Creating behavior plugin wait of type nav2_behaviors::Wait
+[behavior_server-15] [INFO] [1790229709.094298654] [behavior_server]: Configuring spin
+[behavior_server-15] [INFO] [1790229709.102756570] [behavior_server]: Configuring backup
+[behavior_server-15] [INFO] [1790229709.109355995] [behavior_server]: Configuring drive_on_heading
+[behavior_server-15] [INFO] [1790229709.114677885] [behavior_server]: Configuring assisted_teleop
+[behavior_server-15] [INFO] [1790229709.121478898] [behavior_server]: Configuring wait
+[lifecycle_manager-21] [INFO] [1790229709.126418136] [lifecycle_manager_navigation]: [34m[1mConfiguring velocity_smoother[0m[0m
+[velocity_smoother-18] [INFO] [1790229709.126671376] [velocity_smoother]: Configuring velocity smoother
+[lifecycle_manager-21] [INFO] [1790229709.130642462] [lifecycle_manager_navigation]: [34m[1mConfiguring collision_monitor[0m[0m
+[collision_monitor-19] [INFO] [1790229709.130873359] [collision_monitor]: Configuring
+[collision_monitor-19] [INFO] [1790229709.136406287] [collision_monitor]: [scan]: Creating Scan
+[collision_monitor-19] [INFO] [1790229709.140339605] [collision_monitor]: [FootprintApproach]: Creating Polygon
+[collision_monitor-19] [INFO] [1790229709.141470271] [collision_monitor]: [FootprintApproach]: Polygon points are not defined. Using dynamic subscription instead.
+[collision_monitor-19] [INFO] [1790229709.142748653] [collision_monitor]: [FootprintApproach]: Making footprint subscriber on local_costmap/published_footprint topic
+[lifecycle_manager-21] [INFO] [1790229709.155109266] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-16] [INFO] [1790229709.155378397] [bt_navigator]: Configuring
+[bt_navigator-16] [INFO] [1790229709.160781014] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator
+[bt_navigator-16] [INFO] [1790229709.244093180] [bt_navigator]: Creating navigator id navigate_through_poses of type nav2_bt_navigator::NavigateThroughPosesNavigator
+[lifecycle_manager-21] [INFO] [1790229709.266742870] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[waypoint_follower-17] [INFO] [1790229709.267250544] [waypoint_follower]: Configuring
+[waypoint_follower-17] [INFO] [1790229709.292362214] [waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[lifecycle_manager-21] [INFO] [1790229709.293062806] [lifecycle_manager_navigation]: [34m[1mConfiguring docking_server[0m[0m
+[opennav_docking-20] [INFO] [1790229709.821923534] [docking_server]: Configuring docking_server
+[opennav_docking-20] [INFO] [1790229709.821959483] [docking_server]: Controller frequency set to 50.0000Hz
+[opennav_docking-20] [INFO] [1790229709.848154752] [docking_server]: Created charging dock plugin simple_charging_dock of type opennav_docking::SimpleChargingDock
+[opennav_docking-20] [WARN] [1790229709.852669816] [docking_server]: Dock database filepath nor dock parameters set. Docking actions can only be executed specifying the dock pose via the action request. Or update the dock database via the reload_database service.
+[opennav_docking-20] [INFO] [1790229709.852729206] [docking_server]: Docking Server has 1 dock types and 0 dock instances available.
+[lifecycle_manager-21] [INFO] [1790229709.854703494] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-11] [INFO] [1790229709.855013238] [controller_server]: Activating
+[controller_server-11] [INFO] [1790229709.855057204] [local_costmap.local_costmap]: Activating
+[controller_server-11] [INFO] [1790229709.855065169] [local_costmap.local_costmap]: Checking transform
+[controller_server-11] [INFO] [1790229709.855230073] [local_costmap.local_costmap]: start
+[controller_server-11] [WARN] [1790229710.056648266] [controller_server]: Parameter controller_server.verbose not found
+[controller_server-11] [INFO] [1790229710.057528548] [controller_server]: Optimizer reset
+[controller_server-11] [INFO] [1790229710.057772431] [MPPIController]: Activated MPPI Controller: FollowPath
+[controller_server-11] [INFO] [1790229710.057803456] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-21] [INFO] [1790229710.163182441] [lifecycle_manager_navigation]: Server controller_server connected with bond.
+[lifecycle_manager-21] [INFO] [1790229710.163225268] [lifecycle_manager_navigation]: [34m[1mActivating smoother_server[0m[0m
+[smoother_server-12] [INFO] [1790229710.163549418] [smoother_server]: Activating
+[smoother_server-12] [INFO] [1790229710.163586654] [smoother_server]: Creating bond (smoother_server) to lifecycle manager.
+[lifecycle_manager-21] [INFO] [1790229710.268830918] [lifecycle_manager_navigation]: Server smoother_server connected with bond.
+[lifecycle_manager-21] [INFO] [1790229710.268877251] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[planner_server-13] [INFO] [1790229710.269156599] [planner_server]: Activating
+[planner_server-13] [INFO] [1790229710.269184521] [global_costmap.global_costmap]: Activating
+[planner_server-13] [INFO] [1790229710.269188902] [global_costmap.global_costmap]: Checking transform
+[planner_server-13] [INFO] [1790229710.269299379] [global_costmap.global_costmap]: start
+[planner_server-13] [INFO] [1790229711.270946142] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[planner_server-13] [INFO] [1790229711.272370749] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[lifecycle_manager-21] [INFO] [1790229711.376247491] [lifecycle_manager_navigation]: Server planner_server connected with bond.
+[lifecycle_manager-21] [INFO] [1790229711.376287310] [lifecycle_manager_navigation]: [34m[1mActivating route_server[0m[0m
+[route_server-14] [INFO] [1790229711.376544432] [route_server]: Activating
+[route_server-14] [INFO] [1790229711.376663342] [route_server]: Creating bond (route_server) to lifecycle manager.
+[lifecycle_manager-21] [INFO] [1790229711.484719800] [lifecycle_manager_navigation]: Server route_server connected with bond.
+[lifecycle_manager-21] [INFO] [1790229711.484796747] [lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[behavior_server-15] [INFO] [1790229711.485246517] [behavior_server]: Activating
+[behavior_server-15] [INFO] [1790229711.485289501] [behavior_server]: Activating spin
+[behavior_server-15] [INFO] [1790229711.485305015] [behavior_server]: Activating backup
+[behavior_server-15] [INFO] [1790229711.485316397] [behavior_server]: Activating drive_on_heading
+[behavior_server-15] [INFO] [1790229711.485328125] [behavior_server]: Activating assisted_teleop
+[behavior_server-15] [INFO] [1790229711.485338469] [behavior_server]: Activating wait
+[behavior_server-15] [INFO] [1790229711.485356519] [behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[lifecycle_manager-21] [INFO] [1790229711.924117557] [lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[lifecycle_manager-21] [INFO] [1790229711.924162151] [lifecycle_manager_navigation]: [34m[1mActivating velocity_smoother[0m[0m
+[velocity_smoother-18] [INFO] [1790229711.924485965] [velocity_smoother]: Activating
+[velocity_smoother-18] [INFO] [1790229711.924553155] [velocity_smoother]: Creating bond (velocity_smoother) to lifecycle manager.
+[lifecycle_manager-21] [INFO] [1790229712.030304089] [lifecycle_manager_navigation]: Server velocity_smoother connected with bond.
+[lifecycle_manager-21] [INFO] [1790229712.030338549] [lifecycle_manager_navigation]: [34m[1mActivating collision_monitor[0m[0m
+[collision_monitor-19] [INFO] [1790229712.030586804] [collision_monitor]: Activating
+[collision_monitor-19] [INFO] [1790229712.030609697] [collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[lifecycle_manager-21] [INFO] [1790229712.134700780] [lifecycle_manager_navigation]: Server collision_monitor connected with bond.
+[lifecycle_manager-21] [INFO] [1790229712.134742034] [lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[bt_navigator-16] [INFO] [1790229712.135180289] [bt_navigator]: Activating
+[bt_navigator-16] [INFO] [1790229712.207419308] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[lifecycle_manager-21] [INFO] [1790229712.312567547] [lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[lifecycle_manager-21] [INFO] [1790229712.312616867] [lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[waypoint_follower-17] [INFO] [1790229712.315425931] [waypoint_follower]: Activating
+[waypoint_follower-17] [INFO] [1790229712.315466274] [waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[lifecycle_manager-21] [INFO] [1790229712.423009340] [lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[lifecycle_manager-21] [INFO] [1790229712.423039684] [lifecycle_manager_navigation]: [34m[1mActivating docking_server[0m[0m
+[opennav_docking-20] [INFO] [1790229712.423319885] [docking_server]: Activating docking_server
+[opennav_docking-20] [INFO] [1790229712.431383129] [docking_server]: Creating bond (docking_server) to lifecycle manager.
+[lifecycle_manager-21] [INFO] [1790229712.538668304] [lifecycle_manager_navigation]: Server docking_server connected with bond.
+[lifecycle_manager-21] [INFO] [1790229712.538717314] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-21] [INFO] [1790229712.538730812] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+Nav2 active; kiem tra /clock lien tuc trong 5 giay...
+[WARN] [1790229724.456883725] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[WARN] [1790229724.456926046] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+SLAM/Nav2 san sang; /clock on dinh, khong co buoc nhay lui trong 5 giay.
+
+Starting NF on New Room...
+Command: /usr/bin/python3 /home/com1/turtlebot4_project_r003_h031/mapex_lab/scripts/nf_run.py --run-id nf_p500_006 --environment new_room --runtime-profile slam --paper500
+Run hoan tat se tu dong dung exploration, SLAM, Nav2 va Gazebo.
+Nhan Ctrl+C mot lan neu muon dung som.
+
+[WARN] [1790229732.402920880] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[WARN] [1790229732.402945604] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[INFO] [1790229732.530503782] [nearest_euclidean_frontier]: Nearest Euclidean Frontier started (preferred min distance=1.00 m, near fallback=all-frontiers-close, path-subgoal recovery=0.70 m max, 105 limit=2, 105 cooldown=30 s, completion=5 stable sweeps)
+[WARN] [1790229732.644618489] [nearest_euclidean_frontier]: NEAREST RECORDING: env=new_room, profile=slam, output=/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/nearest/nf_p500_006
+[WARN] [1790229737.518772359] [nearest_euclidean_frontier]: NEAREST READY: Nav2 stable for >= 3.0s; benchmark clock will start at first frontier decision
+[INFO] [1790229737.589762336] [nearest_euclidean_frontier]: Selected nearest frontier: x=1.72, y=-0.07, distance=1.72 m, region=185 cells, near_fallback=False
+[bt_navigator-16] [INFO] [1790229737.658008862] [bt_navigator]: Begin navigating from current location (0.00, -0.00) to (1.72, -0.07)
+[controller_server-11] [INFO] [1790229737.679116277] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-11] [WARN] [1790229737.679153093] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded general_goal_checker . This warning will appear once.
+[controller_server-11] [WARN] [1790229737.679161445] [controller_server]: No progress checker was specified in parameter 'current_progress_checker'. Server will use only plugin loaded progress_checker . This warning will appear once.
+[INFO] [1790229737.700345717] [nearest_euclidean_frontier]: Main goal accepted
+[parameter_bridge-2] [INFO] [1790229737.735816987] [bridge_ros_gz]: Passing message from ROS geometry_msgs/msg/Twist to Gazebo gz.msgs.Twist (showing msg only once per type)
+[INFO] [1790229737.867069000] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=34, endpoint=(1.72, -0.07), frontier=(1.72, -0.07), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790229738.712842755] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=28, endpoint=(1.72, -0.07), frontier=(1.72, -0.07), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229738.745959038] [controller_server]: Passing new path to controller.
+[rviz2-7] [INFO] [1790229739.101135619] [rviz2]: Trying to create a map of size 227 x 77 using 1 swatches
+[controller_server-11] [INFO] [1790229739.255419823] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 227 X 77 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229739.269964171] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 227 X 77 at 0.100000 m/pix
+[INFO] [1790229739.711049588] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=18, endpoint=(1.72, -0.07), frontier=(1.72, -0.07), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229739.745923459] [controller_server]: Passing new path to controller.
+[rviz2-7] [INFO] [1790229740.091628921] [rviz2]: Trying to create a map of size 232 x 77 using 1 swatches
+[controller_server-11] [INFO] [1790229740.256252059] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 232 X 77 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229740.269481192] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 232 X 77 at 0.100000 m/pix
+[INFO] [1790229740.753310266] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=12, endpoint=(1.72, -0.07), frontier=(1.72, -0.07), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229740.812593968] [controller_server]: Passing new path to controller.
+[rviz2-7] [INFO] [1790229741.116464855] [rviz2]: Trying to create a map of size 241 x 77 using 1 swatches
+[controller_server-11] [INFO] [1790229741.255428379] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 241 X 77 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229741.269467689] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 241 X 77 at 0.100000 m/pix
+[INFO] [1790229741.752092610] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=8, endpoint=(1.72, -0.07), frontier=(1.72, -0.07), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229741.812636514] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229741.948561271] [controller_server]: Reached the goal!
+[controller_server-11] [INFO] [1790229741.949229949] [controller_server]: Optimizer reset
+[bt_navigator-16] [INFO] [1790229741.978445430] [bt_navigator]: Goal succeeded
+[INFO] [1790229741.980621248] [nearest_euclidean_frontier]: Goal reached
+[INFO] [1790229742.614848035] [nearest_euclidean_frontier]: Selected nearest frontier: x=-2.70, y=-1.78, distance=4.43 m, region=18 cells, near_fallback=False
+[bt_navigator-16] [INFO] [1790229742.616364261] [bt_navigator]: Begin navigating from current location (1.38, -0.05) to (-2.70, -1.78)
+[controller_server-11] [INFO] [1790229742.637311530] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790229742.761157068] [nearest_euclidean_frontier]: Main goal accepted
+[INFO] [1790229742.817261200] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=105, endpoint=(-2.70, -1.78), frontier=(-2.70, -1.78), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790229743.703304464] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=101, endpoint=(-2.70, -1.78), frontier=(-2.70, -1.78), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229743.704134696] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229744.704151035] [controller_server]: Passing new path to controller.
+[INFO] [1790229744.735398624] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=96, endpoint=(-2.70, -1.78), frontier=(-2.70, -1.78), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790229745.725039032] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=89, endpoint=(-2.70, -1.78), frontier=(-2.70, -1.78), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229745.770807659] [controller_server]: Passing new path to controller.
+[INFO] [1790229746.723444489] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=81, endpoint=(-2.70, -1.78), frontier=(-2.70, -1.78), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229746.770816100] [controller_server]: Passing new path to controller.
+[rviz2-7] [INFO] [1790229747.104327655] [rviz2]: Trying to create a map of size 241 x 80 using 1 swatches
+[controller_server-11] [INFO] [1790229747.255415944] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 241 X 80 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229747.269463627] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 241 X 80 at 0.100000 m/pix
+[INFO] [1790229747.750762498] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=75, endpoint=(-2.70, -1.78), frontier=(-2.70, -1.78), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229747.770813189] [controller_server]: Passing new path to controller.
+[rviz2-7] [INFO] [1790229748.089623395] [rviz2]: Trying to create a map of size 241 x 88 using 1 swatches
+[controller_server-11] [INFO] [1790229748.255412529] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 241 X 88 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229748.269469711] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 241 X 88 at 0.100000 m/pix
+[INFO] [1790229748.832963659] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=69, endpoint=(-2.70, -1.78), frontier=(-2.70, -1.78), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229748.837475541] [controller_server]: Passing new path to controller.
+[rviz2-7] [INFO] [1790229749.117405347] [rviz2]: Trying to create a map of size 241 x 100 using 1 swatches
+[controller_server-11] [INFO] [1790229749.255405225] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 241 X 100 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229749.269499151] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 241 X 100 at 0.100000 m/pix
+[INFO] [1790229749.791915611] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=63, endpoint=(-2.70, -1.78), frontier=(-2.70, -1.78), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229749.837472513] [controller_server]: Passing new path to controller.
+[rviz2-7] [INFO] [1790229750.108101051] [rviz2]: Trying to create a map of size 241 x 115 using 1 swatches
+[controller_server-11] [INFO] [1790229750.255452318] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 241 X 115 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229750.269533780] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 241 X 115 at 0.100000 m/pix
+[INFO] [1790229750.832979732] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=57, endpoint=(-2.70, -1.78), frontier=(-2.70, -1.78), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229750.837615381] [controller_server]: Passing new path to controller.
+[rviz2-7] [INFO] [1790229751.099242647] [rviz2]: Trying to create a map of size 257 x 115 using 1 swatches
+[controller_server-11] [INFO] [1790229751.255454359] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 257 X 115 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229751.269475384] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 257 X 115 at 0.100000 m/pix
+[INFO] [1790229751.874916520] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=46, endpoint=(-2.70, -1.78), frontier=(-2.70, -1.78), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229751.904144580] [controller_server]: Passing new path to controller.
+[INFO] [1790229752.885592599] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=42, endpoint=(-2.70, -1.78), frontier=(-2.70, -1.78), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229752.904144697] [controller_server]: Passing new path to controller.
+[rviz2-7] [INFO] [1790229753.117413963] [rviz2]: Trying to create a map of size 257 x 134 using 1 swatches
+[controller_server-11] [INFO] [1790229753.255407886] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 257 X 134 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229753.269479661] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 257 X 134 at 0.100000 m/pix
+[INFO] [1790229753.882691739] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=41, endpoint=(-2.70, -1.78), frontier=(-2.70, -1.78), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229753.904139016] [controller_server]: Passing new path to controller.
+[INFO] [1790229754.912945863] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=33, endpoint=(-2.70, -1.78), frontier=(-2.70, -1.78), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229754.972418132] [controller_server]: Passing new path to controller.
+[INFO] [1790229755.930520766] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=25, endpoint=(-2.70, -1.78), frontier=(-2.70, -1.78), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229755.971045344] [controller_server]: Passing new path to controller.
+[INFO] [1790229756.963082344] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=18, endpoint=(-2.70, -1.78), frontier=(-2.70, -1.78), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229757.037487387] [controller_server]: Passing new path to controller.
+[INFO] [1790229757.986385477] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=13, endpoint=(-2.70, -1.78), frontier=(-2.70, -1.78), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229758.037474262] [controller_server]: Passing new path to controller.
+[INFO] [1790229759.004199852] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=8, endpoint=(-2.70, -1.78), frontier=(-2.70, -1.78), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229759.037504733] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229759.107145292] [controller_server]: Reached the goal!
+[controller_server-11] [INFO] [1790229759.107426686] [controller_server]: Optimizer reset
+[bt_navigator-16] [INFO] [1790229759.136649543] [bt_navigator]: Goal succeeded
+[INFO] [1790229759.138929976] [nearest_euclidean_frontier]: Goal reached
+[INFO] [1790229759.716892405] [nearest_euclidean_frontier]: Selected nearest frontier: x=-3.23, y=1.63, distance=3.77 m, region=16 cells, near_fallback=False
+[bt_navigator-16] [INFO] [1790229759.717614998] [bt_navigator]: Begin navigating from current location (-2.50, -2.07) to (-3.23, 1.63)
+[controller_server-11] [INFO] [1790229759.738444165] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790229759.967516055] [nearest_euclidean_frontier]: Main goal accepted
+[INFO] [1790229760.112224788] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=120, endpoint=(-3.23, 1.63), frontier=(-3.23, 1.63), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790229760.755614560] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=115, endpoint=(-3.23, 1.63), frontier=(-3.23, 1.63), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229760.805298276] [controller_server]: Passing new path to controller.
+[INFO] [1790229761.789083229] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=115, endpoint=(-3.23, 1.63), frontier=(-3.23, 1.63), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229761.805296075] [controller_server]: Passing new path to controller.
+[INFO] [1790229762.827935628] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=113, endpoint=(-3.23, 1.63), frontier=(-3.23, 1.63), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229762.871965065] [controller_server]: Passing new path to controller.
+[INFO] [1790229763.847177000] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=117, endpoint=(-3.23, 1.63), frontier=(-3.23, 1.63), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229763.871985599] [controller_server]: Passing new path to controller.
+[INFO] [1790229764.915771699] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=100, endpoint=(-3.23, 1.63), frontier=(-3.23, 1.63), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229764.938635652] [controller_server]: Passing new path to controller.
+[INFO] [1790229765.895023382] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=90, endpoint=(-3.23, 1.63), frontier=(-3.23, 1.63), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229765.938629895] [controller_server]: Passing new path to controller.
+[INFO] [1790229766.913354738] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=80, endpoint=(-3.23, 1.63), frontier=(-3.23, 1.63), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229766.938649876] [controller_server]: Passing new path to controller.
+[INFO] [1790229767.934038812] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=70, endpoint=(-3.23, 1.63), frontier=(-3.23, 1.63), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229768.005323414] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229768.255536367] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 257 X 134 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229768.269471091] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 257 X 134 at 0.100000 m/pix
+[INFO] [1790229768.951718058] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=62, endpoint=(-3.23, 1.63), frontier=(-3.23, 1.63), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229769.005288849] [controller_server]: Passing new path to controller.
+[INFO] [1790229769.999897672] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=52, endpoint=(-3.23, 1.63), frontier=(-3.23, 1.63), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229770.005543299] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229770.255466463] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 257 X 134 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229770.269501941] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 257 X 134 at 0.100000 m/pix
+[INFO] [1790229771.015518463] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=42, endpoint=(-3.23, 1.63), frontier=(-3.23, 1.63), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229771.071968603] [controller_server]: Passing new path to controller.
+[rviz2-7] [INFO] [1790229771.105837293] [rviz2]: Trying to create a map of size 258 x 141 using 1 swatches
+[controller_server-11] [INFO] [1790229771.255412767] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 258 X 141 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229771.269473104] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 258 X 141 at 0.100000 m/pix
+[INFO] [1790229772.032821133] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=30, endpoint=(-3.23, 1.63), frontier=(-3.23, 1.63), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229772.071956433] [controller_server]: Passing new path to controller.
+[INFO] [1790229773.060652812] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=23, endpoint=(-3.23, 1.63), frontier=(-3.23, 1.63), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229773.138641695] [controller_server]: Passing new path to controller.
+[INFO] [1790229774.086838325] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=19, endpoint=(-3.23, 1.63), frontier=(-3.23, 1.63), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[rviz2-7] [INFO] [1790229774.108479124] [rviz2]: Trying to create a map of size 258 x 143 using 1 swatches
+[controller_server-11] [INFO] [1790229774.138632054] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229774.255441849] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 258 X 143 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229774.269512300] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 258 X 143 at 0.100000 m/pix
+[INFO] [1790229775.107471204] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=12, endpoint=(-3.23, 1.63), frontier=(-3.23, 1.63), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229775.138636317] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229775.874596434] [controller_server]: Reached the goal!
+[controller_server-11] [INFO] [1790229775.875306119] [controller_server]: Optimizer reset
+[bt_navigator-16] [INFO] [1790229775.897884630] [bt_navigator]: Goal succeeded
+[INFO] [1790229775.899960084] [nearest_euclidean_frontier]: Goal reached
+[INFO] [1790229776.746485673] [nearest_euclidean_frontier]: Selected nearest frontier: x=-2.37, y=5.42, distance=3.69 m, region=32 cells, near_fallback=False
+[bt_navigator-16] [INFO] [1790229776.747469088] [bt_navigator]: Begin navigating from current location (-2.95, 1.78) to (-2.37, 5.42)
+[controller_server-11] [INFO] [1790229776.768161512] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790229777.012093779] [nearest_euclidean_frontier]: Main goal accepted
+[INFO] [1790229777.078523845] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=79, endpoint=(-2.37, 5.42), frontier=(-2.37, 5.42), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790229777.776118471] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=75, endpoint=(-2.37, 5.42), frontier=(-2.37, 5.42), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229777.835066005] [controller_server]: Passing new path to controller.
+[INFO] [1790229778.788907758] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=75, endpoint=(-2.37, 5.42), frontier=(-2.37, 5.42), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229778.834989309] [controller_server]: Passing new path to controller.
+[INFO] [1790229779.814620979] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=75, endpoint=(-2.37, 5.42), frontier=(-2.37, 5.42), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229779.835062056] [controller_server]: Passing new path to controller.
+[INFO] [1790229780.835199850] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=67, endpoint=(-2.37, 5.42), frontier=(-2.37, 5.42), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229780.901664412] [controller_server]: Passing new path to controller.
+[INFO] [1790229781.871230070] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=57, endpoint=(-2.37, 5.42), frontier=(-2.37, 5.42), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229781.901693854] [controller_server]: Passing new path to controller.
+[INFO] [1790229782.894735529] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=48, endpoint=(-2.37, 5.42), frontier=(-2.37, 5.42), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229782.968343266] [controller_server]: Passing new path to controller.
+[INFO] [1790229783.912841000] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=41, endpoint=(-2.37, 5.42), frontier=(-2.37, 5.42), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229783.968800830] [controller_server]: Passing new path to controller.
+[INFO] [1790229784.933027508] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=32, endpoint=(-2.37, 5.42), frontier=(-2.37, 5.42), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229784.968354841] [controller_server]: Passing new path to controller.
+[INFO] [1790229785.965920590] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=23, endpoint=(-2.37, 5.42), frontier=(-2.37, 5.42), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229785.968335422] [controller_server]: Passing new path to controller.
+[INFO] [1790229786.973482042] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=18, endpoint=(-2.37, 5.42), frontier=(-2.37, 5.42), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229787.034992452] [controller_server]: Passing new path to controller.
+[INFO] [1790229787.993206603] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=15, endpoint=(-2.37, 5.42), frontier=(-2.37, 5.42), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229788.034995139] [controller_server]: Passing new path to controller.
+[INFO] [1790229789.024767176] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=11, endpoint=(-2.37, 5.42), frontier=(-2.37, 5.42), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229789.102011126] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229789.170375594] [controller_server]: Reached the goal!
+[controller_server-11] [INFO] [1790229789.170599116] [controller_server]: Optimizer reset
+[bt_navigator-16] [INFO] [1790229789.197910210] [bt_navigator]: Goal succeeded
+[INFO] [1790229789.200913218] [nearest_euclidean_frontier]: Goal reached
+[INFO] [1790229789.834735415] [nearest_euclidean_frontier]: Selected nearest frontier: x=-1.17, y=4.32, distance=1.82 m, region=12 cells, near_fallback=False
+[bt_navigator-16] [INFO] [1790229789.836526430] [bt_navigator]: Begin navigating from current location (-2.70, 5.31) to (-1.17, 4.32)
+[controller_server-11] [INFO] [1790229789.858591376] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790229790.181072330] [nearest_euclidean_frontier]: Main goal accepted
+[INFO] [1790229790.257993175] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=62, endpoint=(-1.17, 4.32), frontier=(-1.17, 4.32), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790229790.877383956] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=61, endpoint=(-1.17, 4.32), frontier=(-1.17, 4.32), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229790.925497939] [controller_server]: Passing new path to controller.
+[INFO] [1790229791.904736970] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=49, endpoint=(-1.17, 4.32), frontier=(-1.17, 4.32), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229791.925469029] [controller_server]: Passing new path to controller.
+[INFO] [1790229792.932090394] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=41, endpoint=(-1.17, 4.32), frontier=(-1.17, 4.32), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229792.992104464] [controller_server]: Passing new path to controller.
+[INFO] [1790229793.951054402] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=29, endpoint=(-1.17, 4.32), frontier=(-1.17, 4.32), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229793.992103112] [controller_server]: Passing new path to controller.
+[INFO] [1790229794.971814612] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=23, endpoint=(-1.17, 4.32), frontier=(-1.17, 4.32), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229794.992112799] [controller_server]: Passing new path to controller.
+[INFO] [1790229796.004104508] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=16, endpoint=(-1.17, 4.32), frontier=(-1.17, 4.32), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229796.058765812] [controller_server]: Passing new path to controller.
+[INFO] [1790229797.037319598] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=12, endpoint=(-1.17, 4.32), frontier=(-1.17, 4.32), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229797.058763055] [controller_server]: Passing new path to controller.
+[INFO] [1790229798.061541338] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=9, endpoint=(-1.17, 4.32), frontier=(-1.17, 4.32), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229798.125439771] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229798.794924284] [controller_server]: Reached the goal!
+[controller_server-11] [INFO] [1790229798.795133169] [controller_server]: Optimizer reset
+[bt_navigator-16] [INFO] [1790229798.816783811] [bt_navigator]: Goal succeeded
+[INFO] [1790229798.827606882] [nearest_euclidean_frontier]: Goal reached
+[INFO] [1790229799.791362705] [nearest_euclidean_frontier]: Selected nearest frontier: x=1.13, y=5.92, distance=2.44 m, region=59 cells, near_fallback=False
+[bt_navigator-16] [INFO] [1790229799.792351547] [bt_navigator]: Begin navigating from current location (-0.87, 4.51) to (1.13, 5.92)
+[controller_server-11] [INFO] [1790229799.803251369] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790229800.114882916] [nearest_euclidean_frontier]: Main goal accepted
+[INFO] [1790229800.169666247] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=80, endpoint=(1.13, 5.92), frontier=(1.13, 5.92), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790229800.819595154] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=80, endpoint=(1.13, 5.92), frontier=(1.13, 5.92), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229800.870477278] [controller_server]: Passing new path to controller.
+[INFO] [1790229801.838621624] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=68, endpoint=(1.13, 5.92), frontier=(1.13, 5.92), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229801.870065180] [controller_server]: Passing new path to controller.
+[INFO] [1790229802.857487936] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=61, endpoint=(1.13, 5.92), frontier=(1.13, 5.92), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229802.936749975] [controller_server]: Passing new path to controller.
+[INFO] [1790229803.885910914] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=48, endpoint=(1.13, 5.92), frontier=(1.13, 5.92), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229803.936706775] [controller_server]: Passing new path to controller.
+[INFO] [1790229804.907237027] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=38, endpoint=(1.13, 5.92), frontier=(1.13, 5.92), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229804.936721245] [controller_server]: Passing new path to controller.
+[rviz2-7] [INFO] [1790229805.135013891] [rviz2]: Trying to create a map of size 258 x 144 using 1 swatches
+[controller_server-11] [INFO] [1790229805.255416435] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 258 X 144 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229805.269476247] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 258 X 144 at 0.100000 m/pix
+[INFO] [1790229805.937145367] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=28, endpoint=(1.13, 5.92), frontier=(1.13, 5.92), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229806.003412636] [controller_server]: Passing new path to controller.
+[INFO] [1790229806.957024944] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=19, endpoint=(1.13, 5.92), frontier=(1.13, 5.92), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229807.003398932] [controller_server]: Passing new path to controller.
+[INFO] [1790229807.986296426] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=13, endpoint=(1.13, 5.92), frontier=(1.13, 5.92), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229808.070075711] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229809.005479158] [controller_server]: Reached the goal!
+[controller_server-11] [INFO] [1790229809.005653826] [controller_server]: Optimizer reset
+[INFO] [1790229809.007585185] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=8, endpoint=(1.13, 5.92), frontier=(1.13, 5.92), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229809.013900828] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-11] [INFO] [1790229809.016084736] [controller_server]: Reached the goal!
+[controller_server-11] [INFO] [1790229809.016239907] [controller_server]: Optimizer reset
+[bt_navigator-16] [INFO] [1790229809.042604018] [bt_navigator]: Goal succeeded
+[INFO] [1790229809.045103659] [nearest_euclidean_frontier]: Goal reached
+[INFO] [1790229809.774697548] [nearest_euclidean_frontier]: Selected nearest frontier: x=2.33, y=3.72, distance=2.33 m, region=11 cells, near_fallback=False
+[bt_navigator-16] [INFO] [1790229809.776820652] [bt_navigator]: Begin navigating from current location (0.99, 5.63) to (2.33, 3.72)
+[controller_server-11] [INFO] [1790229809.797446889] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790229810.183183372] [nearest_euclidean_frontier]: Main goal accepted
+[INFO] [1790229810.248542003] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=83, endpoint=(2.33, 3.72), frontier=(2.33, 3.72), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790229810.812763784] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=79, endpoint=(2.33, 3.72), frontier=(2.33, 3.72), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229810.864307883] [controller_server]: Passing new path to controller.
+[INFO] [1790229811.849012273] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=71, endpoint=(2.33, 3.72), frontier=(2.33, 3.72), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229811.864275053] [controller_server]: Passing new path to controller.
+[INFO] [1790229812.872448543] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=67, endpoint=(2.33, 3.72), frontier=(2.33, 3.72), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229812.930906549] [controller_server]: Passing new path to controller.
+[INFO] [1790229813.904814033] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=59, endpoint=(2.33, 3.72), frontier=(2.33, 3.72), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229813.930939581] [controller_server]: Passing new path to controller.
+[INFO] [1790229814.933372691] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=53, endpoint=(2.33, 3.72), frontier=(2.33, 3.72), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229814.997569630] [controller_server]: Passing new path to controller.
+[INFO] [1790229815.958528082] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=50, endpoint=(2.33, 3.72), frontier=(2.33, 3.72), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229815.997577201] [controller_server]: Passing new path to controller.
+[planner_server-13] [WARN] [1790229816.979188114] [planner_server]: GridBased plugin failed to plan from (1.06, 3.44) to (2.33, 3.72): "Failed to create plan with tolerance of: 0.000000"
+[planner_server-13] [WARN] [1790229816.979242123] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-11] [INFO] [1790229816.997571716] [controller_server]: Cancellation was successful. Stopping the robot.
+[controller_server-11] [INFO] [1790229816.997611960] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[controller_server-11] [INFO] [1790229816.997885624] [controller_server]: Optimizer reset
+[behavior_server-15] [INFO] [1790229816.998470098] [behavior_server]: Running wait
+[behavior_server-15] [INFO] [1790229817.298666268] [behavior_server]: wait completed successfully
+[planner_server-13] [WARN] [1790229817.319213204] [planner_server]: GridBased plugin failed to plan from (1.08, 3.37) to (2.33, 3.72): "Failed to create plan with tolerance of: 0.000000"
+[planner_server-13] [WARN] [1790229817.319272418] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-16] [WARN] [1790229817.347030875] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-16] [ERROR] [1790229817.347240859] [bt_navigator]: Goal failed
+[WARN] [1790229817.349228536] [nearest_euclidean_frontier]: Main goal failed (status=6, error_code=208)
+[WARN] [1790229817.349738279] [nearest_euclidean_frontier]: Main frontier abandoned after NO_VALID_PATH (208): x=2.33, y=3.72; candidates within 0.10 m are skipped during normal selection but will be checked again by terminal planner revalidation.
+[INFO] [1790229817.789111866] [nearest_euclidean_frontier]: Selected nearest frontier: x=5.13, y=3.82, distance=4.07 m, region=64 cells, near_fallback=False
+[bt_navigator-16] [INFO] [1790229817.789968631] [bt_navigator]: Begin navigating from current location (1.09, 3.36) to (5.13, 3.82)
+[controller_server-11] [INFO] [1790229817.810835323] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790229818.112062682] [nearest_euclidean_frontier]: Main goal accepted
+[INFO] [1790229818.183069832] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=92, endpoint=(5.13, 3.82), frontier=(5.13, 3.82), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790229818.832855075] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=87, endpoint=(5.13, 3.82), frontier=(5.13, 3.82), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229818.877633701] [controller_server]: Passing new path to controller.
+[INFO] [1790229819.871578600] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=89, endpoint=(5.13, 3.82), frontier=(5.13, 3.82), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229819.877848742] [controller_server]: Passing new path to controller.
+[INFO] [1790229820.869890444] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=88, endpoint=(5.13, 3.82), frontier=(5.13, 3.82), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229820.944330198] [controller_server]: Passing new path to controller.
+[INFO] [1790229821.888466974] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=80, endpoint=(5.13, 3.82), frontier=(5.13, 3.82), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229821.944714242] [controller_server]: Passing new path to controller.
+[INFO] [1790229822.904702372] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=69, endpoint=(5.13, 3.82), frontier=(5.13, 3.82), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229822.944305537] [controller_server]: Passing new path to controller.
+[INFO] [1790229823.935507448] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=60, endpoint=(5.13, 3.82), frontier=(5.13, 3.82), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229824.010969145] [controller_server]: Passing new path to controller.
+[INFO] [1790229824.961890754] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=53, endpoint=(5.13, 3.82), frontier=(5.13, 3.82), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229825.010968605] [controller_server]: Passing new path to controller.
+[INFO] [1790229825.989162279] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=43, endpoint=(5.13, 3.82), frontier=(5.13, 3.82), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229826.010973432] [controller_server]: Passing new path to controller.
+[INFO] [1790229827.014723586] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=36, endpoint=(5.13, 3.82), frontier=(5.13, 3.82), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229827.077639847] [controller_server]: Passing new path to controller.
+[INFO] [1790229828.033876571] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=26, endpoint=(5.13, 3.82), frontier=(5.13, 3.82), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229828.077641677] [controller_server]: Passing new path to controller.
+[INFO] [1790229829.067705664] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=20, endpoint=(5.13, 3.82), frontier=(5.13, 3.82), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229829.144270829] [controller_server]: Passing new path to controller.
+[INFO] [1790229830.091999057] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=12, endpoint=(5.13, 3.82), frontier=(5.13, 3.82), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229830.144314809] [controller_server]: Passing new path to controller.
+[INFO] [1790229831.105526134] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=13, endpoint=(5.13, 3.82), frontier=(5.13, 3.82), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229831.144306889] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229831.213078684] [controller_server]: Reached the goal!
+[controller_server-11] [INFO] [1790229831.213462165] [controller_server]: Optimizer reset
+[bt_navigator-16] [INFO] [1790229831.241082750] [bt_navigator]: Goal succeeded
+[INFO] [1790229831.245556676] [nearest_euclidean_frontier]: Goal reached
+[INFO] [1790229831.786097791] [nearest_euclidean_frontier]: Selected nearest frontier: x=7.43, y=5.62, distance=3.16 m, region=17 cells, near_fallback=False
+[bt_navigator-16] [INFO] [1790229831.787049834] [bt_navigator]: Begin navigating from current location (5.13, 3.45) to (7.43, 5.62)
+[controller_server-11] [INFO] [1790229831.808274201] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790229832.151629423] [nearest_euclidean_frontier]: Main goal accepted
+[INFO] [1790229832.218869395] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=68, endpoint=(7.43, 5.62), frontier=(7.43, 5.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790229832.832532917] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=65, endpoint=(7.43, 5.62), frontier=(7.43, 5.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229832.875119521] [controller_server]: Passing new path to controller.
+[INFO] [1790229833.851588931] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=56, endpoint=(7.43, 5.62), frontier=(7.43, 5.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229833.875103021] [controller_server]: Passing new path to controller.
+[INFO] [1790229834.887252113] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=47, endpoint=(7.43, 5.62), frontier=(7.43, 5.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229834.941800187] [controller_server]: Passing new path to controller.
+[INFO] [1790229835.918464289] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=37, endpoint=(7.43, 5.62), frontier=(7.43, 5.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229835.941782651] [controller_server]: Passing new path to controller.
+[INFO] [1790229836.931095131] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=25, endpoint=(7.43, 5.62), frontier=(7.43, 5.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229837.008440955] [controller_server]: Passing new path to controller.
+[INFO] [1790229837.959669352] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=18, endpoint=(7.43, 5.62), frontier=(7.43, 5.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229838.008444485] [controller_server]: Passing new path to controller.
+[INFO] [1790229838.984289622] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=14, endpoint=(7.43, 5.62), frontier=(7.43, 5.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229839.008460033] [controller_server]: Passing new path to controller.
+[INFO] [1790229840.001403234] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=10, endpoint=(7.43, 5.62), frontier=(7.43, 5.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229840.075127702] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229840.209990011] [controller_server]: Reached the goal!
+[controller_server-11] [INFO] [1790229840.210124620] [controller_server]: Optimizer reset
+[bt_navigator-16] [INFO] [1790229840.237307570] [bt_navigator]: Goal succeeded
+[INFO] [1790229840.241847675] [nearest_euclidean_frontier]: Goal reached
+[INFO] [1790229840.791366587] [nearest_euclidean_frontier]: Selected nearest frontier: x=10.53, y=0.62, distance=5.61 m, region=52 cells, near_fallback=False
+[bt_navigator-16] [INFO] [1790229840.793936143] [bt_navigator]: Begin navigating from current location (7.40, 5.28) to (10.53, 0.62)
+[controller_server-11] [INFO] [1790229840.814678784] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790229841.159124286] [nearest_euclidean_frontier]: Main goal accepted
+[INFO] [1790229841.221121124] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=195, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790229841.837206636] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=192, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229841.881470379] [controller_server]: Passing new path to controller.
+[INFO] [1790229842.863290995] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=185, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229842.881498563] [controller_server]: Passing new path to controller.
+[INFO] [1790229843.895025820] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=178, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229843.948166860] [controller_server]: Passing new path to controller.
+[INFO] [1790229844.910641223] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=171, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229844.948142312] [controller_server]: Passing new path to controller.
+[INFO] [1790229845.958153221] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=165, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229846.014812008] [controller_server]: Passing new path to controller.
+[INFO] [1790229846.961452844] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=157, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229847.014817288] [controller_server]: Passing new path to controller.
+[INFO] [1790229847.995236172] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=151, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229848.014822754] [controller_server]: Passing new path to controller.
+[INFO] [1790229849.024680784] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=143, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229849.081475283] [controller_server]: Passing new path to controller.
+[INFO] [1790229850.033551030] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=136, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229850.081476776] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229851.081518581] [controller_server]: Passing new path to controller.
+[INFO] [1790229851.119271928] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=130, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790229852.088949599] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=122, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229852.148711308] [controller_server]: Passing new path to controller.
+[INFO] [1790229853.091028522] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=117, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229853.148145101] [controller_server]: Passing new path to controller.
+[INFO] [1790229854.128215906] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=118, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229854.148164898] [controller_server]: Passing new path to controller.
+[INFO] [1790229855.154778401] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=118, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229855.214829800] [controller_server]: Passing new path to controller.
+[INFO] [1790229856.173169782] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=118, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229856.214831390] [controller_server]: Passing new path to controller.
+[INFO] [1790229857.213416930] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=112, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229857.214806588] [controller_server]: Passing new path to controller.
+[rviz2-7] [INFO] [1790229858.120984895] [rviz2]: Trying to create a map of size 259 x 144 using 1 swatches
+[INFO] [1790229858.231920940] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=104, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229858.255793621] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 259 X 144 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229858.269470580] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 259 X 144 at 0.100000 m/pix
+[controller_server-11] [INFO] [1790229858.281545861] [controller_server]: Passing new path to controller.
+[INFO] [1790229859.263559439] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=91, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229859.281503271] [controller_server]: Passing new path to controller.
+[rviz2-7] [INFO] [1790229860.137368756] [rviz2]: Trying to create a map of size 259 x 162 using 1 swatches
+[controller_server-11] [INFO] [1790229860.255398759] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 259 X 162 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229860.269502816] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 259 X 162 at 0.100000 m/pix
+[INFO] [1790229860.292292665] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=80, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229860.348147803] [controller_server]: Passing new path to controller.
+[rviz2-7] [INFO] [1790229861.130042663] [rviz2]: Trying to create a map of size 259 x 165 using 1 swatches
+[controller_server-11] [INFO] [1790229861.255414931] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 259 X 165 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229861.270992359] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 259 X 165 at 0.100000 m/pix
+[INFO] [1790229861.311280841] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=68, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229861.348187985] [controller_server]: Passing new path to controller.
+[rviz2-7] [INFO] [1790229862.121402911] [rviz2]: Trying to create a map of size 259 x 166 using 1 swatches
+[controller_server-11] [INFO] [1790229862.255396915] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 259 X 166 at 0.100000 m/pix
+[planner_server-13] [INFO] [1790229862.269569824] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 259 X 166 at 0.100000 m/pix
+[INFO] [1790229862.345584446] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=59, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229862.348136856] [controller_server]: Passing new path to controller.
+[INFO] [1790229863.359279438] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=49, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229863.414806388] [controller_server]: Passing new path to controller.
+[INFO] [1790229864.370267108] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=38, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229864.414823655] [controller_server]: Passing new path to controller.
+[INFO] [1790229865.399714687] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=30, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229865.414808998] [controller_server]: Passing new path to controller.
+[INFO] [1790229866.408580010] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=19, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229866.481478790] [controller_server]: Passing new path to controller.
+[INFO] [1790229867.440734517] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=13, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229867.481480538] [controller_server]: Passing new path to controller.
+[INFO] [1790229868.466843709] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=8, endpoint=(10.53, 0.62), frontier=(10.53, 0.62), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229868.548191305] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229868.550344871] [controller_server]: Reached the goal!
+[controller_server-11] [INFO] [1790229868.550588967] [controller_server]: Optimizer reset
+[bt_navigator-16] [INFO] [1790229868.585095075] [bt_navigator]: Goal succeeded
+[INFO] [1790229868.587640931] [nearest_euclidean_frontier]: Goal reached
+[INFO] [1790229869.889777575] [nearest_euclidean_frontier]: Selected nearest frontier: x=11.73, y=2.01, distance=2.16 m, region=32 cells, near_fallback=False
+[bt_navigator-16] [INFO] [1790229869.891480166] [bt_navigator]: Begin navigating from current location (10.22, 0.46) to (11.73, 2.01)
+[controller_server-11] [INFO] [1790229869.912106202] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790229870.329116939] [nearest_euclidean_frontier]: Main goal accepted
+[INFO] [1790229870.513776232] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=63, endpoint=(11.73, 2.01), frontier=(11.73, 2.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790229870.926319265] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=63, endpoint=(11.73, 2.01), frontier=(11.73, 2.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229870.978922524] [controller_server]: Passing new path to controller.
+[INFO] [1790229871.971379351] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=60, endpoint=(11.73, 2.01), frontier=(11.73, 2.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229871.979126226] [controller_server]: Passing new path to controller.
+[INFO] [1790229872.989587994] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=59, endpoint=(11.73, 2.01), frontier=(11.73, 2.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229873.045632754] [controller_server]: Passing new path to controller.
+[INFO] [1790229874.009193432] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=45, endpoint=(11.73, 2.01), frontier=(11.73, 2.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229874.045588805] [controller_server]: Passing new path to controller.
+[INFO] [1790229875.051920574] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=34, endpoint=(11.73, 2.01), frontier=(11.73, 2.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229875.112302112] [controller_server]: Passing new path to controller.
+[INFO] [1790229876.056526062] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=23, endpoint=(11.73, 2.01), frontier=(11.73, 2.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229876.112474793] [controller_server]: Passing new path to controller.
+[INFO] [1790229877.068464809] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=15, endpoint=(11.73, 2.01), frontier=(11.73, 2.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229877.112257560] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229878.112442084] [controller_server]: Passing new path to controller.
+[INFO] [1790229878.113237192] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=11, endpoint=(11.73, 2.01), frontier=(11.73, 2.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229878.714923021] [controller_server]: Reached the goal!
+[controller_server-11] [INFO] [1790229878.715433805] [controller_server]: Optimizer reset
+[bt_navigator-16] [INFO] [1790229878.741905036] [bt_navigator]: Goal succeeded
+[INFO] [1790229878.746227177] [nearest_euclidean_frontier]: Goal reached
+[INFO] [1790229879.878764067] [nearest_euclidean_frontier]: Selected nearest frontier: x=10.63, y=6.01, distance=4.03 m, region=26 cells, near_fallback=False
+[bt_navigator-16] [INFO] [1790229879.880849427] [bt_navigator]: Begin navigating from current location (11.38, 2.05) to (10.63, 6.01)
+[controller_server-11] [INFO] [1790229879.901661871] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790229880.296516931] [nearest_euclidean_frontier]: Main goal accepted
+[INFO] [1790229880.359352114] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=83, endpoint=(10.63, 6.01), frontier=(10.63, 6.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790229880.917456451] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=83, endpoint=(10.63, 6.01), frontier=(10.63, 6.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229880.968536719] [controller_server]: Passing new path to controller.
+[INFO] [1790229881.965485329] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=83, endpoint=(10.63, 6.01), frontier=(10.63, 6.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229881.968536509] [controller_server]: Passing new path to controller.
+[INFO] [1790229882.975943182] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=75, endpoint=(10.63, 6.01), frontier=(10.63, 6.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229883.035199894] [controller_server]: Passing new path to controller.
+[INFO] [1790229884.014730103] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=66, endpoint=(10.63, 6.01), frontier=(10.63, 6.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229884.035201260] [controller_server]: Passing new path to controller.
+[INFO] [1790229885.037724920] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=56, endpoint=(10.63, 6.01), frontier=(10.63, 6.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229885.101860670] [controller_server]: Passing new path to controller.
+[INFO] [1790229886.059039764] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=46, endpoint=(10.63, 6.01), frontier=(10.63, 6.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229886.102717125] [controller_server]: Passing new path to controller.
+[INFO] [1790229887.077388617] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=38, endpoint=(10.63, 6.01), frontier=(10.63, 6.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229887.102004498] [controller_server]: Passing new path to controller.
+[INFO] [1790229888.105618176] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=28, endpoint=(10.63, 6.01), frontier=(10.63, 6.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229888.168557987] [controller_server]: Passing new path to controller.
+[INFO] [1790229889.118125641] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=20, endpoint=(10.63, 6.01), frontier=(10.63, 6.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229889.168562560] [controller_server]: Passing new path to controller.
+[INFO] [1790229890.155192106] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=12, endpoint=(10.63, 6.01), frontier=(10.63, 6.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229890.168532168] [controller_server]: Passing new path to controller.
+[INFO] [1790229891.186464969] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=8, endpoint=(10.63, 6.01), frontier=(10.63, 6.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229891.235202845] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229891.237681955] [controller_server]: Reached the goal!
+[controller_server-11] [INFO] [1790229891.237882462] [controller_server]: Optimizer reset
+[bt_navigator-16] [INFO] [1790229891.271158269] [bt_navigator]: Goal succeeded
+[INFO] [1790229891.273560247] [nearest_euclidean_frontier]: Goal reached
+[INFO] [1790229891.854930268] [nearest_euclidean_frontier]: Selected nearest frontier: x=10.83, y=-2.59, distance=8.38 m, region=82 cells, near_fallback=False
+[bt_navigator-16] [INFO] [1790229891.856588827] [bt_navigator]: Begin navigating from current location (10.90, 5.80) to (10.83, -2.59)
+[controller_server-11] [INFO] [1790229891.877513260] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790229892.294822160] [nearest_euclidean_frontier]: Main goal accepted
+[INFO] [1790229892.455607768] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=280, endpoint=(10.83, -2.59), frontier=(10.83, -2.59), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790229892.899899758] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=277, endpoint=(10.83, -2.59), frontier=(10.83, -2.59), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229892.944331069] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229893.944325911] [controller_server]: Passing new path to controller.
+[INFO] [1790229893.956040972] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=271, endpoint=(10.83, -2.59), frontier=(10.83, -2.59), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790229894.960911892] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=268, endpoint=(10.83, -2.59), frontier=(10.83, -2.59), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229895.011009808] [controller_server]: Passing new path to controller.
+[INFO] [1790229896.011014916] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=266, endpoint=(10.83, -2.59), frontier=(10.83, -2.59), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229896.010995343] [controller_server]: Passing new path to controller.
+[INFO] [1790229897.036591257] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=264, endpoint=(10.83, -2.59), frontier=(10.83, -2.59), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229897.077658560] [controller_server]: Passing new path to controller.
+[INFO] [1790229898.036332380] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=254, endpoint=(10.83, -2.59), frontier=(10.83, -2.59), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229898.077660824] [controller_server]: Passing new path to controller.
+[controller_server-11] [INFO] [1790229899.077658808] [controller_server]: Passing new path to controller.
+[INFO] [1790229899.116761112] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=245, endpoint=(10.83, -2.59), frontier=(10.83, -2.59), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790229900.100362811] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=234, endpoint=(10.83, -2.59), frontier=(10.83, -2.59), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229900.144327329] [controller_server]: Passing new path to controller.
+[INFO] [1790229901.126872279] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=225, endpoint=(10.83, -2.59), frontier=(10.83, -2.59), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229901.144326410] [controller_server]: Passing new path to controller.
+[INFO] [1790229902.156808255] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=214, endpoint=(10.83, -2.59), frontier=(10.83, -2.59), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229902.210989687] [controller_server]: Passing new path to controller.
+[INFO] [1790229903.187282612] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=205, endpoint=(10.83, -2.59), frontier=(10.83, -2.59), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229903.211004813] [controller_server]: Passing new path to controller.
+[INFO] [1790229904.227308075] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=197, endpoint=(10.83, -2.59), frontier=(10.83, -2.59), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-11] [INFO] [1790229904.277663806] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-10] WARNING: Logging before InitGoogleLogging() is written to STDERR
+[async_slam_toolbox_node-10] W20260924 13:05:05.053560 42541 preprocessor.cc:67] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 16.  Bounding to maximum number available.
+[async_slam_toolbox_node-10] [INFO] [1790229905.057901787] [slam_toolbox]: Adaptive anchor summary: latest_node=393, local_edges=409, loop_history=0, avg_effective_weight=1.730, release_regions=0
+[INFO] [1790229905.239290903] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=186, endpoint=(10.83, -2.59), frontier=(10.83, -2.59), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[planner_server-13] [INFO] [1790229905.269459034] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 259 X 166 at 0.100000 m/pix
+[INFO] [1790229906.275121045] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=182, endpoint=(10.83, -2.59), frontier=(10.83, -2.59), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[bt_navigator-16] [WARN] [1790229906.299977439] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[behavior_server-15] [INFO] [1790229906.300475549] [behavior_server]: Running wait
+[behavior_server-15] [INFO] [1790229906.600632557] [behavior_server]: wait completed successfully
+[bt_navigator-16] [WARN] [1790229906.658992879] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-16] [WARN] [1790229906.666759421] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-16] [ERROR] [1790229906.666929055] [bt_navigator]: Goal failed
+[controller_server-11] [WARN] [1790229905.247340478] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[controller_server-11] [INFO] [1790229905.256002123] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 259 X 166 at 0.100000 m/pix
+[controller_server-11] [WARN] [1790229910.502109101] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[ERROR] [1790229910.505296926] [nearest_euclidean_frontier]: R003 odometry integrity fault: odom_gap_s:2.000000000>1.000000000
+[controller_server-11] [WARN] [1790229910.505579587] [controller_server]: Control loop missed its desired rate of 15.0000 Hz. Current loop rate is 0.1710 Hz.
+[controller_server-11] [INFO] [1790229910.505628718] [controller_server]: Passing new path to controller.
+[ERROR] [1790229910.719512973] [nearest_euclidean_frontier]: R003 odometry integrity fault: odom_gap_s:2.020000000>1.000000000
+[ERROR] [1790229910.808296591] [nearest_euclidean_frontier]: R003 odometry integrity fault: odom_gap_s:2.100000000>1.000000000
+[INFO] [1790229910.812490160] [nearest_euclidean_frontier]: Main /plan diagnostic: poses=183, endpoint=(10.83, -2.59), frontier=(10.83, -2.59), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[ERROR] [1790229910.813680431] [nearest_euclidean_frontier]: R003 odometry integrity fault: odom_gap_s:2.040000000>1.000000000
+[WARN] [1790229910.817636076] [nearest_euclidean_frontier]: Main goal failed (status=6, error_code=0)
+[WARN] [1790229910.831463699] [nearest_euclidean_frontier]: Path-guided recovery #1: temporary subgoal x=9.85, y=0.70, 0.71 m ahead on main path (remaining main path=9.13 m, trigger_error=0)
+[WARN] [1790229910.837124550] [nearest_euclidean_frontier]: R003 cutoff latched; navigation dispatch suppressed
+[WARN] [1790229910.956914770] [nearest_euclidean_frontier]: NEAREST SAVED: env=new_room, profile=slam, coverage=0.470485980, distance=53.16m, output=/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/nearest/nf_p500_006
+
+Stopping experiment...
+[controller_server-11] [INFO] [1790229911.602825686] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[controller_server-11] [INFO] [1790229911.602916041] [controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)
+[controller_server-11] [INFO] [1790229911.602991672] [controller_server]: Deactivating
+[controller_server-11] [WARN] [1790229911.603003416] [controller_server]: [follow_path] [ActionServer] Requested to deactivate server but goal is still executing. Should check if action server is running before deactivating.
+[async_slam_toolbox_node-10] [INFO] [1790229911.602826786] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[image_bridge-4] [INFO] [1790229911.602830103] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rviz2-7] [INFO] [1790229911.602836791] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-6] [INFO] [1790229911.602825787] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[planner_server-13] [INFO] [1790229911.602842812] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[planner_server-13] [INFO] [1790229911.602903768] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)
+[planner_server-13] [INFO] [1790229911.602979709] [planner_server]: Deactivating
+[planner_server-13] [INFO] [1790229911.603011600] [global_costmap.global_costmap]: Deactivating
+[smoother_server-12] [INFO] [1790229911.602842110] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[smoother_server-12] [INFO] [1790229911.602917974] [smoother_server]: Running Nav2 LifecycleNode rcl preshutdown (smoother_server)
+[smoother_server-12] [INFO] [1790229911.603001286] [smoother_server]: Deactivating
+[smoother_server-12] [INFO] [1790229911.603020681] [smoother_server]: Destroying bond (smoother_server) to lifecycle manager.
+[behavior_server-15] [INFO] [1790229911.602846241] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[behavior_server-15] [INFO] [1790229911.602903607] [behavior_server]: Running Nav2 LifecycleNode rcl preshutdown (behavior_server)
+[behavior_server-15] [INFO] [1790229911.602979467] [behavior_server]: Deactivating
+[behavior_server-15] [INFO] [1790229911.603027285] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.
+[image_bridge-3] [INFO] [1790229911.602842199] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[route_server-14] [INFO] [1790229911.602844503] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[route_server-14] [INFO] [1790229911.602918568] [route_server]: Running Nav2 LifecycleNode rcl preshutdown (route_server)
+[route_server-14] [INFO] [1790229911.602987204] [route_server]: Deactivating
+[route_server-14] [INFO] [1790229911.603004533] [route_server]: Destroying bond (route_server) to lifecycle manager.
+[velocity_smoother-18] [INFO] [1790229911.602862289] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[velocity_smoother-18] [INFO] [1790229911.602936155] [velocity_smoother]: Running Nav2 LifecycleNode rcl preshutdown (velocity_smoother)
+[velocity_smoother-18] [INFO] [1790229911.603004946] [velocity_smoother]: Deactivating
+[velocity_smoother-18] [INFO] [1790229911.603034469] [velocity_smoother]: Destroying bond (velocity_smoother) to lifecycle manager.
+[opennav_docking-20] [INFO] [1790229911.602871759] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[opennav_docking-20] [INFO] [1790229911.602964972] [docking_server]: Running Nav2 LifecycleNode rcl preshutdown (docking_server)
+[opennav_docking-20] [INFO] [1790229911.603035564] [docking_server]: Deactivating docking_server
+[parameter_bridge-2] [INFO] [1790229911.602998226] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[bt_navigator-16] [INFO] [1790229911.603220711] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[bt_navigator-16] [INFO] [1790229911.603274590] [bt_navigator]: Running Nav2 LifecycleNode rcl preshutdown (bt_navigator)
+[bt_navigator-16] [INFO] [1790229911.603352805] [bt_navigator]: Deactivating
+[bt_navigator-16] [INFO] [1790229911.603384218] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[collision_monitor-19] [INFO] [1790229911.603225712] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[collision_monitor-19] [INFO] [1790229911.603297783] [collision_monitor]: Running Nav2 LifecycleNode rcl preshutdown (collision_monitor)
+[collision_monitor-19] [INFO] [1790229911.603367855] [collision_monitor]: Deactivating
+[collision_monitor-19] [INFO] [1790229911.603388499] [collision_monitor]: Destroying bond (collision_monitor) to lifecycle manager.
+[waypoint_follower-17] [INFO] [1790229911.603776928] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[waypoint_follower-17] [INFO] [1790229911.603864811] [waypoint_follower]: Running Nav2 LifecycleNode rcl preshutdown (waypoint_follower)
+[waypoint_follower-17] [INFO] [1790229911.603960793] [waypoint_follower]: Deactivating
+[waypoint_follower-17] [INFO] [1790229911.603989049] [waypoint_follower]: Destroying bond (waypoint_follower) to lifecycle manager.
+[lifecycle_manager-21] [INFO] [1790229911.604476279] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-21] [INFO] [1790229911.604560835] [lifecycle_manager_navigation]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_navigation)
+[lifecycle_manager-21] [INFO] [1790229911.604592848] [lifecycle_manager_navigation]: [34m[1mTerminating bond timer...[0m[0m
+[async_slam_toolbox_node-10] Unregistering sensor: Custom Described Lidar
+[opennav_docking-20] [INFO] [1790229911.611751381] [docking_server]: Destroying bond (docking_server) to lifecycle manager.
+[route_server-14] [INFO] [1790229911.613363890] [route_server]: Cleaning up
+[behavior_server-15] [INFO] [1790229911.613379661] [behavior_server]: Cleaning up
+[velocity_smoother-18] [INFO] [1790229911.613585069] [velocity_smoother]: Cleaning up
+[velocity_smoother-18] [INFO] [1790229911.613633191] [velocity_smoother]: Destroying bond (velocity_smoother) to lifecycle manager.
+[smoother_server-12] [INFO] [1790229911.613782907] [smoother_server]: Cleaning up
+[bt_navigator-16] [INFO] [1790229911.614085258] [bt_navigator]: Cleaning up
+[collision_monitor-19] [INFO] [1790229911.614404858] [collision_monitor]: Cleaning up
+[collision_monitor-19] [INFO] [1790229911.614443035] [collision_monitor]: [FootprintApproach]: Destroying Polygon
+[collision_monitor-19] [INFO] [1790229911.614457183] [collision_monitor]: [scan]: Destroying Scan
+[waypoint_follower-17] [INFO] [1790229911.614679075] [waypoint_follower]: Cleaning up
+[collision_monitor-19] [INFO] [1790229911.619158737] [collision_monitor]: Destroying bond (collision_monitor) to lifecycle manager.
+[opennav_docking-20] [INFO] [1790229911.622188742] [docking_server]: Cleaning up docking_server
+[behavior_server-15] [INFO] [1790229911.627315285] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.
+[velocity_smoother-18] [INFO] [1790229911.628733202] [velocity_smoother]: Destroying
+[smoother_server-12] [INFO] [1790229911.631323750] [smoother_server]: Destroying bond (smoother_server) to lifecycle manager.
+[route_server-14] [INFO] [1790229911.637079354] [route_server]: Destroying bond (route_server) to lifecycle manager.
+[collision_monitor-19] [INFO] [1790229911.637782782] [collision_monitor]: Destroying
+[smoother_server-12] [INFO] [1790229911.638096121] [smoother_server]: Destroying
+[controller_server-11] [WARN] [1790229911.640757559] [controller_server]: [follow_path] [ActionServer] Stopping the thread per request.
+[controller_server-11] [WARN] [1790229911.640824505] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[controller_server-11] [INFO] [1790229911.641034164] [MPPIController]: Deactivated MPPI Controller: FollowPath
+[controller_server-11] [INFO] [1790229911.641075239] [local_costmap.local_costmap]: Deactivating
+[opennav_docking-20] [INFO] [1790229911.647936290] [docking_server]: Destroying bond (docking_server) to lifecycle manager.
+[route_server-14] [INFO] [1790229911.649042036] [route_server]: Destroying
+[waypoint_follower-17] [INFO] [1790229911.650203232] [waypoint_follower]: Destroying bond (waypoint_follower) to lifecycle manager.
+[waypoint_follower-17] [INFO] [1790229911.651564728] [waypoint_follower]: Destroying
+[opennav_docking-20] [INFO] [1790229911.660719738] [docking_server]: Destroying
+[behavior_server-15] [INFO] [1790229911.674494778] [behavior_server]: Destroying
+[bt_navigator-16] [INFO] [1790229911.703509084] [bt_navigator]: Completed Cleaning up
+[bt_navigator-16] [INFO] [1790229911.703554059] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[bt_navigator-16] [INFO] [1790229911.708464407] [bt_navigator]: Destroying
+[controller_server-11] [INFO] [1790229911.711576080] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
+[controller_server-11] [INFO] [1790229911.722046543] [controller_server]: Cleaning up
+[controller_server-11] [INFO] [1790229911.722903036] [MPPIController]: Cleaned up MPPI Controller: FollowPath
+[controller_server-11] [INFO] [1790229911.723212426] [local_costmap.local_costmap]: Cleaning up
+[controller_server-11] [INFO] [1790229911.734420213] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
+[controller_server-11] [INFO] [1790229911.737525587] [local_costmap.local_costmap]: Destroying
+[INFO] [image_bridge-3]: process has finished cleanly [pid 42018]
+[controller_server-11] [INFO] [1790229911.741035391] [controller_server]: Destroying
+[INFO] [parameter_bridge-2]: process has finished cleanly [pid 42017]
+[INFO] [robot_state_publisher-6]: process has finished cleanly [pid 42021]
+[INFO] [image_bridge-4]: process has finished cleanly [pid 42019]
+[gz-8] [1;36m[Dbg] [SimulationRunner.cc:562] [0m[1;36mCreating postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SimulationRunner.cc:562] [0m[1;36mCreating postupdate worker thread ([0m[1;36m4[0m[1;36m)[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [RenderUtil.cc:2646] [0m[1;36mCreate scene [[0m[1;36mscene[0m[1;36m][0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [Sensors.cc:391] [0m[1;36mRendering Thread initialized[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [Sensors.cc:953] [0m[1;36mInitialization needed[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [RgbdCameraSensor.cc:210] [0m[1;36mRGB images for [[0m[1;36mturtlebot4::oakd_rgb_camera_frame::rgbd_camera[0m[1;36m] advertised on [[0m[1;36mrgbd_camera[0m[1;36m/image][0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [RgbdCameraSensor.cc:224] [0m[1;36mDepth images for [[0m[1;36mturtlebot4::oakd_rgb_camera_frame::rgbd_camera[0m[1;36m] advertised on [[0m[1;36mrgbd_camera[0m[1;36m/depth_image][0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [RgbdCameraSensor.cc:238] [0m[1;36mPoints for [[0m[1;36mturtlebot4::oakd_rgb_camera_frame::rgbd_camera[0m[1;36m] advertised on [[0m[1;36mrgbd_camera[0m[1;36m/points][0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [CameraSensor.cc:695] [0m[1;36mCamera info for [[0m[1;36mturtlebot4::oakd_rgb_camera_frame::rgbd_camera[0m[1;36m] advertised on [[0m[1;36mrgbd_camera/camera_info[0m[1;36m][0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [Lidar.cc:139] [0m[1;36mLaser scans for [[0m[1;36mturtlebot4::rplidar_link::rplidar[0m[1;36m] advertised on [[0m[1;36mscan[0m[1;36m][0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [GpuLidarSensor.cc:164] [0m[1;36mLidar points for [[0m[1;36mturtlebot4::rplidar_link::rplidar[0m[1;36m] advertised on [[0m[1;36mscan/points[0m[1;36m][0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SignalHandler.cc:142] [0m[1;36mReceived signal[[0m[1;36m2[0m[1;36m].[0m
+[gz-8] [1;36m[Dbg] [ServerPrivate.cc:122] [0m[1;36mServer received signal[[0m[1;36m2[0m[1;36m][0m
+[gz-8] [1;36m[Dbg] [Sensors.cc:565] [0m[1;36mSensorsPrivate::Stop[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [Sensors.cc:551] [0m[1;36mSensorsPrivate::RenderThread stopped[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [gz.cc:434] [0m[1;36mShutting down gz-sim-server[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SimulationRunner.cc:578] [0m[1;36mExiting postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [SimulationRunner.cc:578] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gz-8] [1;36mExiting postupdate worker thread ([Dbg] [SimulationRunner.cc:578] [0m[1;36mExiting postupdate worker thread ([0m[1;36m1[0m[1;36mExiting postupdate worker thread ([0m[1;36mExiting postupdate worker thread ([0m[1;36m4[0m[1;36m)[0m[1;36m[0m
+[gz-8] [1;36m3[0m[1;36m)[0m[1;36m[0m
+[gz-8] [1;36m)[0m[1;36m[0m
+[gz-8] [1;36m[Dbg] [Sensors.cc:565] [0m[1;36mSensorsPrivate::Stop[0m[1;36m[0m
+[lifecycle_manager-21] [INFO] [1790229911.764123950] [lifecycle_manager_navigation]: Destroying lifecycle_manager_navigation
+[INFO] [gz-8]: process has finished cleanly [pid 42139]
+[INFO] [velocity_smoother-18]: process has finished cleanly [pid 42657]
+[INFO] [smoother_server-12]: process has finished cleanly [pid 42651]
+[INFO] [collision_monitor-19]: process has finished cleanly [pid 42658]
+[INFO] [route_server-14]: process has finished cleanly [pid 42653]
+[INFO] [waypoint_follower-17]: process has finished cleanly [pid 42656]
+[INFO] [async_slam_toolbox_node-10]: process has finished cleanly [pid 42541]
+[INFO] [opennav_docking-20]: process has finished cleanly [pid 42659]
+[INFO] [behavior_server-15]: process has finished cleanly [pid 42654]
+[INFO] [bt_navigator-16]: process has finished cleanly [pid 42655]
+[INFO] [controller_server-11]: process has finished cleanly [pid 42650]
+[INFO] [lifecycle_manager-21]: process has finished cleanly [pid 42660]
+[planner_server-13] [INFO] [1790229912.269772337] [planner_server]: Deactivating plugin GridBased of type NavfnPlanner
+[planner_server-13] [INFO] [1790229912.269842902] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[planner_server-13] [INFO] [1790229912.280123025] [planner_server]: Cleaning up
+[planner_server-13] [INFO] [1790229912.287424307] [global_costmap.global_costmap]: Cleaning up
+[planner_server-13] [INFO] [1790229912.292034946] [planner_server]: Cleaning up plugin GridBased of type NavfnPlanner
+[planner_server-13] [INFO] [1790229912.292446129] [planner_server]: Destroying plugin GridBased of type NavfnPlanner
+[planner_server-13] [INFO] [1790229912.302213259] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[planner_server-13] [INFO] [1790229912.306911039] [global_costmap.global_costmap]: Destroying
+[planner_server-13] [INFO] [1790229912.316006333] [planner_server]: Destroying
+[INFO] [planner_server-13]: process has finished cleanly [pid 42652]
+[ERROR] [rviz2-7]: process has died [pid 42022, exit code -11, cmd '/opt/ros/jazzy/lib/rviz2/rviz2 -d /home/com1/turtlebot4_project_r003_h031/ros2_ws/install/frontier_exploration/share/frontier_exploration/rviz/hospital_exploration.rviz --ros-args -r __node:=rviz2 --params-file /tmp/launch_params_v34rl85r -r /tf:=tf -r /tf_static:=tf_static'].
+[gz-9] [1;36m[GUI] [Dbg] [SignalHandler.cc:142] [0m[1;36mReceived signal[[0m[1;36m2[0m[1;36m].[0m
+[gz-9] [1;36m[GUI] [Dbg] [Gui.cc:535] [0m[1;36mShutting down gz-sim-gui[0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [Application.cc:237] [0m[1;36mTerminating application.[0m[1;36m[0m
+[gz-9] [1;36m[GUI] [Dbg] [MinimalScene.cc:841] [0m[1;36mDestroy scene [[0m[1;36mscene[0m[1;36m][0m[1;36m[0m
+[INFO] [gz-9]: process has finished cleanly [pid 42140]
+Experiment stopped.
+Traceback (most recent call last):
+  File "/home/com1/turtlebot4_project_r003_h031/mapex_lab/scripts/r003_deadlock_watchdog.py", line 123, in main
+    rclpy.spin_once(node, timeout_sec=1.0)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 226, in spin_once
+    executor.spin_once(timeout_sec=timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 785, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/com1/turtlebot4_project_r003_h031/mapex_lab/scripts/r003_deadlock_watchdog.py", line 137, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/com1/turtlebot4_project_r003_h031/mapex_lab/scripts/r003_deadlock_watchdog.py", line 127, in main
+    rclpy.shutdown()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 134, in shutdown
+    _shutdown(context=context)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/utilities.py", line 82, in shutdown
+    context.shutdown()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/context.py", line 129, in shutdown
+    self.__context.shutdown()
+rclpy._rclpy_pybind11.RCLError: failed to shutdown: rcl_shutdown already called on the given context, at ./src/rcl/init.c:333
