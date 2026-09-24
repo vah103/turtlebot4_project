@@ -77,7 +77,17 @@ def read_rows(path: Path):
         return list(csv.DictReader(stream))
 
 
-def verify_run(directory: Path, run_id: str, expected_decisions=None):
+def validate_resume_state(state, implementation_sha, data_root: Path, output_root: Path):
+    expected = {"accepted_base_sha": topology.ACCEPTED_BASE_SHA,
+                "implementation_sha": implementation_sha,
+                "data_root": str(data_root), "output_root": str(output_root)}
+    for key, value in expected.items():
+        if state.get(key) != value:
+            raise ValueError(f"resume state mismatch: {key}")
+
+
+def verify_run(directory: Path, run_id: str, expected_decisions,
+               expected_input_fingerprints, expected_implementation_sha):
     manifest_path = directory / "completion_manifest.json"
     if not manifest_path.is_file():
         raise ValueError(f"{run_id}: missing completion manifest")
@@ -86,6 +96,10 @@ def verify_run(directory: Path, run_id: str, expected_decisions=None):
         raise ValueError(f"{run_id}: invalid completion manifest identity/status")
     if manifest.get("accepted_base_sha") != topology.ACCEPTED_BASE_SHA:
         raise ValueError(f"{run_id}: accepted-base mismatch")
+    if manifest.get("implementation_sha") != expected_implementation_sha:
+        raise ValueError(f"{run_id}: implementation SHA mismatch")
+    if manifest.get("input_fingerprints") != expected_input_fingerprints:
+        raise ValueError(f"{run_id}: input fingerprint mismatch")
     for relative, expected_hash in manifest.get("output_hashes", {}).items():
         path = directory / relative
         if not path.is_file() or topology.sha256(path) != expected_hash:
@@ -176,11 +190,7 @@ def main():
         topology.atomic_json(output_root / "preflight.json", preflight)
         if state_path.exists():
             state = json.loads(state_path.read_text(encoding="utf-8"))
-            for key, expected in (("accepted_base_sha", topology.ACCEPTED_BASE_SHA),
-                                  ("implementation_sha", implementation_sha),
-                                  ("output_root", str(output_root))):
-                if state.get(key) != expected:
-                    raise ValueError(f"resume state mismatch: {key}")
+            validate_resume_state(state, implementation_sha, data_root, output_root)
         else:
             state = initial_state(repo, data_root, output_root, implementation_sha)
             topology.atomic_json(state_path, state)
@@ -192,10 +202,13 @@ def main():
         for run_id in topology.base.RUNS:
             final_dir = output_root / "runs" / run_id
             tmp_dir = output_root / "runs" / f"{run_id}.tmp"
-            input_decisions = len(topology.base.read_csv(
-                data_root / "mapex_lab/experiments/mapex" / run_id / "decisions.csv"))
+            run_path = data_root / "mapex_lab/experiments/mapex" / run_id
+            decision_rows = topology.base.read_csv(run_path / "decisions.csv")
+            input_decisions = len(decision_rows)
+            current_input_fingerprints = topology.input_fingerprints(run_path, decision_rows)
             if final_dir.exists():
-                verify_run(final_dir, run_id, input_decisions)
+                verify_run(final_dir, run_id, input_decisions, current_input_fingerprints,
+                           implementation_sha)
                 completed.append(run_id)
                 continue
             if tmp_dir.exists():
@@ -220,7 +233,8 @@ def main():
                         "output_inventory": sorted(output_hashes), "output_hashes": output_hashes,
                         "validation": "PASS", "completed_at": utc_now()}
             topology.atomic_json(tmp_dir / "completion_manifest.json", manifest)
-            verify_run(tmp_dir, run_id, input_decisions)
+            verify_run(tmp_dir, run_id, input_decisions, current_input_fingerprints,
+                       implementation_sha)
             final_dir.parent.mkdir(parents=True, exist_ok=True)
             os.replace(tmp_dir, final_dir)
             completed.append(run_id)

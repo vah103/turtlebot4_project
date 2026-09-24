@@ -1,5 +1,6 @@
 import math
 import json
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -7,9 +8,53 @@ import numpy as np
 import yaml
 
 from mapex_lab.analysis.r004 import evaluate_topology_traversability as t
+from mapex_lab.analysis.r004 import run_topology_low_touch as runner
 
 
 class TopologyTraversabilityTests(unittest.TestCase):
+    def make_completed_run(self, root, implementation_sha="impl", fingerprints=None):
+        fingerprints = fingerprints or {"decisions.csv": "abc"}
+        root.mkdir(parents=True)
+        runner.topology.write_csv(root / "topology_diagnostic_decisions.csv", [{
+            "fragmented": 0, "decision_progress": 0.0}])
+        (root / "overlay_manifest.csv").write_text("", encoding="utf-8")
+        runner.topology.atomic_json(root / "completion_manifest.json", {
+            "status": "complete", "run_id": "mpx_001",
+            "accepted_base_sha": t.ACCEPTED_BASE_SHA,
+            "implementation_sha": implementation_sha,
+            "input_fingerprints": fingerprints, "output_hashes": {}})
+        return fingerprints
+
+    def test_recovery_unchanged_identity_can_skip(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "mpx_001"
+            fingerprints = self.make_completed_run(root)
+            manifest = runner.verify_run(root, "mpx_001", 1, fingerprints, "impl")
+            self.assertEqual(manifest["status"], "complete")
+            state = {"accepted_base_sha": t.ACCEPTED_BASE_SHA, "implementation_sha": "impl",
+                     "data_root": "/data", "output_root": "/output"}
+            runner.validate_resume_state(state, "impl", Path("/data"), Path("/output"))
+
+    def test_recovery_changed_input_hard_fails(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "mpx_001"
+            self.make_completed_run(root)
+            with self.assertRaisesRegex(ValueError, "input fingerprint mismatch"):
+                runner.verify_run(root, "mpx_001", 1, {"decisions.csv": "changed"}, "impl")
+
+    def test_recovery_changed_data_root_hard_fails(self):
+        state = {"accepted_base_sha": t.ACCEPTED_BASE_SHA, "implementation_sha": "impl",
+                 "data_root": "/old", "output_root": "/output"}
+        with self.assertRaisesRegex(ValueError, "resume state mismatch: data_root"):
+            runner.validate_resume_state(state, "impl", Path("/new"), Path("/output"))
+
+    def test_recovery_changed_implementation_hard_fails(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "mpx_001"
+            fingerprints = self.make_completed_run(root, implementation_sha="old")
+            with self.assertRaisesRegex(ValueError, "implementation SHA mismatch"):
+                runner.verify_run(root, "mpx_001", 1, fingerprints, "new")
+
     def test_strict_prediction_threshold(self):
         occupied = t.strict_occupied([0.5, np.nextafter(0.5, 1.0)])
         self.assertEqual(occupied.tolist(), [False, True])
