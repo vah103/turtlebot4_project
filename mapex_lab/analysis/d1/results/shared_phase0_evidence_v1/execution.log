@@ -1,0 +1,290 @@
+PREFLIGHT_AND_TESTS_PASS
+mpx_001 EXTRACTED rows=35
+mpx_002 EXTRACTED rows=37
+mpx_003 EXTRACTED rows=41
+mpx_004 EXTRACTED rows=36
+mpx_005 EXTRACTED rows=34
+mpx_006 EXTRACTED rows=36
+mpx_007 EXTRACTED rows=35
+mpx_008 EXTRACTED rows=35
+mpx_009 EXTRACTED rows=36
+mpx_010 EXTRACTED rows=40
+{
+  "total_rows": 365,
+  "per_run": {
+    "mpx_001": {
+      "total_rows": 35,
+      "row_integrity_ok": 35,
+      "d1_source_available": 16,
+      "d1_runtime_region_evaluable": 16,
+      "u_r_union_evaluable": 16,
+      "broad_error_evaluable": 28,
+      "primary_topology_risk_evaluable": 16,
+      "u_empty_valid": 0
+    },
+    "mpx_002": {
+      "total_rows": 37,
+      "row_integrity_ok": 37,
+      "d1_source_available": 23,
+      "d1_runtime_region_evaluable": 23,
+      "u_r_union_evaluable": 23,
+      "broad_error_evaluable": 28,
+      "primary_topology_risk_evaluable": 14,
+      "u_empty_valid": 9
+    },
+    "mpx_003": {
+      "total_rows": 41,
+      "row_integrity_ok": 41,
+      "d1_source_available": 24,
+      "d1_runtime_region_evaluable": 24,
+      "u_r_union_evaluable": 24,
+      "broad_error_evaluable": 32,
+      "primary_topology_risk_evaluable": 22,
+      "u_empty_valid": 1
+    },
+    "mpx_004": {
+      "total_rows": 36,
+      "row_integrity_ok": 36,
+      "d1_source_available": 18,
+      "d1_runtime_region_evaluable": 18,
+      "u_r_union_evaluable": 18,
+      "broad_error_evaluable": 29,
+      "primary_topology_risk_evaluable": 18,
+      "u_empty_valid": 0
+    },
+    "mpx_005": {
+      "total_rows": 34,
+      "row_integrity_ok": 34,
+      "d1_source_available": 21,
+      "d1_runtime_region_evaluable": 21,
+      "u_r_union_evaluable": 21,
+      "broad_error_evaluable": 26,
+      "primary_topology_risk_evaluable": 14,
+      "u_empty_valid": 0
+    },
+    "mpx_006": {
+      "total_rows": 36,
+      "row_integrity_ok": 36,
+      "d1_source_available": 23,
+      "d1_runtime_region_evaluable": 23,
+      "u_r_union_evaluable": 23,
+      "broad_error_evaluable": 28,
+      "primary_topology_risk_evaluable": 14,
+      "u_empty_valid": 8
+    },
+    "mpx_007": {
+      "total_rows": 35,
+      "row_integrity_ok": 35,
+      "d1_source_available": 20,
+      "d1_runtime_region_evaluable": 20,
+      "u_r_union_evaluable": 20,
+      "broad_error_evaluable": 28,
+      "primary_topology_risk_evaluable": 18,
+      "u_empty_valid": 1
+    },
+    "mpx_008": {
+      "total_rows": 35,
+      "row_integrity_ok": 35,
+      "d1_source_available": 20,
+      "d1_runtime_region_evaluable": 20,
+      "u_r_union_evaluable": 20,
+      "broad_error_evaluable": 27,
+      "primary_topology_risk_evaluable": 19,
+      "u_empty_valid": 0
+    },
+    "mpx_009": {
+      "total_rows": 36,
+      "row_integrity_ok": 36,
+      "d1_source_available": 25,
+      "d1_runtime_region_evaluable": 25,
+      "u_r_union_evaluable": 25,
+      "broad_error_evaluable": 27,
+      "primary_topology_risk_evaluable": 15,
+      "u_empty_valid": 10
+    },
+    "mpx_010": {
+      "total_rows": 40,
+      "row_integrity_ok": 40,
+      "d1_source_available": 28,
+      "d1_runtime_region_evaluable": 28,
+      "u_r_union_evaluable": 28,
+      "broad_error_evaluable": 31,
+      "primary_topology_risk_evaluable": 18,
+      "u_empty_valid": 9
+    }
+  },
+  "flags": {
+    "row_integrity_ok": 365,
+    "d1_source_available": 218,
+    "d1_runtime_region_evaluable": 218,
+    "u_r_union_evaluable": 218,
+    "broad_error_evaluable": 284,
+    "primary_topology_risk_evaluable": 168,
+    "u_empty_valid": 38
+  },
+  "reasons": {
+    "outside_trajectory_range": 10,
+    "": 218,
+    "source_not_known_footprint_safe": 96,
+    "source_outside_runtime_grid": 41
+  },
+  "support_distribution": {
+    "prediction_support_coverage": {
+      "n": 286,
+      "min": 0.3206575320416088,
+      "max": 1.0,
+      "mean": 0.8885785877243055
+    },
+    "free_support_coverage": {
+      "n": 284,
+      "min": 0.3250249026532645,
+      "max": 1.0,
+      "mean": 0.9044258989697328
+    }
+  }
+}
+PREFLIGHT_AND_TESTS_PASS
+mpx_001 VALIDATED_SKIP rows=35
+mpx_002 VALIDATED_SKIP rows=37
+mpx_003 VALIDATED_SKIP rows=41
+mpx_004 VALIDATED_SKIP rows=36
+mpx_005 VALIDATED_SKIP rows=34
+mpx_006 VALIDATED_SKIP rows=36
+mpx_007 VALIDATED_SKIP rows=35
+mpx_008 VALIDATED_SKIP rows=35
+mpx_009 VALIDATED_SKIP rows=36
+mpx_010 VALIDATED_SKIP rows=40
+{
+  "total_rows": 365,
+  "per_run": {
+    "mpx_001": {
+      "total_rows": 35,
+      "row_integrity_ok": 35,
+      "d1_source_available": 16,
+      "d1_runtime_region_evaluable": 16,
+      "u_r_union_evaluable": 16,
+      "broad_error_evaluable": 28,
+      "primary_topology_risk_evaluable": 16,
+      "u_empty_valid": 0
+    },
+    "mpx_002": {
+      "total_rows": 37,
+      "row_integrity_ok": 37,
+      "d1_source_available": 23,
+      "d1_runtime_region_evaluable": 23,
+      "u_r_union_evaluable": 23,
+      "broad_error_evaluable": 28,
+      "primary_topology_risk_evaluable": 14,
+      "u_empty_valid": 9
+    },
+    "mpx_003": {
+      "total_rows": 41,
+      "row_integrity_ok": 41,
+      "d1_source_available": 24,
+      "d1_runtime_region_evaluable": 24,
+      "u_r_union_evaluable": 24,
+      "broad_error_evaluable": 32,
+      "primary_topology_risk_evaluable": 22,
+      "u_empty_valid": 1
+    },
+    "mpx_004": {
+      "total_rows": 36,
+      "row_integrity_ok": 36,
+      "d1_source_available": 18,
+      "d1_runtime_region_evaluable": 18,
+      "u_r_union_evaluable": 18,
+      "broad_error_evaluable": 29,
+      "primary_topology_risk_evaluable": 18,
+      "u_empty_valid": 0
+    },
+    "mpx_005": {
+      "total_rows": 34,
+      "row_integrity_ok": 34,
+      "d1_source_available": 21,
+      "d1_runtime_region_evaluable": 21,
+      "u_r_union_evaluable": 21,
+      "broad_error_evaluable": 26,
+      "primary_topology_risk_evaluable": 14,
+      "u_empty_valid": 0
+    },
+    "mpx_006": {
+      "total_rows": 36,
+      "row_integrity_ok": 36,
+      "d1_source_available": 23,
+      "d1_runtime_region_evaluable": 23,
+      "u_r_union_evaluable": 23,
+      "broad_error_evaluable": 28,
+      "primary_topology_risk_evaluable": 14,
+      "u_empty_valid": 8
+    },
+    "mpx_007": {
+      "total_rows": 35,
+      "row_integrity_ok": 35,
+      "d1_source_available": 20,
+      "d1_runtime_region_evaluable": 20,
+      "u_r_union_evaluable": 20,
+      "broad_error_evaluable": 28,
+      "primary_topology_risk_evaluable": 18,
+      "u_empty_valid": 1
+    },
+    "mpx_008": {
+      "total_rows": 35,
+      "row_integrity_ok": 35,
+      "d1_source_available": 20,
+      "d1_runtime_region_evaluable": 20,
+      "u_r_union_evaluable": 20,
+      "broad_error_evaluable": 27,
+      "primary_topology_risk_evaluable": 19,
+      "u_empty_valid": 0
+    },
+    "mpx_009": {
+      "total_rows": 36,
+      "row_integrity_ok": 36,
+      "d1_source_available": 25,
+      "d1_runtime_region_evaluable": 25,
+      "u_r_union_evaluable": 25,
+      "broad_error_evaluable": 27,
+      "primary_topology_risk_evaluable": 15,
+      "u_empty_valid": 10
+    },
+    "mpx_010": {
+      "total_rows": 40,
+      "row_integrity_ok": 40,
+      "d1_source_available": 28,
+      "d1_runtime_region_evaluable": 28,
+      "u_r_union_evaluable": 28,
+      "broad_error_evaluable": 31,
+      "primary_topology_risk_evaluable": 18,
+      "u_empty_valid": 9
+    }
+  },
+  "flags": {
+    "row_integrity_ok": 365,
+    "d1_source_available": 218,
+    "d1_runtime_region_evaluable": 218,
+    "u_r_union_evaluable": 218,
+    "broad_error_evaluable": 284,
+    "primary_topology_risk_evaluable": 168,
+    "u_empty_valid": 38
+  },
+  "reasons": {
+    "outside_trajectory_range": 10,
+    "": 218,
+    "source_not_known_footprint_safe": 96,
+    "source_outside_runtime_grid": 41
+  },
+  "support_distribution": {
+    "prediction_support_coverage": {
+      "n": 286,
+      "min": 0.3206575320416088,
+      "max": 1.0,
+      "mean": 0.8885785877243055
+    },
+    "free_support_coverage": {
+      "n": 284,
+      "min": 0.3250249026532645,
+      "max": 1.0,
+      "mean": 0.9044258989697328
+    }
+  }
+}

@@ -1,0 +1,23 @@
+test_absent_completion_not_valid (test_extract_shared_phase0_evidence.ContractTests.test_absent_completion_not_valid) ... ok
+test_artifact_identity_crop_and_stale_timestamp (test_extract_shared_phase0_evidence.ContractTests.test_artifact_identity_crop_and_stale_timestamp) ... ok
+test_duplicate_and_missing_rejected (test_extract_shared_phase0_evidence.ContractTests.test_duplicate_and_missing_rejected) ... ok
+test_escape_path_rejected (test_extract_shared_phase0_evidence.ContractTests.test_escape_path_rejected) ... ok
+test_exact_universe_and_accepted_one_to_one (test_extract_shared_phase0_evidence.ContractTests.test_exact_universe_and_accepted_one_to_one) ... ok
+test_exact_zero_and_nonzero_fraction (test_extract_shared_phase0_evidence.ContractTests.test_exact_zero_and_nonzero_fraction) ... ok
+test_footprint_touching_and_outside_blocked (test_extract_shared_phase0_evidence.ContractTests.test_footprint_touching_and_outside_blocked) ... ok
+test_identity_hash_sensitivity (test_extract_shared_phase0_evidence.ContractTests.test_identity_hash_sensitivity) ... ok
+test_known_only_and_area_conversion (test_extract_shared_phase0_evidence.ContractTests.test_known_only_and_area_conversion) ... ok
+test_nan_reference_preserved (test_extract_shared_phase0_evidence.ContractTests.test_nan_reference_preserved) ... ok
+test_no_corner_cut (test_extract_shared_phase0_evidence.ContractTests.test_no_corner_cut) ... ok
+test_non_safe_source_never_snaps (test_extract_shared_phase0_evidence.ContractTests.test_non_safe_source_never_snaps) ... ok
+test_observed_occupied_priority (test_extract_shared_phase0_evidence.ContractTests.test_observed_occupied_priority) ... ok
+test_resume_identity_hash_and_key_validation (test_extract_shared_phase0_evidence.ContractTests.test_resume_identity_hash_and_key_validation) ... ok
+test_source_no_extrapolation_and_floor (test_extract_shared_phase0_evidence.ContractTests.test_source_no_extrapolation_and_floor) ... ok
+test_strict_free_threshold (test_extract_shared_phase0_evidence.ContractTests.test_strict_free_threshold) ... ok
+test_union_and_disagreement_only_on_union (test_extract_shared_phase0_evidence.ContractTests.test_union_and_disagreement_only_on_union) ... ok
+test_valid_empty_and_invalid_source (test_extract_shared_phase0_evidence.ContractTests.test_valid_empty_and_invalid_source) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 1.264s
+
+OK
