@@ -1,0 +1,41 @@
+{
+  "schema": "r003_paper500_slot_checkpoint_v1",
+  "run_id": "nf_p500_003",
+  "method": "nf",
+  "host": "com1",
+  "source_sha": "867337e69daa8146e08238b952347c5bca05c389",
+  "runtime_outcome": "runtime_complete",
+  "attempt": 1,
+  "checks": {
+    "runtime_complete": true,
+    "accepted_integrity_primitive_empty": true,
+    "summary_integrity_empty": true,
+    "evaluation_ok": true,
+    "errors_empty": true,
+    "sample_count_53": true,
+    "profile": true,
+    "checkpoint": true,
+    "source": true,
+    "protocol": true,
+    "budget": true
+  },
+  "accepted_integrity_faults": [],
+  "evaluation": {
+    "path": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/nearest/nf_p500_003/evaluation/paper500/evaluation.json",
+    "sha256": "be74793d4c923a5d02f1b1f9503c85cca888976f2bd1ce1f27c832e184771907",
+    "status": "ok",
+    "errors": [],
+    "sample_count": 53,
+    "endpoint_step": 500
+  },
+  "metadata_sha256": "6de06f60f4374515aa41a07f2ded7be67288b04bdd8088d6ac2987113b8063d4",
+  "summary_sha256": "99fd4235212dabc0a8b627386d53880f4a9bd63841f8a8c4c27e92c69fef6daf",
+  "state_sha256": "5b8988a6434997b109484777215f11e0fac12f9c83fb116eba84ce3f1a6e249a",
+  "next_frozen_id": "mpx_p500_003",
+  "wrapper_reconciliation": {
+    "required": true,
+    "reason": "metadata omits paper500_integrity_faults while summary records []; accepted paper500_integrity_faults() returned []",
+    "rerun_performed": false
+  },
+  "checkpointed_at": 1790223489.5285704
+}
