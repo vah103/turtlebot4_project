@@ -1,5 +1,16 @@
 # mapex_lab status
 
+## R004 — Prediction vs Final Observed offline evaluator pending review
+
+- CODEX implemented accepted V3+V4 on `mpx_001..mpx_010` without new simulation.
+- Full cohort: 10 runs, 365 decisions, no exclusions/fallbacks.
+- Final V4 support audit: 14,589,701 target pairs, 10,418,760 scoreable,
+  4,170,941 unsupported; pooled support coverage 0.7141174449.
+- Code, tables, figures, overlays, sensitivities and provenance are on branch
+  `r004-offline-evaluator`; detailed record: `docs/R004_CODEX_COMPLETION.md`.
+- Status: COMPLETE_PENDING_REVIEW. Next owner is Chat 2/W016 for independent
+  implementation/result-integrity review; interpretation remains blocked.
+
 ## R003 — New Room paper500: implementation ready for independent review
 
 USER reset the official R003 horizon on 2026-09-23. Canonical contract:

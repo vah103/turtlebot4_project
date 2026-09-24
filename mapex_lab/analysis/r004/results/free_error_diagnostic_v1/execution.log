@@ -1,0 +1,12 @@
+{
+  "included_runs": 10,
+  "excluded_runs": [],
+  "decisions": 365,
+  "counts": {
+    "tp_free_count": 8347520,
+    "false_free_count": 557427,
+    "missed_free_count": 614865,
+    "supported_future_free_count": 8962385,
+    "unsupported_future_free_count": 3609329
+  }
+}
