@@ -13,7 +13,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.ndimage import distance_transform_edt
 
-from mapex_lab.analysis.r004 import evaluate_prediction_vs_final_observed as base
+try:
+    from mapex_lab.analysis.r004 import evaluate_prediction_vs_final_observed as base
+except ModuleNotFoundError:  # Direct script execution from the repository root.
+    import evaluate_prediction_vs_final_observed as base
 
 BANDS = ("boundary", "near_interior", "deep_occupied")
 BINS = ("[0.00,0.25)", "[0.25,0.50)", "[0.50,0.75)", "[0.75,1.00]")
@@ -59,7 +62,7 @@ def depth_band(depth):
     return out
 
 
-def decision_metrics(pred, truth, full_f_free, e_free, unsupported_free, depth):
+def decision_metrics(pred, truth, full_f_free, e_free, unsupported_free, depth, resolution=1.0):
     tp, ff, miss = classify(pred, truth)
     union = int(np.sum(tp | ff | miss))
     ntp, nff, nmiss = int(tp.sum()), int(ff.sum()), int(miss.sum())
@@ -68,6 +71,7 @@ def decision_metrics(pred, truth, full_f_free, e_free, unsupported_free, depth):
     deep = np.asarray(depth) > 2.0
     nff_deep = int(np.sum(ff & deep))
     nff_kept = nff - nff_deep
+    ff_depth = np.asarray(depth, dtype=float)[ff]
     out = {
         "tp_free_count": ntp,
         "false_free_count": nff,
@@ -87,6 +91,11 @@ def decision_metrics(pred, truth, full_f_free, e_free, unsupported_free, depth):
         "free_precision_excluding_deep": base.div(ntp, ntp + nff_kept),
         "free_iou_excluding_deep": base.div(ntp, union - nff_deep),
         "deep_false_free_fraction": base.div(nff_deep, nff),
+        "false_free_depth_cells_mean": float(np.mean(ff_depth)) if ff_depth.size else math.nan,
+        "false_free_depth_cells_median": float(np.median(ff_depth)) if ff_depth.size else math.nan,
+        "false_free_depth_meters_mean": float(np.mean(ff_depth) * resolution) if ff_depth.size else math.nan,
+        "false_free_depth_meters_median": float(np.median(ff_depth) * resolution) if ff_depth.size else math.nan,
+        "canonical_resolution_m": float(resolution),
     }
     out["free_precision_deep_delta"] = out["free_precision_excluding_deep"] - out["free_precision"]
     out["free_iou_deep_delta"] = out["free_iou_excluding_deep"] - out["free_iou"]
@@ -107,6 +116,10 @@ def analyze_run(run):
         raise ValueError(f"{run.name}: FinalObserved has no occupied evaluation cells")
     depth = occupied_depth(final)
     table = base.read_csv(run / "decisions.csv")
+    if not table:
+        raise ValueError(f"{run.name}: no decisions")
+    _, canonical_meta, _ = base.load_canvas(run, table[0]["canvas_map"])
+    resolution = canonical_meta[1]
     rows = []
     overlay_inputs = []
     for k, decision in enumerate(table, 1):
@@ -130,7 +143,8 @@ def analyze_run(run):
             "fallback_final_snapshot": int(fallback),
             "scoreable_count": int(E.sum()),
         }
-        row.update(decision_metrics(selected_pred, selected_truth, f_free, e_free, f_free - e_free, selected_depth))
+        row.update(decision_metrics(selected_pred, selected_truth, f_free, e_free, f_free - e_free,
+                                    selected_depth, resolution))
         rows.append(row)
         overlay_inputs.append((decision, obs, prediction, support, F, E, final, depth))
     return rows, overlay_inputs
@@ -247,7 +261,7 @@ def overlays(run_id, inputs, output):
         records.append({"run_id": run_id, "position": position,
                         "decision_id": int(decision["decision_id"]),
                         "decision_progress": base.progress(k, n),
-                        "file": str(path.name)})
+                        "file": str(Path("overlays") / path.name)})
     return records
 
 

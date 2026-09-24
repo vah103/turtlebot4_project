@@ -58,6 +58,13 @@ class FreeErrorDiagnosticTests(unittest.TestCase):
         self.assertAlmostEqual(row["false_free_deep_occupied_rate"], 0.5)
         self.assertAlmostEqual(row["false_free_deep_occupied_share"], 1.0)
 
+    def test_depth_reported_in_cells_and_meters(self):
+        row = d.decision_metrics(np.array([0.1]), np.array([True]), 0, 0, 0,
+                                 np.array([3.0]), resolution=0.05)
+        self.assertAlmostEqual(row["false_free_depth_cells_mean"], 3.0)
+        self.assertAlmostEqual(row["false_free_depth_meters_mean"], 0.15)
+        self.assertAlmostEqual(row["canonical_resolution_m"], 0.05)
+
     def test_run_macro_equal_weight(self):
         rows = []
         for rid, values in (("mpx_001", [0.0] * 100), ("mpx_002", [1.0])):
