@@ -61,7 +61,7 @@ No D1...D6 threshold is frozen yet. Threshold selection must use development dat
 
 ## D1 Gate P status
 
-**COMPLETE — DOES NOT PASS under the current direct predicted-remaining-free-space formulation**
+**COMPLETE — DUAL CANONICAL STATE: P-direct FAIL / P-task PASS_TO_GATE_U**
 
 - Gate P1 `later_observed` remains a **PRELIMINARY PASS**, but its late-stage evidence is heavily right-censored.
 - Gate P2 `structural_gt` has now been executed on the full `mpx_001...mpx_010` cohort with `--reference both`, ensemble-mean prediction and threshold `0.5`.
@@ -82,17 +82,21 @@ No D1...D6 threshold is frozen yet. Threshold selection must use development dat
 - Under the current direct formulation, Gate P therefore **does not pass**.
 - Preserve this as a negative result; do not tune it away.
 
+**AMENDED CANONICAL STATE — 2026-09-24**
+- **P-direct / broad fidelity = FAIL / DOES NOT PASS.** The historical P1/P2 negative evidence above is preserved unchanged.
+- **P-task / D1 task-aligned continuation = PASS_TO_GATE_U only.** Independently reviewed R004 evidence is sufficient to continue Phase-0 evaluation on robot-reachable remaining-free-space semantics.
+- The task-aligned continuation is deliberately narrow: late source-based ReachableFutureFreeRetention is 1.0 but only **n=2** runs contribute; earlier/middle topology losses remain material.
+- Prediction is **not** validated as a standalone STOP oracle.
+
 **CURRENT DECISION**
-- Gate U: **DO NOT START YET**.
-- Gate R: not started.
-- Online D1 stopping: not implemented.
-- Before deciding whether D1 should be revised or stopped, perform the focused diagnostic already recorded in `analysis/d1/D1_RESEARCH_LOG.md`.
+- Gate U: **ELIGIBLE FOR SEPARATE USER ACTIVATION — NOT ACTIVE**.
+- Gate R: **PARKED**.
+- Threshold selection, `K_confirm`, online D1 and rule development: **BLOCKED**.
+- Canonical feasibility order remains `Gate P → Gate U → Gate R`.
 
 **NEXT ACTION**
-1. Visually inspect representative late decisions `mpx_001`, `mpx_009`, and `mpx_010` comparing observed maps with ensemble-mean predictions.
-2. Inspect prediction-value mass at `0.5` and within `[0.45, 0.55]`, separated by structural-GT free vs occupied targets.
-3. Compute pooled last-10 confusion counts and convert true-free → predicted-occupied error into evaluated square metres.
-4. If these checks do not reveal an evaluation artifact, keep the current direct D1 remaining-free formulation unsupported and do not proceed to Gate U threshold development.
+- Only a separate USER activation may open the shared evidence contract / Gate-U methodology path.
+- Do not run Gate U, select thresholds, choose `K_confirm`, implement online D1 or start Gate R merely because this Gate P wording is synchronized.
 
 Canonical evidence and full numerical detail are recorded in:
 - `mapex_lab/analysis/d1/D1_RESEARCH_LOG.md`

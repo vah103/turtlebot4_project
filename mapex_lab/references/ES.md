@@ -984,6 +984,23 @@ At minimum report:
 
 Visual inspection is required for representative success and failure cases, but images alone are not sufficient evidence.
 
+#### Canonical Gate P amended state — 2026-09-24
+
+The original broad/direct prediction-fidelity evaluation remains **FAIL / DOES NOT PASS** and its negative P1/P2 evidence is preserved.
+
+Independently reviewed R004 evidence supports a narrower **P-task = PASS_TO_GATE_U** state for Phase-0 continuation on robot-reachable remaining-free-space semantics. This continuation does not validate prediction as a standalone STOP oracle: late source-based ReachableFutureFreeRetention is 1.0 but only **n=2** runs contribute, while earlier/middle topology losses remain material.
+
+Canonical state after this sync:
+
+- **P-direct / broad fidelity:** **FAIL / DOES NOT PASS**;
+- **P-task / D1 task-aligned continuation:** **PASS_TO_GATE_U only**;
+- **Gate U:** eligible for **separate USER activation**, but **not active**;
+- **Gate R:** **PARKED**;
+- threshold selection, `K_confirm`, online D1 and rule development: **BLOCKED**;
+- feasibility order remains `Gate P → Gate U → Gate R`.
+
+Gate U must independently test whether uncertainty can identify dangerous prediction failures before D1 can progress further.
+
 ### Gate U — uncertainty informativeness
 
 Question:
