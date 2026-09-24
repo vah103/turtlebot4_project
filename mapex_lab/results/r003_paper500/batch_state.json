@@ -200,6 +200,17 @@
       "postprocess": "complete",
       "evaluation": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/mapex/mpx_p500_005/evaluation/paper500/evaluation.json",
       "evaluation_status": "ok"
+    },
+    "mpx_p500_006": {
+      "attempts": 1,
+      "status": "complete",
+      "frozen_order_index": 7,
+      "last_outcome": "runtime_complete",
+      "log": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/results/r003_paper500/logs/mpx_p500_006_attempt01.log",
+      "completed_at": 1790229626.694958,
+      "postprocess": "complete",
+      "evaluation": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/mapex/mpx_p500_006/evaluation/paper500/evaluation.json",
+      "evaluation_status": "ok"
     }
   },
   "reconciliation": {
