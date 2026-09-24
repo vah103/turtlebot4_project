@@ -1,0 +1,34 @@
+{
+  "schema": "r003_paper500_completion_checkpoint_v1",
+  "completed_at": "2026-09-24T14:44:13+07:00",
+  "completed_at_unix": 1790235853,
+  "execution_host": "com1",
+  "source_sha": "867337e69daa8146e08238b952347c5bca05c389",
+  "data_head_with_all_run_artifacts": "b3cefb84dd4db93822d685dc58d290dc07e2e35a",
+  "batch_state_sha256": "c2ea192e198814cbc3f9b169534cd91796ebb733e0a2c4250c3b5e80d699c485",
+  "official_slots_complete": 20,
+  "nf_slots_complete": 10,
+  "mapex_slots_complete": 10,
+  "checks": {
+    "all_expected_run_directories_present": true,
+    "all_state_records_complete": true,
+    "all_integrity_faults_empty": true,
+    "all_evaluators_ok": true,
+    "all_evaluator_errors_empty": true,
+    "all_sample_counts_53": true,
+    "all_endpoint_steps_500": true,
+    "all_source_profile_checkpoint_protocol_budget_provenance_valid": true,
+    "local_data_head_matches_remote": true,
+    "runtime_stack_absent_after_completion": true
+  },
+  "technical_retry_history": [
+    {
+      "run_id": "nf_p500_006",
+      "invalid_attempt": 1,
+      "classification": "recorder_integrity_fault",
+      "durable_evidence_commit": "afc998998c822c2fa5e4f2718ad0f1b2d7c5791b",
+      "accepted_attempt": 2
+    }
+  ],
+  "next_stage": "R003-RESULTS"
+}
