@@ -101,6 +101,12 @@ def completed_masks(observed, prediction, final, support):
     return known, future, scoreable, domain, final_free, reference_occupied, prediction_occupied, missed_free
 
 
+def occupied_clearance(final):
+    if not np.any(final > 0):
+        raise ValueError("FinalObserved has no occupied cells")
+    return distance_transform_edt(final <= 0)
+
+
 def pair_retention(component_sizes, population):
     if population < 2:
         return math.nan
@@ -347,9 +353,7 @@ def analyze_run(data_root: Path, run_id: str, output: Path):
     validate_resolution(resolution)
     trajectory = read_trajectory(run / "trajectory.csv")
     stencil = collision_stencil(RADIUS_M, resolution)
-    if not np.any(final == 1):
-        raise ValueError(f"{run_id}: FinalObserved has no occupied cells")
-    occupied_distance = distance_transform_edt(final != 1)
+    occupied_distance = occupied_clearance(final)
     rows, sources, fragments, overlay_rows, clearance_rows = [], [], [], [], []
     for index, decision in enumerate(decisions, 1):
         obs, prediction, support = base.prediction_canvas(run, decision, shape)

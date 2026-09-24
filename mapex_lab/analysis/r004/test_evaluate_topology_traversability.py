@@ -35,6 +35,12 @@ class TopologyTraversabilityTests(unittest.TestCase):
         self.assertTrue(future[0, 3])
         self.assertFalse(domain[0, 3])
 
+    def test_occupied_clearance_accepts_ros_occupancy_values(self):
+        final = np.array([[-1, 0, 100]])
+        clearance = t.occupied_clearance(final)
+        self.assertEqual(clearance[0, 2], 0.0)
+        self.assertEqual(clearance[0, 1], 1.0)
+
     def test_collision_stencil_axial_and_diagonal(self):
         stencil = t.collision_stencil()
         center = stencil.shape[0] // 2
