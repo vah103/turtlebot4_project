@@ -34,7 +34,8 @@ CANONICAL_FOOTPRINT = (
     (-0.189, 0.000), (-0.134, 0.134), (0.000, 0.189), (0.134, 0.134),
 )
 METRICS = (
-    "navigable_missed_free_fraction", "reachable_future_free_retention",
+    "navigable_missed_free_fraction", "non_navigable_missed_free_fraction",
+    "reachable_future_free_retention",
     "lost_reachable_future_free_fraction", "reachable_pair_connectivity_retention",
     "largest_predicted_piece_fraction", "prediction_component_count",
     "free_support_coverage", "unsupported_future_free_fraction",
@@ -394,6 +395,7 @@ def analyze_run(data_root: Path, run_id: str, output: Path):
                   "unsupported_future_free_fraction": div(np.sum(future & final_free & ~support), np.sum(future & final_free)),
                   "missed_free_count": missed_count, "navigable_missed_free_count": navigable_missed,
                   "navigable_missed_free_fraction": div(navigable_missed, missed_count),
+                  "non_navigable_missed_free_fraction": div(missed_count - navigable_missed, missed_count),
                   "missed_free_clearance_cells_mean": float(np.mean(miss_clear)) if miss_clear.size else math.nan,
                   "missed_free_clearance_cells_median": float(np.median(miss_clear)) if miss_clear.size else math.nan,
                   "missed_free_clearance_cells_p90": float(np.percentile(miss_clear, 90)) if miss_clear.size else math.nan,
@@ -533,8 +535,9 @@ def aggregate(output_root: Path):
     atomic_json(output_root / "fragmentation_inventory.json", fragments)
     figures = output_root / "figures"; figures.mkdir(exist_ok=True)
     plot_macro(macro, figures, "navigable_missed_free_vs_progress.png",
-               (("navigable_missed_free_fraction", "Navigable MissedFree", "o-"),),
-               "Reference-navigable MissedFree", "Run-macro fraction mean ± std")
+               (("navigable_missed_free_fraction", "Navigable MissedFree", "o-"),
+                ("non_navigable_missed_free_fraction", "Non-navigable MissedFree", "s--")),
+               "Navigable vs non-navigable MissedFree", "Run-macro fraction mean ± std")
     plot_macro(macro, figures, "reachable_future_free_retention_vs_progress.png",
                (("reachable_future_free_retention", "Retention", "o-"),
                 ("lost_reachable_future_free_fraction", "Lost fraction", "s--")),

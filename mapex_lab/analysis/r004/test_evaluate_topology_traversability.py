@@ -94,6 +94,10 @@ class TopologyTraversabilityTests(unittest.TestCase):
     def test_largest_piece_fraction(self):
         self.assertAlmostEqual(t.largest_piece_fraction([4, 2], 8), 0.5)
 
+    def test_navigable_partition_is_complementary(self):
+        missed, navigable = 7, 3
+        self.assertAlmostEqual(t.div(navigable, missed) + t.div(missed - navigable, missed), 1.0)
+
     def test_component_inventory_ranking(self):
         labels = np.array([[2, 2, 0], [1, 0, 3]])
         source = labels > 0
