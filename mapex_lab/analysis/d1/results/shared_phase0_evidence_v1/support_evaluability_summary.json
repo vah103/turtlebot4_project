@@ -1,0 +1,134 @@
+{
+  "flags": {
+    "broad_error_evaluable": 284,
+    "d1_runtime_region_evaluable": 218,
+    "d1_source_available": 218,
+    "primary_topology_risk_evaluable": 168,
+    "row_integrity_ok": 365,
+    "u_empty_valid": 38,
+    "u_r_union_evaluable": 218
+  },
+  "per_run": {
+    "mpx_001": {
+      "broad_error_evaluable": 28,
+      "d1_runtime_region_evaluable": 16,
+      "d1_source_available": 16,
+      "primary_topology_risk_evaluable": 16,
+      "row_integrity_ok": 35,
+      "total_rows": 35,
+      "u_empty_valid": 0,
+      "u_r_union_evaluable": 16
+    },
+    "mpx_002": {
+      "broad_error_evaluable": 28,
+      "d1_runtime_region_evaluable": 23,
+      "d1_source_available": 23,
+      "primary_topology_risk_evaluable": 14,
+      "row_integrity_ok": 37,
+      "total_rows": 37,
+      "u_empty_valid": 9,
+      "u_r_union_evaluable": 23
+    },
+    "mpx_003": {
+      "broad_error_evaluable": 32,
+      "d1_runtime_region_evaluable": 24,
+      "d1_source_available": 24,
+      "primary_topology_risk_evaluable": 22,
+      "row_integrity_ok": 41,
+      "total_rows": 41,
+      "u_empty_valid": 1,
+      "u_r_union_evaluable": 24
+    },
+    "mpx_004": {
+      "broad_error_evaluable": 29,
+      "d1_runtime_region_evaluable": 18,
+      "d1_source_available": 18,
+      "primary_topology_risk_evaluable": 18,
+      "row_integrity_ok": 36,
+      "total_rows": 36,
+      "u_empty_valid": 0,
+      "u_r_union_evaluable": 18
+    },
+    "mpx_005": {
+      "broad_error_evaluable": 26,
+      "d1_runtime_region_evaluable": 21,
+      "d1_source_available": 21,
+      "primary_topology_risk_evaluable": 14,
+      "row_integrity_ok": 34,
+      "total_rows": 34,
+      "u_empty_valid": 0,
+      "u_r_union_evaluable": 21
+    },
+    "mpx_006": {
+      "broad_error_evaluable": 28,
+      "d1_runtime_region_evaluable": 23,
+      "d1_source_available": 23,
+      "primary_topology_risk_evaluable": 14,
+      "row_integrity_ok": 36,
+      "total_rows": 36,
+      "u_empty_valid": 8,
+      "u_r_union_evaluable": 23
+    },
+    "mpx_007": {
+      "broad_error_evaluable": 28,
+      "d1_runtime_region_evaluable": 20,
+      "d1_source_available": 20,
+      "primary_topology_risk_evaluable": 18,
+      "row_integrity_ok": 35,
+      "total_rows": 35,
+      "u_empty_valid": 1,
+      "u_r_union_evaluable": 20
+    },
+    "mpx_008": {
+      "broad_error_evaluable": 27,
+      "d1_runtime_region_evaluable": 20,
+      "d1_source_available": 20,
+      "primary_topology_risk_evaluable": 19,
+      "row_integrity_ok": 35,
+      "total_rows": 35,
+      "u_empty_valid": 0,
+      "u_r_union_evaluable": 20
+    },
+    "mpx_009": {
+      "broad_error_evaluable": 27,
+      "d1_runtime_region_evaluable": 25,
+      "d1_source_available": 25,
+      "primary_topology_risk_evaluable": 15,
+      "row_integrity_ok": 36,
+      "total_rows": 36,
+      "u_empty_valid": 10,
+      "u_r_union_evaluable": 25
+    },
+    "mpx_010": {
+      "broad_error_evaluable": 31,
+      "d1_runtime_region_evaluable": 28,
+      "d1_source_available": 28,
+      "primary_topology_risk_evaluable": 18,
+      "row_integrity_ok": 40,
+      "total_rows": 40,
+      "u_empty_valid": 9,
+      "u_r_union_evaluable": 28
+    }
+  },
+  "reasons": {
+    "": 218,
+    "outside_trajectory_range": 10,
+    "source_not_known_footprint_safe": 96,
+    "source_outside_runtime_grid": 41
+  },
+  "support_distribution": {
+    "free_support_coverage": {
+      "max": 1.0,
+      "mean": 0.9044258989697328,
+      "min": 0.3250249026532645,
+      "n": 284
+    },
+    "prediction_support_coverage": {
+      "max": 1.0,
+      "mean": 0.8885785877243055,
+      "min": 0.3206575320416088,
+      "n": 286
+    }
+  },
+  "total_rows": 365
+}

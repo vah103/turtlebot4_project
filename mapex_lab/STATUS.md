@@ -1,5 +1,12 @@
 # mapex_lab status
 
+## D1 shared Phase-0 extractor — H071 / H072 delivery
+
+- DONE (engineering): neutral evidence extraction on 10 historical runs; 365 unique rows; 18/18 focused tests PASS; validated resume skips all ten completed units.
+- IN PROGRESS: independent W016 extraction-integrity review; completion is not yet ACCEPTED.
+- LATEST RESULT: 218 runtime/U-evaluable rows; all 147 non-evaluable rows retained with reasons/NaN. Accepted R004 imported fields preserved exactly.
+- NEXT ACTION: Chat 2 reads `docs/D1_W025_EXTRACTOR_COMPLETION.md` on branch `d1-shared-phase0-w025`. Gate-U scoring remains PARKED. H071/H072 supersede the historical inactive-preparation wording below only for neutral extraction.
+
 ## R003 — New Room paper500: implementation ready for independent review
 
 USER reset the official R003 horizon on 2026-09-23. Canonical contract:

@@ -1,0 +1,221 @@
+{
+  "active": null,
+  "completed": [
+    "mpx_001",
+    "mpx_002",
+    "mpx_003",
+    "mpx_004",
+    "mpx_005",
+    "mpx_006",
+    "mpx_007",
+    "mpx_008",
+    "mpx_009",
+    "mpx_010"
+  ],
+  "events": [
+    {
+      "action": "EXTRACTED",
+      "run_id": "mpx_001"
+    },
+    {
+      "action": "EXTRACTED",
+      "run_id": "mpx_002"
+    },
+    {
+      "action": "EXTRACTED",
+      "run_id": "mpx_003"
+    },
+    {
+      "action": "EXTRACTED",
+      "run_id": "mpx_004"
+    },
+    {
+      "action": "EXTRACTED",
+      "run_id": "mpx_005"
+    },
+    {
+      "action": "EXTRACTED",
+      "run_id": "mpx_006"
+    },
+    {
+      "action": "EXTRACTED",
+      "run_id": "mpx_007"
+    },
+    {
+      "action": "EXTRACTED",
+      "run_id": "mpx_008"
+    },
+    {
+      "action": "EXTRACTED",
+      "run_id": "mpx_009"
+    },
+    {
+      "action": "EXTRACTED",
+      "run_id": "mpx_010"
+    },
+    {
+      "action": "VALIDATED_SKIP",
+      "run_id": "mpx_001"
+    },
+    {
+      "action": "VALIDATED_SKIP",
+      "run_id": "mpx_002"
+    },
+    {
+      "action": "VALIDATED_SKIP",
+      "run_id": "mpx_003"
+    },
+    {
+      "action": "VALIDATED_SKIP",
+      "run_id": "mpx_004"
+    },
+    {
+      "action": "VALIDATED_SKIP",
+      "run_id": "mpx_005"
+    },
+    {
+      "action": "VALIDATED_SKIP",
+      "run_id": "mpx_006"
+    },
+    {
+      "action": "VALIDATED_SKIP",
+      "run_id": "mpx_007"
+    },
+    {
+      "action": "VALIDATED_SKIP",
+      "run_id": "mpx_008"
+    },
+    {
+      "action": "VALIDATED_SKIP",
+      "run_id": "mpx_009"
+    },
+    {
+      "action": "VALIDATED_SKIP",
+      "run_id": "mpx_010"
+    }
+  ],
+  "identity": {
+    "authority_files": {
+      "D1_GATE_U_METHOD_V2.md": {
+        "blob": "d70cc79d1ca7cb33b2f3822f3eb6d539ffabdd7c",
+        "commit": "902285a",
+        "sha256": "4e7083998f155a22f10c0976ef58bf854fa0a020c40742143635a042b8a18c45"
+      },
+      "D1_SHARED_EXTRACTOR_FROZEN_DETAIL_CLARIFICATION_V1.md": {
+        "blob": "570684b91cfb500752cf8ef8ce3fd9c029cf09d5",
+        "commit": "902285a",
+        "sha256": "494cfd641a952da828f6f4e88533b1fa58f7ccbf41887c953ca686e8d936e4de"
+      },
+      "D1_SHARED_EXTRACTOR_FROZEN_DETAIL_CLARIFICATION_V1_REVIEW.md": {
+        "blob": "6add41ed3f5cd6d5c7f1e52df9aa62a92f62c70c",
+        "commit": "902285a",
+        "sha256": "64eb0944bf258d7284914b09831566a931a94f7f03b85f001c7b65c98c6159ed"
+      },
+      "D1_SHARED_PHASE0_EVIDENCE_CONTRACT_V1.md": {
+        "blob": "55e1c45414bfeb3beddc978fcceda11641237d84",
+        "commit": "902285a",
+        "sha256": "a2dfca7b11cd99ffc0119ad2b56d4dad98b6b89db6d0234163ae6fcdb12acd3d"
+      },
+      "H071_D1_SHARED_EXTRACTOR_EXECUTION.md": {
+        "blob": "1d06612223fdde68098da5d4de764c04b283e6d1",
+        "commit": "902285a",
+        "sha256": "9f8d49c1a14ff1c4892f84eb1b9629ddf5856f54602eac99e226e0bf5127f2ea"
+      }
+    },
+    "canonical_base": "d2b6eab35d5b97b6378996fcc938e58cdfdcda6d",
+    "contract_identity": "9d4b4b2e464b85bfc336a12de7c73a5857917e9fb777279f96436c78855e20aa",
+    "data_root": "/home/dell/turtlebot4_project_r003_p500_backup",
+    "implementation_files": {
+      "mapex_lab/analysis/d1/extract_shared_phase0_evidence.py": "a0d88c06b9965feb9300e6e7b4737efc37c05c235eb040215e4c286c169d9833",
+      "mapex_lab/analysis/d1/run_shared_phase0_extract.py": "2c9cdc43caef4b6dcd48ff81b0f281f317d76a1596e95e3dd5cb7b41c8dd87eb",
+      "mapex_lab/analysis/d1/test_extract_shared_phase0_evidence.py": "1e8a3f8dd35a271f5d1359a925f701958a342326e2bce3f3a99427fb948993ed"
+    },
+    "implementation_sha": "e6c0aa7e91f80d66358ef5f4b508498dd8a5ead5",
+    "output_root": "/home/dell/Documents/Codex/2026-09-23/c-mapex-hub-v-nh-n/work/d1-shared-extractor/mapex_lab/analysis/d1/results/shared_phase0_evidence_v1",
+    "reference_files": {
+      "mapex_lab/analysis/r004/evaluate_prediction_vs_final_observed.py": {
+        "blob": "a7820bc3d12b2b701f35f0d6629ab3f05d98f1bc",
+        "commit": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+        "sha256": "3391fdc36f6bbf1ec950368e576c843dfa34d7652f20123349940784abf53d81"
+      },
+      "mapex_lab/analysis/r004/evaluate_topology_traversability.py": {
+        "blob": "ff031cb826908aafd3bc039ca67a499ed092cbc5",
+        "commit": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+        "sha256": "c5acf3229e203641449fb2d16b589011c5dada8ef90f5fc96ef1ef649a89aee5"
+      },
+      "mapex_lab/analysis/r004/results/free_error_diagnostic_v1/free_error_decomposition_decisions.csv": {
+        "blob": "a0d8c8fc6c3005343eec02beabfdac5669c9db6b",
+        "commit": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+        "sha256": "be7e963d6652e91bd3bbea5a7aa62ce7d94b8c75ed18ddf77b26c7967b5e1b0a"
+      },
+      "mapex_lab/analysis/r004/results/prediction_vs_final_observed_v1/prediction_vs_final_observed_decisions.csv": {
+        "blob": "88a2a32132eb310aee1ca07ef38185c71defd3e4",
+        "commit": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+        "sha256": "a6a5e84fc62aa8a94b848e88a65a0781d585c65c5a42beb20931b076bacac59a"
+      },
+      "mapex_lab/analysis/r004/results/topology_traversability_v1/runs/mpx_001/completion_manifest.json": {
+        "blob": "ff92a2a5cbfac9e52bd66b6d615ee63cac515821",
+        "commit": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+        "sha256": "531c557059b46fc30f5b03d876b231ec45d8b6b42fe7bc6341f713313e957c3e"
+      },
+      "mapex_lab/analysis/r004/results/topology_traversability_v1/runs/mpx_002/completion_manifest.json": {
+        "blob": "336fc49f220dd2e9bc77e423644eb75a1bc39376",
+        "commit": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+        "sha256": "19d7581aa8cd2bfcbd3c8c450ae5db9949be7c910987dd93f37f6a94db09634f"
+      },
+      "mapex_lab/analysis/r004/results/topology_traversability_v1/runs/mpx_003/completion_manifest.json": {
+        "blob": "4cb4a5e4b4e253718e94d62ec4d32f17fe6b43d9",
+        "commit": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+        "sha256": "39706f7b8040ca14422a378a5c42c097119f422d5ea49fdefb4d748a1d667905"
+      },
+      "mapex_lab/analysis/r004/results/topology_traversability_v1/runs/mpx_004/completion_manifest.json": {
+        "blob": "33a34bbd7fd9421a4d179d7a809b3206cc25e5ea",
+        "commit": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+        "sha256": "3e6a52aca19d5f764cccda7f432164aa3ab74513495acc99db79a5e380a9a76d"
+      },
+      "mapex_lab/analysis/r004/results/topology_traversability_v1/runs/mpx_005/completion_manifest.json": {
+        "blob": "bafdc440b78a990eda66d55b31c1eb4725168d8d",
+        "commit": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+        "sha256": "f1c34d2e58cd179ce9aba1a58f0bc4239d35f306a09838651a8b70d29829c368"
+      },
+      "mapex_lab/analysis/r004/results/topology_traversability_v1/runs/mpx_006/completion_manifest.json": {
+        "blob": "9a109397cc48337e3dcda8a8df0a2fca5b14bd59",
+        "commit": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+        "sha256": "1221d8616a9731c8f79d1ebeabd77ea9d6caf16ac25ab9a661ea8851a761febd"
+      },
+      "mapex_lab/analysis/r004/results/topology_traversability_v1/runs/mpx_007/completion_manifest.json": {
+        "blob": "1ca231a1239c1f9e9328d560382821aafd256ce0",
+        "commit": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+        "sha256": "2e8a8f07cb88cf90c438ee0af5ec3255b4a0b93258c11cce88b7bad43173f348"
+      },
+      "mapex_lab/analysis/r004/results/topology_traversability_v1/runs/mpx_008/completion_manifest.json": {
+        "blob": "88b88f4c22cdfbe510b5538125875ae871abfd3e",
+        "commit": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+        "sha256": "f521243c89fee649f259fbf85c3918cb2ce72f6ac107e74e56609727c20c6ddd"
+      },
+      "mapex_lab/analysis/r004/results/topology_traversability_v1/runs/mpx_009/completion_manifest.json": {
+        "blob": "0af66b042db964cc1cad3e759d9ad2afdc737578",
+        "commit": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+        "sha256": "92fc4986fa82aabd3846b7bf9192c49928340ead65773fba8c2bcefc61166c0f"
+      },
+      "mapex_lab/analysis/r004/results/topology_traversability_v1/runs/mpx_010/completion_manifest.json": {
+        "blob": "ac38acf561603b1576eaa7f25f0ae4903fe4782b",
+        "commit": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+        "sha256": "9e16ca5274b58c56f911b84ddc6784e3025673f68045fb3dbe176999c8277ea6"
+      },
+      "mapex_lab/analysis/r004/results/topology_traversability_v1/source_pose_alignment_inventory.csv": {
+        "blob": "7fa2e5485a6e6c28caf0d9a89023d13eb2907cbe",
+        "commit": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+        "sha256": "84cbc046a16df98da67d05aa407831a0c1f82effba15193b949729dbe023e170"
+      },
+      "mapex_lab/analysis/r004/results/topology_traversability_v1/topology_diagnostic_decisions.csv": {
+        "blob": "2f95c597ae592f1c21c83901a40c74caf27d09a0",
+        "commit": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+        "sha256": "3de22005b21d13825349f71a01ef3e2fae3c25fb90d1ed7c3505f44e6b3e3ca3"
+      }
+    },
+    "reference_sha": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+    "schema": "d1_shared_phase0_v1_h072"
+  },
+  "status": "COMPLETE_PENDING_REVIEW"
+}
