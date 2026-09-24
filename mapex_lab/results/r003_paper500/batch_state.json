@@ -272,6 +272,17 @@
       "postprocess": "complete",
       "evaluation": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/nearest/nf_p500_008/evaluation/paper500/evaluation.json",
       "evaluation_status": "ok"
+    },
+    "nf_p500_009": {
+      "attempts": 1,
+      "status": "complete",
+      "frozen_order_index": 13,
+      "last_outcome": "runtime_complete",
+      "log": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/results/r003_paper500/logs/nf_p500_009_attempt01.log",
+      "completed_at": 1790233697.7612288,
+      "postprocess": "complete",
+      "evaluation": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/nearest/nf_p500_009/evaluation/paper500/evaluation.json",
+      "evaluation_status": "ok"
     }
   },
   "reconciliation": {
