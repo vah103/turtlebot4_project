@@ -1,0 +1,40 @@
+{
+  "accepted_base_sha": "3ba38c2e309673b698f9882499cedd402916c189",
+  "active_run": null,
+  "aggregation_status": "complete",
+  "completed_validated_runs": [
+    "mpx_001",
+    "mpx_002",
+    "mpx_003",
+    "mpx_004",
+    "mpx_005",
+    "mpx_006",
+    "mpx_007",
+    "mpx_008",
+    "mpx_009",
+    "mpx_010"
+  ],
+  "data_root": "/home/com1/turtlebot4_project_r004_topology",
+  "failed_run": null,
+  "hostname": "com1",
+  "implementation_sha": "59ed20b06ba5ffa396605a450d245aa0d6515e3e",
+  "method_id": "R004_TOPOLOGY_TRAVERSABILITY_METHOD_V2",
+  "next_incomplete_run": null,
+  "output_root": "/home/com1/turtlebot4_project_r004_topology/mapex_lab/analysis/r004/results/topology_traversability_v1",
+  "repo_path": "/home/com1/turtlebot4_project_r004_topology",
+  "run_order": [
+    "mpx_001",
+    "mpx_002",
+    "mpx_003",
+    "mpx_004",
+    "mpx_005",
+    "mpx_006",
+    "mpx_007",
+    "mpx_008",
+    "mpx_009",
+    "mpx_010"
+  ],
+  "schema": "r004_topology_batch_state_v1",
+  "status": "complete",
+  "updated_at": "2026-09-24T08:36:39.667747+00:00"
+}

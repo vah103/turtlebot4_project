@@ -1,0 +1,28 @@
+{
+  "accepted_base_sha": "3ba38c2e309673b698f9882499cedd402916c189",
+  "artifact_manifest": "artifact_manifest.json",
+  "branch": "r004-topology-v2",
+  "completed_at": "2026-09-24T08:36:39.667552+00:00",
+  "completed_runs": [
+    "mpx_001",
+    "mpx_002",
+    "mpx_003",
+    "mpx_004",
+    "mpx_005",
+    "mpx_006",
+    "mpx_007",
+    "mpx_008",
+    "mpx_009",
+    "mpx_010"
+  ],
+  "data_root": "/home/com1/turtlebot4_project_r004_topology",
+  "decision_count": 365,
+  "hostname": "com1",
+  "implementation_sha": "59ed20b06ba5ffa396605a450d245aa0d6515e3e",
+  "output_root": "/home/com1/turtlebot4_project_r004_topology/mapex_lab/analysis/r004/results/topology_traversability_v1",
+  "repo_path": "/home/com1/turtlebot4_project_r004_topology",
+  "schema": "r004_topology_completion_summary_v1",
+  "source_available_count": 220,
+  "source_unavailable_count": 145,
+  "status": "complete"
+}
