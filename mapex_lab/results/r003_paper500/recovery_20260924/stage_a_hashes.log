@@ -1,0 +1,10 @@
+--- exact pinned hashes ---
+58c1841c10d4d97bc1f894ec8fe5b015b165277ddb2b9bb29eb688b21d4363b5  /work/com1/mapex_weights/weights/big_lama/models/best.ckpt
+bc1208d4ffe133ffe8d5783f108304a48a3a14a4eaea461d1ee72bcae573e411  /work/com1/mapex_weights/weights/big_lama/config.yaml
+b37bfef69138806708d6e087b8db89836021f06db987cb3ef3db21fbf28422ca  /work/com1/mapex_weights/weights/lama_ensemble/train_1/models/best.ckpt
+7880d164ccd88da58ddb0e6875f358bea02a232c452eff86b5e226957a489c26  /work/com1/mapex_weights/weights/lama_ensemble/train_2/models/best.ckpt
+fcb43d1102d48ab6b14f5bfded859077d6da0c7efbfbda10d4acbb754c3d3bc1  /work/com1/mapex_weights/weights/lama_ensemble/train_3/models/best.ckpt
+2a06aa4d2dc044f5c5ab83e1e8d56c6f38ae40b57897aef89019e64311d5c4e4  mapex_lab/ground_truth/new_room/generated/r003_paper500/new_room_mapex_eval_010_v1_manifest.json
+d6b587196e6c964e679be0e660b08b39c97398aca51b46f0e7e35a19fbb81471  mapex_lab/ground_truth/new_room/generated/r003_paper500/new_room_mapex_eval_010_v1_tu_goals.npy
+--- accepted launcher/watchdog parser ---
+R003_DRIVER_IMPORT_OK

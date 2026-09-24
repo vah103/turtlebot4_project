@@ -107,38 +107,13 @@
     },
     "mpx_p500_001": {
       "attempts": 1,
-      "status": "complete",
+      "status": "manual_postprocess_pending",
       "manual_executor": "H033_W014_USER",
       "manual_started_at": 1790156331.7113695,
       "runtime_exit_code": 0,
       "runtime_finished_at": 1790156959.2448704,
       "log": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/results/r003_paper500/logs/mpx_p500_001_attempt01_manual.log",
-      "last_outcome": "runtime_complete",
-      "postprocess": "complete",
-      "evaluation": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/mapex/mpx_p500_001/evaluation/paper500/evaluation.json",
-      "evaluation_status": "ok"
-    },
-    "mpx_p500_002": {
-      "attempts": 1,
-      "status": "complete",
-      "last_outcome": "runtime_complete",
-      "postprocess": "complete",
-      "evaluation": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/mapex/mpx_p500_002/evaluation/paper500/evaluation.json",
-      "evaluation_status": "ok"
-    },
-    "nf_p500_002": {
-      "attempts": 1,
-      "status": "complete",
-      "last_outcome": "runtime_complete",
-      "postprocess": "complete",
-      "evaluation": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/nearest/nf_p500_002/evaluation/paper500/evaluation.json",
-      "evaluation_status": "ok"
+      "last_outcome": "runtime_complete"
     }
-  },
-  "reconciliation": {
-    "at_unix": 1790221274.908507,
-    "durable_data_ref": "cff8ed1fefdfefc960401fe8651726a9513c48cf",
-    "evidence": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/results/r003_paper500/recovery_20260924/stage_b_reconciliation.json",
-    "stale_state_sha256": "e0e483daaffe3ec2e675eb766a4a15dab94136900c9bee716cb81c7d80b47b35"
   }
 }

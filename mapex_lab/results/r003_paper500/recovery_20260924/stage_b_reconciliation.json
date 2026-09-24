@@ -1,0 +1,95 @@
+{
+  "schema": "r003_paper500_stage_b_reconciliation_v1",
+  "verified_at_unix": 1790221274.908507,
+  "host": "com1",
+  "source_sha": "867337e69daa8146e08238b952347c5bca05c389",
+  "durable_data_ref": "cff8ed1fefdfefc960401fe8651726a9513c48cf",
+  "restore_verification": {
+    "expected_blobs": 1724,
+    "matched_blobs": 1724,
+    "missing_blobs": 0,
+    "mismatched_blobs": 0,
+    "restore_mode": "archive_to_work_then_rsync_ignore_existing"
+  },
+  "stale_state_backup": {
+    "sha256": "e0e483daaffe3ec2e675eb766a4a15dab94136900c9bee716cb81c7d80b47b35",
+    "path": "/work/com1/r003_paper500_recovery_20260924/batch_state.pre_reconcile.e0e483daaffe3ec2e675eb766a4a15dab94136900c9bee716cb81c7d80b47b35.json"
+  },
+  "slots": {
+    "nf_p500_001": {
+      "run_dir": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/nearest/nf_p500_001",
+      "evaluation": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/nearest/nf_p500_001/evaluation/paper500/evaluation.json",
+      "evaluation_sha256": "d24af8ef3b130a75995ef092a6a1b37cd26a5b3bbb79393110b06347debd353c",
+      "samples_csv_sha256": "b98728b1e86b090e301f0f666091967a76e3060b69723e9b33ba3243ca1dc251",
+      "prediction_manifest_sha256": "6694cd6d4739409d3c0563ef2e8ab3144cc4c72b9c4c5306114a1541709f2448",
+      "metadata_sha256": "c90573bbc261cb91ea262116237c4ce18c3de9f32bf3a22b28aa7440355703be",
+      "status": "ok",
+      "errors": [],
+      "sample_count": 53,
+      "csv_sample_rows": 53,
+      "profile_id": "new_room_mapex_eval_010_v1",
+      "protocol_version": "new_room_mapex_paper500_v1",
+      "source_sha": "867337e69daa8146e08238b952347c5bca05c389"
+    },
+    "mpx_p500_001": {
+      "run_dir": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/mapex/mpx_p500_001",
+      "evaluation": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/mapex/mpx_p500_001/evaluation/paper500/evaluation.json",
+      "evaluation_sha256": "59c702539eb6df449fed66c0b17e30e3253095245132d308d43a210d31d23ead",
+      "samples_csv_sha256": "46fdf31bc899748ceaa3110c24a333a1a3813b36e383c8e8a6b8b11b07f2e2ee",
+      "prediction_manifest_sha256": "7e6146c437c6a53e36ef110e4b65b893a15b818b7206d797834458f874506d4d",
+      "metadata_sha256": "7263dc14ab2c68f230af6a88e72c1a7fe390e94d77e280edf8d7747d4e001a09",
+      "status": "ok",
+      "errors": [],
+      "sample_count": 53,
+      "csv_sample_rows": 53,
+      "profile_id": "new_room_mapex_eval_010_v1",
+      "protocol_version": "new_room_mapex_paper500_v1",
+      "source_sha": "867337e69daa8146e08238b952347c5bca05c389"
+    },
+    "mpx_p500_002": {
+      "run_dir": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/mapex/mpx_p500_002",
+      "evaluation": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/mapex/mpx_p500_002/evaluation/paper500/evaluation.json",
+      "evaluation_sha256": "ead5d3f556f49be6e07427864f1cdf87ace39956100bb3f2965877571197462d",
+      "samples_csv_sha256": "4deb94e6fda8023d8516fd558fe5c23be02613b654d9b988c9e2e31ec356ef12",
+      "prediction_manifest_sha256": "8d33be3af9a6addd60b935e8b796c73f885e9c353a4871bc5356202892e5d258",
+      "metadata_sha256": "325c944e3fda0cb0efc52858d3e357ffc697e256f04e3de601172473ec9b6d9f",
+      "status": "ok",
+      "errors": [],
+      "sample_count": 53,
+      "csv_sample_rows": 53,
+      "profile_id": "new_room_mapex_eval_010_v1",
+      "protocol_version": "new_room_mapex_paper500_v1",
+      "source_sha": "867337e69daa8146e08238b952347c5bca05c389"
+    },
+    "nf_p500_002": {
+      "run_dir": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/nearest/nf_p500_002",
+      "evaluation": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/experiments/nearest/nf_p500_002/evaluation/paper500/evaluation.json",
+      "evaluation_sha256": "b1446f4010da6bf49c80144cb0e1b4131208ed8e8d1cfadcd89d36837428877e",
+      "samples_csv_sha256": "b60a85d0cc54ab4fbb0ce238f34e71deb1c45001593aa98167e47c40883cb12b",
+      "prediction_manifest_sha256": "35b79d549baaabcdcfceae0f031e1db60a7496b93d4f01e3a56288a7e12601f9",
+      "metadata_sha256": "8a4d139e285f204afc5af14a67056d58f6f718f342069522f866918657eb34e6",
+      "status": "ok",
+      "errors": [],
+      "sample_count": 53,
+      "csv_sample_rows": 53,
+      "profile_id": "new_room_mapex_eval_010_v1",
+      "protocol_version": "new_room_mapex_paper500_v1",
+      "source_sha": "867337e69daa8146e08238b952347c5bca05c389"
+    }
+  },
+  "complete_ids": [
+    "mpx_p500_001",
+    "mpx_p500_002",
+    "nf_p500_001",
+    "nf_p500_002"
+  ],
+  "next_selector_result": {
+    "method": "nf",
+    "run_id": "nf_p500_003"
+  },
+  "runtime_started": false,
+  "reconciled_state": {
+    "path": "/home/com1/turtlebot4_project_r003_h031/mapex_lab/results/r003_paper500/batch_state.json",
+    "sha256": "5e343e1def94051432186e4c55db6ca50f782dc06ecc990a8bff6be790eff21b"
+  }
+}

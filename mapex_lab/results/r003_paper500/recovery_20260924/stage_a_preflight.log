@@ -1,0 +1,72 @@
+2026-09-24T10:37:19+07:00
+com1
+Linux com1 6.12.0-061200-generic #202411220723 SMP PREEMPT_DYNAMIC Tue Nov 26 13:49:49 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux
+ 10:37:19 up 57 min,  3 users,  load average: 1.00, 0.99, 0.67
+               total        used        free      shared  buff/cache   available
+Mem:           7.4Gi       4.0Gi       404Mi       259Mi       3.6Gi       3.5Gi
+Swap:          2.0Gi          0B       2.0Gi
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/nvme0n1p3   46G   42G  2.2G  96% /
+/dev/nvme0n1p7  320G  175G  129G  58% /work
+Filesystem       Inodes  IUsed    IFree IUse% Mounted on
+/dev/nvme0n1p3  3055616 841041  2214575   28% /
+/dev/nvme0n1p7 21364736 110837 21253899    1% /work
+--- process health ---
+    140       2 S       3443 [watchdogd]
+  10261    7176 Ss         0 /bin/bash -lc set -o pipefail REC=/home/com1/turtlebot4_project_r003_h031/mapex_lab/results/r003_paper500/recovery_20260924 mkdir -p "$REC" {   date -Is   hostname   uname -a   uptime   free -h   df -h /home /work   df -i /home /work   printf '%s\n' '--- process health ---'   ps -eo pid,ppid,stat,etimes,cmd --sort=pid | rg -i 'ros2|gazebo|gz sim|gzserver|gzclient|nav2|slam_toolbox|r003_paper500|watchdog|mapex_lama_worker' || true   printf '%s\n' '--- technical git ---'   git status --short --branch   git rev-parse HEAD   git branch --show-current   git diff --stat   git diff --cached --stat   git worktree list --porcelain   git fetch origin --prune   git cat-file -t 867337e69daa8146e08238b952347c5bca05c389   git diff --stat 867337e69daa8146e08238b952347c5bca05c389 -- . ':!mapex_lab/experiments' ':!mapex_lab/results'   printf '%s\n' '--- durable branch ---'   git rev-parse origin/r003-paper500-data-backup   git merge-base --is-ancestor 867337e69daa8146e08238b952347c5bca05c389 origin/r003-paper500-data-backup   for p in mapex_lab/experiments/nearest/nf_p500_001 mapex_lab/experiments/mapex/mpx_p500_001 mapex_lab/experiments/mapex/mpx_p500_002 mapex_lab/experiments/nearest/nf_p500_002; do     git cat-file -e "origin/r003-paper500-data-backup:$p"     printf 'RESTORABLE %s\n' "$p"   done   printf '%s\n' '--- ROS/Gazebo/workspace ---'   test -r /opt/ros/jazzy/setup.bash   test -r ros2_ws/install/setup.bash   bash -lc 'source /opt/ros/jazzy/setup.bash && source /home/com1/turtlebot4_project_r003_h031/ros2_ws/install/setup.bash && /usr/bin/python3 -c "import rclpy, action_msgs, nav_msgs; print(\"ROS_IMPORT_OK\", rclpy.__file__)" && command -v ros2 && ros2 --help >/dev/null && command -v gz && gz sim --help >/dev/null && echo GAZEBO_CLI_OK'   printf '%s\n' '--- pinned paths ---'   /work/conda-envs/lama/bin/python -c 'import sys; print("LAMA_PYTHON_OK", sys.executable)'   find /work/com1/mapex_weights/weights/lama_ensemble -maxdepth 4 -type f \( -name 'best.ckpt' -o -name 'config.yaml' \) -printf '%p %s bytes\n' | sort   stat -c '%n %s bytes' /work/com1/mapex_weights/weights/big_lama/models/best.ckpt   printf '%s\n' '--- paper500 source hashes ---'   sha256sum mapex_lab/ground_truth/new_room/generated/r003_paper500/new_room_mapex_eval_010_v1.npz   sha256sum mapex_lab/ground_truth/new_room/generated/r003_paper500/new_room_mapex_eval_010_v1_tu_goals.json } 2>&1 | tee "$REC/stage_a_preflight.log"
+  10270   10261 S          0 /bin/bash -lc set -o pipefail REC=/home/com1/turtlebot4_project_r003_h031/mapex_lab/results/r003_paper500/recovery_20260924 mkdir -p "$REC" {   date -Is   hostname   uname -a   uptime   free -h   df -h /home /work   df -i /home /work   printf '%s\n' '--- process health ---'   ps -eo pid,ppid,stat,etimes,cmd --sort=pid | rg -i 'ros2|gazebo|gz sim|gzserver|gzclient|nav2|slam_toolbox|r003_paper500|watchdog|mapex_lama_worker' || true   printf '%s\n' '--- technical git ---'   git status --short --branch   git rev-parse HEAD   git branch --show-current   git diff --stat   git diff --cached --stat   git worktree list --porcelain   git fetch origin --prune   git cat-file -t 867337e69daa8146e08238b952347c5bca05c389   git diff --stat 867337e69daa8146e08238b952347c5bca05c389 -- . ':!mapex_lab/experiments' ':!mapex_lab/results'   printf '%s\n' '--- durable branch ---'   git rev-parse origin/r003-paper500-data-backup   git merge-base --is-ancestor 867337e69daa8146e08238b952347c5bca05c389 origin/r003-paper500-data-backup   for p in mapex_lab/experiments/nearest/nf_p500_001 mapex_lab/experiments/mapex/mpx_p500_001 mapex_lab/experiments/mapex/mpx_p500_002 mapex_lab/experiments/nearest/nf_p500_002; do     git cat-file -e "origin/r003-paper500-data-backup:$p"     printf 'RESTORABLE %s\n' "$p"   done   printf '%s\n' '--- ROS/Gazebo/workspace ---'   test -r /opt/ros/jazzy/setup.bash   test -r ros2_ws/install/setup.bash   bash -lc 'source /opt/ros/jazzy/setup.bash && source /home/com1/turtlebot4_project_r003_h031/ros2_ws/install/setup.bash && /usr/bin/python3 -c "import rclpy, action_msgs, nav_msgs; print(\"ROS_IMPORT_OK\", rclpy.__file__)" && command -v ros2 && ros2 --help >/dev/null && command -v gz && gz sim --help >/dev/null && echo GAZEBO_CLI_OK'   printf '%s\n' '--- pinned paths ---'   /work/conda-envs/lama/bin/python -c 'import sys; print("LAMA_PYTHON_OK", sys.executable)'   find /work/com1/mapex_weights/weights/lama_ensemble -maxdepth 4 -type f \( -name 'best.ckpt' -o -name 'config.yaml' \) -printf '%p %s bytes\n' | sort   stat -c '%n %s bytes' /work/com1/mapex_weights/weights/big_lama/models/best.ckpt   printf '%s\n' '--- paper500 source hashes ---'   sha256sum mapex_lab/ground_truth/new_room/generated/r003_paper500/new_room_mapex_eval_010_v1.npz   sha256sum mapex_lab/ground_truth/new_room/generated/r003_paper500/new_room_mapex_eval_010_v1_tu_goals.json } 2>&1 | tee "$REC/stage_a_preflight.log"
+  10271   10261 S          0 tee /home/com1/turtlebot4_project_r003_h031/mapex_lab/results/r003_paper500/recovery_20260924/stage_a_preflight.log
+  10280   10270 S          0 rg -i ros2|gazebo|gz sim|gzserver|gzclient|nav2|slam_toolbox|r003_paper500|watchdog|mapex_lama_worker
+--- technical git ---
+## main...origin/main
+?? mapex_lab/experiments/mapex/mpx_p500_001/
+?? mapex_lab/experiments/mapex/mpx_p500_002/
+?? mapex_lab/experiments/nearest/nf_p500_001/
+?? mapex_lab/experiments/nearest/nf_p500_002/
+?? mapex_lab/results/r003_paper500/
+867337e69daa8146e08238b952347c5bca05c389
+main
+worktree /home/com1/turtlebot4_project_r003_h020_clean
+HEAD cf40345b02af6d72db848aeb0977bf681779a17a
+detached
+
+worktree /home/com1/turtlebot4_project_r003_h026_test
+HEAD cf40345b02af6d72db848aeb0977bf681779a17a
+detached
+
+worktree /home/com1/turtlebot4_project_r003_h031
+HEAD 867337e69daa8146e08238b952347c5bca05c389
+branch refs/heads/main
+
+worktree /home/com1/turtlebot4_project_r003_p500_backup
+HEAD 3831f0985c48263e5f11c9aa263662d8af7d2e7a
+branch refs/heads/r003-paper500-data-backup
+
+From https://github.com/vah103/turtlebot4_project
+   3831f098..cff8ed1f  r003-paper500-data-backup -> origin/r003-paper500-data-backup
+ * [new branch]        r004-free-error-diagnostic -> origin/r004-free-error-diagnostic
+ * [new branch]        r004-offline-evaluator -> origin/r004-offline-evaluator
+commit
+--- durable branch ---
+cff8ed1fefdfefc960401fe8651726a9513c48cf
+RESTORABLE mapex_lab/experiments/nearest/nf_p500_001
+RESTORABLE mapex_lab/experiments/mapex/mpx_p500_001
+RESTORABLE mapex_lab/experiments/mapex/mpx_p500_002
+RESTORABLE mapex_lab/experiments/nearest/nf_p500_002
+--- ROS/Gazebo/workspace ---
+ROS_IMPORT_OK /opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py
+/opt/ros/jazzy/bin/ros2
+/opt/ros/jazzy/opt/gz_tools_vendor/bin/gz
+GAZEBO_CLI_OK
+--- pinned paths ---
+LAMA_PYTHON_OK /work/conda-envs/lama/bin/python
+/work/com1/mapex_weights/weights/lama_ensemble/train_1/config.yaml 3301 bytes
+/work/com1/mapex_weights/weights/lama_ensemble/train_1/models/best.ckpt 901730065 bytes
+/work/com1/mapex_weights/weights/lama_ensemble/train_2/config.yaml 3301 bytes
+/work/com1/mapex_weights/weights/lama_ensemble/train_2/models/best.ckpt 901730065 bytes
+/work/com1/mapex_weights/weights/lama_ensemble/train_3/config.yaml 3301 bytes
+/work/com1/mapex_weights/weights/lama_ensemble/train_3/models/best.ckpt 901730065 bytes
+/work/com1/mapex_weights/weights/big_lama/models/best.ckpt 901729744 bytes
+--- paper500 source hashes ---
+3233d9bae62a7dfb52d3f9248c9932218d06bb5e2a2bea3516c57c5074481124  mapex_lab/ground_truth/new_room/generated/r003_paper500/new_room_mapex_eval_010_v1.npz
+sha256sum: mapex_lab/ground_truth/new_room/generated/r003_paper500/new_room_mapex_eval_010_v1_tu_goals.json: No such file or directory
