@@ -1,0 +1,23 @@
+test_01_exact_input_hash (test_d1_gate_u.GateUTests.test_01_exact_input_hash) ... ok
+test_02_exact_universe (test_d1_gate_u.GateUTests.test_02_exact_universe) ... ok
+test_03_duplicate_rejected (test_d1_gate_u.GateUTests.test_03_duplicate_rejected) ... ok
+test_04_changed_hash_rejected (test_d1_gate_u.GateUTests.test_04_changed_hash_rejected) ... ok
+test_05_empirical_cdf_uses_leq_and_preserves_ties (test_d1_gate_u.GateUTests.test_05_empirical_cdf_uses_leq_and_preserves_ties) ... ok
+test_06_low50_ties_not_split (test_d1_gate_u.GateUTests.test_06_low50_ties_not_split) ... ok
+test_07_low25_can_be_empty_due_to_ties (test_d1_gate_u.GateUTests.test_07_low25_can_be_empty_due_to_ties) ... ok
+test_08_spearman_support_and_constant_rules (test_d1_gate_u.GateUTests.test_08_spearman_support_and_constant_rules) ... ok
+test_09_candidate_name_set_frozen (test_d1_gate_u.GateUTests.test_09_candidate_name_set_frozen) ... ok
+test_10_holdout_excluded_from_selection (test_d1_gate_u.GateUTests.test_10_holdout_excluded_from_selection) ... ok
+test_11_fold_is_deterministic (test_d1_gate_u.GateUTests.test_11_fold_is_deterministic) ... ok
+test_12_non_evaluable_rows_preserved (test_d1_gate_u.GateUTests.test_12_non_evaluable_rows_preserved) ... ok
+test_13_percentiles_do_not_use_heldout_risk_for_u (test_d1_gate_u.GateUTests.test_13_percentiles_do_not_use_heldout_risk_for_u) ... ok
+test_14_no_admissible_precedence (test_d1_gate_u.GateUTests.test_14_no_admissible_precedence) ... ok
+test_15_general_sufficiency_precedes_other_failures (test_d1_gate_u.GateUTests.test_15_general_sufficiency_precedes_other_failures) ... ok
+test_16_broad_undefined_not_contradiction (test_d1_gate_u.GateUTests.test_16_broad_undefined_not_contradiction) ... ok
+test_17_stage_bins_are_frozen (test_d1_gate_u.GateUTests.test_17_stage_bins_are_frozen) ... ok
+test_18_fold_output_has_no_operational_fields (test_d1_gate_u.GateUTests.test_18_fold_output_has_no_operational_fields) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 3.089s
+
+OK
