@@ -2,10 +2,10 @@
 
 ## D1 Gate U offline scoring — W027 / H074
 
-- COMPLETE_PENDING_REVIEW: frozen H068 Gate-U Method V2 implemented and scored on the canonical 10-run / 365-row shared evidence cohort.
-- TESTS: 27/27 focused tests PASS after W016 bounded revision; first-fold production smoke PASS; resume revalidated/skipped all 10 folds including both fold-summary and per-decision hashes.
-- LATEST RESULT: historical Gate-U outcome `FAIL` because the frozen strong broad-contradiction veto fired in 6/10 held-out runs. General primary sufficiency passed; all folds selected `U_p95`.
-- NEXT ACTION: W016 / Chat 2 independently reviews `docs/D1_W027_GATE_U_COMPLETION.md` and `analysis/d1/results/gate_u_v1/`. Gate R and online rule development remain parked.
+- REVIEWED / CANONICAL: W016 same-checker ACCEPT on exact revised delivery `97b16e52048a4cfc47b808103cf25e7737e938e1`; PR #31 merged unchanged into canonical main at merge commit `34bc65817d7eb7a42a5ff3149a860748c91fa489`.
+- TESTS: 27/27 focused tests PASS after bounded revision; first-fold production smoke PASS; full resume revalidated/skipped all 10 folds including both fold-summary and per-decision hashes.
+- CANONICAL HISTORICAL RESULT: Gate-U = `FAIL` because the frozen strong broad-contradiction veto fired in exactly 6/10 held-out runs: `mpx_002, mpx_003, mpx_006, mpx_007, mpx_009, mpx_010`. General primary sufficiency passed; all folds selected `U_p95`; strict-late remains `LATE_PRIMARY_INSUFFICIENT`.
+- BOUNDARY: Gate R, operational uncertainty/area/remaining-fraction thresholds, `K_confirm`, and online STOP logic remain unauthorized. Next step is management/methodology interpretation of the canonical Gate-U FAIL, not further Gate-U retuning.
 
 ## D1 shared Phase-0 extractor — H071 / H072 delivery
 
