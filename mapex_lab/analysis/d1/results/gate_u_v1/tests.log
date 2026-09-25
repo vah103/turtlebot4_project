@@ -16,8 +16,17 @@ test_15_general_sufficiency_precedes_other_failures (test_d1_gate_u.GateUTests.t
 test_16_broad_undefined_not_contradiction (test_d1_gate_u.GateUTests.test_16_broad_undefined_not_contradiction) ... ok
 test_17_stage_bins_are_frozen (test_d1_gate_u.GateUTests.test_17_stage_bins_are_frozen) ... ok
 test_18_fold_output_has_no_operational_fields (test_d1_gate_u.GateUTests.test_18_fold_output_has_no_operational_fields) ... ok
+test_19_per_decision_audit_flags_and_undefined (test_d1_gate_u.GateUTests.test_19_per_decision_audit_flags_and_undefined) ... ok
+test_20_srr25_srr50_srr75_explicit (test_d1_gate_u.GateUTests.test_20_srr25_srr50_srr75_explicit) ... ok
+test_21_srr_undefined_for_empty_or_zero_baseline (test_d1_gate_u.GateUTests.test_21_srr_undefined_for_empty_or_zero_baseline) ... ok
+test_22_cache_rejects_changed_input_identity (test_d1_gate_u.GateUTests.test_22_cache_rejects_changed_input_identity) ... ok
+test_23_cache_rejects_changed_method_identity (test_d1_gate_u.GateUTests.test_23_cache_rejects_changed_method_identity) ... ok
+test_24_cache_rejects_changed_implementation_identity (test_d1_gate_u.GateUTests.test_24_cache_rejects_changed_implementation_identity) ... ok
+test_25_cache_rejects_corrupt_summary (test_d1_gate_u.GateUTests.test_25_cache_rejects_corrupt_summary) ... ok
+test_26_cache_rejects_corrupt_per_decision (test_d1_gate_u.GateUTests.test_26_cache_rejects_corrupt_per_decision) ... ok
+test_27_cache_rejects_missing_artifact (test_d1_gate_u.GateUTests.test_27_cache_rejects_missing_artifact) ... ok
 
 ----------------------------------------------------------------------
-Ran 18 tests in 3.089s
+Ran 27 tests in 4.014s
 
 OK

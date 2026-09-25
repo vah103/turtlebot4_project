@@ -29,6 +29,29 @@ def implementation_hash(root: Path) -> str:
     return digest.hexdigest()
 
 
+def validate_fold_cache(target: Path, expected_identity: dict, expected_run: str) -> dict:
+    manifest_path = target / "completion_manifest.json"
+    summary_path = target / "fold_summary.json"
+    decisions_path = target / "per_decision.csv"
+    for required in (manifest_path, summary_path, decisions_path):
+        if not required.is_file():
+            raise RuntimeError(f"missing required fold artifact: {required}")
+    try:
+        saved = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as exc:
+        raise RuntimeError(f"invalid fold manifest: {expected_run}") from exc
+    checks = {
+        "identity": saved.get("identity") == expected_identity,
+        "fold": saved.get("fold") == expected_run,
+        "fold_summary_sha256": saved.get("fold_summary_sha256") == sha256_file(summary_path),
+        "per_decision_sha256": saved.get("per_decision_sha256") == sha256_file(decisions_path),
+    }
+    failed = [name for name, ok in checks.items() if not ok]
+    if failed:
+        raise RuntimeError(f"resume identity/hash mismatch: {expected_run}: {','.join(failed)}")
+    return saved
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", type=Path, required=True)
@@ -65,9 +88,7 @@ def main() -> int:
         target = folds_root / f"holdout_{run_id}"
         manifest = target / "completion_manifest.json"
         if manifest.exists():
-            saved = json.loads(manifest.read_text())
-            if saved.get("identity") != identity or saved.get("fold_summary_sha256") != sha256_file(target / "fold_summary.json"):
-                raise RuntimeError(f"resume identity/hash mismatch: {run_id}")
+            validate_fold_cache(target, identity, run_id)
             log(f"FOLD_VALIDATED_SKIP {run_id}")
             continue
         if args.max_folds is not None and processed >= args.max_folds:

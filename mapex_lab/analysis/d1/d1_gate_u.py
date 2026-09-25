@@ -154,6 +154,15 @@ def _risk_summary(rows: pd.DataFrame, cutoff: float | None) -> dict[str, Any]:
     }
 
 
+def heldout_srr(rows: pd.DataFrame, cutoff: float) -> float | None:
+    eligible = rows.dropna(subset=["R_primary", "U_dev_percentile"])
+    retained = eligible[eligible.U_dev_percentile <= cutoff]
+    baseline = float(eligible.R_primary.mean()) if len(eligible) else None
+    if retained.empty or baseline is None or baseline <= 0:
+        return None
+    return float(retained.R_primary.mean() / baseline)
+
+
 def score_fold(frame: pd.DataFrame, held_out_run: str) -> tuple[dict[str, Any], pd.DataFrame]:
     development = frame[frame.run_id != held_out_run].copy()
     held = frame[frame.run_id == held_out_run].copy()
@@ -169,8 +178,11 @@ def score_fold(frame: pd.DataFrame, held_out_run: str) -> tuple[dict[str, Any], 
     held["U_dev_percentile"] = np.nan
     held["R_primary"] = finite(held["lost_reachable_future_free_fraction"])
     held["R_dev_percentile"] = np.nan
+    for flag in ("low_u_25", "high_risk_75", "cw25", "severe_cw"):
+        held[flag] = pd.Series(pd.NA, index=held.index, dtype="boolean")
     if selected is None:
-        fold.update({"primary_pairs": 0, "rho_primary": None, "srr50_run": None,
+        fold.update({"primary_pairs": 0, "rho_primary": None, "srr25_run": None,
+                     "srr50_run": None, "srr75_run": None,
                      "cw25_rate_run": None, "low_u_primary_rows": 0, "severe_cw_events": []})
         return fold, held
 
@@ -179,16 +191,30 @@ def score_fold(frame: pd.DataFrame, held_out_run: str) -> tuple[dict[str, Any], 
     held.loc[u_valid, "U_dev_percentile"] = development_percentile(development, selected, held.loc[u_valid, "U_selected"])
     r_valid = held.R_primary.notna()
     held.loc[r_valid, "R_dev_percentile"] = development_percentile(development, "lost_reachable_future_free_fraction", held.loc[r_valid, "R_primary"])
+    u_percentile_valid = held.U_dev_percentile.notna()
+    risk_percentile_valid = held.R_dev_percentile.notna()
+    primary_risk_valid = held.R_primary.notna()
+    held.loc[u_percentile_valid, "low_u_25"] = held.loc[u_percentile_valid, "U_dev_percentile"] <= .25
+    held.loc[risk_percentile_valid, "high_risk_75"] = held.loc[risk_percentile_valid, "R_dev_percentile"] >= .75
+    both_relative_valid = u_percentile_valid & risk_percentile_valid
+    held.loc[both_relative_valid, "cw25"] = (
+        held.loc[both_relative_valid, "low_u_25"] & held.loc[both_relative_valid, "high_risk_75"]
+    )
+    severe_valid = u_percentile_valid & primary_risk_valid
+    held.loc[severe_valid, "severe_cw"] = (
+        held.loc[severe_valid, "low_u_25"] & (held.loc[severe_valid, "R_primary"] >= .50)
+    )
     primary = held.dropna(subset=["U_selected", "R_primary", "U_dev_percentile", "R_dev_percentile"])
     rho, pair_n = valid_spearman(primary.U_selected, primary.R_primary)
-    all_mean = float(primary.R_primary.mean()) if len(primary) else None
-    low50 = primary[primary.U_dev_percentile <= .50]
-    srr = float(low50.R_primary.mean() / all_mean) if len(low50) and all_mean and all_mean > 0 else None
+    srr25 = heldout_srr(primary, .25)
+    srr = heldout_srr(primary, .50)
+    srr75 = heldout_srr(primary, .75)
     low25 = primary[primary.U_dev_percentile <= .25]
     cw = float((low25.R_dev_percentile >= .75).mean()) if len(low25) else None
     severe = low25[low25.R_primary >= .50]
     fold.update({
-        "primary_pairs": pair_n, "rho_primary": rho, "srr50_run": srr,
+        "primary_pairs": pair_n, "rho_primary": rho, "srr25_run": srr25,
+        "srr50_run": srr, "srr75_run": srr75,
         "cw25_rate_run": cw, "low_u_primary_rows": len(low25),
         "late_primary_rows": int(((held.progress_bin == "[0.75,1.00]") & held.R_primary.notna()).sum()),
         "risk_by_coverage": {str(c): _risk_summary(primary, c) for c in (.25, .50, .75)} | {"all": _risk_summary(primary, None)},

@@ -7,9 +7,10 @@ import numpy as np
 import pandas as pd
 
 from d1_gate_u import (CANDIDATES, EXPECTED_COUNTS, EXPECTED_INPUT_SHA256,
-                       RUNS, classify, cw25, empirical_cdf, ratio_low50,
+                       RUNS, classify, cw25, empirical_cdf, heldout_srr, ratio_low50,
                        score_fold, select_candidate, sha256_file, valid_spearman,
                        validate_input)
+from run_gate_u_low_touch import validate_fold_cache
 
 
 ROOT = Path(__file__).resolve().parent
@@ -116,6 +117,84 @@ class GateUTests(unittest.TestCase):
         text = json.dumps(fold).lower()
         for forbidden in ("k_confirm", "stop_threshold", "gate_r"):
             self.assertNotIn(forbidden, text)
+
+    def test_19_per_decision_audit_flags_and_undefined(self):
+        _, rows = score_fold(self.frame, RUNS[0])
+        for name in ("low_u_25", "high_risk_75", "cw25", "severe_cw"):
+            self.assertIn(name, rows.columns)
+        relative = rows.dropna(subset=["U_dev_percentile", "R_dev_percentile"])
+        self.assertTrue((relative.low_u_25 == (relative.U_dev_percentile <= .25)).all())
+        self.assertTrue((relative.high_risk_75 == (relative.R_dev_percentile >= .75)).all())
+        self.assertTrue((relative.cw25 == (relative.low_u_25 & relative.high_risk_75)).all())
+        undefined = rows[rows.U_dev_percentile.isna()]
+        self.assertTrue(undefined.low_u_25.isna().all())
+        self.assertTrue(undefined.cw25.isna().all())
+
+    def test_20_srr25_srr50_srr75_explicit(self):
+        fold, rows = score_fold(self.frame, RUNS[0])
+        primary = rows.dropna(subset=["U_selected", "R_primary", "U_dev_percentile", "R_dev_percentile"])
+        for cutoff, name in ((.25, "srr25_run"), (.50, "srr50_run"), (.75, "srr75_run")):
+            self.assertIn(name, fold)
+            expected = heldout_srr(primary, cutoff)
+            self.assertEqual(fold[name], expected)
+
+    def test_21_srr_undefined_for_empty_or_zero_baseline(self):
+        empty = pd.DataFrame({"R_primary": [1.0], "U_dev_percentile": [.9]})
+        self.assertIsNone(heldout_srr(empty, .25))
+        zero = pd.DataFrame({"R_primary": [0.0, 0.0], "U_dev_percentile": [.1, .2]})
+        self.assertIsNone(heldout_srr(zero, .25))
+
+    def _cache_fixture(self, root: Path):
+        identity = {"method_id": "method", "input_sha256": "input", "implementation_sha256": "implementation"}
+        (root / "fold_summary.json").write_text("{}\n")
+        (root / "per_decision.csv").write_text("run_id,decision_id\nmpx_001,1\n")
+        manifest = {"identity": identity, "fold": "mpx_001",
+                    "fold_summary_sha256": sha256_file(root / "fold_summary.json"),
+                    "per_decision_sha256": sha256_file(root / "per_decision.csv")}
+        (root / "completion_manifest.json").write_text(json.dumps(manifest))
+        return identity
+
+    def test_22_cache_rejects_changed_input_identity(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); identity = self._cache_fixture(root)
+            changed = dict(identity, input_sha256="changed")
+            with self.assertRaisesRegex(RuntimeError, "identity"):
+                validate_fold_cache(root, changed, "mpx_001")
+
+    def test_23_cache_rejects_changed_method_identity(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); identity = self._cache_fixture(root)
+            changed = dict(identity, method_id="changed")
+            with self.assertRaisesRegex(RuntimeError, "identity"):
+                validate_fold_cache(root, changed, "mpx_001")
+
+    def test_24_cache_rejects_changed_implementation_identity(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); identity = self._cache_fixture(root)
+            changed = dict(identity, implementation_sha256="changed")
+            with self.assertRaisesRegex(RuntimeError, "identity"):
+                validate_fold_cache(root, changed, "mpx_001")
+
+    def test_25_cache_rejects_corrupt_summary(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); identity = self._cache_fixture(root)
+            (root / "fold_summary.json").write_text("corrupt")
+            with self.assertRaisesRegex(RuntimeError, "fold_summary_sha256"):
+                validate_fold_cache(root, identity, "mpx_001")
+
+    def test_26_cache_rejects_corrupt_per_decision(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); identity = self._cache_fixture(root)
+            (root / "per_decision.csv").write_text("corrupt")
+            with self.assertRaisesRegex(RuntimeError, "per_decision_sha256"):
+                validate_fold_cache(root, identity, "mpx_001")
+
+    def test_27_cache_rejects_missing_artifact(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); identity = self._cache_fixture(root)
+            (root / "per_decision.csv").unlink()
+            with self.assertRaisesRegex(RuntimeError, "missing required"):
+                validate_fold_cache(root, identity, "mpx_001")
 
 
 if __name__ == "__main__":

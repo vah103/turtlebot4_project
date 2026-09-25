@@ -17,13 +17,27 @@ Policy epoch: `2026-09-24-D047`
 
 ## Execution evidence
 
-- Focused tests: **18/18 PASS**.
+- Focused tests after bounded W016 revision: **27/27 PASS**.
 - First real fold smoke: `holdout_mpx_001`, production path, completed successfully.
 - Resume validation: the full invocation verified and skipped the completed first fold before processing folds 2–10.
 - Completed folds: **10/10**.
 - Per-decision result rows: **365**.
 - Candidate selected by every fold: `U_p95`.
 - No simulation, LaMa inference, shared extraction, or accepted R004 evidence was rerun or changed.
+
+## W016 bounded revision closure
+
+The REVISE findings in `D1_W027_GATE_U_OFFLINE_REVIEW.md` were addressed without changing any scientific rule:
+
+- resume now verifies identity, held-out fold identity, `fold_summary.json` hash and `per_decision.csv` hash;
+- focused tests reject changed input/method/implementation identities, corrupt summary/decision artifacts and missing artifacts;
+- per-decision output now emits nullable `low_u_25`, `high_risk_75`, `cw25` and `severe_cw` audit flags;
+- every fold now emits explicit `srr25_run`, `srr50_run` and `srr75_run`.
+
+Rebuilt implementation identity:
+`5e859ad046c40c031e9c3d0cf8e0c44dfac7d0e8d6024cedcdeaa30a7cc434c1`.
+
+The rebuilt package was compared field-for-field against the pre-revision package for all verdict-relevant quantities. Candidate selection, primary metrics, stage metrics, broad diagnostics, severe-CW inventory, aggregate result and the six-run veto set are unchanged.
 
 ## Frozen historical result
 

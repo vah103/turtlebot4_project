@@ -342,7 +342,9 @@
     "selected_candidate": "U_p95",
     "selection_status": "SELECTED",
     "severe_cw_events": [],
+    "srr25_run": 0.2408064395187506,
     "srr50_run": 0.3508392610346474,
+    "srr75_run": 0.6914661004664466,
     "stage_diagnostics": {
       "[0.00,0.25)": {
         "low_u_rows": 0,
@@ -713,7 +715,9 @@
     "selected_candidate": "U_p95",
     "selection_status": "SELECTED",
     "severe_cw_events": [],
+    "srr25_run": null,
     "srr50_run": 0.5565040633298224,
+    "srr75_run": 0.921177894811794,
     "stage_diagnostics": {
       "[0.00,0.25)": {
         "low_u_rows": 1,
@@ -1084,7 +1088,9 @@
     "selected_candidate": "U_p95",
     "selection_status": "SELECTED",
     "severe_cw_events": [],
+    "srr25_run": 0.0,
     "srr50_run": 0.3430213206376555,
+    "srr75_run": 0.756754816883021,
     "stage_diagnostics": {
       "[0.00,0.25)": {
         "low_u_rows": 1,
@@ -1455,7 +1461,9 @@
     "selected_candidate": "U_p95",
     "selection_status": "SELECTED",
     "severe_cw_events": [],
+    "srr25_run": 0.28331837283225364,
     "srr50_run": 1.1671771821965198,
+    "srr75_run": 0.9967486764477768,
     "stage_diagnostics": {
       "[0.00,0.25)": {
         "low_u_rows": 3,
@@ -1826,7 +1834,9 @@
     "selected_candidate": "U_p95",
     "selection_status": "SELECTED",
     "severe_cw_events": [],
+    "srr25_run": null,
     "srr50_run": 0.8090507243800236,
+    "srr75_run": 0.9117952973067956,
     "stage_diagnostics": {
       "[0.00,0.25)": {
         "low_u_rows": 0,
@@ -2197,7 +2207,9 @@
     "selected_candidate": "U_p95",
     "selection_status": "SELECTED",
     "severe_cw_events": [],
+    "srr25_run": null,
     "srr50_run": 1.420729708694822,
+    "srr75_run": 1.1487537368753833,
     "stage_diagnostics": {
       "[0.00,0.25)": {
         "low_u_rows": 1,
@@ -2568,7 +2580,9 @@
     "selected_candidate": "U_p95",
     "selection_status": "SELECTED",
     "severe_cw_events": [],
+    "srr25_run": null,
     "srr50_run": 0.9374119755532104,
+    "srr75_run": 1.063324811444706,
     "stage_diagnostics": {
       "[0.00,0.25)": {
         "low_u_rows": 0,
@@ -2939,7 +2953,9 @@
     "selected_candidate": "U_p95",
     "selection_status": "SELECTED",
     "severe_cw_events": [],
+    "srr25_run": 0.6234536873660855,
     "srr50_run": 0.6567607611159525,
+    "srr75_run": 0.8476933846934267,
     "stage_diagnostics": {
       "[0.00,0.25)": {
         "low_u_rows": 0,
@@ -3310,7 +3326,9 @@
     "selected_candidate": "U_p95",
     "selection_status": "SELECTED",
     "severe_cw_events": [],
+    "srr25_run": 0.3959234049894847,
     "srr50_run": 0.9485494570011249,
+    "srr75_run": 1.1368277371950304,
     "stage_diagnostics": {
       "[0.00,0.25)": {
         "low_u_rows": 0,
@@ -3688,7 +3706,9 @@
         "run_id": "mpx_010"
       }
     ],
+    "srr25_run": 0.8981393761736101,
     "srr50_run": 0.9741238787574522,
+    "srr75_run": 1.0326983423638252,
     "stage_diagnostics": {
       "[0.00,0.25)": {
         "low_u_rows": 0,

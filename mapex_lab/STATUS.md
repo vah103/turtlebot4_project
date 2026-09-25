@@ -3,7 +3,7 @@
 ## D1 Gate U offline scoring — W027 / H074
 
 - COMPLETE_PENDING_REVIEW: frozen H068 Gate-U Method V2 implemented and scored on the canonical 10-run / 365-row shared evidence cohort.
-- TESTS: 18/18 focused tests PASS; first-fold production smoke PASS; resume revalidated/skipped that fold; 10/10 folds complete.
+- TESTS: 27/27 focused tests PASS after W016 bounded revision; first-fold production smoke PASS; resume revalidated/skipped all 10 folds including both fold-summary and per-decision hashes.
 - LATEST RESULT: historical Gate-U outcome `FAIL` because the frozen strong broad-contradiction veto fired in 6/10 held-out runs. General primary sufficiency passed; all folds selected `U_p95`.
 - NEXT ACTION: W016 / Chat 2 independently reviews `docs/D1_W027_GATE_U_COMPLETION.md` and `analysis/d1/results/gate_u_v1/`. Gate R and online rule development remain parked.
 
