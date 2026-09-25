@@ -83,6 +83,12 @@ class Paper500AggregateTests(unittest.TestCase):
             self.assertEqual(before, aggregate.sha256(path))
             self.assertEqual(path.read_text(encoding="utf-8"), "a,b\n1,2\n")
 
+    def test_generated_csv_uses_lf_line_endings(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "output.csv"
+            aggregate.write_csv(path, [{"a": 1, "b": 2}])
+            self.assertEqual(path.read_bytes(), b"a,b\n1,2\n")
+
 
 if __name__ == "__main__":
     unittest.main()
