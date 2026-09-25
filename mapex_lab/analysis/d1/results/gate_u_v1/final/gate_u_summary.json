@@ -1,0 +1,74 @@
+{
+  "bootstrap": {
+    "interval": "95% percentile",
+    "metrics": {
+      "mean_cw25_rate": {
+        "lower": 0.0,
+        "runs": 6,
+        "upper": 0.08333333333333333
+      },
+      "mean_srr50": {
+        "lower": 0.6097197114359637,
+        "runs": 10,
+        "upper": 1.0161607873551433
+      },
+      "median_primary_rho": {
+        "lower": 0.017132905793896494,
+        "runs": 10,
+        "upper": 0.6156024284846813
+      }
+    },
+    "replicates": 10000,
+    "seed": 20260924
+  },
+  "broad_contradiction_runs": 6,
+  "general_sufficiency": true,
+  "held_out_runs_with_5_pairs": 10,
+  "late_primary_support": {
+    "contributing_runs": 0,
+    "status": "LATE_PRIMARY_INSUFFICIENT"
+  },
+  "mean_cw25_rate": 0.027777777777777776,
+  "mean_srr50": 0.816416833270123,
+  "median_primary_rho": 0.290602036000809,
+  "no_admissible_u_folds": 0,
+  "outcome": "FAIL",
+  "positive_rho_runs": 8,
+  "reason_chain": [
+    "strong broad contradiction veto"
+  ],
+  "runs_with_low_u_primary_support": 6,
+  "selected_folds": 10,
+  "severe_cw_runs": 1,
+  "stage_summary": {
+    "[0.00,0.25)": {
+      "contradiction": false,
+      "mean_srr50": 0.9218406872033442,
+      "median_rho": -0.10714285714285715,
+      "rho_runs": 10,
+      "srr_runs": 4
+    },
+    "[0.25,0.50)": {
+      "contradiction": false,
+      "mean_srr50": 0.928721245757208,
+      "median_rho": 0.042857142857142864,
+      "rho_runs": 8,
+      "srr_runs": 8
+    },
+    "[0.50,0.75)": {
+      "contradiction": false,
+      "mean_srr50": 1.0021358349882497,
+      "median_rho": -0.049999999999999996,
+      "rho_runs": 4,
+      "srr_runs": 10
+    },
+    "[0.75,1.00]": {
+      "contradiction": false,
+      "mean_srr50": null,
+      "median_rho": null,
+      "rho_runs": 0,
+      "srr_runs": 0
+    }
+  },
+  "valid_srr50_runs": 10
+}

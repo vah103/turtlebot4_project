@@ -1,0 +1,14 @@
+{
+  "artifacts": {
+    "completion_summary.json": "0ac9df78842dea17c1de272a5bfc7603f70826b41205e6f1ad61dfebbd74bcb4",
+    "gate_u_summary.json": "5bfd8ab295f2cb78fbb20da6593c7e8e9dd4d94ee28970d54741a130c3ace23a",
+    "per_decision_results.csv": "af3253ece01af1765eb9adc5107ec9f802ebb393a14fe96fb27febcfa267de8c",
+    "per_fold_results.json": "451c23f55dc2262892bf0eb3edf1db8f42814627c7727b6851769d97e30779b5"
+  },
+  "completed_at": "2026-09-25T01:30:15.795340+00:00",
+  "identity": {
+    "implementation_sha256": "5e859ad046c40c031e9c3d0cf8e0c44dfac7d0e8d6024cedcdeaa30a7cc434c1",
+    "input_sha256": "993bf0a0e9f1aabfd240778aadd9f6cb34583059ba360cea68fefef97ea2660a",
+    "method_id": "D1_GATE_U_METHOD_V2_H068_ACCEPTED"
+  }
+}
