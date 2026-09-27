@@ -1,0 +1,33 @@
+test_01_constants (test_gate_r_v2.T.test_01_constants) ... ok
+test_02_ecdf_ties (test_gate_r_v2.T.test_02_ecdf_ties) ... ok
+test_03_empty_ecdf (test_gate_r_v2.T.test_03_empty_ecdf) ... ok
+test_04_perfect_rho (test_gate_r_v2.T.test_04_perfect_rho) ... ok
+test_05_reversed_rho (test_gate_r_v2.T.test_05_reversed_rho) ... ok
+test_06_constant_invalid (test_gate_r_v2.T.test_06_constant_invalid) ... ok
+test_07_na_preserved (test_gate_r_v2.T.test_07_na_preserved) ... ok
+test_08_flag_required (test_gate_r_v2.T.test_08_flag_required) ... ok
+test_09_pairing_norm (test_gate_r_v2.T.test_09_pairing_norm) ... ok
+test_10_pairing_abs (test_gate_r_v2.T.test_10_pairing_abs) ... ok
+test_11_cal_sign (test_gate_r_v2.T.test_11_cal_sign) ... ok
+test_12_low25_empty_ties (test_gate_r_v2.T.test_12_low25_empty_ties) ... ok
+test_13_trr_perfect (test_gate_r_v2.T.test_13_trr_perfect) ... ok
+test_14_allowed_no_pass (test_gate_r_v2.T.test_14_allowed_no_pass) ... ok
+test_15_choose_none (test_gate_r_v2.T.test_15_choose_none) ... ok
+test_16_choose_tie (test_gate_r_v2.T.test_16_choose_tie) ... ok
+test_17_fail_precedence (test_gate_r_v2.T.test_17_fail_precedence) ... ok
+test_18_bootstrap_deterministic (test_gate_r_v2.T.test_18_bootstrap_deterministic) ... ok
+test_19_bins_frozen (test_gate_r_v2.T.test_19_bins_frozen) ... ok
+test_20_counts (test_gate_r_v2.T.test_20_counts) ... ok
+test_21_unique_allowed (test_gate_r_v2.T.test_21_unique_allowed) ... ok
+test_22_area_residual_scale (test_gate_r_v2.T.test_22_area_residual_scale) ... ok
+test_23_min_rho_pairs (test_gate_r_v2.T.test_23_min_rho_pairs) ... ok
+test_24_whole_tie_no_split (test_gate_r_v2.T.test_24_whole_tie_no_split) ... ok
+test_25_no_full_pass_label (test_gate_r_v2.T.test_25_no_full_pass_label) ... ok
+test_26_seed_exact (test_gate_r_v2.T.test_26_seed_exact) ... ok
+test_27_fc_formula (test_gate_r_v2.T.test_27_fc_formula) ... ok
+test_28_candidate_names (test_gate_r_v2.T.test_28_candidate_names) ... ok
+
+----------------------------------------------------------------------
+Ran 28 tests
+
+OK
