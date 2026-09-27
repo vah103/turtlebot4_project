@@ -1,0 +1,180 @@
+{
+  "N_GT": 154102,
+  "data_root": "/home/dell/turtlebot4_project_r003_p500_backup/mapex_lab/experiments/mapex",
+  "decision_rows": 365,
+  "identities": {
+    "delivery_revision": "1ffa659f1284a0101461b69888d9f8c3578bd7ec",
+    "executed_implementation": "5ac3100b48e7e41f7e4b983ca19123b0d3d3afc7",
+    "gate_p_blob": "c5bf4e3e6f45c81afef135166fc96e088719658e",
+    "gt_blob": "a5653a7ec7f4550287a3ebeb05b922dbc7a5bc3a",
+    "gt_summary_blob": "81a39bfd9484a6704a3a5f5f1893ae5699830866",
+    "r004_reference": "61b91640ca1d4fd608f716e152a91573ec072b5a",
+    "raw_input_fingerprint": "c4ad82db090016ef86efd778e6f3a684401c807aa1a73dccf3899c7e0ba9379b",
+    "shared_blob": "3e80124d545ea37b2791594dd775a7d953368bea",
+    "technical_base": "cbdfc28f61b2e9e75560d1de7fb2ed7eebfbdfc2"
+  },
+  "no_input_mutation": true,
+  "runs": 10,
+  "selected_runs": [
+    "mpx_001",
+    "mpx_002",
+    "mpx_003",
+    "mpx_004",
+    "mpx_005",
+    "mpx_006",
+    "mpx_007",
+    "mpx_008",
+    "mpx_009",
+    "mpx_010"
+  ],
+  "sensitivity_offsets": {
+    "decision_10_minus_5": [
+      -1,
+      -4,
+      -3,
+      -2,
+      -3,
+      -1,
+      -4,
+      -1,
+      -2,
+      -1
+    ],
+    "decision_1_minus_5": [
+      2,
+      3,
+      4,
+      4,
+      5,
+      3,
+      4,
+      8,
+      5,
+      8
+    ]
+  },
+  "structural_universe_cells": 154102,
+  "structural_universe_m2": 385.25500000000005,
+  "tolerances": {
+    "1": {
+      "found_count": 10,
+      "found_runs": [
+        "mpx_001",
+        "mpx_002",
+        "mpx_003",
+        "mpx_004",
+        "mpx_005",
+        "mpx_006",
+        "mpx_007",
+        "mpx_008",
+        "mpx_009",
+        "mpx_010"
+      ],
+      "fraction_saved": {
+        "mean": 0.38847531553413905,
+        "median": 0.38814616755793224,
+        "sample_std": 0.04507093418730656,
+        "support": 10
+      },
+      "not_found_runs": [],
+      "progress": {
+        "mean": 0.611524684465861,
+        "median": 0.6118538324420677,
+        "sample_std": 0.04507093418730656,
+        "support": 10
+      },
+      "remaining_fraction": {
+        "mean": 0.006829891889787285,
+        "median": 0.0062523523380618035,
+        "sample_std": 0.0016930112830752702,
+        "support": 10
+      },
+      "remaining_m2": {
+        "mean": 2.6312500000000005,
+        "median": 2.4087500000000004,
+        "sample_std": 0.6522410618611634,
+        "support": 10
+      }
+    },
+    "10": {
+      "found_count": 10,
+      "found_runs": [
+        "mpx_001",
+        "mpx_002",
+        "mpx_003",
+        "mpx_004",
+        "mpx_005",
+        "mpx_006",
+        "mpx_007",
+        "mpx_008",
+        "mpx_009",
+        "mpx_010"
+      ],
+      "fraction_saved": {
+        "mean": 0.5801340652811241,
+        "median": 0.5823717948717949,
+        "sample_std": 0.055128352408670214,
+        "support": 10
+      },
+      "not_found_runs": [],
+      "progress": {
+        "mean": 0.4198659347188759,
+        "median": 0.4176282051282051,
+        "sample_std": 0.055128352408670214,
+        "support": 10
+      },
+      "remaining_fraction": {
+        "mean": 0.08771917301527558,
+        "median": 0.0880163787621186,
+        "sample_std": 0.005536411770775113,
+        "support": 10
+      },
+      "remaining_m2": {
+        "mean": 33.79425,
+        "median": 33.90875000000001,
+        "sample_std": 2.1329303167499667,
+        "support": 10
+      }
+    },
+    "5": {
+      "found_count": 10,
+      "found_runs": [
+        "mpx_001",
+        "mpx_002",
+        "mpx_003",
+        "mpx_004",
+        "mpx_005",
+        "mpx_006",
+        "mpx_007",
+        "mpx_008",
+        "mpx_009",
+        "mpx_010"
+      ],
+      "fraction_saved": {
+        "mean": 0.5179351694057577,
+        "median": 0.521031746031746,
+        "sample_std": 0.03882384711938676,
+        "support": 10
+      },
+      "not_found_runs": [],
+      "progress": {
+        "mean": 0.48206483059424227,
+        "median": 0.47896825396825393,
+        "sample_std": 0.038823847119386745,
+        "support": 10
+      },
+      "remaining_fraction": {
+        "mean": 0.03879443485483641,
+        "median": 0.038403135585521275,
+        "sample_std": 0.008829189153629255,
+        "support": 10
+      },
+      "remaining_m2": {
+        "mean": 14.94575,
+        "median": 14.795000000000002,
+        "sample_std": 3.4014892673814385,
+        "support": 10
+      }
+    }
+  }
+}

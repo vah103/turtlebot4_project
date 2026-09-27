@@ -1,0 +1,31 @@
+{
+  "artifacts": {
+    "false_completeness.png": "1c19862a1bb8079b356893dcdfd049e65ef5ee7f1576f6e2d61f02d660224fc6",
+    "future_gain.png": "4b0e4f970c389ce1fc4932db5e386edc99c1fa267170a454c3b59cc188f9aeaa",
+    "gate_r_decisions.csv": "3e05a84ab4cfc96ae84534268ff01486996bdf03c28e5c093bd1cc6d03385e4b",
+    "gate_r_false_completeness.csv": "0ed8b29e85564d68eb13bb071419c0cebe87f33aee20af85acabadf89a3fef1a",
+    "gate_r_folds.csv": "238cb3e866206a51eda5fcc07a689dc13ecd0d9328261ae3a06512dd03eb8419",
+    "gate_r_future_gain.csv": "6a499e64e9a46720df91fd65f38305d5833fb7bbc7f24be2c4a6962f2777fadd",
+    "gate_r_oracle_local.csv": "31bf3902983b795e6dd5b1de82c766dfd78e8ae3dfd8bb3cb12e68773747a452",
+    "gate_r_progress_bins.csv": "77d1cda1ce99f673ae6257c3df9ea4e2943762bc183498624c831ab676b6f8af",
+    "gate_r_runs.csv": "2462b0615bbb2c307ca19fd5b349a0b42b86247126dd7c398609d4cc0c0d1e27",
+    "gate_r_summary.json": "772416f8d165e03fdfb306371adcce863197ec04279120c9815d783c856b07fc",
+    "oracle_local.png": "e8f1dfaa55446d4d3d579247ffb4b62ba346b72979a7977402c3d0badfb2218c",
+    "progress_bins.png": "3c765d283e67ea9e437a8d8030451e04a2e9801228e0724022f6cdf5a439e028",
+    "scatter.png": "819e958dc2ecb08466bdb4504b58fc769acacea0d0381724d912dacaf3e91101",
+    "selected_traces.png": "6fcc2828b9870b2669780a0bb45ce13ec6c2f4d74d987927b2ee898a71ba1f5f",
+    "selective_curve.png": "1879cab43fc75c552ecd6b6c7e9a20b1c4365bf7db751f189054a6ad5e37d426",
+    "tests.log": "8ba6e1eab0273d8630b6d97d43a0d928d9b4a1bacd35d52168968c86aa749815"
+  },
+  "identities": {
+    "accepted_oracle_head": "4f674a81add0c14eb15cc0ab95754130c5923ead",
+    "method_commit": "c883b0ed1e335cad08036d658d305f721ac56429",
+    "oracle_decisions_blob": "9ae8f0479cf37a2b6aa9426a158f120efdc655cf",
+    "shared_evidence_blob": "3e80124d545ea37b2791594dd775a7d953368bea"
+  },
+  "inputs": {
+    "oracle_sha256": "2ca31f97ff4abfeb305667539dd0616af0caabfc5b11743c9bd8347e2f949cf8",
+    "shared_sha256": "993bf0a0e9f1aabfd240778aadd9f6cb34583059ba360cea68fefef97ea2660a"
+  },
+  "no_input_mutation": true
+}
