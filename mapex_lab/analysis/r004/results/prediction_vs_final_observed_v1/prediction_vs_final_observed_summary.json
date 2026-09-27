@@ -1,0 +1,28 @@
+{
+  "schema": "r004_prediction_vs_final_observed_v4",
+  "runs": 10,
+  "included_runs": [
+    "mpx_001",
+    "mpx_002",
+    "mpx_003",
+    "mpx_004",
+    "mpx_005",
+    "mpx_006",
+    "mpx_007",
+    "mpx_008",
+    "mpx_009",
+    "mpx_010"
+  ],
+  "excluded_runs": [],
+  "decisions": 365,
+  "partial_support_decisions": 199,
+  "zero_support_decisions": 0,
+  "F_count": 14589701,
+  "E_count": 10418760,
+  "unsupported_count": 4170941,
+  "support_coverage_pooled": 0.7141174449017152,
+  "method": "V3+V4",
+  "threshold": "occupied iff p > 0.5",
+  "total_sensitivity_rows": 214,
+  "class_sensitivity_rows": 212
+}

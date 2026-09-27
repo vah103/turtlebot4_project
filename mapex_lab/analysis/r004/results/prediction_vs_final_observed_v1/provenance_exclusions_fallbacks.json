@@ -1,0 +1,29 @@
+{
+  "schema": "r004_provenance_v1",
+  "data_root": "/home/dell/turtlebot4_project_r003_p500_backup",
+  "runs": [
+    "mpx_001",
+    "mpx_002",
+    "mpx_003",
+    "mpx_004",
+    "mpx_005",
+    "mpx_006",
+    "mpx_007",
+    "mpx_008",
+    "mpx_009",
+    "mpx_010"
+  ],
+  "final_snapshot_fallbacks": [],
+  "exclusions": [],
+  "method": "R004 V3 + accepted V4 support amendment",
+  "prediction_support": "prediction-artifact geometry with raw-geometry provenance validation",
+  "seed": "SHA256 deterministic",
+  "resamples": 100,
+  "overlay_legend": {
+    "gray": "already observed",
+    "blue": "future-observed target without prediction support",
+    "green": "supported correct class",
+    "red": "supported incorrect class",
+    "white": "outside displayed evidence"
+  }
+}

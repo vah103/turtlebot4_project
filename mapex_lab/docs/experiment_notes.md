@@ -299,3 +299,16 @@ Ghi ngắn gọn các quyết định hoặc sự cố có thể ảnh hưởng 
 ## Initial note
 
 Workspace mới được tạo để làm lại nghiên cứu từ đầu. Chưa có run official mới và chưa chốt bottleneck.
+# 2026-09-23 — R004 offline prediction-quality execution
+
+R004 V3 initially could not score the full future-observed target universe
+because historical predictions have dynamic geometric support. CODEX stopped
+before scoring; V4 was then independently accepted to report conditional
+accuracy on scoreable support and expose unsupported coverage separately.
+
+The final V3+V4 evaluator ran on all ten historical MapEx runs with no
+exclusion or final-snapshot fallback. Results remain pending independent review
+and must not be treated as a scientific prediction-quality verdict yet. Fixed
+total-support and class-composition sensitivities had no eligible final-bin
+decisions under the preregistered sample sizes; the evaluator reports this
+without relaxing the rule.

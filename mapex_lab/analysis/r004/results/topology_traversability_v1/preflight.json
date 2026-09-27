@@ -1,0 +1,151 @@
+{
+  "canonical_canvas": {
+    "canvas_id": "hospital_canvas_v1",
+    "origin_x": -25.6,
+    "origin_y": -60.1,
+    "resolution": 0.05,
+    "shape": [
+      2123,
+      1504
+    ]
+  },
+  "data_root": "/home/com1/turtlebot4_project_r004_topology",
+  "footprint": [
+    [
+      0.189,
+      0.0
+    ],
+    [
+      0.134,
+      -0.134
+    ],
+    [
+      0.0,
+      -0.189
+    ],
+    [
+      -0.134,
+      -0.134
+    ],
+    [
+      -0.189,
+      0.0
+    ],
+    [
+      -0.134,
+      0.134
+    ],
+    [
+      0.0,
+      0.189
+    ],
+    [
+      0.134,
+      0.134
+    ]
+  ],
+  "hostname": "com1",
+  "implementation_files": [
+    "mapex_lab/analysis/r004/evaluate_topology_traversability.py",
+    "mapex_lab/analysis/r004/run_topology_low_touch.py",
+    "mapex_lab/analysis/r004/test_evaluate_topology_traversability.py"
+  ],
+  "implementation_sha": "59ed20b06ba5ffa396605a450d245aa0d6515e3e",
+  "inflation_radius_used_as_hard_radius": false,
+  "output_root": "/home/com1/turtlebot4_project_r004_topology/mapex_lab/analysis/r004/results/topology_traversability_v1",
+  "radius_m": 0.189,
+  "repo_path": "/home/com1/turtlebot4_project_r004_topology",
+  "runs": [
+    {
+      "canonical_resolution_m": 0.05,
+      "decision_count": 35,
+      "footprint_entries": 2,
+      "footprint_valid": true,
+      "frozen_radius_m": 0.189,
+      "run_id": "mpx_001",
+      "run_path": "/home/com1/turtlebot4_project_r004_topology/mapex_lab/experiments/mapex/mpx_001"
+    },
+    {
+      "canonical_resolution_m": 0.05,
+      "decision_count": 37,
+      "footprint_entries": 2,
+      "footprint_valid": true,
+      "frozen_radius_m": 0.189,
+      "run_id": "mpx_002",
+      "run_path": "/home/com1/turtlebot4_project_r004_topology/mapex_lab/experiments/mapex/mpx_002"
+    },
+    {
+      "canonical_resolution_m": 0.05,
+      "decision_count": 41,
+      "footprint_entries": 2,
+      "footprint_valid": true,
+      "frozen_radius_m": 0.189,
+      "run_id": "mpx_003",
+      "run_path": "/home/com1/turtlebot4_project_r004_topology/mapex_lab/experiments/mapex/mpx_003"
+    },
+    {
+      "canonical_resolution_m": 0.05,
+      "decision_count": 36,
+      "footprint_entries": 2,
+      "footprint_valid": true,
+      "frozen_radius_m": 0.189,
+      "run_id": "mpx_004",
+      "run_path": "/home/com1/turtlebot4_project_r004_topology/mapex_lab/experiments/mapex/mpx_004"
+    },
+    {
+      "canonical_resolution_m": 0.05,
+      "decision_count": 34,
+      "footprint_entries": 2,
+      "footprint_valid": true,
+      "frozen_radius_m": 0.189,
+      "run_id": "mpx_005",
+      "run_path": "/home/com1/turtlebot4_project_r004_topology/mapex_lab/experiments/mapex/mpx_005"
+    },
+    {
+      "canonical_resolution_m": 0.05,
+      "decision_count": 36,
+      "footprint_entries": 2,
+      "footprint_valid": true,
+      "frozen_radius_m": 0.189,
+      "run_id": "mpx_006",
+      "run_path": "/home/com1/turtlebot4_project_r004_topology/mapex_lab/experiments/mapex/mpx_006"
+    },
+    {
+      "canonical_resolution_m": 0.05,
+      "decision_count": 35,
+      "footprint_entries": 2,
+      "footprint_valid": true,
+      "frozen_radius_m": 0.189,
+      "run_id": "mpx_007",
+      "run_path": "/home/com1/turtlebot4_project_r004_topology/mapex_lab/experiments/mapex/mpx_007"
+    },
+    {
+      "canonical_resolution_m": 0.05,
+      "decision_count": 35,
+      "footprint_entries": 2,
+      "footprint_valid": true,
+      "frozen_radius_m": 0.189,
+      "run_id": "mpx_008",
+      "run_path": "/home/com1/turtlebot4_project_r004_topology/mapex_lab/experiments/mapex/mpx_008"
+    },
+    {
+      "canonical_resolution_m": 0.05,
+      "decision_count": 36,
+      "footprint_entries": 2,
+      "footprint_valid": true,
+      "frozen_radius_m": 0.189,
+      "run_id": "mpx_009",
+      "run_path": "/home/com1/turtlebot4_project_r004_topology/mapex_lab/experiments/mapex/mpx_009"
+    },
+    {
+      "canonical_resolution_m": 0.05,
+      "decision_count": 40,
+      "footprint_entries": 2,
+      "footprint_valid": true,
+      "frozen_radius_m": 0.189,
+      "run_id": "mpx_010",
+      "run_path": "/home/com1/turtlebot4_project_r004_topology/mapex_lab/experiments/mapex/mpx_010"
+    }
+  ],
+  "schema": "r004_topology_preflight_v1"
+}
