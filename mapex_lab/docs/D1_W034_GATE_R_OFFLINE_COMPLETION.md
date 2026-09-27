@@ -1,6 +1,6 @@
 # D1 W034 Gate R Historical Offline Completion
 
-Status: **COMPLETE_PENDING_REVIEW**
+Status: **REVISED_PENDING_REREVIEW**
 
 - Task: `D1-R-OFFLINE` / H084
 - Executor: W034 / CODEX
@@ -13,6 +13,23 @@ Status: **COMPLETE_PENDING_REVIEW**
 - Frozen method commit: `c883b0ed1e335cad08036d658d305f721ac56429`
 - Oracle decisions blob: `9ae8f0479cf37a2b6aa9426a158f120efdc655cf`
 - Shared evidence blob: `3e80124d545ea37b2791594dd775a7d953368bea`
+
+## H085 bounded revision
+
+The four W029 findings were corrected without changing the primary Gate-R
+method, fold selection, primary metrics or historical classification:
+
+- future-gain output now includes per-run rho, low-C50 selective ratio and
+  strict-late support/rho/selective ratio;
+- source semantics are explicit and source-faithful: coverage gain is
+  `1 - known_fraction_final`, while observed-area gain is
+  `F_count * runtime_resolution²`; `macro_iou` is correctly rejected as an
+  observed-IoU proxy, so FutureIoUGain remains unavailable/NA;
+- the five diagnostic figures named in H085 are now real selective curves,
+  event inventory, aggregated progress-bin rho/TRR, exact OracleStop_5 ±3,
+  and complete future-gain panels rather than generic scatter placeholders;
+- progress-bin rho/TRR aggregation now uses the same run set satisfying the
+  frozen `>=3` finite-pair support rule, with valid-rho/TRR counts explicit.
 
 ## Verification
 
