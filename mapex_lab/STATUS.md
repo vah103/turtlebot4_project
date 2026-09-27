@@ -1,5 +1,12 @@
 # mapex_lab status
 
+## D1 retrospective oracle STOP — W032 / H080
+
+- COMPLETE_PENDING_REVIEW: USER-approved DELL override; exact H080 structural-GT oracle executed on 10 runs / 365 decisions.
+- TESTS: 27/27 PASS; `mpx_001` smoke PASS; full artifact/hash/no-mutation/deterministic-rerun checks PASS.
+- LATEST RESULT: footprint-aware structural universe = 154,102 cells; persistent 1/5/10% oracle found in all 10 runs; primary 5% mean historical fraction saved = 0.517935 (descriptive development result only).
+- NEXT ACTION: W029 / Chat 2 successor independently reviews `docs/D1_W032_ORACLE_STOP_OFFLINE_COMPLETION.md` and `analysis/d1/results/oracle_stop_retro_v1/`. No online rule fitting or Gate R activation.
+
 ## D1 Gate U offline scoring — W027 / H074
 
 - REVIEWED / CANONICAL: W016 same-checker ACCEPT on exact revised delivery `97b16e52048a4cfc47b808103cf25e7737e938e1`; PR #31 merged unchanged into canonical main at merge commit `34bc65817d7eb7a42a5ff3149a860748c91fa489`.

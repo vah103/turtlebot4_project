@@ -1,0 +1,32 @@
+test_01_universe_constants (test_oracle_stop_retro.Tests.test_01_universe_constants) ... ok
+test_02_integer_crossing (test_oracle_stop_retro.Tests.test_02_integer_crossing) ... ok
+test_03_transient_crossing (test_oracle_stop_retro.Tests.test_03_transient_crossing) ... ok
+test_04_no_crossing (test_oracle_stop_retro.Tests.test_04_no_crossing) ... ok
+test_05_zero_remaining (test_oracle_stop_retro.Tests.test_05_zero_remaining) ... ok
+test_06_missing_suffix_blocks (test_oracle_stop_retro.Tests.test_06_missing_suffix_blocks) ... ok
+test_07_best_tie_earliest (test_oracle_stop_retro.Tests.test_07_best_tie_earliest) ... ok
+test_08_monotonicity (test_oracle_stop_retro.Tests.test_08_monotonicity) ... ok
+test_09_no_corner_cut (test_oracle_stop_retro.Tests.test_09_no_corner_cut) ... ok
+test_10_known_projection_uses_known_both (test_oracle_stop_retro.Tests.test_10_known_projection_uses_known_both) ... ok
+test_11_outside_support_unresolved (test_oracle_stop_retro.Tests.test_11_outside_support_unresolved) ... ok
+test_12_prediction_absent (test_oracle_stop_retro.Tests.test_12_prediction_absent) ... ok
+test_13_fixed_denominator (test_oracle_stop_retro.Tests.test_13_fixed_denominator) ... ok
+test_14_universe_reject_duplicates (test_oracle_stop_retro.Tests.test_14_universe_reject_duplicates) ... ok
+test_15_signal_offsets (test_oracle_stop_retro.Tests.test_15_signal_offsets) ... ok
+test_16_determinism (test_oracle_stop_retro.Tests.test_16_determinism) ... ok
+test_17_tolerances_frozen (test_oracle_stop_retro.Tests.test_17_tolerances_frozen) ... ok
+test_18_na_preserved (test_oracle_stop_retro.Tests.test_18_na_preserved) ... ok
+test_19_closed_stencil_boundary (test_oracle_stop_retro.Tests.test_19_closed_stencil_boundary) ... ok
+test_20_geometry_identity (test_oracle_stop_retro.Tests.test_20_geometry_identity) ... ok
+test_21_helper_identity (test_oracle_stop_retro.Tests.test_21_helper_identity) ... ok
+test_22_shared_identity (test_oracle_stop_retro.Tests.test_22_shared_identity) ... ok
+test_23_reference_identity (test_oracle_stop_retro.Tests.test_23_reference_identity) ... ok
+test_24_narrow_corridor_rejected (test_oracle_stop_retro.Tests.test_24_narrow_corridor_rejected) ... ok
+test_25_disconnected_pocket_excluded (test_oracle_stop_retro.Tests.test_25_disconnected_pocket_excluded) ... ok
+test_26_runtime_growth_projection (test_oracle_stop_retro.Tests.test_26_runtime_growth_projection) ... ok
+test_27_raw_input_hash_mismatch (test_oracle_stop_retro.Tests.test_27_raw_input_hash_mismatch) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 0.881s
+
+OK
