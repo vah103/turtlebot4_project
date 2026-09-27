@@ -1,0 +1,50 @@
+{
+  "destination": "new standalone Google Sheets file",
+  "historical_workbook_mutated": false,
+  "presentation": {
+    "curve_axis": "adapted step 0..500",
+    "primary": [
+      "Coverage AUC",
+      "Occupied-IoU AUC",
+      "TU AUC (project-added)"
+    ],
+    "secondary": [
+      "Coverage@500",
+      "Occupied-IoU@500",
+      "TU@500"
+    ],
+    "uncertainty": "across-run sample standard deviation"
+  },
+  "schema": "r003_paper500_tab_layout_v1",
+  "tabs": [
+    {
+      "charts": [
+        "coverage_vs_adapted_step.png",
+        "occupied_iou_vs_adapted_step.png",
+        "tu_vs_adapted_step.png"
+      ],
+      "name": "Summary",
+      "source": "tabs/Summary.csv"
+    },
+    {
+      "name": "NF",
+      "source": "tabs/NF.csv"
+    },
+    {
+      "name": "MapEx",
+      "source": "tabs/MapEx.csv"
+    },
+    {
+      "name": "Coverage Curves",
+      "source": "tabs/Coverage_Curves.csv"
+    },
+    {
+      "name": "IoU Curves",
+      "source": "tabs/Occupied_IoU_Curves.csv"
+    },
+    {
+      "name": "TU Curves",
+      "source": "tabs/TU_Curves.csv"
+    }
+  ]
+}
