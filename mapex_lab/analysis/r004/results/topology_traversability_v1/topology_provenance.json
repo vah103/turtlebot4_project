@@ -1,0 +1,26 @@
+{
+  "accepted_base_sha": "3ba38c2e309673b698f9882499cedd402916c189",
+  "aggregation": "decision -> run/bin median -> equal-run mean/sample std/median/count",
+  "collision": "closed disk against full closed cell squares; touching collides",
+  "data_root": "/home/com1/turtlebot4_project_r004_topology",
+  "graph": "8-neighbour N,NE,E,SE,S,SW,W,NW; no corner cutting",
+  "outside_domain": "collision",
+  "pair_denominator": "all cells in reference source-reachable component; prediction-occupied retained in N",
+  "radius_m": 0.189,
+  "runs": [
+    "mpx_001",
+    "mpx_002",
+    "mpx_003",
+    "mpx_004",
+    "mpx_005",
+    "mpx_006",
+    "mpx_007",
+    "mpx_008",
+    "mpx_009",
+    "mpx_010"
+  ],
+  "schema": "r004_topology_provenance_v1",
+  "source": "trajectory exact-time or strict bracket interpolation; floor containing-cell; no snapping/extrapolation",
+  "threshold": "occupied iff p > 0.5",
+  "underlying_base_sha": "550fa35a082041972133700f9688130bc73fd6f3"
+}

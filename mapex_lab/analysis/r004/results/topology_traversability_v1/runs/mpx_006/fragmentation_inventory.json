@@ -1,0 +1,655 @@
+[
+  {
+    "component_count": NaN,
+    "components": [],
+    "decision_id": 1,
+    "pair_denominator_n": 0,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 5,
+    "components": [
+      {
+        "fraction": 0.8122410594006557,
+        "label": 2,
+        "minimum_cell": [
+          1117,
+          450
+        ],
+        "size": 63912
+      },
+      {
+        "fraction": 0.050415575833057974,
+        "label": 4,
+        "minimum_cell": [
+          1232,
+          707
+        ],
+        "size": 3967
+      },
+      {
+        "fraction": 0.025849579340670514,
+        "label": 5,
+        "minimum_cell": [
+          1233,
+          274
+        ],
+        "size": 2034
+      },
+      {
+        "fraction": 0.003927000991281804,
+        "label": 3,
+        "minimum_cell": [
+          1126,
+          429
+        ],
+        "size": 309
+      },
+      {
+        "fraction": 1.2708741072109397e-05,
+        "label": 1,
+        "minimum_cell": [
+          1117,
+          429
+        ],
+        "size": 1
+      }
+    ],
+    "decision_id": 2,
+    "pair_denominator_n": 78686,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 6,
+    "components": [
+      {
+        "fraction": 0.7611916952563688,
+        "label": 1,
+        "minimum_cell": [
+          1062,
+          464
+        ],
+        "size": 72996
+      },
+      {
+        "fraction": 0.04200339948069283,
+        "label": 6,
+        "minimum_cell": [
+          1234,
+          680
+        ],
+        "size": 4028
+      },
+      {
+        "fraction": 0.03773840683233052,
+        "label": 4,
+        "minimum_cell": [
+          1174,
+          264
+        ],
+        "size": 3619
+      },
+      {
+        "fraction": 0.029615107876158796,
+        "label": 2,
+        "minimum_cell": [
+          1065,
+          267
+        ],
+        "size": 2840
+      },
+      {
+        "fraction": 0.02399449409262021,
+        "label": 5,
+        "minimum_cell": [
+          1234,
+          272
+        ],
+        "size": 2301
+      },
+      {
+        "fraction": 0.02394235481819035,
+        "label": 3,
+        "minimum_cell": [
+          1172,
+          689
+        ],
+        "size": 2296
+      }
+    ],
+    "decision_id": 3,
+    "pair_denominator_n": 95897,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": NaN,
+    "components": [],
+    "decision_id": 4,
+    "pair_denominator_n": 0,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 5,
+    "components": [
+      {
+        "fraction": 0.8833102553765797,
+        "label": 2,
+        "minimum_cell": [
+          996,
+          359
+        ],
+        "size": 100791
+      },
+      {
+        "fraction": 0.03413492717297951,
+        "label": 7,
+        "minimum_cell": [
+          1232,
+          702
+        ],
+        "size": 3895
+      },
+      {
+        "fraction": 0.006134646731986048,
+        "label": 6,
+        "minimum_cell": [
+          1231,
+          658
+        ],
+        "size": 700
+      },
+      {
+        "fraction": 0.00014022049673110968,
+        "label": 5,
+        "minimum_cell": [
+          1112,
+          320
+        ],
+        "size": 16
+      },
+      {
+        "fraction": 3.505512418277742e-05,
+        "label": 3,
+        "minimum_cell": [
+          996,
+          463
+        ],
+        "size": 4
+      }
+    ],
+    "decision_id": 5,
+    "pair_denominator_n": 114106,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 4,
+    "components": [
+      {
+        "fraction": 0.8787883280944191,
+        "label": 1,
+        "minimum_cell": [
+          949,
+          452
+        ],
+        "size": 118538
+      },
+      {
+        "fraction": 0.046356977640709326,
+        "label": 3,
+        "minimum_cell": [
+          1173,
+          684
+        ],
+        "size": 6253
+      },
+      {
+        "fraction": 0.0197793725164581,
+        "label": 2,
+        "minimum_cell": [
+          951,
+          521
+        ],
+        "size": 2668
+      },
+      {
+        "fraction": 0.004989324476602811,
+        "label": 4,
+        "minimum_cell": [
+          1233,
+          653
+        ],
+        "size": 673
+      }
+    ],
+    "decision_id": 6,
+    "pair_denominator_n": 134888,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": NaN,
+    "components": [],
+    "decision_id": 7,
+    "pair_denominator_n": 0,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 3,
+    "components": [
+      {
+        "fraction": 0.8979328069406582,
+        "label": 1,
+        "minimum_cell": [
+          949,
+          580
+        ],
+        "size": 120886
+      },
+      {
+        "fraction": 0.04744219213085042,
+        "label": 4,
+        "minimum_cell": [
+          1172,
+          684
+        ],
+        "size": 6387
+      },
+      {
+        "fraction": 0.0050287089513990505,
+        "label": 2,
+        "minimum_cell": [
+          950,
+          439
+        ],
+        "size": 677
+      }
+    ],
+    "decision_id": 8,
+    "pair_denominator_n": 134627,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": NaN,
+    "components": [],
+    "decision_id": 9,
+    "pair_denominator_n": 0,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 1,
+    "components": [
+      {
+        "fraction": 0.9684515234889707,
+        "label": 1,
+        "minimum_cell": [
+          946,
+          586
+        ],
+        "size": 141852
+      }
+    ],
+    "decision_id": 10,
+    "pair_denominator_n": 146473,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 1,
+    "components": [
+      {
+        "fraction": 0.9669563205563532,
+        "label": 1,
+        "minimum_cell": [
+          947,
+          572
+        ],
+        "size": 142101
+      }
+    ],
+    "decision_id": 11,
+    "pair_denominator_n": 146957,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 2,
+    "components": [
+      {
+        "fraction": 0.9679995098840058,
+        "label": 1,
+        "minimum_cell": [
+          947,
+          570
+        ],
+        "size": 142203
+      },
+      {
+        "fraction": 0.009237325055818766,
+        "label": 2,
+        "minimum_cell": [
+          1277,
+          702
+        ],
+        "size": 1357
+      }
+    ],
+    "decision_id": 12,
+    "pair_denominator_n": 146904,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 1,
+    "components": [
+      {
+        "fraction": 0.9840884445141622,
+        "label": 1,
+        "minimum_cell": [
+          947,
+          570
+        ],
+        "size": 144290
+      }
+    ],
+    "decision_id": 13,
+    "pair_denominator_n": 146623,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": NaN,
+    "components": [],
+    "decision_id": 14,
+    "pair_denominator_n": 0,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 1,
+    "components": [
+      {
+        "fraction": 0.9861038190632693,
+        "label": 1,
+        "minimum_cell": [
+          947,
+          570
+        ],
+        "size": 144621
+      }
+    ],
+    "decision_id": 15,
+    "pair_denominator_n": 146659,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 1,
+    "components": [
+      {
+        "fraction": 0.9889467328043231,
+        "label": 1,
+        "minimum_cell": [
+          947,
+          570
+        ],
+        "size": 144943
+      }
+    ],
+    "decision_id": 16,
+    "pair_denominator_n": 146563,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 1,
+    "components": [
+      {
+        "fraction": 0.9914756608584495,
+        "label": 1,
+        "minimum_cell": [
+          947,
+          568
+        ],
+        "size": 145040
+      }
+    ],
+    "decision_id": 17,
+    "pair_denominator_n": 146287,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": NaN,
+    "components": [],
+    "decision_id": 18,
+    "pair_denominator_n": 0,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": NaN,
+    "components": [],
+    "decision_id": 19,
+    "pair_denominator_n": 0,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 1,
+    "components": [
+      {
+        "fraction": 0.9934587917522116,
+        "label": 1,
+        "minimum_cell": [
+          943,
+          764
+        ],
+        "size": 145650
+      }
+    ],
+    "decision_id": 20,
+    "pair_denominator_n": 146609,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": NaN,
+    "components": [],
+    "decision_id": 21,
+    "pair_denominator_n": 0,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": NaN,
+    "components": [],
+    "decision_id": 22,
+    "pair_denominator_n": 0,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 1,
+    "components": [
+      {
+        "fraction": 0.9985211032433501,
+        "label": 1,
+        "minimum_cell": [
+          945,
+          660
+        ],
+        "size": 146514
+      }
+    ],
+    "decision_id": 23,
+    "pair_denominator_n": 146731,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 1,
+    "components": [
+      {
+        "fraction": 0.9998636469000123,
+        "label": 1,
+        "minimum_cell": [
+          949,
+          359
+        ],
+        "size": 146658
+      }
+    ],
+    "decision_id": 24,
+    "pair_denominator_n": 146678,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": NaN,
+    "components": [],
+    "decision_id": 25,
+    "pair_denominator_n": 0,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": NaN,
+    "components": [],
+    "decision_id": 26,
+    "pair_denominator_n": 0,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": NaN,
+    "components": [],
+    "decision_id": 27,
+    "pair_denominator_n": 0,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": NaN,
+    "components": [],
+    "decision_id": 28,
+    "pair_denominator_n": 0,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 1,
+    "components": [
+      {
+        "fraction": 1.0,
+        "label": 1,
+        "minimum_cell": [
+          949,
+          359
+        ],
+        "size": 146899
+      }
+    ],
+    "decision_id": 29,
+    "pair_denominator_n": 146899,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 1,
+    "components": [
+      {
+        "fraction": 1.0,
+        "label": 1,
+        "minimum_cell": [
+          949,
+          359
+        ],
+        "size": 146899
+      }
+    ],
+    "decision_id": 30,
+    "pair_denominator_n": 146899,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 1,
+    "components": [
+      {
+        "fraction": 1.0,
+        "label": 1,
+        "minimum_cell": [
+          949,
+          359
+        ],
+        "size": 146899
+      }
+    ],
+    "decision_id": 31,
+    "pair_denominator_n": 146899,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 1,
+    "components": [
+      {
+        "fraction": 1.0,
+        "label": 1,
+        "minimum_cell": [
+          949,
+          359
+        ],
+        "size": 146899
+      }
+    ],
+    "decision_id": 32,
+    "pair_denominator_n": 146899,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 1,
+    "components": [
+      {
+        "fraction": 1.0,
+        "label": 1,
+        "minimum_cell": [
+          949,
+          359
+        ],
+        "size": 146899
+      }
+    ],
+    "decision_id": 33,
+    "pair_denominator_n": 146899,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 1,
+    "components": [
+      {
+        "fraction": 1.0,
+        "label": 1,
+        "minimum_cell": [
+          949,
+          359
+        ],
+        "size": 146899
+      }
+    ],
+    "decision_id": 34,
+    "pair_denominator_n": 146899,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 1,
+    "components": [
+      {
+        "fraction": 1.0,
+        "label": 1,
+        "minimum_cell": [
+          949,
+          359
+        ],
+        "size": 146899
+      }
+    ],
+    "decision_id": 35,
+    "pair_denominator_n": 146899,
+    "run_id": "mpx_006"
+  },
+  {
+    "component_count": 1,
+    "components": [
+      {
+        "fraction": 1.0,
+        "label": 1,
+        "minimum_cell": [
+          949,
+          359
+        ],
+        "size": 146899
+      }
+    ],
+    "decision_id": 36,
+    "pair_denominator_n": 146899,
+    "run_id": "mpx_006"
+  }
+]

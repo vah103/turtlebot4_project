@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/home/com1/miniconda3/bin/python3",
+    "-m",
+    "unittest",
+    "mapex_lab.analysis.r004.test_evaluate_topology_traversability",
+    "mapex_lab.analysis.r004.test_evaluate_prediction_vs_final_observed",
+    "mapex_lab.analysis.r004.test_evaluate_free_error_diagnostic"
+  ],
+  "status": "PASS",
+  "tests_run": 53
+}
