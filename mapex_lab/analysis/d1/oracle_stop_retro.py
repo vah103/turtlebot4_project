@@ -22,6 +22,9 @@ GT_SUMMARY_BLOB = "81a39bfd9484a6704a3a5f5f1893ae5699830866"
 GATE_P_BLOB = "c5bf4e3e6f45c81afef135166fc96e088719658e"
 SHARED_BLOB = "3e80124d545ea37b2791594dd775a7d953368bea"
 R004_REFERENCE = "61b91640ca1d4fd608f716e152a91573ec072b5a"
+TECHNICAL_BASE = "cbdfc28f61b2e9e75560d1de7fb2ed7eebfbdfc2"
+EXECUTED_IMPLEMENTATION = "5ac3100b48e7e41f7e4b983ca19123b0d3d3afc7"
+DELIVERY_REVISION = "1ffa659f1284a0101461b69888d9f8c3578bd7ec"
 
 
 def sha256_file(path: Path) -> str:
@@ -89,12 +92,34 @@ def persistent_oracle(values:list[int|None], tolerance:int, denominator:int) -> 
             "persistence_changed":naive!=selected}
 
 
-def monotonicity(values:list[int|None]) -> dict[str,Any]:
+def monotonicity(values:list[int|None], decision_ids:list[int]|None=None) -> dict[str,Any]:
+    if decision_ids is None: decision_ids=list(range(1,len(values)+1))
+    if len(decision_ids)!=len(values): raise ValueError("decision ID/value length mismatch")
     changes=[]
     for i,(a,b) in enumerate(zip(values,values[1:])):
-        if a is not None and b is not None and b>a: changes.append((i+1,b-a))
+        if a is not None and b is not None and b>a: changes.append((decision_ids[i+1],b-a))
     return {"upward_count":len(changes),"max_upward_cells":max((v for _,v in changes),default=0),
-            "affected_next_indices":[i for i,_ in changes]}
+            "max_upward_m2":max((v for _,v in changes),default=0)*GT_RESOLUTION**2,
+            "affected_next_decision_ids":[i for i,_ in changes]}
+
+
+def add_qualification_fields(decisions:pd.DataFrame) -> pd.DataFrame:
+    """Add raw current and complete-suffix qualification without trace repair."""
+    decisions=decisions.copy()
+    for p in TOLERANCES:
+        current=pd.Series(False,index=decisions.index,dtype=bool)
+        persistent=pd.Series(False,index=decisions.index,dtype=bool)
+        for _,group in decisions.groupby("run_id",sort=True):
+            group=group.sort_values("decision_index")
+            evaluable=group.oracle_truth_evaluable.astype(bool).tolist()
+            values=[None if pd.isna(v) else int(v) for v in group.N_remaining]
+            qualifies=[ok and v is not None and 100*v<=p*int(group.N_GT.iloc[0]) for ok,v in zip(evaluable,values)]
+            suffix=[all(evaluable[i:]) and all(qualifies[i:]) for i in range(len(group))]
+            current.loc[group.index]=qualifies
+            persistent.loc[group.index]=suffix
+        decisions[f"oracle_{p}_current_qualifies"]=current
+        decisions[f"oracle_{p}_persistent_suffix_qualifies"]=persistent
+    return decisions
 
 
 def score_decisions(shared:pd.DataFrame,data_root:Path,gt,universe:np.ndarray) -> pd.DataFrame:
@@ -123,20 +148,32 @@ def summarize_runs(decisions:pd.DataFrame) -> tuple[pd.DataFrame,dict[str,Any]]:
     run_rows=[]
     for run_id,group in decisions.groupby("run_id",sort=True):
         group=group.sort_values("decision_index"); values=[None if pd.isna(v) else int(v) for v in group.N_remaining]
+        decision_ids=group.decision_id.astype(int).tolist()
         base={"run_id":run_id,"decision_count":len(group),"N_GT":int(group.N_GT.iloc[0]),
-              "truth_evaluable_rows":int(group.oracle_truth_evaluable.sum()),**monotonicity(values)}
+              "truth_evaluable_rows":int(group.oracle_truth_evaluable.sum()),**monotonicity(values,decision_ids)}
         for p in TOLERANCES:
             out=persistent_oracle(values,p,base["N_GT"]); prefix=f"oracle_{p}"
             base[f"{prefix}_status"]=out["status"]; base[f"{prefix}_naive_decision"]=None if out["naive_index"] is None else int(group.iloc[out["naive_index"]].decision_id)
             base[f"{prefix}_decision"]=None if out["index"] is None else int(group.iloc[out["index"]].decision_id)
             base[f"{prefix}_persistence_changed"]=out["persistence_changed"]
             base[f"{prefix}_best_decision"]=None if out["best_index"] is None else int(group.iloc[out["best_index"]].decision_id)
+            if out["best_index"] is not None:
+                best=group.iloc[out["best_index"]]
+                base[f"{prefix}_best_remaining_cells"]=int(best.N_remaining)
+                base[f"{prefix}_best_remaining_m2"]=float(best.A_true_remaining_m2)
+                base[f"{prefix}_best_remaining_fraction"]=float(best.OracleRemainingFraction_GT)
+            else:
+                for suffix in ("best_remaining_cells","best_remaining_m2","best_remaining_fraction"): base[f"{prefix}_{suffix}"]=np.nan
             if out["index"] is not None:
                 r=group.iloc[out["index"]]; base[f"{prefix}_progress"]=float(r.decision_progress); base[f"{prefix}_fraction_saved"]=1-float(r.decision_progress)
                 base[f"{prefix}_decisions_saved"]=len(group)-out["index"]-1
                 base[f"{prefix}_remaining_cells"]=int(r.N_remaining); base[f"{prefix}_remaining_m2"]=float(r.A_true_remaining_m2); base[f"{prefix}_remaining_fraction"]=float(r.OracleRemainingFraction_GT)
             else:
                 for suffix in ("progress","fraction_saved","decisions_saved","remaining_cells","remaining_m2","remaining_fraction"): base[f"{prefix}_{suffix}"]=np.nan
+        final=group.iloc[-1]
+        base["final_remaining_cells"]=int(final.N_remaining) if pd.notna(final.N_remaining) else np.nan
+        base["final_remaining_m2"]=float(final.A_true_remaining_m2) if pd.notna(final.A_true_remaining_m2) else np.nan
+        base["final_remaining_fraction"]=float(final.OracleRemainingFraction_GT) if pd.notna(final.OracleRemainingFraction_GT) else np.nan
         run_rows.append(base)
     runs=pd.DataFrame(run_rows)
     summary={"runs":len(runs),"decision_rows":len(decisions),"N_GT":int(runs.N_GT.iloc[0]),"tolerances":{}}

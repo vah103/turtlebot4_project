@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import argparse,json,subprocess
+import argparse,json,re,subprocess
 from pathlib import Path
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 import pandas as pd
 from oracle_stop_retro import *
 
@@ -14,11 +15,15 @@ def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--data-root",type=Path,required=True); ap.add_argument("--r004-reference",type=Path,required=True); ap.add_argument("--output",type=Path,required=True); ap.add_argument("--runs",default=",".join(RUNS)); ap.add_argument("--skip-tests",action="store_true"); a=ap.parse_args()
     root=Path(__file__).resolve().parents[3]; out=a.output; out.mkdir(parents=True,exist_ok=True)
     if not a.skip_tests:
-        with (out/"tests.log").open("w") as s:
-            p=subprocess.run(["python3","-m","unittest","-v","test_oracle_stop_retro.py"],cwd=Path(__file__).parent,stdout=s,stderr=subprocess.STDOUT)
+        p=subprocess.run(["python3","-m","unittest","-v","test_oracle_stop_retro.py"],cwd=Path(__file__).parent,
+                         stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+        stable_log=re.sub(r"Ran (\d+) tests? in [0-9.]+s",r"Ran \1 tests",p.stdout)
+        (out/"tests.log").write_text(stable_log,encoding="utf-8")
         if p.returncode: return p.returncode
     identities={
-      "technical_base":subprocess.check_output(["git","rev-parse","HEAD"],cwd=root,text=True).strip(),
+      "technical_base":TECHNICAL_BASE,
+      "executed_implementation":EXECUTED_IMPLEMENTATION,
+      "delivery_revision":DELIVERY_REVISION,
       "gt_blob":git_blob(root,"HEAD","mapex_lab/ground_truth/new_room/generated/new_room_structural_gt_v2.npz"),
       "gt_summary_blob":git_blob(root,"HEAD","mapex_lab/ground_truth/new_room/generated/new_room_structural_gt_v2_summary.json"),
       "gate_p_blob":git_blob(root,"HEAD","mapex_lab/analysis/d1/d1_gate_p.py"),
@@ -32,7 +37,7 @@ def main():
     selected=tuple(x for x in a.runs.split(",") if x); shared=shared[shared.run_id.isin(selected)].copy()
     raw_fingerprint_before=raw_input_fingerprint(shared,a.data_root)
     gt=load_structural_gt(root/"mapex_lab/ground_truth/new_room/generated/new_room_structural_gt_v2.npz"); topo,helper=load_r004_helper(a.r004_reference); universe=structural_universe(gt,topo)
-    decisions=score_decisions(shared,a.data_root,gt,universe); runs,summary=summarize_runs(decisions); around=signal_around(decisions,runs)
+    decisions=add_qualification_fields(score_decisions(shared,a.data_root,gt,universe)); runs,summary=summarize_runs(decisions); around=signal_around(decisions,runs)
     decisions.to_csv(out/"oracle_decisions.csv",index=False); runs.to_csv(out/"oracle_runs.csv",index=False); around.to_csv(out/"signal_around_oracle.csv",index=False)
     raw_fingerprint_after=raw_input_fingerprint(shared,a.data_root)
     if raw_fingerprint_after!=raw_fingerprint_before: raise RuntimeError("raw inputs changed during execution")
@@ -40,9 +45,21 @@ def main():
     summary.update({"identities":identities,"data_root":str(a.data_root),"structural_universe_cells":int(universe.sum()),"structural_universe_m2":float(universe.sum()*GT_RESOLUTION**2),"selected_runs":list(selected),"no_input_mutation":True})
     json_dump(summary,out/"oracle_summary.json")
     fig,ax=plt.subplots(figsize=(10,6))
-    for rid,g in decisions.groupby("run_id"): ax.plot(g.decision_progress,g.OracleRemainingFraction_GT,label=rid,alpha=.8)
+    marker_by_tolerance={1:"o",5:"s",10:"^"}
+    for rid,g in decisions.groupby("run_id"):
+        line,=ax.plot(g.decision_progress,g.OracleRemainingFraction_GT,label=rid,alpha=.8)
+        rr=runs[runs.run_id==rid].iloc[0]
+        for p in TOLERANCES:
+            decision=rr[f"oracle_{p}_decision"]
+            if pd.notna(decision):
+                point=g[g.decision_id==int(decision)].iloc[0]
+                ax.scatter(point.decision_progress,point.OracleRemainingFraction_GT,marker=marker_by_tolerance[p],s=34,
+                           color=line.get_color(),edgecolor="black",linewidth=.35,zorder=4)
     for p in TOLERANCES: ax.axhline(p/100,ls="--",lw=.8)
-    ax.set(xlabel="Decision progress",ylabel="True remaining reachable fraction"); ax.legend(ncol=2,fontsize=7); fig.tight_layout(); fig.savefig(out/"remaining_fraction_traces.png",dpi=160); plt.close(fig)
+    handles,labels=ax.get_legend_handles_labels()
+    handles.extend(Line2D([],[],color="black",marker=marker_by_tolerance[p],linestyle="None",label=f"OracleStop_{p}") for p in TOLERANCES)
+    labels.extend(f"OracleStop_{p}" for p in TOLERANCES)
+    ax.set(xlabel="Decision progress",ylabel="True remaining reachable fraction"); ax.legend(handles,labels,ncol=2,fontsize=7); fig.tight_layout(); fig.savefig(out/"remaining_fraction_traces.png",dpi=160); plt.close(fig)
     fig,ax=plt.subplots(figsize=(10,5)); x=range(len(runs)); w=.24
     for j,p in enumerate(TOLERANCES): ax.bar([i+(j-1)*w for i in x],runs[f"oracle_{p}_fraction_saved"],w,label=f"{p}%")
     ax.set_xticks(list(x),runs.run_id,rotation=45); ax.set_ylabel("Fraction saved"); ax.legend(); fig.tight_layout(); fig.savefig(out/"oracle_savings.png",dpi=160); plt.close(fig)

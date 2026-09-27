@@ -12,7 +12,7 @@ class Tests(unittest.TestCase):
  def test_05_zero_remaining(self): self.assertEqual(persistent_oracle([1,0,0],1,100)["index"],0)
  def test_06_missing_suffix_blocks(self): self.assertEqual(persistent_oracle([4,3,None],5,100)["status"],"INSUFFICIENT_TRUTH_SUPPORT")
  def test_07_best_tie_earliest(self): self.assertEqual(persistent_oracle([5,2,2],1,100)["best_index"],1)
- def test_08_monotonicity(self): self.assertEqual(monotonicity([5,3,4,2]),{"upward_count":1,"max_upward_cells":1,"affected_next_indices":[2]})
+ def test_08_monotonicity(self): self.assertEqual(monotonicity([5,3,4,2],[10,20,30,40]),{"upward_count":1,"max_upward_cells":1,"max_upward_m2":.0025000000000000005,"affected_next_decision_ids":[30]})
  def test_09_no_corner_cut(self):
   ref=Path(__file__).resolve().parents[4]/"d1-r004-reference"; topo,_=load_r004_helper(ref)
   mask=np.array([[1,0],[0,1]],dtype=bool); self.assertEqual(int(topo.reachable(mask,(0,0)).sum()),1)
@@ -60,4 +60,13 @@ class Tests(unittest.TestCase):
    root=Path(tmp); run=root/'mpx_001'; run.mkdir(); (run/'raw.npz').write_bytes(b'x')
    frame=pd.DataFrame([{'run_id':'mpx_001','decision_id':1,'raw_map':'raw.npz','raw_map_sha256':'bad'}])
    with self.assertRaises(ValueError): raw_input_fingerprint(frame,root)
+ def test_28_qualification_fields(self):
+  frame=pd.DataFrame({"run_id":["x"]*3,"decision_index":[0,1,2],"N_GT":[100]*3,"N_remaining":[4,7,3],"oracle_truth_evaluable":[True]*3})
+  out=add_qualification_fields(frame)
+  self.assertEqual(out.oracle_5_current_qualifies.tolist(),[True,False,True])
+  self.assertEqual(out.oracle_5_persistent_suffix_qualifies.tolist(),[False,False,True])
+ def test_29_incomplete_suffix_not_persistent(self):
+  frame=pd.DataFrame({"run_id":["x"]*2,"decision_index":[0,1],"N_GT":[100]*2,"N_remaining":[4,pd.NA],"oracle_truth_evaluable":[True,False]})
+  out=add_qualification_fields(frame)
+  self.assertEqual(out.oracle_5_persistent_suffix_qualifies.tolist(),[False,False])
 if __name__=="__main__": unittest.main()

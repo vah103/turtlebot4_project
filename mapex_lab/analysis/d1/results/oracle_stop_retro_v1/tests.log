@@ -25,8 +25,10 @@ test_24_narrow_corridor_rejected (test_oracle_stop_retro.Tests.test_24_narrow_co
 test_25_disconnected_pocket_excluded (test_oracle_stop_retro.Tests.test_25_disconnected_pocket_excluded) ... ok
 test_26_runtime_growth_projection (test_oracle_stop_retro.Tests.test_26_runtime_growth_projection) ... ok
 test_27_raw_input_hash_mismatch (test_oracle_stop_retro.Tests.test_27_raw_input_hash_mismatch) ... ok
+test_28_qualification_fields (test_oracle_stop_retro.Tests.test_28_qualification_fields) ... ok
+test_29_incomplete_suffix_not_persistent (test_oracle_stop_retro.Tests.test_29_incomplete_suffix_not_persistent) ... ok
 
 ----------------------------------------------------------------------
-Ran 27 tests in 0.881s
+Ran 29 tests
 
 OK

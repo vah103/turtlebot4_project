@@ -1,6 +1,6 @@
 # D1 W032 Retrospective Oracle STOP Offline Completion
 
-Status: **COMPLETE_PENDING_REVIEW**
+Status: **REVISED_PENDING_REREVIEW**
 
 - Task: W032 / H080 / D1-ORACLE-STOP-RETRO-OFFLINE
 - Executor: CODEX
@@ -10,7 +10,23 @@ Status: **COMPLETE_PENDING_REVIEW**
 - Technical base: `cbdfc28f61b2e9e75560d1de7fb2ed7eebfbdfc2`
 - Start checkpoint: `e2b6935257495c6fe341eeed5e9cdf5307e9f91b`
 - Executed implementation: `5ac3100b48e7e41f7e4b983ca19123b0d3d3afc7`
+- Original delivery: `1ffa659f1284a0101461b69888d9f8c3578bd7ec`
 - Branch: `d1-oracle-stop-w032`
+
+## H083 bounded revision
+
+The W029 `REVISE` findings were addressed without changing the structural
+oracle method or retuning any threshold:
+
+- machine-readable identities now separate the frozen technical base,
+  executed implementation and original delivery revision;
+- monotonicity output carries exact affected next decision IDs plus maximum
+  upward change in cells and m²;
+- every decision carries current and complete-suffix persistent qualification
+  fields for 1/5/10%;
+- every run carries best-achieved residuals for each tolerance and final
+  residuals in cells, m² and fraction;
+- the trace figure carries persistent OracleStop_1/5/10 markers for every run.
 
 ## Pinned identities
 
@@ -23,13 +39,13 @@ Status: **COMPLETE_PENDING_REVIEW**
 
 ## Verification
 
-- focused tests: **27/27 PASS**;
+- focused tests: **29/29 PASS**;
 - `mpx_001` production-path smoke: 35/35 rows, all truth-evaluable;
 - full cohort: **10/10 runs, 365/365 unique rows, 365/365 truth-evaluable**;
 - static footprint-aware structural universe: `N_GT = 154102` cells = `385.255 m²`;
 - artifact hash verification: PASS;
 - no-input-mutation check: PASS;
-- deterministic full rerun equality: PASS, 9/9 artifact files byte-identical;
+- deterministic full rerun equality after H083 revision: PASS, 9/9 artifact files byte-identical;
 - no simulation, Gazebo, LaMa, prediction regeneration, GT mutation or shared-evidence mutation.
 
 ## Descriptive results
@@ -78,4 +94,5 @@ Result root: `mapex_lab/analysis/d1/results/oracle_stop_retro_v1/`
 - `tests.log`
 - `artifact_manifest.json`
 
-Next action: W029 independently reviews implementation, helper/projection parity, identities, 365-row truth, persistent crossing, outputs and hashes before Chat 1 interprets the result.
+Next action: W029 re-reviews the exact H083 revision commit, its regenerated
+365-row package and artifact hashes before Chat 1 interprets the result.
