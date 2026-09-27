@@ -1,18 +1,25 @@
 # mapex_lab status
 
-## D1 retrospective oracle STOP — W032 / H080
+## D1 retrospective oracle STOP — W032 / H080 / H083
 
-- COMPLETE_PENDING_REVIEW: USER-approved DELL override; exact H080 structural-GT oracle executed on 10 runs / 365 decisions.
-- TESTS: 27/27 PASS; `mpx_001` smoke PASS; full artifact/hash/no-mutation/deterministic-rerun checks PASS.
-- LATEST RESULT: footprint-aware structural universe = 154,102 cells; persistent 1/5/10% oracle found in all 10 runs; primary 5% mean historical fraction saved = 0.517935 (descriptive development result only).
-- NEXT ACTION: W029 / Chat 2 successor independently reviews `docs/D1_W032_ORACLE_STOP_OFFLINE_COMPLETION.md` and `analysis/d1/results/oracle_stop_retro_v1/`. No online rule fitting or Gate R activation.
+- REVIEWED / CANONICAL: same-checker W029 ACCEPT on exact PR #33 head `4f674a81add0c14eb15cc0ab95754130c5923ead`; the oracle lineage is now included in canonical technical main through MX008.
+- TESTS: revised focused suite 29/29 PASS; 10/10 runs and 365 decision rows preserved; persistent OracleStop_1/5/10 decisions unchanged.
+- RESULT: footprint-aware structural-GT oracle is accepted as retrospective/hindsight evidence only.
+- BOUNDARY: this is not an operational STOP rule, uncertainty threshold, Gate-U result, Gate-R PASS, or `K_confirm`.
+
+## D1 Gate R historical scoring — W034 / H084 / H085
+
+- REVIEWED / CANONICAL: same-checker W029 ACCEPT on exact PR #34 head `e0e85b384564b03178f87b598daca9b476ebd644`; PR #34 includes the accepted PR #33 oracle ancestry and is now integrated into canonical technical main.
+- TESTS: 28/28 focused tests PASS; 10 folds / 10 runs / 365 decisions preserved.
+- HISTORICAL RESULT: `HISTORICAL_NEW_ROOM_FEASIBILITY_SUPPORTED_PENDING_CONFIRMATION`.
+- BOUNDARY: this is **not full Gate-R PASS**. Gate U remains **FAIL — strong broad contradiction veto**. No operational remaining-area threshold, `K_confirm`, U×R online rule, confirmation scoring, or online STOP is authorized.
 
 ## D1 Gate U offline scoring — W027 / H074
 
 - REVIEWED / CANONICAL: W016 same-checker ACCEPT on exact revised delivery `97b16e52048a4cfc47b808103cf25e7737e938e1`; PR #31 merged unchanged into canonical main at merge commit `34bc65817d7eb7a42a5ff3149a860748c91fa489`.
 - TESTS: 27/27 focused tests PASS after bounded revision; first-fold production smoke PASS; full resume revalidated/skipped all 10 folds including both fold-summary and per-decision hashes.
 - CANONICAL HISTORICAL RESULT: Gate-U = `FAIL` because the frozen strong broad-contradiction veto fired in exactly 6/10 held-out runs: `mpx_002, mpx_003, mpx_006, mpx_007, mpx_009, mpx_010`. General primary sufficiency passed; all folds selected `U_p95`; strict-late remains `LATE_PRIMARY_INSUFFICIENT`.
-- BOUNDARY: Gate R, operational uncertainty/area/remaining-fraction thresholds, `K_confirm`, and online STOP logic remain unauthorized. Next step is management/methodology interpretation of the canonical Gate-U FAIL, not further Gate-U retuning.
+- BOUNDARY: Gate-U remains FAIL. A separately approved historical Gate-R diagnostic is now ACCEPTED, but it is not full Gate-R PASS and does not rescue Gate-U FAIL. Operational uncertainty/area/remaining-fraction thresholds, `K_confirm`, U×R online logic and online STOP remain unauthorized.
 
 ## D1 shared Phase-0 extractor — H071 / H072 delivery
 
