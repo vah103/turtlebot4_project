@@ -1,0 +1,5 @@
+variant,run_count,premature_stops,severe_false_stop_10,stop_count,stop_coverage,positive_saving_count,positive_saving_coverage,median_nonpremature_delay,mean_nonpremature_delay,mean_saved_progress
+A0,10,0,0,10,1,10,1,1,1.2,0.46978532905003495
+A1,10,0,0,10,1,10,1,1,1.2,0.46978532905003495
+A2,10,0,0,10,1,10,1,1,1.2,0.46978532905003495
+A3,10,0,0,8,0.80000000000000004,8,0.80000000000000004,6,6,0.25801892551892552

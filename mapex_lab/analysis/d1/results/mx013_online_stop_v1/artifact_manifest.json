@@ -1,0 +1,74 @@
+{
+  "artifacts": [
+    {
+      "bytes": 384741,
+      "file": "ablation_per_decision.csv.gz",
+      "sha256": "00914643395a1d43d33b7b4fe8340f1a1b9b257209e15800c88fdaa1f0e5557f"
+    },
+    {
+      "bytes": 3760,
+      "file": "ablation_per_run.csv",
+      "sha256": "2b63ce9d18257378cea908ac1bc77e0970b1799cdea4139f06c1d95212818cf8"
+    },
+    {
+      "bytes": 413,
+      "file": "ablation_summary.csv",
+      "sha256": "a5572e2a48079b8231ab68a42ab2c1a6b78d4557c2336decf17d1f74443b43d5"
+    },
+    {
+      "bytes": 167,
+      "file": "false_stop_inventory.csv",
+      "sha256": "0c84b84b6f9a0a27d468d4ff0dbcd1bc2c728e7824e5c9ad84b4c9535f78622c"
+    },
+    {
+      "bytes": 1148,
+      "file": "loro_folds.csv",
+      "sha256": "636d639ab522193da58ecec504d08a813cd459e71ed449b6214187669f256a12"
+    },
+    {
+      "bytes": 312,
+      "file": "missing_reset_inventory.csv",
+      "sha256": "48306982e50d270b9b71dbabda915c51a8dd88aa0dfa4f55bce6b6bcbadff7b6"
+    },
+    {
+      "bytes": 34749,
+      "file": "pair_aggregates.csv",
+      "sha256": "a7cb2a44209d1882d1eeda676dccfb312633eb9f9cb28a71b90a6f4c1a19b3c8"
+    },
+    {
+      "bytes": 32665628,
+      "file": "per_decision_all_grids.csv.gz",
+      "sha256": "7c59d3a9ab1bb9debfca2fa803c3167e969ae1e92fdef62d52f59cfaf1efa14c"
+    },
+    {
+      "bytes": 410755,
+      "file": "per_run_all_grids.csv",
+      "sha256": "3d17aa8cae1179636b886c20b55d9cd0f3ed7f85c3c876d38c1b75f1df1447b4"
+    },
+    {
+      "bytes": 199442,
+      "file": "precomputed_online_features.csv",
+      "sha256": "926b9cf5a9ae241dc9c75589c21b0a3396ffa73190e8f13e22668062dc260661"
+    },
+    {
+      "bytes": 3797,
+      "file": "retrospective_topology_at_stops.csv",
+      "sha256": "990e8e15c51d406fcd4e3931b893ca45c6dcdf6a11127e6e4b2cabb63eae5ef2"
+    },
+    {
+      "bytes": 1405,
+      "file": "selected_pair_per_run.csv",
+      "sha256": "5108173427b47d256b353dd5abf09a2ce045b84bb1f7cb7a8ab713260e547ec7"
+    },
+    {
+      "bytes": 1977,
+      "file": "summary.json",
+      "sha256": "96f56a7fe6c1a8a06e14ddc367d8ef91c3dbdd944c080c0b91937dfdd62a3306"
+    }
+  ],
+  "inputs": {
+    "gate_u": "af3253ece01af1765eb9adc5107ec9f802ebb393a14fe96fb27febcfa267de8c",
+    "oracle_truth": "2ca31f97ff4abfeb305667539dd0616af0caabfc5b11743c9bd8347e2f949cf8",
+    "shared_evidence": "993bf0a0e9f1aabfd240778aadd9f6cb34583059ba360cea68fefef97ea2660a"
+  }
+}

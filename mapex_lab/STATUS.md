@@ -1,5 +1,13 @@
 # mapex_lab status
 
+## MX013 online STOP recognizer development replay
+
+- COMPLETE_PENDING_INDEPENDENT_RESEARCH_QA: exact MX012 V2 recognizer/evaluator separation implemented and replayed deterministically on `mpx_001..010` only.
+- FULL-DEVELOPMENT PAIR: `tau_R=3%`, `K=1`; 10/10 stops, 0 full-fit premature, mean saved progress 46.98%.
+- FROZEN CLASSIFICATION: `NO_STABLE_ONLINE_RECOGNIZER_CANDIDATE` because LORO has one held-out premature stop (`mpx_001`, decision 20 vs OracleStop_4 decision 21), so S4 FAILS. S1, S2, S3, S5, S6 and S7 PASS.
+- BOUNDARY: development-only maker result pending independent QA; no confirmation scoring, robot STOP, deployment, Gate verdict change, or post-outcome retuning.
+- Evidence: `analysis/d1/MX013_COMPLETION.md` and `analysis/d1/results/mx013_online_stop_v1/`.
+
 ## D1 retrospective oracle STOP — W032 / H080 / H083
 
 - REVIEWED / CANONICAL: same-checker W029 ACCEPT on exact PR #33 head `4f674a81add0c14eb15cc0ab95754130c5923ead`; the oracle lineage is now included in canonical technical main through MX008.

@@ -1,0 +1,49 @@
+test_first_fire_only (mapex_lab.analysis.d1.test_mx013_online_stop.RecognizerTests.test_first_fire_only) ... ok
+test_frozen_k (mapex_lab.analysis.d1.test_mx013_online_stop.RecognizerTests.test_frozen_k) ... ok
+test_k_consecutive (mapex_lab.analysis.d1.test_mx013_online_stop.RecognizerTests.test_k_consecutive) ... ok
+test_reset_above (mapex_lab.analysis.d1.test_mx013_online_stop.RecognizerTests.test_reset_above) ... ok
+test_reset_missing_r (mapex_lab.analysis.d1.test_mx013_online_stop.RecognizerTests.test_reset_missing_r) ... ok
+test_reset_topology (mapex_lab.analysis.d1.test_mx013_online_stop.RecognizerTests.test_reset_topology) ... ok
+test_strict_occupancy_half_is_free (mapex_lab.analysis.d1.test_mx013_online_stop.RecognizerTests.test_strict_occupancy_half_is_free) ... ok
+test_threshold_equality_qualifies (mapex_lab.analysis.d1.test_mx013_online_stop.RecognizerTests.test_threshold_equality_qualifies) ... ok
+test_truth_free_api (mapex_lab.analysis.d1.test_mx013_online_stop.RecognizerTests.test_truth_free_api) ... ok
+test_u_missing_no_primary_effect (mapex_lab.analysis.d1.test_mx013_online_stop.RecognizerTests.test_u_missing_no_primary_effect) ... ok
+test_u_veto_ablation_blocks_missing (mapex_lab.analysis.d1.test_mx013_online_stop.RecognizerTests.test_u_veto_ablation_blocks_missing) ... ok
+test_unsupported_unknown_nontraversable (mapex_lab.analysis.d1.test_mx013_online_stop.RecognizerTests.test_unsupported_unknown_nontraversable) ... ok
+test_benign_wall_thickening_does_not_disconnect (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_benign_wall_thickening_does_not_disconnect) ... ok
+test_cardinal_and_clear_diagonal_moves (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_cardinal_and_clear_diagonal_moves) ... ok
+test_collision_stencil_axial_and_diagonal (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_collision_stencil_axial_and_diagonal) ... ok
+test_collision_stencil_touching_counts_as_collision (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_collision_stencil_touching_counts_as_collision) ... ok
+test_common_domain_and_observed_identity (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_common_domain_and_observed_identity) ... ok
+test_component_inventory_ranking (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_component_inventory_ranking) ... ok
+test_component_order_is_deterministic (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_component_order_is_deterministic) ... ok
+test_domain_crop_preserves_global_offset (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_domain_crop_preserves_global_offset) ... ok
+test_frozen_radius_and_resolution (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_frozen_radius_and_resolution) ... ok
+test_historical_footprints_match_frozen_provenance (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_historical_footprints_match_frozen_provenance) ... ok
+test_largest_piece_fraction (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_largest_piece_fraction) ... ok
+test_navigable_partition_is_complementary (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_navigable_partition_is_complementary) ... ok
+test_no_corner_cutting (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_no_corner_cutting) ... ok
+test_occupied_clearance_accepts_ros_occupancy_values (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_occupied_clearance_accepts_ros_occupancy_values) ... ok
+test_outside_domain_is_collision (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_outside_domain_is_collision) ... ok
+test_pair_retention_keeps_prediction_occupied_in_denominator (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_pair_retention_keeps_prediction_occupied_in_denominator) ... ok
+test_predicted_barrier_fragments_reference_component (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_predicted_barrier_fragments_reference_component) ... ok
+test_recovery_changed_data_root_hard_fails (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_recovery_changed_data_root_hard_fails) ... ok
+test_recovery_changed_implementation_hard_fails (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_recovery_changed_implementation_hard_fails) ... ok
+test_recovery_changed_input_hard_fails (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_recovery_changed_input_hard_fails) ... ok
+test_recovery_unchanged_identity_can_skip (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_recovery_unchanged_identity_can_skip) ... ok
+test_reference_corridor_survives_identity_stencil (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_reference_corridor_survives_identity_stencil) ... ok
+test_representative_prefers_clearance_then_row_col (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_representative_prefers_clearance_then_row_col) ... ok
+test_resolution_mismatch_is_blocker (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_resolution_mismatch_is_blocker) ... ok
+test_room_door_room_closure_disconnects (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_room_door_room_closure_disconnects) ... ok
+test_shortest_path_is_repeatable (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_shortest_path_is_repeatable) ... ok
+test_source_exact_alignment (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_source_exact_alignment) ... ok
+test_source_never_extrapolates (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_source_never_extrapolates) ... ok
+test_source_strict_bracket_interpolation (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_source_strict_bracket_interpolation) ... ok
+test_strict_prediction_threshold (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_strict_prediction_threshold) ... ok
+test_unsupported_cells_cannot_be_traversed (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_unsupported_cells_cannot_be_traversed) ... ok
+test_world_to_cell_uses_floor (mapex_lab.analysis.r004.test_evaluate_topology_traversability.TopologyTraversabilityTests.test_world_to_cell_uses_floor) ... ok
+
+----------------------------------------------------------------------
+Ran 44 tests in 0.437s
+
+OK

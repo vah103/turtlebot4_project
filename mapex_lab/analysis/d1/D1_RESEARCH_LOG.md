@@ -2314,3 +2314,10 @@ Gate U                 = STILL BLOCKED for current direct D1 formulation
 ```
 
 Resume only on explicit USER instruction. No new threshold, tolerance, GT semantics, or prediction rule is authorized by this checkpoint.
+# MX013 — frozen MX012 V2 online recognizer development replay (2026-09-28)
+
+Implemented exact R + runtime-only TopoValid + K persistence with truth/evaluator separation. Precomputed TopoValid once per decision and swept the complete frozen primary, resolution-sensitivity, widened-boundary-sensitivity and K grids.
+
+Full development selected `tau_R=3%`, `K=1` with 10/10 coverage, no full-fit premature stop, and mean saved progress 46.98%. LORO produced one premature held-out stop for `mpx_001` (fold-selected 4%, K=1; candidate decision 20, OracleStop_4 decision 21). Under the frozen zero-premature criterion, S4 fails and the exact classification is `NO_STABLE_ONLINE_RECOGNIZER_CANDIDATE`. No methodology was changed or retuned after observing this result.
+
+See `MX013_COMPLETION.md` and `results/mx013_online_stop_v1/`. Maker result remains pending Independent Research QA.

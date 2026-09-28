@@ -1,0 +1,92 @@
+{
+  "architecture_status": "DEVELOPMENT_ONLY_NOT_INDEPENDENTLY_VALIDATED",
+  "classification": "NO_STABLE_ONLINE_RECOGNIZER_CANDIDATE",
+  "criteria": {
+    "S1": true,
+    "S2": true,
+    "S3": true,
+    "S4": false,
+    "S5": true,
+    "S6": true,
+    "S7": true
+  },
+  "development_runs": [
+    "mpx_001",
+    "mpx_002",
+    "mpx_003",
+    "mpx_004",
+    "mpx_005",
+    "mpx_006",
+    "mpx_007",
+    "mpx_008",
+    "mpx_009",
+    "mpx_010"
+  ],
+  "full_development": {
+    "PRIMARY": {
+      "k": 1,
+      "mean_nonpremature_delay": 1.2,
+      "mean_saved_progress": 0.46978532905003495,
+      "median_nonpremature_delay": 1.0,
+      "positive_saving_count": 10,
+      "positive_saving_coverage": 1.0,
+      "premature_stops": 0,
+      "run_count": 10,
+      "severe_false_stop_10": 0,
+      "stop_count": 10,
+      "stop_coverage": 1.0,
+      "tau_r": 0.03
+    },
+    "SENSITIVITY_A": {
+      "k": 1,
+      "mean_nonpremature_delay": 0.3,
+      "mean_saved_progress": 0.49495089877442827,
+      "median_nonpremature_delay": 0.0,
+      "positive_saving_count": 10,
+      "positive_saving_coverage": 1.0,
+      "premature_stops": 0,
+      "run_count": 10,
+      "severe_false_stop_10": 0,
+      "stop_count": 10,
+      "stop_coverage": 1.0,
+      "tau_r": 0.035
+    },
+    "SENSITIVITY_B": {
+      "k": 1,
+      "mean_nonpremature_delay": 0.3,
+      "mean_saved_progress": 0.49495089877442827,
+      "median_nonpremature_delay": 0.0,
+      "positive_saving_count": 10,
+      "positive_saving_coverage": 1.0,
+      "premature_stops": 0,
+      "run_count": 10,
+      "severe_false_stop_10": 0,
+      "stop_count": 10,
+      "stop_coverage": 1.0,
+      "tau_r": 0.035
+    }
+  },
+  "k_grid": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "oracle_target": "retrospective persistent-suffix T*=4%; evaluator-only",
+  "primary_grid": [
+    1,
+    15,
+    1
+  ],
+  "sensitivity_a_grid": [
+    0.5,
+    15,
+    0.5
+  ],
+  "sensitivity_b_grid": [
+    0.5,
+    20,
+    0.5
+  ],
+  "task": "MX013"
+}

@@ -1,0 +1,8 @@
+kind,reason,count
+RESET,R_ABOVE_THRESHOLD,123
+RESET,R_MISSING:outside_trajectory_range,10
+RESET,R_MISSING:source_not_known_footprint_safe,96
+RESET,R_MISSING:source_outside_runtime_grid,41
+R_MISSING,outside_trajectory_range,10
+R_MISSING,source_not_known_footprint_safe,96
+R_MISSING,source_outside_runtime_grid,41
