@@ -1,0 +1,77 @@
+{
+  "audit": {
+    "bbox_cols": [
+      501,
+      1004
+    ],
+    "bbox_rows": [
+      500,
+      1623
+    ],
+    "component_count": 7,
+    "crack_dilation_cells": 1,
+    "dae_unit_meter": 0.01,
+    "dae_up_axis": "Y_UP",
+    "denominator_cells": 215435,
+    "elevator_blocker_count": 2,
+    "elevator_blockers": [
+      {
+        "name": "elevator_blocker_left",
+        "sx": 1.8,
+        "sy": 0.18,
+        "sz": 2.6,
+        "x": -1.51,
+        "y": 19.35,
+        "yaw": 0.0,
+        "z": 1.3
+      },
+      {
+        "name": "elevator_blocker_right",
+        "sx": 1.8,
+        "sy": 0.18,
+        "sz": 2.6,
+        "x": 1.52843,
+        "y": 19.3627,
+        "yaw": 0.0,
+        "z": 1.3
+      }
+    ],
+    "normalized_mesh_extents_xyz_m": [
+      25.11659912109375,
+      56.11570068359375,
+      5.9997299194335945
+    ],
+    "obstacle_cells_after_dilation": 71357,
+    "seed_col": 512,
+    "seed_row": 1202,
+    "wall_segment_count": 1040,
+    "wall_slice_bounds_slam_start_m": {
+      "xmax": 47.08145799972493,
+      "xmin": -9.05422543283891,
+      "ymax": 12.551074413305539,
+      "ymin": -12.609602853890483
+    },
+    "wall_slice_z_m": 0.3,
+    "wall_thickness_cells": 2
+  },
+  "connected_free_cells": 215435,
+  "connected_free_id": "hospital_connected_free_v2",
+  "connected_free_sha256": "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1",
+  "decision_30_used_for_gt_construction": false,
+  "evaluation_mask_cells": 245623,
+  "ground_truth_id": "hospital_structural_gt_v2",
+  "gt_file_sha256": "080c7d708f12ae71c1ed1881bfd630dbb491401d95831f613e3116cb9926dce1",
+  "labels": [
+    -1,
+    0,
+    100
+  ],
+  "occupied_cells": 30188,
+  "semantic_digest": "d27ba692b313ba784729ea1fd10b2963c20fea9e4465d27081ece9c8757cf4ea",
+  "semantic_manifest_sha256": "d27ba692b313ba784729ea1fd10b2963c20fea9e4465d27081ece9c8757cf4ea",
+  "shape": [
+    2123,
+    1504
+  ],
+  "transfer_scoring_performed": false
+}

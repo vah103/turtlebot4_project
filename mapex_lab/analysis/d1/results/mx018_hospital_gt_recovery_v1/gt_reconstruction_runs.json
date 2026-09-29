@@ -1,0 +1,22 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "candidate_path": "/tmp/mx018-recon1b.PfTaPo/hospital_structural_gt_v1.npz",
+      "file_sha256": "dc9812c2837343b39bff6c6b07fefac446c87611eb8a066c694397eb5d7b4a85",
+      "semantic_digest": "f105caa276c95ca6524e06f9824aa8e5e632304d5ad392bb751c483089bf472e",
+      "target_match": false
+    },
+    {
+      "attempt": 2,
+      "candidate_path": "/tmp/mx018-recon2b.6VbeBi/hospital_structural_gt_v1.npz",
+      "file_sha256": "dc9812c2837343b39bff6c6b07fefac446c87611eb8a066c694397eb5d7b4a85",
+      "semantic_digest": "f105caa276c95ca6524e06f9824aa8e5e632304d5ad392bb751c483089bf472e",
+      "target_match": false
+    }
+  ],
+  "binary_deterministic": true,
+  "no_hpx_decision_or_outcome_data_used": true,
+  "semantic_deterministic": true,
+  "target_sha256": "7db2d4a2b5866e6854baa5b3e02ca3dd22ce205fcfcac5ec431e872c4724b9e9"
+}

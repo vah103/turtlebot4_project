@@ -1,0 +1,406 @@
+{
+  "all_pass": true,
+  "comparison": "occupied_iou_56_decisions",
+  "comparisons": [
+    {
+      "absolute_difference": 1.3346533600522292e-10,
+      "decision_id": 1,
+      "pass": true,
+      "recomputed": 0.04099248213346533,
+      "saved_9dp": 0.040992482
+    },
+    {
+      "absolute_difference": 9.652015298122762e-12,
+      "decision_id": 2,
+      "pass": true,
+      "recomputed": 0.08699517399034798,
+      "saved_9dp": 0.086995174
+    },
+    {
+      "absolute_difference": 2.0203080874914292e-10,
+      "decision_id": 3,
+      "pass": true,
+      "recomputed": 0.18712385420203081,
+      "saved_9dp": 0.187123854
+    },
+    {
+      "absolute_difference": 1.7754173131656614e-10,
+      "decision_id": 4,
+      "pass": true,
+      "recomputed": 0.22039453717754173,
+      "saved_9dp": 0.220394537
+    },
+    {
+      "absolute_difference": 2.343443494812192e-10,
+      "decision_id": 5,
+      "pass": true,
+      "recomputed": 0.22106533876565565,
+      "saved_9dp": 0.221065339
+    },
+    {
+      "absolute_difference": 2.5901880640333275e-10,
+      "decision_id": 6,
+      "pass": true,
+      "recomputed": 0.2289715292590188,
+      "saved_9dp": 0.228971529
+    },
+    {
+      "absolute_difference": 3.618797206339508e-10,
+      "decision_id": 7,
+      "pass": true,
+      "recomputed": 0.22726851136187973,
+      "saved_9dp": 0.227268511
+    },
+    {
+      "absolute_difference": 5.998154750663787e-11,
+      "decision_id": 8,
+      "pass": true,
+      "recomputed": 0.21907105505998153,
+      "saved_9dp": 0.219071055
+    },
+    {
+      "absolute_difference": 1.649005376691548e-10,
+      "decision_id": 9,
+      "pass": true,
+      "recomputed": 0.22216025283509946,
+      "saved_9dp": 0.222160253
+    },
+    {
+      "absolute_difference": 3.369043377610126e-10,
+      "decision_id": 10,
+      "pass": true,
+      "recomputed": 0.30183531033690436,
+      "saved_9dp": 0.30183531
+    },
+    {
+      "absolute_difference": 1.7638096538874493e-10,
+      "decision_id": 11,
+      "pass": true,
+      "recomputed": 0.289115838176381,
+      "saved_9dp": 0.289115838
+    },
+    {
+      "absolute_difference": 2.7786173362187583e-10,
+      "decision_id": 12,
+      "pass": true,
+      "recomputed": 0.33807798727786176,
+      "saved_9dp": 0.338077987
+    },
+    {
+      "absolute_difference": 4.771323891539225e-10,
+      "decision_id": 13,
+      "pass": true,
+      "recomputed": 0.3899178804771324,
+      "saved_9dp": 0.38991788
+    },
+    {
+      "absolute_difference": 3.7486902471073336e-11,
+      "decision_id": 14,
+      "pass": true,
+      "recomputed": 0.3921427500374869,
+      "saved_9dp": 0.39214275
+    },
+    {
+      "absolute_difference": 1.3738482573799615e-10,
+      "decision_id": 15,
+      "pass": true,
+      "recomputed": 0.38691802686261517,
+      "saved_9dp": 0.386918027
+    },
+    {
+      "absolute_difference": 7.426659287546045e-11,
+      "decision_id": 16,
+      "pass": true,
+      "recomputed": 0.3695405389257334,
+      "saved_9dp": 0.369540539
+    },
+    {
+      "absolute_difference": 2.7087199150344077e-10,
+      "decision_id": 17,
+      "pass": true,
+      "recomputed": 0.394306586270872,
+      "saved_9dp": 0.394306586
+    },
+    {
+      "absolute_difference": 1.809043470579752e-10,
+      "decision_id": 18,
+      "pass": true,
+      "recomputed": 0.40157664918090435,
+      "saved_9dp": 0.401576649
+    },
+    {
+      "absolute_difference": 3.664299419448014e-10,
+      "decision_id": 19,
+      "pass": true,
+      "recomputed": 0.4099081696335701,
+      "saved_9dp": 0.40990817
+    },
+    {
+      "absolute_difference": 8.619310820634496e-11,
+      "decision_id": 20,
+      "pass": true,
+      "recomputed": 0.4094394930861931,
+      "saved_9dp": 0.409439493
+    },
+    {
+      "absolute_difference": 4.867466429914202e-10,
+      "decision_id": 21,
+      "pass": true,
+      "recomputed": 0.40669332148674664,
+      "saved_9dp": 0.406693321
+    },
+    {
+      "absolute_difference": 3.9768044413079906e-10,
+      "decision_id": 22,
+      "pass": true,
+      "recomputed": 0.4098122386023196,
+      "saved_9dp": 0.409812239
+    },
+    {
+      "absolute_difference": 1.3008261134928034e-11,
+      "decision_id": 23,
+      "pass": true,
+      "recomputed": 0.41038282201300824,
+      "saved_9dp": 0.410382822
+    },
+    {
+      "absolute_difference": 2.1938972860624517e-10,
+      "decision_id": 24,
+      "pass": true,
+      "recomputed": 0.4094244882193897,
+      "saved_9dp": 0.409424488
+    },
+    {
+      "absolute_difference": 2.806738175209489e-11,
+      "decision_id": 25,
+      "pass": true,
+      "recomputed": 0.41058540497193263,
+      "saved_9dp": 0.410585405
+    },
+    {
+      "absolute_difference": 4.0375086607369326e-10,
+      "decision_id": 26,
+      "pass": true,
+      "recomputed": 0.4253241935962491,
+      "saved_9dp": 0.425324194
+    },
+    {
+      "absolute_difference": 7.361539156036656e-11,
+      "decision_id": 27,
+      "pass": true,
+      "recomputed": 0.4002407980736154,
+      "saved_9dp": 0.400240798
+    },
+    {
+      "absolute_difference": 1.8347562358300706e-10,
+      "decision_id": 28,
+      "pass": true,
+      "recomputed": 0.4039926148165244,
+      "saved_9dp": 0.403992615
+    },
+    {
+      "absolute_difference": 3.0256203098488754e-10,
+      "decision_id": 29,
+      "pass": true,
+      "recomputed": 0.399844025302562,
+      "saved_9dp": 0.399844025
+    },
+    {
+      "absolute_difference": 1.25410626328204e-10,
+      "decision_id": 30,
+      "pass": true,
+      "recomputed": 0.38414512212541063,
+      "saved_9dp": 0.384145122
+    },
+    {
+      "absolute_difference": 3.8012659686614825e-10,
+      "decision_id": 31,
+      "pass": true,
+      "recomputed": 0.3810963436198734,
+      "saved_9dp": 0.381096344
+    },
+    {
+      "absolute_difference": 3.8012659686614825e-10,
+      "decision_id": 32,
+      "pass": true,
+      "recomputed": 0.3810963436198734,
+      "saved_9dp": 0.381096344
+    },
+    {
+      "absolute_difference": 3.5956237987022632e-12,
+      "decision_id": 33,
+      "pass": true,
+      "recomputed": 0.38972336600359564,
+      "saved_9dp": 0.389723366
+    },
+    {
+      "absolute_difference": 3.335649534363938e-10,
+      "decision_id": 34,
+      "pass": true,
+      "recomputed": 0.383860319666435,
+      "saved_9dp": 0.38386032
+    },
+    {
+      "absolute_difference": 1.925505865862931e-10,
+      "decision_id": 35,
+      "pass": true,
+      "recomputed": 0.37962694780744943,
+      "saved_9dp": 0.379626948
+    },
+    {
+      "absolute_difference": 1.5068113423666318e-11,
+      "decision_id": 36,
+      "pass": true,
+      "recomputed": 0.3852506519849319,
+      "saved_9dp": 0.385250652
+    },
+    {
+      "absolute_difference": 2.0600110506308056e-10,
+      "decision_id": 37,
+      "pass": true,
+      "recomputed": 0.38341027120600113,
+      "saved_9dp": 0.383410271
+    },
+    {
+      "absolute_difference": 3.3832681101131357e-10,
+      "decision_id": 38,
+      "pass": true,
+      "recomputed": 0.3905853883383268,
+      "saved_9dp": 0.390585388
+    },
+    {
+      "absolute_difference": 3.7589303891749637e-10,
+      "decision_id": 39,
+      "pass": true,
+      "recomputed": 0.39052777137589306,
+      "saved_9dp": 0.390527771
+    },
+    {
+      "absolute_difference": 3.8988129391626103e-10,
+      "decision_id": 40,
+      "pass": true,
+      "recomputed": 0.3905727786101187,
+      "saved_9dp": 0.390572779
+    },
+    {
+      "absolute_difference": 4.277955767406638e-10,
+      "decision_id": 41,
+      "pass": true,
+      "recomputed": 0.3971170234277956,
+      "saved_9dp": 0.397117023
+    },
+    {
+      "absolute_difference": 4.277955767406638e-10,
+      "decision_id": 42,
+      "pass": true,
+      "recomputed": 0.3971170234277956,
+      "saved_9dp": 0.397117023
+    },
+    {
+      "absolute_difference": 3.2696734209025635e-10,
+      "decision_id": 43,
+      "pass": true,
+      "recomputed": 0.40292153832696737,
+      "saved_9dp": 0.402921538
+    },
+    {
+      "absolute_difference": 4.3947206984640275e-10,
+      "decision_id": 44,
+      "pass": true,
+      "recomputed": 0.4009264924394721,
+      "saved_9dp": 0.400926492
+    },
+    {
+      "absolute_difference": 1.3993645131549215e-10,
+      "decision_id": 45,
+      "pass": true,
+      "recomputed": 0.40321404613993644,
+      "saved_9dp": 0.403214046
+    },
+    {
+      "absolute_difference": 1.3993645131549215e-10,
+      "decision_id": 46,
+      "pass": true,
+      "recomputed": 0.40321404613993644,
+      "saved_9dp": 0.403214046
+    },
+    {
+      "absolute_difference": 9.341699636067347e-11,
+      "decision_id": 47,
+      "pass": true,
+      "recomputed": 0.413983360093417,
+      "saved_9dp": 0.41398336
+    },
+    {
+      "absolute_difference": 1.8084950204055872e-10,
+      "decision_id": 48,
+      "pass": true,
+      "recomputed": 0.4138665888191505,
+      "saved_9dp": 0.413866589
+    },
+    {
+      "absolute_difference": 4.3810122196674683e-11,
+      "decision_id": 49,
+      "pass": true,
+      "recomputed": 0.43122861404381013,
+      "saved_9dp": 0.431228614
+    },
+    {
+      "absolute_difference": 4.3810122196674683e-11,
+      "decision_id": 50,
+      "pass": true,
+      "recomputed": 0.43122861404381013,
+      "saved_9dp": 0.431228614
+    },
+    {
+      "absolute_difference": 2.6891666671247094e-10,
+      "decision_id": 51,
+      "pass": true,
+      "recomputed": 0.42990955126891667,
+      "saved_9dp": 0.429909551
+    },
+    {
+      "absolute_difference": 2.6891666671247094e-10,
+      "decision_id": 52,
+      "pass": true,
+      "recomputed": 0.42990955126891667,
+      "saved_9dp": 0.429909551
+    },
+    {
+      "absolute_difference": 2.6891666671247094e-10,
+      "decision_id": 53,
+      "pass": true,
+      "recomputed": 0.42990955126891667,
+      "saved_9dp": 0.429909551
+    },
+    {
+      "absolute_difference": 2.6891666671247094e-10,
+      "decision_id": 54,
+      "pass": true,
+      "recomputed": 0.42990955126891667,
+      "saved_9dp": 0.429909551
+    },
+    {
+      "absolute_difference": 2.6891666671247094e-10,
+      "decision_id": 55,
+      "pass": true,
+      "recomputed": 0.42990955126891667,
+      "saved_9dp": 0.429909551
+    },
+    {
+      "absolute_difference": 2.6891666671247094e-10,
+      "decision_id": 56,
+      "pass": true,
+      "recomputed": 0.42990955126891667,
+      "saved_9dp": 0.429909551
+    }
+  ],
+  "decision_count": 56,
+  "max_absolute_difference": 4.867466429914202e-10,
+  "mismatches": [],
+  "tolerance_absolute": 5e-10,
+  "tu_corroboration": {
+    "reason": "legacy goal-source audit is secondary and unnecessary for structural fingerprint decision",
+    "status": "NOT_RUN"
+  }
+}

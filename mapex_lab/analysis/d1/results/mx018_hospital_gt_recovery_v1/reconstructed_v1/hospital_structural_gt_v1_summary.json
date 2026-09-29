@@ -1,0 +1,86 @@
+{
+  "status": "ok_frozen_v1_match",
+  "hospital_scale": 1.0,
+  "world": "/home/dell/Documents/Codex/2026-09-28/c-company-hub-trong-vah103-chat/work/mx018-historical/mapex_lab/map/hospital_aws_flat.sdf",
+  "world_sha256": "59d482029ad56dabf7ce9bb68ece16e476fd263c0ec57f237dff1f893880aeb0",
+  "wall_mesh": "/home/dell/Documents/Codex/2026-09-28/c-company-hub-trong-vah103-chat/work/mx018-historical/mapex_lab/map/models/aws_robomaker_hospital_floor_01_walls/meshes/aws_robomaker_hospital_floor_01_walls_collision.dae",
+  "wall_mesh_sha256": "233b75caa7eb94807427505d21e15522f3f5b15ce30f3b6a6f51b58eb901a523",
+  "roi": {
+    "id": "hospital_connected_free_v1",
+    "cells": 215435,
+    "sha256": "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1",
+    "frozen_v1_expected_cells": 215435,
+    "frozen_v1_expected_sha256": "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1",
+    "frozen_v1_match": true
+  },
+  "active_world_elevator_blocker_widths_m": [
+    1.8
+  ],
+  "audit": {
+    "wall_segment_count": 1040,
+    "elevator_blocker_count": 2,
+    "elevator_blockers": [
+      {
+        "name": "elevator_blocker_left",
+        "x": -1.51,
+        "y": 19.35,
+        "z": 1.3,
+        "yaw": 0.0,
+        "sx": 1.8,
+        "sy": 0.18,
+        "sz": 2.6
+      },
+      {
+        "name": "elevator_blocker_right",
+        "x": 1.52843,
+        "y": 19.3627,
+        "z": 1.3,
+        "yaw": 0.0,
+        "sx": 1.8,
+        "sy": 0.18,
+        "sz": 2.6
+      }
+    ],
+    "component_count": 7,
+    "seed_row": 1202,
+    "seed_col": 512,
+    "bbox_rows": [
+      500,
+      1623
+    ],
+    "bbox_cols": [
+      501,
+      1004
+    ],
+    "obstacle_cells_after_dilation": 71357,
+    "denominator_cells": 215435,
+    "dae_unit_meter": 0.01,
+    "dae_up_axis": "Y_UP",
+    "normalized_mesh_extents_xyz_m": [
+      25.11659912109375,
+      56.11570068359375,
+      5.9997299194335945
+    ],
+    "wall_slice_bounds_slam_start_m": {
+      "xmin": -9.05422543283891,
+      "xmax": 47.08145799972493,
+      "ymin": -12.609602853890483,
+      "ymax": 12.551074413305539
+    },
+    "wall_slice_z_m": 0.3,
+    "wall_thickness_cells": 2,
+    "crack_dilation_cells": 1
+  },
+  "structural_gt": {
+    "id": "hospital_structural_gt_v1",
+    "evaluation_mask_cells": 245623,
+    "occupied_cells": 30188
+  },
+  "outputs": {
+    "roi": "/tmp/mx018-recon1b.PfTaPo/hospital_connected_free_v1.npy",
+    "roi_metadata": "/tmp/mx018-recon1b.PfTaPo/hospital_connected_free_v1_metadata.json",
+    "structural_gt": "/tmp/mx018-recon1b.PfTaPo/hospital_structural_gt_v1.npz",
+    "preview": "/tmp/mx018-recon1b.PfTaPo/hospital_structural_gt_v1_preview.png",
+    "summary": "/tmp/mx018-recon1b.PfTaPo/hospital_structural_gt_v1_summary.json"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "clean_detached_checkout": true,
+  "core_git_blob": "f50aa99a0e6bedbab2aa07274fdd07383f871acd",
+  "decision_30_or_stop_outcome_used": false,
+  "exact_artifact_search": {
+    "found": false,
+    "locations": [
+      "/home/dell",
+      "/work",
+      "/mnt",
+      "/media",
+      "/tmp",
+      "Git history",
+      "Git LFS",
+      "local caches"
+    ]
+  },
+  "execution_environment": {
+    "numpy": "1.26.4",
+    "opencv": "4.6.0",
+    "os": "Linux-6.8.0-142-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "pyyaml": "6.0.1",
+    "scipy": "1.11.4",
+    "trimesh": "5.1.0"
+  },
+  "generator_git_blob": "f0b4c09ab1d6cbdf68ed519e30eb2bf340e74961",
+  "historical_path_emulation": "INFEASIBLE_WITHOUT_SYSTEM_PRIVILEGE_ON_DELL",
+  "hospital_scale": 1.0,
+  "run_commit": "a52784522faa209e875234607bea8c3262293786",
+  "source_wall_mesh_git_blob": "de2c21d5a28ba1c68c266d6730868d04d3fb2730",
+  "source_wall_mesh_sha256": "233b75caa7eb94807427505d21e15522f3f5b15ce30f3b6a6f51b58eb901a523",
+  "source_world_git_blob": "70b01b01f4b908a9ca8acfc16d10772558180ee9",
+  "source_world_sha256": "59d482029ad56dabf7ce9bb68ece16e476fd263c0ec57f237dff1f893880aeb0",
+  "spawn_world": [
+    0.0,
+    12.0,
+    -1.57
+  ],
+  "target_gt_sha256": "7db2d4a2b5866e6854baa5b3e02ca3dd22ce205fcfcac5ec431e872c4724b9e9"
+}

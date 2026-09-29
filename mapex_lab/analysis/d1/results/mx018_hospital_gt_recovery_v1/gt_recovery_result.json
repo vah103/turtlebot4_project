@@ -1,0 +1,14 @@
+{
+  "candidate_gt_sha256": "dc9812c2837343b39bff6c6b07fefac446c87611eb8a066c694397eb5d7b4a85",
+  "candidate_semantic_digest": "f105caa276c95ca6524e06f9824aa8e5e632304d5ad392bb751c483089bf472e",
+  "decision_30_used_for_gt_construction": false,
+  "direct_original_semantic_reference_available": false,
+  "execution_task": "MX018",
+  "mx015_g2_literal_status": "FAIL_EXACT_SHA",
+  "next_action": "GENERATE_GT_V2_AFTER_SEPARATE_ARTIFACT_GATE",
+  "recorded_target_gt_sha256": "7db2d4a2b5866e6854baa5b3e02ca3dd22ce205fcfcac5ec431e872c4724b9e9",
+  "recovery_result": "SEMANTIC_RECONSTRUCTION_SUPPORTED_NOT_PROVEN",
+  "run_id": "hpx_001",
+  "semantic_manifest_schema": "mapex_structural_gt_semantic_manifest_v1",
+  "task": "MX017"
+}

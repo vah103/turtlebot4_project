@@ -1,0 +1,57 @@
+{
+  "artifacts": {
+    "connected_free_sha256": "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1",
+    "gt_sha256": "080c7d708f12ae71c1ed1881bfd630dbb491401d95831f613e3116cb9926dce1",
+    "semantic_digest": "d27ba692b313ba784729ea1fd10b2963c20fea9e4465d27081ece9c8757cf4ea"
+  },
+  "canvas": {
+    "height": 2123,
+    "id": "hospital_canvas_v1",
+    "origin_x": -25.6,
+    "origin_y": -60.1,
+    "resolution_m": 0.05,
+    "width": 1504
+  },
+  "connected_free_id": "hospital_connected_free_v2",
+  "core_git_blob": "f50aa99a0e6bedbab2aa07274fdd07383f871acd",
+  "decision_30_used_for_gt_construction": false,
+  "deterministic_repeat": {
+    "all_v2_artifacts_byte_identical": true
+  },
+  "environment": {
+    "numpy": "1.26.4",
+    "opencv": "4.6.0",
+    "os": "Linux-6.8.0-142-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "pyyaml": "6.0.1",
+    "scipy": "1.11.4",
+    "trimesh": "5.1.0"
+  },
+  "generator_git_blob": "f0b4c09ab1d6cbdf68ed519e30eb2bf340e74961",
+  "ground_truth_id": "hospital_structural_gt_v2",
+  "hospital_scale": 1.0,
+  "rasterization": {
+    "close_raster_cracks_dilation_cells": 1,
+    "connectivity": 8,
+    "include_flat_elevator_blockers": true,
+    "metric_to_cell_rule": "np.rint",
+    "wall_slice_z_m": 0.3,
+    "wall_thickness_cells": 2
+  },
+  "source_wall_mesh": {
+    "git_blob": "de2c21d5a28ba1c68c266d6730868d04d3fb2730",
+    "relative_path": "mapex_lab/map/models/aws_robomaker_hospital_floor_01_walls/meshes/aws_robomaker_hospital_floor_01_walls_collision.dae",
+    "sha256": "233b75caa7eb94807427505d21e15522f3f5b15ce30f3b6a6f51b58eb901a523"
+  },
+  "source_world": {
+    "git_blob": "70b01b01f4b908a9ca8acfc16d10772558180ee9",
+    "relative_path": "mapex_lab/map/hospital_aws_flat.sdf",
+    "sha256": "59d482029ad56dabf7ce9bb68ece16e476fd263c0ec57f237dff1f893880aeb0"
+  },
+  "spawn_world": [
+    0.0,
+    12.0,
+    -1.57
+  ],
+  "transfer_scoring_performed": false
+}

@@ -1,0 +1,95 @@
+{
+  "artifacts": [
+    {
+      "bytes": 10560,
+      "file": "gt_evaluator_fingerprint.json",
+      "sha256": "4071c2c8e64fdb9dd4e3f7fb61def996730599fd008234e889fada485f78142a"
+    },
+    {
+      "bytes": 876,
+      "file": "gt_reconstruction_runs.json",
+      "sha256": "dc68d0a6e6d28dc7314b19d786f69ebc34ca8af8dc0feffbb8c228d62b723f11"
+    },
+    {
+      "bytes": 725,
+      "file": "gt_recovery_result.json",
+      "sha256": "714403f15e9a75b85d588905c85fbace5045f27f8db7266ee9e6ea271d7ec549"
+    },
+    {
+      "bytes": 1305,
+      "file": "gt_recovery_source_manifest.json",
+      "sha256": "c86b538477bbfcdce5d8866448320c8008436cf8e9923f29d3fe791a1b5d05d0"
+    },
+    {
+      "bytes": 1593,
+      "file": "gt_semantic_manifest.canonical.json",
+      "sha256": "f105caa276c95ca6524e06f9824aa8e5e632304d5ad392bb751c483089bf472e"
+    },
+    {
+      "bytes": 2205,
+      "file": "gt_semantic_manifest.json",
+      "sha256": "9e91724d2d18d131078f2d30c1d726a425da986cd739e58303dffd0df5519647"
+    },
+    {
+      "bytes": 23250,
+      "file": "gt_v2/alignment_validation.json",
+      "sha256": "a3a0979bb979bfb195f6271ec4f6be6540341457c825124a5cd69aeb91374275"
+    },
+    {
+      "bytes": 1928,
+      "file": "gt_v2/gt_v2_provenance_manifest.json",
+      "sha256": "61f3b5171c467b14f73608914b516835b121680057be7aa3f82ea03da8859612"
+    },
+    {
+      "bytes": 1592,
+      "file": "gt_v2/gt_v2_semantic_manifest.canonical.json",
+      "sha256": "d27ba692b313ba784729ea1fd10b2963c20fea9e4465d27081ece9c8757cf4ea"
+    },
+    {
+      "bytes": 2105,
+      "file": "gt_v2/gt_v2_semantic_manifest.json",
+      "sha256": "fc919b2f769243f9d87bdee5bb37fa2a8eaca3d5c1ee82c823eaaa4df1aa0612"
+    },
+    {
+      "bytes": 3193120,
+      "file": "gt_v2/hospital_connected_free_v2.npy",
+      "sha256": "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1"
+    },
+    {
+      "bytes": 21486,
+      "file": "gt_v2/hospital_structural_gt_v2.npz",
+      "sha256": "080c7d708f12ae71c1ed1881bfd630dbb491401d95831f613e3116cb9926dce1"
+    },
+    {
+      "bytes": 14377,
+      "file": "gt_v2/hospital_structural_gt_v2_preview.png",
+      "sha256": "107e6add24ba8d8ca109192dc37a8146d0855c736815f9ca32197a15e2402060"
+    },
+    {
+      "bytes": 1933,
+      "file": "gt_v2/hospital_structural_gt_v2_summary.json",
+      "sha256": "7fa0589b4a0482c326106315f8812a6de9bf776db3a5e6cd178257bb9a738415"
+    },
+    {
+      "bytes": 3193120,
+      "file": "reconstructed_v1/hospital_connected_free_v1.npy",
+      "sha256": "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1"
+    },
+    {
+      "bytes": 21703,
+      "file": "reconstructed_v1/hospital_structural_gt_v1.npz",
+      "sha256": "dc9812c2837343b39bff6c6b07fefac446c87611eb8a066c694397eb5d7b4a85"
+    },
+    {
+      "bytes": 14377,
+      "file": "reconstructed_v1/hospital_structural_gt_v1_preview.png",
+      "sha256": "107e6add24ba8d8ca109192dc37a8146d0855c736815f9ca32197a15e2402060"
+    },
+    {
+      "bytes": 2744,
+      "file": "reconstructed_v1/hospital_structural_gt_v1_summary.json",
+      "sha256": "a01b793abcd337919b6443d73a04ad825ae06ba6783c870dd45f62d3d0f05276"
+    }
+  ],
+  "task": "MX018"
+}

@@ -1,0 +1,856 @@
+{
+  "all_decisions_pass": true,
+  "decision_count": 56,
+  "decisions": [
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 1,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": -0.019004417679553853,
+      "residual_y_m": 0.008488783513545428,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 2,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": -0.01982149711015868,
+      "residual_y_m": 0.008488783513545428,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 3,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.016283734311808296,
+      "residual_y_m": 0.005953401117212209,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 4,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.007589595980819652,
+      "residual_y_m": 0.005953401117212209,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 5,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.007099213014083006,
+      "residual_y_m": 0.005953401117212209,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 6,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005612188580538913,
+      "residual_y_m": 0.004603724513724927,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 7,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005244039044143278,
+      "residual_y_m": 0.0048075864236984955,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 8,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005082808290838514,
+      "residual_y_m": 0.0055408486438803806,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 9,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005082808290838514,
+      "residual_y_m": 0.0055408486438803806,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 10,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005082808290838514,
+      "residual_y_m": 0.0055408486438803806,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 11,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005082808290838514,
+      "residual_y_m": 0.0055408486438803806,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 12,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005082808290838514,
+      "residual_y_m": 0.0055408486438803806,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 13,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005082808290838514,
+      "residual_y_m": 0.0055408486438803806,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 14,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005082808290838514,
+      "residual_y_m": 0.0055408486438803806,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 15,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005082808290838514,
+      "residual_y_m": 0.0055408486438803806,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 16,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005082808290838514,
+      "residual_y_m": 0.0055408486438803806,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 17,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005082808290838514,
+      "residual_y_m": 0.0055408486438803806,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 18,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005082808290838514,
+      "residual_y_m": 0.0055408486438803806,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 19,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.004982203374792604,
+      "residual_y_m": 0.005843950059009728,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 20,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.004982203374792604,
+      "residual_y_m": 0.005843950059009728,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 21,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.004989675922686843,
+      "residual_y_m": 0.00587497093198408,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 22,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.004989675922686843,
+      "residual_y_m": 0.00587497093198408,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 23,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.004989675922686843,
+      "residual_y_m": 0.00587497093198408,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 24,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.004989675922686843,
+      "residual_y_m": 0.00587497093198408,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 25,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.004989675922686843,
+      "residual_y_m": 0.00587497093198408,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 26,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.004989675922686843,
+      "residual_y_m": 0.00587497093198408,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 27,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005011321822037118,
+      "residual_y_m": 0.005895391391927518,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 28,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005004472299951601,
+      "residual_y_m": 0.0059733151053968925,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 29,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005004472299951601,
+      "residual_y_m": 0.0059733151053968925,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 30,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005004472299951601,
+      "residual_y_m": 0.0059733151053968925,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 31,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005004472299951601,
+      "residual_y_m": 0.0059733151053968925,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 32,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005004472299951601,
+      "residual_y_m": 0.0059733151053968925,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 33,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.004703689805641176,
+      "residual_y_m": 0.006117617405344333,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 34,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.004792619967000533,
+      "residual_y_m": 0.008926426908875129,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 35,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005061676026933526,
+      "residual_y_m": 0.008858115146921364,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 36,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005228416361472199,
+      "residual_y_m": 0.00876387295521397,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 37,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.005281875135114689,
+      "residual_y_m": 0.009102971121661696,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 38,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.0042240361970300455,
+      "residual_y_m": 0.012301771997950794,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 39,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.0042240361970300455,
+      "residual_y_m": 0.012301771997950794,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 40,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.0042240361970300455,
+      "residual_y_m": 0.012301771997950794,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 41,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.0040773875065251985,
+      "residual_y_m": 0.013160504075429458,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 42,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.0040773875065251985,
+      "residual_y_m": 0.013160504075429458,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 43,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.004213950683194412,
+      "residual_y_m": 0.0132863657410347,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 44,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.00424455845663374,
+      "residual_y_m": 0.013260111750589942,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 45,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.00436515847004415,
+      "residual_y_m": 0.013072171291769408,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 46,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.00436515847004415,
+      "residual_y_m": 0.013072171291769408,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 47,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.004094159512829876,
+      "residual_y_m": 0.01264744645635929,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 48,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.004094159512829876,
+      "residual_y_m": 0.01264744645635929,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 49,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.0027238703124989883,
+      "residual_y_m": 0.014317942923405269,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 50,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.0027238703124989883,
+      "residual_y_m": 0.014317942923405269,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 51,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.0024671754551697234,
+      "residual_y_m": 0.014414550192771713,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 52,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.0024671754551697234,
+      "residual_y_m": 0.014414550192771713,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 53,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.0024671754551697234,
+      "residual_y_m": 0.014414550192771713,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 54,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.0024671754551697234,
+      "residual_y_m": 0.014414550192771713,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 55,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.0024671754551697234,
+      "residual_y_m": 0.014414550192771713,
+      "runtime_resolution": 0.10000000149011612
+    },
+    {
+      "checks": {
+        "axis_aligned": true,
+        "origin_residual": true,
+        "ratio_integer_two": true,
+        "runtime_resolution_consistent": true
+      },
+      "decision_id": 56,
+      "origin_yaw": 0.0,
+      "pass": true,
+      "ratio": 2,
+      "residual_x_m": 0.0024671754551697234,
+      "residual_y_m": 0.014414550192771713,
+      "runtime_resolution": 0.10000000149011612
+    }
+  ],
+  "ground_truth_id": "hospital_structural_gt_v2",
+  "source_world_sha256": "59d482029ad56dabf7ce9bb68ece16e476fd263c0ec57f237dff1f893880aeb0",
+  "start_cell": [
+    1202,
+    512
+  ],
+  "start_footprint_safe": true,
+  "start_structural_free": true,
+  "transfer_scoring_performed": false,
+  "universe_cells": 187531
+}

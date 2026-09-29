@@ -1,0 +1,55 @@
+{
+  "manifest": {
+    "arrays": {
+      "data": {
+        "dtype": "<i2",
+        "sha256": "ff92f44fe7b1d4f49ffb945abadcfea98f1089cf4fa9bb670e3c669be7c2e83b",
+        "shape": [
+          2123,
+          1504
+        ]
+      },
+      "evaluation_mask": {
+        "dtype": "uint8",
+        "sha256": "08a03db4d6cd86b9715726f2d06646da9e2f89f796c2c1f6deb5b2b410224a91",
+        "shape": [
+          2123,
+          1504
+        ]
+      }
+    },
+    "geometry": {
+      "canvas_id": "hospital_canvas_v1",
+      "ground_truth_id": "hospital_structural_gt_v2",
+      "height": 2123,
+      "hospital_scale_f64be_hex": "3ff0000000000000",
+      "origin_x_f64be_hex": "c03999999999999a",
+      "origin_y_f64be_hex": "c04e0ccccccccccd",
+      "resolution_f64be_hex": "3fa999999999999a",
+      "spawn_world_x_f64be_hex": "0000000000000000",
+      "spawn_world_y_f64be_hex": "4028000000000000",
+      "spawn_world_yaw_f64be_hex": "bff91eb851eb851f",
+      "width": 1504,
+      "world_to_slam_rule": "R(-spawn_world_yaw) @ (p_world - p_spawn)"
+    },
+    "rasterization": {
+      "close_raster_cracks_dilation_cells": 1,
+      "evaluation_domain_rule": "frozen_hospital_bounds_then_start_connected_free_plus_structural_occupied_v2",
+      "free_component_connectivity": 8,
+      "include_flat_elevator_blockers": true,
+      "metric_to_cell_rule": "np.rint",
+      "wall_slice_z_m_f64be_hex": "3fd3333333333333",
+      "wall_thickness_cells": 2
+    },
+    "schema": "mapex_structural_gt_semantic_manifest_v1",
+    "source": {
+      "core_git_blob": "f50aa99a0e6bedbab2aa07274fdd07383f871acd",
+      "generator_git_blob": "f0b4c09ab1d6cbdf68ed519e30eb2bf340e74961",
+      "source_wall_mesh_git_blob": "de2c21d5a28ba1c68c266d6730868d04d3fb2730",
+      "source_wall_mesh_sha256": "233b75caa7eb94807427505d21e15522f3f5b15ce30f3b6a6f51b58eb901a523",
+      "source_world_git_blob": "70b01b01f4b908a9ca8acfc16d10772558180ee9",
+      "source_world_sha256": "59d482029ad56dabf7ce9bb68ece16e476fd263c0ec57f237dff1f893880aeb0"
+    }
+  },
+  "semantic_digest": "d27ba692b313ba784729ea1fd10b2963c20fea9e4465d27081ece9c8757cf4ea"
+}
