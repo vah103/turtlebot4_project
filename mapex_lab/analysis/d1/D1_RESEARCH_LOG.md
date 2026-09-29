@@ -2321,3 +2321,6 @@ Implemented exact R + runtime-only TopoValid + K persistence with truth/evaluato
 Full development selected `tau_R=3%`, `K=1` with 10/10 coverage, no full-fit premature stop, and mean saved progress 46.98%. LORO produced one premature held-out stop for `mpx_001` (fold-selected 4%, K=1; candidate decision 20, OracleStop_4 decision 21). Under the frozen zero-premature criterion, S4 fails and the exact classification is `NO_STABLE_ONLINE_RECOGNIZER_CANDIDATE`. No methodology was changed or retuned after observing this result.
 
 See `MX013_COMPLETION.md` and `results/mx013_online_stop_v1/`. Maker result remains pending Independent Research QA.
+## MX016 — Hospital external-transfer sanity replay (maker result; pending QA)
+
+MX016 implemented the accepted MX015 V2 thin Hospital adapter around the exact accepted MX013 recognizer and replayed existing `hpx_001` only. Phase A was sealed before truth and produced `STOP_CONSIDER` at decision 30; a post-truth rerun was byte-identical. The exact structural GT recorded by the run is unavailable on DELL, so G2 fails and the mandated label is `TRANSFER_SANITY_INCONCLUSIVE_ORACLE_INVALID`; no early/late or transfer-quality conclusion is assigned. See `MX016_COMPLETION.md` and `results/mx016_hospital_transfer_v1/`. Independent Research QA is required.

@@ -1,0 +1,69 @@
+{
+  "checks": {
+    "G1": {
+      "reasons": [],
+      "status": "PASS"
+    },
+    "G2": {
+      "reasons": [
+        "ORACLE_INVALID_GT_IDENTITY"
+      ],
+      "status": "FAIL"
+    },
+    "G3": {
+      "reasons": [
+        "GT_UNAVAILABLE"
+      ],
+      "status": "FAIL"
+    },
+    "G4": {
+      "reasons": [
+        "GT_UNAVAILABLE"
+      ],
+      "status": "FAIL"
+    },
+    "G5": {
+      "reasons": [
+        "GT_UNAVAILABLE"
+      ],
+      "status": "FAIL"
+    },
+    "G6": {
+      "reasons": [
+        "GT_UNAVAILABLE"
+      ],
+      "status": "FAIL"
+    },
+    "G7": {
+      "reasons": [
+        "GT_UNAVAILABLE"
+      ],
+      "status": "FAIL"
+    },
+    "G8": {
+      "audit_label": "LEGACY_ROI_V1_GEOMETRY_DIFF_WARNING",
+      "fatal": false,
+      "frozen_sha256": "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1",
+      "readme_warning": "ROI v1 predates elevator-blocker geometry change; audit is non-fatal and ROI is excluded from Oracle formula.",
+      "recorded_denominator": 215435,
+      "recorded_id": "hospital_connected_free_v1",
+      "status": "PASS"
+    }
+  },
+  "expected_gt_sha256": "7db2d4a2b5866e6854baa5b3e02ca3dd22ce205fcfcac5ec431e872c4724b9e9",
+  "fatal_failures": [
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6",
+    "G7"
+  ],
+  "gt_path": "/home/dell/Documents/Codex/2026-09-28/c-company-hub-trong-vah103-chat/work/mx016/mapex_lab/ground_truth/hospital/generated/hospital_structural_gt_v1.npz",
+  "gt_sha256": null,
+  "legacy_roi_is_nonfatal": true,
+  "oracle_gate": "HOSPITAL_ORACLE_INVALID_FOR_TRANSFER_EVAL",
+  "run_id": "hpx_001",
+  "task": "MX016",
+  "world_sha256_recorded": "59d482029ad56dabf7ce9bb68ece16e476fd263c0ec57f237dff1f893880aeb0"
+}

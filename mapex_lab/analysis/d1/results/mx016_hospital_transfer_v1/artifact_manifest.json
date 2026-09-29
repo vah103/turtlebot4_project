@@ -1,0 +1,35 @@
+{
+  "artifacts": [
+    {
+      "bytes": 300,
+      "file": "deterministic_rerun.json",
+      "sha256": "99245cc50aeb6bc3874aef61451e4cd2441dfced68b831a516078656f376f709"
+    },
+    {
+      "bytes": 223,
+      "file": "hospital_oracle_trace.csv",
+      "sha256": "90ffd2612fc8f17fc980c2afb972d1edf486de5c0b9ccf25d15fb3f9dcc78184"
+    },
+    {
+      "bytes": 1708,
+      "file": "hospital_oracle_validity.json",
+      "sha256": "09fe78c445a52d0d45775140af2dc617c72a29b96905290233aecddceff494af"
+    },
+    {
+      "bytes": 38819,
+      "file": "hospital_phase_a_manifest.json",
+      "sha256": "dad7931b3a4bce2503341e18ee841c74766b3b2131c65c9f2fbde4ffb3074e80"
+    },
+    {
+      "bytes": 35768,
+      "file": "hospital_phase_a_trace.csv",
+      "sha256": "47989ceba883f5d9ef6874225806e747a185bfbd48da5f9679f3c52d8efed751"
+    },
+    {
+      "bytes": 988,
+      "file": "hospital_transfer_result.json",
+      "sha256": "29bb97a7ae5122726957772c46ce0bfb9cc73b789f33d599cd4aadf2a5597b18"
+    }
+  ],
+  "task": "MX016"
+}

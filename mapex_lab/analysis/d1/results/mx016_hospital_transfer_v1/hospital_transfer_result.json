@@ -1,0 +1,32 @@
+{
+  "candidate_stop": "STOP_CONSIDER:30",
+  "candidate_stop_decision": 30,
+  "candidate_stop_time_s": 907.998655796,
+  "decisions_saved": 26,
+  "delay_decisions": null,
+  "delay_seconds": null,
+  "early_stop_consequence": null,
+  "guardrail": "N1_NOT_CONFIRMATION_NOT_DEPLOYMENT; MX013_REMAINS_NO_STABLE_ONLINE_RECOGNIZER_CANDIDATE",
+  "hospital_oracle4_decision": null,
+  "hospital_oracle4_status": "HOSPITAL_ORACLE_INVALID_FOR_TRANSFER_EVAL",
+  "oracle_invalid_reasons": [
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6",
+    "G7"
+  ],
+  "phase_a_trace_sha256": "47989ceba883f5d9ef6874225806e747a185bfbd48da5f9679f3c52d8efed751",
+  "retrospective_topology": {
+    "evaluable": false,
+    "reason": "ORACLE_INVALID_TRUTH_UNAVAILABLE"
+  },
+  "run_id": "hpx_001",
+  "saved_progress": 0.4642857142857143,
+  "task": "MX016",
+  "time_saved_s": 1151.0006389619998,
+  "timing_status": null,
+  "transfer_label": "TRANSFER_SANITY_INCONCLUSIVE_ORACLE_INVALID",
+  "true_remaining_at_stop": null
+}
