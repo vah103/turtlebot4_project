@@ -1,0 +1,5 @@
+run_id,decision_id,domain,component_count,path_cells,obstructed_path_cells,r004_missed_free_path_cells,representative_a_row,representative_a_col,representative_b_row,representative_b_col,overlay_file
+mpx_005,16,R004_TOPOLOGY_MISSEDFREE,2,274,36,2,1141,630,978,440,figures/MX023_mpx_005_decision_016_FALSE_BARRIER.svg
+mpx_005,17,R004_TOPOLOGY_MISSEDFREE,2,274,36,2,1141,630,978,440,figures/MX023_mpx_005_decision_017_FALSE_BARRIER.svg
+mpx_007,15,R004_TOPOLOGY_MISSEDFREE,2,286,12,4,1142,630,1088,712,figures/MX023_mpx_007_decision_015_FALSE_BARRIER.svg
+mpx_009,16,R004_TOPOLOGY_MISSEDFREE,2,284,14,6,1141,629,1086,712,figures/MX023_mpx_009_decision_016_FALSE_BARRIER.svg

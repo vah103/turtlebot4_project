@@ -1,0 +1,70 @@
+{
+  "false_barrier_cases": [
+    {
+      "component_count": 2,
+      "decision_id": 16,
+      "domain": "R004_TOPOLOGY_MISSEDFREE",
+      "obstructed_path_cells": 36,
+      "overlay_file": "figures/MX023_mpx_005_decision_016_FALSE_BARRIER.svg",
+      "path_cells": 274,
+      "r004_missed_free_path_cells": 2,
+      "representative_a_col": 630,
+      "representative_a_row": 1141,
+      "representative_b_col": 440,
+      "representative_b_row": 978,
+      "run_id": "mpx_005"
+    },
+    {
+      "component_count": 2,
+      "decision_id": 17,
+      "domain": "R004_TOPOLOGY_MISSEDFREE",
+      "obstructed_path_cells": 36,
+      "overlay_file": "figures/MX023_mpx_005_decision_017_FALSE_BARRIER.svg",
+      "path_cells": 274,
+      "r004_missed_free_path_cells": 2,
+      "representative_a_col": 630,
+      "representative_a_row": 1141,
+      "representative_b_col": 440,
+      "representative_b_row": 978,
+      "run_id": "mpx_005"
+    },
+    {
+      "component_count": 2,
+      "decision_id": 15,
+      "domain": "R004_TOPOLOGY_MISSEDFREE",
+      "obstructed_path_cells": 12,
+      "overlay_file": "figures/MX023_mpx_007_decision_015_FALSE_BARRIER.svg",
+      "path_cells": 286,
+      "r004_missed_free_path_cells": 4,
+      "representative_a_col": 630,
+      "representative_a_row": 1142,
+      "representative_b_col": 712,
+      "representative_b_row": 1088,
+      "run_id": "mpx_007"
+    },
+    {
+      "component_count": 2,
+      "decision_id": 16,
+      "domain": "R004_TOPOLOGY_MISSEDFREE",
+      "obstructed_path_cells": 14,
+      "overlay_file": "figures/MX023_mpx_009_decision_016_FALSE_BARRIER.svg",
+      "path_cells": 284,
+      "r004_missed_free_path_cells": 6,
+      "representative_a_col": 629,
+      "representative_a_row": 1141,
+      "representative_b_col": 712,
+      "representative_b_row": 1086,
+      "run_id": "mpx_009"
+    }
+  ],
+  "frozen_technical_base_sha": "4899ee95c85640965befeaf98c20f156c0d3181a",
+  "method_notes": [
+    "Q1 boundary audit reuses Gate-P saved mean prediction loader, first-later-observed target semantics, and structural-GT projection.",
+    "False-barrier cases reuse accepted R004 footprint/C-space/source/components/representative/shortest-path/render semantics.",
+    "No threshold, Oracle anchor, W10 frame, topology radius, or graph semantics changed."
+  ],
+  "rows_requiring_boundary_sensitivity": 0,
+  "schema": "mx023_bounded_execution_support_v1",
+  "scoreable_exact_p_eq_0_5_total": 0,
+  "w10_boundary_rows": 144
+}
