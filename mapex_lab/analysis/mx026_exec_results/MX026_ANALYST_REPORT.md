@@ -33,6 +33,9 @@ Frozen technical base: 4899ee95c85640965befeaf98c20f156c0d3181a
 - Q1_LATER_OBSERVED: scoreable rows 286/365; exact-boundary rows 0; exact-boundary cells 0; affected identities: none.
 
 ## 5. Interpretation boundary
+- Structural-GT P at each decision is evaluated on that decision's scoreable unknown-space population.
+- That structural evaluation population changes as exploration proceeds.
+- Therefore first-to-final structural-P trends describe the evolving decision-time evaluation domain and are not, by themselves, a fixed-population longitudinal accuracy experiment.
 - Full 365-decision trajectory is primary; fixed progress bins are secondary equal-run summaries.
 - Oracle-4 is marker only and did not select rows, bins, metrics, pairs, or conclusions.
 - Family-specific missingness remains separate; no cross-fill, interpolation or smoothing.

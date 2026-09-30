@@ -7,13 +7,13 @@
   "artifacts": [
     {
       "path": "MX026_PUR_PER_DECISION.csv",
-      "sha256": "b9bbddddf87d36c12c0058967c33d613395932866e3a43ad412b3c935c32868f",
+      "sha256": "a22acee39252d1d76567bd9dfb378348ab5bdcd3d86b1639bd1f5e55718c8c14",
       "size": 438789
     },
     {
       "path": "MX026_P_PER_RUN.csv",
-      "sha256": "226c55f3acf84d9a8a7963453c918d77909b047caad5c0eaeeefa5dcaf496b81",
-      "size": 4665
+      "sha256": "3fe1d58ee148af669db7909c6b17a3aa8846a503098740318a0149b4194b989d",
+      "size": 4666
     },
     {
       "path": "MX026_U_PER_RUN.csv",
@@ -47,7 +47,7 @@
     },
     {
       "path": "MX026_P_BOUNDARY_AUDIT.csv",
-      "sha256": "a9c91a988fdfad2933e11eaed9bb743346b37e14009f5e925766f2c54b4849fc",
+      "sha256": "581f51622d24e2c3da7dd1e4f03b472d8a5ed6590c66dc8b4221f75df8b0ebd5",
       "size": 166129
     },
     {
@@ -62,8 +62,8 @@
     },
     {
       "path": "MX026_ANALYST_REPORT.md",
-      "sha256": "456e28de7ac8d07d2d86939f36f6d85eda1967e00f37d6a199883835814aea8f",
-      "size": 3471
+      "sha256": "6008e1a0a47c9b84fa9312cdda93a0a74ac342c065f62e76e6c5988386b534e7",
+      "size": 3829
     },
     {
       "path": "figures/MX026_mpx_001_FULL_TRAJECTORY.svg",
@@ -114,6 +114,11 @@
       "path": "figures/MX026_mpx_010_FULL_TRAJECTORY.svg",
       "sha256": "1f2ae4395e6eb7769f091b7094e358ab21eec3368cb7110ae926a06a836a73df",
       "size": 106233
+    },
+    {
+      "path": "MX026_R2_CORRECTION_PROVENANCE.json",
+      "sha256": "94f8c1ddee2d5405abf73b6d62e582fe17bf880971c8e323d01d8f6f06c4bd91",
+      "size": 1700
     }
   ],
   "boundary_audit": [
@@ -136,6 +141,15 @@
       "total_scoreable_cells": 2647324
     }
   ],
+  "bounded_result_revision": {
+    "findings_closed": [
+      "MX026-R1",
+      "MX026-R2"
+    ],
+    "parent_technical_result": "d39fcf574ddf59339d3f40db498071193ad098d6",
+    "qa_review_commit": "99cb26e9f7f96ba9fb9cbb5af28fb2098d653a26",
+    "revision": "R2"
+  },
   "guards": {
     "all_365_primary": true,
     "composite": false,
@@ -164,6 +178,6 @@
   },
   "method_revision": "f5144e2727993b920d172fa106ad5477a9c6fbe6",
   "schema": "mx026_full_trajectory_pur_execution_v1",
-  "status": "COMPLETE_PENDING_INDEPENDENT_RESULT_QA",
+  "status": "COMPLETE_PENDING_INDEPENDENT_RESULT_QA_R2",
   "technical_base": "4899ee95c85640965befeaf98c20f156c0d3181a"
 }

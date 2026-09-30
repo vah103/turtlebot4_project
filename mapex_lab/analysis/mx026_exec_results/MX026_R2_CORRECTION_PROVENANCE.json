@@ -1,0 +1,69 @@
+{
+  "R_recomputed": false,
+  "U_recomputed": false,
+  "changed_semantic_rows": {
+    "boundary_audit": [
+      {
+        "decision_id": 29,
+        "domain": "Q1_LATER_OBSERVED",
+        "run_id": "mpx_002"
+      },
+      {
+        "decision_id": 30,
+        "domain": "Q1_LATER_OBSERVED",
+        "run_id": "mpx_002"
+      }
+    ],
+    "master": [
+      {
+        "decision_id": 29,
+        "run_id": "mpx_002"
+      },
+      {
+        "decision_id": 30,
+        "run_id": "mpx_002"
+      }
+    ]
+  },
+  "core_science_retained": [
+    "60 pairwise rows",
+    "90 whole-run direction rows",
+    "1650 progress-bin rows",
+    "U outputs",
+    "R outputs",
+    "10 full-run plots",
+    "p==0.5 counts"
+  ],
+  "corrected_values": {
+    "mpx_002_d29": {
+      "P_LATER_BalancedRecall": "NA",
+      "P_LATER_MacroIoU": "NA"
+    },
+    "mpx_002_d30": {
+      "P_LATER_BalancedRecall": "NA",
+      "P_LATER_MacroIoU": "NA"
+    },
+    "mpx_002_later_per_run_median": {
+      "BalancedRecall": 0.8525424917474265,
+      "MacroIoU": 0.7273323649206492
+    }
+  },
+  "expected_changed_artifacts": [
+    "MX026_PUR_PER_DECISION.csv",
+    "MX026_P_BOUNDARY_AUDIT.csv",
+    "MX026_P_PER_RUN.csv",
+    "MX026_ANALYST_REPORT.md",
+    "MX026_PUR_ARTIFACT_MANIFEST.json",
+    "MX026_R2_CORRECTION_PROVENANCE.json"
+  ],
+  "model_inference_rerun": false,
+  "parent_technical_result": "d39fcf574ddf59339d3f40db498071193ad098d6",
+  "qa_review_commit": "99cb26e9f7f96ba9fb9cbb5af28fb2098d653a26",
+  "report_caveat_added": true,
+  "schema": "mx026_bounded_result_r2_correction_v1",
+  "scope": "MX026-R1/MX026-R2 only",
+  "simulation_rerun": false,
+  "task": "MX026",
+  "threshold_retuned": false,
+  "topology_rerun": false
+}
