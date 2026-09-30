@@ -131,7 +131,7 @@ def main():
         k=(r["run_id"],int(r["decision_id"]))
         if r["reference"]=="structural_gt":gs[k]=r
         elif r["reference"]=="later_observed":gl[k]=r
-    if len(gs)!=365 or len(gl)!=286:raise RuntimeError("P_INVENTORY_FAIL:"+str((len(gs),len(gl))))
+    if len(gs)!=365 or len(gl)!=365:raise RuntimeError("P_INVENTORY_FAIL:"+str((len(gs),len(gl))))
     sh={(r["run_id"],int(r["decision_id"])):r for r in shrows};u={(r["run_id"],int(r["decision_id"])):r for r in ur};rm={(r["run_id"],int(r["decision_id"])):r for r in rr}
     if not(len(sh)==len(u)==len(rm)==365):raise RuntimeError("PRIMARY_INPUT_FAIL")
     uerr={(r["run_id"],int(r["decision_id"]),r["domain"]):r for r in ue}
@@ -145,11 +145,7 @@ def main():
             if abs(prog-float(u[k]["progress"]))>1e-12 or abs(prog-float(rm[k]["progress"]))>1e-12:raise RuntimeError("PROGRESS_MISMATCH:"+str(k))
             o={"run_id":rid,"decision_id":did,"decision_index":idx,"decision_count":N,"normalized_progress":prog,"progress_bin":pbin(prog),"Oracle4_marker":int(did==ORACLE[rid])}
             ps=pfrom(gs[k]);o["P_structural_evaluable"]=1;o["P_structural_reason"]="";pref(o,"P_STRUCT_",ps);pparity.append({"run_id":rid,"decision_id":did,"domain":"Q1_STRUCTURAL_GT","parity_pass":1})
-            if k in gl:
-                pl=pfrom(gl[k]);o["P_later_observed_evaluable"]=1;o["P_later_observed_reason"]="";pref(o,"P_LATER_",pl);pparity.append({"run_id":rid,"decision_id":did,"domain":"Q1_LATER_OBSERVED","parity_pass":1})
-            else:
-                o["P_later_observed_evaluable"]=0;o["P_later_observed_reason"]="NO_LATER_OBSERVED_TARGETS"
-                for z in ps:o["P_LATER_"+z]=""
+            pl=pfrom(gl[k]);later_ok=int(pl["scoreable_count"]>0);o["P_later_observed_evaluable"]=later_ok;o["P_later_observed_reason"]="" if later_ok else "NO_LATER_OBSERVED_TARGETS";pref(o,"P_LATER_",pl);pparity.append({"run_id":rid,"decision_id":did,"domain":"Q1_LATER_OBSERVED","parity_pass":1})
             s=sh[k];te=bval(s.get("primary_topology_risk_evaluable",""));o["P_topology_evaluable"]=int(te);o["P_topology_reason"]="" if te else (s.get("r004_topology_source_reason","") or s.get("non_evaluable_reasons","") or "TOPOLOGY_NOT_EVALUABLE")
             tmap={"NavigableMissedFreeFraction":"r004_topology_navigable_missed_free_fraction","ReachableFutureFreeRetention":"r004_topology_reachable_future_free_retention","ReachablePairConnectivityRetention":"r004_topology_reachable_pair_connectivity_retention","LargestPredictedPieceFraction":"r004_topology_largest_predicted_piece_fraction","source_prediction_traversable":"r004_topology_source_prediction_traversable","fragmented":"r004_topology_fragmented"}
             for a,b in tmap.items():o["P_TOPO_"+a]=s.get(b,"")
