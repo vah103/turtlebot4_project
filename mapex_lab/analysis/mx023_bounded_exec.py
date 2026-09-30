@@ -6,10 +6,10 @@ import numpy as np
 from mapex_lab.analysis.d1 import d1_gate_p as gate
 from mapex_lab.analysis.r004 import evaluate_topology_traversability as topo
 
-ROOT=Path(__file__).resolve().parents[2]
-EXPERIMENTS=ROOT/"experiments"/"mapex"
-OUT=ROOT/"analysis"/"mx023_exec_results"
-GT_PATH=ROOT/"ground_truth"/"new_room"/"generated"/"new_room_structural_gt_v2.npz"
+LAB=Path(__file__).resolve().parents[1]
+EXPERIMENTS=LAB/"experiments"/"mapex"
+OUT=LAB/"analysis"/"mx023_exec_results"
+GT_PATH=LAB/"ground_truth"/"new_room"/"generated"/"new_room_structural_gt_v2.npz"
 ORACLE={"mpx_001":21,"mpx_002":18,"mpx_003":21,"mpx_004":16,"mpx_005":16,"mpx_006":20,"mpx_007":18,"mpx_008":19,"mpx_009":18,"mpx_010":19}
 FRAG_CASES=[("mpx_005",16),("mpx_005",17),("mpx_007",15),("mpx_009",16)]
 BASE_SHA="4899ee95c85640965befeaf98c20f156c0d3181a"
