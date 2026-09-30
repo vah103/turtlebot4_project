@@ -1,0 +1,39 @@
+{
+  "forbidden": [
+    "reachability in primary metric",
+    "hybrid NA fill",
+    "resampling/reprojection",
+    "LaMa rerun",
+    "new simulation",
+    "retuning",
+    "online STOP",
+    "Gate-R relabel"
+  ],
+  "members": [
+    "G1",
+    "G2",
+    "G3"
+  ],
+  "method_revision": "fc0ea05313dc02e6b8a957552c31f952de0897d6",
+  "oracle_role": "retrospective timing alignment only; not domain-matched map-only truth calibration",
+  "paired_orientation": {
+    "A_ratio_map_over_reachable": "map / reachable",
+    "A_signed_difference_m2": "map - reachable",
+    "A_zero_denominator_reason": "ZERO_REACHABLE_AREA_DENOMINATOR",
+    "Fraction_ratio_map_over_reachable": "map / reachable",
+    "Fraction_signed_difference": "map - reachable",
+    "Fraction_zero_denominator_reason": "ZERO_REACHABLE_FRACTION_DENOMINATOR"
+  },
+  "prediction_threshold": "<0.5",
+  "primary_domain": "observed_unknown AND predicted_free_j",
+  "primary_metrics": {
+    "KnownFree_map_m2": "count(raw==0)*resolution^2",
+    "MapRemainingFraction": "A_map_mean/(KnownFree_map + A_map_mean)",
+    "R_MAP_A_mean_m2": "mean(A1,A2,A3)",
+    "R_MAP_Aj_m2": "count((raw<0) AND (Gj_runtime<0.5))*resolution^2"
+  },
+  "secondary_comparator": "accepted D1/Gate-R reachable RemainingFraction/A_mean_m2 from shared_phase0_evidence_v1",
+  "subset_invariant": "for each member on paired valid decisions: A_map_j_m2 >= A_reachable_j_m2",
+  "task": "MX025",
+  "technical_base": "4899ee95c85640965befeaf98c20f156c0d3181a"
+}

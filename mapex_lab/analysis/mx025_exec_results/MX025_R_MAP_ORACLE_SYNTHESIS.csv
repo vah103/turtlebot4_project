@@ -1,0 +1,5 @@
+section,metric,valid_anchor_runs,runs_with_PRE_and_POST,PRE_to_ANCHOR_decreasing,PRE_to_ANCHOR_increasing,PRE_to_ANCHOR_exact_zero,PRE_to_ANCHOR_NA,PRE_to_POST_decreasing,PRE_to_POST_increasing,PRE_to_POST_exact_zero,PRE_to_POST_NA,run_macro_median_anchor_minus_PRE,run_macro_median_POST_minus_PRE,W10_rows,R_MAP_valid_rows,R_REACHABLE_valid_rows,R_MAP_valid_R_REACHABLE_NA_recovered_rows,recovery_reasons_json,paired_rows,A_signed_difference_m2_median,A_ratio_map_over_reachable_median,A_ratio_valid_n,Fraction_signed_difference_median,Fraction_ratio_map_over_reachable_median,Fraction_ratio_valid_n
+PRIMARY_ORACLE_LOCAL,MapRemainingFraction,10,10,10,0,0,0,10,0,0,0,-0.04889771047834824,-0.05694749428155723,,,,,,,,,,,,
+PRIMARY_ORACLE_LOCAL,R_MAP_A_mean_m2,10,10,10,0,0,0,10,0,0,0,-22.380834000334147,-26.12333411186934,,,,,,,,,,,,
+MISSINGNESS_RECOVERY,W10_availability,,,,,,,,,,,,,72,72,39,33,"{""source_not_known_footprint_safe"": 22, ""source_outside_runtime_grid"": 11}",,,,,,,
+PAIRED_W10,map_vs_reachable,,,,,,,,,,,,,,,,,,39,12.323333700597288,2.2641635936976194,39,0.019310540087933422,1.7681004614267843,39

@@ -1,0 +1,104 @@
+{
+  "artifacts": [
+    {
+      "path": "MX025_R_MAP_PER_DECISION.csv",
+      "sha256": "3db238cac7f039a8eb7ecbf499c788cf1f312984f06d201712408cd412d278cd",
+      "size": 124610
+    },
+    {
+      "path": "MX025_R_MAP_PER_RUN.csv",
+      "sha256": "167057c1e2423a86ed62aad6b01718a05e0c7beebf892e5f147b108c74a8d1a1",
+      "size": 6716
+    },
+    {
+      "path": "MX025_R_MAP_ORACLE_SYNTHESIS.csv",
+      "sha256": "b3db7c77da668472a9f9da42521b84d3362ede302d0e8783dfc27795971d96e3",
+      "size": 1120
+    },
+    {
+      "path": "MX025_R_MAP_VS_REACHABLE_PAIRED.csv",
+      "sha256": "7d88d41e01a27212f177182c016e9bd07a3f5450db69d8ba0918f47d0bb5ae7a",
+      "size": 62497
+    },
+    {
+      "path": "MX025_R_MAP_MISSINGNESS_RECOVERY.csv",
+      "sha256": "2ff50696762ca0f8607fe065f1aea3cae8dc1b12abfd912164720fabe6558f34",
+      "size": 3639
+    },
+    {
+      "path": "MX025_R_MAP_MPX004_W10_SANITY.csv",
+      "sha256": "5f874b3664543d97db258f51e53582eb3deea7cde71a97e1d900fb7dcdd9fffb",
+      "size": 1248
+    },
+    {
+      "path": "MX025_R_MAP_METRIC_DICTIONARY.json",
+      "sha256": "ae596c6a5c776a619b6e51237c17e34726c7ff8b4ea5d30a67285e63bffaa86f",
+      "size": 1479
+    },
+    {
+      "path": "MX025_R_MAP_SOURCE_PARITY.csv",
+      "sha256": "115ddc01cbf1d48673b89ee6051424de1fc276896f9f95caa594946d0b8f5034",
+      "size": 183915
+    },
+    {
+      "path": "MX025_ANALYST_REPORT.md",
+      "sha256": "cef2d81be506b2ea9024b451dcd1d82d5e6ceeaef56fbc0472b235fbadc28fbf",
+      "size": 2858
+    }
+  ],
+  "cohort": {
+    "W10_rows": 72,
+    "decisions": 365,
+    "oracle_anchors": {
+      "mpx_001": 21,
+      "mpx_002": 18,
+      "mpx_003": 21,
+      "mpx_004": 16,
+      "mpx_005": 16,
+      "mpx_006": 20,
+      "mpx_007": 18,
+      "mpx_008": 19,
+      "mpx_009": 18,
+      "mpx_010": 19
+    },
+    "runs": [
+      "mpx_001",
+      "mpx_002",
+      "mpx_003",
+      "mpx_004",
+      "mpx_005",
+      "mpx_006",
+      "mpx_007",
+      "mpx_008",
+      "mpx_009",
+      "mpx_010"
+    ]
+  },
+  "guards": {
+    "gate_r_relabel": false,
+    "hybrid_NA_fill": false,
+    "model_rerun": false,
+    "online_stop": false,
+    "prediction_regeneration": false,
+    "reachability_in_primary": false,
+    "retuning": false,
+    "simulation_rerun": false
+  },
+  "integrity": {
+    "W10_paired_rows": 39,
+    "W10_r_map_valid": 72,
+    "W10_reachable_valid": 39,
+    "W10_recovered_reachable_NA": 33,
+    "mpx_004_W10_reachable_NA_rows": 2,
+    "mpx_004_W10_rows": 7,
+    "paired_all_rows": 218,
+    "primary_r_map_evaluable": 365,
+    "raw_g1_g2_g3_alignment_pass": 365,
+    "reachable_r_evaluable_all": 218,
+    "subset_invariant_violations": 0
+  },
+  "method_revision": "fc0ea05313dc02e6b8a957552c31f952de0897d6",
+  "schema": "mx025_map_only_r_execution_v1",
+  "status": "COMPLETE_PENDING_IR2_RESULT_QA",
+  "technical_base": "4899ee95c85640965befeaf98c20f156c0d3181a"
+}
