@@ -57,9 +57,11 @@ def med(vals):return q(vals,.5)
 def pm(FF,FO,OF,OO):
     fr=div(FF,FF+FO); op=div(OO,OO+OF)
     fi=div(FF,FF+FO+OF); oi=div(OO,OO+OF+FO)
+    balanced=(fr+op)/2.0 if math.isfinite(fr) and math.isfinite(op) else math.nan
+    macro=(fi+oi)/2.0 if math.isfinite(fi) and math.isfinite(oi) else math.nan
     return {"FreeRecall":fr,"FreePrecision":div(FF,FF+OF),"MissedFreeRate":div(FO,FF+FO),"FreeIoU":fi,
             "OccupiedRecall":op,"OccupiedPrecision":div(OO,OO+FO),"FalseOpenRate":div(OF,OO+OF),"OccupiedIoU":oi,
-            "BalancedRecall":float(np.nanmean([fr,op])),"MacroIoU":float(np.nanmean([fi,oi]))}
+            "BalancedRecall":balanced,"MacroIoU":macro}
 
 def pfrom(row):
     FF=int(float(row["mean_tn_free"])); FO=int(float(row["mean_fp_occ"])); OF=int(float(row["mean_fn_occ"])); OO=int(float(row["mean_tp_occ"]))
