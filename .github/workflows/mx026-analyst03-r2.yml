@@ -1,0 +1,32 @@
+name: MX026 Analyst03 bounded result R2 correction
+
+on:
+  push:
+    branches:
+      - mx026-analyst03-r2
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: mx026-analyst03-r2
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Apply bounded MX026 R2 correction
+        run: PYTHONPATH=. python mapex_lab/analysis/mx026_result_r2_patch.py
+      - name: Commit corrected derived outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mapex_lab/analysis/mx026_exec_results
+          git diff --cached --quiet && exit 0
+          git commit -m "MX026 R2: correct bounded P context semantics and report"
+          git push origin HEAD:mx026-analyst03-r2
