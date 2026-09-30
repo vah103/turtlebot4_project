@@ -23,7 +23,7 @@ jobs:
       - name: Install bounded analysis dependencies
         run: python -m pip install --disable-pip-version-check numpy scipy matplotlib pyyaml
       - name: Run MX023 bounded support
-        run: python mapex_lab/analysis/mx023_bounded_exec.py
+        run: PYTHONPATH=. python mapex_lab/analysis/mx023_bounded_exec.py
       - name: Commit deterministic outputs to execution branch
         run: |
           git config user.name "github-actions[bot]"
