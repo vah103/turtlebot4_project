@@ -1,0 +1,34 @@
+name: MX024 Analyst03 bounded original MapEx U execution
+
+on:
+  push:
+    branches:
+      - mx024-analyst03-exec-v1
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: mx024-analyst03-exec-v1
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install bounded analysis dependencies
+        run: python -m pip install --disable-pip-version-check numpy scipy matplotlib pyyaml
+      - name: Execute MX024 exact V2 bounded analysis
+        run: PYTHONPATH=. python mapex_lab/analysis/mx024_original_u_exec.py
+      - name: Commit deterministic outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mapex_lab/analysis/mx024_exec_results
+          git diff --cached --quiet && exit 0
+          git commit -m "MX024: record Analyst03 original-U execution outputs"
+          git push origin HEAD:mx024-analyst03-exec-v1
