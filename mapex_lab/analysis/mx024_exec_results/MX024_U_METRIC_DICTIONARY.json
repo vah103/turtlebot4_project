@@ -1,0 +1,75 @@
+{
+  "forbidden": [
+    "LaMa rerun",
+    "new simulation",
+    "prediction regeneration",
+    "retuning",
+    "winner/composite",
+    "online STOP"
+  ],
+  "method_revision": "6fe651e383b3d88d1a824558d6ec398fc97eef1c",
+  "metrics": [
+    {
+      "domain": "MAPEX_UNKNOWN_VALID",
+      "name": "MAPEX_U_mean",
+      "role": "PRIMARY_Q1_PROJECT_SUMMARY"
+    },
+    {
+      "domain": "MAPEX_UNKNOWN_VALID",
+      "name": "MAPEX_U_p95",
+      "role": "PRIMARY_Q1_PROJECT_SUMMARY"
+    },
+    {
+      "domain": "MAPEX_UNKNOWN_VALID",
+      "name": "MAPEX_U_disagreement",
+      "role": "SECONDARY_DIAGNOSTIC"
+    },
+    {
+      "domain": "MATCHED_TRUTH_DOMAIN",
+      "name": "HighUErrorRate",
+      "role": "Q2_DIAGNOSTIC"
+    },
+    {
+      "domain": "MATCHED_TRUTH_DOMAIN",
+      "name": "BaselineErrorRate",
+      "role": "Q2_DIAGNOSTIC"
+    },
+    {
+      "domain": "MATCHED_TRUTH_DOMAIN",
+      "name": "ErrorEnrichment95",
+      "role": "Q2_DIAGNOSTIC"
+    },
+    {
+      "domain": "MATCHED_TRUTH_DOMAIN",
+      "name": "ErrorCapture95",
+      "role": "Q2_DIAGNOSTIC"
+    },
+    {
+      "domain": "MATCHED_TRUTH_DOMAIN",
+      "name": "MissedFreeCapture95",
+      "role": "Q2_DIAGNOSTIC"
+    },
+    {
+      "domain": "MATCHED_TRUTH_DOMAIN",
+      "name": "FalseOpenCapture95",
+      "role": "Q2_DIAGNOSTIC"
+    },
+    {
+      "domain": "D1_R_union",
+      "name": "U_p95/U_mean/U_disagreement",
+      "role": "SECONDARY_R_UNION_CONTEXT"
+    }
+  ],
+  "q95_semantics": "numpy.quantile method=linear; HighU uses >= and includes ties",
+  "technical_base": "4899ee95c85640965befeaf98c20f156c0d3181a",
+  "truth_domains": [
+    "STRUCTURAL_GT",
+    "LATER_OBSERVED"
+  ],
+  "variance_semantics": {
+    "correction": 1,
+    "ddof": 1,
+    "denominator": 2,
+    "ensemble_n": 3
+  }
+}

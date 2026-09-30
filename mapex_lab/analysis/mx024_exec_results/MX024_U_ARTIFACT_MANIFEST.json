@@ -1,0 +1,154 @@
+{
+  "artifacts": [
+    {
+      "path": "MX024_U_METRIC_DICTIONARY.json",
+      "sha256": "3b8c13e0c08c1e96cb160a25238281bcfb70403fda2509bad087efb9e1b50a48",
+      "size": 1774
+    },
+    {
+      "path": "MX024_U_PER_DECISION.csv",
+      "sha256": "eb629103c63412f40095fae0121b0a9fdfac6d9c72cf1a1805983df8c22db503",
+      "size": 92871
+    },
+    {
+      "path": "MX024_U_PER_RUN.csv",
+      "sha256": "9bd922921c5978c3c8976f11ed05e8c9881c0da3879942c7d9bb7282ef813b4c",
+      "size": 5752
+    },
+    {
+      "path": "MX024_U_ERROR_ALIGNMENT_PER_DECISION.csv",
+      "sha256": "d23656cd80ab9509ef34a2d1658fc2eb20fd23f8f3e9bc6d9d1e7e520d74f85d",
+      "size": 377740
+    },
+    {
+      "path": "MX024_U_RUN_MACRO.csv",
+      "sha256": "cfc2a8b1214daa67b94bb577039527f51d836fd76b22ab635402a9f2f27e5257",
+      "size": 3051
+    },
+    {
+      "path": "MX024_U_ORACLE_SYNTHESIS.csv",
+      "sha256": "18af32081facf3d75f10cf9df52ef20f23e177ebeb447dfc1d9b59f0aa565892",
+      "size": 1804
+    },
+    {
+      "path": "MX024_U_SOURCE_PARITY.csv",
+      "sha256": "d4a1907cce4c9f8ba247992395ed16063b51eeb08c771de28bbff372ec8c8972",
+      "size": 276976
+    },
+    {
+      "path": "MX024_ANALYST_REPORT.md",
+      "sha256": "7001abf0d5c52d255c2ae8597ae5fe87a086b6442dd95c48c56caced6178ae77",
+      "size": 1971
+    },
+    {
+      "path": "figures/MX024_mpx_001_ORACLE4_d021.svg",
+      "sha256": "253b3681d28e4710f81383b3f4ccc7b48ca4c1637a3588ec8895f94524c5b4b6",
+      "size": 77143
+    },
+    {
+      "path": "figures/MX024_mpx_002_ORACLE4_d018.svg",
+      "sha256": "bb7520ecbf67cacc8981882422c80532ba8feeba522e66735f465901ac2d0004",
+      "size": 76628
+    },
+    {
+      "path": "figures/MX024_mpx_003_ORACLE4_d021.svg",
+      "sha256": "81a23040f602d446469ead137de26ce7c674c7d1ac6951f2a2a807a371f5635a",
+      "size": 83355
+    },
+    {
+      "path": "figures/MX024_mpx_004_ORACLE4_d016.svg",
+      "sha256": "62e9dc02a8d4fa5a9231be934c44029aad33c310edde11c01ede267a1523e11b",
+      "size": 82605
+    },
+    {
+      "path": "figures/MX024_mpx_005_ORACLE4_d016.svg",
+      "sha256": "96953aad769f3c7bcb5a8624a82c83d015fea6e655c6cd1fe9676a7e11f7f873",
+      "size": 79433
+    },
+    {
+      "path": "figures/MX024_mpx_006_ORACLE4_d020.svg",
+      "sha256": "ae5f59a567ef510edb4be1098088f9e6550f0a48173b67334c65dda9780045e2",
+      "size": 85617
+    },
+    {
+      "path": "figures/MX024_mpx_007_ORACLE4_d018.svg",
+      "sha256": "6fb12edf23118c4851fe4e92444a48f450a92032ee7cc51891632764ff0b8612",
+      "size": 82537
+    },
+    {
+      "path": "figures/MX024_mpx_008_ORACLE4_d019.svg",
+      "sha256": "0adaa3d6cc21a9e08ae81ceeebf7ec78cce4db5b56aff94a0ea0121d4fba2e35",
+      "size": 83552
+    },
+    {
+      "path": "figures/MX024_mpx_009_ORACLE4_d018.svg",
+      "sha256": "3a2c3ffb51b0f9ce9a6c5a43335852d51f45ff0b34309e13bab78ef5eff978a1",
+      "size": 81311
+    },
+    {
+      "path": "figures/MX024_mpx_010_ORACLE4_d019.svg",
+      "sha256": "019c6ca8db75616e07b3ac6d126895f4e079400d14f6fb43906748ca682f841d",
+      "size": 85408
+    }
+  ],
+  "cohort": {
+    "decisions": 365,
+    "oracle_anchors": {
+      "mpx_001": 21,
+      "mpx_002": 18,
+      "mpx_003": 21,
+      "mpx_004": 16,
+      "mpx_005": 16,
+      "mpx_006": 20,
+      "mpx_007": 18,
+      "mpx_008": 19,
+      "mpx_009": 18,
+      "mpx_010": 19
+    },
+    "runs": [
+      "mpx_001",
+      "mpx_002",
+      "mpx_003",
+      "mpx_004",
+      "mpx_005",
+      "mpx_006",
+      "mpx_007",
+      "mpx_008",
+      "mpx_009",
+      "mpx_010"
+    ]
+  },
+  "guards": {
+    "model_rerun": false,
+    "online_stop": false,
+    "prediction_regeneration": false,
+    "primary_u_requires_robot_source": false,
+    "r_union_is_primary": false,
+    "retuning": false,
+    "simulation_rerun": false,
+    "winner_or_composite": false
+  },
+  "integrity": {
+    "mpx_003_d18_20_primary_q1": {
+      "18": 1,
+      "19": 1,
+      "20": 1
+    },
+    "oracle_panel_count": 10,
+    "primary_q1_evaluable_count": 365,
+    "q2_mean_evaluable_count": 365,
+    "variance_parity_pass_count": 365
+  },
+  "method_revision": "6fe651e383b3d88d1a824558d6ec398fc97eef1c",
+  "schema": "mx024_original_mapex_u_execution_v1",
+  "status": "COMPLETE_PENDING_INDEPENDENT_QA",
+  "technical_base": "4899ee95c85640965befeaf98c20f156c0d3181a",
+  "variance_semantics": {
+    "atol": 1e-07,
+    "correction": 1,
+    "ddof": 1,
+    "denominator": 2,
+    "n": 3,
+    "rtol": 1e-05
+  }
+}
