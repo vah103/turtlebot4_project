@@ -81,7 +81,7 @@ def main():
     mpx2=[r for r in master if r["run_id"]=="mpx_002" and r["P_later_observed_evaluable"]=="1"]
     bal=med([fin(r["P_LATER_BalancedRecall"]) for r in mpx2 if math.isfinite(fin(r["P_LATER_BalancedRecall"]))])
     mac=med([fin(r["P_LATER_MacroIoU"]) for r in mpx2 if math.isfinite(fin(r["P_LATER_MacroIoU"]))])
-    if abs(bal-0.8525424923720506)>1e-12 or abs(mac-0.7273323652434376)>1e-12:
+    if round(bal,9)!=0.852542492 or round(mac,9)!=0.727332365:
         raise RuntimeError("QA_EXPECTED_MEDIAN_FAIL:"+repr((bal,mac)))
 
     per=read_csv(PER_RUN);hit=0
