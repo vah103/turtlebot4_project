@@ -1,0 +1,20 @@
+[
+  {
+    "affected_identities": "",
+    "decision_rows": 365,
+    "domain": "Q1_STRUCTURAL_GT",
+    "rows_with_exact_p_eq_0p5": 0,
+    "scoreable_rows": 365,
+    "total_exact_p_eq_0p5_cells": 0,
+    "total_scoreable_cells": 12470841
+  },
+  {
+    "affected_identities": "",
+    "decision_rows": 365,
+    "domain": "Q1_LATER_OBSERVED",
+    "rows_with_exact_p_eq_0p5": 0,
+    "scoreable_rows": 286,
+    "total_exact_p_eq_0p5_cells": 0,
+    "total_scoreable_cells": 2647324
+  }
+]

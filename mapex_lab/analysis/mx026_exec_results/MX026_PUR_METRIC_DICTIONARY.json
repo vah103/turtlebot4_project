@@ -1,0 +1,73 @@
+{
+  "P_threshold": "free iff p<0.5; occupied iff p>=0.5",
+  "R_semantics": "MX025 map-only",
+  "U_semantics": "MX024 original MapEx variance n=3 ddof=1",
+  "accepted_sources": {
+    "P_result": "9998225b66a47962c91526a1ce39b0a37f03950b",
+    "R_input_blob": "f9a79d8f4edb7453832e4b828136a65009712260",
+    "R_result": "c9b0b3fad47839a4e0ed6c29cb4b17d50965b78e",
+    "U_error_input_blob": "b10e8e09b86b27f8a2faebaa1cf1d785433cfe57",
+    "U_input_blob": "4bbdf60198a1df87e8d34e69f7b08221e0f9532b",
+    "U_result": "d9dd15a872d57cd63ff109abae01c581dd582f55",
+    "gate_p_blob": "d3826921e0540e05ed1de40bed2d58c76e2fb90d",
+    "shared_phase0_blob": "3e80124d545ea37b2791594dd775a7d953368bea"
+  },
+  "boundary_audit": "exact p==0.5 only; alternate free iff p<=0.5 only on affected row/domain",
+  "forbidden": [
+    "cross-fill NA",
+    "interpolation",
+    "smoothing",
+    "composite",
+    "winner",
+    "retuning",
+    "online STOP",
+    "causal claim"
+  ],
+  "mandatory_pairs": [
+    {
+      "x": "U_MAPEX_U_p95",
+      "x_domain": "MAPEX_UNKNOWN_VALID",
+      "y": "P_STRUCT_MissedFreeRate",
+      "y_domain": "Q1_STRUCTURAL_GT"
+    },
+    {
+      "x": "U_MAPEX_U_p95",
+      "x_domain": "MAPEX_UNKNOWN_VALID",
+      "y": "P_STRUCT_FalseOpenRate",
+      "y_domain": "Q1_STRUCTURAL_GT"
+    },
+    {
+      "x": "U_MAPEX_U_p95",
+      "x_domain": "MAPEX_UNKNOWN_VALID",
+      "y": "P_STRUCT_FreePrecision",
+      "y_domain": "Q1_STRUCTURAL_GT"
+    },
+    {
+      "x": "R_MapRemainingFraction",
+      "x_domain": "R_MAP_ONLY",
+      "y": "P_STRUCT_MissedFreeRate",
+      "y_domain": "Q1_STRUCTURAL_GT"
+    },
+    {
+      "x": "R_MapRemainingFraction",
+      "x_domain": "R_MAP_ONLY",
+      "y": "P_STRUCT_FalseOpenRate",
+      "y_domain": "Q1_STRUCTURAL_GT"
+    },
+    {
+      "x": "R_MapRemainingFraction",
+      "x_domain": "R_MAP_ONLY",
+      "y": "U_MAPEX_U_p95",
+      "y_domain": "MAPEX_UNKNOWN_VALID"
+    }
+  ],
+  "method_revision": "f5144e2727993b920d172fa106ad5477a9c6fbe6",
+  "primary_scope": "all 365 decisions; Oracle-4 marker only",
+  "spearman": {
+    "minimum_n": 5,
+    "p_values": false,
+    "ties": "average ranks"
+  },
+  "task": "MX026",
+  "technical_base": "4899ee95c85640965befeaf98c20f156c0d3181a"
+}
