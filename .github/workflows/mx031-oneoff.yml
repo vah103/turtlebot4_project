@@ -1,0 +1,43 @@
+name: MX031 one-off Analyst04 execution
+
+on:
+  push:
+    branches:
+      - mx031-analyst04-exec-v1
+    paths:
+      - mapex_lab/analysis/mx031_exec.py
+      - .github/workflows/mx031-oneoff.yml
+
+permissions:
+  contents: write
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout execution branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install bounded replay dependencies
+        run: |
+          python -m pip install --disable-pip-version-check numpy scipy matplotlib pyyaml
+
+      - name: Execute frozen MX031 V3
+        run: |
+          python mapex_lab/analysis/mx031_exec.py
+
+      - name: Freeze result candidate
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mapex_lab/analysis/mx031_exec_results
+          git diff --cached --quiet && { echo "No MX031 result artifacts produced"; exit 1; }
+          git commit -m "MX031: freeze Analyst04 deterministic result candidate"
+          git push origin HEAD:mx031-analyst04-exec-v1
