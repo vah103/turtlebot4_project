@@ -326,7 +326,10 @@ def source_guard():
         ".github/workflows/mx028-oneoff.yml",
         "mapex_lab/analysis/mx028_exec.py",
     }
-    bad = sorted(set(changed) - allowed)
+    bad = sorted(
+        p for p in set(changed)
+        if p not in allowed and not p.startswith("mapex_lab/analysis/mx028_exec_results/")
+    )
     if bad:
         raise RuntimeError(f"Frozen technical source drift outside MX028 files: {bad}")
     return gate_blob, gt_blob, sorted(changed)
@@ -504,7 +507,9 @@ def analyze():
                 "OccPrecision_LowMinusHigh", "OccWrongRate_LOW", "OccWrongRate_HIGH",
                 "OccWrongRate_HighMinusLow", "OccWrongRateRatio_HighOverLow",
                 "Occ_U_MedianGap_WrongMinusCorrect", "Occ_predicted_count",
+                "Occ_support_LOW", "Occ_support_MID", "Occ_support_HIGH",
                 "Occ_correct_U_n", "Occ_wrong_U_n",
+                "Occ_correct_U_median", "Occ_wrong_U_median",
             ):
                 m[f"Structural_{k}"] = sm_occ.get(k, math.nan)
                 m[f"Later_{k}"] = lm_occ.get(k, math.nan)
@@ -513,7 +518,9 @@ def analyze():
                 "FreePrecision_LowMinusHigh", "FreeWrongRate_LOW", "FreeWrongRate_HIGH",
                 "FreeWrongRate_HighMinusLow", "FreeWrongRateRatio_HighOverLow",
                 "Free_U_MedianGap_WrongMinusCorrect", "Free_predicted_count",
+                "Free_support_LOW", "Free_support_MID", "Free_support_HIGH",
                 "Free_correct_U_n", "Free_wrong_U_n",
+                "Free_correct_U_median", "Free_wrong_U_median",
             ):
                 m[f"Structural_{k}"] = sm_free.get(k, math.nan)
                 m[f"Later_{k}"] = lm_free.get(k, math.nan)
@@ -675,12 +682,20 @@ def analyze():
             axes[1].plot(x, [value_or_nan(r, key) for r in rr], label=label)
         axes[1].set_ylabel("variance U"); axes[1].legend()
 
-        for key, label in (("Structural_OccPrecision_LOW","LOW"),("Structural_OccPrecision_MID","MID"),("Structural_OccPrecision_HIGH","HIGH")):
+        for key, label in (("Structural_OccPrecision_LOW","LOW precision"),("Structural_OccPrecision_MID","MID precision"),("Structural_OccPrecision_HIGH","HIGH precision")):
             axes[2].plot(x, [value_or_nan(r, key) for r in rr], label=label)
-        axes[2].set_ylabel("structural occ precision"); axes[2].legend()
+        axes[2].set_ylabel("structural occ precision")
+        support_ax = axes[2].twinx()
+        for key, label in (("Structural_Occ_support_LOW","LOW support"),("Structural_Occ_support_MID","MID support"),("Structural_Occ_support_HIGH","HIGH support")):
+            support_ax.plot(x, [value_or_nan(r, key) for r in rr], linestyle=":", alpha=0.35, label=label)
+        support_ax.set_ylabel("support cells")
+        h1, l1 = axes[2].get_legend_handles_labels()
+        h2, l2 = support_ax.get_legend_handles_labels()
+        axes[2].legend(h1 + h2, l1 + l2, loc="best")
 
-        axes[3].plot(x, [value_or_nan(r, "Structural_Occ_U_MedianGap_WrongMinusCorrect") for r in rr], label="FO median U - OO median U")
-        axes[3].axhline(0.0, linewidth=0.8); axes[3].set_ylabel("occupied U median gap"); axes[3].legend()
+        axes[3].plot(x, [value_or_nan(r, "Structural_Occ_correct_U_median") for r in rr], label="OO correct median U")
+        axes[3].plot(x, [value_or_nan(r, "Structural_Occ_wrong_U_median") for r in rr], label="FO wrong median U")
+        axes[3].set_ylabel("occupied median U"); axes[3].legend()
 
         axes[4].plot(x, [value_or_nan(r, "PredFree_share_unknown") for r in rr], label="PredFree share unknown")
         axes[4].plot(x, [value_or_nan(r, "FreeLowU_share_unknown") for r in rr], label="Free+LOW_U share unknown")
