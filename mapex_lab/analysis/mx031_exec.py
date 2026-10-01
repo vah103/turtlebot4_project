@@ -24,13 +24,15 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from mapex_lab.analysis.r004 import evaluate_topology_traversability as topo
-
 
 SCRIPT = Path(__file__).resolve()
 ANALYSIS = SCRIPT.parent
 MAPEX_LAB = ANALYSIS.parent
 REPO = MAPEX_LAB.parent
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
+
+from mapex_lab.analysis.r004 import evaluate_topology_traversability as topo
 RESULTS = ANALYSIS / "mx031_exec_results"
 FIGURES = RESULTS / "figures"
 EXPERIMENTS = MAPEX_LAB / "experiments" / "mapex"
