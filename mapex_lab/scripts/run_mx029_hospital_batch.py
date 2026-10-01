@@ -236,6 +236,7 @@ def main() -> int:
     parser.add_argument("--max-attempts", type=int, default=2)
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--roll-forward-zero-completed", action="store_true")
+    parser.add_argument("--stop-after-run-id", choices=RUN_IDS)
     args = parser.parse_args()
     root = args.repo_root.resolve()
     evidence = root / "mapex_lab/analysis/d1/results/mx029_hospital_5run"
@@ -278,6 +279,11 @@ def main() -> int:
     for run_id in RUN_IDS:
         record = state["runs"][run_id]
         if record["status"] == "COMPLETED":
+            if args.stop_after_run_id == run_id:
+                state["status"] = "STOPPED_AFTER_REQUESTED_RUN"
+                state["stopped_after_run_id"] = run_id
+                atomic_json(state_path, state)
+                return 0
             continue
         run = root / "mapex_lab/experiments/mapex" / run_id
         if run.exists() and record["status"] in {"RUNNING", "PENDING_RETRY"}:
@@ -335,6 +341,12 @@ def main() -> int:
             atomic_json(state_path, state)
         if record["status"] != "COMPLETED":
             return 1
+        if args.stop_after_run_id == run_id:
+            state["status"] = "STOPPED_AFTER_REQUESTED_RUN"
+            state["stopped_after_run_id"] = run_id
+            atomic_json(state_path, state)
+            print(json.dumps(state, indent=2, sort_keys=True))
+            return 0
     state["status"] = "COLLECTION_COMPLETE"
     state["completed_at_unix"] = time.time()
     atomic_json(state_path, state)

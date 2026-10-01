@@ -1192,7 +1192,11 @@ def main():
         )
         executor = MultiThreadedExecutor(num_threads=4)
         executor.add_node(node)
-        executor.spin()
+        while rclpy.ok() and not node.completed:
+            executor.spin_once(timeout_sec=0.2)
+        if node.completed and not node.finalized:
+            node.finalize("exploration_complete")
+        executor.shutdown()
     except (KeyboardInterrupt, ExternalShutdownException):
         pass
     finally:
