@@ -793,6 +793,59 @@ def main():
             })
     per_decision_output.sort(key=lambda r:(r["run_id"],int(r["decision_index"])))
 
+    # Required 365-row audit surface: even when an outer fold is NO_RULE, retain
+    # all 12 frozen q-pair semantics as columns so IR1 can inspect
+    # FrontierClear/CoverageClear/Qualify/streak without inventing a selected q.
+    out_by_key={(r["run_id"],int(r["decision_id"])):r for r in per_decision_output}
+    def qtag(tau_ig,c):
+        return f"tauIG_{tau_ig:.2f}".replace(".","p")+f"_c{c}"
+    for run in RUNS:
+        tau_r,K=FROZEN_BACKBONE[run]
+        for tau_ig,c in Q_GRID:
+            _, qtrace=replay(by_run[run],tau_r,K,tau_ig,c,base=False)
+            tag=qtag(tau_ig,c)
+            for tr in qtrace:
+                dst=out_by_key[(run,tr["row"]["_decision_id"])]
+                dst[f"FrontierClear_{tag}"]=int(tr["FrontierClear"])
+                dst[f"CoverageClear_{tag}"]=int(tr["CoverageClear"])
+                dst[f"Qualify_{tag}"]=int(tr["Qualify"])
+                dst[f"streak_{tag}"]=tr["streak"]
+                dst[f"first_fire_here_{tag}"]=int(tr["fire"])
+
+    # Diagnostic channel attribution is required for every paired-base stop.
+    # If a fold is NO_RULE there is no selected q, so report all 12 frozen q
+    # pairs as nonselectable diagnostics rather than omitting the fold.
+    channel_rows=[]
+    loro_map={r["heldout_run"]:r for r in loro_selected}
+    for held in RUNS:
+        tau_r,K=FROZEN_BACKBONE[held]
+        base_stop,_=replay(by_run[held],tau_r,K,base=True)
+        if base_stop is None:
+            continue
+        selected_q=selected_by_run.get(held)
+        for tau_ig,c in Q_GRID:
+            _, qtrace=replay(by_run[held],tau_r,K,tau_ig,c,base=False)
+            btr=next(x for x in qtrace if x["row"]["_decision_id"]==base_stop["_decision_id"])
+            frontier_veto=not btr["FrontierClear"]
+            coverage_veto=not btr["CoverageClear"]
+            channel_rows.append({
+                "heldout_run":held,
+                "fold_status":loro_map[held]["fold_status"],
+                "paired_base_stop":base_stop["_decision_id"],
+                "tau_IG":tau_ig,"c":c,
+                "q_role":(
+                    "SELECTED_TRAINING_Q" if selected_q==(tau_ig,c)
+                    else ("NO_RULE_FOLD_DIAGNOSTIC_Q" if selected_q is None else "NONSELECTED_DIAGNOSTIC_Q")
+                ),
+                "FrontierState":base_stop["_state"],"IGRel":base_stop["_ig_rel"],
+                "DeltaKnownArea_m2":base_stop["DeltaKnownArea_m2"],
+                "KnownAreaRate_m2_s":base_stop["KnownAreaRate_m2_s"],
+                "FrontierWouldVeto":int(frontier_veto),
+                "CoverageWouldVeto":int(coverage_veto),
+                "BothWouldVeto":int(frontier_veto and coverage_veto),
+                "NeitherWouldVeto":int(not frontier_veto and not coverage_veto),
+            })
+
     # Full-development descriptive selector, fixed F0 5% K1.
     full_rows=[]
     full_ranked=[]
@@ -815,6 +868,17 @@ def main():
         full_status="ADMISSIBLE_FULL_FIT"
     else:
         full_status="NO_ADMISSIBLE_MX033_FULL_FIT"
+    full_rows.append({
+        "status":"FULL_FIT_SUMMARY","tau_R":0.05,"K":1,
+        "tau_IG":q_full[0] if q_full is not None else "",
+        "c":q_full[1] if q_full is not None else "",
+        "truth_valid_run_count":10,
+        "required_fired_run_count":8,
+        "required_positive_saving_run_count":7,
+        "admissible":int(q_full is not None),
+        "selected_full_fit":int(q_full is not None),
+        "full_fit_status":full_status,
+    })
 
     # Gates.
     solved=sum(r["fold_status"]=="ADMISSIBLE" for r in loro_selected)
