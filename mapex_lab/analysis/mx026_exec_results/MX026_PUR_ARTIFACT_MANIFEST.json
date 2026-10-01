@@ -1,0 +1,183 @@
+{
+  "accepted_input_revisions": {
+    "P": "9998225b66a47962c91526a1ce39b0a37f03950b",
+    "R": "c9b0b3fad47839a4e0ed6c29cb4b17d50965b78e",
+    "U": "d9dd15a872d57cd63ff109abae01c581dd582f55"
+  },
+  "artifacts": [
+    {
+      "path": "MX026_PUR_PER_DECISION.csv",
+      "sha256": "a22acee39252d1d76567bd9dfb378348ab5bdcd3d86b1639bd1f5e55718c8c14",
+      "size": 438789
+    },
+    {
+      "path": "MX026_P_PER_RUN.csv",
+      "sha256": "3fe1d58ee148af669db7909c6b17a3aa8846a503098740318a0149b4194b989d",
+      "size": 4666
+    },
+    {
+      "path": "MX026_U_PER_RUN.csv",
+      "sha256": "ea99c5b2bc8509b8aa97b6214a21e4937f7767afb9b8d48067abebb617d56d60",
+      "size": 2187
+    },
+    {
+      "path": "MX026_R_PER_RUN.csv",
+      "sha256": "ebce697f54523f20349f5269ab8e306c223367bc5aa099dc74f5670ae592ad51",
+      "size": 1539
+    },
+    {
+      "path": "MX026_PUR_PROGRESS_BINS.csv",
+      "sha256": "7b052433abbe7de14bf226a52c306f11118f06c8102d48d03c7b3444866d48bc",
+      "size": 151328
+    },
+    {
+      "path": "MX026_PUR_WHOLE_RUN_DIRECTION.csv",
+      "sha256": "fb87d084de7d00a10cb795a95e5f745875357e62fdc87a4f81b8c8185793703f",
+      "size": 19438
+    },
+    {
+      "path": "MX026_PUR_PAIRWISE_CONTEXT.csv",
+      "sha256": "850d9e70e5dc34dbab671e2c158f1047d159d3bf7650155e2a09c474335f3fbf",
+      "size": 6757
+    },
+    {
+      "path": "MX026_P_SOURCE_PARITY.csv",
+      "sha256": "e9e96e780d6a5252a2cb41c5c17c1e02d8bf3fe2a8888f379d52f3475e0202d0",
+      "size": 22854
+    },
+    {
+      "path": "MX026_P_BOUNDARY_AUDIT.csv",
+      "sha256": "581f51622d24e2c3da7dd1e4f03b472d8a5ed6590c66dc8b4221f75df8b0ebd5",
+      "size": 166129
+    },
+    {
+      "path": "MX026_P_BOUNDARY_AUDIT_SUMMARY.json",
+      "sha256": "2eaa77c1c21eeec62ccdb96950bed321b0476018c28574ff729612958633ba05",
+      "size": 477
+    },
+    {
+      "path": "MX026_PUR_METRIC_DICTIONARY.json",
+      "sha256": "8681b69714ffc5f4f7c14faa65a2d6e3decfc4086146ffb1881b831a839b96a6",
+      "size": 2217
+    },
+    {
+      "path": "MX026_ANALYST_REPORT.md",
+      "sha256": "6008e1a0a47c9b84fa9312cdda93a0a74ac342c065f62e76e6c5988386b534e7",
+      "size": 3829
+    },
+    {
+      "path": "figures/MX026_mpx_001_FULL_TRAJECTORY.svg",
+      "sha256": "e3a230bb68624e166243e1f3078b901d3ac00aba0f29541c303f1ae2e2addf3d",
+      "size": 103364
+    },
+    {
+      "path": "figures/MX026_mpx_002_FULL_TRAJECTORY.svg",
+      "sha256": "2b954a2044d1bfa0432d871e0da53a41f1e42266722e6de07eade94ff763338f",
+      "size": 106979
+    },
+    {
+      "path": "figures/MX026_mpx_003_FULL_TRAJECTORY.svg",
+      "sha256": "2e21b014dad7fc0d76f7420f8096594a83a9df9fc283def97b3f3aea619688bd",
+      "size": 105817
+    },
+    {
+      "path": "figures/MX026_mpx_004_FULL_TRAJECTORY.svg",
+      "sha256": "3068caa3f33be65230bba1f8819cc683c502fd4c6ffd464db8cd5ff9f113e1d4",
+      "size": 105358
+    },
+    {
+      "path": "figures/MX026_mpx_005_FULL_TRAJECTORY.svg",
+      "sha256": "55acae73594b3a50ded232a12d4849244bfb49357ea7aff2f216714d236fc17d",
+      "size": 102496
+    },
+    {
+      "path": "figures/MX026_mpx_006_FULL_TRAJECTORY.svg",
+      "sha256": "2fa04a4ea6ac2a84b7c2879dcec3b185b89eee6b7cf18024d46e17118b803969",
+      "size": 105453
+    },
+    {
+      "path": "figures/MX026_mpx_007_FULL_TRAJECTORY.svg",
+      "sha256": "e819c9d0df8fec98a3c9d9e4e4468f15eb5620421bce1bc95e9f50dc1a0c4f5c",
+      "size": 103690
+    },
+    {
+      "path": "figures/MX026_mpx_008_FULL_TRAJECTORY.svg",
+      "sha256": "1aa94129caa3924f4da25c28c50a78e7f35bb16bea5515cc1d519bb19e4a3dae",
+      "size": 103369
+    },
+    {
+      "path": "figures/MX026_mpx_009_FULL_TRAJECTORY.svg",
+      "sha256": "2e975b29b63935ef2ac6d788288927f9f8102ad59679b5c615a5de76f58b1b41",
+      "size": 103790
+    },
+    {
+      "path": "figures/MX026_mpx_010_FULL_TRAJECTORY.svg",
+      "sha256": "1f2ae4395e6eb7769f091b7094e358ab21eec3368cb7110ae926a06a836a73df",
+      "size": 106233
+    },
+    {
+      "path": "MX026_R2_CORRECTION_PROVENANCE.json",
+      "sha256": "94f8c1ddee2d5405abf73b6d62e582fe17bf880971c8e323d01d8f6f06c4bd91",
+      "size": 1700
+    }
+  ],
+  "boundary_audit": [
+    {
+      "affected_identities": "",
+      "decision_rows": 365,
+      "domain": "Q1_STRUCTURAL_GT",
+      "rows_with_exact_p_eq_0p5": 0,
+      "scoreable_rows": 365,
+      "total_exact_p_eq_0p5_cells": 0,
+      "total_scoreable_cells": 12470841
+    },
+    {
+      "affected_identities": "",
+      "decision_rows": 365,
+      "domain": "Q1_LATER_OBSERVED",
+      "rows_with_exact_p_eq_0p5": 0,
+      "scoreable_rows": 286,
+      "total_exact_p_eq_0p5_cells": 0,
+      "total_scoreable_cells": 2647324
+    }
+  ],
+  "bounded_result_revision": {
+    "findings_closed": [
+      "MX026-R1",
+      "MX026-R2"
+    ],
+    "parent_technical_result": "d39fcf574ddf59339d3f40db498071193ad098d6",
+    "qa_review_commit": "99cb26e9f7f96ba9fb9cbb5af28fb2098d653a26",
+    "revision": "R2"
+  },
+  "guards": {
+    "all_365_primary": true,
+    "composite": false,
+    "cross_fill_NA": false,
+    "interpolation": false,
+    "online_stop": false,
+    "oracle_marker_only": true,
+    "p_values": false,
+    "retuning": false,
+    "smoothing": false,
+    "winner": false
+  },
+  "inventory": {
+    "P_later_observed_evaluable": 286,
+    "P_structural_evaluable": 365,
+    "P_topology_evaluable": 168,
+    "R_map_evaluable": 365,
+    "R_reachable_evaluable": 218,
+    "U_evaluable": 365,
+    "boundary_rows": 730,
+    "full_run_plot_count": 10,
+    "mandatory_pair_rows": 60,
+    "master_rows": 365,
+    "unique_master_keys": 365,
+    "whole_run_direction_rows": 90
+  },
+  "method_revision": "f5144e2727993b920d172fa106ad5477a9c6fbe6",
+  "schema": "mx026_full_trajectory_pur_execution_v1",
+  "status": "COMPLETE_PENDING_INDEPENDENT_RESULT_QA_R2",
+  "technical_base": "4899ee95c85640965befeaf98c20f156c0d3181a"
+}
