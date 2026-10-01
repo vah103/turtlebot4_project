@@ -1,0 +1,97 @@
+{
+  "checks": {
+    "candidate_frontier_policy_metadata": {
+      "evidence": {
+        "candidate_rows": 701,
+        "errors": [],
+        "outcomes": {
+          "no_normally_selectable_candidate": 5,
+          "selected": 51
+        }
+      },
+      "reason": "",
+      "status": "PASS"
+    },
+    "decision_trajectory_and_ids": {
+      "evidence": {
+        "decision_count": 56,
+        "policy_decision_count": 56,
+        "trajectory_rows": 3638
+      },
+      "reason": "",
+      "status": "PASS"
+    },
+    "file_integrity_and_future_survey_inputs": {
+      "evidence": {
+        "csv_files": 65,
+        "file_count": 1003,
+        "json_files": 59,
+        "npz_files": 876,
+        "parse_errors": []
+      },
+      "reason": "",
+      "status": "PASS"
+    },
+    "hospital_gt_v2_alignment_inputs": {
+      "evidence": {
+        "alignment_decisions": 56,
+        "gt_sha256": "080c7d708f12ae71c1ed1881bfd630dbb491401d95831f613e3116cb9926dce1",
+        "semantic_digest": "d27ba692b313ba784729ea1fd10b2963c20fea9e4465d27081ece9c8757cf4ea",
+        "source_revision": "27fad5306f6a2868f93a269b82719fb189d77ebd"
+      },
+      "reason": "",
+      "status": "PASS"
+    },
+    "original_uncertainty_inputs": {
+      "evidence": {
+        "variance_parity_failures": [],
+        "variance_parity_pass": 56
+      },
+      "reason": "",
+      "status": "PASS"
+    },
+    "raw_maps_and_time": {
+      "evidence": {
+        "errors": [],
+        "raw_map_count": 56,
+        "time_s_count": 56
+      },
+      "reason": "",
+      "status": "PASS"
+    },
+    "runtime_config_model_policy_world_launch_provenance": {
+      "evidence": {
+        "checkpoint_hashes_present": true,
+        "config_hash_count": 17,
+        "git_dirty_at_recorder_start": true,
+        "mapex_reference_commit": "53636bd1c79153acc3c74a532837d78c926bae5e",
+        "run_git_commit": "a52784522faa209e875234607bea8c3262293786",
+        "termination_reason": "exploration_complete"
+      },
+      "reason": "",
+      "status": "PASS"
+    },
+    "saved_mapex_predictions": {
+      "evidence": {
+        "artifacts_per_decision": [
+          "raw_map",
+          "canvas_map",
+          "g1_map",
+          "g2_map",
+          "g3_map",
+          "mean_map",
+          "variance_map"
+        ],
+        "decision_count": 56
+      },
+      "reason": "",
+      "status": "PASS"
+    }
+  },
+  "cohort_label": "LEGACY_RETROSPECTIVE_GT_V2",
+  "run_id": "hpx_001",
+  "schema": "mx029_hpx001_preflight_v1",
+  "scientific_pooling_authorized": false,
+  "task": "MX029",
+  "verdict": "HPX001_DATA_REUSE_PASS"
+}

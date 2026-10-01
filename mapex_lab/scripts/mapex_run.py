@@ -98,11 +98,21 @@ ENVIRONMENT_PROFILES = {
         "auto_generate_ground_truth": True,
     },
     "hospital": {
-        "protocol_version": PROTOCOL_VERSION,
-        "roi_id": EVALUATION_ROI_ID,
-        "roi_relative": "ground_truth/hospital/generated/hospital_connected_free_v1.npy",
-        "ground_truth_id": "hospital_structural_gt_v1",
-        "ground_truth_relative": "ground_truth/hospital/generated/hospital_structural_gt_v1.npz",
+        "protocol_version": "hospital_v2_gt_v2_prospective",
+        "roi_id": "hospital_connected_free_v2",
+        "roi_relative": (
+            "analysis/d1/results/mx018_hospital_gt_recovery_v1/gt_v2/"
+            "hospital_connected_free_v2.npy"
+        ),
+        "roi_sha256": "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1",
+        "ground_truth_id": "hospital_structural_gt_v2",
+        "ground_truth_relative": (
+            "analysis/d1/results/mx018_hospital_gt_recovery_v1/gt_v2/"
+            "hospital_structural_gt_v2.npz"
+        ),
+        "ground_truth_sha256": "080c7d708f12ae71c1ed1881bfd630dbb491401d95831f613e3116cb9926dce1",
+        "ground_truth_semantic_digest": "d27ba692b313ba784729ea1fd10b2963c20fea9e4465d27081ece9c8757cf4ea",
+        "ground_truth_source_revision": "27fad5306f6a2868f93a269b82719fb189d77ebd",
         "auto_generate_ground_truth": False,
     },
 }
@@ -176,6 +186,22 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
 
         self.roi_path = root / self.environment_profile["roi_relative"]
         self.ground_truth_path = root / self.environment_profile["ground_truth_relative"]
+        if self.environment == "hospital":
+            expected_gt = self.environment_profile["ground_truth_sha256"]
+            expected_roi = self.environment_profile["roi_sha256"]
+            semantic_path = self.ground_truth_path.with_name(
+                "gt_v2_semantic_manifest.canonical.json"
+            )
+            if not self.ground_truth_path.is_file() or _sha256_file(self.ground_truth_path) != expected_gt:
+                raise RuntimeError("Hospital GT-v2 identity mismatch before execution")
+            if not self.roi_path.is_file() or _sha256_file(self.roi_path) != expected_roi:
+                raise RuntimeError("Hospital GT-v2 ROI identity mismatch before execution")
+            if (
+                not semantic_path.is_file()
+                or _sha256_file(semantic_path)
+                != self.environment_profile["ground_truth_semantic_digest"]
+            ):
+                raise RuntimeError("Hospital GT-v2 semantic identity mismatch before execution")
         self.roi = np.load(self.roi_path).astype(bool) if self.roi_path.is_file() else None
         self.roi_n = int(np.count_nonzero(self.roi)) if self.roi is not None else 0
         self.paper500_profile_path = (
@@ -390,6 +416,16 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                     "ground_truth_contract": self.root / "ground_truth" / "new_room" / "structural_gt_v1.yaml",
                 }
             )
+        elif self.environment == "hospital":
+            hash_paths.update(
+                {
+                    "hospital_gt_v2": self.ground_truth_path,
+                    "hospital_gt_v2_roi": self.roi_path,
+                    "hospital_gt_v2_semantic": self.ground_truth_path.with_name(
+                        "gt_v2_semantic_manifest.canonical.json"
+                    ),
+                }
+            )
         if self.paper500_enabled:
             hash_paths.update(
                 {
@@ -442,6 +478,14 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "structural_ground_truth_id": self.environment_profile["ground_truth_id"],
             "structural_ground_truth_file": str(self.ground_truth_path),
             "structural_ground_truth_exists_at_start": self.ground_truth_path.is_file(),
+            "structural_ground_truth_sha256": self.environment_profile.get("ground_truth_sha256"),
+            "structural_ground_truth_semantic_digest": self.environment_profile.get("ground_truth_semantic_digest"),
+            "structural_ground_truth_source_revision": self.environment_profile.get("ground_truth_source_revision"),
+            "evaluation_roi_sha256": self.environment_profile.get("roi_sha256"),
+            "ground_truth_binding_timing": "before_execution" if self.environment == "hospital" else None,
+            "cohort_provenance_label": "PROSPECTIVE_GT_V2" if self.environment == "hospital" else None,
+            "collection_task": "MX029" if self.environment == "hospital" else None,
+            "experimental_early_stop_enabled": False,
             "evaluation_start_x": None,
             "evaluation_start_y": None,
             "exploration_start_sim_s": None,
@@ -1006,6 +1050,8 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "evaluation_roi_id": self.environment_profile["roi_id"],
             "evaluation_roi_denominator": self.roi_n if self.roi_n > 0 else None,
             "structural_ground_truth_id": self.environment_profile["ground_truth_id"],
+            "structural_ground_truth_sha256": self.environment_profile.get("ground_truth_sha256"),
+            "structural_ground_truth_semantic_digest": self.environment_profile.get("ground_truth_semantic_digest"),
             "final_coverage": self.coverage,
             "final_known_fraction": self.known,
             "total_distance_m": self.distance,
