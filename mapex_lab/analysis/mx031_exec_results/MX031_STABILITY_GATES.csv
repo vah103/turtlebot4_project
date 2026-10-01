@@ -1,0 +1,9 @@
+gate,status,value,requirement
+S1,PASS,10,admissible outer folds >= 8/10
+S2,FAIL,premature=2;severe=0,premature=0 and SevereFalseStop10=0
+S3,PASS,fired=10;positive=10;median_delay=3.0,fired>=8; positive>=7; median nonpremature delay<=3
+S4,PASS,10,same family as full fit >=7/10
+S5,PASS,within2pp=7;range=5.0,>=7/10 within ±2pp; admissible-fold tau range<=6pp
+S6,PASS,exactK=7;range=1,>=7/10 exact K; admissible-fold K range<=1
+S7,NA,NOT_APPLICABLE,only F1/F3
+S8,PASS,A[family=F0;tau=5.5;K=1;c=;same=True;close=True;interior=True] B[family=F0;tau=5.5;K=1;c=;same=True;close=True;interior=True],"A/B same family,K,c; tau close and strictly interior"

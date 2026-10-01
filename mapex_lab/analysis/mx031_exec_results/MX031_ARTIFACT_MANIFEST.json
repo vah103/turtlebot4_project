@@ -1,0 +1,132 @@
+{
+  "artifact_count_excluding_manifest": 23,
+  "artifacts": [
+    {
+      "path": "MX031_ABLATIONS.csv",
+      "sha256": "e4bb5091cbfb95fe666c4ebc099af5d6a1a35f588886412fa197be3512990227",
+      "size": 7980
+    },
+    {
+      "path": "MX031_ANALYST_REPORT.md",
+      "sha256": "e3f8d00308d90eeb8800671e9662844016ae433c81d08dda4901e3a8377232d8",
+      "size": 1956
+    },
+    {
+      "path": "MX031_CANDIDATE_GRID.csv",
+      "sha256": "99aebb24977dc96d4e2b85c09c65441413c37cb11fe562227548277b6a12848b",
+      "size": 180044
+    },
+    {
+      "path": "MX031_EXECUTION_PROVENANCE.json",
+      "sha256": "23d2df10ccb981f7cea23e74c12ed186c9dc2356ce3eb28da07907b13f238251",
+      "size": 3067
+    },
+    {
+      "path": "MX031_FULL_FIT_SELECTION.csv",
+      "sha256": "cc66aa18d59124134040333fa818e7d7e1a0ba9015b236ce5777a49002b3aa6d",
+      "size": 102084
+    },
+    {
+      "path": "MX031_LORO_SELECTED_RULES.csv",
+      "sha256": "061a85467327a931c767766fa6a568c5661fcfd2f443d80b4edbd4f45b603836",
+      "size": 1975
+    },
+    {
+      "path": "MX031_METRIC_DICTIONARY.json",
+      "sha256": "93a646ae2257b87d90d84316b78eeb2c876dc6acb6cef60d40f553ba77ed775f",
+      "size": 2991
+    },
+    {
+      "path": "MX031_MISSINGNESS_INVENTORY.csv",
+      "sha256": "c1beede7ddf52ed0157300ca4bc82109a576603e738663c6a5b1926d05b746c4",
+      "size": 634
+    },
+    {
+      "path": "MX031_PER_DECISION_REPLAY.csv",
+      "sha256": "3cc88b790ea2425b6ba25ddc6f63835de5068e350035fdea586b0357846c1ef4",
+      "size": 183555
+    },
+    {
+      "path": "MX031_SENSITIVITY_SELECTION.csv",
+      "sha256": "c4ffc2ed2d808ee2ec9d9392ccb091122d5e646420c7e46b32826533dc5de7a6",
+      "size": 760
+    },
+    {
+      "path": "MX031_STABILITY_GATES.csv",
+      "sha256": "01aea7e1d1ca4ad6fa61e0ec4539b6e58888946cc7c68aa03fd2297fc054c4f4",
+      "size": 657
+    },
+    {
+      "path": "MX031_STOP_CONTEXT.csv",
+      "sha256": "f85688379263eb1b504e4624aee0ae8a4d7654a48fcd366b856379a3831f1211",
+      "size": 6695
+    },
+    {
+      "path": "MX031_TRAINING_CANDIDATE_SUMMARY.csv",
+      "sha256": "f60c194fd966486027828b29f2e9075b99f42130d77d544fda5bb99c6fa39fd9",
+      "size": 1531360
+    },
+    {
+      "path": "figures/MX031_mpx_001_REPLAY.svg",
+      "sha256": "cf758021095b7ea0fd4175a13bdbf51216bf1dd5d515768dd866baac6409414f",
+      "size": 93674
+    },
+    {
+      "path": "figures/MX031_mpx_002_REPLAY.svg",
+      "sha256": "32c188e71a8f8966b463c6fe1af17799ff9361746ac2a6b0cbbb786811e02a52",
+      "size": 94075
+    },
+    {
+      "path": "figures/MX031_mpx_003_REPLAY.svg",
+      "sha256": "8445531155e8cc66c25aa01de745c29ec8abbe2e6d32825ff5266f25bc22a84a",
+      "size": 94871
+    },
+    {
+      "path": "figures/MX031_mpx_004_REPLAY.svg",
+      "sha256": "192d4192ce8b3ebec8bc318bf53f9d8a9f96276dda58de4f9974e1b797bf54c6",
+      "size": 93884
+    },
+    {
+      "path": "figures/MX031_mpx_005_REPLAY.svg",
+      "sha256": "2257142076920bc25d8a5e9e6de71daa552ad8de3c4b930667d7562e9d22f8da",
+      "size": 93477
+    },
+    {
+      "path": "figures/MX031_mpx_006_REPLAY.svg",
+      "sha256": "735b092d24deefe8ed76e8d2045835a61e4f0a59f8b9a98d1558e06ea887638b",
+      "size": 93883
+    },
+    {
+      "path": "figures/MX031_mpx_007_REPLAY.svg",
+      "sha256": "119889052a4c29845692bd639e6d75232c00b50e4b78b78ac3e47db6200d015d",
+      "size": 91109
+    },
+    {
+      "path": "figures/MX031_mpx_008_REPLAY.svg",
+      "sha256": "7133237ea6a736f7301cef8e16ce6cea8adf5ea0bac716bc44d62ebe0ac9d630",
+      "size": 93663
+    },
+    {
+      "path": "figures/MX031_mpx_009_REPLAY.svg",
+      "sha256": "6b8165fc9b7d3c451e664701b7551d802ea697f82bacad1c676d7d847f3cf13e",
+      "size": 94488
+    },
+    {
+      "path": "figures/MX031_mpx_010_REPLAY.svg",
+      "sha256": "8d1577caa587c08eaffc7c8c677d7d2556d508628ebd7feec3271ea519aafd18",
+      "size": 94673
+    }
+  ],
+  "candidate_grid_rows": 2720,
+  "decision_rows": 365,
+  "development_status": "NO_STABLE_MULTI_SIGNAL_STOP_CANDIDATE",
+  "full_fit_rows": 480,
+  "loro_rows": 10,
+  "method_commit": "c0130eb8bdbdba2a2b144c2d62e16e1bea00ef46",
+  "schema": "mx031_artifact_manifest_v1",
+  "sensitivity_rows": 2,
+  "stability_rows": 8,
+  "status": "COMPLETE_PENDING_IR1_RESULT_QA",
+  "technical_frozen_base": "4899ee95c85640965befeaf98c20f156c0d3181a",
+  "training_candidate_rows": 4800
+}

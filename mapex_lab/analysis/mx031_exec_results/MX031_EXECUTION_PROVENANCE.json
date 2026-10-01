@@ -1,0 +1,81 @@
+{
+  "candidate_counts": {
+    "primary": 480,
+    "sensitivity_A": 960,
+    "sensitivity_B": 1280
+  },
+  "cohort": {
+    "decision_n": 365,
+    "oracle4": {
+      "mpx_001": 21,
+      "mpx_002": 18,
+      "mpx_003": 21,
+      "mpx_004": 16,
+      "mpx_005": 16,
+      "mpx_006": 20,
+      "mpx_007": 18,
+      "mpx_008": 19,
+      "mpx_009": 18,
+      "mpx_010": 19
+    },
+    "runs": [
+      "mpx_001",
+      "mpx_002",
+      "mpx_003",
+      "mpx_004",
+      "mpx_005",
+      "mpx_006",
+      "mpx_007",
+      "mpx_008",
+      "mpx_009",
+      "mpx_010"
+    ]
+  },
+  "execution_delta_from_frozen_base": [
+    ".github/workflows/mx031-oneoff.yml",
+    ".github/workflows/mx031-preflight.yml",
+    "mapex_lab/analysis/mx025_exec_results/MX025_R_MAP_SOURCE_PARITY.csv",
+    "mapex_lab/analysis/mx026_exec_results/MX026_PUR_ARTIFACT_MANIFEST.json",
+    "mapex_lab/analysis/mx026_exec_results/MX026_PUR_PER_DECISION.csv",
+    "mapex_lab/analysis/mx027_exec_results/MX027_IG_COVERAGE_PER_DECISION.csv",
+    "mapex_lab/analysis/mx027_exec_results/MX027_IG_COVERAGE_SOURCE_PARITY.csv",
+    "mapex_lab/analysis/mx031_exec.py"
+  ],
+  "executor_role": "Data & Evidence Analyst successor 04",
+  "frozen_in_base": {
+    "mapex_lab/analysis/d1/extract_shared_phase0_evidence.py": "c48de3322c4dcaefa63b07f8469cdfec2d740f1e",
+    "mapex_lab/analysis/d1/results/oracle_stop_retro_v1/oracle_decisions.csv": "9ae8f0479cf37a2b6aa9426a158f120efdc655cf",
+    "mapex_lab/analysis/r004/evaluate_topology_traversability.py": "ff031cb826908aafd3bc039ca67a499ed092cbc5"
+  },
+  "guards": {
+    "P_U_recognizer_threshold": false,
+    "deployment": false,
+    "engineer_implementation": false,
+    "hospital_scored": false,
+    "model_inference": false,
+    "robot_stop": false,
+    "simulation_rerun": false,
+    "threshold_retune": false,
+    "weighted_composite": false
+  },
+  "method_commit": "c0130eb8bdbdba2a2b144c2d62e16e1bea00ef46",
+  "method_qa_commit": "2d4590e0474be9c004704dcac21c8c4d34c35ec1",
+  "oracle_sha256": "2ca31f97ff4abfeb305667539dd0616af0caabfc5b11743c9bd8347e2f949cf8",
+  "runtime": {
+    "github_run_id": "36815498373",
+    "github_sha_at_start": "1c09a98ee726a1c25e8a71dd1ae564ebad88be37",
+    "matplotlib": "3.11.2",
+    "numpy": "2.4.6",
+    "python": "3.11.16"
+  },
+  "schema": "mx031_execution_provenance_v1",
+  "staged_exact_inputs": {
+    "mapex_lab/analysis/mx025_exec_results/MX025_R_MAP_SOURCE_PARITY.csv": "0a3af2267f37805e7fc7e1964d89f68d3d49013a",
+    "mapex_lab/analysis/mx026_exec_results/MX026_PUR_ARTIFACT_MANIFEST.json": "193be0531b9d5f43f57bd3d76e41527063e0a9d2",
+    "mapex_lab/analysis/mx026_exec_results/MX026_PUR_PER_DECISION.csv": "8e73f4441b1c852f90d801c20f993216bbd1e78a",
+    "mapex_lab/analysis/mx027_exec_results/MX027_IG_COVERAGE_PER_DECISION.csv": "dab247d44578d728c44ffc2245ee306d7375d9cb",
+    "mapex_lab/analysis/mx027_exec_results/MX027_IG_COVERAGE_SOURCE_PARITY.csv": "629560dba455a91c95f2f636d4d532016fd5a4c1"
+  },
+  "status": "COMPLETE_PENDING_IR1_RESULT_QA",
+  "technical_frozen_base": "4899ee95c85640965befeaf98c20f156c0d3181a"
+}
