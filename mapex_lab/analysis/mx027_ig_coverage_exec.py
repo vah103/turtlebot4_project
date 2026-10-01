@@ -216,7 +216,8 @@ def main():
     for r in per:r.pop("_time_s",None)
     if len(per)!=365 or len({(r["run_id"],r["decision_id"]) for r in per})!=365:raise RuntimeError("PER_DECISION_MEMBERSHIP_FAIL")
     no=Counter(r["run_id"] for r in per if r["IG_reason"]=="NO_RUNTIME_SELECTED_FRONTIER")
-    no_full={rid:int(no[rid]) for rid in RUNS}\n    if no_full!=EXPECTED_NO_SELECTION:raise RuntimeError("NO_SELECTION_COUNT_FAIL:"+repr(no_full))
+    no_full={rid:int(no[rid]) for rid in RUNS}
+    if no_full!=EXPECTED_NO_SELECTION:raise RuntimeError("NO_SELECTION_COUNT_FAIL:"+repr(no_full))
     if any(r["IG_reason"]=="BLANK_POLICY_ID_INCONSISTENT_RUNTIME_STATE" for r in per):raise RuntimeError("UNEXPECTED_INCONSISTENT_BLANK_POLICY")
     if sum(int(r["IG_evaluable"]) for r in per)!=306:raise RuntimeError("IG_EVALUABLE_COUNT_FAIL")
     if sum(int(r["Coverage_evaluable"]) for r in per)!=365:raise RuntimeError("COVERAGE_EVALUABLE_COUNT_FAIL")
