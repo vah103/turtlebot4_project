@@ -1,0 +1,7 @@
+gate,status,value,requirement
+S1,FAIL,0/10,all 10 outer folds admissible
+S2,PASS,premature=0;severe=0,premature=0; severe=0
+S3,FAIL,fired=0;positive=0;median_delay=NA,fired>=8; positive>=7; median nonpremature delay<=3
+S4,FAIL,full_status=NO_ADMISSIBLE_MX033_FULL_FIT;q_full=None;exact_q=0;tau_range=nan;c_range=nan,full fit admissible; >=7 exact q; tau range<=0.05; c range<=1
+S5,PASS,outer_parity_fail=0;full_parity_fail=0;source_fail=0;monotonicity=0,all accepted-base/source/integrity parity + monotonicity
+S6,PASS,semantic_pass=7/7,all seven frozen adversarial case families pass

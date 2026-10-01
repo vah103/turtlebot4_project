@@ -1,0 +1,106 @@
+{
+  "accepted_fullfit_first_fires": {
+    "mpx_001": 23,
+    "mpx_002": 18,
+    "mpx_003": 22,
+    "mpx_004": 16,
+    "mpx_005": 19,
+    "mpx_006": 23,
+    "mpx_007": 19,
+    "mpx_008": 20,
+    "mpx_009": 19,
+    "mpx_010": 23
+  },
+  "accepted_value_parity_failures": [],
+  "authorization_task": "MX034",
+  "candidate_grid": {
+    "c": [
+      0,
+      1,
+      2
+    ],
+    "pairs": 12,
+    "tau_IG": [
+      0.0,
+      0.01,
+      0.05,
+      0.1
+    ]
+  },
+  "classification": "VETO_SAFETY_SIGNAL_ONLY_NO_STABLE_CANDIDATE",
+  "cohort": {
+    "decision_rows": 365,
+    "runs": [
+      "mpx_001",
+      "mpx_002",
+      "mpx_003",
+      "mpx_004",
+      "mpx_005",
+      "mpx_006",
+      "mpx_007",
+      "mpx_008",
+      "mpx_009",
+      "mpx_010"
+    ]
+  },
+  "executor_role": "Data & Evidence Analyst successor 04",
+  "expected_source_blobs": {
+    "mapex_lab/analysis/d1/results/oracle_stop_retro_v1/oracle_decisions.csv": "9ae8f0479cf37a2b6aa9426a158f120efdc655cf",
+    "mapex_lab/analysis/mx025_exec_results/MX025_R_MAP_SOURCE_PARITY.csv": "0a3af2267f37805e7fc7e1964d89f68d3d49013a",
+    "mapex_lab/analysis/mx026_exec_results/MX026_PUR_PER_DECISION.csv": "8e73f4441b1c852f90d801c20f993216bbd1e78a",
+    "mapex_lab/analysis/mx027_exec_results/MX027_IG_COVERAGE_PER_DECISION.csv": "dab247d44578d728c44ffc2245ee306d7375d9cb",
+    "mapex_lab/analysis/mx027_exec_results/MX027_IG_COVERAGE_SOURCE_PARITY.csv": "629560dba455a91c95f2f636d4d532016fd5a4c1",
+    "mapex_lab/analysis/mx031_exec_results/MX031_LORO_SELECTED_RULES.csv": "cc0d4230a997e50b00f5c776537d59af0815769f",
+    "mapex_lab/analysis/mx031_exec_results/MX031_PER_DECISION_REPLAY.csv": "daf11687221080790e20227f2bf7b7406476298e",
+    "mapex_lab/analysis/mx033_inputs/MX032_RUN_EXCEPTION_CASEBOOK.csv": "f465036fbb08de7f790af8943d56d8ad59f1dcb0"
+  },
+  "fullfit_365row_parity_failures": [],
+  "guards": {
+    "Engineer": false,
+    "Hospital": false,
+    "MX028": false,
+    "P_online": false,
+    "U_online": false,
+    "deployment": false,
+    "nearest_passing_substitution": false,
+    "retuning": false,
+    "robot_STOP": false,
+    "simulation": false
+  },
+  "hard_replay_integrity_failure_count": 0,
+  "method_blob": "83e1d2038d7bd81618eb47fc65b6e4fa644fbfc6",
+  "method_commit": "86e17f061b3acee14b84d27da2f95b43c007e677",
+  "monotonicity_violations": 0,
+  "mx031_source_revision": "d90498e1a3ead2a0c170a3fee7c02a1bc9526cca",
+  "mx032_pack": "9aefb2bbe0be8685c8e779f3def677b0b5054e82",
+  "outer_paired_base_parity_failures": [],
+  "recomputed_fullfit_first_fires": {
+    "mpx_001": 23,
+    "mpx_002": 18,
+    "mpx_003": 22,
+    "mpx_004": 16,
+    "mpx_005": 19,
+    "mpx_006": 23,
+    "mpx_007": 19,
+    "mpx_008": 20,
+    "mpx_009": 19,
+    "mpx_010": 23
+  },
+  "runtime": {
+    "github_run_id": "36858006241",
+    "github_sha_at_start": "2bed2d8c02dec3ec557e125160024e8187efe516",
+    "python": "3.11.16"
+  },
+  "schema": "mx033_execution_provenance_v2",
+  "source_blob_failures": [],
+  "source_blobs": {
+    "mapex_lab/analysis/d1/results/oracle_stop_retro_v1/oracle_decisions.csv": "9ae8f0479cf37a2b6aa9426a158f120efdc655cf",
+    "mapex_lab/analysis/mx025_exec_results/MX025_R_MAP_SOURCE_PARITY.csv": "0a3af2267f37805e7fc7e1964d89f68d3d49013a",
+    "mapex_lab/analysis/mx026_exec_results/MX026_PUR_PER_DECISION.csv": "8e73f4441b1c852f90d801c20f993216bbd1e78a",
+    "mapex_lab/analysis/mx027_exec_results/MX027_IG_COVERAGE_PER_DECISION.csv": "dab247d44578d728c44ffc2245ee306d7375d9cb",
+    "mapex_lab/analysis/mx027_exec_results/MX027_IG_COVERAGE_SOURCE_PARITY.csv": "629560dba455a91c95f2f636d4d532016fd5a4c1",
+    "mapex_lab/analysis/mx031_exec_results/MX031_LORO_SELECTED_RULES.csv": "cc0d4230a997e50b00f5c776537d59af0815769f",
+    "mapex_lab/analysis/mx031_exec_results/MX031_PER_DECISION_REPLAY.csv": "daf11687221080790e20227f2bf7b7406476298e",
+    "mapex_lab/analysis/mx033_inputs/MX032_RUN_EXCEPTION_CASEBOOK.csv": "f465036fbb08de7f790af8943d56d8ad59f1dcb0"
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "CoverageClear": "Coverage evaluable, blank reasons, finite Delta/Rate, 0<=Delta<=c*r^2, Rate>=0",
+  "ExplorationClear": "FrontierClear AND CoverageClear",
+  "FrontierClear": {
+    "A": "true, IG remains NA",
+    "B": "IGRel<=tau_IG",
+    "C": "false ordinary fail-closed",
+    "D": "hard integrity failure"
+  },
+  "IGPeakSoFar": "max finite nonnegative State-B IG_selected over same run decisions <=t",
+  "IGRel": "State B current IG / IGPeakSoFar; if peak=current=0 then 0; State A/C NA",
+  "NO_RULE": "fixed outer fold remains denominator member; no fire/no saving; no substituted q",
+  "Qualify": "RSmall AND TopoClear AND ExplorationClear",
+  "RSmall": "R_available=1 and finite R_map and R_map<=frozen fold tau_R",
+  "TopoClear": "TopoValid=1; false is ordinary fail-closed reset, not proof of unsafe world",
+  "architecture": "AV-DUAL only",
+  "classification_order": [
+    "MX033_INVALID_EXECUTION",
+    "ACTIVE_EXPLORATION_VETO_SAFETY_FAIL",
+    "VETO_SAFETY_SIGNAL_ONLY_NO_STABLE_CANDIDATE",
+    "ACTIVE_EXPLORATION_VETO_DEVELOPMENT_CANDIDATE"
+  ],
+  "evaluator_only": [
+    "OracleStop_4",
+    "OracleRemainingFraction_GT",
+    "P correctness",
+    "truth-conditioned U",
+    "future/retrospective topology"
+  ],
+  "method_commit": "86e17f061b3acee14b84d27da2f95b43c007e677",
+  "online_fields": [
+    "R_map",
+    "TopoValid",
+    "FrontierState",
+    "State-B IG_selected",
+    "same-run past/current IG",
+    "DeltaKnownArea_m2",
+    "KnownAreaRate_m2_s",
+    "raw_resolution",
+    "past/current recognizer state"
+  ],
+  "outer_backbones": {
+    "mpx_001": {
+      "K": 1,
+      "tau_R": 0.06
+    },
+    "mpx_002": {
+      "K": 2,
+      "tau_R": 0.1
+    },
+    "mpx_003": {
+      "K": 1,
+      "tau_R": 0.05
+    },
+    "mpx_004": {
+      "K": 2,
+      "tau_R": 0.08
+    },
+    "mpx_005": {
+      "K": 1,
+      "tau_R": 0.05
+    },
+    "mpx_006": {
+      "K": 1,
+      "tau_R": 0.05
+    },
+    "mpx_007": {
+      "K": 1,
+      "tau_R": 0.05
+    },
+    "mpx_008": {
+      "K": 1,
+      "tau_R": 0.05
+    },
+    "mpx_009": {
+      "K": 2,
+      "tau_R": 0.08
+    },
+    "mpx_010": {
+      "K": 1,
+      "tau_R": 0.05
+    }
+  },
+  "schema": "mx033_metric_dictionary_v2_execution",
+  "signed_coverage_regression": "preserved; CoverageClear=false; SIGNED_COVERAGE_REGRESSION_VETO",
+  "veto_grid": {
+    "c_cells": [
+      0,
+      1,
+      2
+    ],
+    "pair_count": 12,
+    "tau_IG": [
+      0.0,
+      0.01,
+      0.05,
+      0.1
+    ]
+  }
+}

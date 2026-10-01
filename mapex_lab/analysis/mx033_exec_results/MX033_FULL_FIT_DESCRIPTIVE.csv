@@ -1,0 +1,13 @@
+status,tau_R,K,tau_IG,c,truth_valid_run_count,required_fired_run_count,required_positive_saving_run_count,fired_run_count,positive_saving_run_count,StopCoverage,PositiveSavingCoverage,premature_stop_count,SevereFalseStop10_count,median_nonpremature_DelayDecisions,mean_nonpremature_DelayDecisions,nonpremature_delay_support,MeanSavedProgress,integrity_failure_count,admissible,selector_rank,selected_full_fit
+CANDIDATE,0.05,1,0.0,0,10,8,7,4,4,0.4,0.4,0,0,12.0,12.25,4,0.07557498057498056,0,0,,0
+CANDIDATE,0.05,1,0.0,1,10,8,7,4,4,0.4,0.4,0,0,12.0,12.25,4,0.07557498057498056,0,0,,0
+CANDIDATE,0.05,1,0.0,2,10,8,7,4,4,0.4,0.4,0,0,12.0,12.25,4,0.07557498057498056,0,0,,0
+CANDIDATE,0.05,1,0.01,0,10,8,7,4,4,0.4,0.4,0,0,12.0,12.25,4,0.07557498057498056,0,0,,0
+CANDIDATE,0.05,1,0.01,1,10,8,7,4,4,0.4,0.4,0,0,12.0,12.25,4,0.07557498057498056,0,0,,0
+CANDIDATE,0.05,1,0.01,2,10,8,7,4,4,0.4,0.4,0,0,12.0,12.25,4,0.07557498057498056,0,0,,0
+CANDIDATE,0.05,1,0.05,0,10,8,7,4,4,0.4,0.4,0,0,12.0,12.25,4,0.07557498057498056,0,0,,0
+CANDIDATE,0.05,1,0.05,1,10,8,7,4,4,0.4,0.4,0,0,12.0,12.25,4,0.07557498057498056,0,0,,0
+CANDIDATE,0.05,1,0.05,2,10,8,7,4,4,0.4,0.4,0,0,12.0,12.25,4,0.07557498057498056,0,0,,0
+CANDIDATE,0.05,1,0.1,0,10,8,7,4,4,0.4,0.4,0,0,12.0,12.25,4,0.07557498057498056,0,0,,0
+CANDIDATE,0.05,1,0.1,1,10,8,7,4,4,0.4,0.4,0,0,12.0,12.25,4,0.07557498057498056,0,0,,0
+CANDIDATE,0.05,1,0.1,2,10,8,7,4,4,0.4,0.4,0,0,12.0,12.25,4,0.07557498057498056,0,0,,0
