@@ -216,7 +216,7 @@ def main():
     for r in per:r.pop("_time_s",None)
     if len(per)!=365 or len({(r["run_id"],r["decision_id"]) for r in per})!=365:raise RuntimeError("PER_DECISION_MEMBERSHIP_FAIL")
     no=Counter(r["run_id"] for r in per if r["IG_reason"]=="NO_RUNTIME_SELECTED_FRONTIER")
-    if dict(no)!=EXPECTED_NO_SELECTION:raise RuntimeError("NO_SELECTION_COUNT_FAIL:"+repr(dict(no)))
+    no_full={rid:int(no[rid]) for rid in RUNS}\n    if no_full!=EXPECTED_NO_SELECTION:raise RuntimeError("NO_SELECTION_COUNT_FAIL:"+repr(no_full))
     if any(r["IG_reason"]=="BLANK_POLICY_ID_INCONSISTENT_RUNTIME_STATE" for r in per):raise RuntimeError("UNEXPECTED_INCONSISTENT_BLANK_POLICY")
     if sum(int(r["IG_evaluable"]) for r in per)!=306:raise RuntimeError("IG_EVALUABLE_COUNT_FAIL")
     if sum(int(r["Coverage_evaluable"]) for r in per)!=365:raise RuntimeError("COVERAGE_EVALUABLE_COUNT_FAIL")
@@ -285,7 +285,7 @@ def main():
     arts=[OUT/"MX027_IG_COVERAGE_PER_DECISION.csv",OUT/"MX027_IG_PER_RUN.csv",OUT/"MX027_COVERAGE_PER_RUN.csv",OUT/"MX027_IG_COVERAGE_PROGRESS_BINS.csv",OUT/"MX027_IG_COVERAGE_WHOLE_RUN_DIRECTION.csv",OUT/"MX027_IG_COVERAGE_METRIC_DICTIONARY.json",OUT/"MX027_IG_COVERAGE_SOURCE_PARITY.csv",OUT/"MX027_FIVE_FAMILY_PER_DECISION_VIEW.csv",OUT/"MX027_ANALYST_REPORT.md",*plots]
     manifest={"schema":"mx027_ig_coverage_execution_v1","status":"COMPLETE_PENDING_INDEPENDENT_RESULT_QA","method_revision":METHOD_SHA,"technical_base":BASE_SHA,"accepted_mx026_result":MX026_SHA,
       "inventory":{"decision_rows":365,"IG_evaluable":sum(int(r["IG_evaluable"]) for r in per),"IG_no_selection":sum(r["IG_reason"]=="NO_RUNTIME_SELECTED_FRONTIER" for r in per),"Coverage_evaluable":sum(int(r["Coverage_evaluable"]) for r in per),"candidate_lookup_attempted":sum(int(r["candidate_lookup_attempted"]) for r in source),"progress_bin_rows":len(bins),"whole_run_direction_rows":len(dirs),"joined_rows":len(joined),"plot_count":len(plots)},
-      "no_selection_by_run":dict(no),"guards":{"IG_zero_fill":False,"fallback":False,"interpolation":False,"composite":False,"winner":False,"retuning":False,"online_stop":False,"model_rerun":False,"simulation_rerun":False},
+      "no_selection_by_run":no_full,"guards":{"IG_zero_fill":False,"fallback":False,"interpolation":False,"composite":False,"winner":False,"retuning":False,"online_stop":False,"model_rerun":False,"simulation_rerun":False},
       "artifacts":[{"path":str(p.relative_to(OUT)),"sha256":sha256(p),"size":p.stat().st_size} for p in arts]}
     (OUT/"MX027_IG_COVERAGE_ARTIFACT_MANIFEST.json").write_text(json.dumps(manifest,indent=2,sort_keys=True)+"\n")
     print(json.dumps({"inventory":manifest["inventory"],"no_selection_by_run":manifest["no_selection_by_run"],"negative_delta":neg_delta,"negative_rate":neg_rate},indent=2,sort_keys=True))
