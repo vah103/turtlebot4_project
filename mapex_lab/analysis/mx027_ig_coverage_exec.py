@@ -290,3 +290,4 @@ def main():
     (OUT/"MX027_IG_COVERAGE_ARTIFACT_MANIFEST.json").write_text(json.dumps(manifest,indent=2,sort_keys=True)+"\n")
     print(json.dumps({"inventory":manifest["inventory"],"no_selection_by_run":manifest["no_selection_by_run"],"negative_delta":neg_delta,"negative_rate":neg_rate},indent=2,sort_keys=True))
 if __name__=="__main__":main()
+# execution trigger: MX027 exact V3
