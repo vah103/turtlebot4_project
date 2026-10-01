@@ -4,8 +4,8 @@ Accepted methodology: 6925611773ced0722ffc8bf43279084dd01fad75
 Frozen technical base: 4899ee95c85640965befeaf98c20f156c0d3181a
 
 ## Inventory
-- 365/365 decision rows; IG evaluable 306/365; legitimate runtime no-selection IG NA 59/365; Coverage evaluable 365/365.
-- Candidate lookup attempted only for the 306 nonblank-policy decisions; all 59 no-selection rows skipped candidate lookup.
+- 365/365 decision rows; IG evaluable 285/365; legitimate runtime no-selection IG NA 59/365; nonblank-policy rows with no unique runtime-selected frontier = 21; Coverage evaluable 365/365.
+- Candidate lookup attempted only for the 306 nonblank-policy decisions; all 59 blank-policy no-selection rows skipped candidate lookup. Candidate-table rows without a unique selected frontier remain IG NA fail-closed; no candidate value is reconstructed or substituted.
 - Five-family joined view contains 365 exact accepted MX026 keys and preserves MX026 P/U/R values read-only.
 - IG reason counts: {'OK': 285, 'NO_RUNTIME_SELECTED_FRONTIER': 59, 'SELECTED_FRONTIER_CARDINALITY_NE_1': 21}. Policy-score reason counts: {'OK': 285, 'NO_RUNTIME_SELECTED_FRONTIER': 59, 'SELECTED_FRONTIER_CARDINALITY_NE_1': 21}. Coverage reason counts: {'OK': 365}.
 
