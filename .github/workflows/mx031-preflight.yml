@@ -1,0 +1,39 @@
+name: MX031 schema preflight
+
+on:
+  push:
+    branches:
+      - mx031-analyst04-exec-v1
+    paths:
+      - .github/workflows/mx031-preflight.yml
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install --disable-pip-version-check numpy
+      - name: Inspect frozen schemas only
+        run: |
+          python - <<'PY'
+          import csv, json, numpy as np
+          from pathlib import Path
+          root=Path(".")
+          oracle=root/"mapex_lab/analysis/d1/results/oracle_stop_retro_v1/oracle_decisions.csv"
+          with oracle.open(newline="") as f:
+              r=csv.DictReader(f)
+              first=next(r)
+              print("ORACLE_FIELDS", json.dumps(r.fieldnames))
+              print("ORACLE_FIRST_SELECTED", json.dumps({k:first[k] for k in r.fieldnames if any(t in k.lower() for t in ["run","decision","remaining","time","fraction","oracle"])}))
+          run=root/"mapex_lab/experiments/mapex/mpx_001"
+          with (run/"decisions.csv").open(newline="") as f:
+              d=next(csv.DictReader(f))
+          for key in ["raw_map","g1_map","g2_map","g3_map","mean_map"]:
+              p=run/d[key]
+              with np.load(p,allow_pickle=False) as z:
+                  print(key, p, sorted(z.files))
+                  print(key+"_META", {k: np.asarray(z[k]).reshape(()).item() if np.asarray(z[k]).size==1 else list(np.asarray(z[k]).shape) for k in z.files if k!="data"})
+          PY
