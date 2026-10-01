@@ -615,6 +615,8 @@ def aggregate_candidate(candidate: dict, runs: list[str], base_by_run, oracle_in
     return {
         **candidate,
         "truth_valid_run_count": n,
+        "required_fired_run_count": math.ceil(0.80 * n),
+        "required_positive_saving_run_count": math.ceil(0.70 * n),
         "fired_run_count": fired,
         "positive_saving_run_count": positive,
         "StopCoverage": stop_cov,
@@ -625,6 +627,7 @@ def aggregate_candidate(candidate: dict, runs: list[str], base_by_run, oracle_in
         "mean_nonpremature_DelayDecisions": mean_delay,
         "nonpremature_delay_support": len(nonprem_delays),
         "MeanSavedProgress": mean_saved_progress,
+        "integrity_failure_count": 0,
         "admissible": int(admissible),
         "reject_reason": "|".join(reasons),
         "_outcomes": outcomes,
@@ -789,6 +792,7 @@ def make_base_replay(ridx, cidx, csrcidx, rsrcidx, oracle_index):
                 "IG_visible_unknown_cells": fval(cp.get("IG_visible_unknown_cells")),
                 "OracleStop_4": ORACLE4[run_id],
                 "OracleRemainingFraction_GT": float(orow["OracleRemainingFraction_GT"]),
+                "hard_replay_integrity_failure": 0,
             }
             for tau in PRIMARY_TAUS:
                 row[f"RCondition_tau_{int(tau):02d}pct"] = int(r_available and r_map <= tau / 100.0)
