@@ -25,3 +25,8 @@ Frozen technical base: 4899ee95c85640965befeaf98c20f156c0d3181a
 - No-selection IG is semantic NA, never IG=0.
 - Coverage/Stagnation is independently computed from exact raw_map/resolution/time_s and does not depend on IG evaluability.
 - No binary stagnation threshold, STOP rule, cross-family correlation matrix, composite, winner, causal claim, retuning, interpolation, model rerun or new simulation is produced.
+## Bounded R2 figure correction
+- The 10 full-trajectory figures now place IG_selected and IG_visible_unknown_cells on separate subpanels with distinct y-axis labels/units.
+- Existing NA values remain plot gaps; Oracle-4 remains a vertical marker only; no smoothing or interpolation is introduced.
+- The eight frozen core data/dictionary artifacts remain byte-identical to result V1.
+

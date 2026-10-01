@@ -1,0 +1,64 @@
+{
+  "changes": {
+    "figure_count": 10,
+    "manifest_refreshed": true,
+    "plot_contract": "IG_selected and IG_visible_unknown_cells separated into distinct subpanels",
+    "report_note_added": true
+  },
+  "guards": {
+    "composite": false,
+    "interpolation": false,
+    "model_rerun": false,
+    "new_correlation": false,
+    "retuning": false,
+    "scientific_reanalysis": false,
+    "simulation_rerun": false,
+    "smoothing": false,
+    "source_reextract": false,
+    "stop_rule": false,
+    "winner": false
+  },
+  "parent_technical_result": "a1bb6d98af21d558b1323aaa8edeab53e15aba41",
+  "qa_review_commit": "d21b32bf90792b0e3385de09a56eb57c4f46f5f2",
+  "schema": "mx027_bounded_result_r2_figure_correction_v1",
+  "scope": "figure-only correction",
+  "task": "MX027",
+  "unchanged_core": {
+    "all_sha256_unchanged": true,
+    "artifact_count": 8,
+    "artifacts": [
+      {
+        "path": "MX027_IG_COVERAGE_PER_DECISION.csv",
+        "sha256": "7865610798926b1a1234a7f49d98d82d6fd7000e54c531a1f5fe70252442b308"
+      },
+      {
+        "path": "MX027_IG_PER_RUN.csv",
+        "sha256": "3bcc5b23220ee0dca1d8fb98b9032f648708c95a683aaaf1551f9ce865465606"
+      },
+      {
+        "path": "MX027_COVERAGE_PER_RUN.csv",
+        "sha256": "81707d80d5c3a0279309413902f8662f7032472c15ce1fc460f0d2fce947e4de"
+      },
+      {
+        "path": "MX027_IG_COVERAGE_PROGRESS_BINS.csv",
+        "sha256": "f559743f207cdae54b3ebafa3e3b1207a1a72572944aae24211a3d1dc1684351"
+      },
+      {
+        "path": "MX027_IG_COVERAGE_WHOLE_RUN_DIRECTION.csv",
+        "sha256": "95a6a4596c339c1826d19f23d7f8209bd945430920f537e79b5f87be46ffca30"
+      },
+      {
+        "path": "MX027_IG_COVERAGE_METRIC_DICTIONARY.json",
+        "sha256": "27587e4f44be4577ee1e111e35cb60562e23d632cd30cd92721ab8ef3afcf751"
+      },
+      {
+        "path": "MX027_IG_COVERAGE_SOURCE_PARITY.csv",
+        "sha256": "181398517c459a9869ae79bf925d1a17a1e564aa813f184509fc5c9507a7083e"
+      },
+      {
+        "path": "MX027_FIVE_FAMILY_PER_DECISION_VIEW.csv",
+        "sha256": "07222c15ecf833e042d2594fa6723d6bc8eb197185b039a0358508ba252677ad"
+      }
+    ]
+  }
+}
