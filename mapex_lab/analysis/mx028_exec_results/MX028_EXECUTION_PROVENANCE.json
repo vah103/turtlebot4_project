@@ -21,7 +21,31 @@
   },
   "execution_branch_delta_from_frozen_base": [
     ".github/workflows/mx028-oneoff.yml",
-    "mapex_lab/analysis/mx028_exec.py"
+    "mapex_lab/analysis/mx028_exec.py",
+    "mapex_lab/analysis/mx028_exec_results/MX028_ANALYST_REPORT.md",
+    "mapex_lab/analysis/mx028_exec_results/MX028_EXECUTION_PROVENANCE.json",
+    "mapex_lab/analysis/mx028_exec_results/MX028_FREE_CONTROL_LATER_PER_DECISION.csv",
+    "mapex_lab/analysis/mx028_exec_results/MX028_FREE_CONTROL_STRUCTURAL_PER_DECISION.csv",
+    "mapex_lab/analysis/mx028_exec_results/MX028_OCCUPIED_LATER_PER_DECISION.csv",
+    "mapex_lab/analysis/mx028_exec_results/MX028_OCCUPIED_STRUCTURAL_PER_DECISION.csv",
+    "mapex_lab/analysis/mx028_exec_results/MX028_PXU_ARTIFACT_MANIFEST.json",
+    "mapex_lab/analysis/mx028_exec_results/MX028_PXU_METRIC_DICTIONARY.json",
+    "mapex_lab/analysis/mx028_exec_results/MX028_PXU_ORACLE_LATE_SUMMARY.csv",
+    "mapex_lab/analysis/mx028_exec_results/MX028_PXU_PER_DECISION.csv",
+    "mapex_lab/analysis/mx028_exec_results/MX028_PXU_PER_RUN.csv",
+    "mapex_lab/analysis/mx028_exec_results/MX028_PXU_PROGRESS_BINS.csv",
+    "mapex_lab/analysis/mx028_exec_results/MX028_PXU_SUPPORT_INVENTORY.csv",
+    "mapex_lab/analysis/mx028_exec_results/MX028_VARIANCE_SOURCE_PARITY.csv",
+    "mapex_lab/analysis/mx028_exec_results/figures/MX028_mpx_001_FULL_TRAJECTORY.svg",
+    "mapex_lab/analysis/mx028_exec_results/figures/MX028_mpx_002_FULL_TRAJECTORY.svg",
+    "mapex_lab/analysis/mx028_exec_results/figures/MX028_mpx_003_FULL_TRAJECTORY.svg",
+    "mapex_lab/analysis/mx028_exec_results/figures/MX028_mpx_004_FULL_TRAJECTORY.svg",
+    "mapex_lab/analysis/mx028_exec_results/figures/MX028_mpx_005_FULL_TRAJECTORY.svg",
+    "mapex_lab/analysis/mx028_exec_results/figures/MX028_mpx_006_FULL_TRAJECTORY.svg",
+    "mapex_lab/analysis/mx028_exec_results/figures/MX028_mpx_007_FULL_TRAJECTORY.svg",
+    "mapex_lab/analysis/mx028_exec_results/figures/MX028_mpx_008_FULL_TRAJECTORY.svg",
+    "mapex_lab/analysis/mx028_exec_results/figures/MX028_mpx_009_FULL_TRAJECTORY.svg",
+    "mapex_lab/analysis/mx028_exec_results/figures/MX028_mpx_010_FULL_TRAJECTORY.svg"
   ],
   "execution_type": "bounded one-off deterministic recomputation",
   "executor_role": "Data & Evidence Analyst successor 04",
@@ -55,8 +79,8 @@
     "mpx_010": 19
   },
   "runtime": {
-    "github_run_id": "36804718166",
-    "github_sha_at_start": "c6fb9e2891dfcd807952151579cf4cb5532e9881",
+    "github_run_id": "36804959805",
+    "github_sha_at_start": "9768262e07631d451e74b0afdf7c62d2a954db82",
     "matplotlib": "3.11.2",
     "numpy": "2.4.6",
     "python": "3.11.16"
