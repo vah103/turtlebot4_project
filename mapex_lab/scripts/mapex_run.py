@@ -401,6 +401,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "nav2_override": nav2_override,
             "installed_nav2_base_params": nav2_base,
             "runtime_nav2_merged": merged_path,
+            "execution_runner": self.root.parent / ".run_core",
         }
         if active_slam is not None:
             hash_paths["runtime_slam"] = active_slam
@@ -486,6 +487,10 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "cohort_provenance_label": "PROSPECTIVE_GT_V2" if self.environment == "hospital" else None,
             "collection_task": "MX029" if self.environment == "hospital" else None,
             "experimental_early_stop_enabled": False,
+            "execution_headless": os.environ.get("MAPEX_RUN_HEADLESS", "False").lower()
+            == "true",
+            "execution_use_rviz": os.environ.get("MAPEX_RUN_USE_RVIZ", "True").lower()
+            == "true",
             "evaluation_start_x": None,
             "evaluation_start_y": None,
             "exploration_start_sim_s": None,

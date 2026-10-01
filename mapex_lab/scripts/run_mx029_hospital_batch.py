@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import os
+import signal
 import shutil
 import subprocess
 import sys
@@ -17,6 +19,10 @@ RUN_IDS = tuple(f"hpx_{index:03d}" for index in range(2, 6))
 GT_SHA256 = "080c7d708f12ae71c1ed1881bfd630dbb491401d95831f613e3116cb9926dce1"
 GT_SEMANTIC_DIGEST = "d27ba692b313ba784729ea1fd10b2963c20fea9e4465d27081ece9c8757cf4ea"
 ROI_SHA256 = "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1"
+HEADLESS = True
+USE_RVIZ = False
+MAP_STALL_TIMEOUT_S = 180.0
+MAP_STALL_MIN_DECISIONS = 5
 
 
 def sha256(path: Path) -> str:
@@ -57,6 +63,8 @@ def frozen_identity(root: Path) -> dict:
         "runtime_launch": lab / "launch/slam.launch.py",
         "hospital_scale": lab / "scripts/hospital_scale.py",
         "hospital_world": lab / "map/hospital_aws_flat.sdf",
+        "execution_runner": root / ".run_core",
+        "batch_driver": lab / "scripts/run_mx029_hospital_batch.py",
     }
     identity = {
         "source_revision": git(root, "rev-parse", "HEAD"),
@@ -71,6 +79,12 @@ def frozen_identity(root: Path) -> dict:
         "run_ids": list(RUN_IDS),
         "provenance_label": "PROSPECTIVE_GT_V2",
         "experimental_early_stop_enabled": False,
+        "execution_mode": {
+            "headless": HEADLESS,
+            "use_rviz": USE_RVIZ,
+            "map_stall_timeout_s": MAP_STALL_TIMEOUT_S,
+            "map_stall_min_decisions": MAP_STALL_MIN_DECISIONS,
+        },
         "sim_seed": None,
         "sim_seed_policy": "intentionally_uncontrolled_gazebo_default_multiple_run_statistics",
     }
@@ -108,6 +122,8 @@ def inventory_run(run: Path, frozen: dict) -> dict:
         and metadata.get("ground_truth_binding_timing") == "before_execution"
         and metadata.get("cohort_provenance_label") == "PROSPECTIVE_GT_V2"
         and metadata.get("experimental_early_stop_enabled") is False
+        and metadata.get("execution_headless") is HEADLESS
+        and metadata.get("execution_use_rviz") is USE_RVIZ
         and decision_count > 0
         and not missing
         and all(count == decision_count for count in prediction_counts.values())
@@ -133,11 +149,93 @@ def archive_abort(run: Path, evidence: Path, run_id: str, attempt: int) -> Path:
     return target
 
 
+def read_decision_progress(path: Path) -> tuple[int, str | None]:
+    if not path.is_file():
+        return 0, None
+    with path.open(newline="", encoding="utf-8") as stream:
+        rows = list(csv.DictReader(stream))
+    if not rows:
+        return 0, None
+    return len(rows), rows[-1].get("map_generation")
+
+
+def stop_runner(process: subprocess.Popen) -> None:
+    if process.poll() is not None:
+        return
+    try:
+        os.killpg(process.pid, signal.SIGINT)
+    except ProcessLookupError:
+        return
+    try:
+        process.wait(timeout=45)
+        return
+    except subprocess.TimeoutExpired:
+        pass
+    try:
+        os.killpg(process.pid, signal.SIGTERM)
+    except ProcessLookupError:
+        return
+    try:
+        process.wait(timeout=15)
+        return
+    except subprocess.TimeoutExpired:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            return
+        process.wait()
+
+
+def execute_run(command: list[str], root: Path, run: Path, stream) -> tuple[int, str | None]:
+    env = os.environ.copy()
+    env["MAPEX_RUN_HEADLESS"] = "True" if HEADLESS else "False"
+    env["MAPEX_RUN_USE_RVIZ"] = "True" if USE_RVIZ else "False"
+    process = subprocess.Popen(
+        command,
+        cwd=root,
+        env=env,
+        stdout=stream,
+        stderr=subprocess.STDOUT,
+        start_new_session=True,
+    )
+    observed_generation = None
+    generation_changed_at = time.monotonic()
+    decisions_at_change = 0
+    abort_reason = None
+    try:
+        while process.poll() is None:
+            time.sleep(10)
+            count, generation = read_decision_progress(run / "decisions.csv")
+            if generation is None:
+                continue
+            if generation != observed_generation:
+                observed_generation = generation
+                generation_changed_at = time.monotonic()
+                decisions_at_change = count
+                continue
+            if (
+                count - decisions_at_change >= MAP_STALL_MIN_DECISIONS
+                and time.monotonic() - generation_changed_at >= MAP_STALL_TIMEOUT_S
+            ):
+                abort_reason = (
+                    f"map_generation_stalled:{generation}:"
+                    f"decisions={count - decisions_at_change}:"
+                    f"wall_s={time.monotonic() - generation_changed_at:.1f}"
+                )
+                stop_runner(process)
+                break
+    except BaseException:
+        stop_runner(process)
+        raise
+    return process.wait(), abort_reason
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--max-attempts", type=int, default=2)
     parser.add_argument("--prepare-only", action="store_true")
+    parser.add_argument("--roll-forward-zero-completed", action="store_true")
     args = parser.parse_args()
     root = args.repo_root.resolve()
     evidence = root / "mapex_lab/analysis/d1/results/mx029_hospital_5run"
@@ -156,7 +254,22 @@ def main() -> int:
         "technical_aborts": [],
     }
     if state["frozen"] != frozen:
-        raise RuntimeError("frozen MX029 identity changed after cohort start")
+        completed = [run_id for run_id, record in state["runs"].items() if record["status"] == "COMPLETED"]
+        if not args.roll_forward_zero_completed or completed:
+            raise RuntimeError(
+                "frozen MX029 identity changed after cohort start; "
+                f"completed={completed or 'none'}"
+            )
+        state.setdefault("superseded_frozen_identities", []).append(
+            {
+                "frozen": state["frozen"],
+                "superseded_at_unix": time.time(),
+                "reason": "technical_aborts_before_any_completed_prospective_run",
+            }
+        )
+        state["frozen"] = frozen
+        for record in state["runs"].values():
+            record["status"] = "PENDING"
     atomic_json(state_path, state)
     if args.prepare_only:
         print(json.dumps(state, indent=2, sort_keys=True))
@@ -199,22 +312,23 @@ def main() -> int:
                 "--record", "yes", "--run-id", run_id,
             ]
             with log.open("wb") as stream:
-                result = subprocess.run(command, cwd=root, stdout=stream, stderr=subprocess.STDOUT)
+                returncode, monitor_abort_reason = execute_run(command, root, run, stream)
             inventory = inventory_run(run, frozen) if run.is_dir() else {
                 "status": "TECHNICAL_ABORT", "termination_reason": "run_directory_missing"
             }
             record.update(
-                status=inventory["status"], returncode=result.returncode,
+                status=inventory["status"], returncode=returncode,
                 completed_at_unix=time.time(), inventory=inventory,
             )
-            if inventory["status"] == "COMPLETED" and result.returncode == 0:
+            if inventory["status"] == "COMPLETED" and returncode == 0:
                 atomic_json(state_path, state)
                 break
             archive = archive_abort(run, evidence, run_id, attempt) if run.is_dir() else None
             abort = {
-                "run_id": run_id, "attempt": attempt, "returncode": result.returncode,
+                "run_id": run_id, "attempt": attempt, "returncode": returncode,
                 "inventory": inventory, "log": str(log.relative_to(root)),
                 "archived_run": None if archive is None else str(archive.relative_to(root)),
+                "monitor_abort_reason": monitor_abort_reason,
             }
             state["technical_aborts"].append(abort)
             record.update(status="PENDING_RETRY", last_abort=abort)

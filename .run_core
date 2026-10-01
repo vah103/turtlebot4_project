@@ -641,10 +641,15 @@ if [[ "$METHOD" == "mapex" || "$METHOD" == "mapex_way2" ]]; then
   echo "Device : $MAPEX_DEVICE"
 fi
 echo "Launch : mapex_lab/launch/slam.launch.py"
+echo "Headless: ${MAPEX_RUN_HEADLESS:-False}"
+echo "RViz    : ${MAPEX_RUN_USE_RVIZ:-True}"
 echo "=============================="
 echo ""
 
-setsid ros2 launch "$ROOT_DIR/mapex_lab/launch/slam.launch.py" world:="$WORLD_SELECTOR" &
+setsid ros2 launch "$ROOT_DIR/mapex_lab/launch/slam.launch.py" \
+  world:="$WORLD_SELECTOR" \
+  headless:="${MAPEX_RUN_HEADLESS:-False}" \
+  use_rviz:="${MAPEX_RUN_USE_RVIZ:-True}" &
 LAUNCH_PID=$!
 LAUNCH_SID="$LAUNCH_PID"
 
