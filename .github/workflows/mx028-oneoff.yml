@@ -1,0 +1,43 @@
+name: MX028 one-off Analyst04 execution
+
+on:
+  push:
+    branches:
+      - mx028-analyst04-exec-v1
+    paths:
+      - mapex_lab/analysis/mx028_exec.py
+      - .github/workflows/mx028-oneoff.yml
+
+permissions:
+  contents: write
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact execution branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install bounded analysis dependencies
+        run: |
+          python -m pip install --disable-pip-version-check numpy matplotlib
+
+      - name: Execute frozen MX028 V2
+        run: |
+          python mapex_lab/analysis/mx028_exec.py
+
+      - name: Freeze result candidate
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mapex_lab/analysis/mx028_exec_results
+          git diff --cached --quiet && { echo "No MX028 result artifacts produced"; exit 1; }
+          git commit -m "MX028: freeze Analyst04 full-365 result candidate"
+          git push origin HEAD:mx028-analyst04-exec-v1
