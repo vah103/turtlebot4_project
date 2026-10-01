@@ -149,15 +149,25 @@ def inspect_ig(run,row,did):
 
 def plot_run(rid,rows):
     x=[float(r["normalized_progress"]) for r in rows];oracle=float([r["normalized_progress"] for r in rows if str(r["Oracle4_marker"])=="1"][0])
-    fig,ax=plt.subplots(4,1,figsize=(12,14),sharex=True)
-    ax[0].plot(x,[fin(r["IG_selected"]) for r in rows],label="IG_selected");ax[0].plot(x,[fin(r["IG_visible_unknown_cells"]) for r in rows],label="visible_unknown_cells")
-    ax[0].axvline(oracle,ls="--");ax[0].legend(fontsize=8);ax[0].set_ylabel("IG / cells")
-    ax[1].plot(x,[fin(r["IG_density"]) for r in rows],label="IG_density");b=ax[1].twinx();b.plot(x,[fin(r["IG_policy_score"]) for r in rows],label="policy_score")
-    ax[1].axvline(oracle,ls="--");h1,l1=ax[1].get_legend_handles_labels();h2,l2=b.get_legend_handles_labels();ax[1].legend(h1+h2,l1+l2,fontsize=8)
-    ax[2].plot(x,[fin(r["KnownArea_m2"]) for r in rows],label="KnownArea_m2");ax[2].axvline(oracle,ls="--");ax[2].legend(fontsize=8)
-    ax[3].plot(x,[fin(r["DeltaKnownArea_m2"]) for r in rows],label="DeltaKnownArea_m2");b2=ax[3].twinx();b2.plot(x,[fin(r["KnownAreaRate_m2_s"]) for r in rows],label="KnownAreaRate_m2_s")
-    ax[3].axhline(0,ls=":");ax[3].axvline(oracle,ls="--");h1,l1=ax[3].get_legend_handles_labels();h2,l2=b2.get_legend_handles_labels();ax[3].legend(h1+h2,l1+l2,fontsize=8);ax[3].set_xlabel("normalized progress")
-    fig.suptitle("MX027 "+rid+" full trajectory");fig.tight_layout();p=FIG/f"MX027_{rid}_FULL_TRAJECTORY.svg";fig.savefig(p);plt.close(fig);return p
+    fig,ax=plt.subplots(5,1,figsize=(12,17),sharex=True)
+
+    ax[0].plot(x,[fin(r["IG_selected"]) for r in rows],label="IG_selected")
+    ax[0].axvline(oracle,ls="--");ax[0].legend(fontsize=8);ax[0].set_ylabel("Raw IG (sum variance)")
+
+    ax[1].plot(x,[fin(r["IG_visible_unknown_cells"]) for r in rows],label="visible_unknown_cells")
+    ax[1].axvline(oracle,ls="--");ax[1].legend(fontsize=8);ax[1].set_ylabel("Visible unknown cells (count)")
+
+    ax[2].plot(x,[fin(r["IG_density"]) for r in rows],label="IG_density");b=ax[2].twinx();b.plot(x,[fin(r["IG_policy_score"]) for r in rows],label="policy_score")
+    ax[2].axvline(oracle,ls="--");ax[2].set_ylabel("IG density (IG/cell)");b.set_ylabel("Policy score (IG/m)")
+    h1,l1=ax[2].get_legend_handles_labels();h2,l2=b.get_legend_handles_labels();ax[2].legend(h1+h2,l1+l2,fontsize=8)
+
+    ax[3].plot(x,[fin(r["KnownArea_m2"]) for r in rows],label="KnownArea_m2");ax[3].axvline(oracle,ls="--");ax[3].legend(fontsize=8);ax[3].set_ylabel("Known area (m²)")
+
+    ax[4].plot(x,[fin(r["DeltaKnownArea_m2"]) for r in rows],label="DeltaKnownArea_m2");b2=ax[4].twinx();b2.plot(x,[fin(r["KnownAreaRate_m2_s"]) for r in rows],label="KnownAreaRate_m2_s")
+    ax[4].axhline(0,ls=":");ax[4].axvline(oracle,ls="--");ax[4].set_ylabel("Δ known area (m²)");b2.set_ylabel("Known area rate (m²/s)")
+    h1,l1=ax[4].get_legend_handles_labels();h2,l2=b2.get_legend_handles_labels();ax[4].legend(h1+h2,l1+l2,fontsize=8);ax[4].set_xlabel("normalized progress")
+
+    fig.suptitle("MX027 "+rid+" full trajectory");fig.tight_layout();p=FIG/f"MX027_{rid}_FULL_TRAJECTORY.svg";fig.savefig(p,metadata={"Date":None});plt.close(fig);return p
 
 def main():
     OUT.mkdir(parents=True,exist_ok=True);FIG.mkdir(parents=True,exist_ok=True)
