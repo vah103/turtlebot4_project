@@ -274,8 +274,8 @@ def main():
     dindex=defaultdict(list)
     for r in dirs:dindex[r["metric"]].append(r)
     lines=["# MX027 Analyst Report — full-trajectory IG + Coverage/Stagnation","",f"Accepted methodology: {METHOD_SHA}",f"Frozen technical base: {BASE_SHA}","","## Inventory",
-      f"- 365/365 decision rows; IG evaluable 306/365; legitimate runtime no-selection IG NA 59/365; Coverage evaluable 365/365.",
-      "- Candidate lookup attempted only for the 306 nonblank-policy decisions; all 59 no-selection rows skipped candidate lookup.",
+      f"- 365/365 decision rows; IG evaluable {sum(int(r['IG_evaluable']) for r in per)}/365; legitimate runtime no-selection IG NA 59/365; nonblank-policy rows with no unique runtime-selected frontier = {ig_reason_counts.get('SELECTED_FRONTIER_CARDINALITY_NE_1',0)}; Coverage evaluable {sum(int(r['Coverage_evaluable']) for r in per)}/365.",
+      "- Candidate lookup attempted only for the 306 nonblank-policy decisions; all 59 blank-policy no-selection rows skipped candidate lookup. Candidate-table rows without a unique selected frontier remain IG NA fail-closed; no candidate value is reconstructed or substituted.",
       "- Five-family joined view contains 365 exact accepted MX026 keys and preserves MX026 P/U/R values read-only.",f"- IG reason counts: {ig_reason_counts}. Policy-score reason counts: {score_reason_counts}. Coverage reason counts: {coverage_reason_counts}.","","## Whole-run descriptive direction"]
     for m in METRICS:
         rs=dindex[m];dv=[fin(r["final_minus_first"]) for r in rs if math.isfinite(fin(r["final_minus_first"]))];rh=[fin(r["rho"]) for r in rs if math.isfinite(fin(r["rho"]))]
