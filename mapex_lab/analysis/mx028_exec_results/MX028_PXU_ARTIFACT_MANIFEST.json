@@ -1,0 +1,126 @@
+{
+  "artifact_count_excluding_manifest": 23,
+  "artifacts": [
+    {
+      "path": "MX028_ANALYST_REPORT.md",
+      "sha256": "00d34fcefa914aabf1082688d149c8e43e837c0b5da712e4c16e992ed0cd4277",
+      "size": 1600
+    },
+    {
+      "path": "MX028_EXECUTION_PROVENANCE.json",
+      "sha256": "ccdfeda36045bc6b132d1a5c58dd005988f1c90c3dfdde5ecd4bcb97a2566756",
+      "size": 2197
+    },
+    {
+      "path": "MX028_FREE_CONTROL_LATER_PER_DECISION.csv",
+      "sha256": "c4fa6c25ae30cb5fec518fd60b5a7edaccf753aacf967facdc38db71cb9ac890",
+      "size": 167756
+    },
+    {
+      "path": "MX028_FREE_CONTROL_STRUCTURAL_PER_DECISION.csv",
+      "sha256": "1d4fed8651daaccb67569be5780d7aa4b2480029fb3aa453fd109fc22022eaa4",
+      "size": 169232
+    },
+    {
+      "path": "MX028_OCCUPIED_LATER_PER_DECISION.csv",
+      "sha256": "e4d814232e414115a03fdba406bea51a80401a7e4437cc0f72a94595233482c7",
+      "size": 167050
+    },
+    {
+      "path": "MX028_OCCUPIED_STRUCTURAL_PER_DECISION.csv",
+      "sha256": "c69831554de0aa858e95f2ac122540ca47b1e3a773479863433b395ab9fa833a",
+      "size": 174355
+    },
+    {
+      "path": "MX028_PXU_METRIC_DICTIONARY.json",
+      "sha256": "225d3ce53481d346a2fcc1a737af400c3c31f64c46e3dbf37b929e713373293f",
+      "size": 2526
+    },
+    {
+      "path": "MX028_PXU_ORACLE_LATE_SUMMARY.csv",
+      "sha256": "ac8283be13e509ecd9acecdd5c10e9060bc9eff469c731faf0122b90043147d0",
+      "size": 25872
+    },
+    {
+      "path": "MX028_PXU_PER_DECISION.csv",
+      "sha256": "ba08d4ec53b6bfdbc9178890b433581d4a05af0db18d393943f466eef7bc03d4",
+      "size": 372047
+    },
+    {
+      "path": "MX028_PXU_PER_RUN.csv",
+      "sha256": "0435ba29a1e7ef2f9b2bc519fc13aacef1e51b62545ed74b7d969c7a3001dae0",
+      "size": 19056
+    },
+    {
+      "path": "MX028_PXU_PROGRESS_BINS.csv",
+      "sha256": "d76c9ecfd778feaedb2c0388628fec238b561c8fb8ca17b7ed1d5a90fd2ec22c",
+      "size": 190285
+    },
+    {
+      "path": "MX028_PXU_SUPPORT_INVENTORY.csv",
+      "sha256": "a82a2b9ad16393f7e31529558635a774a742f30e11f5be5482b05311188e92b5",
+      "size": 65094
+    },
+    {
+      "path": "MX028_VARIANCE_SOURCE_PARITY.csv",
+      "sha256": "610e324e700a902875c1e4083eb760b08e106d35b482bb1a142fdbee7d0d1815",
+      "size": 104762
+    },
+    {
+      "path": "figures/MX028_mpx_001_FULL_TRAJECTORY.svg",
+      "sha256": "9a9b7698ed9b1279e69b0f12b577daa3c6b1d3d3f242bfa255af4f4eca790fdf",
+      "size": 124971
+    },
+    {
+      "path": "figures/MX028_mpx_002_FULL_TRAJECTORY.svg",
+      "sha256": "3e383346709d698be3c5d82cbe1231b59fc23a1cdd424e35a521bb6a1ea827a1",
+      "size": 126264
+    },
+    {
+      "path": "figures/MX028_mpx_003_FULL_TRAJECTORY.svg",
+      "sha256": "75bbae4419967ed374a304902ad933ec1ac62b1090bbb6a1467970e71c2e7f16",
+      "size": 127949
+    },
+    {
+      "path": "figures/MX028_mpx_004_FULL_TRAJECTORY.svg",
+      "sha256": "0ff6ddc03973a1152275860ef1936675e64a9b48aa171f8bc4d9f14efff0c866",
+      "size": 126050
+    },
+    {
+      "path": "figures/MX028_mpx_005_FULL_TRAJECTORY.svg",
+      "sha256": "70611bc2dcb649e583ab4ecadb00ba3d018c968da08c72efb3042a8c6818405d",
+      "size": 124564
+    },
+    {
+      "path": "figures/MX028_mpx_006_FULL_TRAJECTORY.svg",
+      "sha256": "d824603ac75d00ecfd0221123398101d587442f085e2abcc1698fa8abf0b64ca",
+      "size": 126040
+    },
+    {
+      "path": "figures/MX028_mpx_007_FULL_TRAJECTORY.svg",
+      "sha256": "cc0b7d49b6074ced7690c8b1bd1b3953e2f8c6733b97190f3713766f539ff972",
+      "size": 125717
+    },
+    {
+      "path": "figures/MX028_mpx_008_FULL_TRAJECTORY.svg",
+      "sha256": "861b29a366ca75165d6b704f2ef0a26d5e7251dc81d97b235e2a0dee373dcfd8",
+      "size": 125765
+    },
+    {
+      "path": "figures/MX028_mpx_009_FULL_TRAJECTORY.svg",
+      "sha256": "8950ea54a652c4cd5b19b44c0921e32c45315938c48c4f8d5193be3712e66fa1",
+      "size": 125936
+    },
+    {
+      "path": "figures/MX028_mpx_010_FULL_TRAJECTORY.svg",
+      "sha256": "daf1146162613bdf5f4f74d1713b6e0efbd236cbdc42d1e3190d550484aa3710",
+      "size": 127538
+    }
+  ],
+  "frozen_method_commit": "429733307f760a5efd9e9641834146e71b927428",
+  "primary_row_count": 365,
+  "schema": "mx028_pxu_artifact_manifest_v1",
+  "status": "COMPLETE_PENDING_IR2_RESULT_QA",
+  "technical_source_base": "4899ee95c85640965befeaf98c20f156c0d3181a",
+  "unique_primary_keys": 365
+}

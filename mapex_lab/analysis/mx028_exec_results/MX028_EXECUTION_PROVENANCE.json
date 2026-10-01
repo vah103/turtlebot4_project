@@ -1,0 +1,76 @@
+{
+  "accepted_dependencies": {
+    "MX023_P": "e50ccbda7755860e696dba6ae8265a1c4c3c6a4e",
+    "MX024_U": "6fe651e383b3d88d1a824558d6ec398fc97eef1c",
+    "MX026_frame": "79ee3ba8e2f82a55cd6e2d68fdb3d2ed08569e55"
+  },
+  "cohort": {
+    "decision_n": 365,
+    "runs": [
+      "mpx_001",
+      "mpx_002",
+      "mpx_003",
+      "mpx_004",
+      "mpx_005",
+      "mpx_006",
+      "mpx_007",
+      "mpx_008",
+      "mpx_009",
+      "mpx_010"
+    ]
+  },
+  "execution_branch_delta_from_frozen_base": [
+    ".github/workflows/mx028-oneoff.yml",
+    "mapex_lab/analysis/mx028_exec.py"
+  ],
+  "execution_type": "bounded one-off deterministic recomputation",
+  "executor_role": "Data & Evidence Analyst successor 04",
+  "frozen_method_commit": "429733307f760a5efd9e9641834146e71b927428",
+  "gate_p_blob": "c5bf4e3e6f45c81afef135166fc96e088719658e",
+  "gate_p_path": "mapex_lab/analysis/d1/d1_gate_p.py",
+  "guards": {
+    "calibration_claim": false,
+    "causal_claim": false,
+    "composite": false,
+    "imputation": false,
+    "model_inference": false,
+    "prediction_regeneration": false,
+    "pseudocount": false,
+    "simulation": false,
+    "stop_rule": false,
+    "threshold_retuning": false,
+    "winner": false
+  },
+  "method_qa_accept_commit": "0df38153a4ed8ce5d6b9e742c3c3b8edfcc45367",
+  "oracle4_decisions": {
+    "mpx_001": 21,
+    "mpx_002": 18,
+    "mpx_003": 21,
+    "mpx_004": 16,
+    "mpx_005": 16,
+    "mpx_006": 20,
+    "mpx_007": 18,
+    "mpx_008": 19,
+    "mpx_009": 18,
+    "mpx_010": 19
+  },
+  "runtime": {
+    "github_run_id": "36804718166",
+    "github_sha_at_start": "c6fb9e2891dfcd807952151579cf4cb5532e9881",
+    "matplotlib": "3.11.2",
+    "numpy": "2.4.6",
+    "python": "3.11.16"
+  },
+  "schema": "mx028_execution_provenance_v1",
+  "status": "COMPLETE_PENDING_IR2_RESULT_QA",
+  "structural_gt_blob": "a5653a7ec7f4550287a3ebeb05b922dbc7a5bc3a",
+  "structural_gt_path": "mapex_lab/ground_truth/new_room/generated/new_room_structural_gt_v2.npz",
+  "technical_source_base": "4899ee95c85640965befeaf98c20f156c0d3181a",
+  "transport_commit_actor": "github-actions[bot]",
+  "variance_parity_contract": {
+    "atol": 1e-07,
+    "ddof": 1,
+    "pass_n": 365,
+    "rtol": 1e-05
+  }
+}

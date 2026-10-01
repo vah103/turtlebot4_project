@@ -1,0 +1,69 @@
+{
+  "class_labels": {
+    "FF": "true free, predicted free",
+    "FO": "true free, predicted occupied",
+    "OF": "true occupied, predicted free",
+    "OO": "true occupied, predicted occupied"
+  },
+  "interpretation_guard": "LOW/MID/HIGH are decision-relative quartiles on runtime D_U=raw<0; not fixed confidence, calibration, or safety classes.",
+  "missingness": {
+    "collapsed_q25_q75": "LOW-vs-HIGH comparisons NA with U_QUANTILE_THRESHOLDS_COLLAPSED",
+    "no_interpolation_fill_imputation": true,
+    "zero_class_denominator": "NA, never 0"
+  },
+  "oracle_decisions": {
+    "mpx_001": 21,
+    "mpx_002": 18,
+    "mpx_003": 21,
+    "mpx_004": 16,
+    "mpx_005": 16,
+    "mpx_006": 20,
+    "mpx_007": 18,
+    "mpx_008": 19,
+    "mpx_009": 18,
+    "mpx_010": 19
+  },
+  "prediction_class": {
+    "free": "p < 0.5",
+    "occupied": "p >= 0.5"
+  },
+  "primary_formulas": {
+    "FreePrecision_s": "FF_s/(FF_s+OF_s)",
+    "Free_U_MedianGap_WrongMinusCorrect": "medianU(OF)-medianU(FF)",
+    "OccLowU_share_predOcc": "count(predicted occupied AND LOW_U)/count(predicted occupied)",
+    "OccLowU_share_unknown": "count(predicted occupied AND LOW_U)/count(D_U)",
+    "OccPrecision_LowMinusHigh": "OccPrecision_LOW-OccPrecision_HIGH",
+    "OccPrecision_s": "OO_s/(OO_s+FO_s)",
+    "OccWrongRateRatio_HighOverLow": "OccWrongRate_HIGH/OccWrongRate_LOW only when LOW>0; no pseudocount",
+    "OccWrongRate_HighMinusLow": "OccWrongRate_HIGH-OccWrongRate_LOW",
+    "OccWrongRate_s": "FO_s/(OO_s+FO_s)",
+    "Occ_U_MedianGap_WrongMinusCorrect": "medianU(FO)-medianU(OO)"
+  },
+  "progress_bins": [
+    "B00_10",
+    "B10_20",
+    "B20_30",
+    "B30_40",
+    "B40_50",
+    "B50_60",
+    "B60_70",
+    "B70_80",
+    "B80_90",
+    "B90_100"
+  ],
+  "schema": "mx028_pxu_metric_dictionary_v1",
+  "spearman": "Average ranks for ties; Pearson of ranks; finite pairs only; n<5 NA; constant-vector reasons preserved.",
+  "status": "COMPLETE_PENDING_IR2_RESULT_QA",
+  "truth_domains": {
+    "LATER_OBSERVED": "Secondary; exact first-later-policy-decision target; no Structural truth borrowing.",
+    "STRUCTURAL_GT": "Primary; exact Gate-P 0.10m to 0.05m projection and evaluation_mask."
+  },
+  "uncertainty": {
+    "HIGH_U": "V >= U_Q75",
+    "LOW_U": "V <= U_Q25",
+    "MID_U": "U_Q25 < V < U_Q75",
+    "parity": "np.var(G1,G2,G3,axis=0,ddof=1), allclose rtol=1e-5 atol=1e-7",
+    "quantiles": "numpy.quantile(method=linear) over finite U on runtime D_U before truth/projection/class masking",
+    "source": "saved original MapEx variance"
+  }
+}
