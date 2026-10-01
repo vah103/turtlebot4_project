@@ -1,0 +1,159 @@
+{
+  "accepted_mx026_result": "79ee3ba8e2f82a55cd6e2d68fdb3d2ed08569e55",
+  "artifacts": [
+    {
+      "path": "MX027_IG_COVERAGE_PER_DECISION.csv",
+      "sha256": "7865610798926b1a1234a7f49d98d82d6fd7000e54c531a1f5fe70252442b308",
+      "size": 78171
+    },
+    {
+      "path": "MX027_IG_PER_RUN.csv",
+      "sha256": "3bcc5b23220ee0dca1d8fb98b9032f648708c95a683aaaf1551f9ce865465606",
+      "size": 2284
+    },
+    {
+      "path": "MX027_COVERAGE_PER_RUN.csv",
+      "sha256": "81707d80d5c3a0279309413902f8662f7032472c15ce1fc460f0d2fce947e4de",
+      "size": 2117
+    },
+    {
+      "path": "MX027_IG_COVERAGE_PROGRESS_BINS.csv",
+      "sha256": "f559743f207cdae54b3ebafa3e3b1207a1a72572944aae24211a3d1dc1684351",
+      "size": 48259
+    },
+    {
+      "path": "MX027_IG_COVERAGE_WHOLE_RUN_DIRECTION.csv",
+      "sha256": "95a6a4596c339c1826d19f23d7f8209bd945430920f537e79b5f87be46ffca30",
+      "size": 7087
+    },
+    {
+      "path": "MX027_IG_COVERAGE_METRIC_DICTIONARY.json",
+      "sha256": "27587e4f44be4577ee1e111e35cb60562e23d632cd30cd92721ab8ef3afcf751",
+      "size": 1378
+    },
+    {
+      "path": "MX027_IG_COVERAGE_SOURCE_PARITY.csv",
+      "sha256": "181398517c459a9869ae79bf925d1a17a1e564aa813f184509fc5c9507a7083e",
+      "size": 112560
+    },
+    {
+      "path": "MX027_FIVE_FAMILY_PER_DECISION_VIEW.csv",
+      "sha256": "07222c15ecf833e042d2594fa6723d6bc8eb197185b039a0358508ba252677ad",
+      "size": 501324
+    },
+    {
+      "path": "MX027_ANALYST_REPORT.md",
+      "sha256": "5b612622e2b1e66a602a8a85f061cd0321353945b4806ea06900488a9b4f20b6",
+      "size": 2537
+    },
+    {
+      "path": "figures/MX027_mpx_001_FULL_TRAJECTORY.svg",
+      "sha256": "3996823e4f9357b00354f6b40a4e88f98189260e940a868e6bf7cedd9fb9b720",
+      "size": 76121
+    },
+    {
+      "path": "figures/MX027_mpx_002_FULL_TRAJECTORY.svg",
+      "sha256": "03662eecd46c862c8718f1cf45c6d2098dba3a6f0175a4292920590e6704c73f",
+      "size": 77128
+    },
+    {
+      "path": "figures/MX027_mpx_003_FULL_TRAJECTORY.svg",
+      "sha256": "6ac084fce002ef45d401d0a8356ac0050e19f9d7b0d5ded6729c75ef644caebb",
+      "size": 75285
+    },
+    {
+      "path": "figures/MX027_mpx_004_FULL_TRAJECTORY.svg",
+      "sha256": "f1f5ed0b73e875ce2430704d8f4a4247bd2e5a1c0b8cb2569742570c1a02fed5",
+      "size": 76191
+    },
+    {
+      "path": "figures/MX027_mpx_005_FULL_TRAJECTORY.svg",
+      "sha256": "67bccbfc7b801fdc406e9a6f2e243a343df6619dd227cd5383ebe9dd87770709",
+      "size": 76431
+    },
+    {
+      "path": "figures/MX027_mpx_006_FULL_TRAJECTORY.svg",
+      "sha256": "886d80035dc6e5bd02ad9b8b1f7193a56a4459b5aeade995d9ee5f7b34f75ee5",
+      "size": 76795
+    },
+    {
+      "path": "figures/MX027_mpx_007_FULL_TRAJECTORY.svg",
+      "sha256": "ed6d6fe50e9a844231f34fda758b3f22c3511541135702bfca56fb57d3b75529",
+      "size": 76580
+    },
+    {
+      "path": "figures/MX027_mpx_008_FULL_TRAJECTORY.svg",
+      "sha256": "f41f10a0e0dfb275c83e31a824123fb9fd863898ec2bc9af62eaf1923b3bb99a",
+      "size": 76639
+    },
+    {
+      "path": "figures/MX027_mpx_009_FULL_TRAJECTORY.svg",
+      "sha256": "f8e76b617113a08eb956f7e114ee983ddf721f3dda1685d3ee00199eafccc131",
+      "size": 77842
+    },
+    {
+      "path": "figures/MX027_mpx_010_FULL_TRAJECTORY.svg",
+      "sha256": "9954e85b330c3d30f49db2b8226655046d6110831a91c9748e9c2e40bd867212",
+      "size": 74474
+    }
+  ],
+  "guards": {
+    "IG_zero_fill": false,
+    "composite": false,
+    "fallback": false,
+    "interpolation": false,
+    "model_rerun": false,
+    "online_stop": false,
+    "retuning": false,
+    "simulation_rerun": false,
+    "winner": false
+  },
+  "inventory": {
+    "Coverage_evaluable": 365,
+    "IG_evaluable": 285,
+    "IG_no_selection": 59,
+    "IG_score_parity_fail": 0,
+    "candidate_lookup_attempted": 306,
+    "decision_rows": 365,
+    "joined_rows": 365,
+    "plot_count": 10,
+    "progress_bin_rows": 770,
+    "whole_run_direction_rows": 70
+  },
+  "method_revision": "6925611773ced0722ffc8bf43279084dd01fad75",
+  "no_selection_by_run": {
+    "mpx_001": 7,
+    "mpx_002": 9,
+    "mpx_003": 9,
+    "mpx_004": 0,
+    "mpx_005": 8,
+    "mpx_006": 0,
+    "mpx_007": 0,
+    "mpx_008": 8,
+    "mpx_009": 9,
+    "mpx_010": 9
+  },
+  "reason_counts": {
+    "Coverage": {
+      "OK": 365
+    },
+    "IG": {
+      "NO_RUNTIME_SELECTED_FRONTIER": 59,
+      "OK": 285,
+      "SELECTED_FRONTIER_CARDINALITY_NE_1": 21
+    },
+    "IG_density": {
+      "NO_RUNTIME_SELECTED_FRONTIER": 59,
+      "OK": 285,
+      "SELECTED_FRONTIER_CARDINALITY_NE_1": 21
+    },
+    "IG_policy_score": {
+      "NO_RUNTIME_SELECTED_FRONTIER": 59,
+      "OK": 285,
+      "SELECTED_FRONTIER_CARDINALITY_NE_1": 21
+    }
+  },
+  "schema": "mx027_ig_coverage_execution_v1",
+  "status": "COMPLETE_PENDING_INDEPENDENT_RESULT_QA",
+  "technical_base": "4899ee95c85640965befeaf98c20f156c0d3181a"
+}

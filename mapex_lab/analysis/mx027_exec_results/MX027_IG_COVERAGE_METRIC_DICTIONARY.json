@@ -1,0 +1,49 @@
+{
+  "accepted_mx026_blob": "8e73f4441b1c852f90d801c20f993216bbd1e78a",
+  "accepted_mx026_result": "79ee3ba8e2f82a55cd6e2d68fdb3d2ed08569e55",
+  "forbidden": [
+    "model rerun",
+    "simulation",
+    "fallback",
+    "IG reconstruction",
+    "IG zero fill",
+    "interpolation",
+    "composite",
+    "winner",
+    "retuning",
+    "STOP"
+  ],
+  "method_revision": "6925611773ced0722ffc8bf43279084dd01fad75",
+  "metrics": {
+    "DeltaKnownArea_m2": {
+      "role": "PRIMARY_STAGNATION_SIGNAL_SIGNED"
+    },
+    "IG_density": {
+      "role": "PROJECT_DERIVED_DIAGNOSTIC"
+    },
+    "IG_policy_score": {
+      "role": "MAPEX_NATIVE_POLICY_CONTEXT"
+    },
+    "IG_selected": {
+      "role": "MAPEX_NATIVE_PRIMARY_IG"
+    },
+    "IG_visible_unknown_cells": {
+      "role": "MAPEX_NATIVE_DOMAIN_SIZE_CONTEXT"
+    },
+    "KnownAreaRate_m2_s": {
+      "role": "PRIMARY_STAGNATION_RATE_SIGNED"
+    },
+    "KnownArea_m2": {
+      "role": "DECISION_TIME_ONLINE_RECOVERABLE"
+    }
+  },
+  "no_selection": {
+    "IG_zero_fill": false,
+    "count": 59,
+    "reason": "NO_RUNTIME_SELECTED_FRONTIER"
+  },
+  "quantile": "numpy linear, finite binary64 only, within-run bin median then equal-run macro",
+  "spearman": "finite complete cases, average-rank ties, Pearson ranks, n>=5, constant vectors NA, no p-value",
+  "task": "MX027",
+  "technical_base": "4899ee95c85640965befeaf98c20f156c0d3181a"
+}
