@@ -398,7 +398,8 @@ def adversarial(by_run,replays,casebook):
     # A3
     oracle_rows=[]
     for run in RUNS:
-        r=next(x for x in by_run[run] if bv(x["Oracle4_marker"]))
+        oracle_d=int(by_run[run][0]["OracleStop_4"])
+        r=next(x for x in by_run[run] if x["_did"]==oracle_d)
         oracle_rows.append(r)
     a3=all(r["_state"]=="B_SELECTED_FRONTIER_AVAILABLE" and finite(r["DeltaKnownArea_m2"]) and float(r["DeltaKnownArea_m2"])>0 for r in oracle_rows)
     rows.append({"audit":"A3","semantic_pass":int(a3),"detail":"10/10 Oracle anchors State B + positive Delta; evaluator-only, not absolute-zero requirement"})
