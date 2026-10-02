@@ -3,13 +3,13 @@
   "artifacts": [
     {
       "path": "MX028_ANALYST_REPORT.md",
-      "sha256": "00d34fcefa914aabf1082688d149c8e43e837c0b5da712e4c16e992ed0cd4277",
-      "size": 1600
+      "sha256": "b3839f498dfde5e043a46b973d06c6a21a208a718c3a9aaf299053adaaeea2e1",
+      "size": 2847
     },
     {
       "path": "MX028_EXECUTION_PROVENANCE.json",
-      "sha256": "2456ae84239939b7950289de62d3182271cbd9f3353108537b82998a32da4b5d",
-      "size": 4165
+      "sha256": "3c2194f215ff1e38eb813950394eae11f69335f46e791f2708ebb23226f44a71",
+      "size": 5018
     },
     {
       "path": "MX028_FREE_CONTROL_LATER_PER_DECISION.csv",
@@ -33,13 +33,13 @@
     },
     {
       "path": "MX028_PXU_METRIC_DICTIONARY.json",
-      "sha256": "225d3ce53481d346a2fcc1a737af400c3c31f64c46e3dbf37b929e713373293f",
-      "size": 2526
+      "sha256": "1115a48b3fce5a6fba8d6f5fd7e6f1c1f6147f075476e551a9e2a30b3c3fb64a",
+      "size": 4332
     },
     {
       "path": "MX028_PXU_ORACLE_LATE_SUMMARY.csv",
-      "sha256": "ac8283be13e509ecd9acecdd5c10e9060bc9eff469c731faf0122b90043147d0",
-      "size": 25872
+      "sha256": "bcea9933d60133ab88dad095dd12b0e79652d0ba31d19aeeb6ac443547109a66",
+      "size": 42911
     },
     {
       "path": "MX028_PXU_PER_DECISION.csv",
@@ -120,7 +120,14 @@
   "frozen_method_commit": "429733307f760a5efd9e9641834146e71b927428",
   "primary_row_count": 365,
   "schema": "mx028_pxu_artifact_manifest_v1",
-  "status": "COMPLETE_PENDING_IR2_RESULT_QA",
+  "status": "COMPLETE_PENDING_IR2_FOCUSED_RESULT_R2",
   "technical_source_base": "4899ee95c85640965befeaf98c20f156c0d3181a",
-  "unique_primary_keys": 365
+  "unique_primary_keys": 365,
+  "bounded_support_semantics_correction": {
+    "correction_role": "Data & Evidence Analyst successor 05",
+    "predecessor_candidate": "3ab8d88a66c3a1b4b3663792808234a9c63bb85f",
+    "corrected_summary_rows": 330,
+    "corrected_or_expanded_support_semantics_rows": 270,
+    "metric_values_changed": false
+  }
 }
