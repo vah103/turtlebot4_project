@@ -11,6 +11,11 @@ from pathlib import Path
 from collections import defaultdict
 import numpy as np
 
+SCRIPT=Path(__file__).resolve()
+REPO=SCRIPT.parents[2]
+if str(REPO) not in sys.path:
+    sys.path.insert(0,str(REPO))
+
 from mapex_lab.analysis import mx037_exec as core
 from mapex_lab.analysis.d1 import d1_gate_p as gatep
 from mapex_lab.analysis.r004 import evaluate_topology_traversability as topo
