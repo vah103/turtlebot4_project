@@ -42,12 +42,27 @@ jobs:
       - name: Syntax check
         run: python -m py_compile mapex_lab/analysis/mx040_exec.py
       - name: Build frozen targets/features for one run
-        run: python mapex_lab/analysis/mx040_exec.py worker ${{ matrix.run_id }}
+        id: mx040_worker
+        shell: bash
+        run: |
+          set +e
+          python mapex_lab/analysis/mx040_exec.py worker ${{ matrix.run_id }} > mx040-worker-${{ matrix.run_id }}.log 2>&1
+          ec=$?
+          echo "$ec" > mx040-worker-${{ matrix.run_id }}.status
+          cat mx040-worker-${{ matrix.run_id }}.log
+          exit 0
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: mx040-part-${{ matrix.run_id }}
-          path: mapex_lab/analysis/mx040_partials/${{ matrix.run_id }}
-          if-no-files-found: error
+          name: mx040-debug-${{ matrix.run_id }}
+          path: |
+            mx040-worker-${{ matrix.run_id }}.log
+            mx040-worker-${{ matrix.run_id }}.status
+            mapex_lab/analysis/mx040_partials/${{ matrix.run_id }}
+          if-no-files-found: warn
+      - name: Preserve worker failure status
+        if: always()
+        run: test "$(cat mx040-worker-${{ matrix.run_id }}.status)" -eq 0
 
   aggregate:
     needs: worker
