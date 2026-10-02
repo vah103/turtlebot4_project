@@ -208,15 +208,22 @@ def online_proxy(run,row,accepted,trajectory):
             if not mcs[source]:treason="SOURCE_NOT_PREDICTED_TRAVERSABLE"
             else:
                 tvalid=True;treason="";reachmean=topo.reachable(mcs,source)
+                component_cache={}
                 for j,emask in enumerate(Ej,1):
                     labels,comps=topo.components(emask)
                     for comp in comps:
+                        key=tuple(comp["cells"])
                         cmask=labels==comp["label"]
-                        hfree=meanfree|cmask
-                        hcs=topo.cspace(hfree,domain,stencil)
-                        rh=topo.reachable(hcs,source)
-                        unlocked=meanfree_unknown&rh&~reachmean
-                        ua=float(unlocked.sum()*canvas_meta[1]*canvas_meta[1]);crit=ua>0
+                        if key in component_cache:
+                            ua,unlocked=component_cache[key]
+                        else:
+                            hfree=meanfree|cmask
+                            hcs=topo.cspace(hfree,domain,stencil)
+                            rh=topo.reachable(hcs,source)
+                            unlocked=meanfree_unknown&rh&~reachmean
+                            ua=float(unlocked.sum()*canvas_meta[1]*canvas_meta[1])
+                            component_cache[key]=(ua,unlocked)
+                        crit=ua>0
                         if crit:tc|=cmask;unlock_union|=unlocked
                         comprows.append({"member":j,"component_id":comp["label"],"component_cells_canvas":int(cmask.sum()),
                                          "component_mask_area_canvas_m2":float(cmask.sum()*canvas_meta[1]*canvas_meta[1]),
@@ -285,6 +292,7 @@ def r004_truth(run,row,proxy,trajectory):
     if not (0<=src[0]<obs.shape[0] and 0<=src[1]<obs.shape[1]) or not reftrav[src]:
         return {"R004_evaluable":0,"R004_reason":"SOURCE_NOT_REFERENCE_TRAVERSABLE","_true_mask":np.zeros(obs.shape,bool),"_true_unlock":np.zeros(obs.shape,bool),"_true_comps":[]}
     refreach=topo.reachable(reftrav,src)
+    predreach=topo.reachable(predtrav,src) if predtrav[src] else np.zeros(obs.shape,bool)
     meanfreeunknown=scoreable&(mean<=.5)
     true_missed=scoreable&final_free&(mean>.5)
     labels,comps=topo.components(true_missed)
@@ -294,7 +302,7 @@ def r004_truth(run,row,proxy,trajectory):
         hfree=(domain&~pred_occ)|cm
         hcs=topo.cspace(hfree,domain,stencil)
         rh=topo.reachable(hcs,src) if hcs[src] else np.zeros(obs.shape,bool)
-        unlocked=meanfreeunknown&rh&~topo.reachable(predtrav,src) if predtrav[src] else meanfreeunknown&rh
+        unlocked=meanfreeunknown&rh&~predreach
         ua=float(unlocked.sum()*proxy["canvas_meta"][1]**2)
         if ua>0:truecrit|=cm;unlock_union|=unlocked;critcomps.append((comp["label"],cm,ua))
     hits=sum(bool(np.any(cm&proxy["tc"])) for _,cm,_ in critcomps) if proxy["tvalid"] else 0
@@ -353,6 +361,7 @@ def main():
     hard=[]
 
     for run_id in RUNS:
+        print(f"MX038 RUN_START {run_id}",flush=True)
         run=EXPS/run_id;decisions=read_csv(run/"decisions.csv");trajectory=topo.read_trajectory(run/"trajectory.csv")
         decision_grids=[gatep.load_raw_grid(run/r["raw_map"]) for r in decisions]
         for di,row in enumerate(decisions,1):
