@@ -7,6 +7,7 @@ on:
     paths:
       - mapex_lab/analysis/mx037_exec.py
       - mapex_lab/analysis/mx037_parallel_exec.py
+      - mapex_lab/analysis/mx037_parallel2_exec.py
       - .github/workflows/mx038-oneoff.yml
 
 permissions:
@@ -64,7 +65,7 @@ jobs:
           path: mapex_lab/analysis/mx037_partials
           merge-multiple: true
       - name: Aggregate frozen ten-run result
-        run: python mapex_lab/analysis/mx037_parallel_exec.py aggregate
+        run: python mapex_lab/analysis/mx037_parallel2_exec.py aggregate
       - name: Freeze result candidate
         run: |
           git config user.name "github-actions[bot]"
