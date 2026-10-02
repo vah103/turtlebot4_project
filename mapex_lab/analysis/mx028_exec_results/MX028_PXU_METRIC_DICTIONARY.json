@@ -51,9 +51,9 @@
     "B80_90",
     "B90_100"
   ],
-  "schema": "mx028_pxu_metric_dictionary_v1",
+  "schema": "mx028_pxu_metric_dictionary_v2_support_semantics",
   "spearman": "Average ranks for ties; Pearson of ranks; finite pairs only; n<5 NA; constant-vector reasons preserved.",
-  "status": "COMPLETE_PENDING_IR2_RESULT_QA",
+  "status": "COMPLETE_PENDING_IR2_FOCUSED_RESULT_R2",
   "truth_domains": {
     "LATER_OBSERVED": "Secondary; exact first-later-policy-decision target; no Structural truth borrowing.",
     "STRUCTURAL_GT": "Primary; exact Gate-P 0.10m to 0.05m projection and evaluation_mask."
@@ -65,5 +65,54 @@
     "parity": "np.var(G1,G2,G3,axis=0,ddof=1), allclose rtol=1e-5 atol=1e-7",
     "quantiles": "numpy.quantile(method=linear) over finite U on runtime D_U before truth/projection/class masking",
     "source": "saved original MapEx variance"
+  },
+  "oracle_late_support_semantics": {
+    "correction_scope": "Support representation only; metric values, Oracle decisions, progress bins, truth domains, and scientific formulas unchanged.",
+    "aggregation": {
+      "ORACLE4": "Exact support at accepted Oracle decision.",
+      "B80_90": "Median of the metric-specific support count across the same within-run bin candidate decisions, preserving prior support-summary aggregation.",
+      "B90_100": "Median of the metric-specific support count across the same within-run bin candidate decisions, preserving prior support-summary aggregation."
+    },
+    "mappings": {
+      "OccLowU_share_unknown": [
+        "D_U_count"
+      ],
+      "PredOcc_share_unknown": [
+        "D_U_count"
+      ],
+      "PredOcc_median_U": [
+        "PredOcc_count"
+      ],
+      "STRUCTURAL_GT_OccPrecision_LOW": [
+        "Structural_Occ_support_LOW"
+      ],
+      "STRUCTURAL_GT_OccPrecision_HIGH": [
+        "Structural_Occ_support_HIGH"
+      ],
+      "STRUCTURAL_GT_OccPrecision_LowMinusHigh": [
+        "Structural_Occ_support_LOW",
+        "Structural_Occ_support_HIGH"
+      ],
+      "STRUCTURAL_GT_Occ_U_MedianGap_WrongMinusCorrect": [
+        "Structural_Occ_correct_U_n",
+        "Structural_Occ_wrong_U_n"
+      ],
+      "LATER_OBSERVED_OccPrecision_LOW": [
+        "Later_Occ_support_LOW"
+      ],
+      "LATER_OBSERVED_OccPrecision_HIGH": [
+        "Later_Occ_support_HIGH"
+      ],
+      "LATER_OBSERVED_OccPrecision_LowMinusHigh": [
+        "Later_Occ_support_LOW",
+        "Later_Occ_support_HIGH"
+      ],
+      "LATER_OBSERVED_Occ_U_MedianGap_WrongMinusCorrect": [
+        "Later_Occ_correct_U_n",
+        "Later_Occ_wrong_U_n"
+      ]
+    },
+    "row_count": 330,
+    "corrected_or_expanded_support_semantics_rows": 270
   }
 }
