@@ -35,3 +35,5 @@ jobs:
           git diff --cached --quiet && { echo "No MX037 result artifacts produced"; exit 1; }
           git commit -m "MX038: freeze MX037 V2 Analyst04 result candidate"
           git push origin HEAD:mx038-analyst04-exec-v1
+
+# corrected-head rerun
