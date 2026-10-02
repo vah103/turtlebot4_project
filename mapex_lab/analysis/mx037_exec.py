@@ -34,6 +34,7 @@ BASE_FIRE={"mpx_001":23,"mpx_002":18,"mpx_003":22,"mpx_004":16,"mpx_005":19,"mpx
 R_TAU=.05
 
 MX026=ANALYSIS/"mx026_exec_results"/"MX026_PUR_PER_DECISION.csv"
+MX031PRIMARY=ANALYSIS/"mx031_exec_results"/"MX031_PER_DECISION_REPLAY.csv"
 MX025SRC=ANALYSIS/"mx025_exec_results"/"MX025_R_MAP_SOURCE_PARITY.csv"
 ORACLE=ANALYSIS/"d1"/"results"/"oracle_stop_retro_v1"/"oracle_decisions.csv"
 GT_PATH=MAPEX/"ground_truth"/"new_room"/"generated"/"new_room_structural_gt_v2.npz"
@@ -42,6 +43,7 @@ GATEP_SRC=ANALYSIS/"d1"/"d1_gate_p.py"
 CASEBOOK=INPUTS/"MX032_RUN_EXCEPTION_CASEBOOK.csv"
 EXPECTED={
  MX026:"8e73f4441b1c852f90d801c20f993216bbd1e78a",
+ MX031PRIMARY:"daf11687221080790e20227f2bf7b7406476298e",
  MX025SRC:"0a3af2267f37805e7fc7e1964d89f68d3d49013a",
  ORACLE:"9ae8f0479cf37a2b6aa9426a158f120efdc655cf",
  GT_PATH:"a5653a7ec7f4550287a3ebeb05b922dbc7a5bc3a",
@@ -373,7 +375,7 @@ def adversarial():
 def main():
     RESULTS.mkdir(parents=True,exist_ok=True)
     blob_fail=[f"{p.relative_to(REPO)}:{git_blob(p)}!={e}" for p,e in EXPECTED.items() if git_blob(p)!=e]
-    mx026=read_csv(MX026);accepted=idx(mx026);oracle=idx(read_csv(ORACLE));gt=gatep.load_structural_gt(GT_PATH)
+    mx026=read_csv(MX026);accepted=idx(mx026);mx031=idx(read_csv(MX031PRIMARY));oracle=idx(read_csv(ORACLE));gt=gatep.load_structural_gt(GT_PATH)
     per=[];components=[];accaudit=[];structrows=[];laterrows=[];r004rows=[];shared=[];byrun=defaultdict(list)
     hard=[]
 
@@ -382,15 +384,17 @@ def main():
         run=EXPS/run_id;decisions=read_csv(run/"decisions.csv");trajectory=topo.read_trajectory(run/"trajectory.csv")
         decision_grids=[gatep.load_raw_grid(run/r["raw_map"]) for r in decisions]
         for di,row in enumerate(decisions,1):
-            key=(run_id,int(row["decision_id"]));a=accepted[key]
+            key=(run_id,int(row["decision_id"]));a=accepted[key];x31=mx031[key]
             p=online_proxy(run,row,a,trajectory)
+            if p["tvalid"] != bv(x31["TopoValid"]) or str(p["treason"]) != str(x31["TopoValid_reason"]):
+                hard.append(f"{key}:TopoValid_parity:{p['tvalid']}/{p['treason']} != {x31['TopoValid']}/{x31['TopoValid_reason']}")
             if not p["parity"]:hard.append(f"{key}:accepted_R_parity")
             rawgrid=decision_grids[di-1]
             se=structural_eval(p,rawgrid,gt);le=later_eval(p,rawgrid,di,decisions,decision_grids);te=r004_truth(run,row,p,trajectory)
             basefire=(int(row["decision_id"])==BASE_FIRE[run_id])
             rec={"run_id":run_id,"decision_id":int(row["decision_id"]),"decision_index":di,"decision_count":len(decisions),
-                 "normalized_progress":float(a["normalized_progress"]),"decision_time_s":float(row["time_s"]),"OracleStop_4":int(a["Oracle4_marker"]) if bv(a["Oracle4_marker"]) else int(oracle[key].get("Oracle4_decision",0) or 0),
-                 "OracleRemainingFraction_GT":float(oracle[key]["OracleRemainingFraction_GT"]),
+                 "normalized_progress":float(a["normalized_progress"]),"decision_time_s":float(row["time_s"]),"OracleStop_4":int(x31["OracleStop_4"]),
+                 "OracleRemainingFraction_GT":float(x31["OracleRemainingFraction_GT"]),
                  "R_map":float(a["R_MapRemainingFraction"]),"A_map_mean_m2":float(a["R_A_map_mean_m2"]),"KnownFree_map_m2":float(a["R_KnownFree_map_m2"]),
                  "H_ANY_mask_m2":p["Hany"],"Delta_ANY_m2":p["delta_any"],"A_ANY_adj_m2":p["Aany"],"R_ANY":p["Rany"],
                  "H_TC_mask_m2":p["Htc"],"Delta_TC_m2":p["delta_tc"],"A_TC_adj_m2":p["Atc"],"R_TC":p["Rtc"],
