@@ -9,8 +9,10 @@
     "MX037_RISK_COVERED_BUT_TOO_CONSERVATIVE_FOR_STOP",
     "MX037_HIDDEN_FREE_RISK_PROXY_RETROSPECTIVE_CANDIDATE"
   ],
+  "evaluator_projection": "canonical_0.05m_evaluator_only",
   "method_commit": "ac5b7a4e2b31a33aaaed1172d3b42f5fdf80862e",
+  "online_topology_representation": "runtime_grid_exact_MX031",
   "parallelization": "run-level scheduling only; science functions imported unchanged from mx037_exec.py",
   "primary": "TC-MSR",
-  "schema": "mx037_metric_dictionary_v2_parallel_execution"
+  "schema": "mx037_metric_dictionary_v3_bounded_topology_correction"
 }

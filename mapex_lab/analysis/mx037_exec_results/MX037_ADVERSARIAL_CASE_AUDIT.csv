@@ -1,6 +1,6 @@
 audit,semantic_pass,detail
 A1,1,synthetic shared bias: mean/member all occupied => absent E_ANY/E_TC
-A2,0,isolated/thin disagreement present but UnlockedArea=0
+A2,1,runtime-grid B0 disagreement; source/C-space valid; UnlockedArea=0; P1 excludes
 A3,1,single blocker opened alone unlocks downstream mean-free region
 A4,1,synthetic disagreement inflation: B0 mask > topology-critical blocker mask
 A5,1,disconnected multi-member mosaic not manufactured by one-component testing
