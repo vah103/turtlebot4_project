@@ -1,6 +1,6 @@
 # MX028 Analyst04 — Full-365 P×U result candidate
 
-Status: **COMPLETE_PENDING_IR2_RESULT_QA**
+Status: **COMPLETE_PENDING_IR2_FOCUSED_RESULT_R2**
 
 Frozen method: 429733307f760a5efd9e9641834146e71b927428
 Frozen technical source: 4899ee95c85640965befeaf98c20f156c0d3181a
@@ -36,3 +36,18 @@ truth populations remain separate.
 No model/simulation/prediction rerun, threshold optimization, pseudocount,
 imputation, composite, winner, STOP/deployment rule, calibration claim, or
 causal claim was introduced.
+
+## Bounded support-semantics correction — successor 05
+
+The predecessor Analyst04 scientific/numerical result remains frozen. Successor05 corrected only the Oracle/late support representation required by the IR2 corrective review.
+
+- 330/330 summary metric `value` fields, Oracle decisions, bin membership, valid-decision counts and candidate-decision counts are preserved exactly from the predecessor summary.
+- `OccLowU_share_unknown` now carries `D_U_count` support.
+- LOW/HIGH occupied precision carries its corresponding stratum support.
+- LOW-minus-HIGH precision exposes LOW and HIGH supports separately.
+- wrong-minus-correct median-U gap exposes correct-U n and wrong-U n separately.
+- Structural and Later-observed supports remain separate.
+- 270/330 rows required corrected or expanded support semantics; 60/330 already had the correct single-support mapping.
+- No model/simulation/prediction rerun, retune, metric-value change, threshold/bin/Oracle change, figure change, or new scientific claim was made.
+
+Predecessor authorship/provenance for the frozen scientific result remains unchanged; this bounded package correction is attributable to Data & Evidence Analyst successor 05 and is pending IR2 successor01 focused R2.
