@@ -198,18 +198,22 @@ def online_proxy(run,row,accepted,trajectory):
     Aany=Are+delta_any;Rany=Aany/(Ka+Aany) if Ka+Aany>0 else math.nan
 
     known=obs>=0;domain=known|DU;meanfree=(obs==0)|(DU&(mean<=.5));meanfree_unknown=DU&(mean<=.5)
+    offset,cropped=topo.crop_domain(domain,meanfree,meanfree_unknown,Ej[0],Ej[1],Ej[2])
+    d,mf,mfu,e1c,e2c,e3c=cropped
     pose=topo.align_source(float(row["time_s"]),trajectory)
-    tvalid=False;treason=pose["mode"];source=None;reachmean=np.zeros(obs.shape,bool);tc=np.zeros(obs.shape,bool);comprows=[];unlock_union=np.zeros(obs.shape,bool)
+    tvalid=False;treason=pose["mode"];source=None
+    reachmean=np.zeros(d.shape,bool);tc_local=np.zeros(d.shape,bool);comprows=[];unlock_local=np.zeros(d.shape,bool)
     if pose["available"]:
-        source=topo.world_to_cell(pose["x"],pose["y"],canvas_meta[2],canvas_meta[3],canvas_meta[1])
-        if not (0<=source[0]<obs.shape[0] and 0<=source[1]<obs.shape[1]):treason="SOURCE_OUTSIDE_ONLINE_DOMAIN"
+        source_global=topo.world_to_cell(pose["x"],pose["y"],canvas_meta[2],canvas_meta[3],canvas_meta[1])
+        source=(source_global[0]-offset[0],source_global[1]-offset[1])
+        if not (0<=source[0]<d.shape[0] and 0<=source[1]<d.shape[1]):treason="SOURCE_OUTSIDE_ONLINE_DOMAIN"
         else:
-            stencil=topo.collision_stencil(0.189,canvas_meta[1]);mcs=topo.cspace(meanfree,domain,stencil)
+            stencil=topo.collision_stencil(0.189,canvas_meta[1]);mcs=topo.cspace(mf,d,stencil)
             if not mcs[source]:treason="SOURCE_NOT_PREDICTED_TRAVERSABLE"
             else:
                 tvalid=True;treason="";reachmean=topo.reachable(mcs,source)
                 component_cache={}
-                for j,emask in enumerate(Ej,1):
+                for j,emask in enumerate((e1c,e2c,e3c),1):
                     labels,comps=topo.components(emask)
                     for comp in comps:
                         key=tuple(comp["cells"])
@@ -217,17 +221,21 @@ def online_proxy(run,row,accepted,trajectory):
                         if key in component_cache:
                             ua,unlocked=component_cache[key]
                         else:
-                            hfree=meanfree|cmask
-                            hcs=topo.cspace(hfree,domain,stencil)
+                            hfree=mf|cmask
+                            hcs=topo.cspace(hfree,d,stencil)
                             rh=topo.reachable(hcs,source)
-                            unlocked=meanfree_unknown&rh&~reachmean
+                            unlocked=mfu&rh&~reachmean
                             ua=float(unlocked.sum()*canvas_meta[1]*canvas_meta[1])
                             component_cache[key]=(ua,unlocked)
                         crit=ua>0
-                        if crit:tc|=cmask;unlock_union|=unlocked
+                        if crit:tc_local|=cmask;unlock_local|=unlocked
                         comprows.append({"member":j,"component_id":comp["label"],"component_cells_canvas":int(cmask.sum()),
                                          "component_mask_area_canvas_m2":float(cmask.sum()*canvas_meta[1]*canvas_meta[1]),
                                          "unlocked_area_m2":ua,"critical":int(crit)})
+    tc=np.zeros(obs.shape,bool);unlock_union=np.zeros(obs.shape,bool)
+    r0,c0=offset
+    tc[r0:r0+d.shape[0],c0:c0+d.shape[1]]=tc_local
+    unlock_union[r0:r0+d.shape[0],c0:c0+d.shape[1]]=unlock_local
     if tvalid:
         tc_rt=collapse_canvas(tc,raw.shape,res,ox,oy,canvas_meta)
         htc=float(tc_rt.sum()*cell_area)
@@ -284,39 +292,48 @@ def r004_truth(run,row,proxy,trajectory):
     final,_,_=r004base.final_snapshot(run)
     obs,mean,support=r004base.prediction_canvas(run,row,proxy["canvas_meta"][0])
     known,future,scoreable,domain,final_free,ref_occ,pred_occ,missed=topo.completed_masks(obs,mean,final,support)
+    offset,cropped=topo.crop_domain(domain,ref_occ,pred_occ,scoreable,final_free,mean)
+    d,ro,po,e,ffree,m=cropped
     stencil=topo.collision_stencil(0.189,proxy["canvas_meta"][1])
-    reftrav=topo.cspace(domain&~ref_occ,domain,stencil);predtrav=topo.cspace(domain&~pred_occ,domain,stencil)
+    reftrav=topo.cspace(d&~ro,d,stencil);predtrav=topo.cspace(d&~po,d,stencil)
     pose=topo.align_source(float(row["time_s"]),trajectory)
-    if not pose["available"]:return {"R004_evaluable":0,"R004_reason":pose["mode"],"_true_mask":np.zeros(obs.shape,bool),"_true_unlock":np.zeros(obs.shape,bool),"_true_comps":[]}
-    src=topo.world_to_cell(pose["x"],pose["y"],proxy["canvas_meta"][2],proxy["canvas_meta"][3],proxy["canvas_meta"][1])
-    if not (0<=src[0]<obs.shape[0] and 0<=src[1]<obs.shape[1]) or not reftrav[src]:
-        return {"R004_evaluable":0,"R004_reason":"SOURCE_NOT_REFERENCE_TRAVERSABLE","_true_mask":np.zeros(obs.shape,bool),"_true_unlock":np.zeros(obs.shape,bool),"_true_comps":[]}
-    refreach=topo.reachable(reftrav,src)
-    predreach=topo.reachable(predtrav,src) if predtrav[src] else np.zeros(obs.shape,bool)
-    meanfreeunknown=scoreable&(mean<=.5)
-    true_missed=scoreable&final_free&(mean>.5)
+    empty=np.zeros(obs.shape,bool)
+    if not pose["available"]:return {"R004_evaluable":0,"R004_reason":pose["mode"],"_true_mask":empty,"_true_unlock":empty,"_true_comps":[]}
+    srcg=topo.world_to_cell(pose["x"],pose["y"],proxy["canvas_meta"][2],proxy["canvas_meta"][3],proxy["canvas_meta"][1])
+    src=(srcg[0]-offset[0],srcg[1]-offset[1])
+    if not (0<=src[0]<d.shape[0] and 0<=src[1]<d.shape[1]) or not reftrav[src]:
+        return {"R004_evaluable":0,"R004_reason":"SOURCE_NOT_REFERENCE_TRAVERSABLE","_true_mask":empty,"_true_unlock":empty,"_true_comps":[]}
+    predreach=topo.reachable(predtrav,src) if predtrav[src] else np.zeros(d.shape,bool)
+    meanfreeunknown=e&(m<=.5)
+    true_missed=e&ffree&(m>.5)
     labels,comps=topo.components(true_missed)
-    truecrit=np.zeros(obs.shape,bool);unlock_union=np.zeros(obs.shape,bool);critcomps=[]
+    truecrit=np.zeros(d.shape,bool);unlock_union=np.zeros(d.shape,bool);critcomps=[]
     for comp in comps:
         cm=labels==comp["label"]
-        hfree=(domain&~pred_occ)|cm
-        hcs=topo.cspace(hfree,domain,stencil)
-        rh=topo.reachable(hcs,src) if hcs[src] else np.zeros(obs.shape,bool)
+        hfree=(d&~po)|cm
+        hcs=topo.cspace(hfree,d,stencil)
+        rh=topo.reachable(hcs,src) if hcs[src] else np.zeros(d.shape,bool)
         unlocked=meanfreeunknown&rh&~predreach
         ua=float(unlocked.sum()*proxy["canvas_meta"][1]**2)
         if ua>0:truecrit|=cm;unlock_union|=unlocked;critcomps.append((comp["label"],cm,ua))
-    hits=sum(bool(np.any(cm&proxy["tc"])) for _,cm,_ in critcomps) if proxy["tvalid"] else 0
+    fullcrit=np.zeros(obs.shape,bool);fullunlock=np.zeros(obs.shape,bool);r0,c0=offset
+    fullcrit[r0:r0+d.shape[0],c0:c0+d.shape[1]]=truecrit
+    fullunlock[r0:r0+d.shape[0],c0:c0+d.shape[1]]=unlock_union
+    hits=sum(bool(np.any(fullcrit_component&proxy["tc"])) for fullcrit_component in [
+        np.pad(cm,((r0,obs.shape[0]-r0-d.shape[0]),(c0,obs.shape[1]-c0-d.shape[1])),constant_values=False)
+        for _,cm,_ in critcomps
+    ]) if proxy["tvalid"] else 0
     missedc=len(critcomps)-hits
-    truearea=float(truecrit.sum()*proxy["canvas_meta"][1]**2)
-    proxyfalse=float(np.sum(proxy["tc"]&~truecrit)*proxy["canvas_meta"][1]**2) if proxy["tvalid"] else math.nan
-    overlap=float(np.sum(unlock_union&proxy["unlocked_union"])*proxy["canvas_meta"][1]**2) if proxy["tvalid"] else math.nan
-    shared=int(np.sum(truecrit&(proxy["k_canvas"]==0)))
-    return {"R004_evaluable":1,"R004_reason":"","R004_true_critical_cells":int(truecrit.sum()),"R004_true_critical_area_m2":truearea,
+    truearea=float(fullcrit.sum()*proxy["canvas_meta"][1]**2)
+    proxyfalse=float(np.sum(proxy["tc"]&~fullcrit)*proxy["canvas_meta"][1]**2) if proxy["tvalid"] else math.nan
+    overlap=float(np.sum(fullunlock&proxy["unlocked_union"])*proxy["canvas_meta"][1]**2) if proxy["tvalid"] else math.nan
+    shared=int(np.sum(fullcrit&(proxy["k_canvas"]==0)))
+    return {"R004_evaluable":1,"R004_reason":"","R004_true_critical_cells":int(fullcrit.sum()),"R004_true_critical_area_m2":truearea,
             "R004_true_critical_component_count":len(critcomps),"R004_true_critical_component_hit_count":hits,
             "R004_true_critical_component_hit_rate":div(hits,len(critcomps)) if critcomps else 1.0,
             "R004_missed_critical_component_count":missedc,"R004_shared_bias_critical_cells":shared,
             "R004_proxy_false_critical_area_m2":proxyfalse,"R004_unlocked_consequence_overlap_m2":overlap,
-            "_true_mask":truecrit,"_true_unlock":unlock_union,"_true_comps":critcomps}
+            "_true_mask":fullcrit,"_true_unlock":fullunlock,"_true_comps":[x[0] for x in critcomps]}
 
 def score_stop(stop,rr):
     if stop is None:return {"CandidateStop":"","DelayDecisions":math.nan,"PrematureStop":False,"PrematureByDecisions":0,"SevereFalseStop10":False,"SavedDecisions":0,"PositiveSaving":False,"SavedProgress":0.0,"SavedTime_s":math.nan}
