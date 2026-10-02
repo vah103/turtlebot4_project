@@ -141,7 +141,7 @@ def robust_adversarial(per,components):
     m=np.zeros((3,3),bool);m[0,0]=m[1,1]=True
     rows.append({"audit":"A10","semantic_pass":int(not topo.valid_move(m,0,0,1,1)),"detail":"diagonal-only blocked sides are not reachable"})
     # A11 consequence not accounting: observed all Delta<=H and fields distinct.
-    ok11=all((not core.finite(r["Delta_TC_m2"])) or (float(r["Delta_TC_m2"])<=float(r["H_TC_mask_m2"])+1e-12)) for r in per)
+    ok11=all((not core.finite(r["Delta_TC_m2"])) or (float(r["Delta_TC_m2"])<=float(r["H_TC_mask_m2"])+1e-12) for r in per)
     rows.append({"audit":"A11","semantic_pass":int(ok11),"detail":"UnlockedArea separate; Delta_TC<=H_TC and only Delta enters R_TC"})
     rows.append({"audit":"A12","semantic_pass":1,"detail":"worker online_proxy inputs are same-decision raw/mean/G1-G3/support/source/accepted-R only"})
     a=.01;ok13=all(math.isclose(base+inc,a,abs_tol=1e-15) for base,inc in [(a/3,2*a/3),(2*a/3,a/3),(a,0)])
