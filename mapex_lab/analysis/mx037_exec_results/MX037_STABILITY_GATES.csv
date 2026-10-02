@@ -1,0 +1,7 @@
+gate,status,value,detail
+S1,FAIL,blob_fail=0;hard=45,constructability/integrity
+S2,FAIL,matched_support=10/10;failures=mpx_002:COVERAGE_FAIL;mpx_003:COVERAGE_FAIL;mpx_004:COVERAGE_FAIL;mpx_005:COVERAGE_FAIL;mpx_007:COVERAGE_FAIL;mpx_008:COVERAGE_FAIL;mpx_009:COVERAGE_FAIL;mpx_010:COVERAGE_FAIL,fixed-base topology-critical risk-mask coverage
+S3,FAIL,TC_fired=10;failures=mpx_002;mpx_003;mpx_004;mpx_005;mpx_007;mpx_008;mpx_009;mpx_010,emitted-stop underestimation + retrospective safety
+S4,PASS,fired=10;positive=10;median_delay=2.0,held-out usefulness
+S5,FAIL,accounting=True;components=True;component_residual=True;early_TC=False;hard=45,topology relevance/no-overreach/accounting
+S6,FAIL,A_pass=12/13,A1-A13

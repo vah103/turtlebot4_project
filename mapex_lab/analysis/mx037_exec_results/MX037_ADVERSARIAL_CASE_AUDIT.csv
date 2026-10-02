@@ -1,0 +1,14 @@
+audit,semantic_pass,detail
+A1,1,synthetic shared bias: mean/member all occupied => absent E_ANY/E_TC
+A2,0,isolated/thin disagreement present but UnlockedArea=0
+A3,1,single blocker opened alone unlocks downstream mean-free region
+A4,1,synthetic disagreement inflation: B0 mask > topology-critical blocker mask
+A5,1,disconnected multi-member mosaic not manufactured by one-component testing
+A6,1,two-blocker joint interaction remains explicit blind spot
+A7,1,"mpx_001 d21 TopoValid false => TC NA, STOP_TC false"
+A8,1,unsupported online unknown area explicitly reported; no future fill
+A9,1,mean .5 is primary occupied + topology free; member .5 is not member-free
+A10,1,diagonal-only blocked sides are not reachable
+A11,1,UnlockedArea separate; Delta_TC<=H_TC and only Delta enters R_TC
+A12,1,worker online_proxy inputs are same-decision raw/mean/G1-G3/support/source/accepted-R only
+A13,1,k=1/2/3 accepted base + residual = exactly one physical cell

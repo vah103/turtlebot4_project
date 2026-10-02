@@ -1,0 +1,16 @@
+{
+  "R_TC": "(A_map_mean+Delta_TC)/(KnownFree+A_map_mean+Delta_TC)",
+  "ResidualToFull": "max(0,1-k_free/3)*runtime_cell_area",
+  "baseline": "Any-Member diagnostic only",
+  "classification_order": [
+    "MX037_INVALID_EXECUTION_OR_EVIDENCE",
+    "NO_DEFENSIBLE_ONLINE_HIDDEN_FREE_RISK_PROXY_METHOD",
+    "MX037_HIDDEN_FREE_PROXY_UNSAFE_UNDERESTIMATION",
+    "MX037_RISK_COVERED_BUT_TOO_CONSERVATIVE_FOR_STOP",
+    "MX037_HIDDEN_FREE_RISK_PROXY_RETROSPECTIVE_CANDIDATE"
+  ],
+  "method_commit": "ac5b7a4e2b31a33aaaed1172d3b42f5fdf80862e",
+  "parallelization": "run-level scheduling only; science functions imported unchanged from mx037_exec.py",
+  "primary": "TC-MSR",
+  "schema": "mx037_metric_dictionary_v2_parallel_execution"
+}
