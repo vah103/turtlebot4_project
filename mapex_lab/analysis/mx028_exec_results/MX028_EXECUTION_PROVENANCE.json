@@ -86,15 +86,32 @@
     "python": "3.11.16"
   },
   "schema": "mx028_execution_provenance_v1",
-  "status": "COMPLETE_PENDING_IR2_RESULT_QA",
+  "status": "COMPLETE_PENDING_IR2_FOCUSED_RESULT_R2",
   "structural_gt_blob": "a5653a7ec7f4550287a3ebeb05b922dbc7a5bc3a",
   "structural_gt_path": "mapex_lab/ground_truth/new_room/generated/new_room_structural_gt_v2.npz",
   "technical_source_base": "4899ee95c85640965befeaf98c20f156c0d3181a",
   "transport_commit_actor": "github-actions[bot]",
   "variance_parity_contract": {
-    "atol": 1e-07,
+    "atol": 1e-7,
     "ddof": 1,
     "pass_n": 365,
-    "rtol": 1e-05
+    "rtol": 0.00001
+  },
+  "bounded_support_semantics_correction": {
+    "date": "2026-10-02",
+    "correction_role": "Data & Evidence Analyst successor 05",
+    "predecessor_frozen_candidate": "3ab8d88a66c3a1b4b3663792808234a9c63bb85f",
+    "corrective_review": "company/reviews/HO-20261001-MX028-ANALYST04-RESULT-QA-CORRECTION__independent-research-qa.md",
+    "corrective_review_commit": "08d50346c7d20ac23371e69c9aa645d4a2734425",
+    "correction_type": "Oracle/late metric-specific support semantics and package metadata only",
+    "summary_rows": 330,
+    "corrected_or_expanded_support_semantics_rows": 270,
+    "metric_values_changed": false,
+    "model_inference": false,
+    "simulation": false,
+    "prediction_regeneration": false,
+    "threshold_or_bin_or_oracle_change": false,
+    "figures_changed": false,
+    "per_decision_science_changed": false
   }
 }
