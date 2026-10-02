@@ -108,12 +108,16 @@ def robust_adversarial(per,components):
     rows.append({"audit":"A1","semantic_pass":int(not any(e)),"detail":"synthetic shared bias: mean/member all occupied => absent E_ANY/E_TC"})
     # shared topology helpers.
     res=.05;stencil=topo.collision_stencil(.189,res);shape=(90,140);domain=np.ones(shape,bool);src=(45,15)
-    # A2: open room, isolated disagreement does not unlock.
-    mf=np.zeros(shape,bool);mf[10:80,5:130]=True;risk=np.zeros(shape,bool);risk[42:48,65:71]=True
-    base=topo.cspace(mf&~risk,domain,stencil);br=topo.reachable(base,src)
-    hy=topo.cspace((mf&~risk)|risk,domain,stencil);hr=topo.reachable(hy,src)
-    unlocked=(mf&~risk)&hr&~br
-    rows.append({"audit":"A2","semantic_pass":int(risk.any() and unlocked.sum()==0),"detail":"isolated/thin disagreement present but UnlockedArea=0"})
+    # A2 bounded fixture repair only. Use the accepted runtime-grid resolution
+    # and isolate a real B0 disagreement behind a thick non-free region.
+    a2_res=.10;a2_stencil=topo.collision_stencil(.189,a2_res);a2_shape=(60,80);a2_domain=np.ones(a2_shape,bool);a2_src=(30,10)
+    a2_mf=np.zeros(a2_shape,bool);a2_mf[8:52,5:35]=True
+    a2_risk=np.zeros(a2_shape,bool);a2_risk[27:33,60:66]=True
+    a2_base=topo.cspace(a2_mf,a2_domain,a2_stencil);a2_br=topo.reachable(a2_base,a2_src)
+    a2_hy=topo.cspace(a2_mf|a2_risk,a2_domain,a2_stencil);a2_hr=topo.reachable(a2_hy,a2_src) if a2_hy[a2_src] else np.zeros(a2_shape,bool)
+    a2_unlocked=a2_mf&a2_hr&~a2_br
+    a2_ok=bool(a2_risk.any() and a2_base[a2_src] and a2_br[a2_src] and a2_unlocked.sum()==0)
+    rows.append({"audit":"A2","semantic_pass":int(a2_ok),"detail":"runtime-grid B0 disagreement; source/C-space valid; UnlockedArea=0; P1 excludes"})
     # A3: one vertical blocker separates two large regions; opening it unlocks right side.
     mf=np.zeros(shape,bool);mf[10:80,5:130]=True;wall=np.zeros(shape,bool);wall[10:80,67:73]=True;mf0=mf&~wall
     base=topo.cspace(mf0,domain,stencil);br=topo.reachable(base,src);hy=topo.cspace(mf0|wall,domain,stencil);hr=topo.reachable(hy,src)
@@ -232,19 +236,19 @@ def aggregate():
     core.write_csv(R/"MX037_PER_DECISION_PROXY.csv",per);core.write_csv(R/"MX037_COMPONENT_AUDIT.csv",components);core.write_csv(R/"MX037_ACCEPTED_R_ACCOUNTING_AUDIT.csv",accaudit)
     core.write_csv(R/"MX037_STRUCTURAL_PROXY_TRUTH.csv",structrows);core.write_csv(R/"MX037_LATER_OBSERVED_PROXY_TRUTH.csv",laterrows);core.write_csv(R/"MX037_R004_TOPO_CRITICAL_TRUTH.csv",r004rows)
     core.write_csv(R/"MX037_SHARED_BIAS_AUDIT.csv",shared);core.write_csv(R/"MX037_HELDOUT_STOP_OUTCOMES.csv",stoprows);core.write_csv(R/"MX037_STABILITY_GATES.csv",gates);core.write_csv(R/"MX037_ADVERSARIAL_CASE_AUDIT.csv",adv)
-    dictionary={"schema":"mx037_metric_dictionary_v2_parallel_execution","method_commit":core.METHOD,"primary":"TC-MSR","baseline":"Any-Member diagnostic only",
+    dictionary={"schema":"mx037_metric_dictionary_v3_bounded_topology_correction","method_commit":core.METHOD,"primary":"TC-MSR","baseline":"Any-Member diagnostic only","online_topology_representation":"runtime_grid_exact_MX031","evaluator_projection":"canonical_0.05m_evaluator_only",
       "ResidualToFull":"max(0,1-k_free/3)*runtime_cell_area","R_TC":"(A_map_mean+Delta_TC)/(KnownFree+A_map_mean+Delta_TC)",
       "parallelization":"run-level scheduling only; science functions imported unchanged from mx037_exec.py",
       "classification_order":["MX037_INVALID_EXECUTION_OR_EVIDENCE","NO_DEFENSIBLE_ONLINE_HIDDEN_FREE_RISK_PROXY_METHOD","MX037_HIDDEN_FREE_PROXY_UNSAFE_UNDERESTIMATION","MX037_RISK_COVERED_BUT_TOO_CONSERVATIVE_FOR_STOP","MX037_HIDDEN_FREE_RISK_PROXY_RETROSPECTIVE_CANDIDATE"]}
     core.write_json(R/"MX037_METRIC_DICTIONARY.json",dictionary)
-    prov={"schema":"mx037_execution_provenance_v2_parallel","authorization_task":"MX038","executor_role":"Data & Evidence Analyst successor 04","method_commit":core.METHOD,"method_blob":core.METHOD_BLOB,
+    prov={"schema":"mx037_execution_provenance_v3_bounded_correction","authorization_task":"MX038","executor_role":"Data & Evidence Analyst successor 05","predecessor_executor_role":"Data & Evidence Analyst successor 04","predecessor_candidate":core.PREDECESSOR_CANDIDATE,"bounded_correction_authorization":core.BOUNDED_CORRECTION_AUTH,"ir2_parent_result_qa":core.IR2_RESULT_QA,"method_commit":core.METHOD,"method_blob":core.METHOD_BLOB,
       "base_revision":core.BASE_REV,"source_blobs":{str(p.relative_to(core.REPO)):core.git_blob(p) for p in core.EXPECTED},"expected_source_blobs":{str(p.relative_to(core.REPO)):v for p,v in core.EXPECTED.items()},
       "blob_failures":blob_fail,"hard_integrity_failures":hard,"cohort":{"runs":list(core.RUNS),"decision_rows":len(per)},"classification":classification,
-      "execution_scheduler":"10 fixed run workers + one aggregate; no scientific parameter changed","guards":{"retuning":False,"Hospital":False,"prospective":False,"Engineer":False,"deployment":False,"robot_STOP":False}}
+      "execution_scheduler":"10 fixed run workers + one aggregate; bounded topology/A2 correction only; no scientific parameter changed","correction_scope":{"online_topology":"runtime grid exact MX031 semantics","A2_fixture":"repaired nonblocking premise","simulation_rerun":False,"model_inference":False,"prediction_regeneration":False},"guards":{"retuning":False,"Hospital":False,"prospective":False,"Engineer":False,"deployment":False,"robot_STOP":False}}
     core.write_json(R/"MX037_EXECUTION_PROVENANCE.json",prov)
-    report=f"""# MX037 Analyst04 retrospective result candidate — executed under MX038
+    report=f"""# MX037 Analyst05 bounded corrective result candidate — executed under MX038
 
-Status: COMPLETE_PENDING_INDEPENDENT_RESULT_QA
+Status: COMPLETE_PENDING_IR2_FOCUSED_RESULT_R2
 Frozen Method V2: {core.METHOD}
 Classification: **{classification}**
 
@@ -265,9 +269,13 @@ Classification: **{classification}**
 - A1-A13: {sum(x['semantic_pass'] for x in adv)}/13 PASS
 - corrected TC stop earlier than BASE: {tc_early}
 
-Execution was parallelized by fixed run only. All scientific functions/thresholds,
-truth domains and gates remained frozen. No Hospital, prospective collection,
-Engineer implementation, deployment or robot STOP was performed.
+This is the USER/PM-authorized bounded R1/R2 correction of predecessor candidate
+{core.PREDECESSOR_CANDIDATE}. Online topology now uses the exact accepted MX031
+runtime-grid representation; canonical 0.05 m projection is evaluator-only. A2
+was repaired without changing the TC criticality rule. All Method V2 thresholds,
+truth domains and gates remained frozen. No simulation/model prediction rerun,
+retuning, Hospital, prospective collection, Engineer implementation, deployment
+or robot STOP was performed.
 """
     (R/"MX037_ANALYST_REPORT.md").write_text(report,encoding="utf-8")
     required=["MX037_PER_DECISION_PROXY.csv","MX037_COMPONENT_AUDIT.csv","MX037_ACCEPTED_R_ACCOUNTING_AUDIT.csv","MX037_STRUCTURAL_PROXY_TRUTH.csv","MX037_LATER_OBSERVED_PROXY_TRUTH.csv","MX037_R004_TOPO_CRITICAL_TRUTH.csv","MX037_SHARED_BIAS_AUDIT.csv","MX037_HELDOUT_STOP_OUTCOMES.csv","MX037_STABILITY_GATES.csv","MX037_ADVERSARIAL_CASE_AUDIT.csv","MX037_METRIC_DICTIONARY.json","MX037_EXECUTION_PROVENANCE.json","MX037_ANALYST_REPORT.md"]

@@ -32,6 +32,9 @@ BASE_REV="d90498e1a3ead2a0c170a3fee7c02a1bc9526cca"
 RUNS=tuple(f"mpx_{i:03d}" for i in range(1,11))
 BASE_FIRE={"mpx_001":23,"mpx_002":18,"mpx_003":22,"mpx_004":16,"mpx_005":19,"mpx_006":23,"mpx_007":19,"mpx_008":20,"mpx_009":19,"mpx_010":23}
 R_TAU=.05
+PREDECESSOR_CANDIDATE="8a866b3ef1780ea4e38ec2cc882619d34439165e"
+BOUNDED_CORRECTION_AUTH="ac0a17245316af679ca26ce27222c02bdef68ba2"
+IR2_RESULT_QA="1daafc2d65435a32bf725025bb06e4fb08746a38"
 
 MX026=ANALYSIS/"mx026_exec_results"/"MX026_PUR_PER_DECISION.csv"
 MX031PRIMARY=ANALYSIS/"mx031_exec_results"/"MX031_PER_DECISION_REPLAY.csv"
@@ -171,6 +174,10 @@ def truth_metrics(target,proxy,cell_area,prefix):
     }
 
 def online_proxy(run,row,accepted,trajectory):
+    # Evaluator-side canonical 0.05 m representation is retained only for
+    # Structural/Later/R004 truth comparisons. The online primary topology
+    # below is computed exclusively on the current runtime grid, exactly as
+    # accepted MX031.
     decisions=read_csv(run/"decisions.csv")
     obs,mean,support=r004base.prediction_canvas(run,row,r004base.load_canvas(run,decisions[0]["canvas_map"])[1][0])
     _,canvas_meta,_=r004base.load_canvas(run,row["canvas_map"])
@@ -181,7 +188,10 @@ def online_proxy(run,row,accepted,trajectory):
     _,g1r,_,_,_=rt1;_,g2r,_,_,_=rt2;_,g3r,_,_,_=rt3
     if not (g1r.shape==g2r.shape==g3r.shape==mrun.shape==raw.shape):raise RuntimeError("runtime member shape mismatch")
     cell_area=res*res
+
+    # Accepted-R reconstruction stays on runtime cells and is unchanged.
     unknown=raw<0
+    runtime_support=np.ones(raw.shape,dtype=bool)
     k=(g1r<.5).astype(np.int8)+(g2r<.5).astype(np.int8)+(g3r<.5).astype(np.int8)
     A=[float(np.sum(unknown&(g<.5))*cell_area) for g in (g1r,g2r,g3r)]
     Are=float(sum(A)/3)
@@ -190,95 +200,116 @@ def online_proxy(run,row,accepted,trajectory):
     accA=[float(accepted[f"R_A_map_{j}_m2"]) for j in (1,2,3)]
     parity=max(abs(A[j]-accA[j]) for j in range(3))<=1e-5 and abs(Are-float(accepted["R_A_map_mean_m2"]))<=1e-5 and abs(Ka-float(accepted["R_KnownFree_map_m2"]))<=1e-5 and abs(Rre-float(accepted["R_MapRemainingFraction"]))<=1e-9
 
+    # Canonical evaluator masks remain definition-identical for truth scoring.
     DU=(obs<0)&support
     ks=(g1<.5).astype(np.int8)+(g2<.5).astype(np.int8)+(g3<.5).astype(np.int8)
     Ej=[DU&(mean>=.5)&(g<.5) for g in (g1,g2,g3)]
     Eany=Ej[0]|Ej[1]|Ej[2]
-    eany_rt=unknown&(mrun>=.5)&((g1r<.5)|(g2r<.5)|(g3r<.5))
+
+    # B0 Any-Member and all residual accounting remain runtime-cell quantities.
+    DU_rt=unknown&runtime_support
+    Ej_rt=[DU_rt&(mrun>=.5)&(g<.5) for g in (g1r,g2r,g3r)]
+    eany_rt=Ej_rt[0]|Ej_rt[1]|Ej_rt[2]
     Hany=float(eany_rt.sum()*cell_area)
     delta_any=float(np.sum(np.maximum(0,1-k[eany_rt]/3.0))*cell_area)
     Aany=Are+delta_any;Rany=Aany/(Ka+Aany) if Ka+Aany>0 else math.nan
 
-    known=obs>=0;domain=known|DU;meanfree=(obs==0)|(DU&(mean<=.5));meanfree_unknown=DU&(mean<=.5)
-    offset,cropped=topo.crop_domain(domain,meanfree,meanfree_unknown,Ej[0],Ej[1],Ej[2])
-    d,mf,mfu,e1c,e2c,e3c=cropped
+    # R1 correction: exact accepted MX031 current-decision online topology.
+    known_rt=raw>=0
+    supported_unknown_rt=unknown&runtime_support
+    domain_rt=known_rt|supported_unknown_rt
+    meanfree_rt=(raw==0)|(supported_unknown_rt&(mrun<=.5))
+    meanfree_unknown_rt=supported_unknown_rt&(mrun<=.5)
+
     pose=topo.align_source(float(row["time_s"]),trajectory)
-    tvalid=False;treason=pose["mode"];source=None
-    reachmean=np.zeros(d.shape,bool);tc_local=np.zeros(d.shape,bool);comprows=[];unlock_local=np.zeros(d.shape,bool)
+    tvalid=False;treason=str(pose["mode"]);source=None
+    reachmean_rt=np.zeros(raw.shape,bool);tc_rt=np.zeros(raw.shape,bool)
+    unlock_rt=np.zeros(raw.shape,bool);comprows=[]
     if pose["available"]:
-        source_global=topo.world_to_cell(pose["x"],pose["y"],canvas_meta[2],canvas_meta[3],canvas_meta[1])
-        source=(source_global[0]-offset[0],source_global[1]-offset[1])
-        if not (0<=source[0]<d.shape[0] and 0<=source[1]<d.shape[1]):treason="SOURCE_OUTSIDE_ONLINE_DOMAIN"
+        source=topo.world_to_cell(pose["x"],pose["y"],ox,oy,res)
+        if not (0<=source[0]<raw.shape[0] and 0<=source[1]<raw.shape[1]):
+            treason="SOURCE_OUTSIDE_RUNTIME_GRID"
+        elif not domain_rt[source]:
+            treason="SOURCE_OUTSIDE_ONLINE_DOMAIN"
         else:
-            stencil=topo.collision_stencil(0.189,canvas_meta[1]);mcs=topo.cspace(mf,d,stencil)
-            if not mcs[source]:treason="SOURCE_NOT_PREDICTED_TRAVERSABLE"
+            stencil=topo.collision_stencil(0.189,res)
+            mcs=topo.cspace(meanfree_rt,domain_rt,stencil)
+            if not mcs[source]:
+                treason="SOURCE_NOT_PREDICTED_TRAVERSABLE"
             else:
-                tvalid=True;treason="";reachmean=topo.reachable(mcs,source)
-                component_cache={}
-                for j,emask in enumerate((e1c,e2c,e3c),1):
-                    labels,comps=topo.components(emask)
-                    for comp in comps:
-                        key=tuple(comp["cells"])
-                        cmask=labels==comp["label"]
-                        if key in component_cache:
-                            ua,unlocked=component_cache[key]
-                        else:
-                            hfree=mf|cmask
-                            hcs=topo.cspace(hfree,d,stencil)
-                            rh=topo.reachable(hcs,source)
-                            unlocked=mfu&rh&~reachmean
-                            ua=float(unlocked.sum()*canvas_meta[1]*canvas_meta[1])
-                            component_cache[key]=(ua,unlocked)
-                        crit=ua>0
-                        if crit:tc_local|=cmask;unlock_local|=unlocked
-                        gcomps=[(int(rr+offset[0]),int(cc+offset[1])) for rr,cc in comp["cells"]]
-                        comprows.append({"member":j,"component_id":comp["label"],"component_cells_canvas":int(cmask.sum()),
-                                         "component_mask_area_canvas_m2":float(cmask.sum()*canvas_meta[1]*canvas_meta[1]),
-                                         "unlocked_area_m2":ua,"critical":int(crit),"_global_cells":gcomps})
-    tc=np.zeros(obs.shape,bool);unlock_union=np.zeros(obs.shape,bool)
-    r0,c0=offset
-    tc[r0:r0+d.shape[0],c0:c0+d.shape[1]]=tc_local
-    unlock_union[r0:r0+d.shape[0],c0:c0+d.shape[1]]=unlock_local
+                reachmean_rt=topo.reachable(mcs,source)
+                if int(np.count_nonzero(reachmean_rt))<=0:
+                    treason="EMPTY_SOURCE_REACHABLE_COMPONENT"
+                else:
+                    tvalid=True;treason=""
+                    component_cache={}
+                    for j,emask in enumerate(Ej_rt,1):
+                        labels,comps=topo.components(emask)
+                        for comp in comps:
+                            key=tuple(comp["cells"])
+                            cmask=labels==comp["label"]
+                            if key in component_cache:
+                                ua,unlocked=component_cache[key]
+                            else:
+                                hfree=meanfree_rt|cmask
+                                hcs=topo.cspace(hfree,domain_rt,stencil)
+                                rh=topo.reachable(hcs,source) if hcs[source] else np.zeros(raw.shape,bool)
+                                unlocked=meanfree_unknown_rt&rh&~reachmean_rt
+                                ua=float(unlocked.sum()*cell_area)
+                                component_cache[key]=(ua,unlocked)
+                            crit=ua>0
+                            if crit:
+                                tc_rt|=cmask
+                                unlock_rt|=unlocked
+                            comprows.append({
+                                "member":j,
+                                "component_id":comp["label"],
+                                "component_representation":"runtime_grid",
+                                "component_grid_resolution_m":res,
+                                "component_cells_runtime":int(cmask.sum()),
+                                "component_mask_area_runtime_m2":float(cmask.sum()*cell_area),
+                                "unlocked_area_m2":ua,
+                                "critical":int(crit),
+                                "_runtime_cells":[(int(rr),int(cc)) for rr,cc in comp["cells"]],
+                            })
+
     if tvalid:
-        tc_rt=collapse_canvas(tc,raw.shape,res,ox,oy,canvas_meta)
         htc=float(tc_rt.sum()*cell_area)
         delta_tc=float(np.sum(np.maximum(0,1-k[tc_rt]/3.0))*cell_area)
         Atc=Are+delta_tc;Rtc=Atc/(Ka+Atc) if Ka+Atc>0 else math.nan
     else:
-        tc_rt=np.zeros(raw.shape,bool);htc=delta_tc=Atc=Rtc=math.nan
+        htc=delta_tc=Atc=Rtc=math.nan
 
-    # Deterministic union-safe per-component residual accounting in member/component order.
-    # E_j comes from 2x expansion of runtime cells, so map selected canonical cells
-    # back to their owning runtime cells and assign residual only on first inclusion.
-    canvas_r0=round((oy-canvas_meta[3])/canvas_meta[1]);canvas_c0=round((ox-canvas_meta[2])/canvas_meta[1])
-    ratio=round(res/canvas_meta[1]);accounted_rt=np.zeros(raw.shape,bool)
+    # Project the already-selected runtime TC mask to canonical 0.05 m only for
+    # evaluator-side truth comparison. This projection never feeds online
+    # source validity, C-space, reachability, criticality or STOP.
+    tc=project_runtime(tc_rt.astype(bool),res,ox,oy,canvas_meta,False)[0].astype(bool)
+    unlock_union=project_runtime(unlock_rt.astype(bool),res,ox,oy,canvas_meta,False)[0].astype(bool)
+
+    # Deterministic union-safe residual accounting directly on runtime cells.
+    accounted_rt=np.zeros(raw.shape,bool)
     for comp in comprows:
         inc=0.0
         if comp["critical"]:
-            rset=set()
-            for gr,gc in comp["_global_cells"]:
-                rr=(gr-canvas_r0)//ratio;cc=(gc-canvas_c0)//ratio
-                if 0<=rr<raw.shape[0] and 0<=cc<raw.shape[1]:
-                    rset.add((int(rr),int(cc)))
-            for rr,cc in sorted(rset):
+            for rr,cc in sorted(set(comp["_runtime_cells"])):
                 if not accounted_rt[rr,cc]:
                     inc+=max(0.0,1.0-float(k[rr,cc])/3.0)*cell_area
                     accounted_rt[rr,cc]=True
         comp["incremental_residual_area_m2"]=float(inc)
-        comp.pop("_global_cells",None)
-    unsupported_online_area=float(np.sum((obs<0)&~support)*canvas_meta[1]*canvas_meta[1])
+        comp.pop("_runtime_cells",None)
 
+    unsupported_online_area=float(np.sum(unknown&~runtime_support)*cell_area)
     counts={f"k_free_{n}_unknown_count":int(np.sum(unknown&(k==n))) for n in range(4)}
     selcounts={f"TC_k_free_{n}_count":int(np.sum(tc_rt&(k==n))) if tvalid else "" for n in (1,2,3)}
     anycounts={f"ANY_k_free_{n}_count":int(np.sum(eany_rt&(k==n))) for n in (1,2,3)}
-    boundary={"mean_eq_0_5_count":int(np.sum(DU&(mean==.5)))}
-    for j,g in enumerate((g1,g2,g3),1):boundary[f"g{j}_eq_0_5_count"]=int(np.sum(DU&(g==.5)))
+    boundary={"mean_eq_0_5_count":int(np.sum(DU_rt&(mrun==.5)))}
+    for j,g in enumerate((g1r,g2r,g3r),1):boundary[f"g{j}_eq_0_5_count"]=int(np.sum(DU_rt&(g==.5)))
     return {
       "obs":obs,"mean":mean,"members":(g1,g2,g3),"support":support,"DU":DU,"k_canvas":ks,
       "raw":raw,"mrun":mrun,"members_rt":(g1r,g2r,g3r),"k_rt":k,"eany":Eany,"eany_rt":eany_rt,"tc":tc,"tc_rt":tc_rt,
       "canvas_meta":canvas_meta,"runtime_meta":(res,ox,oy),"cell_area":cell_area,"tvalid":tvalid,"treason":treason,
-      "source":source,"reachmean":reachmean,"meanfree":meanfree,"meanfree_unknown":meanfree_unknown,
-      "unlocked_union":unlock_union,"comprows":comprows,"unsupported_online_area_m2":unsupported_online_area,
+      "source":source,"reachmean":reachmean_rt,"meanfree":meanfree_rt,"meanfree_unknown":meanfree_unknown_rt,
+      "unlocked_union":unlock_union,"unlocked_union_rt":unlock_rt,"comprows":comprows,"unsupported_online_area_m2":unsupported_online_area,
       "A":A,"Are":Are,"Ka":Ka,"Rre":Rre,"parity":parity,
       "Hany":Hany,"delta_any":delta_any,"Aany":Aany,"Rany":Rany,
       "Htc":htc,"delta_tc":delta_tc,"Atc":Atc,"Rtc":Rtc,
@@ -371,11 +402,17 @@ def adversarial():
     rows=[]
     # A1 shared bias arithmetic/semantics
     rows.append({"audit":"A1","semantic_pass":1,"detail":"k_free=0 mean-occ truth-free cell is absent from E_ANY/E_TC and counted SharedBias; never imputed"})
-    # A2 nonblocking thin error via topology primitive
-    dom=np.ones((15,15),bool);src=(7,2);meanfree=np.zeros_like(dom);meanfree[5:10,1:6]=True
-    stencil=topo.collision_stencil(.189,.05);mcs=topo.cspace(meanfree,dom,stencil);reach=topo.reachable(mcs,src)
-    thin=np.zeros_like(dom);thin[1,13]=True;hcs=topo.cspace(meanfree|thin,dom,stencil);rh=topo.reachable(hcs,src);unlock=(meanfree&rh&~reach)
-    rows.append({"audit":"A2","semantic_pass":int(unlock.sum()==0),"detail":"synthetic isolated disagreement has UnlockedArea=0: B0 yes, P1 no"})
+    # A2 bounded fixture repair: a real B0 disagreement is isolated behind a
+    # thick non-free region, so opening it cannot unlock any baseline mean-free
+    # runtime cell. Exact source/C-space remains valid and UnlockedArea=0.
+    dom=np.ones((60,80),bool);src=(30,10);meanfree=np.zeros_like(dom);meanfree[8:52,5:35]=True
+    risk=np.zeros_like(dom);risk[27:33,60:66]=True
+    stencil=topo.collision_stencil(.189,.10)
+    mcs=topo.cspace(meanfree,dom,stencil);reach=topo.reachable(mcs,src)
+    hcs=topo.cspace(meanfree|risk,dom,stencil);rh=topo.reachable(hcs,src) if hcs[src] else np.zeros_like(dom)
+    unlock=meanfree&rh&~reach
+    a2_ok=bool(risk.any() and mcs[src] and reach[src] and unlock.sum()==0)
+    rows.append({"audit":"A2","semantic_pass":int(a2_ok),"detail":"runtime-grid isolated B0 disagreement; source/C-space valid; UnlockedArea=0; P1 excludes"})
     rows.append({"audit":"A3","semantic_pass":1,"detail":"implementation includes a member component iff one-component hybrid UnlockedArea>0; H full mask, Delta residual only"})
     rows.append({"audit":"A4","semantic_pass":1,"detail":"B0 and P1 emitted separately; no component-size filter"})
     rows.append({"audit":"A5","semantic_pass":1,"detail":"each member/component hybrid evaluated alone; no multi-member/component mosaic"})
