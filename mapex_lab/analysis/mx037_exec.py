@@ -231,9 +231,10 @@ def online_proxy(run,row,accepted,trajectory):
                             component_cache[key]=(ua,unlocked)
                         crit=ua>0
                         if crit:tc_local|=cmask;unlock_local|=unlocked
+                        gcomps=[(int(rr+offset[0]),int(cc+offset[1])) for rr,cc in comp["cells"]]
                         comprows.append({"member":j,"component_id":comp["label"],"component_cells_canvas":int(cmask.sum()),
                                          "component_mask_area_canvas_m2":float(cmask.sum()*canvas_meta[1]*canvas_meta[1]),
-                                         "unlocked_area_m2":ua,"critical":int(crit)})
+                                         "unlocked_area_m2":ua,"critical":int(crit),"_global_cells":gcomps})
     tc=np.zeros(obs.shape,bool);unlock_union=np.zeros(obs.shape,bool)
     r0,c0=offset
     tc[r0:r0+d.shape[0],c0:c0+d.shape[1]]=tc_local
@@ -246,6 +247,27 @@ def online_proxy(run,row,accepted,trajectory):
     else:
         tc_rt=np.zeros(raw.shape,bool);htc=delta_tc=Atc=Rtc=math.nan
 
+    # Deterministic union-safe per-component residual accounting in member/component order.
+    # E_j comes from 2x expansion of runtime cells, so map selected canonical cells
+    # back to their owning runtime cells and assign residual only on first inclusion.
+    canvas_r0=round((oy-canvas_meta[3])/canvas_meta[1]);canvas_c0=round((ox-canvas_meta[2])/canvas_meta[1])
+    ratio=round(res/canvas_meta[1]);accounted_rt=np.zeros(raw.shape,bool)
+    for comp in comprows:
+        inc=0.0
+        if comp["critical"]:
+            rset=set()
+            for gr,gc in comp["_global_cells"]:
+                rr=(gr-canvas_r0)//ratio;cc=(gc-canvas_c0)//ratio
+                if 0<=rr<raw.shape[0] and 0<=cc<raw.shape[1]:
+                    rset.add((int(rr),int(cc)))
+            for rr,cc in sorted(rset):
+                if not accounted_rt[rr,cc]:
+                    inc+=max(0.0,1.0-float(k[rr,cc])/3.0)*cell_area
+                    accounted_rt[rr,cc]=True
+        comp["incremental_residual_area_m2"]=float(inc)
+        comp.pop("_global_cells",None)
+    unsupported_online_area=float(np.sum((obs<0)&~support)*canvas_meta[1]*canvas_meta[1])
+
     counts={f"k_free_{n}_unknown_count":int(np.sum(unknown&(k==n))) for n in range(4)}
     selcounts={f"TC_k_free_{n}_count":int(np.sum(tc_rt&(k==n))) if tvalid else "" for n in (1,2,3)}
     anycounts={f"ANY_k_free_{n}_count":int(np.sum(eany_rt&(k==n))) for n in (1,2,3)}
@@ -256,7 +278,7 @@ def online_proxy(run,row,accepted,trajectory):
       "raw":raw,"mrun":mrun,"members_rt":(g1r,g2r,g3r),"k_rt":k,"eany":Eany,"eany_rt":eany_rt,"tc":tc,"tc_rt":tc_rt,
       "canvas_meta":canvas_meta,"runtime_meta":(res,ox,oy),"cell_area":cell_area,"tvalid":tvalid,"treason":treason,
       "source":source,"reachmean":reachmean,"meanfree":meanfree,"meanfree_unknown":meanfree_unknown,
-      "unlocked_union":unlock_union,"comprows":comprows,
+      "unlocked_union":unlock_union,"comprows":comprows,"unsupported_online_area_m2":unsupported_online_area,
       "A":A,"Are":Are,"Ka":Ka,"Rre":Rre,"parity":parity,
       "Hany":Hany,"delta_any":delta_any,"Aany":Aany,"Rany":Rany,
       "Htc":htc,"delta_tc":delta_tc,"Atc":Atc,"Rtc":Rtc,
@@ -402,7 +424,7 @@ def main():
                  "critical_component_count":sum(c["critical"] for c in p["comprows"]),
                  "max_UnlockedArea_m2":max([c["unlocked_area_m2"] for c in p["comprows"]],default=0) if p["tvalid"] else math.nan,
                  "union_UnlockedArea_m2":float(p["unlocked_union"].sum()*p["canvas_meta"][1]**2) if p["tvalid"] else math.nan,
-                 "unsupported_online_area_m2":0.0,"fixed_base_first_fire":int(basefire),
+                 "unsupported_online_area_m2":p["unsupported_online_area_m2"],"fixed_base_first_fire":int(basefire),
                  "STOP_BASE_condition":int(float(a["R_MapRemainingFraction"])<=R_TAU and p["tvalid"]),
                  "STOP_ANY_condition":int(p["tvalid"] and finite(p["Rany"]) and p["Rany"]<=R_TAU),
                  "STOP_TC_condition":int(p["tvalid"] and finite(p["Rtc"]) and p["Rtc"]<=R_TAU),
