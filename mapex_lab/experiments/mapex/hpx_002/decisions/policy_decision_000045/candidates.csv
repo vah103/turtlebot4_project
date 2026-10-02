@@ -1,0 +1,4 @@
+decision_id,mapex_policy_decision_id,policy_decision_id,candidate_id,raw_rank,policy_rank,row,col,x,y,distance_cells,distance_m,region_size,below_1m,distance_eligible,near_frontier_fallback,execution_suppressed,planner_suppressed,selectable,status,selected,execution_result,rank_all,rank_selectable,information_gain,score,visible_unknown_cells,ensemble_prediction_ms,all_frontier_scoring_ms,suppressed_planner_blocked
+45,45,45,2,1,1,198,461,37.169551124,7.227850153,93.210216273,9.321021766,30,0,1,0,0,0,1,selected,1,,1,1,1.962592363,0.210555496,123,2774.687466001,201.271329999,0
+45,45,45,0,2,,15,278,18.869550851,-11.072150120,349.337048425,34.933705363,339,0,1,0,0,1,0,planner_suppressed,0,,2,,2.986394167,0.085487472,196,2774.687466001,201.271329999,1
+45,45,45,1,3,2,199,329,23.969550927,7.327850154,218.061871560,21.806187481,15,0,1,0,0,0,1,ranked,0,,3,2,0.000000010,0.000000000,13,2774.687466001,201.271329999,0

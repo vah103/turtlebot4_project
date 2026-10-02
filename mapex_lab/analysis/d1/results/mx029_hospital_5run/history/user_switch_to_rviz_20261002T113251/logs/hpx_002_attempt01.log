@@ -1,0 +1,956 @@
+ROS isolation: domain=42, localhost_only=1
+
+
+==============================
+Method : MapEx
+Map    : Hospital
+Record : yes
+Run ID : hpx_002
+Python : /usr/bin/python3
+MapEx  : /home/com1/MapEx
+LaMa   : /work/conda-envs/lama/bin/python
+Weights: /work/com1/mapex_weights/weights/lama_ensemble
+Device : cpu
+Launch : mapex_lab/launch/slam.launch.py
+Headless: True
+RViz    : False
+==============================
+
+
+Dang cho /map, Nav2 lifecycle active va /clock on dinh...
+[INFO] [launch]: All log files can be found below /home/com1/.ros/log/2026-10-02-11-27-28-979028-com1-5695
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [launch.user]: Simulation world: hospital; path=/work/com1/turtlebot4_project_mx029/mapex_lab/map/hospital_aws_flat.sdf; spawn=(0.0, 12.0, -1.57)
+[INFO] [xacro-1]: process started with pid [5715]
+[INFO] [parameter_bridge-2]: process started with pid [5716]
+[INFO] [image_bridge-3]: process started with pid [5717]
+[INFO] [image_bridge-4]: process started with pid [5718]
+[INFO] [create-5]: process started with pid [5719]
+[INFO] [robot_state_publisher-6]: process started with pid [5720]
+[robot_state_publisher-6] [WARN] [1790915249.250336475] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[robot_state_publisher-6] [WARN] [1790915249.250347381] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[create-5] [WARN] [1790915249.264670443] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[create-5] [WARN] [1790915249.264699712] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[create-5] [INFO] [1790915249.279691291] [ros_gz_sim]: Requesting list of world names.
+[robot_state_publisher-6] [WARN] [1790915249.288771107] [kdl_parser]: The root link base_link has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF.
+[robot_state_publisher-6] [INFO] [1790915249.288903895] [robot_state_publisher]: Robot initialized
+[parameter_bridge-2] [WARN] [1790915249.292466158] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[parameter_bridge-2] [WARN] [1790915249.292476829] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[image_bridge-4] [WARN] [1790915249.293484942] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[image_bridge-4] [WARN] [1790915249.293493469] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[image_bridge-3] [WARN] [1790915249.293484526] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[image_bridge-3] [WARN] [1790915249.293494332] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[INFO] [xacro-1]: process has finished cleanly [pid 5715]
+[INFO] [gz-7]: process started with pid [5817]
+[gz-7] [1;32m[Msg] [0m[1;32mGazebo Sim Server v[0m[1;32m8.11.0[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mLoading SDF world file[[0m[1;32m/tmp/nav2_p4qby720.sdf[0m[1;32m].[0m
+[gz-7] [1;32m[Msg] [0m[1;32mServing entity system service on [[0m[1;32m/[0m[1;32mentity/system/add[0m[1;32m][0m[1;32m[0m
+[gz-7] [1;36m[Dbg] [Physics.cc:906] [0m[1;36mLoaded [[0m[1;36mgz::physics::dartsim::Plugin[0m[1;36m] from library [[0m[1;36m/opt/ros/jazzy/opt/gz_physics_vendor/lib/gz-physics-7/engine-plugins/libgz-physics-dartsim-plugin.so[0m[1;36m][0m[1;36m[0m
+[gz-7] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Physics[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/create_multiple[0m[1;32m] (async)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/create_multiple/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/remove[0m[1;32m] (async)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/remove/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/set_pose[0m[1;32m] (async)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/set_pose/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/set_pose_vector[0m[1;32m] (async)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/set_pose_vector/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/light_config[0m[1;32m] (async)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/light_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/set_physics[0m[1;32m] (async)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/set_physics/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/set_spherical_coordinates[0m[1;32m] (async)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/set_spherical_coordinates/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/enable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/enable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/disable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/disable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/visual_config[0m[1;32m] (async)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/visual_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/wheel_slip[0m[1;32m] (async)[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/hospital_flat_world/wheel_slip/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[create-5] [INFO] [1790915249.882574897] [ros_gz_sim]: Waiting messages on topic [robot_description].
+[create-5] [INFO] [1790915249.895185684] [ros_gz_sim]: Entity creation successful.
+[INFO] [create-5]: process has finished cleanly [pid 5719]
+[parameter_bridge-2] [INFO] [1790915250.306339553] [bridge_ros_gz]: Creating GZ->ROS Bridge: [/clock (gz.msgs.Clock) -> clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1790915250.309456889] [bridge_ros_gz]: Creating GZ->ROS Bridge: [joint_states (gz.msgs.Model) -> joint_states (sensor_msgs/msg/JointState)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1790915250.315407019] [bridge_ros_gz]: Creating GZ->ROS Bridge: [/odom (gz.msgs.Odometry) -> odom (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1790915250.320647277] [bridge_ros_gz]: Creating GZ->ROS Bridge: [/tf (gz.msgs.Pose_V) -> tf (tf2_msgs/msg/TFMessage)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1790915250.324230754] [bridge_ros_gz]: Creating GZ->ROS Bridge: [/imu (gz.msgs.IMU) -> imu (sensor_msgs/msg/Imu)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1790915250.325120768] [bridge_ros_gz]: Creating GZ->ROS Bridge: [/scan (gz.msgs.LaserScan) -> scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1790915250.325892337] [bridge_ros_gz]: Creating ROS->GZ Bridge: [cmd_vel (geometry_msgs/msg/Twist) -> /cmd_vel (gz.msgs.Twist)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1790915250.327339164] [bridge_ros_gz]: Creating GZ->ROS Bridge: [/rgbd_camera/camera_info (gz.msgs.CameraInfo) -> /rgbd_camera/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[gz-7] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::UserCommands[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gz-7] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::SceneBroadcaster[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gz-7] [1;36m[Dbg] [Sensors.cc:697] [0m[1;36mConfiguring Sensors system[0m[1;36m[0m
+[gz-7] [1;36m[Dbg] [Sensors.cc:557] [0m[1;36mSensorsPrivate::Run[0m[1;36m[0m
+[gz-7] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Sensors[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gz-7] [1;36m[Dbg] [Sensors.cc:532] [0m[1;36mSensorsPrivate::RenderThread started[0m[1;36m[0m
+[gz-7] [1;36m[Dbg] [Sensors.cc:337] [0m[1;36mWaiting for init[0m[1;36m[0m
+[gz-7] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Imu[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mLoaded level [[0m[1;32mdefault[0m[1;32m][0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mServing world controls on [[0m[1;32m/world/hospital_flat_world[0m[1;32m/control], [[0m[1;32m/world/hospital_flat_world[0m[1;32m/control/state] and [[0m[1;32m/world/hospital_flat_world[0m[1;32m/playback/control][0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mServing GUI information on [[0m[1;32m/world/hospital_flat_world[0m[1;32m/[0m[1;32mgui/info[0m[1;32m][0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mWorld [[0m[1;32mhospital_flat_world[0m[1;32m] initialized with [[0m[1;32mhospital_realtime[0m[1;32m] physics profile.[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mServing world SDF generation service on [[0m[1;32m/world/hospital_flat_world[0m[1;32m/[0m[1;32mgenerate_world_sdf[0m[1;32m][0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mServing world names on [[0m[1;32m/gazebo/worlds[0m[1;32m][0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mResource path add service on [[0m[1;32m/gazebo/resource_paths/add[0m[1;32m].[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mResource path get service on [[0m[1;32m/gazebo/resource_paths/get[0m[1;32m].[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mResource path resolve service on [[0m[1;32m/gazebo/resource_paths/resolve[0m[1;32m].[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mResource paths published on [[0m[1;32m/gazebo/resource_paths[0m[1;32m].[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mServer control service on [[0m[1;32m/server_control[0m[1;32m].[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mFound no publishers on /stats, adding root stats topic[0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mFound no publishers on /clock, adding root clock topic[0m[1;32m[0m
+[gz-7] [1;36m[Dbg] [SimulationRunner.cc:551] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m4[0m[1;36m[0m
+[gz-7] [1;36m[Dbg] [SimulationRunner.cc:562] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gz-7] [1;36m[Dbg] [SimulationRunner.cc:562] [0m[1;36mCreating postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gz-7] [1;36m[Dbg] [SimulationRunner.cc:562] [0m[1;36mCreating postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gz-7] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="turtlebot4"]/link[@name="rplidar_link"]/sensor[@name="rplidar"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gz-7] [1;33m[Wrn] [SdfEntityCreator.cc:933] [0m[1;33mGazebo does not support Ogre material scripts. See [0m[1;33mhttps://gazebosim.org/api/sim/8/migrationsdf.html#:~:text=Materials [0m[1;33mfor details.[0m[1;33m[0m
+[gz-7] [1;33m[Wrn] [SdfEntityCreator.cc:949] [0m[1;33mUsing an internal gazebo.material to parse [0m[1;33mGazebo/DarkGrey[0m[1;33m[0m
+[gz-7] [1;33m[Wrn] [SdfEntityCreator.cc:933] [0m[1;33mGazebo does not support Ogre material scripts. See [0m[1;33mhttps://gazebosim.org/api/sim/8/migrationsdf.html#:~:text=Materials [0m[1;33mfor details.[0m[1;33m[0m
+[gz-7] [1;33m[Wrn] [SdfEntityCreator.cc:949] [0m[1;33mUsing an internal gazebo.material to parse [0m[1;33mGazebo/DarkGrey[0m[1;33m[0m
+[gz-7] [1;33m[Wrn] [SdfEntityCreator.cc:933] [0m[1;33mGazebo does not support Ogre material scripts. See [0m[1;33mhttps://gazebosim.org/api/sim/8/migrationsdf.html#:~:text=Materials [0m[1;33mfor details.[0m[1;33m[0m
+[gz-7] [1;33m[Wrn] [SdfEntityCreator.cc:949] [0m[1;33mUsing an internal gazebo.material to parse [0m[1;33mGazebo/DarkGrey[0m[1;33m[0m
+[gz-7] [1;33m[Wrn] [ColladaLoader.cc:1993] [0m[1;33mUnable to add material[[0m[1;33m][0m
+[gz-7] [1;33m[Wrn] [ColladaLoader.cc:1993] [0m[1;33mUnable to add material[[0m[1;33m][0m
+[gz-7] [1;33m[Wrn] [ColladaLoader.cc:1993] [0m[1;33mUnable to add material[[0m[1;33m][0m
+[gz-7] [1;33m[Wrn] [ColladaLoader.cc:1993] [0m[1;33mUnable to add material[[0m[1;33m][0m
+[gz-7] [1;33m[Wrn] [ColladaLoader.cc:1993] [0m[1;33mUnable to add material[[0m[1;33m][0m
+[gz-7] [1;33m[Wrn] [ColladaLoader.cc:1993] [0m[1;33mUnable to add material[[0m[1;33m][0m
+[gz-7] [1;33m[Wrn] [ColladaLoader.cc:1993] [0m[1;33mUnable to add material[[0m[1;33m][0m
+[gz-7] [1;32m[Msg] [0m[1;32mDiffDrive subscribing to twist messages on [[0m[1;32m/cmd_vel[0m[1;32m][0m[1;32m[0m
+[gz-7] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::DiffDrive[0m[1;36m] for entity [[0m[1;36m26[0m[1;36m][0m[1;36m[0m
+[gz-7] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::JointStatePublisher[0m[1;36m] for entity [[0m[1;36m26[0m[1;36m][0m[1;36m[0m
+[gz-7] [1;36m[Dbg] [UserCommands.cc:1094] [0m[1;36mCreated entity [[0m[1;36m26[0m[1;36m] named [[0m[1;36mturtlebot4[0m[1;36m][0m[1;36m[0m
+[gz-7] [1;36m[Dbg] [SDFFeatures.cc:332] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gz-7] [1;36m[Dbg] [SDFFeatures.cc:864] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gz-7] [1;36m[Dbg] [SDFFeatures.cc:332] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gz-7] [1;36m[Dbg] [SDFFeatures.cc:864] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gz-7] [1;36m[Dbg] [SDFFeatures.cc:332] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gz-7] [1;36m[Dbg] [SDFFeatures.cc:864] [0m[1;36mThe geometry element of collision [[0m[1;36mbase_link_fixed_joint_lump__bumper_collision_1[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gz-7] [1;36m[Dbg] [SDFFeatures.cc:332] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gz-7] [1;36m[Dbg] [SDFFeatures.cc:864] [0m[1;36mThe geometry element of collision [[0m[1;36mbase_link_fixed_joint_lump__shell_collision_collision_2[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gz-7] [1;36m[Dbg] [Sensors.cc:953] [0m[1;36mInitialization needed[0m[1;36m[0m
+[gz-7] [1;36m[Dbg] [Sensors.cc:349] [0m[1;36mInitializing render context[0m[1;36m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mgz-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[gz-7] [1;36m[Dbg] [ImuSensor.cc:150] [0m[1;36mIMU data for [[0m[1;36mturtlebot4::imu_link::imu[0m[1;36m] advertised on [[0m[1;36mimu[0m[1;36m][0m[1;36m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mServing scene information on [[0m[1;32m/world/hospital_flat_world[0m[1;32m/[0m[1;32mscene/info[0m[1;32m][0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mServing graph information on [[0m[1;32m/world/hospital_flat_world[0m[1;32m/[0m[1;32mscene/graph[0m[1;32m][0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mServing full state on [[0m[1;32m/world/hospital_flat_world[0m[1;32m/[0m[1;32mstate[0m[1;32m][0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mServing full state (async) on [[0m[1;32m/world/hospital_flat_world[0m[1;32m/[0m[1;32mstate_async[0m[1;32m][0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mPublishing scene information on [[0m[1;32m/world/hospital_flat_world/scene/info[0m[1;32m][0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mPublishing entity deletions on [[0m[1;32m/world/hospital_flat_world/scene/deletion[0m[1;32m][0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mPublishing state changes on [[0m[1;32m/world/hospital_flat_world/state[0m[1;32m][0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mPublishing pose messages on [[0m[1;32m/world/hospital_flat_world[0m[1;32m/[0m[1;32mpose/info[0m[1;32m][0m[1;32m[0m
+[gz-7] [1;32m[Msg] [0m[1;32mPublishing dynamic pose messages on [[0m[1;32m/world/hospital_flat_world[0m[1;32m/[0m[1;32mdynamic_pose/info[0m[1;32m][0m[1;32m[0m
+[gz-7] [1;36m[Dbg] [SimulationRunner.cc:578] [0m[1;36mExiting postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gz-7] [1;36m[Dbg] [SimulationRunner.cc:578] [0m[1;36mExiting postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gz-7] [1;36m[Dbg] [SimulationRunner.cc:578] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[WARN] [1790915259.259764881] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[WARN] [1790915259.259783719] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[INFO] [async_slam_toolbox_node-8]: process started with pid [6021]
+[async_slam_toolbox_node-8] [WARN] [1790915259.426610905] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[async_slam_toolbox_node-8] [WARN] [1790915259.426624477] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[async_slam_toolbox_node-8] [INFO] [1790915259.440646163] [slam_toolbox]: Node using stack size 40000000
+[async_slam_toolbox_node-8] [INFO] [1790915259.634388074] [slam_toolbox]: Configuring
+[async_slam_toolbox_node-8] [INFO] [1790915259.635751590] [slam_toolbox]: Old-map sequential matcher: enabled=false, min_conf=0.25, decay=70.0, keep_first=true, keyframe_dist=1.00, history_radius=1.50, history_max=6
+[async_slam_toolbox_node-8] [INFO] [1790915259.646002056] [slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[async_slam_toolbox_node-8] [INFO] [1790915259.646291541] [slam_toolbox]: CeresSolver adaptive anchor V1: enabled=true, weight=5.00->1.00, decay=70.0, local_gap<=5, loop_gap>=30, evidence=3, mahal_sq>=9.00, release=1.00->1.00
+[async_slam_toolbox_node-8] [INFO] [1790915259.646448310] [slam_toolbox]: CeresSolver: Using SCHUR_JACOBI preconditioner.
+[INFO] [launch.user]: [LifecycleLaunch] Slamtoolbox node is activating.
+[async_slam_toolbox_node-8] [INFO] [1790915259.659307589] [slam_toolbox]: Activating
+[async_slam_toolbox_node-8] Registering sensor: [Custom Described Lidar]
+[INFO] [controller_server-9]: process started with pid [6144]
+[INFO] [smoother_server-10]: process started with pid [6145]
+[INFO] [planner_server-11]: process started with pid [6146]
+[INFO] [route_server-12]: process started with pid [6147]
+[INFO] [behavior_server-13]: process started with pid [6148]
+[INFO] [bt_navigator-14]: process started with pid [6149]
+[INFO] [waypoint_follower-15]: process started with pid [6150]
+[INFO] [velocity_smoother-16]: process started with pid [6151]
+[INFO] [collision_monitor-17]: process started with pid [6152]
+[INFO] [opennav_docking-18]: process started with pid [6153]
+[INFO] [lifecycle_manager-19]: process started with pid [6154]
+[velocity_smoother-16] [WARN] [1790915269.327395746] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[velocity_smoother-16] [WARN] [1790915269.327406286] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[bt_navigator-14] [WARN] [1790915269.330499936] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[bt_navigator-14] [WARN] [1790915269.330509827] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[velocity_smoother-16] [INFO] [1790915269.338418519] [velocity_smoother]: 
+[velocity_smoother-16] 	velocity_smoother lifecycle node launched. 
+[velocity_smoother-16] 	Waiting on external lifecycle transitions to activate
+[velocity_smoother-16] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-14] [INFO] [1790915269.341212047] [bt_navigator]: 
+[bt_navigator-14] 	bt_navigator lifecycle node launched. 
+[bt_navigator-14] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-14] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[behavior_server-13] [WARN] [1790915269.345365642] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[behavior_server-13] [WARN] [1790915269.345377322] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[waypoint_follower-15] [WARN] [1790915269.345525005] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[waypoint_follower-15] [WARN] [1790915269.345535789] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[controller_server-9] [WARN] [1790915269.346333806] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[controller_server-9] [WARN] [1790915269.346342489] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[planner_server-11] [WARN] [1790915269.347888680] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[planner_server-11] [WARN] [1790915269.347899679] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[bt_navigator-14] [INFO] [1790915269.347990188] [bt_navigator]: Creating
+[lifecycle_manager-19] [WARN] [1790915269.349077161] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[lifecycle_manager-19] [WARN] [1790915269.349094950] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[smoother_server-10] [WARN] [1790915269.350223279] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[smoother_server-10] [WARN] [1790915269.350241617] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[collision_monitor-17] [WARN] [1790915269.350390832] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[collision_monitor-17] [WARN] [1790915269.350403553] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[route_server-12] [WARN] [1790915269.352305590] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[route_server-12] [WARN] [1790915269.352320574] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[opennav_docking-18] [WARN] [1790915269.353382408] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[opennav_docking-18] [WARN] [1790915269.353398468] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[waypoint_follower-15] [INFO] [1790915269.379561571] [waypoint_follower]: 
+[waypoint_follower-15] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-15] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-15] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[route_server-12] [INFO] [1790915269.379619284] [route_server]: 
+[route_server-12] 	route_server lifecycle node launched. 
+[route_server-12] 	Waiting on external lifecycle transitions to activate
+[route_server-12] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-9] [INFO] [1790915269.379665990] [controller_server]: 
+[controller_server-9] 	controller_server lifecycle node launched. 
+[controller_server-9] 	Waiting on external lifecycle transitions to activate
+[controller_server-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-19] [INFO] [1790915269.380232197] [lifecycle_manager_navigation]: Creating
+[waypoint_follower-15] [INFO] [1790915269.381391297] [waypoint_follower]: Creating
+[controller_server-9] [INFO] [1790915269.382973961] [controller_server]: Creating controller server
+[smoother_server-10] [INFO] [1790915269.383764122] [smoother_server]: 
+[smoother_server-10] 	smoother_server lifecycle node launched. 
+[smoother_server-10] 	Waiting on external lifecycle transitions to activate
+[smoother_server-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[collision_monitor-17] [INFO] [1790915269.384384173] [collision_monitor]: 
+[collision_monitor-17] 	collision_monitor lifecycle node launched. 
+[collision_monitor-17] 	Waiting on external lifecycle transitions to activate
+[collision_monitor-17] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[smoother_server-10] [INFO] [1790915269.384529107] [smoother_server]: Creating smoother server
+[planner_server-11] [INFO] [1790915269.386060143] [planner_server]: 
+[planner_server-11] 	planner_server lifecycle node launched. 
+[planner_server-11] 	Waiting on external lifecycle transitions to activate
+[planner_server-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-11] [INFO] [1790915269.387466823] [planner_server]: Creating
+[lifecycle_manager-19] [INFO] [1790915269.388586230] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[opennav_docking-18] [INFO] [1790915269.388757869] [docking_server]: 
+[opennav_docking-18] 	docking_server lifecycle node launched. 
+[opennav_docking-18] 	Waiting on external lifecycle transitions to activate
+[opennav_docking-18] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[opennav_docking-18] [INFO] [1790915269.388834842] [docking_server]: Creating docking_server
+[behavior_server-13] [INFO] [1790915269.389031768] [behavior_server]: 
+[behavior_server-13] 	behavior_server lifecycle node launched. 
+[behavior_server-13] 	Waiting on external lifecycle transitions to activate
+[behavior_server-13] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-9] [INFO] [1790915269.394747384] [local_costmap.local_costmap]: 
+[controller_server-9] 	local_costmap lifecycle node launched. 
+[controller_server-9] 	Waiting on external lifecycle transitions to activate
+[controller_server-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-9] [INFO] [1790915269.396072086] [local_costmap.local_costmap]: Creating Costmap
+[planner_server-11] [INFO] [1790915269.396570325] [global_costmap.global_costmap]: 
+[planner_server-11] 	global_costmap lifecycle node launched. 
+[planner_server-11] 	Waiting on external lifecycle transitions to activate
+[planner_server-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-11] [INFO] [1790915269.396952604] [global_costmap.global_costmap]: Creating Costmap
+[lifecycle_manager-19] [INFO] [1790915269.881058555] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-19] [INFO] [1790915269.881097462] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-9] [INFO] [1790915269.881332315] [controller_server]: Configuring controller interface
+[controller_server-9] [INFO] [1790915269.881351287] [controller_server]: getting progress checker plugins..
+[controller_server-9] [INFO] [1790915269.881474152] [controller_server]: getting goal checker plugins..
+[controller_server-9] [INFO] [1790915269.881528302] [controller_server]: Controller frequency set to 15.0000Hz
+[controller_server-9] [INFO] [1790915269.881556647] [local_costmap.local_costmap]: Configuring
+[controller_server-9] [INFO] [1790915269.887470102] [local_costmap.local_costmap]: Using plugin "static_layer"
+[controller_server-9] [INFO] [1790915269.893882788] [local_costmap.local_costmap]: Subscribing to the map topic (/map) with transient local durability
+[controller_server-9] [INFO] [1790915269.895108759] [local_costmap.local_costmap]: Initialized plugin "static_layer"
+[controller_server-9] [INFO] [1790915269.895126293] [local_costmap.local_costmap]: Using plugin "voxel_layer"
+[controller_server-9] [INFO] [1790915269.895633493] [local_costmap.local_costmap]: Subscribed to Topics: scan
+[controller_server-9] [INFO] [1790915269.905062042] [local_costmap.local_costmap]: Initialized plugin "voxel_layer"
+[controller_server-9] [INFO] [1790915269.905086622] [local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-9] [INFO] [1790915269.905460234] [local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-9] [INFO] [1790915269.918822612] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 193 X 180 at 0.100000 m/pix
+[controller_server-9] [INFO] [1790915269.919205114] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-9] [INFO] [1790915269.919605214] [controller_server]: Controller Server has progress_checker  progress checkers available.
+[controller_server-9] [INFO] [1790915269.920197220] [controller_server]: Created goal checker : general_goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-9] [INFO] [1790915269.920466609] [controller_server]: Controller Server has general_goal_checker  goal checkers available.
+[controller_server-9] [INFO] [1790915269.922844724] [controller_server]: Created controller : FollowPath of type nav2_mppi_controller::MPPIController
+[controller_server-9] [INFO] [1790915269.924461882] [controller_server]: Controller period is equal to model dt. Control sequence shifting is ON
+[controller_server-9] [INFO] [1790915269.927763509] [controller_server]: ConstraintCritic instantiated with 1 power and 4.000000 weight.
+[controller_server-9] [INFO] [1790915269.927833646] [controller_server]: Critic loaded : mppi::critics::ConstraintCritic
+[controller_server-9] [INFO] [1790915269.929115221] [controller_server]: InflationCostCritic instantiated with 1 power and 300.000000 / 0.015000 weights. Critic will collision check based on footprint cost.
+[controller_server-9] [INFO] [1790915269.929162412] [controller_server]: Critic loaded : mppi::critics::CostCritic
+[controller_server-9] [INFO] [1790915269.929681879] [controller_server]: GoalCritic instantiated with 1 power and 5.000000 weight.
+[controller_server-9] [INFO] [1790915269.929708318] [controller_server]: Critic loaded : mppi::critics::GoalCritic
+[controller_server-9] [INFO] [1790915269.930124703] [controller_server]: GoalAngleCritic instantiated with 1 power, 3.000000 weight, 0.500000 angular threshold and symmetric_yaw_tolerance disabled
+[controller_server-9] [INFO] [1790915269.930143283] [controller_server]: Critic loaded : mppi::critics::GoalAngleCritic
+[controller_server-9] [INFO] [1790915269.930436262] [controller_server]: ReferenceTrajectoryCritic instantiated with 1 power and 20.000000 weight
+[controller_server-9] [INFO] [1790915269.930448646] [controller_server]: Critic loaded : mppi::critics::PathAlignCritic
+[controller_server-9] [INFO] [1790915269.930650933] [controller_server]: Critic loaded : mppi::critics::PathFollowCritic
+[controller_server-9] [INFO] [1790915269.931042435] [controller_server]: PathAngleCritic instantiated with 1 power and 4.000000 weight. Mode set to: Forward Preference
+[controller_server-9] [INFO] [1790915269.931084554] [controller_server]: Critic loaded : mppi::critics::PathAngleCritic
+[controller_server-9] [INFO] [1790915269.931322468] [controller_server]: PreferForwardCritic instantiated with 1 power and 5.000000 weight.
+[controller_server-9] [INFO] [1790915269.931331630] [controller_server]: Critic loaded : mppi::critics::PreferForwardCritic
+[controller_server-9] [INFO] [1790915269.932175289] [controller_server]: Optimizer reset
+[controller_server-9] [INFO] [1790915269.935323232] [MPPIController]: Configured MPPI Controller: FollowPath
+[controller_server-9] [INFO] [1790915269.935366696] [controller_server]: Controller Server has FollowPath  controllers available.
+[lifecycle_manager-19] [INFO] [1790915269.943477138] [lifecycle_manager_navigation]: [34m[1mConfiguring smoother_server[0m[0m
+[smoother_server-10] [INFO] [1790915269.943681961] [smoother_server]: Configuring smoother server
+[smoother_server-10] [INFO] [1790915269.952661400] [smoother_server]: Created smoother : simple_smoother of type nav2_smoother::SimpleSmoother
+[smoother_server-10] [INFO] [1790915269.952991298] [smoother_server]: Smoother Server has simple_smoother  smoothers available.
+[lifecycle_manager-19] [INFO] [1790915269.957154303] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-11] [INFO] [1790915269.957333830] [planner_server]: Configuring
+[planner_server-11] [INFO] [1790915269.957353007] [global_costmap.global_costmap]: Configuring
+[planner_server-11] [INFO] [1790915269.962696275] [global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-11] [INFO] [1790915269.965148314] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[planner_server-11] [INFO] [1790915269.966406718] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-11] [INFO] [1790915269.966425397] [global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[planner_server-11] [INFO] [1790915269.966892882] [global_costmap.global_costmap]: Subscribed to Topics: scan
+[planner_server-11] [INFO] [1790915269.969432544] [global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[planner_server-11] [INFO] [1790915269.969452237] [global_costmap.global_costmap]: Using plugin "inflation_layer"
+[planner_server-11] [INFO] [1790915269.969841420] [global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[planner_server-11] [INFO] [1790915269.985311854] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 193 X 180 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915269.986421844] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner
+[planner_server-11] [INFO] [1790915269.986451253] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[planner_server-11] [INFO] [1790915269.986986293] [planner_server]: Planner Server has GridBased  planners available.
+[lifecycle_manager-19] [INFO] [1790915269.994854827] [lifecycle_manager_navigation]: [34m[1mConfiguring route_server[0m[0m
+[route_server-12] [INFO] [1790915269.995013572] [route_server]: Configuring
+[route_server-12] [INFO] [1790915270.016742634] [route_server]: Created GraphFileLoader GeoJsonGraphFileLoader of type nav2_route::GeoJsonGraphFileLoader
+[route_server-12] [INFO] [1790915270.016769713] [route_server]: Configuring geojson graph file loader
+[route_server-12] [INFO] [1790915270.016777144] [route_server]: No graph file provided to load yet.
+[route_server-12] [INFO] [1790915270.018883533] [route_server]: Created edge cost function plugin DistanceScorer of type nav2_route::DistanceScorer
+[route_server-12] [INFO] [1790915270.018902642] [route_server]: Configuring distance scorer.
+[route_server-12] [INFO] [1790915270.019022032] [route_server]: Created edge cost function plugin DynamicEdgesScorer of type nav2_route::DynamicEdgesScorer
+[route_server-12] [INFO] [1790915270.019030139] [route_server]: Configuring adjust edges scorer.
+[route_server-12] [INFO] [1790915270.021902200] [route_server]: Created route operation AdjustSpeedLimit of type nav2_route::AdjustSpeedLimit
+[route_server-12] [INFO] [1790915270.021928954] [route_server]: Configuring Adjust speed limit operation.
+[route_server-12] [INFO] [1790915270.022655304] [route_server]: Created route operation ReroutingService of type nav2_route::ReroutingService
+[route_server-12] [INFO] [1790915270.022682448] [route_server]: Configuring Rerouting service operation.
+[lifecycle_manager-19] [INFO] [1790915270.024887249] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[behavior_server-13] [INFO] [1790915270.025119759] [behavior_server]: Configuring
+[behavior_server-13] [INFO] [1790915270.029804623] [behavior_server]: Creating behavior plugin spin of type nav2_behaviors::Spin
+[behavior_server-13] [INFO] [1790915270.031283845] [behavior_server]: Creating behavior plugin backup of type nav2_behaviors::BackUp
+[behavior_server-13] [INFO] [1790915270.032783832] [behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors::DriveOnHeading
+[behavior_server-13] [INFO] [1790915270.034161487] [behavior_server]: Creating behavior plugin assisted_teleop of type nav2_behaviors::AssistedTeleop
+[behavior_server-13] [INFO] [1790915270.036708487] [behavior_server]: Creating behavior plugin wait of type nav2_behaviors::Wait
+[behavior_server-13] [INFO] [1790915270.043196169] [behavior_server]: Configuring spin
+[behavior_server-13] [INFO] [1790915270.048718473] [behavior_server]: Configuring backup
+[behavior_server-13] [INFO] [1790915270.052541366] [behavior_server]: Configuring drive_on_heading
+[behavior_server-13] [INFO] [1790915270.056489186] [behavior_server]: Configuring assisted_teleop
+[behavior_server-13] [INFO] [1790915270.062420241] [behavior_server]: Configuring wait
+[lifecycle_manager-19] [INFO] [1790915270.066746492] [lifecycle_manager_navigation]: [34m[1mConfiguring velocity_smoother[0m[0m
+[velocity_smoother-16] [INFO] [1790915270.066976349] [velocity_smoother]: Configuring velocity smoother
+[lifecycle_manager-19] [INFO] [1790915270.070331101] [lifecycle_manager_navigation]: [34m[1mConfiguring collision_monitor[0m[0m
+[collision_monitor-17] [INFO] [1790915270.070526451] [collision_monitor]: Configuring
+[collision_monitor-17] [INFO] [1790915270.075591451] [collision_monitor]: [scan]: Creating Scan
+[collision_monitor-17] [INFO] [1790915270.077450916] [collision_monitor]: [FootprintApproach]: Creating Polygon
+[collision_monitor-17] [INFO] [1790915270.078127021] [collision_monitor]: [FootprintApproach]: Polygon points are not defined. Using dynamic subscription instead.
+[collision_monitor-17] [INFO] [1790915270.078550091] [collision_monitor]: [FootprintApproach]: Making footprint subscriber on local_costmap/published_footprint topic
+[lifecycle_manager-19] [INFO] [1790915270.086229510] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-14] [INFO] [1790915270.086397362] [bt_navigator]: Configuring
+[bt_navigator-14] [INFO] [1790915270.091080599] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator
+[bt_navigator-14] [INFO] [1790915270.177011603] [bt_navigator]: Creating navigator id navigate_through_poses of type nav2_bt_navigator::NavigateThroughPosesNavigator
+[lifecycle_manager-19] [INFO] [1790915270.205772237] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[waypoint_follower-15] [INFO] [1790915270.206078165] [waypoint_follower]: Configuring
+[waypoint_follower-15] [INFO] [1790915270.232464392] [waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[lifecycle_manager-19] [INFO] [1790915270.233446453] [lifecycle_manager_navigation]: [34m[1mConfiguring docking_server[0m[0m
+[opennav_docking-18] [INFO] [1790915270.233815472] [docking_server]: Configuring docking_server
+[opennav_docking-18] [INFO] [1790915270.233865856] [docking_server]: Controller frequency set to 50.0000Hz
+[opennav_docking-18] [INFO] [1790915270.270257662] [docking_server]: Created charging dock plugin simple_charging_dock of type opennav_docking::SimpleChargingDock
+[opennav_docking-18] [WARN] [1790915270.274969837] [docking_server]: Dock database filepath nor dock parameters set. Docking actions can only be executed specifying the dock pose via the action request. Or update the dock database via the reload_database service.
+[opennav_docking-18] [INFO] [1790915270.275011635] [docking_server]: Docking Server has 1 dock types and 0 dock instances available.
+[lifecycle_manager-19] [INFO] [1790915270.276488925] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-9] [INFO] [1790915270.276713260] [controller_server]: Activating
+[controller_server-9] [INFO] [1790915270.276767503] [local_costmap.local_costmap]: Activating
+[controller_server-9] [INFO] [1790915270.276784073] [local_costmap.local_costmap]: Checking transform
+[controller_server-9] [INFO] [1790915270.276914381] [local_costmap.local_costmap]: start
+[controller_server-9] [WARN] [1790915270.478124194] [controller_server]: Parameter controller_server.verbose not found
+[controller_server-9] [INFO] [1790915270.478800007] [controller_server]: Optimizer reset
+[controller_server-9] [INFO] [1790915270.478955428] [MPPIController]: Activated MPPI Controller: FollowPath
+[controller_server-9] [INFO] [1790915270.478976069] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-19] [INFO] [1790915270.584092343] [lifecycle_manager_navigation]: Server controller_server connected with bond.
+[lifecycle_manager-19] [INFO] [1790915270.584143606] [lifecycle_manager_navigation]: [34m[1mActivating smoother_server[0m[0m
+[smoother_server-10] [INFO] [1790915270.804938208] [smoother_server]: Activating
+[smoother_server-10] [INFO] [1790915270.805009758] [smoother_server]: Creating bond (smoother_server) to lifecycle manager.
+[lifecycle_manager-19] [INFO] [1790915270.917535242] [lifecycle_manager_navigation]: Server smoother_server connected with bond.
+[lifecycle_manager-19] [INFO] [1790915270.917601671] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[planner_server-11] [INFO] [1790915270.918202637] [planner_server]: Activating
+[planner_server-11] [INFO] [1790915270.918249255] [global_costmap.global_costmap]: Activating
+[planner_server-11] [INFO] [1790915270.918258195] [global_costmap.global_costmap]: Checking transform
+[planner_server-11] [INFO] [1790915270.918416240] [global_costmap.global_costmap]: start
+[planner_server-11] [INFO] [1790915271.921079086] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[planner_server-11] [INFO] [1790915271.923780769] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[lifecycle_manager-19] [INFO] [1790915272.033638261] [lifecycle_manager_navigation]: Server planner_server connected with bond.
+[lifecycle_manager-19] [INFO] [1790915272.033757395] [lifecycle_manager_navigation]: [34m[1mActivating route_server[0m[0m
+[route_server-12] [INFO] [1790915272.034819218] [route_server]: Activating
+[route_server-12] [INFO] [1790915272.035152222] [route_server]: Creating bond (route_server) to lifecycle manager.
+[lifecycle_manager-19] [INFO] [1790915272.161096230] [lifecycle_manager_navigation]: Server route_server connected with bond.
+[lifecycle_manager-19] [INFO] [1790915272.161172456] [lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[behavior_server-13] [INFO] [1790915272.161706584] [behavior_server]: Activating
+[behavior_server-13] [INFO] [1790915272.161744876] [behavior_server]: Activating spin
+[behavior_server-13] [INFO] [1790915272.161759744] [behavior_server]: Activating backup
+[behavior_server-13] [INFO] [1790915272.161771066] [behavior_server]: Activating drive_on_heading
+[behavior_server-13] [INFO] [1790915272.161781924] [behavior_server]: Activating assisted_teleop
+[behavior_server-13] [INFO] [1790915272.161791916] [behavior_server]: Activating wait
+[behavior_server-13] [INFO] [1790915272.161807071] [behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[lifecycle_manager-19] [INFO] [1790915272.273313772] [lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[lifecycle_manager-19] [INFO] [1790915272.273417002] [lifecycle_manager_navigation]: [34m[1mActivating velocity_smoother[0m[0m
+[velocity_smoother-16] [INFO] [1790915272.274207974] [velocity_smoother]: Activating
+[velocity_smoother-16] [INFO] [1790915272.274361755] [velocity_smoother]: Creating bond (velocity_smoother) to lifecycle manager.
+[lifecycle_manager-19] [INFO] [1790915272.387619517] [lifecycle_manager_navigation]: Server velocity_smoother connected with bond.
+[lifecycle_manager-19] [INFO] [1790915272.387665769] [lifecycle_manager_navigation]: [34m[1mActivating collision_monitor[0m[0m
+[collision_monitor-17] [INFO] [1790915272.388129139] [collision_monitor]: Activating
+[collision_monitor-17] [INFO] [1790915272.388189515] [collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[lifecycle_manager-19] [INFO] [1790915272.498995070] [lifecycle_manager_navigation]: Server collision_monitor connected with bond.
+[lifecycle_manager-19] [INFO] [1790915272.499078860] [lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[bt_navigator-14] [INFO] [1790915272.499620461] [bt_navigator]: Activating
+[bt_navigator-14] [INFO] [1790915272.581179208] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[lifecycle_manager-19] [INFO] [1790915272.685661533] [lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[lifecycle_manager-19] [INFO] [1790915272.685758268] [lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[waypoint_follower-15] [INFO] [1790915272.686486526] [waypoint_follower]: Activating
+[waypoint_follower-15] [INFO] [1790915272.686552303] [waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[lifecycle_manager-19] [INFO] [1790915272.803853597] [lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[lifecycle_manager-19] [INFO] [1790915272.803894490] [lifecycle_manager_navigation]: [34m[1mActivating docking_server[0m[0m
+[opennav_docking-18] [INFO] [1790915272.804251618] [docking_server]: Activating docking_server
+[opennav_docking-18] [INFO] [1790915272.813733880] [docking_server]: Creating bond (docking_server) to lifecycle manager.
+[lifecycle_manager-19] [INFO] [1790915272.918263122] [lifecycle_manager_navigation]: Server docking_server connected with bond.
+[lifecycle_manager-19] [INFO] [1790915272.918311591] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-19] [INFO] [1790915272.918323169] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+Nav2 active; kiem tra /clock lien tuc trong 5 giay...
+[WARN] [1790915323.607507277] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[WARN] [1790915323.607534420] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+SLAM/Nav2 san sang; /clock on dinh, khong co buoc nhay lui trong 5 giay.
+
+Starting MapEx on Hospital...
+Command: /usr/bin/python3 /work/com1/turtlebot4_project_mx029/mapex_lab/scripts/mapex_run.py --run-id hpx_002 --environment hospital --runtime-profile hospital_slam
+Run hoan tat se tu dong dung exploration, SLAM, Nav2 va Gazebo.
+Nhan Ctrl+C mot lan neu muon dung som.
+
+[WARN] [1790915329.492100778] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[WARN] [1790915329.492123077] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[INFO] [1790915329.615281054] [mapex_explorer]: Loading official MapEx LaMa ensemble...
+[INFO] [1790915338.248025587] [mapex_explorer]: MapEx Explorer started (config=/work/com1/turtlebot4_project_mx029/mapex_lab/config/mapex.yaml, commit=53636bd1c79153acc3c74a532837d78c926bae5e, grid=0.10 m, visibility=20.0 m/250 rays, epsilon=0.80, preferred min distance=1.00 m, near fallback=all-frontiers-close, shared execution=nf_basic)
+[INFO] [1790915338.250091050] [mapex_explorer]: MapEx G1: /work/com1/mapex_weights/weights/lama_ensemble/train_1/models/best.ckpt
+[INFO] [1790915338.250372160] [mapex_explorer]: MapEx G2: /work/com1/mapex_weights/weights/lama_ensemble/train_2/models/best.ckpt
+[INFO] [1790915338.250618379] [mapex_explorer]: MapEx G3: /work/com1/mapex_weights/weights/lama_ensemble/train_3/models/best.ckpt
+[WARN] [1790915342.608939894] [mapex_explorer]: MAPEX RECORDING: env=hospital, profile=hospital_slam, output=/work/com1/turtlebot4_project_mx029/mapex_lab/experiments/mapex/hpx_002
+[WARN] [1790915346.599424344] [mapex_explorer]: MAPEX READY: Nav2 stable for >= 3.0s; benchmark clock will start at first frontier decision
+[INFO] [1790915348.479786865] [mapex_explorer]: All current MapEx frontier representatives are closer than 1.00 m; enabling near-frontier fallback.
+[INFO] [1790915348.495852372] [mapex_explorer]: MapEx decision 1: selected x=0.88, y=0.21, IG=315.060852, distance=0.91 m, score=348.006926, region=593, candidates=1, near_fallback=True, compute=1.87 s
+[bt_navigator-14] [INFO] [1790915348.669057763] [bt_navigator]: Begin navigating from current location (0.00, -0.00) to (0.88, 0.21)
+[controller_server-9] [INFO] [1790915348.710065378] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-9] [WARN] [1790915348.711229923] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded general_goal_checker . This warning will appear once.
+[controller_server-9] [WARN] [1790915348.711431369] [controller_server]: No progress checker was specified in parameter 'current_progress_checker'. Server will use only plugin loaded progress_checker . This warning will appear once.
+[parameter_bridge-2] [INFO] [1790915348.775710682] [bridge_ros_gz]: Passing message from ROS geometry_msgs/msg/Twist to Gazebo gz.msgs.Twist (showing msg only once per type)
+[INFO] [1790915348.791550584] [mapex_explorer]: Main goal accepted
+[INFO] [1790915348.837261582] [mapex_explorer]: Main /plan diagnostic: poses=17, endpoint=(0.88, 0.21), frontier=(0.88, 0.21), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915349.714532362] [mapex_explorer]: Main /plan diagnostic: poses=14, endpoint=(0.88, 0.21), frontier=(0.88, 0.21), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915349.778912489] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915349.877111899] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 193 X 180 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915349.918659722] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 193 X 180 at 0.100000 m/pix
+[controller_server-9] [INFO] [1790915350.677113216] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 194 X 180 at 0.100000 m/pix
+[controller_server-9] [INFO] [1790915350.778908425] [controller_server]: Passing new path to controller.
+[INFO] [1790915350.785747264] [mapex_explorer]: Main /plan diagnostic: poses=10, endpoint=(0.88, 0.21), frontier=(0.88, 0.21), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[planner_server-11] [INFO] [1790915350.918653374] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 194 X 180 at 0.100000 m/pix
+[controller_server-9] [INFO] [1790915350.981400012] [controller_server]: Reached the goal!
+[controller_server-9] [INFO] [1790915350.982248032] [controller_server]: Optimizer reset
+[bt_navigator-14] [INFO] [1790915351.010416976] [bt_navigator]: Goal succeeded
+[INFO] [1790915351.014932025] [mapex_explorer]: Goal reached
+[controller_server-9] [INFO] [1790915351.677095679] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 194 X 181 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915351.918642450] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 194 X 181 at 0.100000 m/pix
+[INFO] [1790915359.391693116] [mapex_explorer]: MapEx decision 2: selected x=3.86, y=1.01, IG=171.957535, distance=3.40 m, score=50.544042, region=3044, candidates=22, near_fallback=False, compute=7.79 s
+[bt_navigator-14] [INFO] [1790915359.393200082] [bt_navigator]: Begin navigating from current location (0.59, 0.09) to (3.86, 1.01)
+[controller_server-9] [INFO] [1790915359.413837232] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790915359.725815314] [mapex_explorer]: Main goal accepted
+[INFO] [1790915359.811831820] [mapex_explorer]: Main /plan diagnostic: poses=70, endpoint=(3.86, 1.01), frontier=(3.86, 1.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915360.433628821] [mapex_explorer]: Main /plan diagnostic: poses=63, endpoint=(3.86, 1.01), frontier=(3.86, 1.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915360.480620806] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915360.677081508] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 194 X 187 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915360.918786812] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 194 X 187 at 0.100000 m/pix
+[INFO] [1790915361.456994296] [mapex_explorer]: Main /plan diagnostic: poses=52, endpoint=(3.86, 1.01), frontier=(3.86, 1.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915361.480648448] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915361.677113841] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 202 X 218 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915361.918612161] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 202 X 218 at 0.100000 m/pix
+[INFO] [1790915362.494290536] [mapex_explorer]: Main /plan diagnostic: poses=40, endpoint=(3.86, 1.01), frontier=(3.86, 1.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915362.547299658] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915362.677139102] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 206 X 232 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915362.918690431] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 206 X 232 at 0.100000 m/pix
+[INFO] [1790915363.515869098] [mapex_explorer]: Main /plan diagnostic: poses=32, endpoint=(3.86, 1.01), frontier=(3.86, 1.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915363.547297823] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915363.677082169] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 213 X 233 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915363.918764201] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 213 X 233 at 0.100000 m/pix
+[INFO] [1790915364.530026226] [mapex_explorer]: Main /plan diagnostic: poses=23, endpoint=(3.86, 1.01), frontier=(3.86, 1.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915364.547291013] [controller_server]: Passing new path to controller.
+[INFO] [1790915365.599142616] [mapex_explorer]: Main /plan diagnostic: poses=14, endpoint=(3.86, 1.01), frontier=(3.86, 1.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915365.613952881] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915366.613950776] [controller_server]: Passing new path to controller.
+[INFO] [1790915366.732234766] [mapex_explorer]: Main /plan diagnostic: poses=8, endpoint=(3.86, 1.01), frontier=(3.86, 1.01), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915366.748651883] [controller_server]: Reached the goal!
+[controller_server-9] [INFO] [1790915366.748772714] [controller_server]: Optimizer reset
+[bt_navigator-14] [INFO] [1790915366.773541814] [bt_navigator]: Goal succeeded
+[INFO] [1790915366.776153815] [mapex_explorer]: Goal reached
+[INFO] [1790915371.190332918] [mapex_explorer]: MapEx decision 3: selected x=-0.94, y=9.16, IG=129.877884, distance=9.45 m, score=13.739138, region=174, candidates=15, near_fallback=False, compute=3.59 s
+[bt_navigator-14] [INFO] [1790915371.191355665] [bt_navigator]: Begin navigating from current location (3.56, 0.84) to (-0.94, 9.16)
+[controller_server-9] [INFO] [1790915371.211943191] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790915371.452931736] [mapex_explorer]: Main goal accepted
+[INFO] [1790915371.512682963] [mapex_explorer]: Main /plan diagnostic: poses=217, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915372.278694827] [controller_server]: Passing new path to controller.
+[INFO] [1790915372.289148303] [mapex_explorer]: Main /plan diagnostic: poses=217, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915373.278692200] [controller_server]: Passing new path to controller.
+[INFO] [1790915373.286098766] [mapex_explorer]: Main /plan diagnostic: poses=212, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915373.677078199] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 217 X 237 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915373.918621140] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 217 X 237 at 0.100000 m/pix
+[controller_server-9] [INFO] [1790915374.278717368] [controller_server]: Passing new path to controller.
+[INFO] [1790915374.464564066] [mapex_explorer]: Main /plan diagnostic: poses=182, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915375.299714044] [mapex_explorer]: Main /plan diagnostic: poses=192, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915375.345429905] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915375.677102149] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 217 X 237 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915375.918585361] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 217 X 237 at 0.100000 m/pix
+[INFO] [1790915376.324728028] [mapex_explorer]: Main /plan diagnostic: poses=165, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915376.345410098] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915376.677132037] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 217 X 237 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915376.918596876] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 217 X 237 at 0.100000 m/pix
+[planner_server-11] [ERROR] [1790915377.344488567] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-11] [WARN] [1790915377.345742899] [planner_server]: GridBased plugin failed to plan from (2.97, 3.03) to (-0.94, 9.16): "Failed to create plan with tolerance of: 0.000000"
+[planner_server-11] [WARN] [1790915377.345882957] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-14] [ERROR] [1790915377.372920732] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!
+[behavior_server-13] [INFO] [1790915377.384709963] [behavior_server]: Running wait
+[controller_server-9] [INFO] [1790915377.412101517] [controller_server]: Cancellation was successful. Stopping the robot.
+[controller_server-9] [INFO] [1790915377.412180684] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[controller_server-9] [INFO] [1790915377.413211150] [controller_server]: Optimizer reset
+[controller_server-9] [INFO] [1790915377.677135506] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 217 X 237 at 0.100000 m/pix
+[behavior_server-13] [INFO] [1790915377.687351968] [behavior_server]: wait completed successfully
+[INFO] [1790915377.722305051] [mapex_explorer]: Main /plan diagnostic: poses=165, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915377.724482065] [controller_server]: Received a goal, begin computing control effort.
+[planner_server-11] [INFO] [1790915377.918631889] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 217 X 237 at 0.100000 m/pix
+[INFO] [1790915378.771397850] [mapex_explorer]: Main /plan diagnostic: poses=153, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915378.791291979] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915378.877126254] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 219 X 238 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915378.918628717] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 219 X 238 at 0.100000 m/pix
+[controller_server-9] [INFO] [1790915379.677096980] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 232 X 238 at 0.100000 m/pix
+[INFO] [1790915379.770837915] [mapex_explorer]: Main /plan diagnostic: poses=138, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915379.791354813] [controller_server]: Passing new path to controller.
+[planner_server-11] [INFO] [1790915379.918587862] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 232 X 238 at 0.100000 m/pix
+[controller_server-9] [INFO] [1790915380.677099213] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 232 X 238 at 0.100000 m/pix
+[INFO] [1790915380.799554731] [mapex_explorer]: Main /plan diagnostic: poses=130, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915380.857955462] [controller_server]: Passing new path to controller.
+[planner_server-11] [INFO] [1790915380.918700834] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 232 X 238 at 0.100000 m/pix
+[INFO] [1790915381.820277920] [mapex_explorer]: Main /plan diagnostic: poses=117, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915381.857932134] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915382.677073897] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 232 X 238 at 0.100000 m/pix
+[INFO] [1790915382.855461882] [mapex_explorer]: Main /plan diagnostic: poses=112, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[planner_server-11] [INFO] [1790915382.918604589] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 232 X 238 at 0.100000 m/pix
+[controller_server-9] [INFO] [1790915382.924626079] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915383.677102025] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 233 X 238 at 0.100000 m/pix
+[INFO] [1790915383.868070367] [mapex_explorer]: Main /plan diagnostic: poses=103, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[planner_server-11] [INFO] [1790915383.918647221] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 233 X 238 at 0.100000 m/pix
+[controller_server-9] [INFO] [1790915383.924616856] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915384.677099772] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 233 X 238 at 0.100000 m/pix
+[INFO] [1790915384.905922920] [mapex_explorer]: Main /plan diagnostic: poses=92, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[planner_server-11] [INFO] [1790915384.918626349] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 233 X 238 at 0.100000 m/pix
+[controller_server-9] [INFO] [1790915384.924607763] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915385.991265382] [controller_server]: Passing new path to controller.
+[INFO] [1790915386.014461057] [mapex_explorer]: Main /plan diagnostic: poses=80, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915386.949953382] [mapex_explorer]: Main /plan diagnostic: poses=75, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915386.991291884] [controller_server]: Passing new path to controller.
+[INFO] [1790915388.042431944] [mapex_explorer]: Main /plan diagnostic: poses=60, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915388.057931088] [controller_server]: Passing new path to controller.
+[INFO] [1790915389.016276326] [mapex_explorer]: Main /plan diagnostic: poses=48, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915389.057936216] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915390.057938438] [controller_server]: Passing new path to controller.
+[INFO] [1790915390.064354512] [mapex_explorer]: Main /plan diagnostic: poses=39, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915391.072080732] [mapex_explorer]: Main /plan diagnostic: poses=29, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915391.124596175] [controller_server]: Passing new path to controller.
+[INFO] [1790915392.089197672] [mapex_explorer]: Main /plan diagnostic: poses=19, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915392.124607784] [controller_server]: Passing new path to controller.
+[INFO] [1790915393.160409813] [mapex_explorer]: Main /plan diagnostic: poses=13, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915393.191296108] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915394.127824048] [controller_server]: Reached the goal!
+[controller_server-9] [INFO] [1790915394.128003535] [controller_server]: Optimizer reset
+[INFO] [1790915394.151434612] [mapex_explorer]: Main /plan diagnostic: poses=7, endpoint=(-0.94, 9.16), frontier=(-0.94, 9.16), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[bt_navigator-14] [INFO] [1790915394.154108166] [bt_navigator]: Goal succeeded
+[INFO] [1790915394.155749958] [mapex_explorer]: Goal reached
+[INFO] [1790915398.201484082] [mapex_explorer]: MapEx decision 4: selected x=2.02, y=10.86, IG=46.288513, distance=3.53 m, score=13.106135, region=50, candidates=13, near_fallback=False, compute=3.60 s
+[bt_navigator-14] [INFO] [1790915398.202320752] [bt_navigator]: Begin navigating from current location (-0.88, 8.84) to (2.02, 10.86)
+[controller_server-9] [INFO] [1790915398.222902586] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790915398.515758084] [mapex_explorer]: Main goal accepted
+[INFO] [1790915398.525202682] [mapex_explorer]: Main /plan diagnostic: poses=160, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915399.252540303] [mapex_explorer]: Main /plan diagnostic: poses=156, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915399.289759676] [controller_server]: Passing new path to controller.
+[INFO] [1790915400.273529828] [mapex_explorer]: Main /plan diagnostic: poses=148, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915400.289727854] [controller_server]: Passing new path to controller.
+[INFO] [1790915401.353367001] [mapex_explorer]: Main /plan diagnostic: poses=144, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915401.356374940] [controller_server]: Passing new path to controller.
+[INFO] [1790915402.323859234] [mapex_explorer]: Main /plan diagnostic: poses=134, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915402.356709591] [controller_server]: Passing new path to controller.
+[INFO] [1790915403.348928323] [mapex_explorer]: Main /plan diagnostic: poses=130, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915403.423081893] [controller_server]: Passing new path to controller.
+[INFO] [1790915404.375375663] [mapex_explorer]: Main /plan diagnostic: poses=123, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915404.423034501] [controller_server]: Passing new path to controller.
+[INFO] [1790915405.397733193] [mapex_explorer]: Main /plan diagnostic: poses=121, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915405.423047914] [controller_server]: Passing new path to controller.
+[INFO] [1790915406.430754497] [mapex_explorer]: Main /plan diagnostic: poses=118, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915406.489814812] [controller_server]: Passing new path to controller.
+[INFO] [1790915407.449043049] [mapex_explorer]: Main /plan diagnostic: poses=110, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915407.489712947] [controller_server]: Passing new path to controller.
+[INFO] [1790915408.517448043] [mapex_explorer]: Main /plan diagnostic: poses=101, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915408.556363481] [controller_server]: Passing new path to controller.
+[INFO] [1790915409.534964524] [mapex_explorer]: Main /plan diagnostic: poses=89, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915409.556388812] [controller_server]: Passing new path to controller.
+[INFO] [1790915410.521434837] [mapex_explorer]: Main /plan diagnostic: poses=80, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915410.556375061] [controller_server]: Passing new path to controller.
+[INFO] [1790915411.549209600] [mapex_explorer]: Main /plan diagnostic: poses=70, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915411.623038263] [controller_server]: Passing new path to controller.
+[INFO] [1790915412.569978319] [mapex_explorer]: Main /plan diagnostic: poses=61, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915412.623048028] [controller_server]: Passing new path to controller.
+[INFO] [1790915413.601231248] [mapex_explorer]: Main /plan diagnostic: poses=51, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915413.623028251] [controller_server]: Passing new path to controller.
+[INFO] [1790915414.659567442] [mapex_explorer]: Main /plan diagnostic: poses=40, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915414.689726772] [controller_server]: Passing new path to controller.
+[INFO] [1790915415.639426872] [mapex_explorer]: Main /plan diagnostic: poses=28, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915415.689728972] [controller_server]: Passing new path to controller.
+[INFO] [1790915416.670556750] [mapex_explorer]: Main /plan diagnostic: poses=20, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915416.689703438] [controller_server]: Passing new path to controller.
+[INFO] [1790915417.705265716] [mapex_explorer]: Main /plan diagnostic: poses=13, endpoint=(2.02, 10.86), frontier=(2.02, 10.86), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915417.756389653] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915418.559614463] [controller_server]: Reached the goal!
+[controller_server-9] [INFO] [1790915418.560229548] [controller_server]: Optimizer reset
+[bt_navigator-14] [INFO] [1790915418.582523143] [bt_navigator]: Goal succeeded
+[INFO] [1790915418.584103170] [mapex_explorer]: Goal reached
+[INFO] [1790915422.006967795] [mapex_explorer]: MapEx decision 5: selected x=-6.08, y=6.36, IG=65.296089, distance=8.91 m, score=7.331779, region=39, candidates=12, near_fallback=False, compute=3.40 s
+[bt_navigator-14] [INFO] [1790915422.007693041] [bt_navigator]: Begin navigating from current location (1.79, 10.61) to (-6.08, 6.36)
+[controller_server-9] [INFO] [1790915422.028418595] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790915422.157598047] [mapex_explorer]: Main goal accepted
+[INFO] [1790915422.195092487] [mapex_explorer]: Main /plan diagnostic: poses=258, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915423.053456489] [mapex_explorer]: Main /plan diagnostic: poses=252, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915423.095217396] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915424.095277576] [controller_server]: Passing new path to controller.
+[INFO] [1790915424.131519379] [mapex_explorer]: Main /plan diagnostic: poses=247, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915425.161866687] [controller_server]: Passing new path to controller.
+[INFO] [1790915425.164417812] [mapex_explorer]: Main /plan diagnostic: poses=239, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915426.159605923] [mapex_explorer]: Main /plan diagnostic: poses=234, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915426.161867979] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915427.228538771] [controller_server]: Passing new path to controller.
+[INFO] [1790915427.249975078] [mapex_explorer]: Main /plan diagnostic: poses=231, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915428.228535775] [controller_server]: Passing new path to controller.
+[INFO] [1790915428.236774869] [mapex_explorer]: Main /plan diagnostic: poses=229, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915429.209423931] [mapex_explorer]: Main /plan diagnostic: poses=220, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915429.228533646] [controller_server]: Passing new path to controller.
+[INFO] [1790915430.241037559] [mapex_explorer]: Main /plan diagnostic: poses=210, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915430.295200640] [controller_server]: Passing new path to controller.
+[INFO] [1790915431.256715032] [mapex_explorer]: Main /plan diagnostic: poses=200, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915431.295214045] [controller_server]: Passing new path to controller.
+[INFO] [1790915432.353344911] [mapex_explorer]: Main /plan diagnostic: poses=190, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915432.361867464] [controller_server]: Passing new path to controller.
+[INFO] [1790915433.318098550] [mapex_explorer]: Main /plan diagnostic: poses=180, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915433.361891332] [controller_server]: Passing new path to controller.
+[INFO] [1790915434.353806528] [mapex_explorer]: Main /plan diagnostic: poses=167, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915434.361875182] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915435.428540432] [controller_server]: Passing new path to controller.
+[INFO] [1790915435.444747168] [mapex_explorer]: Main /plan diagnostic: poses=158, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915436.428543348] [controller_server]: Passing new path to controller.
+[INFO] [1790915436.459681454] [mapex_explorer]: Main /plan diagnostic: poses=148, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915437.433740149] [mapex_explorer]: Main /plan diagnostic: poses=137, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915437.495226930] [controller_server]: Passing new path to controller.
+[INFO] [1790915438.452329635] [mapex_explorer]: Main /plan diagnostic: poses=126, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915438.495203343] [controller_server]: Passing new path to controller.
+[INFO] [1790915439.493723476] [mapex_explorer]: Main /plan diagnostic: poses=116, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915439.561870414] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915440.561865651] [controller_server]: Passing new path to controller.
+[INFO] [1790915440.632795366] [mapex_explorer]: Main /plan diagnostic: poses=106, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915441.536008405] [mapex_explorer]: Main /plan diagnostic: poses=96, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915441.561989742] [controller_server]: Passing new path to controller.
+[INFO] [1790915442.553422669] [mapex_explorer]: Main /plan diagnostic: poses=86, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915442.628536703] [controller_server]: Passing new path to controller.
+[INFO] [1790915443.602366614] [mapex_explorer]: Main /plan diagnostic: poses=75, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915443.628560708] [controller_server]: Passing new path to controller.
+[INFO] [1790915444.595169028] [mapex_explorer]: Main /plan diagnostic: poses=65, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915444.628534675] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915444.877097916] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 233 X 238 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915444.918646841] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 233 X 238 at 0.100000 m/pix
+[controller_server-9] [INFO] [1790915445.695211005] [controller_server]: Passing new path to controller.
+[INFO] [1790915445.701894510] [mapex_explorer]: Main /plan diagnostic: poses=55, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915446.648053331] [mapex_explorer]: Main /plan diagnostic: poses=45, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915446.695224356] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915447.695225913] [controller_server]: Passing new path to controller.
+[INFO] [1790915447.920494928] [mapex_explorer]: Main /plan diagnostic: poses=35, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915448.737612984] [mapex_explorer]: Main /plan diagnostic: poses=23, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915448.761871794] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915449.761865000] [controller_server]: Passing new path to controller.
+[INFO] [1790915449.831723328] [mapex_explorer]: Main /plan diagnostic: poses=18, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915450.760724655] [mapex_explorer]: Main /plan diagnostic: poses=11, endpoint=(-6.08, 6.36), frontier=(-6.08, 6.36), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915450.828549263] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915451.496913904] [controller_server]: Reached the goal!
+[controller_server-9] [INFO] [1790915451.497013731] [controller_server]: Optimizer reset
+[bt_navigator-14] [INFO] [1790915451.517956460] [bt_navigator]: Goal succeeded
+[INFO] [1790915451.519924759] [mapex_explorer]: Goal reached
+[INFO] [1790915455.313494210] [mapex_explorer]: MapEx decision 6: selected x=-0.79, y=-8.54, IG=83.865974, distance=15.45 m, score=5.427686, region=122, candidates=10, near_fallback=False, compute=3.71 s
+[bt_navigator-14] [INFO] [1790915455.314514689] [bt_navigator]: Begin navigating from current location (-5.90, 6.07) to (-0.79, -8.54)
+[controller_server-9] [INFO] [1790915455.335205198] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790915455.686781201] [mapex_explorer]: Main goal accepted
+[INFO] [1790915455.695589076] [mapex_explorer]: Main /plan diagnostic: poses=372, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915456.402001053] [controller_server]: Passing new path to controller.
+[INFO] [1790915456.486395110] [mapex_explorer]: Main /plan diagnostic: poses=366, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915457.402028904] [controller_server]: Passing new path to controller.
+[INFO] [1790915457.442590445] [mapex_explorer]: Main /plan diagnostic: poses=359, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915458.468688050] [controller_server]: Passing new path to controller.
+[INFO] [1790915458.488803343] [mapex_explorer]: Main /plan diagnostic: poses=349, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915459.468695539] [controller_server]: Passing new path to controller.
+[INFO] [1790915459.492869778] [mapex_explorer]: Main /plan diagnostic: poses=343, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915460.470503362] [mapex_explorer]: Main /plan diagnostic: poses=335, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915460.535362788] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915461.535361834] [controller_server]: Passing new path to controller.
+[INFO] [1790915461.547320032] [mapex_explorer]: Main /plan diagnostic: poses=329, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915462.535370237] [controller_server]: Passing new path to controller.
+[INFO] [1790915462.588286383] [mapex_explorer]: Main /plan diagnostic: poses=321, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915463.559333688] [mapex_explorer]: Main /plan diagnostic: poses=315, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915463.602013261] [controller_server]: Passing new path to controller.
+[INFO] [1790915464.602012328] [mapex_explorer]: Main /plan diagnostic: poses=307, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915464.602030142] [controller_server]: Passing new path to controller.
+[INFO] [1790915465.609609585] [mapex_explorer]: Main /plan diagnostic: poses=300, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915465.668703141] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915465.877097513] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 233 X 238 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915465.918598058] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 233 X 238 at 0.100000 m/pix
+[INFO] [1790915466.630198585] [mapex_explorer]: Main /plan diagnostic: poses=292, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915466.668679996] [controller_server]: Passing new path to controller.
+[INFO] [1790915467.650571474] [mapex_explorer]: Main /plan diagnostic: poses=294, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915467.668720628] [controller_server]: Passing new path to controller.
+[INFO] [1790915468.706354510] [mapex_explorer]: Main /plan diagnostic: poses=290, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915468.735344926] [controller_server]: Passing new path to controller.
+[INFO] [1790915469.714720553] [mapex_explorer]: Main /plan diagnostic: poses=279, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915469.735362401] [controller_server]: Passing new path to controller.
+[INFO] [1790915470.729058789] [mapex_explorer]: Main /plan diagnostic: poses=269, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915470.735362072] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915471.802002110] [controller_server]: Passing new path to controller.
+[INFO] [1790915471.885166988] [mapex_explorer]: Main /plan diagnostic: poses=259, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915472.774924016] [mapex_explorer]: Main /plan diagnostic: poses=249, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915472.802022025] [controller_server]: Passing new path to controller.
+[INFO] [1790915473.851256283] [mapex_explorer]: Main /plan diagnostic: poses=240, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915473.868724906] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915474.868669103] [controller_server]: Passing new path to controller.
+[INFO] [1790915474.971861126] [mapex_explorer]: Main /plan diagnostic: poses=230, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915475.868700775] [controller_server]: Passing new path to controller.
+[INFO] [1790915475.915027729] [mapex_explorer]: Main /plan diagnostic: poses=219, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915476.935334692] [controller_server]: Passing new path to controller.
+[INFO] [1790915477.074163484] [mapex_explorer]: Main /plan diagnostic: poses=210, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915477.935335099] [controller_server]: Passing new path to controller.
+[INFO] [1790915477.963152919] [mapex_explorer]: Main /plan diagnostic: poses=200, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915478.960742217] [mapex_explorer]: Main /plan diagnostic: poses=188, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915479.002035286] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915480.002002233] [controller_server]: Passing new path to controller.
+[INFO] [1790915480.174757417] [mapex_explorer]: Main /plan diagnostic: poses=178, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915481.035468543] [mapex_explorer]: Main /plan diagnostic: poses=170, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915481.068675624] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915481.877107661] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 233 X 250 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915481.918873491] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 233 X 250 at 0.100000 m/pix
+[INFO] [1790915482.044063519] [mapex_explorer]: Main /plan diagnostic: poses=159, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915482.068709506] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915482.877115338] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 233 X 250 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915482.918633213] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 233 X 250 at 0.100000 m/pix
+[controller_server-9] [INFO] [1790915483.068669092] [controller_server]: Passing new path to controller.
+[INFO] [1790915483.117149788] [mapex_explorer]: Main /plan diagnostic: poses=149, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915484.088739689] [mapex_explorer]: Main /plan diagnostic: poses=139, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915484.135356142] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915484.877073497] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 233 X 250 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915484.918721364] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 233 X 250 at 0.100000 m/pix
+[INFO] [1790915485.112577178] [mapex_explorer]: Main /plan diagnostic: poses=128, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915485.135359460] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915486.202002778] [controller_server]: Passing new path to controller.
+[INFO] [1790915486.231889588] [mapex_explorer]: Main /plan diagnostic: poses=118, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915486.877107682] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 233 X 250 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915486.918626671] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 233 X 250 at 0.100000 m/pix
+[INFO] [1790915487.156895416] [mapex_explorer]: Main /plan diagnostic: poses=108, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915487.202031627] [controller_server]: Passing new path to controller.
+[INFO] [1790915488.179381340] [mapex_explorer]: Main /plan diagnostic: poses=96, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915488.202028810] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915488.877082843] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 234 X 250 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915488.918634294] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 234 X 250 at 0.100000 m/pix
+[INFO] [1790915489.218347513] [mapex_explorer]: Main /plan diagnostic: poses=87, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915489.268702107] [controller_server]: Passing new path to controller.
+[INFO] [1790915490.246238869] [mapex_explorer]: Main /plan diagnostic: poses=77, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915490.268657394] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915490.877075003] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 234 X 250 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915490.918626140] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 234 X 250 at 0.100000 m/pix
+[INFO] [1790915491.273433850] [mapex_explorer]: Main /plan diagnostic: poses=73, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915491.335363177] [controller_server]: Passing new path to controller.
+[INFO] [1790915492.294941111] [mapex_explorer]: Main /plan diagnostic: poses=69, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915492.335352551] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915493.335331656] [controller_server]: Passing new path to controller.
+[INFO] [1790915493.360858683] [mapex_explorer]: Main /plan diagnostic: poses=58, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915494.355170873] [mapex_explorer]: Main /plan diagnostic: poses=50, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915494.402002620] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915495.402024489] [controller_server]: Passing new path to controller.
+[INFO] [1790915495.450059884] [mapex_explorer]: Main /plan diagnostic: poses=39, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915496.434284626] [mapex_explorer]: Main /plan diagnostic: poses=30, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915496.468670083] [controller_server]: Passing new path to controller.
+[INFO] [1790915497.447683979] [mapex_explorer]: Main /plan diagnostic: poses=20, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915497.468703582] [controller_server]: Passing new path to controller.
+[INFO] [1790915498.467747174] [mapex_explorer]: Main /plan diagnostic: poses=14, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915498.535356351] [controller_server]: Passing new path to controller.
+[INFO] [1790915499.487518556] [mapex_explorer]: Main /plan diagnostic: poses=8, endpoint=(-0.79, -8.54), frontier=(-0.79, -8.54), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915499.535340398] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915499.670326270] [controller_server]: Reached the goal!
+[controller_server-9] [INFO] [1790915499.670454068] [controller_server]: Optimizer reset
+[bt_navigator-14] [INFO] [1790915499.694742904] [bt_navigator]: Goal succeeded
+[INFO] [1790915499.697262500] [mapex_explorer]: Goal reached
+[INFO] [1790915503.587775098] [mapex_explorer]: MapEx decision 7: selected x=0.10, y=-9.67, IG=23.421465, distance=1.75 m, score=13.387936, region=14, candidates=10, near_fallback=False, compute=2.99 s
+[bt_navigator-14] [INFO] [1790915503.588865015] [bt_navigator]: Begin navigating from current location (-0.87, -8.22) to (0.10, -9.67)
+[controller_server-9] [INFO] [1790915503.609299009] [controller_server]: Received a goal, begin computing control effort.
+[INFO] [1790915503.762282256] [mapex_explorer]: Main goal accepted
+[INFO] [1790915504.009097212] [mapex_explorer]: Main /plan diagnostic: poses=118, endpoint=(0.10, -9.67), frontier=(0.10, -9.67), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915504.676085944] [controller_server]: Passing new path to controller.
+[INFO] [1790915504.678292714] [mapex_explorer]: Main /plan diagnostic: poses=114, endpoint=(0.10, -9.67), frontier=(0.10, -9.67), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915505.676086726] [controller_server]: Passing new path to controller.
+[INFO] [1790915505.711018587] [mapex_explorer]: Main /plan diagnostic: poses=106, endpoint=(0.10, -9.67), frontier=(0.10, -9.67), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915506.656462504] [mapex_explorer]: Main /plan diagnostic: poses=97, endpoint=(0.10, -9.67), frontier=(0.10, -9.67), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915506.676084908] [controller_server]: Passing new path to controller.
+[INFO] [1790915507.686027471] [mapex_explorer]: Main /plan diagnostic: poses=93, endpoint=(0.10, -9.67), frontier=(0.10, -9.67), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915507.742753091] [controller_server]: Passing new path to controller.
+[INFO] [1790915508.714298999] [mapex_explorer]: Main /plan diagnostic: poses=91, endpoint=(0.10, -9.67), frontier=(0.10, -9.67), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915508.742790599] [controller_server]: Passing new path to controller.
+[INFO] [1790915509.796538691] [mapex_explorer]: Main /plan diagnostic: poses=91, endpoint=(0.10, -9.67), frontier=(0.10, -9.67), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915509.809420903] [controller_server]: Passing new path to controller.
+[INFO] [1790915510.786972857] [mapex_explorer]: Main /plan diagnostic: poses=83, endpoint=(0.10, -9.67), frontier=(0.10, -9.67), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915510.809423590] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915511.809420149] [controller_server]: Passing new path to controller.
+[INFO] [1790915511.821275991] [mapex_explorer]: Main /plan diagnostic: poses=72, endpoint=(0.10, -9.67), frontier=(0.10, -9.67), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[INFO] [1790915512.849027313] [mapex_explorer]: Main /plan diagnostic: poses=63, endpoint=(0.10, -9.67), frontier=(0.10, -9.67), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915512.876083245] [controller_server]: Passing new path to controller.
+[INFO] [1790915513.826056319] [mapex_explorer]: Main /plan diagnostic: poses=51, endpoint=(0.10, -9.67), frontier=(0.10, -9.67), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915513.876113940] [controller_server]: Passing new path to controller.
+[INFO] [1790915514.856684353] [mapex_explorer]: Main /plan diagnostic: poses=40, endpoint=(0.10, -9.67), frontier=(0.10, -9.67), endpoint_to_frontier=0.000 m, limit=0.10 m -> usable
+[controller_server-9] [INFO] [1790915514.876112152] [controller_server]: Passing new path to controller.
+
+Stopping experiment...
+Error in sitecustomize; set PYTHONVERBOSE for traceback:
+SyntaxError: future feature annotations is not defined (sitecustomize.py, line 10)
+Detectron v2 is not installed
+Traceback (most recent call last):
+  File "/work/com1/turtlebot4_project_mx029/mapex_lab/scripts/mapex_lama_worker.py", line 228, in <module>
+    main()
+  File "/work/com1/turtlebot4_project_mx029/mapex_lab/scripts/mapex_lama_worker.py", line 129, in main
+    for line in sys.stdin:
+KeyboardInterrupt
+[WARN] [1790915515.337187463] [mapex_explorer]: MAPEX SAVED: env=hospital, profile=hospital_slam, coverage=0.433012277, distance=56.67m, output=/work/com1/turtlebot4_project_mx029/mapex_lab/experiments/mapex/hpx_002
+Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:423
+[controller_server-9] [INFO] [1790915515.942761236] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915516.942782055] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915517.879629924] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 234 X 250 at 0.100000 m/pix
+[planner_server-11] [INFO] [1790915517.918695180] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 234 X 250 at 0.100000 m/pix
+[controller_server-9] [INFO] [1790915518.009421617] [controller_server]: Passing new path to controller.
+[controller_server-9] [INFO] [1790915519.009437961] [controller_server]: Passing new path to controller.
+MAPEX OFFLINE EVAL: env=hospital, IoU=0.248951, TU=0.490000, decisions=7
+[controller_server-9] [INFO] [1790915519.944296690] [controller_server]: Reached the goal!
+[controller_server-9] [INFO] [1790915519.944474505] [controller_server]: Optimizer reset
+[bt_navigator-14] [INFO] [1790915519.969136694] [bt_navigator]: Goal succeeded
+[controller_server-9] [INFO] [1790915520.406022344] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[collision_monitor-17] [INFO] [1790915520.406062626] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[planner_server-11] [INFO] [1790915520.406074165] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[velocity_smoother-16] [INFO] [1790915520.406074238] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[behavior_server-13] [INFO] [1790915520.406314066] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[behavior_server-13] [INFO] [1790915520.406702455] [behavior_server]: Running Nav2 LifecycleNode rcl preshutdown (behavior_server)
+[bt_navigator-14] [INFO] [1790915520.406565130] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[bt_navigator-14] [INFO] [1790915520.406839119] [bt_navigator]: Running Nav2 LifecycleNode rcl preshutdown (bt_navigator)
+[controller_server-9] [INFO] [1790915520.406180374] [controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)
+[planner_server-11] [INFO] [1790915520.406576231] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)
+[async_slam_toolbox_node-8] [INFO] [1790915520.406218191] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-2] [INFO] [1790915520.407291968] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[collision_monitor-17] [INFO] [1790915520.407943242] [collision_monitor]: Running Nav2 LifecycleNode rcl preshutdown (collision_monitor)
+[velocity_smoother-16] [INFO] [1790915520.408286235] [velocity_smoother]: Running Nav2 LifecycleNode rcl preshutdown (velocity_smoother)
+[controller_server-9] [INFO] [1790915520.409312378] [controller_server]: Deactivating
+[controller_server-9] [INFO] [1790915520.409346037] [MPPIController]: Deactivated MPPI Controller: FollowPath
+[controller_server-9] [INFO] [1790915520.411705780] [local_costmap.local_costmap]: Deactivating
+[lifecycle_manager-19] [INFO] [1790915520.409662742] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-19] [INFO] [1790915520.411935487] [lifecycle_manager_navigation]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_navigation)
+[opennav_docking-18] [INFO] [1790915520.411434235] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[opennav_docking-18] [INFO] [1790915520.412595325] [docking_server]: Running Nav2 LifecycleNode rcl preshutdown (docking_server)
+[route_server-12] [INFO] [1790915520.411453850] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[planner_server-11] [INFO] [1790915520.411512906] [planner_server]: Deactivating
+[planner_server-11] [INFO] [1790915520.412238295] [global_costmap.global_costmap]: Deactivating
+[bt_navigator-14] [INFO] [1790915520.411306574] [bt_navigator]: Deactivating
+[bt_navigator-14] [INFO] [1790915520.411610482] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[waypoint_follower-15] [INFO] [1790915520.411626234] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[waypoint_follower-15] [INFO] [1790915520.412854168] [waypoint_follower]: Running Nav2 LifecycleNode rcl preshutdown (waypoint_follower)
+[smoother_server-10] [INFO] [1790915520.409911365] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[smoother_server-10] [INFO] [1790915520.412621946] [smoother_server]: Running Nav2 LifecycleNode rcl preshutdown (smoother_server)
+[lifecycle_manager-19] [INFO] [1790915520.413772766] [lifecycle_manager_navigation]: [34m[1mTerminating bond timer...[0m[0m
+[route_server-12] [INFO] [1790915520.412340574] [route_server]: Running Nav2 LifecycleNode rcl preshutdown (route_server)
+[behavior_server-13] [INFO] [1790915520.411453033] [behavior_server]: Deactivating
+[behavior_server-13] [INFO] [1790915520.414065177] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.
+[robot_state_publisher-6] [INFO] [1790915520.411966134] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[collision_monitor-17] [INFO] [1790915520.412201153] [collision_monitor]: Deactivating
+[collision_monitor-17] [INFO] [1790915520.412227562] [collision_monitor]: Destroying bond (collision_monitor) to lifecycle manager.
+[image_bridge-3] [INFO] [1790915520.412360491] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[velocity_smoother-16] [INFO] [1790915520.413442166] [velocity_smoother]: Deactivating
+[velocity_smoother-16] [INFO] [1790915520.413872279] [velocity_smoother]: Destroying bond (velocity_smoother) to lifecycle manager.
+[image_bridge-4] [INFO] [1790915520.412650206] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[opennav_docking-18] [INFO] [1790915520.419569389] [docking_server]: Deactivating docking_server
+[route_server-12] [INFO] [1790915520.419747431] [route_server]: Deactivating
+[route_server-12] [INFO] [1790915520.421584832] [route_server]: Destroying bond (route_server) to lifecycle manager.
+[bt_navigator-14] [INFO] [1790915520.422161436] [bt_navigator]: Cleaning up
+[collision_monitor-17] [INFO] [1790915520.422459090] [collision_monitor]: Cleaning up
+[collision_monitor-17] [INFO] [1790915520.422645379] [collision_monitor]: [FootprintApproach]: Destroying Polygon
+[waypoint_follower-15] [INFO] [1790915520.422612563] [waypoint_follower]: Deactivating
+[waypoint_follower-15] [INFO] [1790915520.423444236] [waypoint_follower]: Destroying bond (waypoint_follower) to lifecycle manager.
+[smoother_server-10] [INFO] [1790915520.422614242] [smoother_server]: Deactivating
+[collision_monitor-17] [INFO] [1790915520.423327576] [collision_monitor]: [scan]: Destroying Scan
+[velocity_smoother-16] [INFO] [1790915520.424207021] [velocity_smoother]: Cleaning up
+[velocity_smoother-16] [INFO] [1790915520.424227148] [velocity_smoother]: Destroying bond (velocity_smoother) to lifecycle manager.
+[smoother_server-10] [INFO] [1790915520.424351648] [smoother_server]: Destroying bond (smoother_server) to lifecycle manager.
+[behavior_server-13] [INFO] [1790915520.424571862] [behavior_server]: Cleaning up
+[async_slam_toolbox_node-8] Unregistering sensor: Custom Described Lidar
+[waypoint_follower-15] [INFO] [1790915520.438712382] [waypoint_follower]: Cleaning up
+[route_server-12] [INFO] [1790915520.440157779] [route_server]: Cleaning up
+[smoother_server-10] [INFO] [1790915520.440871852] [smoother_server]: Cleaning up
+[collision_monitor-17] [INFO] [1790915520.444813660] [collision_monitor]: Destroying bond (collision_monitor) to lifecycle manager.
+[velocity_smoother-16] [INFO] [1790915520.447152900] [velocity_smoother]: Destroying
+[behavior_server-13] [INFO] [1790915520.455754976] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.
+[collision_monitor-17] [INFO] [1790915520.471656196] [collision_monitor]: Destroying
+[controller_server-9] [INFO] [1790915520.478261913] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
+[opennav_docking-18] [INFO] [1790915520.481409610] [docking_server]: Destroying bond (docking_server) to lifecycle manager.
+[waypoint_follower-15] [INFO] [1790915520.481429340] [waypoint_follower]: Destroying bond (waypoint_follower) to lifecycle manager.
+[controller_server-9] [INFO] [1790915520.488800744] [controller_server]: Cleaning up
+[smoother_server-10] [INFO] [1790915520.489190991] [smoother_server]: Destroying bond (smoother_server) to lifecycle manager.
+[controller_server-9] [INFO] [1790915520.491089815] [MPPIController]: Cleaned up MPPI Controller: FollowPath
+[opennav_docking-18] [INFO] [1790915520.491748161] [docking_server]: Cleaning up docking_server
+[controller_server-9] [INFO] [1790915520.491938801] [local_costmap.local_costmap]: Cleaning up
+[smoother_server-10] [INFO] [1790915520.492863706] [smoother_server]: Destroying
+[route_server-12] [INFO] [1790915520.499697976] [route_server]: Destroying bond (route_server) to lifecycle manager.
+[waypoint_follower-15] [INFO] [1790915520.504738914] [waypoint_follower]: Destroying
+[opennav_docking-18] [INFO] [1790915520.512493456] [docking_server]: Destroying bond (docking_server) to lifecycle manager.
+[route_server-12] [INFO] [1790915520.513723241] [route_server]: Destroying
+[behavior_server-13] [INFO] [1790915520.515354294] [behavior_server]: Destroying
+[opennav_docking-18] [INFO] [1790915520.526337688] [docking_server]: Destroying
+[bt_navigator-14] [INFO] [1790915520.543813850] [bt_navigator]: Completed Cleaning up
+[bt_navigator-14] [INFO] [1790915520.543865768] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[bt_navigator-14] [INFO] [1790915520.551065448] [bt_navigator]: Destroying
+[controller_server-9] [INFO] [1790915520.555834523] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
+[controller_server-9] [INFO] [1790915520.559615881] [local_costmap.local_costmap]: Destroying
+[controller_server-9] [INFO] [1790915520.571623401] [controller_server]: Destroying
+[lifecycle_manager-19] [INFO] [1790915520.616447723] [lifecycle_manager_navigation]: Destroying lifecycle_manager_navigation
+[INFO] [velocity_smoother-16]: process has finished cleanly [pid 6151]
+[INFO] [collision_monitor-17]: process has finished cleanly [pid 6152]
+[INFO] [robot_state_publisher-6]: process has finished cleanly [pid 5720]
+[INFO] [smoother_server-10]: process has finished cleanly [pid 6145]
+[INFO] [waypoint_follower-15]: process has finished cleanly [pid 6150]
+[INFO] [image_bridge-4]: process has finished cleanly [pid 5718]
+[INFO] [image_bridge-3]: process has finished cleanly [pid 5717]
+[INFO] [async_slam_toolbox_node-8]: process has finished cleanly [pid 6021]
+[INFO] [behavior_server-13]: process has finished cleanly [pid 6148]
+[INFO] [parameter_bridge-2]: process has finished cleanly [pid 5716]
+[INFO] [route_server-12]: process has finished cleanly [pid 6147]
+[INFO] [opennav_docking-18]: process has finished cleanly [pid 6153]
+[INFO] [bt_navigator-14]: process has finished cleanly [pid 6149]
+[INFO] [controller_server-9]: process has finished cleanly [pid 6144]
+[INFO] [lifecycle_manager-19]: process has finished cleanly [pid 6154]
+[planner_server-11] [INFO] [1790915520.919554137] [planner_server]: Deactivating plugin GridBased of type NavfnPlanner
+[planner_server-11] [INFO] [1790915520.919646271] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[planner_server-11] [INFO] [1790915520.930330489] [planner_server]: Cleaning up
+[planner_server-11] [INFO] [1790915520.952932783] [global_costmap.global_costmap]: Cleaning up
+[planner_server-11] [INFO] [1790915520.963268865] [planner_server]: Cleaning up plugin GridBased of type NavfnPlanner
+[planner_server-11] [INFO] [1790915520.963954090] [planner_server]: Destroying plugin GridBased of type NavfnPlanner
+[planner_server-11] [INFO] [1790915520.979423435] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[planner_server-11] [INFO] [1790915520.986743639] [global_costmap.global_costmap]: Destroying
+[planner_server-11] [INFO] [1790915521.004968165] [planner_server]: Destroying
+[INFO] [planner_server-11]: process has finished cleanly [pid 6146]
+WARNING: slam.launch.py did not stop after SIGINT; sending SIGTERM...
+WARNING: slam.launch.py still running; forcing SIGKILL...
+Experiment stopped.

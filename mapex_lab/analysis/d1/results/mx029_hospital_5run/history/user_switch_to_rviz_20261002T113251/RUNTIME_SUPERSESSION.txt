@@ -1,0 +1,5 @@
+MX029 runtime supersession by explicit USER request.
+Previous attempt: headless=True, use_rviz=False.
+New prospective cohort runtime: headless=True, use_rviz=True.
+Interrupted hpx_002 is preserved and excluded from the restarted cohort.
+Timestamp: 20261002T113251

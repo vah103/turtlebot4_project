@@ -1,0 +1,193 @@
+{
+  "completed_at_unix": 1790929458.575117,
+  "frozen": {
+    "configuration": {
+      "batch_driver": "33e007bc0c5d8093c02453e9e707eb25e06cd40fbd5ac1c786ffde7bd6e4e886",
+      "execution_runner": "eaeec6646580796447f2a4f99e13b021dbd731de844b873aecc500ad67d81980",
+      "hospital_gt_v2": "080c7d708f12ae71c1ed1881bfd630dbb491401d95831f613e3116cb9926dce1",
+      "hospital_gt_v2_roi": "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1",
+      "hospital_gt_v2_semantic": "d27ba692b313ba784729ea1fd10b2963c20fea9e4465d27081ece9c8757cf4ea",
+      "hospital_scale": "097782251c3141f58f3b2e0601f7307ca7c1e89e3c713737bcf0034fb5f2d985",
+      "hospital_world": "59d482029ad56dabf7ce9bb68ece16e476fd263c0ec57f237dff1f893880aeb0",
+      "mapex_config": "7e8f62db7f36322bb8f475400c707408bdb6d90d4f93fed0e3d41155d7fe2955",
+      "mapex_policy": "034c033d0a5d3b243b3cff200a3f9730f9dc4e056f475047d72fb3c538f79863",
+      "mapex_run": "1fecab233efd149e7fbc6ce2776421134244296228850e80804aa1665f4f36d9",
+      "nav2_override": "d9ea5a0e03387da3180ecd9f2bbc507ea93f6d304f7e18c576afe49d97efe370",
+      "nf_shared_execution": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e",
+      "runtime_launch": "e513d46e9446581902259580621336b8914e05d87325f2fdfff4837465d82b18"
+    },
+    "execution_mode": {
+      "headless": true,
+      "map_stall_min_decisions": 5,
+      "map_stall_timeout_s": 180.0,
+      "use_rviz": true
+    },
+    "experimental_early_stop_enabled": false,
+    "gt_v2": {
+      "binding_timing": "before_execution",
+      "roi_sha256": "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1",
+      "semantic_digest": "d27ba692b313ba784729ea1fd10b2963c20fea9e4465d27081ece9c8757cf4ea",
+      "sha256": "080c7d708f12ae71c1ed1881bfd630dbb491401d95831f613e3116cb9926dce1"
+    },
+    "provenance_label": "PROSPECTIVE_GT_V2",
+    "run_ids": [
+      "hpx_002",
+      "hpx_003",
+      "hpx_004",
+      "hpx_005"
+    ],
+    "sim_seed": null,
+    "sim_seed_policy": "intentionally_uncontrolled_gazebo_default_multiple_run_statistics",
+    "source_branch": "mapex-mx029-hospital-5run-v1",
+    "source_revision": "ab2b8020d987234d5a63fe4a0452b0f3e7847d63"
+  },
+  "legacy_run": {
+    "label": "LEGACY_RETROSPECTIVE_GT_V2",
+    "run_id": "hpx_001"
+  },
+  "preflight_verdict": "HPX001_DATA_REUSE_PASS",
+  "runs": {
+    "hpx_002": {
+      "attempts": 1,
+      "completed_at_unix": 1790917856.3639975,
+      "inventory": {
+        "artifact_count": 942,
+        "decision_count": 51,
+        "metadata_sha256": "26dffe0d93058e98d594f8f43f5cf24b31b36791d7706642c7e2a4c6f04e6532",
+        "missing_required_files": [],
+        "prediction_counts": {
+          "g1": 51,
+          "g2": 51,
+          "g3": 51,
+          "mean": 51,
+          "variance": 51
+        },
+        "status": "COMPLETED",
+        "summary_sha256": "deb316fc0b2795063e01dadb2254fbaf28e236c449fa69410df86e2730cbcdb9",
+        "termination_reason": "exploration_complete"
+      },
+      "log": "mapex_lab/analysis/d1/results/mx029_hospital_5run/logs/hpx_002_attempt01.log",
+      "returncode": 0,
+      "started_at_unix": 1790915666.116124,
+      "status": "COMPLETED"
+    },
+    "hpx_003": {
+      "attempts": 1,
+      "completed_at_unix": 1790920855.578043,
+      "inventory": {
+        "artifact_count": 896,
+        "decision_count": 49,
+        "metadata_sha256": "99782d8eb9106ef13c883c864b5237df778f78e3f6c3ca428224aebc011ea6ae",
+        "missing_required_files": [],
+        "prediction_counts": {
+          "g1": 49,
+          "g2": 49,
+          "g3": 49,
+          "mean": 49,
+          "variance": 49
+        },
+        "status": "COMPLETED",
+        "summary_sha256": "170ad71172bdedaddf0c1aafc63e2b94203a0f14425a375b47cea697725b1d30",
+        "termination_reason": "exploration_complete"
+      },
+      "log": "mapex_lab/analysis/d1/results/mx029_hospital_5run/logs/hpx_003_attempt01.log",
+      "returncode": 0,
+      "started_at_unix": 1790918607.2180102,
+      "status": "COMPLETED"
+    },
+    "hpx_004": {
+      "attempts": 2,
+      "completed_at_unix": 1790925899.4728892,
+      "inventory": {
+        "artifact_count": 971,
+        "decision_count": 52,
+        "metadata_sha256": "45c4d4e4f85f963afb912fee9574232e34fa62a89fc073869bd1b2cf7c2ea5ea",
+        "missing_required_files": [],
+        "prediction_counts": {
+          "g1": 52,
+          "g2": 52,
+          "g3": 52,
+          "mean": 52,
+          "variance": 52
+        },
+        "status": "COMPLETED",
+        "summary_sha256": "cd785abed9bfee9c862ed923aa4b8dd8992a5331582c637c0bed554d199d33e8",
+        "termination_reason": "exploration_complete"
+      },
+      "last_abort": {
+        "archived_log": "mapex_lab/analysis/d1/results/mx029_hospital_5run/technical_aborts/hpx_004_attempt01_machine_crash_20261002T134707/hpx_004_attempt01.log",
+        "archived_run": "mapex_lab/analysis/d1/results/mx029_hospital_5run/technical_aborts/hpx_004_attempt01_machine_crash_20261002T134707",
+        "attempt": 1,
+        "classification": "USER_REPORTED_MACHINE_CRASH",
+        "manifest_status_before_recovery": "RUNNING",
+        "preserved_at": "20261002T134707",
+        "run_id": "hpx_004",
+        "status": "TECHNICAL_ABORT"
+      },
+      "log": "mapex_lab/analysis/d1/results/mx029_hospital_5run/logs/hpx_004_attempt02.log",
+      "returncode": 0,
+      "started_at_unix": 1790923649.12223,
+      "status": "COMPLETED"
+    },
+    "hpx_005": {
+      "attempts": 2,
+      "completed_at_unix": 1790929021.5037498,
+      "inventory": {
+        "artifact_count": 911,
+        "decision_count": 50,
+        "metadata_sha256": "6f7dfdbe3d0607be2f324bc1279f291d54b0d403a10f1b7c4f50340152f17958",
+        "missing_required_files": [],
+        "prediction_counts": {
+          "g1": 50,
+          "g2": 50,
+          "g3": 50,
+          "mean": 50,
+          "variance": 50
+        },
+        "status": "COMPLETED",
+        "summary_sha256": "2f64d1971fafe78a6c2832be0cfa79fc7254c4c62c8e7cd693f0b6cc21327959",
+        "termination_reason": "exploration_complete"
+      },
+      "last_abort": {
+        "archived_log": "mapex_lab/analysis/d1/results/mx029_hospital_5run/technical_aborts/hpx_005_attempt01_user_rerun_wall_contact_20261002T144209/hpx_005_attempt01.log",
+        "archived_run": "mapex_lab/analysis/d1/results/mx029_hospital_5run/technical_aborts/hpx_005_attempt01_user_rerun_wall_contact_20261002T144209",
+        "attempt": 1,
+        "classification": "USER_REQUESTED_RERUN_AFTER_WALL_CONTACT",
+        "manifest_status_before_recovery": "RUNNING",
+        "preserved_at": "20261002T144209",
+        "run_id": "hpx_005",
+        "status": "TECHNICAL_ABORT"
+      },
+      "log": "mapex_lab/analysis/d1/results/mx029_hospital_5run/logs/hpx_005_attempt02.log",
+      "returncode": 0,
+      "started_at_unix": 1790926991.290176,
+      "status": "COMPLETED"
+    }
+  },
+  "schema": "mx029_hospital_batch_state_v1",
+  "status": "COLLECTION_COMPLETE",
+  "stopped_after_run_id": "hpx_005",
+  "task": "MX029",
+  "technical_aborts": [
+    {
+      "archived_log": "mapex_lab/analysis/d1/results/mx029_hospital_5run/technical_aborts/hpx_004_attempt01_machine_crash_20261002T134707/hpx_004_attempt01.log",
+      "archived_run": "mapex_lab/analysis/d1/results/mx029_hospital_5run/technical_aborts/hpx_004_attempt01_machine_crash_20261002T134707",
+      "attempt": 1,
+      "classification": "USER_REPORTED_MACHINE_CRASH",
+      "manifest_status_before_recovery": "RUNNING",
+      "preserved_at": "20261002T134707",
+      "run_id": "hpx_004",
+      "status": "TECHNICAL_ABORT"
+    },
+    {
+      "archived_log": "mapex_lab/analysis/d1/results/mx029_hospital_5run/technical_aborts/hpx_005_attempt01_user_rerun_wall_contact_20261002T144209/hpx_005_attempt01.log",
+      "archived_run": "mapex_lab/analysis/d1/results/mx029_hospital_5run/technical_aborts/hpx_005_attempt01_user_rerun_wall_contact_20261002T144209",
+      "attempt": 1,
+      "classification": "USER_REQUESTED_RERUN_AFTER_WALL_CONTACT",
+      "manifest_status_before_recovery": "RUNNING",
+      "preserved_at": "20261002T144209",
+      "run_id": "hpx_005",
+      "status": "TECHNICAL_ABORT"
+    }
+  ]
+}

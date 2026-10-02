@@ -1,0 +1,8 @@
+decision_id,time_s,distance_m,occupied_iou,tu,tu_succeeded,tu_failed,tu_total,mean_map,prediction_map,prediction_source,ensemble_mean_occupied_iou,ensemble_mean_tu
+1,0.000000000,0.000000000,0.040992482,0.460000000,46,54,100,predictions/decision_000001_mean.npz,predictions/decision_000001_mean.npz,mean_map,,
+2,4.998935699,0.593238443,0.097127728,0.410000000,41,59,100,predictions/decision_000002_mean.npz,predictions/decision_000002_mean.npz,mean_map,,
+3,20.998516321,3.682617327,0.187920093,0.480000000,48,52,100,predictions/decision_000003_mean.npz,predictions/decision_000003_mean.npz,mean_map,,
+4,47.998425007,13.559379194,0.191814256,0.480000000,48,52,100,predictions/decision_000004_mean.npz,predictions/decision_000004_mean.npz,mean_map,,
+5,71.998160839,21.071223848,0.197387247,0.490000000,49,51,100,predictions/decision_000005_mean.npz,predictions/decision_000005_mean.npz,mean_map,,
+6,104.998261929,33.659537293,0.198500000,0.480000000,48,52,100,predictions/decision_000006_mean.npz,predictions/decision_000006_mean.npz,mean_map,,
+7,153.998289108,52.699491341,0.248951440,0.490000000,49,51,100,predictions/decision_000007_mean.npz,predictions/decision_000007_mean.npz,mean_map,,

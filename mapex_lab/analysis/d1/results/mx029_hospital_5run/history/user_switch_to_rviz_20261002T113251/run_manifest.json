@@ -1,0 +1,71 @@
+{
+  "frozen": {
+    "configuration": {
+      "batch_driver": "5f9f90030cbf462df9b6839c861345d6767e330341ebc074f61e86ead952407a",
+      "execution_runner": "eaeec6646580796447f2a4f99e13b021dbd731de844b873aecc500ad67d81980",
+      "hospital_gt_v2": "080c7d708f12ae71c1ed1881bfd630dbb491401d95831f613e3116cb9926dce1",
+      "hospital_gt_v2_roi": "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1",
+      "hospital_gt_v2_semantic": "d27ba692b313ba784729ea1fd10b2963c20fea9e4465d27081ece9c8757cf4ea",
+      "hospital_scale": "097782251c3141f58f3b2e0601f7307ca7c1e89e3c713737bcf0034fb5f2d985",
+      "hospital_world": "59d482029ad56dabf7ce9bb68ece16e476fd263c0ec57f237dff1f893880aeb0",
+      "mapex_config": "7e8f62db7f36322bb8f475400c707408bdb6d90d4f93fed0e3d41155d7fe2955",
+      "mapex_policy": "034c033d0a5d3b243b3cff200a3f9730f9dc4e056f475047d72fb3c538f79863",
+      "mapex_run": "1fecab233efd149e7fbc6ce2776421134244296228850e80804aa1665f4f36d9",
+      "nav2_override": "d9ea5a0e03387da3180ecd9f2bbc507ea93f6d304f7e18c576afe49d97efe370",
+      "nf_shared_execution": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e",
+      "runtime_launch": "e513d46e9446581902259580621336b8914e05d87325f2fdfff4837465d82b18"
+    },
+    "execution_mode": {
+      "headless": true,
+      "map_stall_min_decisions": 5,
+      "map_stall_timeout_s": 180.0,
+      "use_rviz": false
+    },
+    "experimental_early_stop_enabled": false,
+    "gt_v2": {
+      "binding_timing": "before_execution",
+      "roi_sha256": "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1",
+      "semantic_digest": "d27ba692b313ba784729ea1fd10b2963c20fea9e4465d27081ece9c8757cf4ea",
+      "sha256": "080c7d708f12ae71c1ed1881bfd630dbb491401d95831f613e3116cb9926dce1"
+    },
+    "provenance_label": "PROSPECTIVE_GT_V2",
+    "run_ids": [
+      "hpx_002",
+      "hpx_003",
+      "hpx_004",
+      "hpx_005"
+    ],
+    "sim_seed": null,
+    "sim_seed_policy": "intentionally_uncontrolled_gazebo_default_multiple_run_statistics",
+    "source_branch": "mapex-mx029-hospital-5run-v1",
+    "source_revision": "662efd4a17a33efc19bee84a628dd1dacb799fc3"
+  },
+  "legacy_run": {
+    "label": "LEGACY_RETROSPECTIVE_GT_V2",
+    "run_id": "hpx_001"
+  },
+  "preflight_verdict": "HPX001_DATA_REUSE_PASS",
+  "runs": {
+    "hpx_002": {
+      "attempts": 1,
+      "log": "mapex_lab/analysis/d1/results/mx029_hospital_5run/logs/hpx_002_attempt01.log",
+      "started_at_unix": 1790915246.390816,
+      "status": "RUNNING"
+    },
+    "hpx_003": {
+      "attempts": 0,
+      "status": "PENDING"
+    },
+    "hpx_004": {
+      "attempts": 0,
+      "status": "PENDING"
+    },
+    "hpx_005": {
+      "attempts": 0,
+      "status": "PENDING"
+    }
+  },
+  "schema": "mx029_hospital_batch_state_v1",
+  "task": "MX029",
+  "technical_aborts": []
+}
