@@ -1,0 +1,7 @@
+gate,status,value,requirement
+S1,FAIL,0/10,10/10 outer folds admissible
+S2,PASS,premature=0;severe=0,held-out premature=0; SevereFalseStop10=0; retrospective non-regression only
+S3,FAIL,fired=0;positive=0;median_delay=NA,fired>=8; positive>=7; finite median delay<=3
+S4,FAIL,full_status=NO_ADMISSIBLE_MX035_FULL_FIT;q_full=None;exact_q=0;theta_range=nan;J_range=nan,full fit exists; >=7 exact q; theta range<=0.25; J range<=1
+S5,PASS,blob_fail=0;value_fail=0;base_parity_fail=0;monotonicity=0,365-row base parity + source/key/value integrity + monotonicity
+S6,PASS,adversarial=11/11,A1-A11 exact semantics

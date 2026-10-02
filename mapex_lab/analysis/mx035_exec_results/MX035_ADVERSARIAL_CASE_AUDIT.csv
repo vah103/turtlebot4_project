@@ -1,0 +1,12 @@
+audit,semantic_pass,detail
+A1,1,mpx_001 d20 R>5 RUN/no candidate; d21 R<5 Topo invalid RESET/no STOP; base first d23
+A2,1,"mpx_002 d15 R>5 no candidate; d18 legitimate entry, no entry-row STOP"
+A3,1,"10/10 Oracle anchors State B + positive Delta; evaluator-only, not absolute-zero requirement"
+A4,1,State A IG NA remains semantically frontier-weak; Topo invalid prevents STOP
+A5,1,accepted State-C row causes active-episode RESET; IG not imputed; no same-row rearm
+A6,1,Topo-invalid active row resets; immediate next accepted row clears RESET->RUN and can re-arm
+A7,1,signed negative Coverage preserved; CoverageWeak=false; no clamp
+A8,1,mpx_007 J=2 weak streak at d20 resets on real d21 IG rebound
+A9,1,synthetic R rebound: no same-row rearm; immediately next row processes under RUN and can re-arm
+A10,1,third actual post-entry row reaches H_max=>ABSTAIN_LOCKED; no later rearm
+A11,1,run ends age=2 unresolved: NO_STOP_END_OF_RUN_RECHECK; no synthetic timeout/decision

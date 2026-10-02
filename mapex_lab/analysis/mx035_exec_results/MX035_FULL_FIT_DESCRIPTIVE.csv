@@ -1,0 +1,6 @@
+row_type,qid,theta,J,truth_valid_run_count,required_fired_run_count,required_positive_saving_run_count,fired_run_count,positive_saving_run_count,StopCoverage,PositiveSavingCoverage,premature_stop_count,SevereFalseStop10_count,median_nonpremature_DelayDecisions,mean_nonpremature_DelayDecisions,nonpremature_delay_support,MeanSavedProgress,NO_STOP_count,NO_STOP_END_OF_RUN_RECHECK_count,ABSTAIN_LOCKED_count,integrity_failure_count,admissible,selector_rank,selected_full_fit,full_fit_status
+CANDIDATE,Q1,0.5,1,10,8,7,7,7,0.7,0.7,0,0,6.0,6.571428571428571,7,0.22970860838507895,3,0,0,0,0,,0,
+CANDIDATE,Q2,0.5,2,10,8,7,5,5,0.5,0.5,0,0,13.0,11.2,5,0.1072027972027972,5,0,0,0,0,,0,
+CANDIDATE,Q3,0.75,1,10,8,7,8,8,0.8,0.8,0,0,4.5,5.375,8,0.2951928790164084,2,0,0,0,0,,0,
+CANDIDATE,Q4,0.75,2,10,8,7,5,5,0.5,0.5,0,0,11.0,10.0,5,0.12252331002331003,5,0,0,0,0,,0,
+FULL_FIT_SUMMARY,,,,10,8,7,,,,,,,,,,,,,,,0,,0,NO_ADMISSIBLE_MX035_FULL_FIT

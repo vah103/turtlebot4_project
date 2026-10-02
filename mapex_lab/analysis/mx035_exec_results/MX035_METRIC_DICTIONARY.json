@@ -1,0 +1,63 @@
+{
+  "ABSTAIN_LOCKED": "only when third actual post-entry accepted decision is processed without STOP",
+  "CoverageWeak": "GainRatio<=theta for valid nonnegative gain; regression/unavailable false and weak_streak reset",
+  "FrontierWeak": "State A true; State B IGRatio<=theta when causal IG_ref finite; State C resets",
+  "GainCells": "DeltaKnownArea_m2 / raw_resolution^2 when Coverage valid and Delta/Rate nonnegative",
+  "Gain_ref": "median eligible GainCells in W_ref; required for candidate entry",
+  "IG_ref": "median finite nonnegative State-B IG in W_ref; NA allowed",
+  "JointWeak": "FrontierWeak AND CoverageWeak",
+  "NO_STOP_END_OF_RUN_RECHECK": "end of accepted run while TEMPORAL_RECHECK age<3; ordinary non-fire denominator; no synthetic decision",
+  "RESET_ABSTAIN": "row causing reset cannot rearm; next accepted row clears RESET before evaluating same row once under RUN",
+  "W_ref": "t0 plus at most two immediately preceding accepted same-run decisions; no back-search",
+  "candidate_entry_counts_toward_J": false,
+  "classification_order": [
+    "MX035_INVALID_EXECUTION",
+    "MX035_TEMPORAL_RECHECK_SAFETY_FAIL",
+    "MX035_TEMPORAL_RECHECK_NO_STABLE_CANDIDATE",
+    "MX035_TEMPORAL_RECHECK_RETROSPECTIVE_CANDIDATE"
+  ],
+  "evaluator_only": [
+    "Oracle",
+    "P correctness",
+    "truth-conditioned U",
+    "retrospective/future topology"
+  ],
+  "fixed_backbone": {
+    "B_ref_accepted_decisions": 3,
+    "H_max_post_entry_decisions": 3,
+    "K": 1,
+    "R_threshold": 0.05,
+    "TopoValid_required": true
+  },
+  "method_commit": "5842dd9a6fb34bb6266904bdd943dfdc514db38b",
+  "online_fields": [
+    "R_map",
+    "R_available",
+    "TopoValid",
+    "FrontierState",
+    "State-B IG_selected",
+    "accepted same-run history <=t",
+    "Coverage fields",
+    "raw_resolution",
+    "episode memory"
+  ],
+  "q_domain": {
+    "Q1": {
+      "J": 1,
+      "theta": 0.5
+    },
+    "Q2": {
+      "J": 2,
+      "theta": 0.5
+    },
+    "Q3": {
+      "J": 1,
+      "theta": 0.75
+    },
+    "Q4": {
+      "J": 2,
+      "theta": 0.75
+    }
+  },
+  "schema": "mx035_metric_dictionary_v2_execution"
+}
