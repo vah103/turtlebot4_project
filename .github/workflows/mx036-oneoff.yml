@@ -1,0 +1,39 @@
+name: MX036 one-off Analyst04 execution
+
+on:
+  push:
+    branches:
+      - mx036-analyst04-exec-v1
+    paths:
+      - mapex_lab/analysis/mx035_exec.py
+      - .github/workflows/mx036-oneoff.yml
+
+permissions:
+  contents: write
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout execution branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Execute frozen MX035 V2
+        run: |
+          python mapex_lab/analysis/mx035_exec.py
+
+      - name: Freeze result candidate
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mapex_lab/analysis/mx035_exec_results
+          git diff --cached --quiet && { echo "No MX035 result artifacts produced"; exit 1; }
+          git commit -m "MX036: freeze MX035 V2 Analyst04 result candidate"
+          git push origin HEAD:mx036-analyst04-exec-v1
