@@ -1,0 +1,17 @@
+MX049_RESOLVE_ONLY_PASS
+world_path=/home/dell/turtlebot4_project_mx050/mapex_lab/map/generated/mx049_fresh_dell/layout_49001/world.sdf
+world_sha256=f108cc233848d8cfd15438735b96ed1972c2f2d7b0729a146bfe427f05744296
+layout_config_path=/home/dell/turtlebot4_project_mx050/mapex_lab/map/generated/mx049_fresh_dell/layout_49001/layout_config.json
+layout_config_sha256=eaf710445acb8e8a0392c511dc3122cc1d90d484d1fb2841dffa3de8406f591d
+world_identity_sha256=537867208a44c89de987f2b62f8105ae77c2dc40b37af06e9435c90938118888
+spawn=(0.0,3.0,0.0)
+gazebo_seed=960057065
+
+Stopping experiment...
+Experiment stopped.
+
+--- DRY LAUNCH ---
+[INFO] [launch]: All log files can be found below /home/dell/.ros/log/2026-10-03-21-08-04-214203-dell-191827
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [launch.user]: MX048_LAUNCH_BINDING_PASS world_path=/home/dell/turtlebot4_project_mx050/mapex_lab/map/generated/mx049_fresh_dell/layout_49001/world.sdf world_sha256=f108cc233848d8cfd15438735b96ed1972c2f2d7b0729a146bfe427f05744296 layout_config_path=/home/dell/turtlebot4_project_mx050/mapex_lab/map/generated/mx049_fresh_dell/layout_49001/layout_config.json layout_config_sha256=eaf710445acb8e8a0392c511dc3122cc1d90d484d1fb2841dffa3de8406f591d spawn=(0.0,3.0,0.0)
+

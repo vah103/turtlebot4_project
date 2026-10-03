@@ -1,10 +1,10 @@
 # MX049 / MX050 DELL implementation and acquisition preflight report
 
 - Classification: **MX049_DELL_PREFLIGHT_PASS_READY_FOR_MX050_COLLECTION**
-- Technical repo commit: 2b44f5ca2becb94abb2d1d3cac3b3dbbff923fdd
+- Technical repo commit: 5b2a266626a40399970293f81f49ee455a99b991
 - Contract: 928be24d768f821f20155864d641e78bf9b31dcd / blob 731c53555318efa079629485b3622d54a2660c84
 - Addendum: bdaaceb10b7f4a102e6e1b5dc1a9bf3d27cdf0a8 / blob dcdffdbf4e3c6d62a845ea2c32e6a098cdc7bb0a
-- Manifest SHA256: 3350e3f32752d5387e3f77ca6e6578e34409bed7aecc0f711c30cf5dd167d01b
+- Manifest SHA256: 2acb6f98e0955d74911cb7e7f6b00c983daa17e79e429a7a88febe81e1188e3a
 - DELL P1: DELL_ONLY_TWO_ROOTS_PASS
 
 ## P1-P18
@@ -19,7 +19,7 @@
 - P8: **PASS** - metadata allowed; raw numeric/GT/ROI/evaluator reads denied
 - P9: **PASS** - synthetic unseal opens authorized path; incomplete/inconsistent unseal denied
 - P10: **PASS** - manifest world/config resolves through canonical runner
-- P11: **PASS** - {"acquisition_only": true, "actual_world_sha256": "f108cc233848d8cfd15438735b96ed1972c2f2d7b0729a146bfe427f05744296", "environment_world": "mapex_lab/map/generated/mx049_fresh_dell/layout_49001/world.sdf", "expected_layout_config_sha256": "15c6fde6c9f9162d7d0bb091cdf24d8923c30e817e43484eece7dc952e6b6be4", "expected_world_sha256": "f108cc233848d8cfd15438735b96ed1972c2f2d7b0729a146bfe427f05744296", "launch_spawn": {"x_m": 0.0, "y_m": 3.0, "yaw_rad": 0.0}, "layout_config_sha256": "15c6fde6c9f9162d7d0bb091cdf24d8923c30e817e43484eece7dc952e6b6be4", "world_identity_sha256": "95dbd3a72e79248d9e14b3c23099cdc6ee37446e9455f7f26dfa5c84579d1733"}
+- P11: **PASS** - {"acquisition_only": true, "actual_world_sha256": "f108cc233848d8cfd15438735b96ed1972c2f2d7b0729a146bfe427f05744296", "environment_world": "mapex_lab/map/generated/mx049_fresh_dell/layout_49001/world.sdf", "expected_layout_config_sha256": "eaf710445acb8e8a0392c511dc3122cc1d90d484d1fb2841dffa3de8406f591d", "expected_world_sha256": "f108cc233848d8cfd15438735b96ed1972c2f2d7b0729a146bfe427f05744296", "launch_spawn": {"x_m": 0.0, "y_m": 3.0, "yaw_rad": 0.0}, "layout_config_sha256": "eaf710445acb8e8a0392c511dc3122cc1d90d484d1fb2841dffa3de8406f591d", "world_identity_sha256": "537867208a44c89de987f2b62f8105ae77c2dc40b37af06e9435c90938118888"}
 - P12: **PASS** - one-byte world mutation rejected
 - P13: **PASS** - 12/12 bindings verify
 - P14: **PASS** - generated world path only

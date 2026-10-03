@@ -1,0 +1,97 @@
+layout_seed,run_seed,component_tag,derived_seed,status,component_version,binding_proof,use_proof,reason
+49001,1,gazebo,960057065,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49001,1,exploration,657206563,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49001,1,planner,1594076057,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49001,1,sensor,1132182544,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49001,2,gazebo,630867375,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49001,2,exploration,1945963733,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49001,2,planner,687714731,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49001,2,sensor,875173746,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49002,1,gazebo,1863262957,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49002,1,exploration,414222073,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49002,1,planner,1939921417,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49002,1,sensor,267362284,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49002,2,gazebo,329397824,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49002,2,exploration,842350011,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49002,2,planner,804776269,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49002,2,sensor,999315438,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49003,1,gazebo,1601982826,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49003,1,exploration,494734918,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49003,1,planner,2071739563,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49003,1,sensor,572026228,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49003,2,gazebo,1342103693,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49003,2,exploration,725794700,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49003,2,planner,1123959255,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49003,2,sensor,1500831536,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49004,1,gazebo,419379748,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49004,1,exploration,1288488729,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49004,1,planner,993210654,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49004,1,sensor,44859589,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49004,2,gazebo,786582979,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49004,2,exploration,612416313,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49004,2,planner,1302941295,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49004,2,sensor,672156001,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49005,1,gazebo,961918865,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49005,1,exploration,571837999,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49005,1,planner,142923561,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49005,1,sensor,145386298,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49005,2,gazebo,204367508,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49005,2,exploration,814923483,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49005,2,planner,1161728416,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49005,2,sensor,1869728192,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49006,1,gazebo,1650188234,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49006,1,exploration,1068590286,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49006,1,planner,1960021572,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49006,1,sensor,1009809450,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49006,2,gazebo,834879043,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49006,2,exploration,1677135098,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49006,2,planner,1400520698,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49006,2,sensor,1307345944,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49007,1,gazebo,430162273,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49007,1,exploration,419558029,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49007,1,planner,1868701299,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49007,1,sensor,1841023644,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49007,2,gazebo,105601891,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49007,2,exploration,1368697011,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49007,2,planner,132663181,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49007,2,sensor,1685886693,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49008,1,gazebo,1183031188,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49008,1,exploration,1153039949,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49008,1,planner,1080506313,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49008,1,sensor,379547326,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49008,2,gazebo,1078936914,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49008,2,exploration,63936271,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49008,2,planner,1174876577,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49008,2,sensor,945760192,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49009,1,gazebo,2119341447,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49009,1,exploration,1850521762,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49009,1,planner,667519907,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49009,1,sensor,334890143,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49009,2,gazebo,593438012,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49009,2,exploration,1429161217,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49009,2,planner,1744353643,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49009,2,sensor,1944953346,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49010,1,gazebo,2031084460,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49010,1,exploration,1041938815,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49010,1,planner,1651838912,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49010,1,sensor,2033337719,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49010,2,gazebo,1145185710,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49010,2,exploration,1169520895,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49010,2,planner,1109288908,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49010,2,sensor,1315239073,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49011,1,gazebo,451742954,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49011,1,exploration,2009597607,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49011,1,planner,1364444724,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49011,1,sensor,1479479442,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49011,2,gazebo,655650547,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49011,2,exploration,183929144,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49011,2,planner,1443881106,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49011,2,sensor,1323294661,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49012,1,gazebo,1038180874,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49012,1,exploration,1640605543,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49012,1,planner,1108157441,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49012,1,sensor,651509328,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49012,2,gazebo,183816113,SEEDED_EFFECTIVE,Gazebo Sim 8.11.0,MX049_GAZEBO_SEED_BINDING_PROBE.log,installed gz sim -h states --seed passes custom seed to random number generator,
+49012,2,exploration,205361012,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49012,2,planner,245286794,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
+49012,2,sensor,1854449755,UNSEEDED_RUNTIME_NONDETERMINISM,frozen_runtime_component,,,no verified seed interface; derived seed retained in provenance
