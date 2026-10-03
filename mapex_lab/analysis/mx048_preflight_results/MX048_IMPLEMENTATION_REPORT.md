@@ -1,0 +1,32 @@
+# MX048 implementation / acquisition preflight report
+
+- Classification: **MX048_PREFLIGHT_PASS_READY_FOR_MX046_COLLECTION**
+- Technical repo commit: 82f5fae6265d7f714a96a82f41e5cb61ffe03904
+- Contract: 928be24d768f821f20155864d641e78bf9b31dcd / blob 731c53555318efa079629485b3622d54a2660c84
+- Manifest SHA256: 49fc5392f7b5acbdce46cff1266c30c645412264792f7f6108cd2c646073217e
+- Cross-machine: PASS
+
+## P1-P18
+
+- P1: **PASS** - two-root determinism; cross-machine=PASS
+- P2: **PASS** - 12/12 unique
+- P3: **PASS** - 12/12 accepted; V1-V9 PASS
+- P4: **PASS** - exact split/role mapping
+- P5: **PASS** - 24 run slots recompute; geometry/config unchanged by run seed
+- P6: **PASS** - Gazebo SEEDED_EFFECTIVE via startup readback + installed RNG seed trace
+- P7: **PASS** - acquisition_only suppresses offline evaluator
+- P8: **PASS** - metadata allowed; raw numeric/GT/ROI/evaluator reads denied
+- P9: **PASS** - synthetic unseal opens authorized path; incomplete/inconsistent unseal denied
+- P10: **PASS** - manifest world/config resolves through canonical runner
+- P11: **PASS** - {"acquisition_only": true, "actual_world_sha256": "e896c06a3c49297a43eb459755f80ec666d60a0b43fd26178792c6a836da0ca7", "environment_world": "mapex_lab/map/generated/mx045_shadow/layout_45001/world.sdf", "layout_config_sha256": "91e2aea82d7783c09a28c3fb3afe482e2d14c2a5981dfd1468abb6e724c49364", "world_identity_sha256": "bae4203bd300202de921858e2a9a20be8d98cd56b268778d99eebd3d83e6fb60"}
+- P12: **PASS** - one-byte world mutation rejected
+- P13: **PASS** - 12/12 bindings verify
+- P14: **PASS** - generated world path only
+- P15: **PASS** - no derived outputs; numeric denylist enforced
+- P16: **PASS** - {"scientific": {"action": "NO_RESERVE", "scientific_weakness_count": 1, "split": "development"}, "second_failure": {"action": "GLOBAL_INSUFFICIENT_BLOCK", "invalid_primary_layouts": [45001, 45002], "split": "development"}, "technical": {"action": "ACTIVATE_WHOLE_LAYOUT_RESERVE", "excluded_layout": 45001, "required_run_seeds": [1, 2], "reserve_layout": 45011, "split": "development"}}
+- P17: **PASS** - generator imports contain no telemetry/scoring/outcome dependency
+- P18: **PASS** - manifest complete; deterministic identity scan clean
+
+## Collection gate
+
+Durable token: MX048_PREFLIGHT_PASS_READY_FOR_MX046_COLLECTION
