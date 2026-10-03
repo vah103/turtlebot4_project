@@ -10,6 +10,7 @@ ENVIRONMENT_ARG=""
 RECORD_ARG=""
 RUN_ID_ARG=""
 MX045_MANIFEST_ARG=""
+MX049_MANIFEST_MODE=0
 MX045_LAYOUT_SEED_ARG=""
 MX045_RUN_SEED_ARG=""
 MX045_ACQUISITION_ONLY=0
@@ -20,6 +21,7 @@ usage() {
 Usage: ./run [--paper500] [--method nf|mapex] [--environment new_room]
              [--record yes|no] [--run-id ID]
              [--mx045-manifest PATH --layout-seed N --run-seed N --acquisition-only]
+             [--mx049-manifest PATH --layout-seed N --run-seed N --acquisition-only]
              [--mx045-resolve-only]
 
   --paper500   Enable the approved R003 New Room paper500 recorder profile.
@@ -53,6 +55,11 @@ while (( $# > 0 )); do
       ;;
     --mx045-manifest)
       MX045_MANIFEST_ARG="${2:?--mx045-manifest requires a value}"
+      shift 2
+      ;;
+    --mx049-manifest)
+      MX045_MANIFEST_ARG="${2:?--mx049-manifest requires a value}"
+      MX049_MANIFEST_MODE=1
       shift 2
       ;;
     --layout-seed)
@@ -639,7 +646,15 @@ if [[ -n "$MX045_MANIFEST_ARG" ]]; then
     echo "ERROR: MX045 manifest execution requires --layout-seed and --run-seed."
     exit 21
   fi
-  eval "$("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mx048_acquisition.py" resolve-run --repo-root "$ROOT_DIR" --manifest "$MX045_MANIFEST_ARG" --layout-seed "$MX045_LAYOUT_SEED_ARG" --run-seed "$MX045_RUN_SEED_ARG" --shell)"
+  if [[ "$MX049_MANIFEST_MODE" -eq 1 ]]; then
+    MX049_TOKEN_ARG=(--require-pass-token)
+    if [[ "$MX045_RESOLVE_ONLY" -eq 1 ]]; then
+      MX049_TOKEN_ARG=()
+    fi
+    eval "$("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mx049_acquisition.py" resolve-run --repo-root "$ROOT_DIR" --manifest "$MX045_MANIFEST_ARG" --layout-seed "$MX045_LAYOUT_SEED_ARG" --run-seed "$MX045_RUN_SEED_ARG" "${MX049_TOKEN_ARG[@]}" --shell)"
+  else
+    eval "$("$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mx048_acquisition.py" resolve-run --repo-root "$ROOT_DIR" --manifest "$MX045_MANIFEST_ARG" --layout-seed "$MX045_LAYOUT_SEED_ARG" --run-seed "$MX045_RUN_SEED_ARG" --shell)"
+  fi
   WORLD_SELECTOR="$MX045_WORLD_PATH"
   MAP_LABEL="MX045 layout $MX045_LAYOUT_SEED"
   if [[ -n "$RUN_ID_ARG" && "$RUN_ID_ARG" != "$MX045_RUN_ID" ]]; then
@@ -648,7 +663,7 @@ if [[ -n "$MX045_MANIFEST_ARG" ]]; then
   fi
   RUN_ID_ARG="$MX045_RUN_ID"
   if [[ "$MX045_RESOLVE_ONLY" -eq 1 ]]; then
-    echo "MX048_RESOLVE_ONLY_PASS"
+    echo "MX049_RESOLVE_ONLY_PASS"
     echo "world_path=$MX045_WORLD_PATH"
     echo "world_sha256=$MX045_WORLD_SHA256"
     echo "layout_config_path=$MX045_LAYOUT_CONFIG_PATH"
@@ -753,6 +768,13 @@ elif [[ "$METHOD" == "mapex" && "$RECORD" == "yes" ]]; then
       --spawn-y-m "$MX045_SPAWN_Y_M"
       --spawn-yaw-rad "$MX045_SPAWN_YAW_RAD"
       --confirmation-state "$MX045_CONFIRMATION_STATE"
+      --cohort-id "${MX049_COHORT_ID:-}"
+      --machine-id-sha256 "${MX049_MACHINE_ID_SHA256:-}"
+      --authorized-machine-label "${MX049_AUTHORIZED_MACHINE_LABEL:-}"
+      --technical-repo-commit "${MX049_TECHNICAL_REPO_COMMIT:-}"
+      --runner-blob "${MX049_RUNNER_BLOB:-}"
+      --recorder-blob "${MX049_RECORDER_BLOB:-}"
+      --generator-blob "${MX049_GENERATOR_BLOB:-}"
       --acquisition-only
     )
   fi

@@ -37,7 +37,7 @@ import mapex
 from evaluate_mapex_profiled import evaluate_run
 from generate_new_room_ground_truth import generate as generate_new_room_ground_truth
 from mapex_lama_bridge import LamaEnsembleBridge
-from mx048_acquisition import add_run_provenance_arguments, run_provenance_from_args, should_run_offline_evaluator
+from mx049_acquisition import add_run_provenance_arguments, run_provenance_from_args, should_run_offline_evaluator
 from nf_basic import MIN_DISTANCE_THRESHOLD, MIN_REGION_SIZE, PLANNER_BLOCKED_SKIP_RADIUS_M
 from nf_run import (
     CANVAS_RES,
@@ -195,9 +195,9 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             self.roi_path = self.repo_root / binding["roi_path"]
             self.ground_truth_path = self.repo_root / binding["gt_path"]
             self.environment_profile.update(
-                protocol_version="mx045_shadow_mx048_v1",
-                roi_id=f"mx045_shadow_roi_{self.mx048_run_provenance['layout_seed']}",
-                ground_truth_id=f"mx045_shadow_gt_{self.mx048_run_provenance['layout_seed']}",
+                protocol_version="mx049_fresh_dell_v1",
+                roi_id=f"mx049_fresh_dell_roi_{self.mx048_run_provenance['layout_seed']}",
+                ground_truth_id=f"mx049_fresh_dell_gt_{self.mx048_run_provenance['layout_seed']}",
                 roi_sha256=binding["roi_sha256"],
                 ground_truth_sha256=binding["gt_sha256"],
                 ground_truth_semantic_digest=binding["semantic_digest"],
@@ -225,7 +225,13 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                 != self.environment_profile["ground_truth_semantic_digest"]
             ):
                 raise RuntimeError("Hospital GT-v2 semantic identity mismatch before execution")
-        self.roi = np.load(self.roi_path).astype(bool) if self.roi_path.is_file() else None
+        # Confirmation acquisition is byte-write/hash only.  Do not decode the
+        # sealed ROI/GT before the one-time downstream unseal gate.
+        self.roi = (
+            None
+            if self.mx048_confirmation_sealed
+            else (np.load(self.roi_path).astype(bool) if self.roi_path.is_file() else None)
+        )
         self.roi_n = int(np.count_nonzero(self.roi)) if self.roi is not None else 0
         self.paper500_profile_path = (
             root / "ground_truth" / "new_room" / "generated" / "r003_paper500"
@@ -439,8 +445,8 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                         "environment_world": FilePath(self.mx048_run_provenance["environment_world_resolved_runtime"]),
                         "mx048_layout_config": FilePath(self.mx048_run_provenance["layout_config_resolved_runtime"]),
                         "mx048_gt_binding": FilePath(self.mx048_run_provenance["gt_binding_path_resolved_runtime"]),
-                        "mx048_acquisition_contract": self.root / "scripts" / "mx048_acquisition.py",
-                        "mx048_generator": self.root / "scripts" / "mx048_generator.py",
+                        "mx049_acquisition_contract": self.root / "scripts" / "mx049_acquisition.py",
+                        "mx049_generator": self.root / "scripts" / "mx049_generator.py",
                         "ground_truth_generator": self.root / "scripts" / "generate_new_room_ground_truth.py",
                     }
                 )
@@ -578,8 +584,8 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         }
         if self.mx048_run_provenance:
             metadata.update(self.mx048_run_provenance)
-            metadata["collection_task"] = "MX046"
-            metadata["cohort_provenance_label"] = "MX045_SHADOW_MX048_R1"
+            metadata["collection_task"] = "MX050"
+            metadata["cohort_provenance_label"] = "MX049_FRESH_DELL_V1"
             metadata["ground_truth_binding_timing"] = "frozen_pre_outcome"
         self._write_metadata(metadata)
         return metadata
