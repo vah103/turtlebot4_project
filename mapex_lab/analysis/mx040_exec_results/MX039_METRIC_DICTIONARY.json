@@ -1,0 +1,92 @@
+{
+  "FU_promotable": false,
+  "Gate_U": "FAIL",
+  "baselines": {
+    "B0": [
+      "R_map"
+    ],
+    "B1": [
+      "R_map",
+      "log_decision",
+      "log_elapsed"
+    ]
+  },
+  "classification_order": [
+    "MX039_INVALID_EXECUTION_OR_LEAKAGE",
+    "MX039_INSUFFICIENT_EVALUABLE_SUPPORT",
+    "MX039_STAGE_A_INCREMENTAL_SHORTLIST_CANDIDATE",
+    "MX039_UNSTABLE_OR_TARGET_SPECIFIC_SIGNAL_ONLY",
+    "MX039_NO_STABLE_INCREMENTAL_SIGNAL"
+  ],
+  "direction_screen": "DCS + Holm-shaped non-inferential step-down",
+  "families": {
+    "F1": [
+      "F1_PredOccShare",
+      "F1_OccMaskIoUMean2",
+      "F1_OccFlipRateMean2"
+    ],
+    "F2": [
+      "F2_Vote3Share",
+      "F2_Vote2Share",
+      "F2_Vote1Share",
+      "F2_VotePersistenceMean2"
+    ],
+    "F3": [
+      "F3_AnyRiskResidualShare",
+      "F3_TCResidualShare",
+      "F3_ReachMeanUnknownShare",
+      "F3_ReachShareRange3"
+    ],
+    "F4": [
+      "F4_NoFrontierFrac3",
+      "F4_IndeterminateFrac3",
+      "F4_IGDensityGated",
+      "F4_LogVisibleUnknownGated",
+      "F4_KnownAreaRateMean3"
+    ],
+    "FU": [
+      "U_mean",
+      "U_p95",
+      "U_disagreement"
+    ]
+  },
+  "method_blob": "1929d5cc83ea87d73432613380629b62e30786b1",
+  "method_commit": "895af4744b2f1b32f97d250dbf24a2861f028043",
+  "model": {
+    "equal_run_training_weights": true,
+    "family": "weighted ridge linear regression",
+    "lambda": 1.0,
+    "training_only_standardization": true
+  },
+  "no_STOP_algorithm": true,
+  "outer_evaluation": "10-fold leave-one-run-out common-support",
+  "primary_metric": "Delta_B1=nMAE_B1-nMAE_B1_plus_family",
+  "promotion_hypotheses": {
+    "H1": [
+      "F1",
+      "T1"
+    ],
+    "H2": [
+      "F2",
+      "T1"
+    ],
+    "H3": [
+      "F3",
+      "T2"
+    ],
+    "H4": [
+      "F4",
+      "T3"
+    ]
+  },
+  "schema": "mx039_stage_a_predictive_utility_r1",
+  "targets": {
+    "T1": "P_STRUCT_FO/(P_STRUCT_FO+P_STRUCT_OO)",
+    "T2": "P_STRUCT_FO*0.05^2 m2",
+    "T2b": "matched R004 topology-critical hidden-free area, evaluator-only",
+    "T3": "KnownArea(i+3)-KnownArea(i), signed",
+    "T4": "diagnostic Opportunity5 premature/severe",
+    "T5": "decision_index-OracleStop_4",
+    "T6": "P_LATER_FO/(P_LATER_FO+P_LATER_OO)"
+  }
+}

@@ -1,0 +1,16 @@
+audit,semantic_pass,detail
+A1,1,synthetic t+1 lineage is rejected by max_source<=target rule
+A2,1,end-of-run normalized progress absent from online predictors
+A3,1,missing middle W3 source makes temporal feature NA; no back-search
+A4,1,B0/B1/aug use exact same comparison row keys
+A5,1,State A semantic IG remains unavailable while model-gated encoding is zero
+A6,1,State C remains indeterminate and only gated encoding is zero
+A7,1,signed Coverage preserved; negative source rates present=10
+A8,1,last three decisions per run are T3 RIGHT_CENSORED_H3
+A9,1,"R004 future/reference topology appears only as target T2b, never F3 input"
+A10,1,no MX038 result/outcome or MX028 result artifact is a source
+A11,1,FU cannot enter shortlist; Gate U remains FAIL
+A12,1,synthetic one-run positive-gain domination exceeds 0.50 and fails promotion criterion
+A13,1,fold-level Delta gates prevent favorable pooled-row illusion from promotion
+A14,1,baseline support mismatch is hard-invalid and none observed
+A15,1,whole frozen family blocks retained; no feature-family shopping
