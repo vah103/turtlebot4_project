@@ -154,6 +154,7 @@ def resolve_run(repo_root: Path, manifest_path: Path, layout_seed: int, run_seed
         raise RuntimeError("MX048_MANIFEST_NOT_FROZEN")
     layout = find_layout(manifest, layout_seed)
     verify_layout_identity(repo_root, layout)
+    cfg = _load_json(repo_root / _canonical_rel(layout["layout_config_path"]))
     run = find_run(layout, run_seed_value)
     if run["expected_world_identity_sha256"] != layout["world_identity_sha256"]:
         raise RuntimeError("MX048_RUN_WORLD_IDENTITY_MISMATCH")
@@ -301,16 +302,24 @@ def run_provenance_from_args(args: argparse.Namespace) -> dict:
         "gazebo": int(args.gazebo_seed), "exploration": int(args.exploration_seed),
         "planner": int(args.planner_seed), "sensor": int(args.sensor_seed),
     }
+    actual_world_sha = sha256_file(Path(args.actual_world))
+    actual_layout_sha = sha256_file(Path(args.layout_config))
+    if args.expected_world_sha256 and actual_world_sha != args.expected_world_sha256:
+        raise RuntimeError("MX048_RECORDER_WORLD_HASH_MISMATCH")
+    if args.expected_layout_config_sha256 and actual_layout_sha != args.expected_layout_config_sha256:
+        raise RuntimeError("MX048_RECORDER_LAYOUT_CONFIG_HASH_MISMATCH")
     return {
         "run_id": args.run_id, "layout_seed": int(args.layout_seed), "run_seed": int(args.run_seed),
         "split": args.split, "primary_or_reserve": args.primary_or_reserve,
         "world_identity_sha256": args.world_identity_sha256,
         "environment_world": args.actual_world_rel,
         "environment_world_resolved_runtime": str(Path(args.actual_world).resolve()),
-        "actual_world_sha256": sha256_file(Path(args.actual_world)),
+        "actual_world_sha256": actual_world_sha,
+        "expected_world_sha256": args.expected_world_sha256,
         "layout_config_path": args.layout_config_rel,
         "layout_config_resolved_runtime": str(Path(args.layout_config).resolve()),
-        "layout_config_sha256": sha256_file(Path(args.layout_config)),
+        "layout_config_sha256": actual_layout_sha,
+        "expected_layout_config_sha256": args.expected_layout_config_sha256,
         "gt_binding_path": args.gt_binding_rel,
         "gt_binding_path_resolved_runtime": str(Path(args.gt_binding).resolve()),
         "launch_spawn": {"x_m": float(args.spawn_x_m), "y_m": float(args.spawn_y_m), "yaw_rad": float(args.spawn_yaw_rad)},
@@ -324,8 +333,10 @@ def run_provenance_from_args(args: argparse.Namespace) -> dict:
 def add_run_provenance_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--actual-world")
     parser.add_argument("--actual-world-rel")
+    parser.add_argument("--expected-world-sha256")
     parser.add_argument("--layout-config")
     parser.add_argument("--layout-config-rel")
+    parser.add_argument("--expected-layout-config-sha256")
     parser.add_argument("--world-identity-sha256")
     parser.add_argument("--gt-binding")
     parser.add_argument("--gt-binding-rel")

@@ -375,7 +375,9 @@ def check_p11(repo_root,manifest_path):
         run_id=r["run_id"],layout_seed=45001,run_seed=1,split=r["split"],
         primary_or_reserve=r["primary_or_reserve"],world_identity_sha256=r["world_identity_sha256"],
         actual_world=r["world_path"],actual_world_rel=r["world_rel"],
+        expected_world_sha256=r["world_sha256"],
         layout_config=r["layout_config_path"],layout_config_rel=r["layout_config_rel"],
+        expected_layout_config_sha256=r["layout_config_sha256"],
         gt_binding=r["gt_binding_path"],gt_binding_rel=r["gt_binding_rel"],
         gazebo_seed=r["gazebo_seed"],exploration_seed=r["exploration_seed"],
         planner_seed=r["planner_seed"],sensor_seed=r["sensor_seed"],
@@ -388,10 +390,12 @@ def check_p11(repo_root,manifest_path):
     ok=(p["environment_world"]==l["world_path"]
         and p["actual_world_sha256"]==l["world_sha256"]
         and p["layout_config_sha256"]==l["layout_config_sha256"]
+        and p["expected_world_sha256"]==l["world_sha256"]
+        and p["expected_layout_config_sha256"]==l["layout_config_sha256"]
         and p["world_identity_sha256"]==l["world_identity_sha256"]
         and p["launch_spawn"]=={"x_m":0.0,"y_m":3.0,"yaw_rad":0.0}
         and p["acquisition_only"] is True)
-    return ok,json.dumps({k:p[k] for k in ("environment_world","actual_world_sha256","layout_config_sha256","world_identity_sha256","launch_spawn","acquisition_only")},sort_keys=True)
+    return ok,json.dumps({k:p[k] for k in ("environment_world","actual_world_sha256","expected_world_sha256","layout_config_sha256","expected_layout_config_sha256","world_identity_sha256","launch_spawn","acquisition_only")},sort_keys=True)
 
 def check_p12(repo_root,manifest_path):
     manifest=load_json(manifest_path); l=find_layout(manifest,45001)
@@ -426,7 +430,14 @@ def check_p14(repo_root,manifest_path):
 
 def check_p15(repo_root,seal):
     forbidden=("MX045_TARGETS_PER_DECISION.csv","MX045_DEVELOPMENT_MODELS.csv","MX045_CONFIRMATION_METRICS.csv")
-    return all(not (repo_root/x).exists() for x in forbidden) and all(seal["denied"].values()),"no derived outputs; numeric denylist enforced"
+    source=(repo_root/"mapex_lab/scripts/mapex_run.py").read_text(encoding="utf-8")
+    sealed_metadata=(
+        "if not self.mx048_confirmation_sealed:" in source
+        and "confirmation=SEALED_RAW_ONLY" in source
+        and "None if self.mx048_confirmation_sealed" in source
+    )
+    ok=all(not (repo_root/x).exists() for x in forbidden) and all(seal["denied"].values()) and sealed_metadata
+    return ok,"no derived outputs; numeric denylist + confirmation metadata/log redaction enforced"
 
 def check_p16():
     a=reserve_decision("development",[{"layout_seed":45001,"primary_or_reserve":"primary","technical_invalid":True}])

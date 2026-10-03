@@ -733,8 +733,10 @@ elif [[ "$METHOD" == "mapex" && "$RECORD" == "yes" ]]; then
     EXPLORE_CMD+=(
       --actual-world "$MX045_WORLD_PATH"
       --actual-world-rel "$MX045_WORLD_REL"
+      --expected-world-sha256 "$MX045_WORLD_SHA256"
       --layout-config "$MX045_LAYOUT_CONFIG_PATH"
       --layout-config-rel "$MX045_LAYOUT_CONFIG_REL"
+      --expected-layout-config-sha256 "$MX045_LAYOUT_CONFIG_SHA256"
       --world-identity-sha256 "$MX045_WORLD_IDENTITY_SHA256"
       --gt-binding "$MX045_GT_BINDING_PATH"
       --gt-binding-rel "$MX045_GT_BINDING_REL"

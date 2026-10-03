@@ -182,6 +182,9 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         self.environment_profile = dict(ENVIRONMENT_PROFILES[environment])
         self.paper500_enabled = bool(paper500)
         self.mx048_run_provenance = dict(mx048_run_provenance or {})
+        self.mx048_confirmation_sealed = (
+            self.mx048_run_provenance.get("confirmation_state") == "SEALED_RAW_ONLY"
+        )
         if self.paper500_enabled and environment != "new_room":
             raise RuntimeError("R003 paper500 is New Room only")
         if self.mx048_run_provenance:
@@ -506,7 +509,10 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "fixed_canvas_id": FIXED_CANVAS_ID,
             "fixed_canvas_resolution_m": CANVAS_RES,
             "evaluation_roi_id": self.environment_profile["roi_id"],
-            "evaluation_roi_denominator": self.roi_n if self.roi_n > 0 else None,
+            "evaluation_roi_denominator": (
+                None if self.mx048_confirmation_sealed
+                else (self.roi_n if self.roi_n > 0 else None)
+            ),
             "evaluation_roi_file": str(self.roi_path),
             "structural_ground_truth_id": self.environment_profile["ground_truth_id"],
             "structural_ground_truth_file": str(self.ground_truth_path),
@@ -1154,31 +1160,39 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         (self.run / "summary.json").write_text(
             json.dumps(summary, indent=2, allow_nan=True), encoding="utf-8"
         )
-        self._update_metadata(
-            termination_reason=reason,
-            runtime_map_resolution_m=(
+        metadata_updates = {
+            "termination_reason": reason,
+            "runtime_map_resolution_m": (
                 None if self.map_msg is None else float(self.map_msg.info.resolution)
             ),
-            final_coverage=self.coverage,
-            final_known_fraction=self.known,
-            total_distance_m=self.distance,
-            total_time_s=total_time,
-            policy_decisions=decision_count,
-            near_frontier_fallback_count=self.near_frontier_fallback_count,
-            planner_blocked_abandoned_total=blocked_total,
-            selection_verification_failures=self.selection_verification_failures,
-            prediction_save_ms_mean=self._mean(self.prediction_save_ms),
-            prediction_save_ms_std=self._std(self.prediction_save_ms),
-            paper500_progress_step=self.paper500_budget.step if self.paper500_enabled else None,
-            paper500_distance_m=self.paper500_budget.distance_m if self.paper500_enabled else None,
-            paper500_post_cancellation_distance_m=self.paper500_post_cancel_distance_m if self.paper500_enabled else None,
-            paper500_cutoff_detection_overshoot_m=self.paper500_cutoff_detection_overshoot_m if self.paper500_enabled else None,
-            paper500_cutoff_map_age_s=self.paper500_cutoff_map_age_s if self.paper500_enabled else None,
-        )
-        self.get_logger().warn(
-            f"MAPEX SAVED: env={self.environment}, profile={self.runtime_profile_name}, "
-            f"coverage={self.fmt(self.coverage)}, distance={self.distance:.2f}m, output={self.run}"
-        )
+            "total_distance_m": self.distance,
+            "total_time_s": total_time,
+            "policy_decisions": decision_count,
+            "near_frontier_fallback_count": self.near_frontier_fallback_count,
+            "planner_blocked_abandoned_total": blocked_total,
+            "selection_verification_failures": self.selection_verification_failures,
+            "prediction_save_ms_mean": self._mean(self.prediction_save_ms),
+            "prediction_save_ms_std": self._std(self.prediction_save_ms),
+            "paper500_progress_step": self.paper500_budget.step if self.paper500_enabled else None,
+            "paper500_distance_m": self.paper500_budget.distance_m if self.paper500_enabled else None,
+            "paper500_post_cancellation_distance_m": self.paper500_post_cancel_distance_m if self.paper500_enabled else None,
+            "paper500_cutoff_detection_overshoot_m": self.paper500_cutoff_detection_overshoot_m if self.paper500_enabled else None,
+            "paper500_cutoff_map_age_s": self.paper500_cutoff_map_age_s if self.paper500_enabled else None,
+        }
+        if not self.mx048_confirmation_sealed:
+            metadata_updates["final_coverage"] = self.coverage
+            metadata_updates["final_known_fraction"] = self.known
+        self._update_metadata(**metadata_updates)
+        if self.mx048_confirmation_sealed:
+            self.get_logger().warn(
+                f"MAPEX SAVED: env={self.environment}, profile={self.runtime_profile_name}, "
+                f"confirmation=SEALED_RAW_ONLY, distance={self.distance:.2f}m, output={self.run}"
+            )
+        else:
+            self.get_logger().warn(
+                f"MAPEX SAVED: env={self.environment}, profile={self.runtime_profile_name}, "
+                f"coverage={self.fmt(self.coverage)}, distance={self.distance:.2f}m, output={self.run}"
+            )
         if self.paper500_enabled:
             self.paper500_shutdown_requested = True
 
