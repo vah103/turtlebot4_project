@@ -42,12 +42,17 @@ def median(xs):
     return float(np.median(z)) if z else math.nan
 def read_csv(p):
     with open(p,newline="",encoding="utf-8") as f:return list(csv.DictReader(f))
+EMPTY_SCHEMAS = {
+    "MX043_HELDOUT_UTILITY_VALIDITY.csv":["arm","heldout_run","run_id","decision_id","decision_index","selected_tau","U3_cells","u_hat","utility_margin","U_upper","UtilityUnder"],
+    "MX043_UNCERTAINTY_AUDIT.csv":["arm","heldout_run","reason_type","feature","count","run_id","decision_id","stop_on_uncertain"],
+}
 def write_csv(p,rows):
     rows=list(rows); p.parent.mkdir(parents=True,exist_ok=True)
     fields=[]
     for r in rows:
         for k in r:
             if k not in fields: fields.append(k)
+    if not fields: fields=EMPTY_SCHEMAS.get(p.name,["status"])
     with open(p,"w",newline="",encoding="utf-8") as f:
         w=csv.DictWriter(f,fieldnames=fields);w.writeheader();w.writerows(rows)
 def write_json(p,obj):
@@ -399,7 +404,10 @@ def main():
           "UtilityUnder_violations":uv,"premature":prem,"severe":sev,"utility_false_stop":uf,"utility_unverifiable_stop":unv,
           "fired":fired,"positive":pos,"median_delay":median(delays),"tau_full":tfull,"tau_matches":matches,"saving_concentration":conc}
     # adversarial A1-A31
-    synthetic_uv = int(0==0 and "RIGHT_CENSORED_H3"!="")
+    a31_cases=[x for x in train_summary
+      if int(x.get("utility_unverifiable_stop",0))>0
+      and "RIGHT_CENSORED_H3" in str(x.get("utility_unverifiable_reason_summary",""))
+      and int(x.get("admissible",0))==0]
     adv=[
       ("A1",True,"future U3/Delta fields absent from runtime predictor lists"),
       ("A2",sum(x["U3_reason"]=="RIGHT_CENSORED_H3" for x in targets)==30,"final three decisions per run are right-censored H3"),
@@ -431,7 +439,7 @@ def main():
       ("A28",classify("ARM_INVALID_EXECUTION_OR_LEAKAGE","ARM_DIRECT_UTILITY_STOP_DEVELOPMENT_CANDIDATE")[0]=="MX043_DIRECT_UTILITY_STOP_DEVELOPMENT_CANDIDATE","local-invalid + candidate preserves valid arm"),
       ("A29",classify("ARM_INVALID_EXECUTION_OR_LEAKAGE","ARM_NO_DEFENSIBLE_DIRECT_UTILITY_BOUND")[0]=="MX043_ARM_LOCAL_INVALIDITY_NO_CANDIDATE","local-invalid + no candidate totality"),
       ("A30",True,"positive class language limited to historical development same-cohort tau universe"),
-      ("A31",synthetic_uv==1,"synthetic inner STOP on RIGHT_CENSORED_H3 => UtilityUnverifiableStop=1 and tau nonadmissible; no H1/H2 fallback"),
+      ("A31",len(a31_cases)>0,f"actual inner-training RIGHT_CENSORED_H3 STOP cases={len(a31_cases)}; each UtilityUnverifiableStop>0 and tau nonadmissible; no H1/H2 fallback"),
     ]
     advrows=[{"audit":a,"semantic_pass":int(p),"detail":d} for a,p,d in adv];write_csv(OUT/"MX043_ADVERSARIAL_CASE_AUDIT.csv",advrows)
     s6=int(all(x["semantic_pass"]==1 for x in advrows))
