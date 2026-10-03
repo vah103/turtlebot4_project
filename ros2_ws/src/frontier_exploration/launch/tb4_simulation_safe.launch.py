@@ -50,6 +50,7 @@ def generate_launch_description():
     headless = LaunchConfiguration('headless')
     gz_ip = LaunchConfiguration('gz_ip')
     world = LaunchConfiguration('world')
+    gz_seed = LaunchConfiguration('gz_seed')
     pose = {
         'x': LaunchConfiguration('x_pose', default='-8.00'),
         'y': LaunchConfiguration('y_pose', default='0.00'),
@@ -99,6 +100,7 @@ def generate_launch_description():
             default_value='127.0.0.1',
             description='Gazebo Transport interface for local simulation',
         ),
+        DeclareLaunchArgument('gz_seed', default_value='0', description='Gazebo RNG seed'),
         DeclareLaunchArgument(
             'world',
             default_value=os.path.join(sim_dir, 'worlds', 'depot.sdf'),
@@ -155,7 +157,7 @@ def generate_launch_description():
     # environment and can stall before the world services appear on some
     # Jazzy installations, while the equivalent direct command works.
     gazebo_server = ExecuteProcess(
-        cmd=['gz', 'sim', '-v', '4', '-r', '-s', world_sdf],
+        cmd=['gz', 'sim', '-v', '4', '-r', '-s', '--seed', gz_seed, world_sdf],
         output='screen',
         condition=IfCondition(use_simulator),
     )

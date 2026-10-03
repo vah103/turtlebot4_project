@@ -140,6 +140,7 @@ def generate_launch_description() -> LaunchDescription:
     use_rviz = LaunchConfiguration('use_rviz')
     headless = LaunchConfiguration('headless')
     world = LaunchConfiguration('world')
+    gz_seed = LaunchConfiguration('gz_seed')
     x_pose = LaunchConfiguration('x_pose')
     y_pose = LaunchConfiguration('y_pose')
     yaw = LaunchConfiguration('yaw')
@@ -156,6 +157,7 @@ def generate_launch_description() -> LaunchDescription:
         ),
         launch_arguments={
             'world': world,
+            'gz_seed': gz_seed,
             'use_rviz': use_rviz,
             'headless': headless,
             'x_pose': x_pose,
@@ -202,6 +204,7 @@ def generate_launch_description() -> LaunchDescription:
     return LaunchDescription(
         [
             DeclareLaunchArgument('world', default_value='new_room'),
+            DeclareLaunchArgument('gz_seed', default_value='0'),
             DeclareLaunchArgument('x_pose', default_value='auto'),
             DeclareLaunchArgument('y_pose', default_value='auto'),
             DeclareLaunchArgument('yaw', default_value='auto'),

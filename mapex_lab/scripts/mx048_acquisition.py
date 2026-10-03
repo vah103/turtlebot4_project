@@ -45,7 +45,7 @@ def _load_json(path: Path) -> dict:
 
 def _canonical_rel(path: str) -> str:
     p = Path(path)
-    if p.is_absolute() or ".." in p.parts or "\" in path:
+    if p.is_absolute() or ".." in p.parts or "\\" in path:
         raise ValueError(f"noncanonical path: {path}")
     return p.as_posix()
 
@@ -294,6 +294,7 @@ def run_provenance_from_args(args: argparse.Namespace) -> dict:
         "layout_config_resolved_runtime": str(Path(args.layout_config).resolve()),
         "layout_config_sha256": sha256_file(Path(args.layout_config)),
         "gt_binding_path": args.gt_binding_rel,
+        "gt_binding_path_resolved_runtime": str(Path(args.gt_binding).resolve()),
         "component_seeds": component_seeds,
         "acquisition_only": bool(args.acquisition_only),
         "confirmation_state": args.confirmation_state,

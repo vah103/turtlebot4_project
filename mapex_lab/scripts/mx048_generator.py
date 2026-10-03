@@ -490,8 +490,8 @@ def build_gt(repo_root: Path, sdf_path: Path, canonical_sdf: str, out_dir: Path)
         "coordinate_frame": "slam_start",
         "ground_truth_id": gtref.GT_ID,
         "outputs": {
-            "connected_free_roi": str(ROI_REL),
-            "ground_truth": str(GT_REL),
+            "connected_free_roi": canonical_sdf.replace("mapex_lab/map/generated/mx045_shadow/", "mapex_lab/ground_truth/mx045_shadow/").replace("/world.sdf", "/sealed/connected_free_roi_v2.npy"),
+            "ground_truth": canonical_sdf.replace("mapex_lab/map/generated/mx045_shadow/", "mapex_lab/ground_truth/mx045_shadow/").replace("/world.sdf", "/sealed/structural_gt_v2.npz"),
         },
         "roi_id": gtref.ROI_ID,
         "roi_seed_slam_xy": [0.0, 0.0],

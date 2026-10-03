@@ -74,6 +74,7 @@ def _launch_simulation(context, package_dir: str, project_root: Path, hospital):
         PythonLaunchDescriptionSource(base_launch),
         launch_arguments={
             'world': world_path,
+            'gz_seed': LaunchConfiguration('gz_seed'),
             'use_rviz': LaunchConfiguration('use_rviz'),
             'rviz_config_file': LaunchConfiguration('rviz_config_file'),
             'robot_sdf': LaunchConfiguration('robot_sdf'),
@@ -114,6 +115,7 @@ def generate_launch_description() -> LaunchDescription:
             default_value='hospital',
             description='World selector: hospital, new_room, or an explicit SDF path.',
         ),
+        DeclareLaunchArgument('gz_seed', default_value='0'),
         DeclareLaunchArgument(
             'use_rviz',
             default_value='False',

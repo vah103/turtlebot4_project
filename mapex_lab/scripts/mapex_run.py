@@ -37,6 +37,7 @@ import mapex
 from evaluate_mapex_profiled import evaluate_run
 from generate_new_room_ground_truth import generate as generate_new_room_ground_truth
 from mapex_lama_bridge import LamaEnsembleBridge
+from mx048_acquisition import add_run_provenance_arguments, run_provenance_from_args, should_run_offline_evaluator
 from nf_basic import MIN_DISTANCE_THRESHOLD, MIN_REGION_SIZE, PLANNER_BLOCKED_SKIP_RADIUS_M
 from nf_run import (
     CANVAS_RES,
@@ -159,6 +160,7 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         environment: str,
         runtime_profile: str | None = None,
         paper500: bool = False,
+        mx048_run_provenance: dict | None = None,
     ):
         root = FilePath(__file__).resolve().parents[1]
         if environment not in ENVIRONMENT_PROFILES:
@@ -179,13 +181,31 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         self.environment = environment
         self.environment_profile = dict(ENVIRONMENT_PROFILES[environment])
         self.paper500_enabled = bool(paper500)
+        self.mx048_run_provenance = dict(mx048_run_provenance or {})
         if self.paper500_enabled and environment != "new_room":
             raise RuntimeError("R003 paper500 is New Room only")
-        if self.environment_profile["auto_generate_ground_truth"]:
-            _ensure_new_room_ground_truth(root)
-
-        self.roi_path = root / self.environment_profile["roi_relative"]
-        self.ground_truth_path = root / self.environment_profile["ground_truth_relative"]
+        if self.mx048_run_provenance:
+            if environment != "new_room" or self.paper500_enabled:
+                raise RuntimeError("MX048 acquisition is New Room only and incompatible with paper500")
+            binding_path = FilePath(self.mx048_run_provenance["gt_binding_path_resolved_runtime"])
+            binding = json.loads(binding_path.read_text(encoding="utf-8"))
+            self.roi_path = self.repo_root / binding["roi_path"]
+            self.ground_truth_path = self.repo_root / binding["gt_path"]
+            self.environment_profile.update(
+                protocol_version="mx045_shadow_mx048_v1",
+                roi_id=f"mx045_shadow_roi_{self.mx048_run_provenance['layout_seed']}",
+                ground_truth_id=f"mx045_shadow_gt_{self.mx048_run_provenance['layout_seed']}",
+                roi_sha256=binding["roi_sha256"],
+                ground_truth_sha256=binding["gt_sha256"],
+                ground_truth_semantic_digest=binding["semantic_digest"],
+                ground_truth_source_revision=binding["gt_generator_commit"],
+                auto_generate_ground_truth=False,
+            )
+        else:
+            if self.environment_profile["auto_generate_ground_truth"]:
+                _ensure_new_room_ground_truth(root)
+            self.roi_path = root / self.environment_profile["roi_relative"]
+            self.ground_truth_path = root / self.environment_profile["ground_truth_relative"]
         if self.environment == "hospital":
             expected_gt = self.environment_profile["ground_truth_sha256"]
             expected_roi = self.environment_profile["roi_sha256"]
@@ -410,13 +430,25 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
         for name, relative in self.runtime_profile["extra_hashes"].items():
             hash_paths[name] = self.root / relative
         if self.environment == "new_room":
-            hash_paths.update(
-                {
-                    "environment_world": self.root / "map" / "new_room.sdf",
-                    "ground_truth_generator": self.root / "scripts" / "generate_new_room_ground_truth.py",
-                    "ground_truth_contract": self.root / "ground_truth" / "new_room" / "structural_gt_v1.yaml",
-                }
-            )
+            if self.mx048_run_provenance:
+                hash_paths.update(
+                    {
+                        "environment_world": FilePath(self.mx048_run_provenance["environment_world_resolved_runtime"]),
+                        "mx048_layout_config": FilePath(self.mx048_run_provenance["layout_config_resolved_runtime"]),
+                        "mx048_gt_binding": FilePath(self.mx048_run_provenance["gt_binding_path_resolved_runtime"]),
+                        "mx048_acquisition_contract": self.root / "scripts" / "mx048_acquisition.py",
+                        "mx048_generator": self.root / "scripts" / "mx048_generator.py",
+                        "ground_truth_generator": self.root / "scripts" / "generate_new_room_ground_truth.py",
+                    }
+                )
+            else:
+                hash_paths.update(
+                    {
+                        "environment_world": self.root / "map" / "new_room.sdf",
+                        "ground_truth_generator": self.root / "scripts" / "generate_new_room_ground_truth.py",
+                        "ground_truth_contract": self.root / "ground_truth" / "new_room" / "structural_gt_v1.yaml",
+                    }
+                )
         elif self.environment == "hospital":
             hash_paths.update(
                 {
@@ -522,8 +554,14 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "ensemble_checkpoints": checkpoints,
             "save_prediction_maps": self.save_predictions,
             "saved_prediction_members": 3 if self.save_predictions else 0,
-            "sim_seed": None,
-            "sim_seed_policy": SIM_SEED_POLICY,
+            "sim_seed": (
+                self.mx048_run_provenance.get("component_seeds", {}).get("gazebo")
+                if self.mx048_run_provenance else None
+            ),
+            "sim_seed_policy": (
+                "MX048_RUN_V1_component_seed_binding"
+                if self.mx048_run_provenance else SIM_SEED_POLICY
+            ),
             "config_sha256": config_sha256,
             "termination_reason": None,
             "evaluation_profile": PAPER500_PROFILE_ID if self.paper500_enabled else None,
@@ -532,6 +570,11 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             "paper500_max_odom_gap_s": self.paper500_budget.max_gap_s if self.paper500_enabled else None,
             "paper500_max_odom_increment_m": self.paper500_budget.max_increment_m if self.paper500_enabled else None,
         }
+        if self.mx048_run_provenance:
+            metadata.update(self.mx048_run_provenance)
+            metadata["collection_task"] = "MX046"
+            metadata["cohort_provenance_label"] = "MX045_SHADOW_MX048_R1"
+            metadata["ground_truth_binding_timing"] = "frozen_pre_outcome"
         self._write_metadata(metadata)
         return metadata
 
@@ -1174,7 +1217,9 @@ def main():
         ),
     )
     parser.add_argument("--paper500", action="store_true", help="enable approved R003 New Room paper500 profile")
+    add_run_provenance_arguments(parser)
     args, ros_args = parser.parse_known_args()
+    mx048_provenance = run_provenance_from_args(args) if args.actual_world else None
 
     rclpy.init(args=mapex._mapex_init_args(ros_args))
     node = None
@@ -1189,6 +1234,7 @@ def main():
             args.environment,
             args.runtime_profile,
             args.paper500,
+            mx048_provenance,
         )
         executor = MultiThreadedExecutor(num_threads=4)
         executor.add_node(node)
@@ -1214,7 +1260,8 @@ def main():
         if rclpy.ok():
             rclpy.shutdown()
 
-    if run_dir is not None and ground_truth_path is not None and roi_path is not None and not args.paper500:
+    if (run_dir is not None and ground_truth_path is not None and roi_path is not None
+            and not args.paper500 and should_run_offline_evaluator(args.acquisition_only)):
         result = evaluate_run(run_dir, ground_truth_path, roi_path)
         status = result.get("status", "unknown")
         if status == "ok":
