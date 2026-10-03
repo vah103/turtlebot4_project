@@ -1,0 +1,19 @@
+test,status,detail
+P1,PASS,two-root DELL determinism; DELL_ONLY_TWO_ROOTS_PASS
+P2,PASS,fresh_unique=12/12; old_denylist=12; cross_collisions=0; A12=True
+P3,PASS,12/12 accepted; V1-V9 PASS
+P4,PASS,exact split/role mapping
+P5,PASS,24 run slots recompute; geometry/config unchanged by run seed
+P6,PASS,Gazebo SEEDED_EFFECTIVE via startup readback + installed RNG seed trace
+P7,PASS,acquisition_only suppresses offline evaluator
+P8,PASS,metadata allowed; raw numeric/GT/ROI/evaluator reads denied
+P9,PASS,synthetic unseal opens authorized path; incomplete/inconsistent unseal denied
+P10,PASS,manifest world/config resolves through canonical runner
+P11,PASS,"{""acquisition_only"": true, ""actual_world_sha256"": ""f108cc233848d8cfd15438735b96ed1972c2f2d7b0729a146bfe427f05744296"", ""environment_world"": ""mapex_lab/map/generated/mx049_fresh_dell/layout_49001/world.sdf"", ""expected_layout_config_sha256"": ""eaf710445acb8e8a0392c511dc3122cc1d90d484d1fb2841dffa3de8406f591d"", ""expected_world_sha256"": ""f108cc233848d8cfd15438735b96ed1972c2f2d7b0729a146bfe427f05744296"", ""launch_spawn"": {""x_m"": 0.0, ""y_m"": 3.0, ""yaw_rad"": 0.0}, ""layout_config_sha256"": ""eaf710445acb8e8a0392c511dc3122cc1d90d484d1fb2841dffa3de8406f591d"", ""world_identity_sha256"": ""537867208a44c89de987f2b62f8105ae77c2dc40b37af06e9435c90938118888""}"
+P12,PASS,one-byte world mutation rejected
+P13,PASS,12/12 bindings verify
+P14,PASS,generated world path only
+P15,PASS,no derived outputs; numeric denylist + confirmation metadata/log redaction enforced
+P16,PASS,"{""scientific"": {""action"": ""NO_RESERVE"", ""scientific_weakness_count"": 1, ""split"": ""development""}, ""second_failure"": {""action"": ""GLOBAL_INSUFFICIENT_BLOCK"", ""invalid_primary_layouts"": [49001, 49002], ""split"": ""development""}, ""technical"": {""action"": ""ACTIVATE_WHOLE_LAYOUT_RESERVE"", ""excluded_layout"": 49001, ""required_run_seeds"": [1, 2], ""reserve_layout"": 49011, ""split"": ""development""}}"
+P17,PASS,generator has no telemetry/scoring/outcome dependency; denylist is exact five-field post-V1-V9 veto
+P18,PASS,fresh manifest complete; DELL/disjoint bindings and identity scan clean

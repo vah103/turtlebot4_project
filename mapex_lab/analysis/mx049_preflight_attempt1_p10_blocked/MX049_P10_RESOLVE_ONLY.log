@@ -1,0 +1,9 @@
+WARNING: ros2_ws/install/setup.bash not found; using only /opt/ros/jazzy.
+ERROR: MAPEX_LAMA_PYTHON not executable: /work/conda-envs/lama/bin/python
+
+Stopping experiment...
+Experiment stopped.
+
+--- DRY LAUNCH ---
+Package 'frontier_exploration' not found: "package 'frontier_exploration' not found, searching: ['/home/dell/turtlebot4_project/ros2_ws/install/slam_toolbox', '/opt/ros/jazzy']"
+

@@ -1,0 +1,10 @@
+ERROR: MAPEX_ENSEMBLE_DIR not found: /work/com1/mapex_weights/weights/lama_ensemble
+
+Stopping experiment...
+Experiment stopped.
+
+--- DRY LAUNCH ---
+[INFO] [launch]: All log files can be found below /home/dell/.ros/log/2026-10-03-21-04-45-269476-dell-190472
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [launch.user]: MX048_LAUNCH_BINDING_PASS world_path=/home/dell/turtlebot4_project_mx050/mapex_lab/map/generated/mx049_fresh_dell/layout_49001/world.sdf world_sha256=f108cc233848d8cfd15438735b96ed1972c2f2d7b0729a146bfe427f05744296 layout_config_path=/home/dell/turtlebot4_project_mx050/mapex_lab/map/generated/mx049_fresh_dell/layout_49001/layout_config.json layout_config_sha256=554d84fffd27925da746b4a3ad0cb53f57c6129d1e24156198a3e28c9b2ec715 spawn=(0.0,3.0,0.0)
+
