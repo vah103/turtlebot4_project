@@ -1,0 +1,30 @@
+{
+  "accepted_mx040_result": "35ee9315cce3899190d439b75958fbcbe31f9851",
+  "decision_rows": 365,
+  "forbidden_result_sources": {
+    "F3_F4_rescue": false,
+    "MX028": false,
+    "MX038": false,
+    "U_rescue": false
+  },
+  "method_blob": "a362739b115908621d4a81a04870f5e7e200b7c3",
+  "method_commit": "1f655c3a77b485369ac463479544ccbf728b4dc0",
+  "schema": "mx041_source_provenance_v1",
+  "source_guard": {
+    "actual": {
+      "mx026": "8e73f4441b1c852f90d801c20f993216bbd1e78a",
+      "mx031": "daf11687221080790e20227f2bf7b7406476298e",
+      "mx031_rules": "cc0d4230a997e50b00f5c776537d59af0815769f",
+      "mx040_features": "e91a45e2f88806d7ba52ef658c9fd86262ab9a91",
+      "mx040_targets": "ff8257c2d9dabe92b5ffd142a05c763abd445221"
+    },
+    "expected": {
+      "mx026": "8e73f4441b1c852f90d801c20f993216bbd1e78a",
+      "mx031": "daf11687221080790e20227f2bf7b7406476298e",
+      "mx031_rules": "cc0d4230a997e50b00f5c776537d59af0815769f",
+      "mx040_features": "e91a45e2f88806d7ba52ef658c9fd86262ab9a91",
+      "mx040_targets": "ff8257c2d9dabe92b5ffd142a05c763abd445221"
+    },
+    "failures": []
+  }
+}

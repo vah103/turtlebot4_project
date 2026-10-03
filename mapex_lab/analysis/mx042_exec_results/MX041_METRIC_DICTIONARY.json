@@ -1,0 +1,17 @@
+{
+  "Delta_hidden_reserve": "H_upper (no B_meanOcc subtraction)",
+  "H_upper": "q_upper*g_support*A_meanOcc_online",
+  "K_R": 1,
+  "R_risk": "(A_map_mean+H_upper)/(KnownFree_map+A_map_mean+H_upper)",
+  "arms": "F1 and F2 independent; no ranking/combination",
+  "lambda": 1.0,
+  "rate_margin": "max training-only inner-cross-fitted max(0,T1-qhat)",
+  "schema": "mx041_metric_dictionary_r1_execution",
+  "support_bridge": "max training-only A_predOcc_STRUCT/A_meanOcc_online",
+  "tau": [
+    0.05,
+    0.06,
+    0.08,
+    0.1
+  ]
+}

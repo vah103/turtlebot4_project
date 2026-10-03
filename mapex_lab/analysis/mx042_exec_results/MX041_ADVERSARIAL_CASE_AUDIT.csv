@@ -1,0 +1,29 @@
+audit,semantic_pass,detail
+A1,1,teacher/future fields excluded from runtime feature lists
+A2,1,W3 missingness is preserved from accepted MX040 features; no back-search
+A3,1,TopoValid false maps to EXPLORE
+A4,1,missing arm/model/area input maps to RISK_BLOCKED at R candidate
+A5,1,any held-out RateUnder violation fails A-SV
+A6,1,any held-out BridgeUnder violation fails A-SV
+A7,1,any held-out AreaUnder violation fails A-SV
+A8,1,teacher/runtime support mismatch retained; bridge used; Structural runtime_used=false
+A9,1,full H_upper reserve; no B_meanOcc subtraction
+A10,1,qhat and q_upper clipping helper
+A11,1,no admissible threshold => NO_RULE
+A12,1,R<=tau and R_risk>tau maps to RISK_BLOCKED
+A13,1,eligible same-row risk pass maps directly to STOP_CONSIDER
+A14,1,each decision reevaluated fresh; no persistent veto/streak
+A15,1,premature held-out STOP is counted and fails A-S2
+A16,1,GT remaining underestimation at STOP is counted and fails A-S2
+A17,1,SavingConcentration >0.50 fails A-S4
+A18,1,no cross-arm combination
+A19,1,U/F3/F4 absent from model/action feature lists
+A20,1,held-out run absent from outer fit training runs
+A21,1,accepted MX040 feature source preserves exact 0.5 class boundary
+A22,1,full-development fit is descriptive only and cannot override outer gates
+A23,1,no MX038 result source
+A24,1,rate margin=max residual and support bridge=max ratio; no trimming
+A25,1,local-invalid + insufficient totality
+A26,1,local-invalid + supported noncandidate totality
+A27,1,local-invalid + candidate preserves valid candidate
+A28,1,report language frozen as historical development conditional on inherited same-cohort tau universe
