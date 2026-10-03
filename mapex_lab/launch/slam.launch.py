@@ -141,6 +141,9 @@ def generate_launch_description() -> LaunchDescription:
     headless = LaunchConfiguration('headless')
     world = LaunchConfiguration('world')
     gz_seed = LaunchConfiguration('gz_seed')
+    mx048_world_sha256 = LaunchConfiguration('mx048_world_sha256')
+    mx048_layout_config = LaunchConfiguration('mx048_layout_config')
+    mx048_layout_config_sha256 = LaunchConfiguration('mx048_layout_config_sha256')
     x_pose = LaunchConfiguration('x_pose')
     y_pose = LaunchConfiguration('y_pose')
     yaw = LaunchConfiguration('yaw')
@@ -158,6 +161,9 @@ def generate_launch_description() -> LaunchDescription:
         launch_arguments={
             'world': world,
             'gz_seed': gz_seed,
+            'mx048_world_sha256': mx048_world_sha256,
+            'mx048_layout_config': mx048_layout_config,
+            'mx048_layout_config_sha256': mx048_layout_config_sha256,
             'use_rviz': use_rviz,
             'headless': headless,
             'x_pose': x_pose,
@@ -205,6 +211,9 @@ def generate_launch_description() -> LaunchDescription:
         [
             DeclareLaunchArgument('world', default_value='new_room'),
             DeclareLaunchArgument('gz_seed', default_value='0'),
+            DeclareLaunchArgument('mx048_world_sha256', default_value=''),
+            DeclareLaunchArgument('mx048_layout_config', default_value=''),
+            DeclareLaunchArgument('mx048_layout_config_sha256', default_value=''),
             DeclareLaunchArgument('x_pose', default_value='auto'),
             DeclareLaunchArgument('y_pose', default_value='auto'),
             DeclareLaunchArgument('yaw', default_value='auto'),

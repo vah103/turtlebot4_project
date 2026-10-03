@@ -654,6 +654,7 @@ if [[ -n "$MX045_MANIFEST_ARG" ]]; then
     echo "layout_config_path=$MX045_LAYOUT_CONFIG_PATH"
     echo "layout_config_sha256=$MX045_LAYOUT_CONFIG_SHA256"
     echo "world_identity_sha256=$MX045_WORLD_IDENTITY_SHA256"
+    echo "spawn=($MX045_SPAWN_X_M,$MX045_SPAWN_Y_M,$MX045_SPAWN_YAW_RAD)"
     echo "gazebo_seed=$MX045_GAZEBO_SEED"
     exit 0
   fi
@@ -705,6 +706,12 @@ echo ""
 setsid ros2 launch "$ROOT_DIR/mapex_lab/launch/slam.launch.py" \
   world:="$WORLD_SELECTOR" \
   gz_seed:="${MX045_GAZEBO_SEED:-0}" \
+  x_pose:="${MX045_SPAWN_X_M:-auto}" \
+  y_pose:="${MX045_SPAWN_Y_M:-auto}" \
+  yaw:="${MX045_SPAWN_YAW_RAD:-auto}" \
+  mx048_world_sha256:="${MX045_WORLD_SHA256:-}" \
+  mx048_layout_config:="${MX045_LAYOUT_CONFIG_PATH:-}" \
+  mx048_layout_config_sha256:="${MX045_LAYOUT_CONFIG_SHA256:-}" \
   headless:="${MAPEX_RUN_HEADLESS:-False}" \
   use_rviz:="${MAPEX_RUN_USE_RVIZ:-True}" &
 LAUNCH_PID=$!
@@ -740,6 +747,9 @@ elif [[ "$METHOD" == "mapex" && "$RECORD" == "yes" ]]; then
       --planner-seed "$MX045_PLANNER_SEED"
       --sensor-seed "$MX045_SENSOR_SEED"
       --manifest-sha256 "$MX045_MANIFEST_SHA256"
+      --spawn-x-m "$MX045_SPAWN_X_M"
+      --spawn-y-m "$MX045_SPAWN_Y_M"
+      --spawn-yaw-rad "$MX045_SPAWN_YAW_RAD"
       --confirmation-state "$MX045_CONFIRMATION_STATE"
       --acquisition-only
     )

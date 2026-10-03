@@ -1,3 +1,4 @@
+import hashlib
 import importlib.util
 import os
 import sys
@@ -8,6 +9,14 @@ from launch import LaunchDescription
 from launch.actions import AppendEnvironmentVariable, DeclareLaunchArgument, IncludeLaunchDescription, LogInfo, OpaqueFunction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open('rb') as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _find_project_root(package_dir: str) -> Path:
@@ -48,6 +57,10 @@ def _launch_simulation(context, package_dir: str, project_root: Path, hospital):
     x_arg = LaunchConfiguration('x_pose').perform(context).strip()
     y_arg = LaunchConfiguration('y_pose').perform(context).strip()
     yaw_arg = LaunchConfiguration('yaw').perform(context).strip()
+    expected_world_sha = LaunchConfiguration('mx048_world_sha256').perform(context).strip()
+    layout_config_arg = LaunchConfiguration('mx048_layout_config').perform(context).strip()
+    expected_layout_sha = LaunchConfiguration('mx048_layout_config_sha256').perform(context).strip()
+    dry_launch = LaunchConfiguration('mx048_dry_launch').perform(context).strip().lower() == 'true'
 
     if world_arg in ('', 'hospital'):
         world_path = str(hospital.world)
@@ -66,8 +79,35 @@ def _launch_simulation(context, package_dir: str, project_root: Path, hospital):
     spawn_y = str(default_spawn[1]) if y_arg in ('', 'auto') else y_arg
     spawn_yaw = str(default_spawn[2]) if yaw_arg in ('', 'auto') else yaw_arg
 
-    if not Path(world_path).is_file():
+    world_file = Path(world_path)
+    if not world_file.is_file():
         raise FileNotFoundError(f'Simulation world does not exist: {world_path}')
+
+    binding_msg = (
+        f'Simulation world: {world_label}; path={world_path}; '
+        f'spawn=({spawn_x}, {spawn_y}, {spawn_yaw})'
+    )
+    if expected_world_sha or layout_config_arg or expected_layout_sha:
+        if not (expected_world_sha and layout_config_arg and expected_layout_sha):
+            raise RuntimeError('MX048 launch binding requires world SHA, layout-config path, and layout-config SHA together')
+        actual_world_sha = _sha256(world_file)
+        layout_config_path = Path(layout_config_arg).expanduser().resolve()
+        if not layout_config_path.is_file():
+            raise FileNotFoundError(f'MX048 layout config does not exist: {layout_config_path}')
+        actual_layout_sha = _sha256(layout_config_path)
+        if actual_world_sha != expected_world_sha:
+            raise RuntimeError(f'MX048 world hash mismatch: {actual_world_sha} != {expected_world_sha}')
+        if actual_layout_sha != expected_layout_sha:
+            raise RuntimeError(f'MX048 layout-config hash mismatch: {actual_layout_sha} != {expected_layout_sha}')
+        binding_msg = (
+            'MX048_LAUNCH_BINDING_PASS '
+            f'world_path={world_path} world_sha256={actual_world_sha} '
+            f'layout_config_path={layout_config_path} layout_config_sha256={actual_layout_sha} '
+            f'spawn=({spawn_x},{spawn_y},{spawn_yaw})'
+        )
+
+    if dry_launch:
+        return [LogInfo(msg=binding_msg)]
 
     base_launch = os.path.join(package_dir, 'launch', 'tb4_simulation_safe.launch.py')
     simulation = IncludeLaunchDescription(
@@ -85,15 +125,7 @@ def _launch_simulation(context, package_dir: str, project_root: Path, hospital):
         }.items(),
     )
 
-    return [
-        LogInfo(
-            msg=(
-                f'Simulation world: {world_label}; path={world_path}; '
-                f'spawn=({spawn_x}, {spawn_y}, {spawn_yaw})'
-            )
-        ),
-        simulation,
-    ]
+    return [LogInfo(msg=binding_msg), simulation]
 
 
 def generate_launch_description() -> LaunchDescription:
@@ -116,6 +148,10 @@ def generate_launch_description() -> LaunchDescription:
             description='World selector: hospital, new_room, or an explicit SDF path.',
         ),
         DeclareLaunchArgument('gz_seed', default_value='0'),
+        DeclareLaunchArgument('mx048_world_sha256', default_value=''),
+        DeclareLaunchArgument('mx048_layout_config', default_value=''),
+        DeclareLaunchArgument('mx048_layout_config_sha256', default_value=''),
+        DeclareLaunchArgument('mx048_dry_launch', default_value='false'),
         DeclareLaunchArgument(
             'use_rviz',
             default_value='False',

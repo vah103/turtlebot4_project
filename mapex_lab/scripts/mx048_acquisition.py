@@ -173,6 +173,9 @@ def resolve_run(repo_root: Path, manifest_path: Path, layout_seed: int, run_seed
         "world_identity_sha256": layout["world_identity_sha256"],
         "gt_binding_path": str((repo_root / layout["gt_binding_path"]).resolve()),
         "gt_binding_rel": layout["gt_binding_path"],
+        "spawn_x_m": float(cfg["spawn"]["x_cm"]) / 100.0,
+        "spawn_y_m": float(cfg["spawn"]["y_cm"]) / 100.0,
+        "spawn_yaw_rad": float(cfg["spawn"]["yaw_millirad"]) / 1000.0,
         "gazebo_seed": run["gazebo_seed"],
         "exploration_seed": run["exploration_seed"],
         "planner_seed": run["planner_seed"],
@@ -197,6 +200,9 @@ def shell_exports(resolved: dict) -> str:
         "MX045_WORLD_IDENTITY_SHA256": resolved["world_identity_sha256"],
         "MX045_GT_BINDING_PATH": resolved["gt_binding_path"],
         "MX045_GT_BINDING_REL": resolved["gt_binding_rel"],
+        "MX045_SPAWN_X_M": resolved["spawn_x_m"],
+        "MX045_SPAWN_Y_M": resolved["spawn_y_m"],
+        "MX045_SPAWN_YAW_RAD": resolved["spawn_yaw_rad"],
         "MX045_GAZEBO_SEED": resolved["gazebo_seed"],
         "MX045_EXPLORATION_SEED": resolved["exploration_seed"],
         "MX045_PLANNER_SEED": resolved["planner_seed"],
@@ -307,6 +313,7 @@ def run_provenance_from_args(args: argparse.Namespace) -> dict:
         "layout_config_sha256": sha256_file(Path(args.layout_config)),
         "gt_binding_path": args.gt_binding_rel,
         "gt_binding_path_resolved_runtime": str(Path(args.gt_binding).resolve()),
+        "launch_spawn": {"x_m": float(args.spawn_x_m), "y_m": float(args.spawn_y_m), "yaw_rad": float(args.spawn_yaw_rad)},
         "component_seeds": component_seeds,
         "acquisition_only": bool(args.acquisition_only),
         "confirmation_state": args.confirmation_state,
@@ -331,6 +338,9 @@ def add_run_provenance_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--planner-seed", type=int)
     parser.add_argument("--sensor-seed", type=int)
     parser.add_argument("--manifest-sha256")
+    parser.add_argument("--spawn-x-m", type=float, default=0.0)
+    parser.add_argument("--spawn-y-m", type=float, default=3.0)
+    parser.add_argument("--spawn-yaw-rad", type=float, default=0.0)
     parser.add_argument("--confirmation-state", default="DEVELOPMENT_RAW")
     parser.add_argument("--acquisition-only", action="store_true")
 

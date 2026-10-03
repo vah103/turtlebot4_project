@@ -335,19 +335,39 @@ def sealing_tests(manifest_sha):
         shutil.rmtree(fixture,ignore_errors=True)
 
 def check_p10(repo_root,manifest_path):
+    resolved=resolve_run(repo_root,manifest_path,45001,1)
     proc=run([
         str(repo_root/".run_core"),"--method","mapex","--environment","new_room",
         "--record","yes","--mx045-manifest",str(manifest_path),
         "--layout-seed","45001","--run-seed","1","--acquisition-only","--mx045-resolve-only",
     ],cwd=repo_root,check=False,timeout=30)
+    env=os.environ.copy()
+    env["TURTLEBOT4_PROJECT_ROOT"]=str(repo_root)
+    dry=run([
+        "ros2","launch","frontier_exploration","hospital_flat_simulation.launch.py",
+        f"world:={resolved['world_path']}",
+        f"gz_seed:={resolved['gazebo_seed']}",
+        f"x_pose:={resolved['spawn_x_m']}",
+        f"y_pose:={resolved['spawn_y_m']}",
+        f"yaw:={resolved['spawn_yaw_rad']}",
+        f"mx048_world_sha256:={resolved['world_sha256']}",
+        f"mx048_layout_config:={resolved['layout_config_path']}",
+        f"mx048_layout_config_sha256:={resolved['layout_config_sha256']}",
+        "mx048_dry_launch:=true","use_rviz:=False","headless:=True",
+    ],cwd=repo_root,env=env,check=False,timeout=30)
     a=(repo_root/"mapex_lab/launch/slam.launch.py").read_text()
-    b=(repo_root/"ros2_ws/src/frontier_exploration/launch/hospital_flat_simulation.launch.py").read_text()
     c=(repo_root/"ros2_ws/src/frontier_exploration/launch/tb4_simulation_safe.launch.py").read_text()
+    expected_spawn=f"spawn=({resolved['spawn_x_m']},{resolved['spawn_y_m']},{resolved['spawn_yaw_rad']})"
     ok=(proc.returncode==0 and "MX048_RESOLVE_ONLY_PASS" in proc.stdout
-        and "world_sha256=" in proc.stdout and "layout_config_sha256=" in proc.stdout
-        and "'gz_seed': gz_seed" in a and "'gz_seed': LaunchConfiguration('gz_seed')" in b
+        and dry.returncode==0 and "MX048_LAUNCH_BINDING_PASS" in dry.stdout
+        and resolved["world_sha256"] in dry.stdout
+        and resolved["layout_config_sha256"] in dry.stdout
+        and str(Path(resolved["layout_config_path"]).resolve()) in dry.stdout
+        and expected_spawn in dry.stdout
+        and "'mx048_world_sha256': mx048_world_sha256" in a
+        and "'mx048_layout_config': mx048_layout_config" in a
         and "'--seed', gz_seed" in c)
-    return ok,proc.stdout[-2000:]
+    return ok,(proc.stdout+"\n--- DRY LAUNCH ---\n"+dry.stdout)[-6000:]
 
 def check_p11(repo_root,manifest_path):
     r=resolve_run(repo_root,manifest_path,45001,1)
@@ -359,6 +379,7 @@ def check_p11(repo_root,manifest_path):
         gt_binding=r["gt_binding_path"],gt_binding_rel=r["gt_binding_rel"],
         gazebo_seed=r["gazebo_seed"],exploration_seed=r["exploration_seed"],
         planner_seed=r["planner_seed"],sensor_seed=r["sensor_seed"],
+        spawn_x_m=r["spawn_x_m"],spawn_y_m=r["spawn_y_m"],spawn_yaw_rad=r["spawn_yaw_rad"],
         acquisition_only=True,confirmation_state=r["confirmation_state"],
         manifest_sha256=r["manifest_sha256"],
     )
@@ -368,8 +389,9 @@ def check_p11(repo_root,manifest_path):
         and p["actual_world_sha256"]==l["world_sha256"]
         and p["layout_config_sha256"]==l["layout_config_sha256"]
         and p["world_identity_sha256"]==l["world_identity_sha256"]
+        and p["launch_spawn"]=={"x_m":0.0,"y_m":3.0,"yaw_rad":0.0}
         and p["acquisition_only"] is True)
-    return ok,json.dumps({k:p[k] for k in ("environment_world","actual_world_sha256","layout_config_sha256","world_identity_sha256","acquisition_only")},sort_keys=True)
+    return ok,json.dumps({k:p[k] for k in ("environment_world","actual_world_sha256","layout_config_sha256","world_identity_sha256","launch_spawn","acquisition_only")},sort_keys=True)
 
 def check_p12(repo_root,manifest_path):
     manifest=load_json(manifest_path); l=find_layout(manifest,45001)
