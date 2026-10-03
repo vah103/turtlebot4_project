@@ -206,6 +206,17 @@ set -u
 
 export TURTLEBOT4_PROJECT_ROOT="$ROOT_DIR"
 
+# The desktop shell may carry a remote discovery-server binding from another
+# ROS workflow.  MX050 is DELL-local and must not inherit that external graph.
+# Reset the domain-local daemon before any stale-stack or readiness query so
+# every CLI probe observes the same localhost-only graph as the launched nodes.
+unset ROS_DISCOVERY_SERVER ROS_SUPER_CLIENT
+ros2 daemon stop >/dev/null 2>&1 || true
+if ! timeout 15 ros2 daemon start >/dev/null 2>&1; then
+  echo "ERROR: failed to start the DELL-local ROS 2 daemon."
+  exit 1
+fi
+
 # ROS nodes use Ubuntu/Jazzy Python. MapEx LaMa inference keeps its own Conda
 # Python via MAPEX_LAMA_PYTHON and is launched by mapex_lama_bridge.py.
 if [[ -x /usr/bin/python3 ]]; then
@@ -498,7 +509,7 @@ ask_run_id() {
 
 lifecycle_active() {
   local node="$1"
-  timeout 3 ros2 lifecycle get "$node" 2>/dev/null | grep -Eq '^active([[:space:]]|$)'
+  timeout 15 ros2 lifecycle get "$node" 2>/dev/null | grep -Eq '^active([[:space:]]|$)'
 }
 
 clock_stable_once() {
@@ -557,7 +568,9 @@ PY
 }
 
 wait_for_stack() {
-  local timeout_s=150
+  # DELL is an authorized MX050 surface.  Its lifecycle service round-trips
+  # can exceed the COM1-era 3 s probe while the stack is already healthy.
+  local timeout_s=360
   local start_wall
   local elapsed
   local clock_notice=0
@@ -583,10 +596,10 @@ wait_for_stack() {
     local planner_active=0
     local bt_active=0
 
-    if timeout 3 ros2 topic list 2>/dev/null | grep -qx '/map'; then
+    if timeout 15 ros2 topic list 2>/dev/null | grep -qx '/map'; then
       have_map=1
     fi
-    if timeout 3 ros2 action list 2>/dev/null | grep -qx '/navigate_to_pose'; then
+    if timeout 15 ros2 action list 2>/dev/null | grep -qx '/navigate_to_pose'; then
       have_nav=1
     fi
     if lifecycle_active /controller_server; then
