@@ -297,7 +297,7 @@ preflight_clean_stack() {
 
 configure_mapex_environment() {
   export MAPEX_ROOT="${MAPEX_ROOT:-$HOME/MapEx}"
-  export MAPEX_LAMA_PYTHON="${MAPEX_LAMA_PYTHON:-/work/conda-envs/lama/bin/python}"
+  export MAPEX_LAMA_PYTHON="${MAPEX_LAMA_PYTHON:-/home/dell/miniforge3/envs/lama/bin/python}"
   export MAPEX_ENSEMBLE_DIR="${MAPEX_ENSEMBLE_DIR:-/work/com1/mapex_weights/weights/lama_ensemble}"
   export MAPEX_DEVICE="${MAPEX_DEVICE:-cpu}"
 
