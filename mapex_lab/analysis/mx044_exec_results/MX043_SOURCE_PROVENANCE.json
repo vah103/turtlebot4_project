@@ -1,0 +1,26 @@
+{
+  "B_U": 3.0,
+  "H": 3,
+  "accepted_mx040_result": "35ee9315cce3899190d439b75958fbcbe31f9851",
+  "decision_rows": 365,
+  "forbidden_sources": {
+    "F3_F4": false,
+    "Hospital": false,
+    "MX041_MX042_hidden_free": false,
+    "U": false
+  },
+  "method_blob": "1820b41bfee928560d8ac0bc93eb0d66c2b1cf66",
+  "method_commit": "333f64887f66794da7fcd6aba1ac547d6cd999d4",
+  "schema": "mx043_source_provenance_v1",
+  "source_guard": {
+    "actual": {
+      "mx031_replay": "daf11687221080790e20227f2bf7b7406476298e",
+      "mx040_features": "e91a45e2f88806d7ba52ef658c9fd86262ab9a91"
+    },
+    "expected": {
+      "mx031_replay": "daf11687221080790e20227f2bf7b7406476298e",
+      "mx040_features": "e91a45e2f88806d7ba52ef658c9fd86262ab9a91"
+    },
+    "failures": []
+  }
+}

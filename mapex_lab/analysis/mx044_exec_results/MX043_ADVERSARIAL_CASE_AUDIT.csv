@@ -1,0 +1,32 @@
+audit,semantic_pass,detail
+A1,1,future U3/Delta fields absent from runtime predictor lists
+A2,1,final three decisions per run are right-censored H3
+A3,1,"negative Coverage retained while positive target uses max(0,dA)"
+A4,1,missing future Coverage yields target NA; no interpolation
+A5,1,missing W3/model input => UNCERTAIN_CONTINUE; no back-search
+A6,1,TopoValid false at R candidate => TOPOLOGY_CONTINUE
+A7,1,outside SupportBox => UNCERTAIN_CONTINUE
+A8,1,missing model input => UNCERTAIN_CONTINUE; no imputation
+A9,1,any held-out UtilityUnder violation fails A-SV
+A10,1,held-out STOP with U3>B_U fails A-S2
+A11,1,held-out STOP with U3 unavailable sets UtilityUnverifiableStop and fails A-S2
+A12,1,premature STOP counted and fails A-S2
+A13,1,OracleRemainingFraction_GT>0.10 at STOP counted severe
+A14,1,U_upper>B_U => UTILITY_CONTINUE
+A15,1,exact budget boundary U_upper==3 may STOP
+A16,1,same-row full qualification may STOP; no wait
+A17,1,continue states reevaluated fresh; no persistent veto
+A18,1,no admissible tau => NO_RULE
+A19,1,no F1+F2 combined model
+A20,1,U/F3/F4 absent from runtime model/action
+A21,1,no MX041/MX042 hidden-free bridge/reserve/T1 machinery
+A22,1,no mpx_001 keyed patch in selector/state
+A23,1,no mpx_006 keyed patch in margin/support
+A24,1,margin is exact maximum positive inner residual
+A25,1,budget fixed at 3
+A26,1,saving concentration >0.50 fails A-S4
+A27,1,full-fit descriptive result cannot override outer gate
+A28,1,local-invalid + candidate preserves valid arm
+A29,1,local-invalid + no candidate totality
+A30,1,positive class language limited to historical development same-cohort tau universe
+A31,1,actual inner-training RIGHT_CENSORED_H3 STOP cases=5; each UtilityUnverifiableStop>0 and tau nonadmissible; no H1/H2 fallback

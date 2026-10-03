@@ -1,0 +1,18 @@
+{
+  "B_U": 3.0,
+  "H": 3,
+  "K_R": 1,
+  "SupportBox": "inclusive raw min/max for every B1+arm predictor on same tau calibration rows",
+  "arms": "F1,F2 independent; no ranking/combination",
+  "lambda": 1.0,
+  "margin": "max training-only inner-cross-fitted max(0,U3-u_hat)",
+  "runtime_stop": "R<=tau AND TopoValid AND feature/support valid AND (u_hat+margin)<=3",
+  "schema": "mx043_metric_dictionary_r1_execution",
+  "target": "U3_cells=sum(max(0,DeltaKnownArea_m2[t+1:t+3]))/raw_resolution(t)^2",
+  "tau": [
+    0.05,
+    0.06,
+    0.08,
+    0.1
+  ]
+}

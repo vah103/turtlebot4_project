@@ -1,0 +1,46 @@
+{
+  "accepted_mx040_result": "35ee9315cce3899190d439b75958fbcbe31f9851",
+  "arm_statuses": {
+    "F1": "ARM_NO_DEFENSIBLE_DIRECT_UTILITY_BOUND",
+    "F2": "ARM_NO_DEFENSIBLE_DIRECT_UTILITY_BOUND"
+  },
+  "candidate_arms": [],
+  "constraints": {
+    "B_U": 3.0,
+    "F1_F2_combined": false,
+    "H": 3,
+    "Hospital": false,
+    "K_R": 1,
+    "MX041_MX042_rescue": false,
+    "U_F3_F4_rescue": false,
+    "deployment": false,
+    "lambda": 1.0,
+    "prospective": false,
+    "retuning": false,
+    "robot_STOP": false,
+    "tau": [
+      0.05,
+      0.06,
+      0.08,
+      0.1
+    ]
+  },
+  "decision_rows": 365,
+  "hard_failures": [],
+  "method_blob": "1820b41bfee928560d8ac0bc93eb0d66c2b1cf66",
+  "method_commit": "333f64887f66794da7fcd6aba1ac547d6cd999d4",
+  "overall_classification": "MX043_NO_DEFENSIBLE_DIRECT_UTILITY_BOUND",
+  "schema": "mx043_execution_provenance_r1",
+  "source_guard": {
+    "actual": {
+      "mx031_replay": "daf11687221080790e20227f2bf7b7406476298e",
+      "mx040_features": "e91a45e2f88806d7ba52ef658c9fd86262ab9a91"
+    },
+    "expected": {
+      "mx031_replay": "daf11687221080790e20227f2bf7b7406476298e",
+      "mx040_features": "e91a45e2f88806d7ba52ef658c9fd86262ab9a91"
+    },
+    "failures": []
+  },
+  "task": "MX044"
+}
