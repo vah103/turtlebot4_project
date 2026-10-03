@@ -9,11 +9,11 @@ P7,PASS,acquisition_only suppresses offline evaluator
 P8,PASS,metadata allowed; raw numeric/GT/ROI/evaluator reads denied
 P9,PASS,synthetic unseal opens authorized path; incomplete/inconsistent unseal denied
 P10,PASS,manifest world/config resolves through canonical runner
-P11,PASS,"{""acquisition_only"": true, ""actual_world_sha256"": ""e896c06a3c49297a43eb459755f80ec666d60a0b43fd26178792c6a836da0ca7"", ""environment_world"": ""mapex_lab/map/generated/mx045_shadow/layout_45001/world.sdf"", ""layout_config_sha256"": ""91e2aea82d7783c09a28c3fb3afe482e2d14c2a5981dfd1468abb6e724c49364"", ""world_identity_sha256"": ""bae4203bd300202de921858e2a9a20be8d98cd56b268778d99eebd3d83e6fb60""}"
+P11,PASS,"{""acquisition_only"": true, ""actual_world_sha256"": ""e896c06a3c49297a43eb459755f80ec666d60a0b43fd26178792c6a836da0ca7"", ""environment_world"": ""mapex_lab/map/generated/mx045_shadow/layout_45001/world.sdf"", ""expected_layout_config_sha256"": ""f9b26a9a55ad1345ae766fa47497fa235ef413b1f59d84a8c876821d67001de3"", ""expected_world_sha256"": ""e896c06a3c49297a43eb459755f80ec666d60a0b43fd26178792c6a836da0ca7"", ""launch_spawn"": {""x_m"": 0.0, ""y_m"": 3.0, ""yaw_rad"": 0.0}, ""layout_config_sha256"": ""f9b26a9a55ad1345ae766fa47497fa235ef413b1f59d84a8c876821d67001de3"", ""world_identity_sha256"": ""1cca5e5d22cd8ee40d735760c8733aeea6e9371367cce08334661c3381302ee0""}"
 P12,PASS,one-byte world mutation rejected
 P13,PASS,12/12 bindings verify
 P14,PASS,generated world path only
-P15,PASS,no derived outputs; numeric denylist enforced
+P15,PASS,no derived outputs; numeric denylist + confirmation metadata/log redaction enforced
 P16,PASS,"{""scientific"": {""action"": ""NO_RESERVE"", ""scientific_weakness_count"": 1, ""split"": ""development""}, ""second_failure"": {""action"": ""GLOBAL_INSUFFICIENT_BLOCK"", ""invalid_primary_layouts"": [45001, 45002], ""split"": ""development""}, ""technical"": {""action"": ""ACTIVATE_WHOLE_LAYOUT_RESERVE"", ""excluded_layout"": 45001, ""required_run_seeds"": [1, 2], ""reserve_layout"": 45011, ""split"": ""development""}}"
 P17,PASS,generator imports contain no telemetry/scoring/outcome dependency
 P18,PASS,manifest complete; deterministic identity scan clean
