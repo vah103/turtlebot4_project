@@ -241,6 +241,18 @@ def validate_unseal_record(path: Path, expected: dict[str, Any]) -> dict:
             raise PermissionError(SEAL_ERROR)
     return rec
 
+def consume_unseal_once(path: Path, consumption_marker: Path, expected: dict[str, Any]) -> dict:
+    rec = validate_unseal_record(path, expected)
+    unseal_sha = sha256_file(path)
+    if consumption_marker.exists():
+        old = _load_json(consumption_marker)
+        if old.get("unseal_sha256") != unseal_sha:
+            raise PermissionError(SEAL_ERROR)
+        return rec
+    write_canonical_json(consumption_marker, {"unseal_sha256": unseal_sha, "consumed": True})
+    return rec
+
+
 def metadata_for_csv(path: Path) -> dict:
     with path.open("r", encoding="utf-8", newline="") as f:
         header = f.readline().rstrip("\r\n").split(",") if path.stat().st_size else []
