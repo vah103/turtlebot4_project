@@ -44,7 +44,7 @@ from collections import deque
 import json
 import math
 import os
-from pathlib import Path
+from pathlib import Path as FilePath
 import time
 
 import numpy as np
@@ -158,7 +158,7 @@ class NearestEuclideanFrontier(Node):
         heartbeat_path = os.environ.get("MX050_LIVENESS_HEARTBEAT_PATH")
         self.liveness_writer = (
             HeartbeatWriter(
-                Path(heartbeat_path),
+                FilePath(heartbeat_path),
                 os.environ.get("MX050_RECOVERY_RUN_SLOT", ""),
                 os.environ.get("MX050_RECOVERY_ATTEMPT_ID", ""),
             )

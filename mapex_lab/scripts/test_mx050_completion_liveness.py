@@ -56,6 +56,9 @@ class MX050RecoveryPreflight(unittest.TestCase):
         return policy
 
     def test_p1_heartbeat_cadence_and_strict_w1_boundary(self):
+        nf_source = Path("mapex_lab/scripts/nf_basic.py").read_text(encoding="utf-8")
+        self.assertIn("from pathlib import Path as FilePath", nf_source)
+        self.assertIn("FilePath(heartbeat_path)", nf_source)
         clock_value = [0.0]
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory) / "heartbeat.json"

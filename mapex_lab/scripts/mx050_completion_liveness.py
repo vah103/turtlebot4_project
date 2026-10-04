@@ -353,6 +353,44 @@ def run_preflight(args: argparse.Namespace) -> int:
     return 0
 
 
+def verify_overlay_audit(args: argparse.Namespace) -> int:
+    """Verify the frozen recovery implementation for post-attempt02 runs."""
+    repo_root = Path(args.repo_root).resolve()
+    overlay_path = Path(args.overlay).resolve()
+    audit_path = Path(args.audit).resolve()
+    overlay, overlay_sha, commit, machine, files = verify_overlay_identity(
+        repo_root, overlay_path
+    )
+    audit_sha = sha256_file(audit_path)
+    if audit_sha != read_digest_sidecar(audit_path):
+        raise RuntimeError("P1-P9 audit SHA256 sidecar mismatch")
+    audit = read_json(audit_path)
+    if not isinstance(audit, dict) or audit.get("overlay_sha256") != overlay_sha:
+        raise RuntimeError("P1-P9 audit overlay binding mismatch")
+    if audit.get("results") != {f"P{i}": "PASS" for i in range(1, 10)}:
+        raise RuntimeError("P1-P9 aggregate is not an exact all-PASS set")
+    print(
+        json.dumps(
+            {
+                "classification": "MX050_RECOVERY_IMPLEMENTATION_READY_FOR_PROSPECTIVE_RUN",
+                "target_slot": args.run_slot,
+                "target_infrastructure_attempt": args.attempt_id,
+                "original_acquisition": overlay["original_acquisition"],
+                "recovery_implementation_files": files,
+                "overlay_path": str(overlay_path),
+                "overlay_sha256": overlay_sha,
+                "p1_p9_audit_path": str(audit_path),
+                "p1_p9_audit_sha256": audit_sha,
+                "recovery_technical_commit": commit,
+                "machine_id_sha256": machine,
+                "drift_check": "PASS",
+            },
+            sort_keys=True,
+        )
+    )
+    return 0
+
+
 def verify_ready(args: argparse.Namespace) -> int:
     """Fail closed on any overlay/token/implementation identity drift."""
     repo_root = Path(args.repo_root).resolve()
@@ -500,6 +538,13 @@ def build_parser() -> argparse.ArgumentParser:
     preflight.add_argument("--overlay", required=True)
     preflight.add_argument("--audit-output", required=True)
     preflight.set_defaults(func=run_preflight)
+    prospective = subparsers.add_parser("verify-overlay-audit")
+    prospective.add_argument("--repo-root", required=True)
+    prospective.add_argument("--overlay", required=True)
+    prospective.add_argument("--audit", required=True)
+    prospective.add_argument("--run-slot", required=True)
+    prospective.add_argument("--attempt-id", required=True)
+    prospective.set_defaults(func=verify_overlay_audit)
     return parser
 
 

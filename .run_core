@@ -17,6 +17,7 @@ MX045_ACQUISITION_ONLY=0
 MX045_RESOLVE_ONLY=0
 MX050_RECOVERY_OVERLAY_ARG=""
 MX050_RECOVERY_READY_TOKEN_ARG=""
+MX050_RECOVERY_AUDIT_ARG=""
 MX050_RECOVERY_ATTEMPT_ID_ARG=""
 
 usage() {
@@ -27,6 +28,8 @@ Usage: ./run [--paper500] [--method nf|mapex] [--environment new_room]
              [--mx049-manifest PATH --layout-seed N --run-seed N --acquisition-only]
              [--mx050-recovery-overlay PATH --mx050-recovery-ready-token PATH
               --mx050-attempt-id attempt02]
+             [--mx050-recovery-overlay PATH --mx050-recovery-audit PATH
+              --mx050-attempt-id attempt01]
              [--mx045-resolve-only]
 
   --paper500   Enable the approved R003 New Room paper500 recorder profile.
@@ -89,6 +92,10 @@ while (( $# > 0 )); do
       ;;
     --mx050-recovery-ready-token)
       MX050_RECOVERY_READY_TOKEN_ARG="${2:?--mx050-recovery-ready-token requires a value}"
+      shift 2
+      ;;
+    --mx050-recovery-audit)
+      MX050_RECOVERY_AUDIT_ARG="${2:?--mx050-recovery-audit requires a value}"
       shift 2
       ;;
     --mx050-attempt-id)
@@ -714,35 +721,71 @@ if [[ -n "$MX045_MANIFEST_ARG" ]]; then
   fi
 fi
 
-if [[ -n "$MX050_RECOVERY_OVERLAY_ARG" || -n "$MX050_RECOVERY_READY_TOKEN_ARG" || -n "$MX050_RECOVERY_ATTEMPT_ID_ARG" ]]; then
-  if [[ -z "$MX050_RECOVERY_OVERLAY_ARG" || -z "$MX050_RECOVERY_READY_TOKEN_ARG" || "$MX050_RECOVERY_ATTEMPT_ID_ARG" != "attempt02" ]]; then
-    echo "ERROR: MX050 recovery requires overlay, ready token, and exact attempt02 ID."
+if [[ -n "$MX050_RECOVERY_OVERLAY_ARG" || -n "$MX050_RECOVERY_READY_TOKEN_ARG" || -n "$MX050_RECOVERY_AUDIT_ARG" || -n "$MX050_RECOVERY_ATTEMPT_ID_ARG" ]]; then
+  if [[ -z "$MX050_RECOVERY_OVERLAY_ARG" || -z "$MX050_RECOVERY_ATTEMPT_ID_ARG" || "$MX049_MANIFEST_MODE" -ne 1 ]]; then
+    echo "ERROR: MX050 recovery requires overlay, attempt ID, and MX049 manifest mode."
     exit 24
   fi
-  if [[ "$MX049_MANIFEST_MODE" -ne 1 || "${MX045_LAYOUT_SEED:-}" != "49001" || "${MX045_RUN_SEED:-}" != "1" || "${MX045_RUN_ID:-}" != "mx049_fresh_dell_l49001_r1" ]]; then
-    echo "ERROR: MX050 attempt02 gate is valid only for exact frozen 49001/r1 slot."
+  if [[ -n "$MX050_RECOVERY_READY_TOKEN_ARG" && -n "$MX050_RECOVERY_AUDIT_ARG" ]]; then
+    echo "ERROR: choose exact-attempt02 token mode or prospective audit mode, not both."
     exit 25
   fi
 
   MX050_RECOVERY_OVERLAY_PATH="$(realpath "$MX050_RECOVERY_OVERLAY_ARG")"
-  MX050_RECOVERY_READY_TOKEN_PATH="$(realpath "$MX050_RECOVERY_READY_TOKEN_ARG")"
-  MX050_RECOVERY_RUN_SLOT="mx049_fresh_dell_l49001_r1"
-  MX050_RECOVERY_ATTEMPT_ID="attempt02"
-  MX050_RUNTIME_DIR="$ROOT_DIR/evidence/mx050_recovery/runtime/attempt02"
-  MX050_OUTPUT_DIR="$ROOT_DIR/mapex_lab/experiments/mapex/mx050_recovery_attempts/attempt02/$MX050_RECOVERY_RUN_SLOT"
+  MX050_RECOVERY_RUN_SLOT="$MX045_RUN_ID"
+  MX050_RECOVERY_ATTEMPT_ID="$MX050_RECOVERY_ATTEMPT_ID_ARG"
+  MX050_VERIFY_MODE=""
+  if [[ -n "$MX050_RECOVERY_READY_TOKEN_ARG" ]]; then
+    if [[ "$MX050_RECOVERY_ATTEMPT_ID" != "attempt02" || "${MX045_LAYOUT_SEED:-}" != "49001" || "${MX045_RUN_SEED:-}" != "1" || "$MX050_RECOVERY_RUN_SLOT" != "mx049_fresh_dell_l49001_r1" ]]; then
+      echo "ERROR: exact ready token is valid only for 49001/r1 attempt02."
+      exit 25
+    fi
+    MX050_VERIFY_MODE="attempt02"
+    MX050_RECOVERY_READY_TOKEN_PATH="$(realpath "$MX050_RECOVERY_READY_TOKEN_ARG")"
+    MX050_RUNTIME_DIR="$ROOT_DIR/evidence/mx050_recovery/runtime/attempt02"
+  elif [[ -n "$MX050_RECOVERY_AUDIT_ARG" ]]; then
+    if [[ "$MX050_RECOVERY_ATTEMPT_ID" != "attempt01" || "${MX045_LAYOUT_SEED:-}" == "49001" ]]; then
+      echo "ERROR: prospective recovery mode requires attempt01 and forbids excluded layout 49001."
+      exit 25
+    fi
+    MX050_VERIFY_MODE="prospective"
+    MX050_RECOVERY_AUDIT_PATH="$(realpath "$MX050_RECOVERY_AUDIT_ARG")"
+    MX050_RUNTIME_DIR="$ROOT_DIR/evidence/mx050_recovery/runtime/$MX050_RECOVERY_RUN_SLOT/$MX050_RECOVERY_ATTEMPT_ID"
+    if [[ "${MX045_LAYOUT_SEED:-}" == "49011" ]]; then
+      MX050_RESERVE_ACTIVATION_PATH="$ROOT_DIR/evidence/mx050_recovery/runtime/attempt02/MX050_RESERVE_49011_ACTIVATION.json"
+      "$ROS_PYTHON" - "$MX050_RESERVE_ACTIVATION_PATH" <<'PY'
+import json, pathlib, sys
+p = pathlib.Path(sys.argv[1])
+d = json.loads(p.read_text())
+assert d["required_reserve_layout_seed"] == 49011
+assert d["third_49001_r1_retry_allowed"] is False
+assert d["required_run_seeds"] == [1, 2]
+PY
+      MX050_RESERVE_ACTIVATION_SHA256="$(sha256sum "$MX050_RESERVE_ACTIVATION_PATH" | awk '{print $1}')"
+      export MX050_RESERVE_ACTIVATION_PATH MX050_RESERVE_ACTIVATION_SHA256
+    fi
+  else
+    echo "ERROR: missing MX050 ready token or P1-P9 audit."
+    exit 25
+  fi
+
+  MX050_OUTPUT_DIR="$ROOT_DIR/mapex_lab/experiments/mapex/mx050_recovery_attempts/$MX050_RECOVERY_ATTEMPT_ID/$MX050_RECOVERY_RUN_SLOT"
   if [[ -e "$MX050_RUNTIME_DIR" || -e "$MX050_OUTPUT_DIR" ]]; then
-    echo "ERROR: immutable attempt02 runtime/output namespace already exists."
+    echo "ERROR: immutable MX050 recovery runtime/output namespace already exists."
     exit 26
   fi
   mkdir -p "$(dirname "$MX050_RUNTIME_DIR")"
-  MX050_PRE_ATTEMPT_DRIFT_EVIDENCE_PATH="$MX050_RUNTIME_DIR/pre_attempt02_drift_check.json"
-  MX050_DRIFT_TMP="$(mktemp "$(dirname "$MX050_RUNTIME_DIR")/.pre_attempt02_drift.XXXXXX")"
-  if ! "$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mx050_completion_liveness.py" verify-ready \
-      --repo-root "$ROOT_DIR" \
-      --overlay "$MX050_RECOVERY_OVERLAY_PATH" \
-      --ready-token "$MX050_RECOVERY_READY_TOKEN_PATH" \
-      --run-slot "$MX050_RECOVERY_RUN_SLOT" \
-      --attempt-id "$MX050_RECOVERY_ATTEMPT_ID" > "$MX050_DRIFT_TMP"; then
+  MX050_PRE_ATTEMPT_DRIFT_EVIDENCE_PATH="$MX050_RUNTIME_DIR/pre_attempt_drift_check.json"
+  MX050_DRIFT_TMP="$(mktemp "$(dirname "$MX050_RUNTIME_DIR")/.pre_attempt_drift.XXXXXX")"
+  MX050_VERIFY_ARGS=(--repo-root "$ROOT_DIR" --overlay "$MX050_RECOVERY_OVERLAY_PATH" --run-slot "$MX050_RECOVERY_RUN_SLOT" --attempt-id "$MX050_RECOVERY_ATTEMPT_ID")
+  if [[ "$MX050_VERIFY_MODE" == "attempt02" ]]; then
+    MX050_VERIFY_COMMAND="verify-ready"
+    MX050_VERIFY_ARGS+=(--ready-token "$MX050_RECOVERY_READY_TOKEN_PATH")
+  else
+    MX050_VERIFY_COMMAND="verify-overlay-audit"
+    MX050_VERIFY_ARGS+=(--audit "$MX050_RECOVERY_AUDIT_PATH")
+  fi
+  if ! "$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mx050_completion_liveness.py" "$MX050_VERIFY_COMMAND" "${MX050_VERIFY_ARGS[@]}" > "$MX050_DRIFT_TMP"; then
     rm -f "$MX050_DRIFT_TMP"
     echo "ERROR: MX050_RECOVERY_READY_TOKEN_INVALIDATED_BY_IMPLEMENTATION_OR_IDENTITY_DRIFT"
     exit 27
@@ -751,11 +794,16 @@ if [[ -n "$MX050_RECOVERY_OVERLAY_ARG" || -n "$MX050_RECOVERY_READY_TOKEN_ARG" |
   mv "$MX050_DRIFT_TMP" "$MX050_PRE_ATTEMPT_DRIFT_EVIDENCE_PATH"
 
   MX050_RECOVERY_OVERLAY_SHA256="$(sha256sum "$MX050_RECOVERY_OVERLAY_PATH" | awk '{print $1}')"
-  MX050_RECOVERY_READY_TOKEN_SHA256="$(sha256sum "$MX050_RECOVERY_READY_TOKEN_PATH" | awk '{print $1}')"
+  if [[ "$MX050_VERIFY_MODE" == "attempt02" ]]; then
+    MX050_RECOVERY_READY_TOKEN_SHA256="$(sha256sum "$MX050_RECOVERY_READY_TOKEN_PATH" | awk '{print $1}')"
+    export MX050_RECOVERY_READY_TOKEN_PATH MX050_RECOVERY_READY_TOKEN_SHA256
+  else
+    MX050_RECOVERY_AUDIT_SHA256="$(sha256sum "$MX050_RECOVERY_AUDIT_PATH" | awk '{print $1}')"
+    export MX050_RECOVERY_AUDIT_PATH MX050_RECOVERY_AUDIT_SHA256
+  fi
   MX050_LIVENESS_HEARTBEAT_PATH="$MX050_RUNTIME_DIR/technical_heartbeat.json"
   MX050_TECHNICAL_ABORT_MARKER_PATH="$MX050_RUNTIME_DIR/technical_abort.json"
-  export MX050_RECOVERY_OVERLAY_PATH MX050_RECOVERY_READY_TOKEN_PATH
-  export MX050_RECOVERY_OVERLAY_SHA256 MX050_RECOVERY_READY_TOKEN_SHA256
+  export MX050_RECOVERY_OVERLAY_PATH MX050_RECOVERY_OVERLAY_SHA256
   export MX050_RECOVERY_RUN_SLOT MX050_RECOVERY_ATTEMPT_ID
   export MX050_PRE_ATTEMPT_DRIFT_EVIDENCE_PATH
   export MX050_LIVENESS_HEARTBEAT_PATH MX050_TECHNICAL_ABORT_MARKER_PATH

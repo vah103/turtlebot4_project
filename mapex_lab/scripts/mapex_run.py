@@ -611,6 +611,16 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                 "ready_token_sha256": os.environ.get(
                     "MX050_RECOVERY_READY_TOKEN_SHA256"
                 ),
+                "p1_p9_audit_path": os.environ.get("MX050_RECOVERY_AUDIT_PATH"),
+                "p1_p9_audit_sha256": os.environ.get(
+                    "MX050_RECOVERY_AUDIT_SHA256"
+                ),
+                "reserve_activation_path": os.environ.get(
+                    "MX050_RESERVE_ACTIVATION_PATH"
+                ),
+                "reserve_activation_sha256": os.environ.get(
+                    "MX050_RESERVE_ACTIVATION_SHA256"
+                ),
                 "pre_attempt_drift_evidence_path": os.environ.get(
                     "MX050_PRE_ATTEMPT_DRIFT_EVIDENCE_PATH"
                 ),
