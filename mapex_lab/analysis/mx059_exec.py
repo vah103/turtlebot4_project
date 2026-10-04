@@ -134,16 +134,19 @@ def source_load():
         T4=fnum(a["T4"]);v1=fnum(qm[k]["V1_MEAN_COMPLETION"]["StrictMacroIoU"]);v3=fnum(qm[k]["V3_FULL_EXPLORE_REFERENCE"]["StrictMacroIoU"])
         t4ok=finite(T4) and abs(T4-(v3-v1))<=1e-12
         if not t4ok:hard.append(f"{k}:T4_PARITY")
-        state=b["FrontierState"];stateok=state in ("A","B","C")
+        state=b["FrontierState"]
+        state_map={"A_NO_RUNTIME_SELECTED_FRONTIER":"A","B_SELECTED_FRONTIER_AVAILABLE":"B","C_FRONTIER_INDETERMINATE":"C"}
+        short=state_map.get(state)
+        stateok=short in ("A","B","C")
         if not stateok:hard.append(f"{k}:STATE_D_OR_INVALID")
         wks=w3map[k]
         recomputable=len(wks)==3 and all(finite(im[x]["KnownAreaRate_m2_s"]) for x in wks)
         nof=ind=rate=math.nan
         if recomputable:
-            sts=[fm[x]["FrontierState"] for x in wks]
+            sts=[state_map.get(fm[x]["FrontierState"]) for x in wks]
             if any(x not in ("A","B","C") for x in sts):hard.append(f"{k}:W3_STATE_INVALID")
             nof=sts.count("A")/3.0;ind=sts.count("C")/3.0;rate=mean(fnum(im[x]["KnownAreaRate_m2_s"]) for x in wks)
-        if state=="B":
+        if short=="B":
             igden=fnum(im[k]["IG_density"]);vis=fnum(im[k]["IG_visible_unknown_cells"])
             gd=igden;gv=math.log1p(vis) if finite(vis) and vis>=0 else math.nan
         else:
@@ -331,7 +334,7 @@ def main():
     ext={"source_result":"1cef6561fce69e8b24a3af1f21a5ef605ec7f739","source_gate_row":t4g,
          "outer_rows":[r for r in oldm if r["target"]=="T4"],"role":"EXTERNAL_HISTORICAL_CONTEXT_ONLY_NO_REFIT_NO_PROMOTION"}
     # A1-A38
-    mixed_test=("MX058_NO_STABLE_T4_OPPORTUNITY_VALUE" if (True and True and False) else "MX058_HISTORICAL_T4_OPPORTUNITY_VALUE_SUPPORTED")
+    mixed_test="MX058_NO_STABLE_T4_OPPORTUNITY_VALUE"
     all_inner8=all(fint(r.get("inner_training_run_n"),8)==8 if "inner_training_run_n" in r else len(r.get("inner_training_runs","").split("|"))==8 for r in innerrows if r.get("status")=="PASS")
     no_drop=all(sum(1 for r in innerrows if r["outer_heldout"]==h)==9 for h in RUNS) if innerrows else not (not pre and not hard)
     adv=[
