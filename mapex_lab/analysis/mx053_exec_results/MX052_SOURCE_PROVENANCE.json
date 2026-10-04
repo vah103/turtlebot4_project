@@ -1,0 +1,50 @@
+{
+  "accepted_sources": {
+    "MX031": "d90498e1a3ead2a0c170a3fee7c02a1bc9526cca",
+    "MX040": "35ee9315cce3899190d439b75958fbcbe31f9851",
+    "MX044_U3_teacher": "dbf83b97a3bd7d44c13b78c2c663a51f0b3669a2"
+  },
+  "decision_rows": 365,
+  "forbidden_sources": {
+    "F3_F4": false,
+    "Hospital": false,
+    "MX041_bridge": false,
+    "MX043_action_rule": false,
+    "MX046_partial": false,
+    "MX050_partial": false,
+    "U_features": false,
+    "confirmation": false
+  },
+  "method_blob": "ca7cc0f92248531c10c48b88ed4be5bd8b721142",
+  "method_commit": "5cc064808b68203093d508af74fe3fc5027ddae8",
+  "offline_only": true,
+  "run_ids": [
+    "mpx_001",
+    "mpx_002",
+    "mpx_003",
+    "mpx_004",
+    "mpx_005",
+    "mpx_006",
+    "mpx_007",
+    "mpx_008",
+    "mpx_009",
+    "mpx_010"
+  ],
+  "schema": "mx052_source_provenance_r2_execution",
+  "source_guard": {
+    "actual": {
+      "features": "e91a45e2f88806d7ba52ef658c9fd86262ab9a91",
+      "mx031": "daf11687221080790e20227f2bf7b7406476298e",
+      "targets": "ff8257c2d9dabe92b5ffd142a05c763abd445221",
+      "u3_teacher": "2f7dc9fa9be9e9f87fa0599e08e6a286266513aa"
+    },
+    "expected": {
+      "features": "e91a45e2f88806d7ba52ef658c9fd86262ab9a91",
+      "mx031": "daf11687221080790e20227f2bf7b7406476298e",
+      "targets": "ff8257c2d9dabe92b5ffd142a05c763abd445221",
+      "u3_teacher": "2f7dc9fa9be9e9f87fa0599e08e6a286266513aa"
+    },
+    "failures": []
+  },
+  "task": "MX053"
+}

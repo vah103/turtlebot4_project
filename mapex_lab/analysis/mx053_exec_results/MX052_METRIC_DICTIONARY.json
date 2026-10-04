@@ -1,0 +1,80 @@
+{
+  "schema": "mx052_metric_dictionary_r2_execution",
+  "stage_a": {
+    "PGC_max": 0.5,
+    "best_separate": "nested inner LORO training-only",
+    "common_support": "T1+B1+complete_F1+complete_F2",
+    "effect_threshold": 0.025,
+    "lambda": 1.0,
+    "models": {
+      "B0": [
+        "R_map"
+      ],
+      "B1": [
+        "R_map",
+        "log_decision",
+        "log_elapsed"
+      ],
+      "J": [
+        "R_map",
+        "log_decision",
+        "log_elapsed",
+        "F1_PredOccShare",
+        "F1_OccMaskIoUMean2",
+        "F1_OccFlipRateMean2",
+        "F2_Vote3Share",
+        "F2_Vote2Share",
+        "F2_Vote1Share",
+        "F2_VotePersistenceMean2"
+      ],
+      "S1": [
+        "R_map",
+        "log_decision",
+        "log_elapsed",
+        "F1_PredOccShare",
+        "F1_OccMaskIoUMean2",
+        "F1_OccFlipRateMean2"
+      ],
+      "S2": [
+        "R_map",
+        "log_decision",
+        "log_elapsed",
+        "F2_Vote3Share",
+        "F2_Vote2Share",
+        "F2_Vote1Share",
+        "F2_VotePersistenceMean2"
+      ]
+    },
+    "primary_target": "T1"
+  },
+  "stage_b": {
+    "J_predictors": [
+      "R_map",
+      "log_decision",
+      "log_elapsed",
+      "F1_PredOccShare",
+      "F1_OccMaskIoUMean2",
+      "F1_OccFlipRateMean2",
+      "F2_Vote3Share",
+      "F2_Vote2Share",
+      "F2_Vote1Share",
+      "F2_VotePersistenceMean2"
+    ],
+    "K": 1,
+    "M1": "ridge logistic Y_area_severe=1[OracleRemainingFraction_GT>0.10]",
+    "M2": "ridge logistic Y_topo_severe=1[T2b>0]",
+    "M3": "ridge linear U3_cells lower-clipped zero",
+    "SupportBox": "inclusive raw J min/max",
+    "lambda": 1.0,
+    "q_U": [
+      0.25,
+      0.5
+    ],
+    "tau": [
+      0.05,
+      0.06,
+      0.08,
+      0.1
+    ]
+  }
+}

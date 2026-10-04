@@ -1,0 +1,22 @@
+{
+  "adversarial_pass": 36,
+  "constraints": {
+    "Gazebo": false,
+    "Hospital": false,
+    "RViz": false,
+    "confirmation": false,
+    "deployment": false,
+    "new_run": false,
+    "retuning": false,
+    "robot_STOP": false
+  },
+  "final_classification": "MX052_JOINT_SUPPORTED_STAGE_B_INSUFFICIENT_SUPPORT",
+  "hard_failures": [],
+  "method_blob": "ca7cc0f92248531c10c48b88ed4be5bd8b721142",
+  "method_commit": "5cc064808b68203093d508af74fe3fc5027ddae8",
+  "schema": "mx052_execution_provenance_r2",
+  "stage_a_classification": "MX052_STAGE_A_JOINT_INCREMENTAL_VALUE_PASS",
+  "stage_b_classification": "MX052_JOINT_SUPPORTED_STAGE_B_INSUFFICIENT_SUPPORT",
+  "stage_b_opened": true,
+  "task": "MX053"
+}

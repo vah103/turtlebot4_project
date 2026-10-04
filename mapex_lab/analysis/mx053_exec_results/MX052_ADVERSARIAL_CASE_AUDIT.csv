@@ -1,0 +1,37 @@
+audit,semantic_pass,detail
+A1,1,BestSeparate_train is inner-LORO training-only
+A2,1,all Stage-A arms use strict J common support
+A3,1,complete blocks fixed
+A4,1,lambda/model family frozen
+A5,1,runtime inputs only J
+A6,1,Stage B iff Stage-A PASS
+A7,1,severe spatial hard
+A8,1,T2b positive hard
+A9,1,T2b NA unverifiable
+A10,1,topology fail closed
+A11,1,SupportBox fail closed
+A12,1,inclusive severe threshold
+A13,1,inclusive utility threshold
+A14,1,q_U frozen
+A15,1,tau frozen
+A16,1,NO_STOP PU=0
+A17,1,timing alone not hard
+A18,1,severe cannot be traded
+A19,1,MX042 not relabeled/rescued
+A20,1,MX044 action rule not reused
+A21,1,Gate U remains FAIL
+A22,1,Hospital absent
+A23,1,MX046/MX050 absent
+A24,1,confirmation sealed
+A25,1,full-fit cannot override outer
+A26,1,Stage-A concentration enforced
+A27,1,PU concentration contract preserved
+A28,1,invalid time denominator has no fallback
+A29,1,severe calibration support insufficiency is not zero risk
+A30,1,U3 NA/right-censored unverifiable
+A31,1,no H1/H2 substitute
+A32,1,offline CSV/Git compute only
+A33,1,inner models calibration/selection only
+A34,1,A invalid precedence
+A35,1,A insuff distinct
+A36,1,B invalid precedes insuff

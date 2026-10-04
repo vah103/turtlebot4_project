@@ -1,0 +1,18 @@
+{
+  "DCS_J": 0.0009765625,
+  "DCS_pass": true,
+  "JOINT_CROSS_TARGET_CONTRADICTION": false,
+  "PGC_J": 0.1410391256604733,
+  "PGC_pass": true,
+  "both_separate_positive_pass": true,
+  "classification": "MX052_STAGE_A_JOINT_INCREMENTAL_VALUE_PASS",
+  "effect_pass": true,
+  "effect_threshold": 0.025,
+  "evaluable_folds": 10,
+  "hard_failure_count": 0,
+  "median_Delta_J_vs_Best": 0.028723059181217064,
+  "median_Delta_J_vs_S1": 0.04769947445714583,
+  "median_Delta_J_vs_S2": 0.028723059181217064,
+  "positive_folds": 10,
+  "support_insufficient": false
+}
