@@ -1,0 +1,19 @@
+{
+  "A_breach": 0.22444166235776203,
+  "A_region": 1.7955332988620962,
+  "C_scale": 0.05,
+  "effect_threshold": 0.025,
+  "lambda": 1.0,
+  "schema": "mx056_metric_dictionary_r1",
+  "stageB_K": 1,
+  "stageB_R_tau": 0.1,
+  "stageB_margin": "zero paired-regret non-inferiority",
+  "struct_regret": "max signed ConnRegret,TravRegret,UnsafeRegret",
+  "targets": {
+    "T1": "StructRegret(V1|V2)",
+    "T2": "StructRegret(V1|V3)",
+    "T3": "IoU_V2-IoU_V1",
+    "T4": "IoU_V3-IoU_V1",
+    "T5": "IoU_V1-IoU_V0"
+  }
+}

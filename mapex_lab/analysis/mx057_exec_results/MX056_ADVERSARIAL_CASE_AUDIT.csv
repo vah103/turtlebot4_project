@@ -1,0 +1,41 @@
+audit,semantic_pass,detail
+A1,1,MX055 S1/S2/S3 source rows reused unchanged
+A2,1,"V1/V2/V3 accepted values joined, not recomputed"
+A3,1,V2/GT absent runtime predictors
+A4,1,V3/future absent runtime predictors
+A5,1,saving/Oracle absent runtime predictors
+A6,1,T1-T5 derived from exact accepted MX055 rows
+A7,1,no raw-map regeneration path
+A8,1,signed targets preserved
+A9,1,struct envelope=max signed components
+A10,1,negative dimension cannot offset positive due max envelope
+A11,1,C_scale fixed
+A12,1,A_region fixed
+A13,1,A_breach fixed
+A14,1,T3 exact V2-V1 accepted StrictMacroIoU
+A15,1,T4 exact V3-V1
+A16,1,T5 exact V1-V0
+A17,1,secondary ordinal labels descriptive only
+A18,1,no target dropped
+A19,1,same primary common support for all Stage-A arms/targets
+A20,1,BestSeparate selected inner training only
+A21,1,lambda fixed
+A22,1,target predictions not clipped
+A23,1,equal total training weight per run
+A24,1,family requires all targets
+A25,1,Stage B only after family PASS
+A26,1,R fixed .10
+A27,1,K fixed 1
+A28,1,TopoValid false never STOP_SHADOW
+A29,1,outside SupportBox abstains
+A30,1,max empirical residual envelopes
+A31,1,zero regret margin
+A32,1,positive U_T1/U_T2 blocks STOP
+A33,1,positive U_T4 blocks STOP
+A34,1,L_T5<=0 blocks STOP
+A35,1,U_T3>=L_T5 blocks STOP
+A36,1,Oracle evaluator-only
+A37,1,paired regret never called absolute safety
+A38,1,Hospital/MX046/MX050/confirmation absent
+A39,1,offline replay only
+A40,1,no deployment/robot STOP

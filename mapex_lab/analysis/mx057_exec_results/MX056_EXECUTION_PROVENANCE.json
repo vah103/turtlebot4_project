@@ -1,0 +1,56 @@
+{
+  "A1_A40_pass": 40,
+  "classification": "MX056_JOINT_NO_STABLE_PAIRED_REGRET_PREDICTIVE_VALUE",
+  "constraints": {
+    "K_search": false,
+    "deployment": false,
+    "new_run": false,
+    "retune": false,
+    "robot_STOP": false,
+    "target_subset_rescue": false,
+    "tau_search": false
+  },
+  "hard_failures": [],
+  "schema": "mx056_execution_provenance_r1",
+  "source_insufficiencies": [],
+  "stage0": {
+    "all_targets_identifiable": true,
+    "benefit_context_pass": true,
+    "benefit_positive_median_runs": 10,
+    "benefit_positive_row_fraction": 1.0,
+    "classification": "MX056_STAGE0_PASS",
+    "common_support_n": 345,
+    "common_support_pass": true,
+    "failures": [],
+    "per_run_common_support": {
+      "mpx_001": 33,
+      "mpx_002": 35,
+      "mpx_003": 39,
+      "mpx_004": 34,
+      "mpx_005": 32,
+      "mpx_006": 34,
+      "mpx_007": 33,
+      "mpx_008": 33,
+      "mpx_009": 34,
+      "mpx_010": 38
+    }
+  },
+  "stage_a": {
+    "all_five_pass": false,
+    "classification": "MX056_JOINT_NO_STABLE_PAIRED_REGRET_PREDICTIVE_VALUE",
+    "failed_targets": [
+      "T4"
+    ],
+    "passed_targets": [
+      "T1",
+      "T2",
+      "T3",
+      "T5"
+    ]
+  },
+  "stage_b_opened": false,
+  "stage_b_summary": {
+    "upstream_reason": "MX056_JOINT_NO_STABLE_PAIRED_REGRET_PREDICTIVE_VALUE"
+  },
+  "task": "MX057"
+}

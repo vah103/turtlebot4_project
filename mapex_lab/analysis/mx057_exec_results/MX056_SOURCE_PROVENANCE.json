@@ -1,0 +1,34 @@
+{
+  "accepted_parent_result": "a19f0902ffefdd009bf1c5661c16ebf03b1f47cb",
+  "common_support_rows": 345,
+  "decision_rows": 365,
+  "forbidden_sources": {
+    "Hospital": false,
+    "MX046": false,
+    "MX050": false,
+    "confirmation": false,
+    "new_run": false,
+    "raw_reconstruction": false
+  },
+  "hard_failures": [],
+  "method_blob": "41397cc70063f9106b917450a34188dbd287c6ac",
+  "method_commit": "cb91dd2d132d860576be5557a16b7c59858026ef",
+  "schema": "mx056_source_provenance_r1",
+  "source_blob_actual": {
+    "events": "fe347c7ba64838e8cc830a23bc9681ceebe5373b",
+    "mx031": "daf11687221080790e20227f2bf7b7406476298e",
+    "quality": "ed77ae4c44585e3883b6c42d1c0bc7c356891cf6",
+    "saving": "50a90f21b986d926510fdad4b9dfa8c5928142cf",
+    "signal": "65d4b3e7bf2197683ab1ce6678d8bee97171fd48",
+    "struct": "4f093e71473960fa9697ec49b806acd0cc37cb43"
+  },
+  "source_blob_expected": {
+    "events": "fe347c7ba64838e8cc830a23bc9681ceebe5373b",
+    "mx031": "daf11687221080790e20227f2bf7b7406476298e",
+    "quality": "ed77ae4c44585e3883b6c42d1c0bc7c356891cf6",
+    "saving": "50a90f21b986d926510fdad4b9dfa8c5928142cf",
+    "signal": "65d4b3e7bf2197683ab1ce6678d8bee97171fd48",
+    "struct": "4f093e71473960fa9697ec49b806acd0cc37cb43"
+  },
+  "source_insufficiencies": []
+}
