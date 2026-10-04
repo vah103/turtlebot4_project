@@ -1298,6 +1298,11 @@ def main():
         )
         executor = MultiThreadedExecutor(num_threads=4)
         executor.add_node(node)
+        node.emit_liveness(
+            "explorer_control_ready",
+            state="EXPLORING",
+            reason="explorer_control_ready",
+        )
         while rclpy.ok() and not node.completed:
             executor.spin_once(timeout_sec=0.2)
         if node.completed and not node.finalized:

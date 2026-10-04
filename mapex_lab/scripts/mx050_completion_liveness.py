@@ -224,6 +224,42 @@ def recovery_disposition(attempt_id: str, terminal_reason: str) -> dict[str, Any
     }
 
 
+def r2_reserve_disposition(attempt_id: str, terminal_reason: str) -> dict[str, Any]:
+    """Exact R2 transaction for the activated 49011 reserve slot."""
+    method_gap = "PRE_R2_ABORT_LAMA_STARTUP_HEARTBEAT_SCOPE_METHOD_GAP"
+    if attempt_id == "attempt01" and terminal_reason == method_gap:
+        return {
+            "scientific_slot_filled": False,
+            "allow_49011_r1_attempt02": True,
+            "allow_third_49011_r1_attempt": False,
+            "activate_additional_reserve": False,
+            "classification": "AUDIT_ONLY_PRE_R2_METHOD_GAP",
+        }
+    if attempt_id == "attempt02" and terminal_reason in WATCHDOG_REASONS:
+        return {
+            "scientific_slot_filled": False,
+            "allow_49011_r1_attempt02": False,
+            "allow_third_49011_r1_attempt": False,
+            "activate_additional_reserve": False,
+            "classification": "INSUFFICIENT_NEW_DATA",
+        }
+    if attempt_id == "attempt02" and terminal_reason == "ordinary_completion":
+        return {
+            "scientific_slot_filled": True,
+            "allow_49011_r1_attempt02": False,
+            "allow_third_49011_r1_attempt": False,
+            "activate_additional_reserve": False,
+            "classification": "PENDING_COLLECTION_INTEGRITY_QA",
+        }
+    return {
+        "scientific_slot_filled": False,
+        "allow_49011_r1_attempt02": False,
+        "allow_third_49011_r1_attempt": False,
+        "activate_additional_reserve": False,
+        "classification": "MX050_BLOCKED_UNCLASSIFIED_FAILURE",
+    }
+
+
 def read_json(path: Path) -> Any:
     try:
         return json.loads(path.read_text(encoding="utf-8"))
@@ -324,15 +360,15 @@ def run_preflight(args: argparse.Namespace) -> int:
     shared_binding = {
         "overlay_path": str(overlay_path),
         "overlay_sha256": overlay_sha,
-        "accepted_r1a_commit": overlay["accepted_recovery_method"]["commit"],
-        "accepted_r1a_blob": overlay["accepted_recovery_method"]["git_blob"],
+        "accepted_r2_commit": overlay["accepted_recovery_method"]["commit"],
+        "accepted_r2_blob": overlay["accepted_recovery_method"]["git_blob"],
         "recovery_technical_commit": commit,
         "recovery_implementation_files": files,
         "machine_id_sha256": machine,
     }
     audit = {
-        "schema": "MX050_RECOVERY_P1_P9_AUDIT_V1",
-        "classification": "MX050_RECOVERY_IMPLEMENTATION_PREFLIGHT_PASS",
+        "schema": "MX050_RECOVERY_R2_P1_P9_AUDIT_V1",
+        "classification": "MX050_RECOVERY_R2_IMPLEMENTATION_PREFLIGHT_PASS",
         **shared_binding,
         "results": results,
         "records": [
@@ -409,7 +445,7 @@ def verify_ready(args: argparse.Namespace) -> int:
     if token_sha != read_digest_sidecar(token_path):
         raise RuntimeError("ready-token SHA256 sidecar mismatch")
     if token.get("classification") != (
-        "MX050_RECOVERY_READY_FOR_EXACT_49001_R1_ATTEMPT02"
+        "MX050_RECOVERY_R2_READY_FOR_EXACT_49011_R1_ATTEMPT02"
     ):
         raise RuntimeError("ready-token classification mismatch")
     if token.get("target_slot") != args.run_slot or token.get(
@@ -454,7 +490,8 @@ def verify_ready(args: argparse.Namespace) -> int:
                 "artifact_namespace_isolation": {
                     "attempt01_reuse": False,
                     "attempt02_runtime": str(
-                        repo_root / "evidence/mx050_recovery/runtime/attempt02"
+                        repo_root
+                        / "evidence/mx050_recovery/runtime/mx049_fresh_dell_l49011_r1/attempt02"
                     ),
                     "attempt02_output": str(
                         repo_root

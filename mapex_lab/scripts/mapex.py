@@ -41,6 +41,7 @@ from pathlib import Path
 import sys
 import time
 from typing import Iterable
+from typing import Callable
 
 import numpy as np
 import rclpy
@@ -262,6 +263,7 @@ class LamaEnsemble:
         mapex_root: Path,
         device: str,
         prediction_config: dict,
+        readiness_heartbeat: Callable[[], None] | None = None,
     ) -> None:
         self.mapex_root = mapex_root.expanduser().resolve()
         self.device = device
@@ -309,6 +311,8 @@ class LamaEnsemble:
         self.models = []
         self.source_names = []
         for model_dir, checkpoint_name in model_specs:
+            if readiness_heartbeat is not None:
+                readiness_heartbeat()
             model = self.load_lama_model(
                 str(model_dir),
                 checkpoint_name=checkpoint_name,
@@ -515,10 +519,25 @@ class MapExExplorer(NearestEuclideanFrontier):
         )
 
         self.get_logger().info("Loading official MapEx LaMa ensemble...")
+        self.emit_liveness(
+            "lama_initializing",
+            state="INITIALIZING_LAMA",
+            reason="startup",
+        )
         self.ensemble = LamaEnsemble(
             self.mapex_root,
             self.mapex_device,
             prediction,
+            readiness_heartbeat=lambda: self.emit_liveness(
+                "lama_loading_heartbeat",
+                state="INITIALIZING_LAMA",
+                reason="startup",
+            ),
+        )
+        self.emit_liveness(
+            "lama_ready",
+            state="INITIALIZING_LAMA",
+            reason="lama_ready",
         )
 
         self.mapex_decision_id = 0

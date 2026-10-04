@@ -6,8 +6,11 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+import selectors
 import subprocess
 import tempfile
+import time
+from typing import Callable
 
 import numpy as np
 
@@ -15,7 +18,13 @@ import numpy as np
 class LamaEnsembleBridge:
     """Drop-in replacement for mapex.LamaEnsemble using a separate Python env."""
 
-    def __init__(self, mapex_root: Path, device: str, prediction_config: dict) -> None:
+    def __init__(
+        self,
+        mapex_root: Path,
+        device: str,
+        prediction_config: dict,
+        readiness_heartbeat: Callable[[], None] | None = None,
+    ) -> None:
         self.mapex_root = mapex_root.expanduser().resolve()
         self.device = device
         self.prediction_config = prediction_config
@@ -65,7 +74,7 @@ class LamaEnsembleBridge:
             text=True,
             bufsize=1,
         )
-        ready = self._read_response()
+        ready = self._read_startup_response(readiness_heartbeat)
         if ready.get("status") != "ready":
             self.close()
             raise RuntimeError(
@@ -73,6 +82,45 @@ class LamaEnsembleBridge:
                 f"{ready.get('error', ready)}"
             )
         self.source_names = list(ready.get("sources", []))
+
+    def _read_startup_response(
+        self,
+        readiness_heartbeat: Callable[[], None] | None,
+    ) -> dict:
+        """Wait for worker readiness while the active wait path proves liveness.
+
+        This is deliberately a polled synchronous wait, not a detached ticker:
+        if this control path stops iterating, loading heartbeats stop as well and
+        the external W1 supervisor fails closed.
+        """
+        if self.process.stdout is None:
+            raise RuntimeError("MapEx LaMa worker stdout is unavailable")
+        if readiness_heartbeat is None:
+            return self._read_response()
+
+        heartbeat_period_s = 5.0
+        next_heartbeat_s = time.monotonic() + heartbeat_period_s
+        with selectors.DefaultSelector() as selector:
+            selector.register(self.process.stdout, selectors.EVENT_READ)
+            while True:
+                now_s = time.monotonic()
+                timeout_s = max(0.0, next_heartbeat_s - now_s)
+                if selector.select(timeout_s):
+                    line = self.process.stdout.readline()
+                    if line:
+                        return self._decode_response(line)
+                if self.process.poll() is not None:
+                    return {
+                        "status": "fatal",
+                        "error": (
+                            "worker exited before ready with code "
+                            f"{self.process.returncode}"
+                        ),
+                    }
+                now_s = time.monotonic()
+                if now_s >= next_heartbeat_s:
+                    readiness_heartbeat()
+                    next_heartbeat_s = now_s + heartbeat_period_s
 
     def _read_response(self) -> dict:
         if self.process.stdout is None:
@@ -83,6 +131,10 @@ class LamaEnsembleBridge:
                 "status": "fatal",
                 "error": f"worker exited with code {self.process.poll()}",
             }
+        return self._decode_response(line)
+
+    @staticmethod
+    def _decode_response(line: str) -> dict:
         try:
             payload = json.loads(line)
         except json.JSONDecodeError as exc:

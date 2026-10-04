@@ -736,13 +736,13 @@ if [[ -n "$MX050_RECOVERY_OVERLAY_ARG" || -n "$MX050_RECOVERY_READY_TOKEN_ARG" |
   MX050_RECOVERY_ATTEMPT_ID="$MX050_RECOVERY_ATTEMPT_ID_ARG"
   MX050_VERIFY_MODE=""
   if [[ -n "$MX050_RECOVERY_READY_TOKEN_ARG" ]]; then
-    if [[ "$MX050_RECOVERY_ATTEMPT_ID" != "attempt02" || "${MX045_LAYOUT_SEED:-}" != "49001" || "${MX045_RUN_SEED:-}" != "1" || "$MX050_RECOVERY_RUN_SLOT" != "mx049_fresh_dell_l49001_r1" ]]; then
-      echo "ERROR: exact ready token is valid only for 49001/r1 attempt02."
+    if [[ "$MX050_RECOVERY_ATTEMPT_ID" != "attempt02" || "${MX045_LAYOUT_SEED:-}" != "49011" || "${MX045_RUN_SEED:-}" != "1" || "$MX050_RECOVERY_RUN_SLOT" != "mx049_fresh_dell_l49011_r1" ]]; then
+      echo "ERROR: exact R2 ready token is valid only for 49011/r1 attempt02."
       exit 25
     fi
     MX050_VERIFY_MODE="attempt02"
     MX050_RECOVERY_READY_TOKEN_PATH="$(realpath "$MX050_RECOVERY_READY_TOKEN_ARG")"
-    MX050_RUNTIME_DIR="$ROOT_DIR/evidence/mx050_recovery/runtime/attempt02"
+    MX050_RUNTIME_DIR="$ROOT_DIR/evidence/mx050_recovery/runtime/$MX050_RECOVERY_RUN_SLOT/attempt02"
   elif [[ -n "$MX050_RECOVERY_AUDIT_ARG" ]]; then
     if [[ "$MX050_RECOVERY_ATTEMPT_ID" != "attempt01" || "${MX045_LAYOUT_SEED:-}" == "49001" ]]; then
       echo "ERROR: prospective recovery mode requires attempt01 and forbids excluded layout 49001."
