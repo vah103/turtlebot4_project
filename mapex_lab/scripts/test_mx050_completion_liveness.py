@@ -155,6 +155,11 @@ class MX050RecoveryPreflight(unittest.TestCase):
             "mx049_fresh_dell_l49001_r1"
         )
         self.assertNotEqual(attempt01, attempt02)
+        runner_source = Path(".run_core").read_text(encoding="utf-8")
+        self.assertIn(
+            'mx050_recovery_attempts/$MX050_RECOVERY_ATTEMPT_ID_ARG/$RUN_ID',
+            runner_source,
+        )
         disposition = live.recovery_disposition(
             "attempt01", "PRE_AMENDMENT_ABORT_COMPLETION_LIVENESS_METHOD_GAP"
         )

@@ -475,7 +475,9 @@ ask_run_id() {
       continue
     fi
 
-    if [[ "$METHOD" == "nf" ]]; then
+    if [[ -n "$MX050_RECOVERY_ATTEMPT_ID_ARG" ]]; then
+      run_dir="$ROOT_DIR/mapex_lab/experiments/mapex/mx050_recovery_attempts/$MX050_RECOVERY_ATTEMPT_ID_ARG/$RUN_ID"
+    elif [[ "$METHOD" == "nf" ]]; then
       run_dir="$ROOT_DIR/mapex_lab/experiments/nearest/$RUN_ID"
     else
       run_dir="$ROOT_DIR/mapex_lab/experiments/mapex/$RUN_ID"
