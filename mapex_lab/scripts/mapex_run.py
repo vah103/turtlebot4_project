@@ -253,7 +253,18 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
                 ground_truth_id=PAPER500_EVAL_ID,
             )
 
-        run = root / "experiments" / "mapex" / run_id
+        recovery_attempt_id = os.environ.get("MX050_RECOVERY_ATTEMPT_ID")
+        if recovery_attempt_id:
+            run = (
+                root
+                / "experiments"
+                / "mapex"
+                / "mx050_recovery_attempts"
+                / recovery_attempt_id
+                / run_id
+            )
+        else:
+            run = root / "experiments" / "mapex" / run_id
         if run.exists():
             raise RuntimeError(f"Run exists: {run}")
 
@@ -587,6 +598,25 @@ class MapExRun(Stage2Run, mapex.MapExExplorer):
             metadata["collection_task"] = "MX050"
             metadata["cohort_provenance_label"] = "MX049_FRESH_DELL_V1"
             metadata["ground_truth_binding_timing"] = "frozen_pre_outcome"
+        if os.environ.get("MX050_RECOVERY_ATTEMPT_ID"):
+            metadata["mx050_recovery_provenance"] = {
+                "attempt_id": os.environ["MX050_RECOVERY_ATTEMPT_ID"],
+                "original_acquisition_technical_repo_commit": (
+                    "2b44f5ca2becb94abb2d1d3cac3b3dbbff923fdd"
+                ),
+                "recovery_technical_repo_commit": git_commit,
+                "overlay_path": os.environ.get("MX050_RECOVERY_OVERLAY_PATH"),
+                "overlay_sha256": os.environ.get("MX050_RECOVERY_OVERLAY_SHA256"),
+                "ready_token_path": os.environ.get("MX050_RECOVERY_READY_TOKEN_PATH"),
+                "ready_token_sha256": os.environ.get(
+                    "MX050_RECOVERY_READY_TOKEN_SHA256"
+                ),
+                "pre_attempt_drift_evidence_path": os.environ.get(
+                    "MX050_PRE_ATTEMPT_DRIFT_EVIDENCE_PATH"
+                ),
+                "attempt01_artifact_reuse": False,
+                "artifact_namespace": str(self.run),
+            }
         self._write_metadata(metadata)
         return metadata
 
@@ -1267,8 +1297,20 @@ def main():
         pass
     finally:
         if node is not None:
-            if not node.finalized:
+            technical_abort_marker = os.environ.get(
+                "MX050_TECHNICAL_ABORT_MARKER_PATH"
+            )
+            technical_abort_active = bool(
+                technical_abort_marker
+                and FilePath(technical_abort_marker).is_file()
+            )
+            if not node.finalized and not technical_abort_active:
                 node.finalize("keyboard_interrupt")
+            elif technical_abort_active:
+                print(
+                    "MX050 TECHNICAL ABORT: preserving partial artifacts without "
+                    "synthesizing summary.json"
+                )
             run_dir = node.run
             ground_truth_path = node.ground_truth_path
             roi_path = node.roi_path

@@ -15,6 +15,9 @@ MX045_LAYOUT_SEED_ARG=""
 MX045_RUN_SEED_ARG=""
 MX045_ACQUISITION_ONLY=0
 MX045_RESOLVE_ONLY=0
+MX050_RECOVERY_OVERLAY_ARG=""
+MX050_RECOVERY_READY_TOKEN_ARG=""
+MX050_RECOVERY_ATTEMPT_ID_ARG=""
 
 usage() {
   cat <<'EOF'
@@ -22,6 +25,8 @@ Usage: ./run [--paper500] [--method nf|mapex] [--environment new_room]
              [--record yes|no] [--run-id ID]
              [--mx045-manifest PATH --layout-seed N --run-seed N --acquisition-only]
              [--mx049-manifest PATH --layout-seed N --run-seed N --acquisition-only]
+             [--mx050-recovery-overlay PATH --mx050-recovery-ready-token PATH
+              --mx050-attempt-id attempt02]
              [--mx045-resolve-only]
 
   --paper500   Enable the approved R003 New Room paper500 recorder profile.
@@ -78,6 +83,18 @@ while (( $# > 0 )); do
       MX045_RESOLVE_ONLY=1
       shift
       ;;
+    --mx050-recovery-overlay)
+      MX050_RECOVERY_OVERLAY_ARG="${2:?--mx050-recovery-overlay requires a value}"
+      shift 2
+      ;;
+    --mx050-recovery-ready-token)
+      MX050_RECOVERY_READY_TOKEN_ARG="${2:?--mx050-recovery-ready-token requires a value}"
+      shift 2
+      ;;
+    --mx050-attempt-id)
+      MX050_RECOVERY_ATTEMPT_ID_ARG="${2:?--mx050-attempt-id requires a value}"
+      shift 2
+      ;;
     -h|--help)
       usage
       exit 0
@@ -94,6 +111,7 @@ LAUNCH_PID=""
 LAUNCH_SID=""
 EXPLORATION_PID=""
 EXPLORATION_SID=""
+LIVENESS_SUPERVISOR_PID=""
 CLEANED_UP=0
 
 session_alive() {
@@ -171,6 +189,12 @@ cleanup() {
   echo
   echo "Stopping experiment..."
 
+  if [[ -n "$LIVENESS_SUPERVISOR_PID" ]]; then
+    kill "$LIVENESS_SUPERVISOR_PID" 2>/dev/null || true
+    wait "$LIVENESS_SUPERVISOR_PID" 2>/dev/null || true
+    LIVENESS_SUPERVISOR_PID=""
+  fi
+
   if [[ -n "$EXPLORATION_SID" ]]; then
     stop_session "$EXPLORATION_SID" "$EXPLORATION_PID" "exploration"
     EXPLORATION_PID=""
@@ -230,7 +254,7 @@ if [[ -z "$ROS_PYTHON" ]]; then
   exit 1
 fi
 
-for required_cmd in setsid pkill ps timeout; do
+for required_cmd in setsid pkill ps timeout realpath sha256sum mktemp; do
   if ! command -v "$required_cmd" >/dev/null 2>&1; then
     echo "ERROR: required command not found: $required_cmd"
     exit 1
@@ -688,6 +712,53 @@ if [[ -n "$MX045_MANIFEST_ARG" ]]; then
   fi
 fi
 
+if [[ -n "$MX050_RECOVERY_OVERLAY_ARG" || -n "$MX050_RECOVERY_READY_TOKEN_ARG" || -n "$MX050_RECOVERY_ATTEMPT_ID_ARG" ]]; then
+  if [[ -z "$MX050_RECOVERY_OVERLAY_ARG" || -z "$MX050_RECOVERY_READY_TOKEN_ARG" || "$MX050_RECOVERY_ATTEMPT_ID_ARG" != "attempt02" ]]; then
+    echo "ERROR: MX050 recovery requires overlay, ready token, and exact attempt02 ID."
+    exit 24
+  fi
+  if [[ "$MX049_MANIFEST_MODE" -ne 1 || "${MX045_LAYOUT_SEED:-}" != "49001" || "${MX045_RUN_SEED:-}" != "1" || "${MX045_RUN_ID:-}" != "mx049_fresh_dell_l49001_r1" ]]; then
+    echo "ERROR: MX050 attempt02 gate is valid only for exact frozen 49001/r1 slot."
+    exit 25
+  fi
+
+  MX050_RECOVERY_OVERLAY_PATH="$(realpath "$MX050_RECOVERY_OVERLAY_ARG")"
+  MX050_RECOVERY_READY_TOKEN_PATH="$(realpath "$MX050_RECOVERY_READY_TOKEN_ARG")"
+  MX050_RECOVERY_RUN_SLOT="mx049_fresh_dell_l49001_r1"
+  MX050_RECOVERY_ATTEMPT_ID="attempt02"
+  MX050_RUNTIME_DIR="$ROOT_DIR/evidence/mx050_recovery/runtime/attempt02"
+  MX050_OUTPUT_DIR="$ROOT_DIR/mapex_lab/experiments/mapex/mx050_recovery_attempts/attempt02/$MX050_RECOVERY_RUN_SLOT"
+  if [[ -e "$MX050_RUNTIME_DIR" || -e "$MX050_OUTPUT_DIR" ]]; then
+    echo "ERROR: immutable attempt02 runtime/output namespace already exists."
+    exit 26
+  fi
+  mkdir -p "$(dirname "$MX050_RUNTIME_DIR")"
+  MX050_PRE_ATTEMPT_DRIFT_EVIDENCE_PATH="$MX050_RUNTIME_DIR/pre_attempt02_drift_check.json"
+  MX050_DRIFT_TMP="$(mktemp "$(dirname "$MX050_RUNTIME_DIR")/.pre_attempt02_drift.XXXXXX")"
+  if ! "$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mx050_completion_liveness.py" verify-ready \
+      --repo-root "$ROOT_DIR" \
+      --overlay "$MX050_RECOVERY_OVERLAY_PATH" \
+      --ready-token "$MX050_RECOVERY_READY_TOKEN_PATH" \
+      --run-slot "$MX050_RECOVERY_RUN_SLOT" \
+      --attempt-id "$MX050_RECOVERY_ATTEMPT_ID" > "$MX050_DRIFT_TMP"; then
+    rm -f "$MX050_DRIFT_TMP"
+    echo "ERROR: MX050_RECOVERY_READY_TOKEN_INVALIDATED_BY_IMPLEMENTATION_OR_IDENTITY_DRIFT"
+    exit 27
+  fi
+  mkdir "$MX050_RUNTIME_DIR"
+  mv "$MX050_DRIFT_TMP" "$MX050_PRE_ATTEMPT_DRIFT_EVIDENCE_PATH"
+
+  MX050_RECOVERY_OVERLAY_SHA256="$(sha256sum "$MX050_RECOVERY_OVERLAY_PATH" | awk '{print $1}')"
+  MX050_RECOVERY_READY_TOKEN_SHA256="$(sha256sum "$MX050_RECOVERY_READY_TOKEN_PATH" | awk '{print $1}')"
+  MX050_LIVENESS_HEARTBEAT_PATH="$MX050_RUNTIME_DIR/technical_heartbeat.json"
+  MX050_TECHNICAL_ABORT_MARKER_PATH="$MX050_RUNTIME_DIR/technical_abort.json"
+  export MX050_RECOVERY_OVERLAY_PATH MX050_RECOVERY_READY_TOKEN_PATH
+  export MX050_RECOVERY_OVERLAY_SHA256 MX050_RECOVERY_READY_TOKEN_SHA256
+  export MX050_RECOVERY_RUN_SLOT MX050_RECOVERY_ATTEMPT_ID
+  export MX050_PRE_ATTEMPT_DRIFT_EVIDENCE_PATH
+  export MX050_LIVENESS_HEARTBEAT_PATH MX050_TECHNICAL_ABORT_MARKER_PATH
+fi
+
 if [[ "$PAPER500" -eq 1 ]]; then
   if [[ "$ENVIRONMENT" != "new_room" ]]; then
     echo "ERROR: --paper500 is only valid for New Room."
@@ -818,10 +889,58 @@ setsid "${EXPLORE_CMD[@]}" &
 EXPLORATION_PID=$!
 EXPLORATION_SID="$EXPLORATION_PID"
 
-set +e
-wait "$EXPLORATION_PID"
-EXPLORATION_STATUS=$?
-set -e
+if [[ -n "${MX050_LIVENESS_HEARTBEAT_PATH:-}" ]]; then
+  "$ROS_PYTHON" "$ROOT_DIR/mapex_lab/scripts/mx050_completion_liveness.py" supervise \
+    --heartbeat "$MX050_LIVENESS_HEARTBEAT_PATH" \
+    --abort-marker "$MX050_TECHNICAL_ABORT_MARKER_PATH" \
+    --run-slot "$MX050_RECOVERY_RUN_SLOT" \
+    --attempt-id "$MX050_RECOVERY_ATTEMPT_ID" \
+    --explorer-pid "$EXPLORATION_PID" &
+  LIVENESS_SUPERVISOR_PID=$!
+
+  EXPLORATION_STATUS=0
+  while kill -0 "$EXPLORATION_PID" 2>/dev/null; do
+    if ! kill -0 "$LIVENESS_SUPERVISOR_PID" 2>/dev/null; then
+      set +e
+      wait "$LIVENESS_SUPERVISOR_PID"
+      SUPERVISOR_STATUS=$?
+      set -e
+      LIVENESS_SUPERVISOR_PID=""
+      if [[ "$SUPERVISOR_STATUS" -eq 42 && -f "$MX050_TECHNICAL_ABORT_MARKER_PATH" ]]; then
+        stop_session "$EXPLORATION_SID" "$EXPLORATION_PID" "exploration after MX050 technical abort"
+        EXPLORATION_PID=""
+        EXPLORATION_SID=""
+        EXPLORATION_STATUS=42
+        break
+      fi
+      echo "ERROR: MX050 liveness supervisor exited unexpectedly: $SUPERVISOR_STATUS"
+      stop_session "$EXPLORATION_SID" "$EXPLORATION_PID" "exploration after supervisor failure"
+      EXPLORATION_PID=""
+      EXPLORATION_SID=""
+      EXPLORATION_STATUS=43
+      break
+    fi
+    sleep 0.25
+  done
+  if [[ -n "$EXPLORATION_PID" ]]; then
+    set +e
+    wait "$EXPLORATION_PID"
+    EXPLORATION_STATUS=$?
+    set -e
+    EXPLORATION_PID=""
+    EXPLORATION_SID=""
+  fi
+  if [[ -n "$LIVENESS_SUPERVISOR_PID" ]]; then
+    kill "$LIVENESS_SUPERVISOR_PID" 2>/dev/null || true
+    wait "$LIVENESS_SUPERVISOR_PID" 2>/dev/null || true
+    LIVENESS_SUPERVISOR_PID=""
+  fi
+else
+  set +e
+  wait "$EXPLORATION_PID"
+  EXPLORATION_STATUS=$?
+  set -e
+fi
 
 if [[ "$EXPLORATION_STATUS" -ne 0 && "$EXPLORATION_STATUS" -ne 130 ]]; then
   echo "Exploration ket thuc voi ma loi: $EXPLORATION_STATUS"

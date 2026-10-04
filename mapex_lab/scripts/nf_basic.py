@@ -44,6 +44,8 @@ from collections import deque
 import json
 import math
 import os
+from pathlib import Path
+import time
 
 import numpy as np
 import rclpy
@@ -56,6 +58,8 @@ from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
 from std_msgs.msg import Bool, String
 from tf2_ros import Buffer, TransformException, TransformListener
 from visualization_msgs.msg import Marker, MarkerArray
+
+from mx050_completion_liveness import HEARTBEAT_PERIOD_S, HeartbeatWriter
 
 
 MIN_REGION_SIZE = 10
@@ -144,6 +148,23 @@ class NearestEuclideanFrontier(Node):
         self.revalidation_index = 0
         self.revalidation_signature = None
         self.revalidation_last_start_s = -math.inf
+        self.revalidation_action_pending = False
+        self.revalidation_action_started_monotonic_s = None
+
+        # MX050 recovery uses a file heartbeat rather than a ROS topic so the
+        # control-plane monitor remains independent of a stalled ROS executor.
+        # It is enabled only by the recovery launch gate.
+        self.last_map_callback_monotonic_s = None
+        heartbeat_path = os.environ.get("MX050_LIVENESS_HEARTBEAT_PATH")
+        self.liveness_writer = (
+            HeartbeatWriter(
+                Path(heartbeat_path),
+                os.environ.get("MX050_RECOVERY_RUN_SLOT", ""),
+                os.environ.get("MX050_RECOVERY_ATTEMPT_ID", ""),
+            )
+            if heartbeat_path
+            else None
+        )
 
         self.create_subscription(OccupancyGrid, "/map", self.map_callback, 10)
         self.create_subscription(Path, "/plan", self.plan_callback, 10)
@@ -184,6 +205,11 @@ class NearestEuclideanFrontier(Node):
             "compute_path_to_pose",
         )
         self.timer = self.create_timer(1.0, self.exploration_step)
+        self.liveness_timer = (
+            self.create_timer(HEARTBEAT_PERIOD_S, self.publish_liveness_heartbeat)
+            if self.liveness_writer is not None
+            else None
+        )
 
         if not os.path.isfile(BT_XML_PATH):
             self.get_logger().warn(
@@ -212,6 +238,7 @@ class NearestEuclideanFrontier(Node):
     def map_callback(self, msg: OccupancyGrid):
         self.map_msg = msg
         self.map_generation += 1
+        self.last_map_callback_monotonic_s = time.monotonic()
 
     def plan_callback(self, msg: Path):
         self.path_pub.publish(msg)
@@ -279,6 +306,50 @@ class NearestEuclideanFrontier(Node):
         msg.data = json.dumps(payload, separators=(",", ":"))
         self.status_pub.publish(msg)
         self.last_status_state = state
+        self.emit_liveness("status_update", state=state, reason=reason)
+
+    def liveness_fields(self, state=None, reason=None):
+        """Return only the technical fields frozen by MX050 Recovery V1."""
+        now_s = time.monotonic()
+        map_age_s = (
+            None
+            if self.last_map_callback_monotonic_s is None
+            else max(0.0, now_s - self.last_map_callback_monotonic_s)
+        )
+        pending_age_s = (
+            None
+            if self.revalidation_action_started_monotonic_s is None
+            else max(0.0, now_s - self.revalidation_action_started_monotonic_s)
+        )
+        return {
+            "state": state or self.last_status_state or "STARTING",
+            "completion_reason": reason if reason is not None else self.completion_reason,
+            "completion_streak": int(self.completion_streak),
+            "map_generation": int(self.map_generation),
+            "last_map_callback_age_s": map_age_s,
+            "revalidation_active": bool(self.revalidation_active),
+            "revalidation_index": int(self.revalidation_index),
+            "revalidation_candidate_count": len(self.revalidation_candidates),
+            "planner_action_pending": bool(self.revalidation_action_pending),
+            "planner_action_pending_age_s": pending_age_s,
+            "completed": bool(self.completed),
+        }
+
+    def emit_liveness(self, event, state=None, reason=None):
+        if self.liveness_writer is None:
+            return
+        try:
+            self.liveness_writer.emit(
+                event,
+                self.liveness_fields(state=state, reason=reason),
+            )
+        except OSError as exc:
+            # The passive supervisor will fail closed under W1 if valid
+            # heartbeats cannot be materialized.
+            self.get_logger().error(f"MX050 heartbeat write failed: {exc}")
+
+    def publish_liveness_heartbeat(self):
+        self.emit_liveness("periodic_heartbeat")
 
     def reset_completion_verification(self, reason: str):
         had_evidence = self.completion_streak > 0
@@ -294,6 +365,8 @@ class NearestEuclideanFrontier(Node):
             )
         if not self.completed and self.last_status_state != "EXPLORING":
             self.publish_status("EXPLORING", reason=reason)
+        else:
+            self.emit_liveness("completion_verification_reset", reason=reason)
 
     def observe_no_frontier_terminal_state(self):
         """Accumulate conservative completion evidence on distinct map updates."""
@@ -709,6 +782,7 @@ class NearestEuclideanFrontier(Node):
         self.revalidation_candidates = sorted(candidates, key=lambda item: item[0])
         self.revalidation_index = 0
         self.revalidation_last_start_s = now_s
+        self.emit_liveness("planner_revalidation_sweep_start")
 
         self.publish_status(
             "VERIFYING_COMPLETE",
@@ -744,6 +818,9 @@ class NearestEuclideanFrontier(Node):
         goal.use_start = False
 
         future = self.planner_client.send_goal_async(goal)
+        self.revalidation_action_pending = True
+        self.revalidation_action_started_monotonic_s = time.monotonic()
+        self.emit_liveness("planner_revalidation_action_submitted")
         future.add_done_callback(
             lambda done_future, checked_candidate=candidate: (
                 self.planner_revalidation_goal_response(
@@ -760,6 +837,9 @@ class NearestEuclideanFrontier(Node):
         try:
             goal_handle = future.result()
         except Exception as exc:  # noqa: BLE001
+            self.revalidation_action_pending = False
+            self.revalidation_action_started_monotonic_s = None
+            self.emit_liveness("planner_revalidation_goal_response_failed")
             self.get_logger().warn(
                 f"Planner revalidation request failed: {exc}"
             )
@@ -768,11 +848,15 @@ class NearestEuclideanFrontier(Node):
             return
 
         if not goal_handle.accepted:
+            self.revalidation_action_pending = False
+            self.revalidation_action_started_monotonic_s = None
+            self.emit_liveness("planner_revalidation_goal_rejected")
             self.get_logger().warn("Planner revalidation goal rejected")
             self.revalidation_index += 1
             self.send_next_planner_revalidation_goal()
             return
 
+        self.emit_liveness("planner_revalidation_goal_accepted")
         result_future = goal_handle.get_result_async()
         result_future.add_done_callback(
             lambda done_future, checked_candidate=candidate: (
@@ -787,6 +871,9 @@ class NearestEuclideanFrontier(Node):
         if not self.revalidation_active or self.completed:
             return
 
+        self.revalidation_action_pending = False
+        self.revalidation_action_started_monotonic_s = None
+        self.emit_liveness("planner_revalidation_result")
         try:
             wrapped_result = future.result()
             status = wrapped_result.status
@@ -826,9 +913,12 @@ class NearestEuclideanFrontier(Node):
             return
 
         self.revalidation_active = False
+        self.revalidation_action_pending = False
+        self.revalidation_action_started_monotonic_s = None
         candidate_count = len(self.revalidation_candidates)
         self.revalidation_candidates = []
         self.revalidation_index = 0
+        self.emit_liveness("planner_revalidation_sweep_exhausted")
 
         now_s = self.now_s()
         self.completion_last_sweep_s = now_s
