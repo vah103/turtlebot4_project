@@ -1,0 +1,55 @@
+{
+  "F4": [
+    "F4_NoFrontierFrac3",
+    "F4_IndeterminateFrac3",
+    "F4_IGDensityGated",
+    "F4_LogVisibleUnknownGated",
+    "F4_KnownAreaRateMean3"
+  ],
+  "H_BEST_inner_scale": "fold-specific equal-run T4 SD on exact 8 inner-training runs",
+  "arms": {
+    "B1": [
+      "R_map",
+      "log_decision",
+      "log_elapsed"
+    ],
+    "O": [
+      "R_map",
+      "log_decision",
+      "log_elapsed",
+      "F4_NoFrontierFrac3",
+      "F4_IndeterminateFrac3",
+      "F4_IGDensityGated",
+      "F4_LogVisibleUnknownGated",
+      "F4_KnownAreaRateMean3"
+    ],
+    "S2": [
+      "R_map",
+      "log_decision",
+      "log_elapsed",
+      "F2_Vote3Share",
+      "F2_Vote2Share",
+      "F2_Vote1Share",
+      "F2_VotePersistenceMean2"
+    ],
+    "SO": [
+      "R_map",
+      "log_decision",
+      "log_elapsed",
+      "F2_Vote3Share",
+      "F2_Vote2Share",
+      "F2_Vote1Share",
+      "F2_VotePersistenceMean2",
+      "F4_NoFrontierFrac3",
+      "F4_IndeterminateFrac3",
+      "F4_IGDensityGated",
+      "F4_LogVisibleUnknownGated",
+      "F4_KnownAreaRateMean3"
+    ]
+  },
+  "gates": "10/10 evaluable; DCS<=.05; median delta>=.025; PGC<=.50; positive requires H-O&H-SO&H-BEST",
+  "lambda": 1.0,
+  "schema": "mx058_metric_dictionary_r2",
+  "support": "T4+B1+complete F2+complete F4 exactly 335 rows",
+  "target": "T4=StrictMacroIoU(V3)-StrictMacroIoU(V1_t)"
+}

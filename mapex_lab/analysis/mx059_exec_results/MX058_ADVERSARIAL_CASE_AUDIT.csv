@@ -1,0 +1,39 @@
+audit,semantic_pass,detail
+A1,1,T4 exact V3-V1
+A2,1,V3 offset not centered/subtracted
+A3,1,progress diagnostic only
+A4,1,final decision count absent predictors
+A5,1,V3 quality absent predictors
+A6,1,heldout diagnostics post-fit only
+A7,1,GT absent predictors
+A8,1,Oracle absent predictors
+A9,1,future Coverage absent
+A10,1,future IG/frontier absent
+A11,1,exact five F4
+A12,1,State D absent/hard invalid
+A13,1,A/C gated zeros paired state history
+A14,1,signed Coverage retained
+A15,1,exact W3 no back-search
+A16,1,missing excluded not imputed
+A17,1,identical strict support
+A18,1,B1 restricted same support
+A19,1,F2 complete unchanged
+A20,1,no F1/F3/U
+A21,1,lambda fixed
+A22,1,linear ridge only
+A23,1,equal run weighting
+A24,1,training-only standardization
+A25,1,training-only target scale
+A26,1,H-O independent
+A27,1,H-SO independent
+A28,1,H-BEST inner only eight training runs
+A29,1,H-BEST required
+A30,1,effect fixed
+A31,1,DCS/PGC non-inferential
+A32,1,MX057 external comparator verbatim
+A33,1,no shadow STOP
+A34,1,no prohibited data/new run
+A35,1,negative stop-loss class
+A36,1,mixed state negative
+A37,1,fold-specific eight-run scale
+A38,1,no silent inner fold drop

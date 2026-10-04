@@ -1,0 +1,4 @@
+hypothesis,delta_column,evaluable_folds,positive_folds,DCS,median_Delta,effect_threshold,PGC,pass_evaluable,pass_DCS,pass_effect,pass_PGC,hypothesis_pass
+H-O,Delta_O_vs_B1,10,6,0.376953125,0.007556429205638579,0.025,0.2785861247239103,1,0,0,1,0
+H-SO,Delta_SO_vs_S2,10,7,0.171875,0.010589661338009426,0.025,0.23233490800907514,1,0,0,1,0
+H-BEST,Delta_BestF4_vs_BestNoF4,10,8,0.0546875,0.011314144738527834,0.025,0.3226213507785193,1,0,0,1,0

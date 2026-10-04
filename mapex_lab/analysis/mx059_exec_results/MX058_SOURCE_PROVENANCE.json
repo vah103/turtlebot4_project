@@ -1,0 +1,24 @@
+{
+  "accepted_parent": "1cef6561fce69e8b24a3af1f21a5ef605ec7f739",
+  "blob_actual": {
+    "causality": "18e6ffc0f139efb75ba93583e376059e06b3051a",
+    "features": "e91a45e2f88806d7ba52ef658c9fd86262ab9a91",
+    "igcov": "dab247d44578d728c44ffc2245ee306d7375d9cb",
+    "igcov_parity": "629560dba455a91c95f2f636d4d532016fd5a4c1",
+    "mx031": "daf11687221080790e20227f2bf7b7406476298e",
+    "quality": "ed77ae4c44585e3883b6c42d1c0bc7c356891cf6",
+    "t4": "b64e755d34ceb4c30f0686047f06ddb4ce4c6865"
+  },
+  "blob_expected": {
+    "causality": "18e6ffc0f139efb75ba93583e376059e06b3051a",
+    "features": "e91a45e2f88806d7ba52ef658c9fd86262ab9a91",
+    "igcov": "dab247d44578d728c44ffc2245ee306d7375d9cb",
+    "igcov_parity": "629560dba455a91c95f2f636d4d532016fd5a4c1",
+    "mx031": "daf11687221080790e20227f2bf7b7406476298e",
+    "quality": "ed77ae4c44585e3883b6c42d1c0bc7c356891cf6",
+    "t4": "b64e755d34ceb4c30f0686047f06ddb4ce4c6865"
+  },
+  "hard_failures": [],
+  "method_commit": "01979ff5b13bce618ce0dc2182b671976bae95e8",
+  "source_insufficiencies": []
+}
