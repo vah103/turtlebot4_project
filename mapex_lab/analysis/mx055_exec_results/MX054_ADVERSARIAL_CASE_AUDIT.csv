@@ -1,0 +1,31 @@
+audit,semantic_pass,detail
+A1,1,365/365 exact stored mean present/read; no regeneration
+A2,1,primary member exact mean; G1/G2/G3 never substituted
+A3,1,raw/prediction/canvas source stamps match
+A4,1,raw/prediction origin/resolution/shape match
+A5,1,canvas/GT geometry and canvas id match
+A6,1,accepted rounded projection succeeds; nonlattice rows=365
+A7,1,observed cells changed by V1=0
+A8,1,V1 uses current obs + stored mean only; no future map input
+A9,1,"GT enters only V2/evaluator metrics, never V1"
+A10,1,unsupported unknown filled by V1=0
+A11,1,strict full-map denominator fixed |D|; unresolved retained as errors
+A12,1,V2 marked evaluator-only GT fill ceiling
+A13,1,V3 marked evaluator-only historical full-explore reference
+A14,1,V1 uses strict >0.5 occupied
+A15,1,accepted projection blob guards nearest integer replication/no bilinear
+A16,1,structural free mask requires V==0; unresolved is non-traversable
+A17,1,accepted no-corner-cut topology blob + component equivalence check
+A18,1,robot radius 0.189m
+A19,1,severe flag is non-tradeable in frontier/opportunity gates
+A20,1,no semantic room labels created; only region/bottleneck proxies
+A21,1,meaningful fragmentation area=16x robot footprint
+A22,1,unsafe opening severe area=2x robot footprint
+A23,1,pair-retention severe threshold fixed 0.95
+A24,1,prediction attribution requires V2 non-severe
+A25,1,V2 severe assigned observed/support-limited
+A26,1,R strata descriptive only; no selected threshold/K
+A27,1,Pareto frontier non-actionable
+A28,1,F1+F2 never labeled safety signal
+A29,1,"severe absence/support handled as insufficiency, never safety PASS"
+A30,1,Hospital/MX046/MX050/confirmation absent by source contract

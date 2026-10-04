@@ -1,0 +1,91 @@
+{
+  "adequate_for_followon_model_design": false,
+  "nonsevere_runs": 0,
+  "overall_V1_nonsevere_decisions": 0,
+  "overall_V1_severe_decisions": 365,
+  "per_outer_split": [
+    {
+      "nonsevere_decisions": 0,
+      "nonsevere_runs": 0,
+      "outer_heldout": "mpx_001",
+      "pass": 0,
+      "severe_decisions": 330,
+      "severe_runs": 9
+    },
+    {
+      "nonsevere_decisions": 0,
+      "nonsevere_runs": 0,
+      "outer_heldout": "mpx_002",
+      "pass": 0,
+      "severe_decisions": 328,
+      "severe_runs": 9
+    },
+    {
+      "nonsevere_decisions": 0,
+      "nonsevere_runs": 0,
+      "outer_heldout": "mpx_003",
+      "pass": 0,
+      "severe_decisions": 324,
+      "severe_runs": 9
+    },
+    {
+      "nonsevere_decisions": 0,
+      "nonsevere_runs": 0,
+      "outer_heldout": "mpx_004",
+      "pass": 0,
+      "severe_decisions": 329,
+      "severe_runs": 9
+    },
+    {
+      "nonsevere_decisions": 0,
+      "nonsevere_runs": 0,
+      "outer_heldout": "mpx_005",
+      "pass": 0,
+      "severe_decisions": 331,
+      "severe_runs": 9
+    },
+    {
+      "nonsevere_decisions": 0,
+      "nonsevere_runs": 0,
+      "outer_heldout": "mpx_006",
+      "pass": 0,
+      "severe_decisions": 329,
+      "severe_runs": 9
+    },
+    {
+      "nonsevere_decisions": 0,
+      "nonsevere_runs": 0,
+      "outer_heldout": "mpx_007",
+      "pass": 0,
+      "severe_decisions": 330,
+      "severe_runs": 9
+    },
+    {
+      "nonsevere_decisions": 0,
+      "nonsevere_runs": 0,
+      "outer_heldout": "mpx_008",
+      "pass": 0,
+      "severe_decisions": 330,
+      "severe_runs": 9
+    },
+    {
+      "nonsevere_decisions": 0,
+      "nonsevere_runs": 0,
+      "outer_heldout": "mpx_009",
+      "pass": 0,
+      "severe_decisions": 329,
+      "severe_runs": 9
+    },
+    {
+      "nonsevere_decisions": 0,
+      "nonsevere_runs": 0,
+      "outer_heldout": "mpx_010",
+      "pass": 0,
+      "severe_decisions": 325,
+      "severe_runs": 9
+    }
+  ],
+  "schema": "mx054_severe_event_support_r1",
+  "severe_runs": 10,
+  "status": "SEVERE_EVENT_SUPPORT_INSUFFICIENT_FOR_FOLLOWON_MODEL_DESIGN"
+}

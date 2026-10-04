@@ -1,0 +1,59 @@
+{
+  "accepted_mx031_commit": "d90498e1a3ead2a0c170a3fee7c02a1bc9526cca",
+  "blob_actual": {
+    "FEATURES": "e91a45e2f88806d7ba52ef658c9fd86262ab9a91",
+    "GT": "a5653a7ec7f4550287a3ebeb05b922dbc7a5bc3a",
+    "MX031": "daf11687221080790e20227f2bf7b7406476298e",
+    "PROJECTION": "a7820bc3d12b2b701f35f0d6629ab3f05d98f1bc",
+    "ROI": "90bdeecc54bb7e97a9d018b6614d9b879d10b4e7",
+    "TOPOLOGY": "ff031cb826908aafd3bc039ca67a499ed092cbc5"
+  },
+  "blob_expected": {
+    "FEATURES": "e91a45e2f88806d7ba52ef658c9fd86262ab9a91",
+    "GT": "a5653a7ec7f4550287a3ebeb05b922dbc7a5bc3a",
+    "MX031": "daf11687221080790e20227f2bf7b7406476298e",
+    "PROJECTION": "a7820bc3d12b2b701f35f0d6629ab3f05d98f1bc",
+    "ROI": "90bdeecc54bb7e97a9d018b6614d9b879d10b4e7",
+    "TOPOLOGY": "ff031cb826908aafd3bc039ca67a499ed092cbc5"
+  },
+  "decision_inventory": 365,
+  "forbidden_sources": {
+    "GT_in_V1": false,
+    "Hospital": false,
+    "MX046_partial": false,
+    "MX050_partial": false,
+    "confirmation": false,
+    "future_map_in_V1": false,
+    "prediction_regeneration": false
+  },
+  "frozen_historical_source_root": "35ee9315cce3899190d439b75958fbcbe31f9851",
+  "gt_meta": {
+    "D_count": 211696,
+    "canvas_id": "hospital_canvas_v1",
+    "connected_free_roi_count": 187690,
+    "origin_x": -25.6,
+    "origin_y": -60.1,
+    "resolution": 0.05,
+    "shape": [
+      2123,
+      1504
+    ]
+  },
+  "method_blob": "cba73d155861fa1fb2c3b1b32418253082afcf05",
+  "method_commit": "1e88c1289b2e1803d5d75d79627cb2148623b5a4",
+  "run_ids": [
+    "mpx_001",
+    "mpx_002",
+    "mpx_003",
+    "mpx_004",
+    "mpx_005",
+    "mpx_006",
+    "mpx_007",
+    "mpx_008",
+    "mpx_009",
+    "mpx_010"
+  ],
+  "schema": "mx054_source_provenance_r1_execution",
+  "source_valid_decisions": 365,
+  "task": "MX055"
+}

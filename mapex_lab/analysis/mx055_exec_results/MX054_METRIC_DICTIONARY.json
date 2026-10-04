@@ -1,0 +1,32 @@
+{
+  "PrimarySevere": "PairConnectivityRetention<0.95 OR MeaningfulFragmentation OR UnsafeTravArea>=2*A_robot",
+  "R_strata": [
+    ">0.10",
+    "0.05<R<=0.10",
+    "<=0.05"
+  ],
+  "component_label_zero": "excluded from n_kj pieces; non-traversable is not a synthetic component",
+  "frontier": "descriptive only; PrimarySevere=0 lexicographically dominates PrimarySevere=1; then saving/StrictMacroIoU Pareto",
+  "meaningful_fragmentation_area_m2": 1.7955332988620962,
+  "no_stop_rule": true,
+  "pair_connectivity_threshold": 0.95,
+  "prediction_threshold": ">0.5 occupied; <=0.5 free",
+  "progress_strata": [
+    "0-25%",
+    "25-50%",
+    "50-75%",
+    "75-100%"
+  ],
+  "resolution_m": 0.05,
+  "robot_radius_m": 0.189,
+  "schema": "mx054_metric_dictionary_r1_execution",
+  "strict_quality": "unresolved cells included as class FN; accuracy denominator |D|",
+  "unresolved": "unsupported decision-time unknown remains -1",
+  "unsafe_breach_area_m2": 0.22444166235776203,
+  "variants": {
+    "V0": "OBS_ONLY",
+    "V1": "MEAN_COMPLETION_PRIMARY",
+    "V2": "GT_FILL_CEILING_EVALUATOR_ONLY",
+    "V3": "FULL_EXPLORE_REFERENCE_EVALUATOR_ONLY"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "NonSevereUsefulOpportunity_by_run": {
+    "mpx_001": 0,
+    "mpx_002": 0,
+    "mpx_003": 0,
+    "mpx_004": 0,
+    "mpx_005": 0,
+    "mpx_006": 0,
+    "mpx_007": 0,
+    "mpx_008": 0,
+    "mpx_009": 0,
+    "mpx_010": 0
+  },
+  "classification": "MX054_COUNTERFACTUAL_VALID_SEVERE_EVENT_SUPPORT_INSUFFICIENT",
+  "followon_method_support": false,
+  "opportunity_requirement_runs": 8,
+  "opportunity_runs": 0,
+  "schema": "mx054_followon_support_gate_r1",
+  "severe_support_adequate": false
+}

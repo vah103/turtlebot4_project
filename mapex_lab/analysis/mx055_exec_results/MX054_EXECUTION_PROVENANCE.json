@@ -1,0 +1,28 @@
+{
+  "A1_A30_pass": 30,
+  "classification": "MX054_COUNTERFACTUAL_VALID_SEVERE_EVENT_SUPPORT_INSUFFICIENT",
+  "constraints": {
+    "Hospital": false,
+    "K_selection": false,
+    "MX046_MX050": false,
+    "STOP_model_fit": false,
+    "confirmation": false,
+    "deployment": false,
+    "new_run": false,
+    "prediction_regeneration": false,
+    "retuning": false,
+    "robot_STOP": false,
+    "simulation": false,
+    "threshold_selection": false
+  },
+  "decision_inventory": 365,
+  "hard_failures": [],
+  "method_blob": "cba73d155861fa1fb2c3b1b32418253082afcf05",
+  "method_commit": "1e88c1289b2e1803d5d75d79627cb2148623b5a4",
+  "opportunity_runs": 0,
+  "schema": "mx054_execution_provenance_r1",
+  "severe_support_adequate": false,
+  "source_insufficiencies": [],
+  "source_valid_decisions": 365,
+  "task": "MX055"
+}
