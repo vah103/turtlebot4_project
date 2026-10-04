@@ -171,12 +171,31 @@ def fit_logistic(rows,target,features):
         loss=float(np.sum(w*(np.logaddexp(0.0,eta)-y*eta))+0.5*LAMBDA*np.dot(b[1:],b[1:]))
         p=1.0/(1.0+np.exp(-np.clip(eta,-50,50)))
         g=Z.T@(w*(p-y));g[1:]+=LAMBDA*b[1:]
-        return loss,g
-    res=minimize(lambda b:fg(b),np.zeros(Z.shape[1]),jac=True,method="L-BFGS-B",options={"ftol":1e-14,"gtol":1e-10,"maxiter":2000})
-    if not res.success:raise RuntimeError("LOGISTIC_NONCONVERGENCE:"+str(res.message))
-    return {"kind":"logistic","target":target,"features":features,"mu":mu,"sd":sd,"zero":zero,"beta":res.x,
+        return loss,g,p
+    b=np.zeros(Z.shape[1],float)
+    converged=False
+    for _ in range(100):
+        loss,g,p=fg(b)
+        if np.max(np.abs(g))<=1e-9:
+            converged=True;break
+        curv=w*p*(1.0-p)
+        H=Z.T@(Z*curv[:,None]);H[1:,1:]+=LAMBDA*np.eye(len(features))
+        try:step=np.linalg.solve(H,g)
+        except np.linalg.LinAlgError:step=np.linalg.lstsq(H,g,rcond=None)[0]
+        gd=float(np.dot(g,step));alpha=1.0
+        while alpha>=1e-10:
+            cand=b-alpha*step
+            cand_loss=fg(cand)[0]
+            if cand_loss<=loss-1e-4*alpha*gd:
+                b=cand;break
+            alpha*=0.5
+        else:break
+    loss,g,p=fg(b)
+    if not converged and np.max(np.abs(g))<=1e-8:converged=True
+    if not converged:raise RuntimeError("LOGISTIC_NONCONVERGENCE_NEWTON_MAX_GRAD="+str(float(np.max(np.abs(g)))))
+    return {"kind":"logistic","target":target,"features":features,"mu":mu,"sd":sd,"zero":zero,"beta":b,
       "runs":sorted(set(r["run_id"] for r in rows)),"n":len(rows),"clip01":False,"lower_clip":False,"converged":True,
-      "objective":float(res.fun)}
+      "objective":float(loss)}
 
 def predict(model,r):
     x=np.asarray([float(r[f]) for f in model["features"]]);z=np.zeros(len(x));nz=~model["zero"]
