@@ -1,0 +1,618 @@
+{
+  "archival_source_root": "35ee9315cce3899190d439b75958fbcbe31f9851",
+  "canonical_alias_map": {
+    "mpx_001": "mpx_101",
+    "mpx_002": "mpx_102",
+    "mpx_003": "mpx_103",
+    "mpx_004": "mpx_104",
+    "mpx_005": "mpx_105",
+    "mpx_006": "mpx_106",
+    "mpx_007": "mpx_107",
+    "mpx_008": "mpx_008",
+    "mpx_009": "mpx_109",
+    "mpx_010": "mpx_110"
+  },
+  "decision_counts": {
+    "mpx_001": 35,
+    "mpx_002": 37,
+    "mpx_003": 41,
+    "mpx_004": 36,
+    "mpx_005": 34,
+    "mpx_006": 36,
+    "mpx_007": 35,
+    "mpx_008": 35,
+    "mpx_009": 36,
+    "mpx_010": 40
+  },
+  "forbidden": {
+    "Hospital": false,
+    "MX046": false,
+    "MX050": false,
+    "prediction_regeneration": false,
+    "prospective": false
+  },
+  "hard_failures": [],
+  "manifest_frozen_before_target_characterization": true,
+  "method_blob": "4bdc5ed8032c1dd08edd9f7e47832e84f3b1a7d8",
+  "method_commit": "a5c4d11f8d41b5a1b6bfdb64bc441748d54c2026",
+  "population_runs": [
+    "mpx_001",
+    "mpx_002",
+    "mpx_003",
+    "mpx_004",
+    "mpx_005",
+    "mpx_006",
+    "mpx_007",
+    "mpx_008",
+    "mpx_009",
+    "mpx_010"
+  ],
+  "runs": [
+    {
+      "alias_pass": true,
+      "canonical_run_id": "mpx_001",
+      "decision_count": 35,
+      "decision_identity_pass": true,
+      "expected_legacy_alias": "mpx_101",
+      "git_commit": "a18142136a3a4124d7423746040894a4b938c93b",
+      "git_dirty_at_recorder_start": true,
+      "inventory": {
+        "canvas": 35,
+        "decision_json": 35,
+        "g1": 35,
+        "g2": 35,
+        "g3": 35,
+        "mean": 35,
+        "raw": 35,
+        "variance": 35
+      },
+      "legacy_metadata_run_id": "mpx_101",
+      "recorder_exact": true,
+      "recorder_sha256_proof": {
+        "mapex_run": {
+          "candidate_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b",
+          "match": true,
+          "path": "mapex_lab/scripts/mapex_run.py",
+          "stored_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b"
+        },
+        "nf_basic_shared_execution": {
+          "candidate_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_basic.py",
+          "stored_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e"
+        },
+        "nf_run_recorder_base": {
+          "candidate_sha256": "b44b77866e8831ede0e85ede68d25066cfc24f2e4f160ff0078987a010cf2f7e",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_run.py",
+          "stored_sha256": "b44b77866e8831ede0e85ede68d25066cfc24f2e4f160ff0078987a010cf2f7e"
+        },
+        "runtime_launch": {
+          "candidate_sha256": "d7c48f290e30d9ee22e0f6463f8bcacf1936efd0599d030526e9f7599126ece9",
+          "match": true,
+          "path": "mapex_lab/launch/new_toolbox.launch.py",
+          "stored_sha256": "d7c48f290e30d9ee22e0f6463f8bcacf1936efd0599d030526e9f7599126ece9"
+        }
+      },
+      "runtime_launch_exact": true,
+      "runtime_launch_file": "mapex_lab/launch/new_toolbox.launch.py",
+      "runtime_profile": "new_room_new_toolbox_adaptive_v1_buffer30",
+      "time_clock_note": "recorder now_s uses ROS node clock, but run-specific evidence does not prove use_sim_time=true on the recorder node itself; launch defaults for other nodes are insufficient",
+      "time_clock_status": "TIME_PRESENT_BUT_CLOCK_PROVENANCE_INCOMPLETE"
+    },
+    {
+      "alias_pass": true,
+      "canonical_run_id": "mpx_002",
+      "decision_count": 37,
+      "decision_identity_pass": true,
+      "expected_legacy_alias": "mpx_102",
+      "git_commit": "a18142136a3a4124d7423746040894a4b938c93b",
+      "git_dirty_at_recorder_start": true,
+      "inventory": {
+        "canvas": 37,
+        "decision_json": 37,
+        "g1": 37,
+        "g2": 37,
+        "g3": 37,
+        "mean": 37,
+        "raw": 37,
+        "variance": 37
+      },
+      "legacy_metadata_run_id": "mpx_102",
+      "recorder_exact": true,
+      "recorder_sha256_proof": {
+        "mapex_run": {
+          "candidate_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b",
+          "match": true,
+          "path": "mapex_lab/scripts/mapex_run.py",
+          "stored_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b"
+        },
+        "nf_basic_shared_execution": {
+          "candidate_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_basic.py",
+          "stored_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e"
+        },
+        "nf_run_recorder_base": {
+          "candidate_sha256": "b44b77866e8831ede0e85ede68d25066cfc24f2e4f160ff0078987a010cf2f7e",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_run.py",
+          "stored_sha256": "b44b77866e8831ede0e85ede68d25066cfc24f2e4f160ff0078987a010cf2f7e"
+        },
+        "runtime_launch": {
+          "candidate_sha256": "d7c48f290e30d9ee22e0f6463f8bcacf1936efd0599d030526e9f7599126ece9",
+          "match": true,
+          "path": "mapex_lab/launch/new_toolbox.launch.py",
+          "stored_sha256": "d7c48f290e30d9ee22e0f6463f8bcacf1936efd0599d030526e9f7599126ece9"
+        }
+      },
+      "runtime_launch_exact": true,
+      "runtime_launch_file": "mapex_lab/launch/new_toolbox.launch.py",
+      "runtime_profile": "new_room_new_toolbox_adaptive_v1_buffer30",
+      "time_clock_note": "recorder now_s uses ROS node clock, but run-specific evidence does not prove use_sim_time=true on the recorder node itself; launch defaults for other nodes are insufficient",
+      "time_clock_status": "TIME_PRESENT_BUT_CLOCK_PROVENANCE_INCOMPLETE"
+    },
+    {
+      "alias_pass": true,
+      "canonical_run_id": "mpx_003",
+      "decision_count": 41,
+      "decision_identity_pass": true,
+      "expected_legacy_alias": "mpx_103",
+      "git_commit": "a18142136a3a4124d7423746040894a4b938c93b",
+      "git_dirty_at_recorder_start": true,
+      "inventory": {
+        "canvas": 41,
+        "decision_json": 41,
+        "g1": 41,
+        "g2": 41,
+        "g3": 41,
+        "mean": 41,
+        "raw": 41,
+        "variance": 41
+      },
+      "legacy_metadata_run_id": "mpx_103",
+      "recorder_exact": true,
+      "recorder_sha256_proof": {
+        "mapex_run": {
+          "candidate_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b",
+          "match": true,
+          "path": "mapex_lab/scripts/mapex_run.py",
+          "stored_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b"
+        },
+        "nf_basic_shared_execution": {
+          "candidate_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_basic.py",
+          "stored_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e"
+        },
+        "nf_run_recorder_base": {
+          "candidate_sha256": "b44b77866e8831ede0e85ede68d25066cfc24f2e4f160ff0078987a010cf2f7e",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_run.py",
+          "stored_sha256": "b44b77866e8831ede0e85ede68d25066cfc24f2e4f160ff0078987a010cf2f7e"
+        },
+        "runtime_launch": {
+          "candidate_sha256": "d7c48f290e30d9ee22e0f6463f8bcacf1936efd0599d030526e9f7599126ece9",
+          "match": true,
+          "path": "mapex_lab/launch/new_toolbox.launch.py",
+          "stored_sha256": "d7c48f290e30d9ee22e0f6463f8bcacf1936efd0599d030526e9f7599126ece9"
+        }
+      },
+      "runtime_launch_exact": true,
+      "runtime_launch_file": "mapex_lab/launch/new_toolbox.launch.py",
+      "runtime_profile": "new_room_new_toolbox_adaptive_v1_buffer30",
+      "time_clock_note": "recorder now_s uses ROS node clock, but run-specific evidence does not prove use_sim_time=true on the recorder node itself; launch defaults for other nodes are insufficient",
+      "time_clock_status": "TIME_PRESENT_BUT_CLOCK_PROVENANCE_INCOMPLETE"
+    },
+    {
+      "alias_pass": true,
+      "canonical_run_id": "mpx_004",
+      "decision_count": 36,
+      "decision_identity_pass": true,
+      "expected_legacy_alias": "mpx_104",
+      "git_commit": "a18142136a3a4124d7423746040894a4b938c93b",
+      "git_dirty_at_recorder_start": true,
+      "inventory": {
+        "canvas": 36,
+        "decision_json": 36,
+        "g1": 36,
+        "g2": 36,
+        "g3": 36,
+        "mean": 36,
+        "raw": 36,
+        "variance": 36
+      },
+      "legacy_metadata_run_id": "mpx_104",
+      "recorder_exact": true,
+      "recorder_sha256_proof": {
+        "mapex_run": {
+          "candidate_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b",
+          "match": true,
+          "path": "mapex_lab/scripts/mapex_run.py",
+          "stored_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b"
+        },
+        "nf_basic_shared_execution": {
+          "candidate_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_basic.py",
+          "stored_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e"
+        },
+        "nf_run_recorder_base": {
+          "candidate_sha256": "b44b77866e8831ede0e85ede68d25066cfc24f2e4f160ff0078987a010cf2f7e",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_run.py",
+          "stored_sha256": "b44b77866e8831ede0e85ede68d25066cfc24f2e4f160ff0078987a010cf2f7e"
+        },
+        "runtime_launch": {
+          "candidate_sha256": "d7c48f290e30d9ee22e0f6463f8bcacf1936efd0599d030526e9f7599126ece9",
+          "match": true,
+          "path": "mapex_lab/launch/new_toolbox.launch.py",
+          "stored_sha256": "d7c48f290e30d9ee22e0f6463f8bcacf1936efd0599d030526e9f7599126ece9"
+        }
+      },
+      "runtime_launch_exact": true,
+      "runtime_launch_file": "mapex_lab/launch/new_toolbox.launch.py",
+      "runtime_profile": "new_room_new_toolbox_adaptive_v1_buffer30",
+      "time_clock_note": "recorder now_s uses ROS node clock, but run-specific evidence does not prove use_sim_time=true on the recorder node itself; launch defaults for other nodes are insufficient",
+      "time_clock_status": "TIME_PRESENT_BUT_CLOCK_PROVENANCE_INCOMPLETE"
+    },
+    {
+      "alias_pass": true,
+      "canonical_run_id": "mpx_005",
+      "decision_count": 34,
+      "decision_identity_pass": true,
+      "expected_legacy_alias": "mpx_105",
+      "git_commit": "a18142136a3a4124d7423746040894a4b938c93b",
+      "git_dirty_at_recorder_start": true,
+      "inventory": {
+        "canvas": 34,
+        "decision_json": 34,
+        "g1": 34,
+        "g2": 34,
+        "g3": 34,
+        "mean": 34,
+        "raw": 34,
+        "variance": 34
+      },
+      "legacy_metadata_run_id": "mpx_105",
+      "recorder_exact": true,
+      "recorder_sha256_proof": {
+        "mapex_run": {
+          "candidate_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b",
+          "match": true,
+          "path": "mapex_lab/scripts/mapex_run.py",
+          "stored_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b"
+        },
+        "nf_basic_shared_execution": {
+          "candidate_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_basic.py",
+          "stored_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e"
+        },
+        "nf_run_recorder_base": {
+          "candidate_sha256": "b44b77866e8831ede0e85ede68d25066cfc24f2e4f160ff0078987a010cf2f7e",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_run.py",
+          "stored_sha256": "b44b77866e8831ede0e85ede68d25066cfc24f2e4f160ff0078987a010cf2f7e"
+        },
+        "runtime_launch": {
+          "candidate_sha256": "d7c48f290e30d9ee22e0f6463f8bcacf1936efd0599d030526e9f7599126ece9",
+          "match": true,
+          "path": "mapex_lab/launch/new_toolbox.launch.py",
+          "stored_sha256": "d7c48f290e30d9ee22e0f6463f8bcacf1936efd0599d030526e9f7599126ece9"
+        }
+      },
+      "runtime_launch_exact": true,
+      "runtime_launch_file": "mapex_lab/launch/new_toolbox.launch.py",
+      "runtime_profile": "new_room_new_toolbox_adaptive_v1_buffer30",
+      "time_clock_note": "recorder now_s uses ROS node clock, but run-specific evidence does not prove use_sim_time=true on the recorder node itself; launch defaults for other nodes are insufficient",
+      "time_clock_status": "TIME_PRESENT_BUT_CLOCK_PROVENANCE_INCOMPLETE"
+    },
+    {
+      "alias_pass": true,
+      "canonical_run_id": "mpx_006",
+      "decision_count": 36,
+      "decision_identity_pass": true,
+      "expected_legacy_alias": "mpx_106",
+      "git_commit": "a18142136a3a4124d7423746040894a4b938c93b",
+      "git_dirty_at_recorder_start": true,
+      "inventory": {
+        "canvas": 36,
+        "decision_json": 36,
+        "g1": 36,
+        "g2": 36,
+        "g3": 36,
+        "mean": 36,
+        "raw": 36,
+        "variance": 36
+      },
+      "legacy_metadata_run_id": "mpx_106",
+      "recorder_exact": true,
+      "recorder_sha256_proof": {
+        "mapex_run": {
+          "candidate_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b",
+          "match": true,
+          "path": "mapex_lab/scripts/mapex_run.py",
+          "stored_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b"
+        },
+        "nf_basic_shared_execution": {
+          "candidate_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_basic.py",
+          "stored_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e"
+        },
+        "nf_run_recorder_base": {
+          "candidate_sha256": "b44b77866e8831ede0e85ede68d25066cfc24f2e4f160ff0078987a010cf2f7e",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_run.py",
+          "stored_sha256": "b44b77866e8831ede0e85ede68d25066cfc24f2e4f160ff0078987a010cf2f7e"
+        },
+        "runtime_launch": {
+          "candidate_sha256": "d7c48f290e30d9ee22e0f6463f8bcacf1936efd0599d030526e9f7599126ece9",
+          "match": true,
+          "path": "mapex_lab/launch/new_toolbox.launch.py",
+          "stored_sha256": "d7c48f290e30d9ee22e0f6463f8bcacf1936efd0599d030526e9f7599126ece9"
+        }
+      },
+      "runtime_launch_exact": true,
+      "runtime_launch_file": "mapex_lab/launch/new_toolbox.launch.py",
+      "runtime_profile": "new_room_new_toolbox_adaptive_v1_buffer30",
+      "time_clock_note": "recorder now_s uses ROS node clock, but run-specific evidence does not prove use_sim_time=true on the recorder node itself; launch defaults for other nodes are insufficient",
+      "time_clock_status": "TIME_PRESENT_BUT_CLOCK_PROVENANCE_INCOMPLETE"
+    },
+    {
+      "alias_pass": true,
+      "canonical_run_id": "mpx_007",
+      "decision_count": 35,
+      "decision_identity_pass": true,
+      "expected_legacy_alias": "mpx_107",
+      "git_commit": "a18142136a3a4124d7423746040894a4b938c93b",
+      "git_dirty_at_recorder_start": true,
+      "inventory": {
+        "canvas": 35,
+        "decision_json": 35,
+        "g1": 35,
+        "g2": 35,
+        "g3": 35,
+        "mean": 35,
+        "raw": 35,
+        "variance": 35
+      },
+      "legacy_metadata_run_id": "mpx_107",
+      "recorder_exact": true,
+      "recorder_sha256_proof": {
+        "mapex_run": {
+          "candidate_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b",
+          "match": true,
+          "path": "mapex_lab/scripts/mapex_run.py",
+          "stored_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b"
+        },
+        "nf_basic_shared_execution": {
+          "candidate_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_basic.py",
+          "stored_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e"
+        },
+        "nf_run_recorder_base": {
+          "candidate_sha256": "b44b77866e8831ede0e85ede68d25066cfc24f2e4f160ff0078987a010cf2f7e",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_run.py",
+          "stored_sha256": "b44b77866e8831ede0e85ede68d25066cfc24f2e4f160ff0078987a010cf2f7e"
+        },
+        "runtime_launch": {
+          "candidate_sha256": "d7c48f290e30d9ee22e0f6463f8bcacf1936efd0599d030526e9f7599126ece9",
+          "match": true,
+          "path": "mapex_lab/launch/new_toolbox.launch.py",
+          "stored_sha256": "d7c48f290e30d9ee22e0f6463f8bcacf1936efd0599d030526e9f7599126ece9"
+        }
+      },
+      "runtime_launch_exact": true,
+      "runtime_launch_file": "mapex_lab/launch/new_toolbox.launch.py",
+      "runtime_profile": "new_room_new_toolbox_adaptive_v1_buffer30",
+      "time_clock_note": "recorder now_s uses ROS node clock, but run-specific evidence does not prove use_sim_time=true on the recorder node itself; launch defaults for other nodes are insufficient",
+      "time_clock_status": "TIME_PRESENT_BUT_CLOCK_PROVENANCE_INCOMPLETE"
+    },
+    {
+      "alias_pass": true,
+      "canonical_run_id": "mpx_008",
+      "decision_count": 35,
+      "decision_identity_pass": true,
+      "expected_legacy_alias": "mpx_008",
+      "git_commit": "818f078ef88054e33705087cab09c5ff0e404a25",
+      "git_dirty_at_recorder_start": true,
+      "inventory": {
+        "canvas": 35,
+        "decision_json": 35,
+        "g1": 35,
+        "g2": 35,
+        "g3": 35,
+        "mean": 35,
+        "raw": 35,
+        "variance": 35
+      },
+      "legacy_metadata_run_id": "mpx_008",
+      "recorder_exact": true,
+      "recorder_sha256_proof": {
+        "mapex_run": {
+          "candidate_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b",
+          "match": true,
+          "path": "mapex_lab/scripts/mapex_run.py",
+          "stored_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b"
+        },
+        "nf_basic_shared_execution": {
+          "candidate_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_basic.py",
+          "stored_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e"
+        },
+        "nf_run_recorder_base": {
+          "candidate_sha256": "09e1f084389570635a811a24f50d58f5e1fedc81a3e346b9dd1ccc47bf832423",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_run.py",
+          "stored_sha256": "09e1f084389570635a811a24f50d58f5e1fedc81a3e346b9dd1ccc47bf832423"
+        },
+        "runtime_launch": {
+          "candidate_sha256": "811f1f40f14b39ffd99b81d363f5a1c229874e9f3d01671e3c956500dfd7bfe9",
+          "match": true,
+          "path": "mapex_lab/launch/submap.launch.py",
+          "stored_sha256": "811f1f40f14b39ffd99b81d363f5a1c229874e9f3d01671e3c956500dfd7bfe9"
+        }
+      },
+      "runtime_launch_exact": true,
+      "runtime_launch_file": "mapex_lab/launch/submap.launch.py",
+      "runtime_profile": "new_room_submap",
+      "time_clock_note": "recorder now_s uses ROS node clock, but run-specific evidence does not prove use_sim_time=true on the recorder node itself; launch defaults for other nodes are insufficient",
+      "time_clock_status": "TIME_PRESENT_BUT_CLOCK_PROVENANCE_INCOMPLETE"
+    },
+    {
+      "alias_pass": true,
+      "canonical_run_id": "mpx_009",
+      "decision_count": 36,
+      "decision_identity_pass": true,
+      "expected_legacy_alias": "mpx_109",
+      "git_commit": "c582e249f521b472b7de19de4bd6bad25ccc15e3",
+      "git_dirty_at_recorder_start": true,
+      "inventory": {
+        "canvas": 36,
+        "decision_json": 36,
+        "g1": 36,
+        "g2": 36,
+        "g3": 36,
+        "mean": 36,
+        "raw": 36,
+        "variance": 36
+      },
+      "legacy_metadata_run_id": "mpx_109",
+      "recorder_exact": true,
+      "recorder_sha256_proof": {
+        "mapex_run": {
+          "candidate_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b",
+          "match": true,
+          "path": "mapex_lab/scripts/mapex_run.py",
+          "stored_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b"
+        },
+        "nf_basic_shared_execution": {
+          "candidate_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_basic.py",
+          "stored_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e"
+        },
+        "nf_run_recorder_base": {
+          "candidate_sha256": "09e1f084389570635a811a24f50d58f5e1fedc81a3e346b9dd1ccc47bf832423",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_run.py",
+          "stored_sha256": "09e1f084389570635a811a24f50d58f5e1fedc81a3e346b9dd1ccc47bf832423"
+        },
+        "runtime_launch": {
+          "candidate_sha256": "e513d46e9446581902259580621336b8914e05d87325f2fdfff4837465d82b18",
+          "match": true,
+          "path": "mapex_lab/launch/slam.launch.py",
+          "stored_sha256": "e513d46e9446581902259580621336b8914e05d87325f2fdfff4837465d82b18"
+        }
+      },
+      "runtime_launch_exact": true,
+      "runtime_launch_file": "mapex_lab/launch/slam.launch.py",
+      "runtime_profile": "new_room_slam_adaptive_anchor",
+      "time_clock_note": "recorder now_s uses ROS node clock, but run-specific evidence does not prove use_sim_time=true on the recorder node itself; launch defaults for other nodes are insufficient",
+      "time_clock_status": "TIME_PRESENT_BUT_CLOCK_PROVENANCE_INCOMPLETE"
+    },
+    {
+      "alias_pass": true,
+      "canonical_run_id": "mpx_010",
+      "decision_count": 40,
+      "decision_identity_pass": true,
+      "expected_legacy_alias": "mpx_110",
+      "git_commit": "726da10078f54e73fc8ccb473fdb8a799d922484",
+      "git_dirty_at_recorder_start": true,
+      "inventory": {
+        "canvas": 40,
+        "decision_json": 40,
+        "g1": 40,
+        "g2": 40,
+        "g3": 40,
+        "mean": 40,
+        "raw": 40,
+        "variance": 40
+      },
+      "legacy_metadata_run_id": "mpx_110",
+      "recorder_exact": true,
+      "recorder_sha256_proof": {
+        "mapex_run": {
+          "candidate_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b",
+          "match": true,
+          "path": "mapex_lab/scripts/mapex_run.py",
+          "stored_sha256": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b"
+        },
+        "nf_basic_shared_execution": {
+          "candidate_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_basic.py",
+          "stored_sha256": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e"
+        },
+        "nf_run_recorder_base": {
+          "candidate_sha256": "09e1f084389570635a811a24f50d58f5e1fedc81a3e346b9dd1ccc47bf832423",
+          "match": true,
+          "path": "mapex_lab/scripts/nf_run.py",
+          "stored_sha256": "09e1f084389570635a811a24f50d58f5e1fedc81a3e346b9dd1ccc47bf832423"
+        },
+        "runtime_launch": {
+          "candidate_sha256": "e513d46e9446581902259580621336b8914e05d87325f2fdfff4837465d82b18",
+          "match": true,
+          "path": "mapex_lab/launch/slam.launch.py",
+          "stored_sha256": "e513d46e9446581902259580621336b8914e05d87325f2fdfff4837465d82b18"
+        }
+      },
+      "runtime_launch_exact": true,
+      "runtime_launch_file": "mapex_lab/launch/slam.launch.py",
+      "runtime_profile": "new_room_slam_adaptive_anchor",
+      "time_clock_note": "recorder now_s uses ROS node clock, but run-specific evidence does not prove use_sim_time=true on the recorder node itself; launch defaults for other nodes are insufficient",
+      "time_clock_status": "TIME_PRESENT_BUT_CLOCK_PROVENANCE_INCOMPLETE"
+    }
+  ],
+  "schema": "mx062_source_manifest_r2",
+  "source_blob_guards": {
+    "CAUSAL": {
+      "actual_blob": "18e6ffc0f139efb75ba93583e376059e06b3051a",
+      "expected_blob": "18e6ffc0f139efb75ba93583e376059e06b3051a",
+      "pass": true,
+      "path": "mapex_lab/analysis/mx040_exec_results/MX039_CAUSALITY_AUDIT.csv"
+    },
+    "FEATURES": {
+      "actual_blob": "e91a45e2f88806d7ba52ef658c9fd86262ab9a91",
+      "expected_blob": "e91a45e2f88806d7ba52ef658c9fd86262ab9a91",
+      "pass": true,
+      "path": "mapex_lab/analysis/mx040_exec_results/MX039_FEATURES_PER_DECISION.csv"
+    },
+    "GT": {
+      "actual_blob": "a5653a7ec7f4550287a3ebeb05b922dbc7a5bc3a",
+      "expected_blob": "a5653a7ec7f4550287a3ebeb05b922dbc7a5bc3a",
+      "pass": true,
+      "path": "mapex_lab/ground_truth/new_room/generated/new_room_structural_gt_v2.npz"
+    },
+    "MX031": {
+      "actual_blob": "daf11687221080790e20227f2bf7b7406476298e",
+      "expected_blob": "daf11687221080790e20227f2bf7b7406476298e",
+      "pass": true,
+      "path": "mapex_lab/analysis/mx031_exec_results/MX031_PER_DECISION_REPLAY.csv"
+    },
+    "QUALITY": {
+      "actual_blob": "ed77ae4c44585e3883b6c42d1c0bc7c356891cf6",
+      "expected_blob": "ed77ae4c44585e3883b6c42d1c0bc7c356891cf6",
+      "pass": true,
+      "path": "mapex_lab/analysis/mx055_exec_results/MX054_MAP_QUALITY_PER_DECISION.csv"
+    },
+    "R004": {
+      "actual_blob": "a7820bc3d12b2b701f35f0d6629ab3f05d98f1bc",
+      "expected_blob": "a7820bc3d12b2b701f35f0d6629ab3f05d98f1bc",
+      "pass": true,
+      "path": "mapex_lab/analysis/r004/evaluate_prediction_vs_final_observed.py"
+    },
+    "T4": {
+      "actual_blob": "b64e755d34ceb4c30f0686047f06ddb4ce4c6865",
+      "expected_blob": "b64e755d34ceb4c30f0686047f06ddb4ce4c6865",
+      "pass": true,
+      "path": "mapex_lab/analysis/mx057_exec_results/MX056_PAIRED_TARGETS_PER_DECISION.csv"
+    }
+  },
+  "total_decisions": 365
+}
