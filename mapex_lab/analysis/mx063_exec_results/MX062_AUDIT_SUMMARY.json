@@ -1,0 +1,172 @@
+{
+  "A1_A45_pass": 45,
+  "H1_FULL_MATERIAL_BENCHMARK_DISCORDANCE": true,
+  "H1_H3_MATERIAL_HORIZON_DISCORDANCE": false,
+  "all_block_common_support_n": 325,
+  "cost": {
+    "D0_endpoint_total": 0,
+    "D1_endpoint_total": 355,
+    "D2_endpoint_total": 10,
+    "class": "MX062_HISTORICAL_COST_TELEMETRY_INCOMPLETE",
+    "time_exact_runs": 0
+  },
+  "cost_class": "MX062_HISTORICAL_COST_TELEMETRY_INCOMPLETE",
+  "discordance": {
+    "H1_FULL": {
+      "DelayedPositive": {
+        "event_n": 23,
+        "event_rate": 0.0647887323943662,
+        "event_run_n": 6,
+        "material": false,
+        "n": 355
+      },
+      "EarlyPositiveReversal": {
+        "event_n": 92,
+        "event_rate": 0.2591549295774648,
+        "event_run_n": 10,
+        "material": true,
+        "n": 355
+      },
+      "abs_delta_distribution": {
+        "NEAR_ZERO_fraction": 0.0,
+        "NEAR_ZERO_n": 0,
+        "NEG_fraction": 0.0,
+        "NEG_n": 0,
+        "POS_fraction": 1.0,
+        "POS_n": 355,
+        "distinct_1e6": 281,
+        "iqr": 0.024672514167047077,
+        "max": 0.401108492198062,
+        "mean": 0.06685507021433372,
+        "median": 0.04480589253926781,
+        "min": 0.00020532944044049373,
+        "n": 355,
+        "p05": 0.004863526398906781,
+        "p95": 0.27081065889936023,
+        "q25": 0.03208886628656116,
+        "q75": 0.056761380453608234,
+        "sd": 0.07742485243640618
+      },
+      "delta_distribution": {
+        "NEAR_ZERO_fraction": 0.0,
+        "NEAR_ZERO_n": 0,
+        "NEG_fraction": 0.6563380281690141,
+        "NEG_n": 233,
+        "POS_fraction": 0.3436619718309859,
+        "POS_n": 122,
+        "distinct_1e6": 281,
+        "iqr": 0.08075833763637158,
+        "max": 0.401108492198062,
+        "mean": 0.014768396456423942,
+        "median": -0.031211371974688373,
+        "min": -0.06191188590729224,
+        "n": 355,
+        "p05": -0.056761380453608234,
+        "p95": 0.27081065889936023,
+        "q25": -0.045825649217079434,
+        "q75": 0.034932688419292146,
+        "sd": 0.10122303420797389
+      },
+      "material": true,
+      "shared_n": 355,
+      "sign_agreement": 0.4732394366197183
+    },
+    "H1_H3": {
+      "DelayedPositive": {
+        "event_n": 45,
+        "event_rate": 0.13432835820895522,
+        "event_run_n": 10,
+        "material": false,
+        "n": 335
+      },
+      "EarlyPositiveReversal": {
+        "event_n": 24,
+        "event_rate": 0.07164179104477612,
+        "event_run_n": 9,
+        "material": false,
+        "n": 335
+      },
+      "abs_delta_distribution": {
+        "NEAR_ZERO_fraction": 0.1701492537313433,
+        "NEAR_ZERO_n": 57,
+        "NEG_fraction": 0.0,
+        "NEG_n": 0,
+        "POS_fraction": 0.8298507462686567,
+        "POS_n": 278,
+        "distinct_1e6": 272,
+        "iqr": 0.02267949002889641,
+        "max": 0.20735745644894288,
+        "mean": 0.024850614161699085,
+        "median": 0.006377440008594304,
+        "min": 0.0,
+        "n": 335,
+        "p05": 0.0,
+        "p95": 0.10371754898017572,
+        "q25": 0.0012865351386195933,
+        "q75": 0.023966025167516003,
+        "sd": 0.04117172351215482
+      },
+      "delta_distribution": {
+        "NEAR_ZERO_fraction": 0.1701492537313433,
+        "NEAR_ZERO_n": 57,
+        "NEG_fraction": 0.22388059701492538,
+        "NEG_n": 75,
+        "POS_fraction": 0.6059701492537314,
+        "POS_n": 203,
+        "distinct_1e6": 275,
+        "iqr": 0.023122235366307253,
+        "max": 0.20735745644894288,
+        "mean": 0.022309979159476166,
+        "median": 0.0027865056023014256,
+        "min": -0.03322435011066349,
+        "n": 335,
+        "p05": -0.008923618514269527,
+        "p95": 0.10371754898017572,
+        "q25": 0.0,
+        "q75": 0.023122235366307253,
+        "sd": 0.042601979661498125
+      },
+      "material": false,
+      "shared_n": 335,
+      "sign_agreement": 0.7880597014925373
+    }
+  },
+  "feature_lock_flag": "FEATURE_LOCK_COVERAGE_ADEQUATE",
+  "primary_class": "MX062_CV_Q1_OFFLINE_FEASIBILITY_SUPPORTS_NEW_DATA_DECISION",
+  "schema": "mx062_audit_summary_r2",
+  "source_hard_failures": [],
+  "support": {
+    "H1_evaluable": 355,
+    "H1_gate": true,
+    "H1_structural_max": 355,
+    "H3_evaluable": 335,
+    "H3_gate": true,
+    "H3_structural_max": 335,
+    "late_gate": true,
+    "late_support_runs_pass": 10
+  },
+  "variation": {
+    "adequate": true,
+    "global": {
+      "NEAR_ZERO_fraction": 0.2028169014084507,
+      "NEAR_ZERO_n": 72,
+      "NEG_fraction": 0.23098591549295774,
+      "NEG_n": 82,
+      "POS_fraction": 0.5661971830985916,
+      "POS_n": 201,
+      "distinct_1e6": 283,
+      "iqr": 0.010122847778725574,
+      "max": 0.17834723645574158,
+      "mean": 0.015571601159754358,
+      "median": 0.0010118051273528827,
+      "min": -0.03392415202628363,
+      "n": 355,
+      "p05": -0.00640413304115367,
+      "p95": 0.09172466824147062,
+      "q25": 0.0,
+      "q75": 0.010122847778725574,
+      "sd": 0.03399176120148393
+    },
+    "within_run_pass_n": 10
+  }
+}

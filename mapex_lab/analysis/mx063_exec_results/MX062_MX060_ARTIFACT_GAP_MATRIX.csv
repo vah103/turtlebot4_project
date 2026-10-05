@@ -1,0 +1,17 @@
+requirement,historical_status,historical_evidence,MX060_required
+NEXT linkage,HISTORICAL_EXACT,decision identity/index,preserve exact i+1
+NEXT3 linkage,HISTORICAL_EXACT,decision identity/index,preserve exact i+3
+V1 source bundle,HISTORICAL_EXACT,stored obs+mean+support,collect exact stored observed maps/prediction support/mean prospectively
+Q_STOP,HISTORICAL_EXACT,reconstructed + MX055 parity,same definition prospectively
+CV_Q1,HISTORICAL_EXACT,H1 exact except terminal censor,collect all decision snapshots
+CV_Q3,HISTORICAL_EXACT,H3 exact except final-three censor,collect all decision snapshots
+full benchmark,HISTORICAL_EXACT,accepted empirical V3,prospective final empirical reference
+scientific /clock,HISTORICAL_PARTIAL,timestamps present but recorder-node use_sim_time proof incomplete,G-cost: explicitly record recorder node use_sim_time and /clock provenance
+per-decision cumulative odometry distance,HISTORICAL_PARTIAL,periodic trajectory brackets; no exact decision endpoints,record cumulative odometry distance atomically at each decision
+R/B1/F1/F2/F4 key support,HISTORICAL_EXACT,FEATURE_LOCK_COVERAGE_ADEQUATE,prospectively retain exact keys/evaluability/reasons
+G1 exact decision snapshot identity,PROSPECTIVE_REQUIRED,MX061 prospective contract,collect exact decision bundle identity
+G2 immediate NEXT continuity,PROSPECTIVE_REQUIRED,MX061 prospective contract,collect sequential accepted-decision linkage
+G3 Q_STOP inputs,PROSPECTIVE_REQUIRED,MX061 prospective contract,store causal observed/prediction support/mean inputs
+G4 scientific time cost,PROSPECTIVE_REQUIRED,historical clock proof incomplete,record simulation-clock provenance + exact timestamps
+G5 distance cost,PROSPECTIVE_REQUIRED,historical exact decision distance absent,record decision-snapshot cumulative odometry distance
+G6 feature-lock source,PROSPECTIVE_REQUIRED,future-layout evidence required,record R/B1/F1/F2/F4 causal source/evaluability exactly
