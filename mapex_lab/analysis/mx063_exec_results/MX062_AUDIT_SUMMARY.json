@@ -5,9 +5,13 @@
   "all_block_common_support_n": 325,
   "cost": {
     "D0_endpoint_total": 0,
-    "D1_endpoint_total": 355,
-    "D2_endpoint_total": 10,
+    "D1_endpoint_total": 0,
+    "D2_endpoint_total": 365,
     "class": "MX062_HISTORICAL_COST_TELEMETRY_INCOMPLETE",
+    "odom_topic_frame_provenance": "INCOMPLETE_UNBOUND",
+    "raw_bracketed_timestamp_total": 355,
+    "raw_exact_timestamp_match_total": 0,
+    "raw_no_valid_bracket_total": 10,
     "time_exact_runs": 0
   },
   "cost_class": "MX062_HISTORICAL_COST_TELEMETRY_INCOMPLETE",

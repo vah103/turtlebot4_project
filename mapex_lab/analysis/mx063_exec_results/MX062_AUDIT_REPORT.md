@@ -22,7 +22,8 @@ H1-FULL material benchmark discordance: **True**
 - H1-FULL material=True; delayed=0.0647887323943662; early reversal=0.2591549295774648.
 
 ## 5. Time/distance cũ có đủ chuẩn MX061 không?
-- MX062_HISTORICAL_COST_TELEMETRY_INCOMPLETE. decision_time values parity 365/365, but recorder-node simulation-clock provenance is incomplete; exact decision distance endpoints = 0/365.
+- MX062_HISTORICAL_COST_TELEMETRY_INCOMPLETE. decision_time values parity 365/365, but recorder-node simulation-clock provenance is incomplete, so exact C_time1_s/C_time3_s are blank.
+- Frozen evidence does not bind actual runtime odom topic/frame, so formal distance endpoints fail closed: D0=0, D1=0, D2=365. Raw timing inventory remains diagnostic only: exact timestamp=0, bracketed=355, no bracket=10.
 
 ## 6. Feature keys có đủ rộng không?
 - FEATURE_LOCK_COVERAGE_ADEQUATE; all-block H1 common support=325/355.

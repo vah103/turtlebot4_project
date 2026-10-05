@@ -191,15 +191,20 @@ def distance_endpoints(run,decisions):
     for d in decisions:
         did=int(d["decision_id"]);j=json.load(open(rp/"decisions"/f"policy_decision_{did:06d}"/"decision.json"));t=float(j["sim_time_s"])
         if not valid:
-            endpoint[did]={"status":"D2_DISTANCE_SOURCE_INVALID","reason":"TRAJECTORY_INVALID"}
+            endpoint[did]={"status":"D2_DISTANCE_SOURCE_INVALID","reason":"ODOM_TOPIC_FRAME_PROVENANCE_INCOMPLETE",
+                           "raw_timing_status":"RAW_TRAJECTORY_INVALID","raw_timing_reason":"TRAJECTORY_INVALID","time_s":t}
             continue
         k=bisect.bisect_left(ts,t)
         if k<len(ts) and abs(ts[k]-t)<=1e-9:
-            endpoint[did]={"status":"D0_EXACT_DECISION_DISTANCE","distance_m":ds[k],"time_s":t}
+            endpoint[did]={"status":"D2_DISTANCE_SOURCE_INVALID","reason":"ODOM_TOPIC_FRAME_PROVENANCE_INCOMPLETE",
+                           "raw_timing_status":"RAW_EXACT_TIMESTAMP_MATCH","raw_distance_m":ds[k],"time_s":t}
         elif 0<k<len(ts):
-            endpoint[did]={"status":"D1_BRACKETED_TRAJECTORY_ONLY","d_before":ds[k-1],"d_after":ds[k],"DistanceBracketWidth_m":ds[k]-ds[k-1],"t_before":ts[k-1],"t_after":ts[k],"time_s":t}
+            endpoint[did]={"status":"D2_DISTANCE_SOURCE_INVALID","reason":"ODOM_TOPIC_FRAME_PROVENANCE_INCOMPLETE",
+                           "raw_timing_status":"RAW_BRACKETED_TIMESTAMP","d_before":ds[k-1],"d_after":ds[k],
+                           "DistanceBracketWidth_m":ds[k]-ds[k-1],"t_before":ts[k-1],"t_after":ts[k],"time_s":t}
         else:
-            endpoint[did]={"status":"D2_DISTANCE_SOURCE_INVALID","reason":"NO_BRACKET_FOR_DECISION_TIME","time_s":t}
+            endpoint[did]={"status":"D2_DISTANCE_SOURCE_INVALID","reason":"ODOM_TOPIC_FRAME_PROVENANCE_INCOMPLETE",
+                           "raw_timing_status":"RAW_NO_VALID_BRACKET","raw_timing_reason":"NO_BRACKET_FOR_DECISION_TIME","time_s":t}
     return endpoint,{"trajectory_present":tp.is_file(),"trajectory_rows":len(rows),"trajectory_valid_monotonic":valid,"summary_final_distance_match":final_match,
       "trajectory_final_distance_m":ds[-1] if ds else math.nan,"summary_total_distance_m":summary.get("total_distance_m",math.nan)}
 
@@ -272,16 +277,26 @@ def main(full=True):
             h1row={"run_id":run,"decision_id":did,"decision_index":idx,"decision_count":N,"normalized_progress":prog,
               "next_decision_id":K1[1] if K1 else "","next_decision_index":idx+1 if K1 else "","Q_STOP_t":v,"Q_STOP_next":v1,"CV_Q1":cv1,
               "H1_evaluable":int(e1),"H1_reason":r1,"sign_class":sign(cv1),"C_dec1":1 if e1 else "",
-              "time_status":time_status,"C_time1_s":ctime1 if e1 else "",
-              "distance_endpoint_status_t":ep0["status"],"distance_endpoint_status_next":ep1["status"] if ep1 else "TERMINAL_NO_NEXT","C_dist1_m":cdist1 if finite(cdist1) else "",
+              "time_status":time_status,"C_time1_s":"",
+              "distance_endpoint_status_t":ep0["status"],"distance_endpoint_reason_t":ep0.get("reason",""),
+              "distance_endpoint_raw_timing_status_t":ep0.get("raw_timing_status",""),
+              "distance_endpoint_status_next":ep1["status"] if ep1 else "TERMINAL_NO_NEXT",
+              "distance_endpoint_reason_next":ep1.get("reason","") if ep1 else "",
+              "distance_endpoint_raw_timing_status_next":ep1.get("raw_timing_status","") if ep1 else "",
+              "C_dist1_m":"",
               "R_B1_evaluable":int(all(finite(fr.get(x)) for x in ["R_map","log_decision","log_elapsed"])),
               "F1_evaluable":fint(fr.get("F1_evaluable"),0),"F2_evaluable":fint(fr.get("F2_evaluable"),0),"F4_evaluable":fint(fr.get("F4_evaluable"),0)}
             h1.append(h1row);h1_by[K]=h1row
             h3row={"run_id":run,"decision_id":did,"decision_index":idx,"decision_count":N,"normalized_progress":prog,
               "next3_decision_id":K3[1] if K3 else "","next3_decision_index":idx+3 if K3 else "","Q_STOP_t":v,"Q_STOP_next3":v3,"CV_Q3":cv3,
               "H3_evaluable":int(e3),"H3_reason":r3,"sign_class":sign(cv3),"C_dec3":3 if e3 else "",
-              "time_status":time_status,"C_time3_s":ctime3 if e3 else "",
-              "distance_endpoint_status_t":ep0["status"],"distance_endpoint_status_next3":ep3["status"] if ep3 else "TERMINAL_NO_NEXT3","C_dist3_m":cdist3 if finite(cdist3) else ""}
+              "time_status":time_status,"C_time3_s":"",
+              "distance_endpoint_status_t":ep0["status"],"distance_endpoint_reason_t":ep0.get("reason",""),
+              "distance_endpoint_raw_timing_status_t":ep0.get("raw_timing_status",""),
+              "distance_endpoint_status_next3":ep3["status"] if ep3 else "TERMINAL_NO_NEXT3",
+              "distance_endpoint_reason_next3":ep3.get("reason","") if ep3 else "",
+              "distance_endpoint_raw_timing_status_next3":ep3.get("raw_timing_status","") if ep3 else "",
+              "C_dist3_m":""}
             h3.append(h3row);h3_by[K]=h3row
             acc=t4m[K];t4=fnum(acc["T4"]);qfull=fnum(qm[K]["V3_FULL_EXPLORE_REFERENCE"]["StrictMacroIoU"]);recon=qfull-v if finite(qfull) and finite(v) else math.nan
             bp=finite(t4) and finite(recon) and abs(t4-recon)<=1e-12
@@ -325,13 +340,20 @@ def main(full=True):
     # costs
     for run in RUNS:
         meta=json.load(open(DATA/run/"metadata.json"));proof=[x for x in manifest["runs"] if x["canonical_run_id"]==run][0]
-        eps=endpoint_all[run];st=Counter(x["status"] for x in eps.values())
+        eps=endpoint_all[run];st=Counter(x["status"] for x in eps.values());rawst=Counter(x.get("raw_timing_status","") for x in eps.values())
         cost.append({"run_id":run,"legacy_metadata_run_id":meta["run_id"],"git_commit":meta["git_commit"],"git_dirty_at_recorder_start":int(meta["git_dirty_at_recorder_start"]),
           "recorder_exact_sha256_proof":int(proof["recorder_exact"]),"runtime_launch_exact_sha256_proof":int(proof["runtime_launch_exact"]),
           "time_status":"TIME_PRESENT_BUT_CLOCK_PROVENANCE_INCOMPLETE","decision_time_parity_n":sum(1 for x in parity if x["run_id"]==run and x["time_parity_1e9"]==1),
           "trajectory_present":int(cost_run[run]["trajectory_present"]),"trajectory_valid_monotonic":int(cost_run[run]["trajectory_valid_monotonic"]),
           "summary_final_distance_match":int(cost_run[run]["summary_final_distance_match"]),
+          "odom_topic_provenance_status":"ODOM_TOPIC_PROVENANCE_INCOMPLETE",
+          "odom_frame_provenance_status":"ODOM_FRAME_PROVENANCE_INCOMPLETE",
+          "formal_distance_source_status":"DISTANCE_SOURCE_UNBOUND_FAIL_CLOSED",
           "D0_exact_decision_distance_n":st["D0_EXACT_DECISION_DISTANCE"],"D1_bracketed_n":st["D1_BRACKETED_TRAJECTORY_ONLY"],"D2_invalid_n":st["D2_DISTANCE_SOURCE_INVALID"],
+          "raw_exact_timestamp_match_n":rawst["RAW_EXACT_TIMESTAMP_MATCH"],
+          "raw_bracketed_timestamp_n":rawst["RAW_BRACKETED_TIMESTAMP"],
+          "raw_no_valid_bracket_n":rawst["RAW_NO_VALID_BRACKET"],
+          "raw_trajectory_invalid_n":rawst["RAW_TRAJECTORY_INVALID"],
           "exact_C_dist1_n":sum(1 for r in h1 if r["run_id"]==run and finite(r.get("C_dist1_m"))),
           "exact_C_dist3_n":sum(1 for r in h3 if r["run_id"]==run and finite(r.get("C_dist3_m")))})
     cost_complete=all(r["time_status"]=="TIME_EXACT_SCIENTIFIC_CLOCK" and r["exact_C_dist1_n"]==COUNTS[r["run_id"]]-1 for r in cost)
@@ -400,13 +422,13 @@ def main(full=True):
       ("CV_Q3","HISTORICAL_EXACT","H3 exact except final-three censor","collect all decision snapshots"),
       ("full benchmark","HISTORICAL_EXACT","accepted empirical V3","prospective final empirical reference"),
       ("scientific /clock","HISTORICAL_PARTIAL","timestamps present but recorder-node use_sim_time proof incomplete","G-cost: explicitly record recorder node use_sim_time and /clock provenance"),
-      ("per-decision cumulative odometry distance","HISTORICAL_PARTIAL","periodic trajectory brackets; no exact decision endpoints","record cumulative odometry distance atomically at each decision"),
+      ("per-decision cumulative odometry distance","HISTORICAL_PARTIAL","raw trajectory timing inventory has brackets, but frozen evidence does not bind actual runtime odom topic/frame; formal endpoints fail closed to D2","bind actual odom topic + odometry frame and record cumulative odometry distance atomically at each decision"),
       ("R/B1/F1/F2/F4 key support","HISTORICAL_EXACT" if feature_adequate else "HISTORICAL_PARTIAL",feature_flag,"prospectively retain exact keys/evaluability/reasons"),
       ("G1 exact decision snapshot identity","PROSPECTIVE_REQUIRED","MX061 prospective contract","collect exact decision bundle identity"),
       ("G2 immediate NEXT continuity","PROSPECTIVE_REQUIRED","MX061 prospective contract","collect sequential accepted-decision linkage"),
       ("G3 Q_STOP inputs","PROSPECTIVE_REQUIRED","MX061 prospective contract","store causal observed/prediction support/mean inputs"),
       ("G4 scientific time cost","PROSPECTIVE_REQUIRED","historical clock proof incomplete","record simulation-clock provenance + exact timestamps"),
-      ("G5 distance cost","PROSPECTIVE_REQUIRED","historical exact decision distance absent","record decision-snapshot cumulative odometry distance"),
+      ("G5 distance cost","PROSPECTIVE_REQUIRED","historical odom topic/frame provenance unbound and exact decision distance absent","record actual odom topic/frame provenance plus decision-snapshot cumulative odometry distance"),
       ("G6 feature-lock source","PROSPECTIVE_REQUIRED","future-layout evidence required","record R/B1/F1/F2/F4 causal source/evaluability exactly")]
     gaprows=[{"requirement":a,"historical_status":b,"historical_evidence":c,"MX060_required":d} for a,b,c,d in gap]
     # A1-A45
@@ -421,7 +443,9 @@ def main(full=True):
       ("A18",any(r["H1_evaluable"] and r["CV_Q1"]<0 for r in h1),"negative preserved"),("A19",True,"H3 diagnostic only"),("A20",True,"full benchmark separate"),
       ("A21",all(x["benchmark_parity_pass"]==1 for x in bench),"T4 parity no centering"),("A22",True,"variation no sign balance"),("A23",True,"late progress support only"),
       ("A24",True,"discordance frozen .20/3 runs"),("A25",True,"no horizon switch"),("A26",all(x["time_parity_1e9"]==1 for x in parity),"decision time parity"),
-      ("A27",cost_class=="MX062_HISTORICAL_COST_TELEMETRY_INCOMPLETE","wall clock not substituted"),("A28",True,"selected_distance not used"),("A29",all(r["exact_C_dist1_n"]==0 for r in cost),"brackets not exact"),
+      ("A27",cost_class=="MX062_HISTORICAL_COST_TELEMETRY_INCOMPLETE" and all(r.get("C_time1_s","")=="" for r in h1) and all(r.get("C_time3_s","")=="" for r in h3),"incomplete clock provenance leaves exact C_time fields blank"),
+      ("A28",True,"selected_distance not used"),
+      ("A29",all(r["D1_bracketed_n"]==0 and r["D2_invalid_n"]==COUNTS[r["run_id"]] and r["exact_C_dist1_n"]==0 and r["exact_C_dist3_n"]==0 for r in cost),"unbound odom topic/frame fails formal distance status closed to D2; raw bracket inventory stays diagnostic only"),
       ("A30",all(r["trajectory_valid_monotonic"]==1 for r in cost),"distance monotonic audited"),("A31",primary!="MX062_INVALID_SOURCE_OR_TARGET_RECONSTRUCTION" or bool(hard),"cost incomplete orthogonal"),
       ("A32",True,"feature audit overlap only"),("A33",True,"no target-feature correlation"),("A34",True,"no model fit"),("A35",True,"no feature ranking"),("A36",True,"no threshold/STOP"),
       ("A37",True,"MX057/MX059 immutable"),("A38",True,"runs not independent layouts"),("A39",True,"favorable result no pilot authority"),("A40",True,"no deployment"),
@@ -439,7 +463,11 @@ def main(full=True):
         "late_support_runs_pass":sum(x["late_support_pass"] for x in support),"H1_gate":h1_global,"H3_gate":h3_global,"late_gate":late_gate},
       "variation":{"global":gd,"within_run_pass_n":var_runs,"adequate":variation_gate},"discordance":flags,
       "cost":{"class":cost_class,"time_exact_runs":sum(r["time_status"]=="TIME_EXACT_SCIENTIFIC_CLOCK" for r in cost),
-        "D0_endpoint_total":sum(r["D0_exact_decision_distance_n"] for r in cost),"D1_endpoint_total":sum(r["D1_bracketed_n"] for r in cost),"D2_endpoint_total":sum(r["D2_invalid_n"] for r in cost)},
+        "D0_endpoint_total":sum(r["D0_exact_decision_distance_n"] for r in cost),"D1_endpoint_total":sum(r["D1_bracketed_n"] for r in cost),"D2_endpoint_total":sum(r["D2_invalid_n"] for r in cost),
+        "raw_exact_timestamp_match_total":sum(r["raw_exact_timestamp_match_n"] for r in cost),
+        "raw_bracketed_timestamp_total":sum(r["raw_bracketed_timestamp_n"] for r in cost),
+        "raw_no_valid_bracket_total":sum(r["raw_no_valid_bracket_n"] for r in cost),
+        "odom_topic_frame_provenance":"INCOMPLETE_UNBOUND"},
       "feature_lock_flag":feature_flag,"all_block_common_support_n":len(allcommon),"A1_A45_pass":advpass}
     # write outputs
     write_csv(OUT/"MX062_DECISION_NEXT_LINKAGE.csv",linkage)
@@ -464,7 +492,8 @@ def main(full=True):
       "## 3. CV_Q1 có biến thiên không?",f"- median={gd['median']}; IQR={gd['iqr']}; SD={gd['sd']}; distinct_1e-6={gd['distinct_1e6']}; within-run variation pass={var_runs}/10.","",
       "## 4. H=1 có trái chiều với H=3/full không?",f"- H1-H3 material={h13flag}; delayed={flags['H1_H3']['DelayedPositive']['event_rate']}; early reversal={flags['H1_H3']['EarlyPositiveReversal']['event_rate']}.",
       f"- H1-FULL material={h1fflag}; delayed={flags['H1_FULL']['DelayedPositive']['event_rate']}; early reversal={flags['H1_FULL']['EarlyPositiveReversal']['event_rate']}.","",
-      "## 5. Time/distance cũ có đủ chuẩn MX061 không?",f"- {cost_class}. decision_time values parity 365/365, but recorder-node simulation-clock provenance is incomplete; exact decision distance endpoints = {sum(r['D0_exact_decision_distance_n'] for r in cost)}/365.","",
+      "## 5. Time/distance cũ có đủ chuẩn MX061 không?",f"- {cost_class}. decision_time values parity 365/365, but recorder-node simulation-clock provenance is incomplete, so exact C_time1_s/C_time3_s are blank.",
+      f"- Frozen evidence does not bind actual runtime odom topic/frame, so formal distance endpoints fail closed: D0={sum(r['D0_exact_decision_distance_n'] for r in cost)}, D1={sum(r['D1_bracketed_n'] for r in cost)}, D2={sum(r['D2_invalid_n'] for r in cost)}. Raw timing inventory remains diagnostic only: exact timestamp={sum(r['raw_exact_timestamp_match_n'] for r in cost)}, bracketed={sum(r['raw_bracketed_timestamp_n'] for r in cost)}, no bracket={sum(r['raw_no_valid_bracket_n'] for r in cost)}.","",
       "## 6. Feature keys có đủ rộng không?",f"- {feature_flag}; all-block H1 common support={len(allcommon)}/{len(h1valid)}.","",
       "## 7. MX060 phải bổ sung gì?", "- Exact recorder-node /clock provenance and decision-snapshot cumulative odometry distance are prospective requirements; preserve exact NEXT/Q_STOP and R/B1/F1/F2/F4 source/evaluability contracts.","",
       "## 8. Có đáng để PM/USER cân nhắc pilot mới không?",f"- Method-R2 return class: {primary}. This is feasibility evidence only; it does not authorize MX060, model fitting, STOP construction or deployment."
