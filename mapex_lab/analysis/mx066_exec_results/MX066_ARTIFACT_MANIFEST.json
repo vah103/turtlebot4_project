@@ -1,0 +1,136 @@
+{
+  "A1_A47_pass": 47,
+  "CROSS_ENV_POSITIVE_SIGNAL_COMPATIBLE": false,
+  "artifacts": [
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_ACQUISITION_SEMANTIC_COMPATIBILITY_AUDIT.csv",
+      "sha256": "70672693e7ff8958c6a790df45972ac2cf91f963a15cf4a5078e427feb6c1351",
+      "size_bytes": 41574
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_ARTIFACT_AVAILABILITY_BY_RUN.csv",
+      "sha256": "38b333be8e3da8a40174fd7e368b097061e6c0de3571e1d26f790c3c4e626550",
+      "size_bytes": 412
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_CENSORING_MISSINGNESS_REASONS.csv",
+      "sha256": "33c0c4df08d6ce838de4cfa2ee74c9214286fcd22f8ac28b5d4c3b2b0184c1b4",
+      "size_bytes": 663
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_CV_Q1_PER_DECISION.csv",
+      "sha256": "f6aaade352a1f39606564b920f97da381bb16cb088ea5546a460e676e57f6cbe",
+      "size_bytes": 22115
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_F4_CLOCK_ODOM_INVENTORY.csv",
+      "sha256": "2ea0db8d7c59c9d7df37d64316164b299a7c734d6722cb5df114f45e7a39f099",
+      "size_bytes": 715
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_GT_PROVENANCE_ALIGNMENT_AUDIT.csv",
+      "sha256": "ddc514da4e4265069dea9f66a761c697455b1219d4b3c176f91cbc9328d45a6f",
+      "size_bytes": 1968
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_HOSPITAL_RUN_INVENTORY.csv",
+      "sha256": "90b90b490b89c3aa7314234929576030d81a84b37b97199147d066c76965f61a",
+      "size_bytes": 1677
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_HOSPITAL_SOURCE_MANIFEST.json",
+      "sha256": "ea8c1d1e04cb79768a8d4cceda02d1d96de1b206d5e686dabd2236e218e1888d",
+      "size_bytes": 19518
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_NEW_ROOM_COMPANION_COMPARISON.csv",
+      "sha256": "427e469339f5cc1936c98adca020d5721eca029db749b5309bf46ca214e511ca",
+      "size_bytes": 5916
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_NEXT_LINKAGE_AUDIT.csv",
+      "sha256": "5981a92901a80a0e50ac7a3705e57d316dc1f2c0f64baf987eab652b766e8064",
+      "size_bytes": 6354
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_PM_USER_DECISION_REPORT.md",
+      "sha256": "27a4a70931e5b25a64903567f424a3e643de4b5877004692d4356b70607b9c15",
+      "size_bytes": 615
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_QSTOP_RECONSTRUCTION_AUDIT.csv",
+      "sha256": "ed571727302f66d385bf72c3406f9399c4970fc7c0b27fcef50c5a1e73c25484",
+      "size_bytes": 68222
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_R_F1_F2_PER_DECISION.csv",
+      "sha256": "c9a3a8e06e631631ac18188bc384a441e50727838ee7062aeb3a7704357470ba",
+      "size_bytes": 57998
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_STAGE_A_GATE_SUMMARY.json",
+      "sha256": "677bbd6c85bfd5a1c3d4963af4f0264116f1841f6eef4cc99b60a4e647fdc2cf",
+      "size_bytes": 7029
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_STAGE_A_REPORT.md",
+      "sha256": "5be623385cf61c66c53be938719e4589b00008ab2f2bcb7c7a679845d1225e31",
+      "size_bytes": 490
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_STAGE_B_HELDOUT_PREDICTIONS.csv",
+      "sha256": "e6dcfcedeee208f1678c044bb12d3a8f874eaffd95f03a1332ece30b604e5aea",
+      "size_bytes": 658812
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_STAGE_B_MODEL_AUDIT.json",
+      "sha256": "ef924911197b1fced092432760662995ed6058c7f8ba436f1db16dd61fe5ab14",
+      "size_bytes": 234618
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_STAGE_B_OUTER_FOLDS.csv",
+      "sha256": "57821b8ae1ee2db5c20b828128e0f7c17dcc3964293d82112de1b1edd68cc6d0",
+      "size_bytes": 2816
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_STAGE_B_RESULT_SUMMARY.json",
+      "sha256": "f67f56065201dd8dee692d7fe301b1fb8ee38ed50d43e6d4033a6e7d9985022e",
+      "size_bytes": 7226
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_STAGE_B_RUN_INFLUENCE.csv",
+      "sha256": "b21bcb3892ddd1cc8dfbf64d813c91911be5e9389af4082bff6dbc18187c952a",
+      "size_bytes": 633
+    },
+    {
+      "path": "mapex_lab/analysis/mx066_exec_results/MX065_STRICT_COMMON_SUPPORT.csv",
+      "sha256": "626f9d853f8a6c6cbd9e9148c0d6f9b7fa60e49ee2b800dc92186ac596a434d6",
+      "size_bytes": 67408
+    }
+  ],
+  "boundaries": {
+    "environment_pooling": false,
+    "new_simulation": false,
+    "prediction_regeneration": false,
+    "robot": false,
+    "stop_construction": false,
+    "threshold_tuning": false
+  },
+  "execution_scripts": {
+    "mapex_lab/analysis/mx066_exec.py": "e5bcaaf55785d631f7a86fb82ec9a66f8b516dfb408cf05247831681bd8638e5",
+    "mapex_lab/analysis/mx066_source_freeze.py": "b1afe94f52aad3f475b24b11dbdcd6e302ec464446c538e700a8bab469015943"
+  },
+  "hospital_source_commit": "1e622f03b8cc90dcb1c431e459e773fa6de26374",
+  "method_blob": "62796c55eb3cb810eb2865d6c9d56d9c4fb0bfab",
+  "method_commit": "a94055cb793a8096a1152fc20f3ac58d3a20bcba",
+  "method_qa_commit": "098e2ca7ce15f456cc7918e036140a41577499f9",
+  "method_task": "MX065",
+  "new_room_cv_commit": "f8a72a9e542386db67f4cad05ffeaffd08c31385",
+  "new_room_feature_commit": "35ee9315cce3899190d439b75958fbcbe31f9851",
+  "pm_handoff_commit": "8a1707e421268b594e437031eeb15caf5bc060e3",
+  "schema": "mx066_artifact_manifest_v1",
+  "source_freeze_commit": "020291a581cb8202de16628b1a84a4870c42104f",
+  "stage_a_class": "MX065_STAGE_A_SOURCE_FEASIBILITY_PASS",
+  "stage_b_class": "MX065_HOSPITAL_R_F1_F2_CVQ1_SIGNAL_NOT_USEFUL",
+  "task": "MX066"
+}

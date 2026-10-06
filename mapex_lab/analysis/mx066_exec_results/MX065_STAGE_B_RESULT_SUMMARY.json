@@ -1,0 +1,280 @@
+{
+  "A1_A47_pass": 47,
+  "A46_row_level_audit_pass": true,
+  "A47_model_state_audit_pass": true,
+  "CROSS_ENV_POSITIVE_SIGNAL_COMPATIBLE": false,
+  "adversarial_tests": [
+    {
+      "evidence": "canonical set hpx_001..005",
+      "pass": true,
+      "test_id": "A1"
+    },
+    {
+      "evidence": "hpx_001 retained in primary/equal-role cohort",
+      "pass": true,
+      "test_id": "A2"
+    },
+    {
+      "evidence": "equal total training-run weights verified for every fold/arm",
+      "pass": true,
+      "test_id": "A3"
+    },
+    {
+      "evidence": "distinct provenance labels retained",
+      "pass": true,
+      "test_id": "A4"
+    },
+    {
+      "evidence": "archived technical-abort attempts excluded by frozen source manifest",
+      "pass": true,
+      "test_id": "A5"
+    },
+    {
+      "evidence": "all five are repeats of one Hospital environment, never relabeled layouts",
+      "pass": true,
+      "test_id": "A6"
+    },
+    {
+      "evidence": "no simulation/world/seed/GT generation executed",
+      "pass": true,
+      "test_id": "A7"
+    },
+    {
+      "evidence": "stored predictions only; no prediction regeneration",
+      "pass": true,
+      "test_id": "A8"
+    },
+    {
+      "evidence": "no nearest/interpolated source proxy",
+      "pass": true,
+      "test_id": "A9"
+    },
+    {
+      "evidence": "GT used only in evaluator target/Q_STOP quality",
+      "pass": true,
+      "test_id": "A10"
+    },
+    {
+      "evidence": "V1 fill mask is observed-canvas unknown only; known cells retained",
+      "pass": true,
+      "test_id": "A11"
+    },
+    {
+      "evidence": "V1 fill requires exact prediction support; unsupported unknown remains unresolved",
+      "pass": true,
+      "test_id": "A12"
+    },
+    {
+      "evidence": "stored mean occupied iff >0.5 in V1",
+      "pass": true,
+      "test_id": "A13"
+    },
+    {
+      "evidence": "Strict IoU full-domain denominators include unresolved",
+      "pass": true,
+      "test_id": "A14"
+    },
+    {
+      "evidence": "NEXT exact i+1",
+      "pass": true,
+      "test_id": "A15"
+    },
+    {
+      "evidence": "one terminal censor per run; never zero-imputed",
+      "pass": true,
+      "test_id": "A16"
+    },
+    {
+      "evidence": "CV_Q1 exact Q_STOP_next-Q_STOP_t; no downstream option value",
+      "pass": true,
+      "test_id": "A17"
+    },
+    {
+      "evidence": "R exact map-only formula; no reachability",
+      "pass": true,
+      "test_id": "A18"
+    },
+    {
+      "evidence": "exact W3; no back-search",
+      "pass": true,
+      "test_id": "A19"
+    },
+    {
+      "evidence": "F1 mean and F2 member occupied semantics >=0.5",
+      "pass": true,
+      "test_id": "A20"
+    },
+    {
+      "evidence": "no future/GT/final fields in predictors",
+      "pass": true,
+      "test_id": "A21"
+    },
+    {
+      "evidence": "B1 excludes normalized_progress",
+      "pass": true,
+      "test_id": "A22"
+    },
+    {
+      "evidence": "F4 excluded",
+      "pass": true,
+      "test_id": "A23"
+    },
+    {
+      "evidence": "U excluded",
+      "pass": true,
+      "test_id": "A24"
+    },
+    {
+      "evidence": "Stage-B code path guarded by exact Stage-A PASS",
+      "pass": true,
+      "test_id": "A25"
+    },
+    {
+      "evidence": "separate PM execution authorization pre-bound",
+      "pass": true,
+      "test_id": "A26"
+    },
+    {
+      "evidence": "outer split unit is run",
+      "pass": true,
+      "test_id": "A27"
+    },
+    {
+      "evidence": "heldout run excluded from scaling,target scale,fit by construction",
+      "pass": true,
+      "test_id": "A28"
+    },
+    {
+      "evidence": "hpx_001 never removed after Delta",
+      "pass": true,
+      "test_id": "A29"
+    },
+    {
+      "evidence": "lambda fixed 1",
+      "pass": true,
+      "test_id": "A30"
+    },
+    {
+      "evidence": "single weighted ridge-linear family only",
+      "pass": true,
+      "test_id": "A31"
+    },
+    {
+      "evidence": "no target-feature subset search",
+      "pass": true,
+      "test_id": "A32"
+    },
+    {
+      "evidence": "no CV_Q1 threshold tuning",
+      "pass": true,
+      "test_id": "A33"
+    },
+    {
+      "evidence": "promising gate constants frozen before result",
+      "pass": true,
+      "test_id": "A34"
+    },
+    {
+      "evidence": "J remains sole promotion arm; S1/S2 diagnostics only",
+      "pass": true,
+      "test_id": "A35"
+    },
+    {
+      "evidence": "Hospital/NewRoom separately fit; no pooling",
+      "pass": true,
+      "test_id": "A36"
+    },
+    {
+      "evidence": "New Room companion cannot rescue Hospital class",
+      "pass": true,
+      "test_id": "A37"
+    },
+    {
+      "evidence": "MX057/MX059 immutable/not reopened",
+      "pass": true,
+      "test_id": "A38"
+    },
+    {
+      "evidence": "cross-environment flag not called multi-layout confirmation",
+      "pass": true,
+      "test_id": "A39"
+    },
+    {
+      "evidence": "F4/clock/odom inventory non-gating",
+      "pass": true,
+      "test_id": "A40"
+    },
+    {
+      "evidence": "no automatic MX060 collection authority",
+      "pass": true,
+      "test_id": "A41"
+    },
+    {
+      "evidence": "no STOP/deployment/safety claim",
+      "pass": true,
+      "test_id": "A42"
+    },
+    {
+      "evidence": "dirty Git commit not authority; stored config_sha256 used",
+      "pass": true,
+      "test_id": "A43"
+    },
+    {
+      "evidence": "every acquisition-exact candidate hash-matches stored SHA",
+      "pass": true,
+      "test_id": "A44"
+    },
+    {
+      "evidence": "no required unresolved material difference; hpx_001 retained",
+      "pass": true,
+      "test_id": "A45"
+    },
+    {
+      "evidence": "row-level heldout prediction contract; rows=2890, expected=2890, exact common-support identity per environment/fold",
+      "pass": true,
+      "test_id": "A46"
+    },
+    {
+      "evidence": "complete per-fold/per-arm model state; records=75, residual<1e-10",
+      "pass": true,
+      "test_id": "A47"
+    }
+  ],
+  "cross_environment_compatibility": false,
+  "hospital": {
+    "DCS_J": 0.8125,
+    "PGC_J": 0.9756972094047255,
+    "evaluable_folds": 5,
+    "gate": false,
+    "max_Delta_J_vs_B1": 0.01615289762825778,
+    "mean_Delta_J_vs_B1": -0.01917715776092215,
+    "median_Delta_J_vs_B1": -0.015882407704946977,
+    "median_Delta_J_vs_S1": -0.002836341077804283,
+    "median_Delta_J_vs_S2": -0.003843472204047904,
+    "min_Delta_J_vs_B1": -0.07650596400927495,
+    "positive_folds": 2,
+    "total_folds": 5
+  },
+  "hospital_common_support_n": 243,
+  "lambda": 1.0,
+  "new_room": {
+    "DCS_J": 0.828125,
+    "PGC_J": 0.30800410385441185,
+    "evaluable_folds": 10,
+    "gate": false,
+    "max_Delta_J_vs_B1": 0.011814788572329371,
+    "mean_Delta_J_vs_B1": -0.014407218961351664,
+    "median_Delta_J_vs_B1": -0.0208445513604828,
+    "median_Delta_J_vs_S1": 0.0023630916496182874,
+    "median_Delta_J_vs_S2": -0.010732984952214752,
+    "min_Delta_J_vs_B1": -0.04595903218375086,
+    "positive_folds": 4,
+    "total_folds": 10
+  },
+  "new_room_common_support_n": 335,
+  "no_pooling": true,
+  "no_stop_authority": true,
+  "schema": "mx065_stage_b_result_summary_r2",
+  "stage_a_class": "MX065_STAGE_A_SOURCE_FEASIBILITY_PASS",
+  "stage_b_class": "MX065_HOSPITAL_R_F1_F2_CVQ1_SIGNAL_NOT_USEFUL"
+}
