@@ -1,0 +1,360 @@
+{
+  "acquisition_semantic_compatibility_pass": true,
+  "canonical_runs": [
+    "hpx_001",
+    "hpx_002",
+    "hpx_003",
+    "hpx_004",
+    "hpx_005"
+  ],
+  "collection_source_revision": "1e622f03b8cc90dcb1c431e459e773fa6de26374",
+  "decision_counts": {
+    "hpx_001": 56,
+    "hpx_002": 51,
+    "hpx_003": 49,
+    "hpx_004": 52,
+    "hpx_005": 50
+  },
+  "gt_sha256": "080c7d708f12ae71c1ed1881bfd630dbb491401d95831f613e3116cb9926dce1",
+  "method_blob": "62796c55eb3cb810eb2865d6c9d56d9c4fb0bfab",
+  "method_commit": "a94055cb793a8096a1152fc20f3ac58d3a20bcba",
+  "method_qa_commit": "098e2ca7ce15f456cc7918e036140a41577499f9",
+  "method_task": "MX065",
+  "pm_handoff_commit": "8a1707e421268b594e437031eeb15caf5bc060e3",
+  "roi_sha256": "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1",
+  "runs": [
+    {
+      "canvas_count": 56,
+      "config_sha256": {
+        "adaptive_ceres_solver": "333f284e8eb53792c776f61c33c0557b25e6554bcad442da272194c7289d9f01",
+        "hospital_scale": "097782251c3141f58f3b2e0601f7307ca7c1e89e3c713737bcf0034fb5f2d985",
+        "hospital_world": "59d482029ad56dabf7ce9bb68ece16e476fd263c0ec57f237dff1f893880aeb0",
+        "installed_nav2_base_params": "f936bdee74f02e497317f31621b8d0013ff0f592b5d8ba7d570952bd33f5821f",
+        "mapex_config": "7e8f62db7f36322bb8f475400c707408bdb6d90d4f93fed0e3d41155d7fe2955",
+        "mapex_evaluator": "00b29248fa889eb90f579be71e61d3bb237f7fd974e0e3d1e42caa3706fd31cf",
+        "mapex_lama_bridge": "8a279d02706b59faf015e452b0dd2654ef81421c9abdb29c9b04da683cc18579",
+        "mapex_lama_worker": "f401211e1698401ec2b58784a394646ab7b58fc2166d52335c0c77f03cdd8c3e",
+        "mapex_policy": "034c033d0a5d3b243b3cff200a3f9730f9dc4e056f475047d72fb3c538f79863",
+        "mapex_profiled_evaluator": "cedd77c29d4a49f54f84eac0899f95925707d5b18c77efaf34be15fb241c9f30",
+        "mapex_run": "66ec027c318ea22441385fbe5b6e0f4079b48d70c0457127f186cf850e97a03b",
+        "nav2_override": "d9ea5a0e03387da3180ecd9f2bbc507ea93f6d304f7e18c576afe49d97efe370",
+        "nf_basic_shared_execution": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e",
+        "nf_run_recorder_base": "40ea7f19718c869be02d5116b0d73df9197759eb5e0a79384d2ea1e0cd5a4813",
+        "runtime_launch": "e513d46e9446581902259580621336b8914e05d87325f2fdfff4837465d82b18",
+        "runtime_mapex": "3fff0e105a24f6ab9aa3b17f46d53ec901e248c822a7f9c9fdf61afa36643dac",
+        "runtime_nav2_merged": "bd3d8919cccd893c1b53a1c68dc0c429ce9c67eabe366e2e8c4c6091aa69944a"
+      },
+      "decision_count": 56,
+      "ensemble_checkpoints": [
+        {
+          "member": "G1",
+          "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_1/models/best.ckpt",
+          "sha256": "b37bfef69138806708d6e087b8db89836021f06db987cb3ef3db21fbf28422ca",
+          "size_bytes": 901730065
+        },
+        {
+          "member": "G2",
+          "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_2/models/best.ckpt",
+          "sha256": "7880d164ccd88da58ddb0e6875f358bea02a232c452eff86b5e226957a489c26",
+          "size_bytes": 901730065
+        },
+        {
+          "member": "G3",
+          "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_3/models/best.ckpt",
+          "sha256": "fcb43d1102d48ab6b14f5bfded859077d6da0c7efbfbda10d4acbb754c3d3bc1",
+          "size_bytes": 901730065
+        }
+      ],
+      "git_commit": "a52784522faa209e875234607bea8c3262293786",
+      "git_dirty_at_recorder_start": true,
+      "metadata_sha256": "e7b8ba725c16bf92d6735b4692bf4e7ca9284cc3ecd9fc42a9d4314595ccddd1",
+      "prediction_counts": {
+        "g1": 56,
+        "g2": 56,
+        "g3": 56,
+        "mean": 56,
+        "variance": 56
+      },
+      "provenance_stratum": "LEGACY_RETROSPECTIVE_GT_V2",
+      "raw_count": 56,
+      "run_id": "hpx_001",
+      "summary_sha256": "1d4ccd46a43aeeeeb0d166cff4cfcc8d4fc89e2dbef98dc662ad0eab496f4654",
+      "termination_reason": "exploration_complete"
+    },
+    {
+      "canvas_count": 51,
+      "config_sha256": {
+        "adaptive_ceres_solver": "333f284e8eb53792c776f61c33c0557b25e6554bcad442da272194c7289d9f01",
+        "execution_runner": "eaeec6646580796447f2a4f99e13b021dbd731de844b873aecc500ad67d81980",
+        "hospital_gt_v2": "080c7d708f12ae71c1ed1881bfd630dbb491401d95831f613e3116cb9926dce1",
+        "hospital_gt_v2_roi": "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1",
+        "hospital_gt_v2_semantic": "d27ba692b313ba784729ea1fd10b2963c20fea9e4465d27081ece9c8757cf4ea",
+        "hospital_scale": "097782251c3141f58f3b2e0601f7307ca7c1e89e3c713737bcf0034fb5f2d985",
+        "hospital_world": "59d482029ad56dabf7ce9bb68ece16e476fd263c0ec57f237dff1f893880aeb0",
+        "installed_nav2_base_params": "f936bdee74f02e497317f31621b8d0013ff0f592b5d8ba7d570952bd33f5821f",
+        "mapex_config": "7e8f62db7f36322bb8f475400c707408bdb6d90d4f93fed0e3d41155d7fe2955",
+        "mapex_evaluator": "31bf7ad076d6caa64a07c1f9c23484b9286400d1a83792a49c73d1f06251aff0",
+        "mapex_lama_bridge": "8a279d02706b59faf015e452b0dd2654ef81421c9abdb29c9b04da683cc18579",
+        "mapex_lama_worker": "f401211e1698401ec2b58784a394646ab7b58fc2166d52335c0c77f03cdd8c3e",
+        "mapex_policy": "034c033d0a5d3b243b3cff200a3f9730f9dc4e056f475047d72fb3c538f79863",
+        "mapex_profiled_evaluator": "cedd77c29d4a49f54f84eac0899f95925707d5b18c77efaf34be15fb241c9f30",
+        "mapex_run": "1fecab233efd149e7fbc6ce2776421134244296228850e80804aa1665f4f36d9",
+        "nav2_override": "d9ea5a0e03387da3180ecd9f2bbc507ea93f6d304f7e18c576afe49d97efe370",
+        "nf_basic_shared_execution": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e",
+        "nf_run_recorder_base": "cb25ba257ec2bf8738f715a4332d9a09ac765d778c1dc4a20257ac1ce22f60d3",
+        "runtime_launch": "e513d46e9446581902259580621336b8914e05d87325f2fdfff4837465d82b18",
+        "runtime_mapex": "3fff0e105a24f6ab9aa3b17f46d53ec901e248c822a7f9c9fdf61afa36643dac",
+        "runtime_nav2_merged": "bd3d8919cccd893c1b53a1c68dc0c429ce9c67eabe366e2e8c4c6091aa69944a"
+      },
+      "decision_count": 51,
+      "ensemble_checkpoints": [
+        {
+          "member": "G1",
+          "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_1/models/best.ckpt",
+          "sha256": "b37bfef69138806708d6e087b8db89836021f06db987cb3ef3db21fbf28422ca",
+          "size_bytes": 901730065
+        },
+        {
+          "member": "G2",
+          "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_2/models/best.ckpt",
+          "sha256": "7880d164ccd88da58ddb0e6875f358bea02a232c452eff86b5e226957a489c26",
+          "size_bytes": 901730065
+        },
+        {
+          "member": "G3",
+          "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_3/models/best.ckpt",
+          "sha256": "fcb43d1102d48ab6b14f5bfded859077d6da0c7efbfbda10d4acbb754c3d3bc1",
+          "size_bytes": 901730065
+        }
+      ],
+      "git_commit": "ab2b8020d987234d5a63fe4a0452b0f3e7847d63",
+      "git_dirty_at_recorder_start": true,
+      "metadata_sha256": "26dffe0d93058e98d594f8f43f5cf24b31b36791d7706642c7e2a4c6f04e6532",
+      "prediction_counts": {
+        "g1": 51,
+        "g2": 51,
+        "g3": 51,
+        "mean": 51,
+        "variance": 51
+      },
+      "provenance_stratum": "PROSPECTIVE_GT_V2",
+      "raw_count": 51,
+      "run_id": "hpx_002",
+      "summary_sha256": "deb316fc0b2795063e01dadb2254fbaf28e236c449fa69410df86e2730cbcdb9",
+      "termination_reason": "exploration_complete"
+    },
+    {
+      "canvas_count": 49,
+      "config_sha256": {
+        "adaptive_ceres_solver": "333f284e8eb53792c776f61c33c0557b25e6554bcad442da272194c7289d9f01",
+        "execution_runner": "eaeec6646580796447f2a4f99e13b021dbd731de844b873aecc500ad67d81980",
+        "hospital_gt_v2": "080c7d708f12ae71c1ed1881bfd630dbb491401d95831f613e3116cb9926dce1",
+        "hospital_gt_v2_roi": "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1",
+        "hospital_gt_v2_semantic": "d27ba692b313ba784729ea1fd10b2963c20fea9e4465d27081ece9c8757cf4ea",
+        "hospital_scale": "097782251c3141f58f3b2e0601f7307ca7c1e89e3c713737bcf0034fb5f2d985",
+        "hospital_world": "59d482029ad56dabf7ce9bb68ece16e476fd263c0ec57f237dff1f893880aeb0",
+        "installed_nav2_base_params": "f936bdee74f02e497317f31621b8d0013ff0f592b5d8ba7d570952bd33f5821f",
+        "mapex_config": "7e8f62db7f36322bb8f475400c707408bdb6d90d4f93fed0e3d41155d7fe2955",
+        "mapex_evaluator": "31bf7ad076d6caa64a07c1f9c23484b9286400d1a83792a49c73d1f06251aff0",
+        "mapex_lama_bridge": "8a279d02706b59faf015e452b0dd2654ef81421c9abdb29c9b04da683cc18579",
+        "mapex_lama_worker": "f401211e1698401ec2b58784a394646ab7b58fc2166d52335c0c77f03cdd8c3e",
+        "mapex_policy": "034c033d0a5d3b243b3cff200a3f9730f9dc4e056f475047d72fb3c538f79863",
+        "mapex_profiled_evaluator": "cedd77c29d4a49f54f84eac0899f95925707d5b18c77efaf34be15fb241c9f30",
+        "mapex_run": "1fecab233efd149e7fbc6ce2776421134244296228850e80804aa1665f4f36d9",
+        "nav2_override": "d9ea5a0e03387da3180ecd9f2bbc507ea93f6d304f7e18c576afe49d97efe370",
+        "nf_basic_shared_execution": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e",
+        "nf_run_recorder_base": "cb25ba257ec2bf8738f715a4332d9a09ac765d778c1dc4a20257ac1ce22f60d3",
+        "runtime_launch": "e513d46e9446581902259580621336b8914e05d87325f2fdfff4837465d82b18",
+        "runtime_mapex": "3fff0e105a24f6ab9aa3b17f46d53ec901e248c822a7f9c9fdf61afa36643dac",
+        "runtime_nav2_merged": "bd3d8919cccd893c1b53a1c68dc0c429ce9c67eabe366e2e8c4c6091aa69944a"
+      },
+      "decision_count": 49,
+      "ensemble_checkpoints": [
+        {
+          "member": "G1",
+          "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_1/models/best.ckpt",
+          "sha256": "b37bfef69138806708d6e087b8db89836021f06db987cb3ef3db21fbf28422ca",
+          "size_bytes": 901730065
+        },
+        {
+          "member": "G2",
+          "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_2/models/best.ckpt",
+          "sha256": "7880d164ccd88da58ddb0e6875f358bea02a232c452eff86b5e226957a489c26",
+          "size_bytes": 901730065
+        },
+        {
+          "member": "G3",
+          "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_3/models/best.ckpt",
+          "sha256": "fcb43d1102d48ab6b14f5bfded859077d6da0c7efbfbda10d4acbb754c3d3bc1",
+          "size_bytes": 901730065
+        }
+      ],
+      "git_commit": "ab2b8020d987234d5a63fe4a0452b0f3e7847d63",
+      "git_dirty_at_recorder_start": true,
+      "metadata_sha256": "99782d8eb9106ef13c883c864b5237df778f78e3f6c3ca428224aebc011ea6ae",
+      "prediction_counts": {
+        "g1": 49,
+        "g2": 49,
+        "g3": 49,
+        "mean": 49,
+        "variance": 49
+      },
+      "provenance_stratum": "PROSPECTIVE_GT_V2",
+      "raw_count": 49,
+      "run_id": "hpx_003",
+      "summary_sha256": "170ad71172bdedaddf0c1aafc63e2b94203a0f14425a375b47cea697725b1d30",
+      "termination_reason": "exploration_complete"
+    },
+    {
+      "canvas_count": 52,
+      "config_sha256": {
+        "adaptive_ceres_solver": "333f284e8eb53792c776f61c33c0557b25e6554bcad442da272194c7289d9f01",
+        "execution_runner": "eaeec6646580796447f2a4f99e13b021dbd731de844b873aecc500ad67d81980",
+        "hospital_gt_v2": "080c7d708f12ae71c1ed1881bfd630dbb491401d95831f613e3116cb9926dce1",
+        "hospital_gt_v2_roi": "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1",
+        "hospital_gt_v2_semantic": "d27ba692b313ba784729ea1fd10b2963c20fea9e4465d27081ece9c8757cf4ea",
+        "hospital_scale": "097782251c3141f58f3b2e0601f7307ca7c1e89e3c713737bcf0034fb5f2d985",
+        "hospital_world": "59d482029ad56dabf7ce9bb68ece16e476fd263c0ec57f237dff1f893880aeb0",
+        "installed_nav2_base_params": "f936bdee74f02e497317f31621b8d0013ff0f592b5d8ba7d570952bd33f5821f",
+        "mapex_config": "7e8f62db7f36322bb8f475400c707408bdb6d90d4f93fed0e3d41155d7fe2955",
+        "mapex_evaluator": "31bf7ad076d6caa64a07c1f9c23484b9286400d1a83792a49c73d1f06251aff0",
+        "mapex_lama_bridge": "8a279d02706b59faf015e452b0dd2654ef81421c9abdb29c9b04da683cc18579",
+        "mapex_lama_worker": "f401211e1698401ec2b58784a394646ab7b58fc2166d52335c0c77f03cdd8c3e",
+        "mapex_policy": "034c033d0a5d3b243b3cff200a3f9730f9dc4e056f475047d72fb3c538f79863",
+        "mapex_profiled_evaluator": "cedd77c29d4a49f54f84eac0899f95925707d5b18c77efaf34be15fb241c9f30",
+        "mapex_run": "1fecab233efd149e7fbc6ce2776421134244296228850e80804aa1665f4f36d9",
+        "nav2_override": "d9ea5a0e03387da3180ecd9f2bbc507ea93f6d304f7e18c576afe49d97efe370",
+        "nf_basic_shared_execution": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e",
+        "nf_run_recorder_base": "cb25ba257ec2bf8738f715a4332d9a09ac765d778c1dc4a20257ac1ce22f60d3",
+        "runtime_launch": "e513d46e9446581902259580621336b8914e05d87325f2fdfff4837465d82b18",
+        "runtime_mapex": "3fff0e105a24f6ab9aa3b17f46d53ec901e248c822a7f9c9fdf61afa36643dac",
+        "runtime_nav2_merged": "bd3d8919cccd893c1b53a1c68dc0c429ce9c67eabe366e2e8c4c6091aa69944a"
+      },
+      "decision_count": 52,
+      "ensemble_checkpoints": [
+        {
+          "member": "G1",
+          "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_1/models/best.ckpt",
+          "sha256": "b37bfef69138806708d6e087b8db89836021f06db987cb3ef3db21fbf28422ca",
+          "size_bytes": 901730065
+        },
+        {
+          "member": "G2",
+          "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_2/models/best.ckpt",
+          "sha256": "7880d164ccd88da58ddb0e6875f358bea02a232c452eff86b5e226957a489c26",
+          "size_bytes": 901730065
+        },
+        {
+          "member": "G3",
+          "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_3/models/best.ckpt",
+          "sha256": "fcb43d1102d48ab6b14f5bfded859077d6da0c7efbfbda10d4acbb754c3d3bc1",
+          "size_bytes": 901730065
+        }
+      ],
+      "git_commit": "ab2b8020d987234d5a63fe4a0452b0f3e7847d63",
+      "git_dirty_at_recorder_start": true,
+      "metadata_sha256": "45c4d4e4f85f963afb912fee9574232e34fa62a89fc073869bd1b2cf7c2ea5ea",
+      "prediction_counts": {
+        "g1": 52,
+        "g2": 52,
+        "g3": 52,
+        "mean": 52,
+        "variance": 52
+      },
+      "provenance_stratum": "PROSPECTIVE_GT_V2",
+      "raw_count": 52,
+      "run_id": "hpx_004",
+      "summary_sha256": "cd785abed9bfee9c862ed923aa4b8dd8992a5331582c637c0bed554d199d33e8",
+      "termination_reason": "exploration_complete"
+    },
+    {
+      "canvas_count": 50,
+      "config_sha256": {
+        "adaptive_ceres_solver": "333f284e8eb53792c776f61c33c0557b25e6554bcad442da272194c7289d9f01",
+        "execution_runner": "eaeec6646580796447f2a4f99e13b021dbd731de844b873aecc500ad67d81980",
+        "hospital_gt_v2": "080c7d708f12ae71c1ed1881bfd630dbb491401d95831f613e3116cb9926dce1",
+        "hospital_gt_v2_roi": "05d45b7aba66cb6dbb71e0406005f4a3e21875901af3ae72164b17f1d3add8d1",
+        "hospital_gt_v2_semantic": "d27ba692b313ba784729ea1fd10b2963c20fea9e4465d27081ece9c8757cf4ea",
+        "hospital_scale": "097782251c3141f58f3b2e0601f7307ca7c1e89e3c713737bcf0034fb5f2d985",
+        "hospital_world": "59d482029ad56dabf7ce9bb68ece16e476fd263c0ec57f237dff1f893880aeb0",
+        "installed_nav2_base_params": "f936bdee74f02e497317f31621b8d0013ff0f592b5d8ba7d570952bd33f5821f",
+        "mapex_config": "7e8f62db7f36322bb8f475400c707408bdb6d90d4f93fed0e3d41155d7fe2955",
+        "mapex_evaluator": "31bf7ad076d6caa64a07c1f9c23484b9286400d1a83792a49c73d1f06251aff0",
+        "mapex_lama_bridge": "8a279d02706b59faf015e452b0dd2654ef81421c9abdb29c9b04da683cc18579",
+        "mapex_lama_worker": "f401211e1698401ec2b58784a394646ab7b58fc2166d52335c0c77f03cdd8c3e",
+        "mapex_policy": "034c033d0a5d3b243b3cff200a3f9730f9dc4e056f475047d72fb3c538f79863",
+        "mapex_profiled_evaluator": "cedd77c29d4a49f54f84eac0899f95925707d5b18c77efaf34be15fb241c9f30",
+        "mapex_run": "1fecab233efd149e7fbc6ce2776421134244296228850e80804aa1665f4f36d9",
+        "nav2_override": "d9ea5a0e03387da3180ecd9f2bbc507ea93f6d304f7e18c576afe49d97efe370",
+        "nf_basic_shared_execution": "2d810976564c22534905aa9d22788b7c99d902851e168a3f048e7310f126e10e",
+        "nf_run_recorder_base": "cb25ba257ec2bf8738f715a4332d9a09ac765d778c1dc4a20257ac1ce22f60d3",
+        "runtime_launch": "e513d46e9446581902259580621336b8914e05d87325f2fdfff4837465d82b18",
+        "runtime_mapex": "3fff0e105a24f6ab9aa3b17f46d53ec901e248c822a7f9c9fdf61afa36643dac",
+        "runtime_nav2_merged": "bd3d8919cccd893c1b53a1c68dc0c429ce9c67eabe366e2e8c4c6091aa69944a"
+      },
+      "decision_count": 50,
+      "ensemble_checkpoints": [
+        {
+          "member": "G1",
+          "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_1/models/best.ckpt",
+          "sha256": "b37bfef69138806708d6e087b8db89836021f06db987cb3ef3db21fbf28422ca",
+          "size_bytes": 901730065
+        },
+        {
+          "member": "G2",
+          "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_2/models/best.ckpt",
+          "sha256": "7880d164ccd88da58ddb0e6875f358bea02a232c452eff86b5e226957a489c26",
+          "size_bytes": 901730065
+        },
+        {
+          "member": "G3",
+          "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_3/models/best.ckpt",
+          "sha256": "fcb43d1102d48ab6b14f5bfded859077d6da0c7efbfbda10d4acbb754c3d3bc1",
+          "size_bytes": 901730065
+        }
+      ],
+      "git_commit": "ab2b8020d987234d5a63fe4a0452b0f3e7847d63",
+      "git_dirty_at_recorder_start": true,
+      "metadata_sha256": "6f7dfdbe3d0607be2f324bc1279f291d54b0d403a10f1b7c4f50340152f17958",
+      "prediction_counts": {
+        "g1": 50,
+        "g2": 50,
+        "g3": 50,
+        "mean": 50,
+        "variance": 50
+      },
+      "provenance_stratum": "PROSPECTIVE_GT_V2",
+      "raw_count": 50,
+      "run_id": "hpx_005",
+      "summary_sha256": "2f64d1971fafe78a6c2832be0cfa79fc7254c4c62c8e7cd693f0b6cc21327959",
+      "termination_reason": "exploration_complete"
+    }
+  ],
+  "schema": "mx065_hospital_source_manifest_v1",
+  "semantic_digest": "d27ba692b313ba784729ea1fd10b2963c20fea9e4465d27081ece9c8757cf4ea",
+  "source_freeze_hard_failures": [],
+  "task": "MX066",
+  "technical_abort_namespace_excluded": [
+    {
+      "archived_log": "mapex_lab/analysis/d1/results/mx029_hospital_5run/technical_aborts/hpx_004_attempt01_machine_crash_20261002T134707/hpx_004_attempt01.log",
+      "archived_run": "mapex_lab/analysis/d1/results/mx029_hospital_5run/technical_aborts/hpx_004_attempt01_machine_crash_20261002T134707",
+      "attempt": 1,
+      "classification": "USER_REPORTED_MACHINE_CRASH",
+      "manifest_status_before_recovery": "RUNNING",
+      "preserved_at": "20261002T134707",
+      "run_id": "hpx_004",
+      "status": "TECHNICAL_ABORT"
+    },
+    {
+      "archived_log": "mapex_lab/analysis/d1/results/mx029_hospital_5run/technical_aborts/hpx_005_attempt01_user_rerun_wall_contact_20261002T144209/hpx_005_attempt01.log",
+      "archived_run": "mapex_lab/analysis/d1/results/mx029_hospital_5run/technical_aborts/hpx_005_attempt01_user_rerun_wall_contact_20261002T144209",
+      "attempt": 1,
+      "classification": "USER_REQUESTED_RERUN_AFTER_WALL_CONTACT",
+      "manifest_status_before_recovery": "RUNNING",
+      "preserved_at": "20261002T144209",
+      "run_id": "hpx_005",
+      "status": "TECHNICAL_ABORT"
+    }
+  ],
+  "total_decisions": 258
+}
