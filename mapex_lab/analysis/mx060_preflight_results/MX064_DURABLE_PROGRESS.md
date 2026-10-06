@@ -1,10 +1,10 @@
 # MX064 durable progress
 
-- status: BLOCKED
-- blocker: `[Errno 2] No such file or directory: 'gz'`
-- technical commit: `37d8f4612d13a90719c8e3de365c614adf4847f9`
-- completed: P1-P11 and P13-P18 PASS; deterministic two-root generation, V1-V9, prior disjointness, diversity, active subset, reserve compatibility and GT/ROI binding validated
+- status: PREFLIGHT PASS / COLLECTION NOT AUTHORIZED
+- blocker: none for technical/preflight QA; six-run collection remains a separate USER/PM gate
+- technical implementation commit: `7c2e5b82b9554da23029a6ea5008b05feb9e86cd`
+- completed: P1-P20 and all A1-A53 PASS; deterministic two-root generation, V1-V9, prior disjointness, diversity, active subset, reserve compatibility, GT/ROI binding, effective Gazebo seed, acquisition-only, liveness, sealing, causal source, retry/reserve and mutation checks validated
 - worlds/seeds generated: only 60001, 60002, 60003, 60004 technical preflight worlds
 - scientific runs: none
-- ready token: not created
-- resume: source `/opt/ros/jazzy/setup.bash` for the Gazebo seed-use probe, then rerun the same preflight with the exact verified G1/G2/G3 paths.
+- ready token: `MX060_COM1_PILOT_PREFLIGHT_READY_FOR_COLLECTION` created; it does not authorize collection
+- next action: IR1 successor03 independent technical/preflight QA of the exact implementation and sixteen-artifact package; then return to PM/USER for `AUTHORIZE_SIX_RUN_COLLECTION` or `DO_NOT_COLLECT`.
