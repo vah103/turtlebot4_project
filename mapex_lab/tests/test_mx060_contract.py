@@ -11,6 +11,7 @@ sys.path.insert(0, str(SCRIPTS))
 
 import mx049_generator as mx048
 from mx060_acquisition import content_neutral_inventory, validate_bundle
+from mx060_full_preflight import ARTIFACT_NAMES, build_denylist, technical_fixtures
 from mx060_contract import (
     LAYOUT_SEEDS, PARAMETER_ORDER, acquisition_only_allows, derive_seed32,
     metadata_only, pairwise_diversity, retry_disposition, run_id,
@@ -94,3 +95,17 @@ def test_bundle_hash_clock_and_future_leakage(tmp_path):
     validate_bundle(bundle, tmp_path)
     inventory = content_neutral_inventory([tmp_path / "G1"], tmp_path)
     assert inventory["files"][0]["bytes"] == 2
+
+
+def test_full_preflight_fixture_artifacts_pass(tmp_path):
+    results = technical_fixtures(tmp_path)
+    assert all(row["status"] == "PASS" for row in results.values())
+    assert len(ARTIFACT_NAMES) == 16
+
+
+def test_prior_geometry_denylist_exact_sources(tmp_path):
+    repo = Path(__file__).resolve().parents[2]
+    doc = build_denylist(repo, tmp_path / "denylist.json")
+    assert doc["generated_geometry_cardinality"] == 24
+    assert len(doc["generated_geometry_entries"]) == 24
+    assert doc["source_hashes"]["MX049_OLD_MX046_GEOMETRY_DENYLIST.json"] == "e2c6989d94f703a40f227a7c3146f0612df337c7743491d7050b1f332707b8ec"
