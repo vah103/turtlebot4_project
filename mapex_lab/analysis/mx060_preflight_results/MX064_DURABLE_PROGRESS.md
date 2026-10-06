@@ -1,13 +1,10 @@
 # MX064 durable progress
 
 - status: BLOCKED
-- blocker: `MX060_PREFLIGHT_IMPLEMENTATION_STOPS_BEFORE_P4_PENDING_EXPLICIT_COMPLETION`
-- technical commit: `dba5b3a56504cc1c22d3dbaad4762d0cec63f526`
-- completed: exact authority reconciliation, COM1 binding, exact G1/G2/G3 SHA256 verification, ordered fail-closed P1-P3
-- G1: `/work/com1/mapex_weights/weights/lama_ensemble/train_1/models/best.ckpt` — `b37bfef69138806708d6e087b8db89836021f06db987cb3ef3db21fbf28422ca`
-- G2: `/work/com1/mapex_weights/weights/lama_ensemble/train_2/models/best.ckpt` — `7880d164ccd88da58ddb0e6875f358bea02a232c452eff86b5e226957a489c26`
-- G3: `/work/com1/mapex_weights/weights/lama_ensemble/train_3/models/best.ckpt` — `fcb43d1102d48ab6b14f5bfded859077d6da0c7efbfbda10d4acbb754c3d3bc1`
-- worlds/seeds generated: none
+- blocker: `[Errno 2] No such file or directory: 'gz'`
+- technical commit: `37d8f4612d13a90719c8e3de365c614adf4847f9`
+- completed: P1-P11 and P13-P18 PASS; deterministic two-root generation, V1-V9, prior disjointness, diversity, active subset, reserve compatibility and GT/ROI binding validated
+- worlds/seeds generated: only 60001, 60002, 60003, 60004 technical preflight worlds
 - scientific runs: none
 - ready token: not created
-- resume: complete and review the P4-P20 preflight implementation after `dba5b3a5`; rerun from a clean commit with the same exact three `--weight` paths above.
+- resume: source `/opt/ros/jazzy/setup.bash` for the Gazebo seed-use probe, then rerun the same preflight with the exact verified G1/G2/G3 paths.

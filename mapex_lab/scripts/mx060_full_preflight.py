@@ -6,6 +6,7 @@ import hashlib
 import itertools
 import json
 import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -238,14 +239,19 @@ def seed_proof(result_dir: Path, active: tuple[int, int, int]) -> dict[str, Any]
         for run_seed in RUN_SEEDS:
             rows.append({"layout_seed": seed, "run_seed": run_seed,
                          "component_seeds": {tag: derive_seed32(seed, run_seed, tag) for tag in COMPONENT_TAGS}})
-    help_proc = run(["gz", "sim", "-h"], timeout=20, check=False)
+    ros_setup = "/opt/ros/jazzy/setup.bash"
+    help_proc = run(["bash", "-lc", f"source {shlex.quote(ros_setup)} && gz sim -h"], timeout=20, check=False)
     interface = "custom seed" in help_proc.stdout.lower() or "--seed" in help_proc.stdout
     probe = result_dir / "mx060_seed_probe.sdf"
     probe.write_text("<sdf version='1.9'><world name='seed_probe'/></sdf>\n", encoding="utf-8")
     seed_a = rows[0]["component_seeds"]["gazebo"]; seed_b = rows[1]["component_seeds"]["gazebo"]
     logs = []; readbacks = []
     for seed in (seed_a, seed_b):
-        proc = run(["timeout", "8", "gz", "sim", "-v", "4", "-r", "-s", "--iterations", "1", "--seed", str(seed), str(probe)], timeout=12, check=False)
+        command = (
+            f"source {shlex.quote(ros_setup)} && timeout 8 gz sim -v 4 -r -s "
+            f"--iterations 1 --seed {seed} {shlex.quote(str(probe))}"
+        )
+        proc = run(["bash", "-lc", command], timeout=12, check=False)
         logs.append(proc.stdout); readbacks.append("Setting seed value:" in proc.stdout and str(seed) in proc.stdout)
     probe.unlink(missing_ok=True)
     effective = interface and all(readbacks) and seed_a != seed_b

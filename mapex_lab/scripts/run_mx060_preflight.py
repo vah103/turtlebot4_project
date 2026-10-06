@@ -101,7 +101,7 @@ def p2_binding(repo: Path, output: Path) -> tuple[dict[str, Any], dict[str, Any]
         "authorized_machine_label": "COM1", "machine_id_sha256": machine_hash(),
         "hostname_runtime_only": socket.gethostname(), "os": platform.platform(),
         "kernel": platform.release(), "ros_distribution": os.environ.get("ROS_DISTRO", "UNAVAILABLE"),
-        "gazebo_version": version(["gz", "sim", "--versions"]),
+        "gazebo_version": version(["bash", "-lc", "source /opt/ros/jazzy/setup.bash && gz sim --versions"]),
         "python_runtimes": {"active": sys.version.splitlines()[0], "system": version(["/usr/bin/python3", "--version"])},
         "mapex_worker_runtime": version([sys.executable, "--version"]),
         "technical_repository_commit": git(repo, "rev-parse", "HEAD"), "dirty": dirty,
@@ -162,7 +162,7 @@ def main() -> int:
         report["overall_status"] = "BLOCKED"
         report["blocker"] = str(exc)
         report["ready_token_created"] = False
-        report["worlds_generated"] = False
+        report["worlds_generated"] = (repo / "mapex_lab/map/generated/mx060_com1_pilot").exists()
         report["scientific_runs_executed"] = 0
         write_canonical_json(result_dir / "MX060_PREFLIGHT_P1_P20.json", report)
         note = (
