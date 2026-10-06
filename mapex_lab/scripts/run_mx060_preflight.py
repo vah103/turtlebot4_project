@@ -20,6 +20,7 @@ from mx060_contract import (
     MX060_METHOD_BLOB, MX060_METHOD_COMMIT, MX061_METHOD_BLOB, MX061_METHOD_COMMIT,
     sha256_file, write_canonical_json,
 )
+from mx060_full_preflight import execute as execute_full_preflight
 
 HANDOFF_COMMIT = "0f7d2002dcd882e242f8584e1f6b6d77302ce65f"
 HANDOFF_PATH = "company/operations/HO-20261005-MX064-PM-ENGINEER-MX060-R2-IMPLEMENT-PREFLIGHT.md"
@@ -154,7 +155,9 @@ def main() -> int:
         if report["checks"]["P2"]["status"] != "PASS": raise RuntimeError("MX060_P2_COM1_BINDING_FAIL")
         report["checks"]["P3"] = p3_ensemble(args.weight)
         if report["checks"]["P3"]["status"] != "PASS": raise RuntimeError("MX060_P3_ENSEMBLE_IDENTITY_FAIL")
-        raise RuntimeError("MX060_PREFLIGHT_IMPLEMENTATION_STOPS_BEFORE_P4_PENDING_EXPLICIT_COMPLETION")
+        execute_full_preflight(repo, result_dir, report, args.weight)
+        print(json.dumps(report, indent=2, sort_keys=True))
+        return 0
     except Exception as exc:
         report["overall_status"] = "BLOCKED"
         report["blocker"] = str(exc)
