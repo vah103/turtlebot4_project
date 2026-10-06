@@ -48,6 +48,39 @@ def machine_hash() -> str:
     return hashlib.sha256(Path("/etc/machine-id").read_text(encoding="utf-8").strip().encode()).hexdigest()
 
 
+def ros_identity() -> dict[str, Any]:
+    setup = Path("/opt/ros/jazzy/setup.bash")
+    identity: dict[str, Any] = {
+        "source": "source /opt/ros/jazzy/setup.bash; environment + dpkg-query",
+        "setup_path": str(setup),
+        "setup_sha256": sha256_file(setup) if setup.is_file() else None,
+        "distribution": None, "ros_version": None, "ros_python_version": None,
+        "ament_prefix_path": None, "rclpy_prefix": None, "package_versions": {},
+    }
+    if not setup.is_file():
+        return identity
+    env_probe = run([
+        "bash", "-lc",
+        "source /opt/ros/jazzy/setup.bash && printf '%s\\n%s\\n%s\\n%s\\n' \"$ROS_DISTRO\" \"$ROS_VERSION\" \"$ROS_PYTHON_VERSION\" \"$AMENT_PREFIX_PATH\" && ros2 pkg prefix rclpy",
+    ], check=False)
+    lines = [line.strip() for line in env_probe.stdout.splitlines()]
+    if env_probe.returncode != 0 or len(lines) < 5:
+        return identity
+    identity.update({
+        "distribution": lines[0] or None, "ros_version": lines[1] or None,
+        "ros_python_version": lines[2] or None, "ament_prefix_path": lines[3] or None,
+        "rclpy_prefix": lines[4] or None,
+    })
+    packages = ("ros-jazzy-ros-base", "ros-jazzy-ros-core", "ros-jazzy-rclpy")
+    package_probe = run(["dpkg-query", "-W", "-f=${Package}=${Version}\\n", *packages], check=False)
+    if package_probe.returncode == 0:
+        identity["package_versions"] = {
+            line.split("=", 1)[0]: line.split("=", 1)[1]
+            for line in package_probe.stdout.splitlines() if "=" in line
+        }
+    return identity
+
+
 def blob_at(governance: Path, commit: str, path: str) -> str:
     return git(governance, "rev-parse", f"{commit}:{path}")
 
@@ -96,11 +129,14 @@ def p2_binding(repo: Path, output: Path) -> tuple[dict[str, Any], dict[str, Any]
         "generator_blob": "mapex_lab/scripts/mx060_generator.py",
         "preflight_blob": "mapex_lab/scripts/run_mx060_preflight.py",
     }
+    ros = ros_identity()
     binding: dict[str, Any] = {
         "schema_version": "MX060_COM1_BINDING_V1", "cohort_id": COHORT_ID,
         "authorized_machine_label": "COM1", "machine_id_sha256": machine_hash(),
         "hostname_runtime_only": socket.gethostname(), "os": platform.platform(),
-        "kernel": platform.release(), "ros_distribution": os.environ.get("ROS_DISTRO", "UNAVAILABLE"),
+        "kernel": platform.release(), "ros_distribution": ros["distribution"] or "UNAVAILABLE",
+        "ros_distribution_version": ros["package_versions"].get("ros-jazzy-ros-base", "UNAVAILABLE"),
+        "ros_identity": ros,
         "gazebo_version": version(["bash", "-lc", "source /opt/ros/jazzy/setup.bash && gz sim --versions"]),
         "python_runtimes": {"active": sys.version.splitlines()[0], "system": version(["/usr/bin/python3", "--version"])},
         "mapex_worker_runtime": version([sys.executable, "--version"]),
@@ -118,6 +154,10 @@ def p2_binding(repo: Path, output: Path) -> tuple[dict[str, Any], dict[str, Any]
         "clean_scientific_worktree": not dirty,
         "free_disk_gte_5gb": free >= 5_000_000_000,
         "runner_recorder_generator_present": all(binding[key] != "MISSING" for key in ("runner_blob", "recorder_blob", "generator_blob")),
+        "ros_identity_available": all(ros.get(key) for key in ("distribution", "ros_version", "ros_python_version", "ament_prefix_path", "rclpy_prefix", "setup_sha256")),
+        "ros_distribution_matches_collection_environment": ros.get("distribution") == "jazzy",
+        "ros_version_matches_collection_environment": ros.get("ros_version") == "2",
+        "ros_package_versions_concrete": set(ros.get("package_versions", {})) == {"ros-jazzy-ros-base", "ros-jazzy-ros-core", "ros-jazzy-rclpy"},
     }
     return binding, {"status": "PASS" if all(checks.values()) else "FAIL", "checks": checks}
 
@@ -149,6 +189,13 @@ def main() -> int:
         "checks": {f"P{i}": {"status": "NOT_RUN_FAIL_CLOSED"} for i in range(1, 21)},
     }
     try:
+        test_command = ["/usr/bin/pytest", "-q", "mapex_lab/tests/test_mx060_contract.py"]
+        test_proc = run(test_command, check=False)
+        report["targeted_tests"] = {
+            "command": " ".join(test_command), "returncode": test_proc.returncode,
+            "output": test_proc.stdout.strip(), "status": "PASS" if test_proc.returncode == 0 else "FAIL",
+        }
+        if test_proc.returncode != 0: raise RuntimeError("MX060_TARGETED_TESTS_FAIL")
         report["checks"]["P1"] = p1_authority(governance, repo)
         if report["checks"]["P1"]["status"] != "PASS": raise RuntimeError("MX060_P1_AUTHORITY_FAIL")
         _, report["checks"]["P2"] = p2_binding(repo, result_dir / "MX060_COM1_BINDING.json")
