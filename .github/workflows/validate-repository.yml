@@ -1,4 +1,4 @@
-name: Validate repository
+name: Validate active MapEx layout
 
 on:
   push:
@@ -17,19 +17,33 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          submodules: false
 
-      - name: Validate JSON metadata
-        run: |
-          python -m json.tool .joy/project.json >/dev/null
-          python -m json.tool .joy/roadmap.json >/dev/null
-          python -m json.tool .joy/commands.json >/dev/null
-
-      - name: Check required project files
+      - name: Check active MapEx/runtime layout
         run: |
           test -f README.md
-          test -f PROJECT_STATUS.md
-          test -f report/2026-07-30.md
-          test -f stage3_navigation_benchmark/README.md
+          test -f AGENTS.md
+          test -x run
+          test -x .run_core
+          test -f mapex_lab/README.md
+          test -f mapex_lab/EXPERIMENT_PROTOCOL.md
+          test -f mapex_lab/launch/slam.launch.py
+          test -f mapex_lab/scripts/mapex.py
+          test -f ros2_ws/src/frontier_exploration/package.xml
+          test -f slam_toolbox/package.xml
+
+      - name: Check legacy archive boundary
+        run: |
+          test -f archive/legacy_project/README.md
+          test -f archive/legacy_project/PROJECT_STATUS.md
+          test -f archive/legacy_project/ROOT_README_LEGACY.md
+          test -f archive/legacy_project/stage3_navigation_benchmark/README.md
+          test -f archive/legacy_project/evidence/stage4_2026_08_03/README.md
+
+      - name: Compile primary research entrypoints
+        run: |
+          python -m py_compile             mapex_lab/scripts/mapex.py             mapex_lab/scripts/nf_basic.py
 
       - name: Reject generated ROS build directories
         run: |
