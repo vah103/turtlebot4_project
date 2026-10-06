@@ -124,25 +124,29 @@ def _worktree_generate(repo: Path, denylist: Path, label: str) -> tuple[Path, Pa
 
 
 def deterministic_generation(repo: Path, denylist_path: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:
-    roots: list[tuple[Path, Path]] = []
-    try:
-        pa, wa, a = _worktree_generate(repo, denylist_path, "root_a"); roots.append((pa, wa))
-        pb, wb, b = _worktree_generate(repo, denylist_path, "root_b"); roots.append((pb, wb))
-        by_a = {x["layout_seed"]: x for x in a}; by_b = {x["layout_seed"]: x for x in b}
-        comparisons = []
-        identity_keys = ("accepted_attempt", "geometry_parameter_digest", "world_sha256",
-                         "layout_config_sha256", "gt_binding_sha256", "gt_sha256", "roi_sha256",
-                         "gt_semantic_digest", "world_identity_sha256")
-        for seed in LAYOUT_SEEDS:
-            equal = all(by_a[seed].get(key) == by_b[seed].get(key) for key in identity_keys)
-            comparisons.append({"layout_seed": seed, "identity_equal": equal,
-                                "root_a_status": by_a[seed]["status"], "root_b_status": by_b[seed]["status"]})
-        if not all(x["identity_equal"] and x["root_a_status"] == "ACCEPTED" for x in comparisons):
-            raise RuntimeError("MX060_P6_DETERMINISTIC_GENERATOR_FAIL")
-    finally:
-        for parent, worktree in roots:
-            run(["git", "-C", str(repo), "worktree", "remove", "--force", str(worktree)], check=False)
-            shutil.rmtree(parent, ignore_errors=True)
+    results = []
+    for label in ("root_a", "root_b"):
+        parent = worktree = None
+        try:
+            parent, worktree, generated = _worktree_generate(repo, denylist_path, label)
+            results.append(generated)
+        finally:
+            if worktree is not None:
+                run(["git", "-C", str(repo), "worktree", "remove", "--force", str(worktree)], check=False)
+            if parent is not None:
+                shutil.rmtree(parent, ignore_errors=True)
+    a, b = results
+    by_a = {x["layout_seed"]: x for x in a}; by_b = {x["layout_seed"]: x for x in b}
+    comparisons = []
+    identity_keys = ("accepted_attempt", "geometry_parameter_digest", "world_sha256",
+                     "layout_config_sha256", "gt_binding_sha256", "gt_sha256", "roi_sha256",
+                     "gt_semantic_digest", "world_identity_sha256")
+    for seed in LAYOUT_SEEDS:
+        equal = all(by_a[seed].get(key) == by_b[seed].get(key) for key in identity_keys)
+        comparisons.append({"layout_seed": seed, "identity_equal": equal,
+                            "root_a_status": by_a[seed]["status"], "root_b_status": by_b[seed]["status"]})
+    if not all(x["identity_equal"] and x["root_a_status"] == "ACCEPTED" for x in comparisons):
+        raise RuntimeError("MX060_P6_DETERMINISTIC_GENERATOR_FAIL")
     generated = gen.generate_set(repo, LAYOUT_SEEDS, {x["geometry_parameter_digest"] for x in load(denylist_path)["generated_geometry_entries"]})
     return generated, {"status": "PASS", "independent_absolute_roots": 2, "comparisons": comparisons}
 
