@@ -4,6 +4,7 @@ from __future__ import annotations
 from dataclasses import fields
 import json
 from pathlib import Path
+import tempfile
 import unittest
 
 import numpy as np
@@ -155,6 +156,36 @@ class Tests(unittest.TestCase):
         self.assertEqual(mask.shape, mean.shape)
         self.assertFalse(mask[10, 20])
         self.assertFalse(mask[40, 20])
+
+    def test_full_branch_budget_and_summary_without_hypothesis(self):
+        # A deterministic predictor fixture tests orchestration, not research efficacy.
+        from .run import run_branch
+        class Predictor:
+            calls = 0
+            inference_s = 0.0
+            def predict(self, observed):
+                mean = np.where(observed == .5, .7, observed).astype(np.float32)
+                return np.repeat(mean[None], 3, axis=0), mean, np.zeros_like(mean)
+        class Numerics:
+            def visibility(self, pose, mean, observed):
+                return observed == .5
+        occupied = self.room(80)
+        asset = dict(occupied=occupied, domain=np.ones_like(occupied), resolution=np.array(.1), start=np.array([40, 40]))
+        cfg = self.cfg()
+        cfg.update(sensor_range_m=1.0, sensor_rays=360, branch_budget_m=.5)
+        world = GridWorld(occupied, .1, (40, 40), sensor_range_m=1, sensor_rays=360)
+        world.sense()
+        warm = dict(observed=world.observed, pose=world.pose, requested_distance_m=0,
+                    actual_distance_m=0, observed_hash=array_hash(world.observed))
+        predictor = Predictor()
+        initial = predictor.predict(world.observed)
+        with tempfile.TemporaryDirectory() as directory:
+            result = run_branch("fixture__warm0", "mapex", asset, warm, predictor, Numerics(), cfg,
+                                initial, "fixture-identity", Path(directory))
+            self.assertEqual(result["termination"], "DISTANCE_BUDGET")
+            self.assertAlmostEqual(result["distance_m"], .5)
+            self.assertEqual(result["verify_patch_observed"], 0)
+            self.assertEqual(result["collisions"], 0)
 
 
 if __name__ == "__main__":
