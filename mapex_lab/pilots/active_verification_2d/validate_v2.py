@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 from pathlib import Path
 
@@ -52,6 +53,17 @@ def main():
                 rows.append(row)
         expected = 2*len(cfg[phase+"_layouts"])*len(cfg["confirmation_methods"])
         check(phase+" full declared cohort", len(rows) == expected and len({(r["case"], r["method"]) for r in rows}) == expected)
+        with (output/"branches.csv").open() as f:
+            csv_rows = list(csv.DictReader(f))
+        by_key = {(r["case"],r["method"]):r for r in rows}
+        csv_ok = len(csv_rows) == len(rows)
+        for row in csv_rows:
+            reference = by_key.get((row["case"],row["method"]))
+            csv_ok &= reference is not None
+            if reference is not None:
+                csv_ok &= all(abs(float(row[k])-reference[k]) < 1e-9 for k in
+                              ("distance_m","reachable_mismatch_m2","macro_iou","collisions"))
+        check(phase+" published CSV matches branch records", csv_ok)
         stored = json.loads((output/"summary.json").read_text())
         check(phase+" paired summary recomputation", stored == summarize(rows, phase, cfg))
         check(phase+" phase provenance seal", json.loads((output/"provenance.json").read_text())["seal_sha256"] == file_hash(args.output/"seal.json"))
