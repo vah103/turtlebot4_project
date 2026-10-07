@@ -134,3 +134,7 @@ The new pilot treats verification as a hypothesis to test, not an established re
 - Hypothesis Graph Refinement: https://chenpppx.github.io/Hypothesis_Graph_Refinement/ — revisable semantic hypotheses and verification/cascade correction for embodied navigation. Hypothesis verification itself is not claimed as new here.
 
 The pilot asks whether local structural consequence can improve action selection for predicted 2D map completion, including ensemble consensus errors. Current results do not establish superiority or novelty; see the branch-only [pilot report](../pilots/active_verification_2d/REPORT_VI.md).
+
+### V2 design check — 2026-10-07
+
+Read MapEx https://arxiv.org/html/2409.15590v1 and PIPE https://arxiv.org/html/2503.07504v1, including their method/experimental sections. PIPE already integrates path sensor coverage and variance and normalizes by path length. V2 therefore includes a PIPE-inspired route uncertainty control; our hard-map ray scans and candidate pool differ from its probabilistic polygon-union implementation. Pathwise scoring alone is not novel. The extra candidate contribution under test is cell-error-weighted partial local structural correction; neither its superiority nor novelty is established by implementing it.

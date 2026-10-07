@@ -424,3 +424,7 @@ This branch-only pilot follows the USER request to implement and test active ver
 - IN PROGRESS: independent scientific review remains outstanding.
 - NEXT ACTION: inspect proposal/visibility/ranking against the evaluation-only one-action oracle before considering a new confirmation cohort or STOP policy.
 - Evidence: [pilot report](pilots/active_verification_2d/REPORT_VI.md), [protocol and commands](pilots/active_verification_2d/README.md), [independent review scope](pilots/active_verification_2d/QA_REVIEW.md).
+
+## 2026-10-07 — V2 route/risk pilot IN PROGRESS
+
+USER requested continuation. V1 results remain frozen. V2 adds a development-only logistic cell-error estimator, route sensing, and the reachable-component effect of partial local counterfactual observations. Controls are route_uncertainty and route_error; structural_v2 must be compared to route_error to isolate structural benefit. Three new policy-development-excluded layouts are fixed in protocol_v2.json (50015847, 50052753, 50052754), before inference/outcomes. 22/22 tests PASS. Fit uses only six V1 states; leave-layout-out Brier improves over a constant prior on 2/3 development layouts, worsens on 1/3. No calibration/novelty guarantee. Confirmation outcomes pending.
