@@ -26,6 +26,15 @@ NAVIGATION_SEED = 6100703
 NAVIGATION_QUERIES = 40
 
 
+def make_navigation_queries(physical, domain, start, rng):
+    start = tuple(int(v) for v in start)
+    true_dist, _ = shortest_paths(physical, start)
+    candidates = np.argwhere((true_dist > 0) & domain)
+    selected = rng.choice(len(candidates), min(NAVIGATION_QUERIES, len(candidates)), replace=False)
+    goals = [tuple(int(v) for v in candidates[i]) for i in selected]
+    return dict(start=list(start), goals=[list(p) for p in goals], truth_physical_hash=array_hash(physical)), goals, true_dist
+
+
 def navigation_scores(free, physical_free, start, goals, true_dist):
     dist, parent = shortest_paths(free, start)
     attempted, safe, lengths = 0, 0, []
@@ -71,12 +80,8 @@ def main():
             reliability.append(dict(phase=phase,case=case,layout=layout,cells=len(labels),**scores,
                                     constant_prior_brier=constant["brier"],delta_brier=scores["brier"]-constant["brier"]))
             physical = clearance_free(~truth,cfg["robot_radius_m"]/.1)
-            true_dist, _ = shortest_paths(physical,state.pose)
-            candidates = np.argwhere((true_dist > 0) & domain)
-            selected = rng.choice(len(candidates),min(NAVIGATION_QUERIES,len(candidates)),replace=False)
-            goals = [tuple(int(v) for v in candidates[i]) for i in selected]
-            queries.append(dict(phase=phase,case=case,start=list(state.pose),goals=[list(p) for p in goals],
-                                truth_physical_hash=array_hash(physical)))
+            query, goals, true_dist = make_navigation_queries(physical,domain,state.pose,rng)
+            queries.append(dict(phase=phase,case=case,**query))
             for method in cfg["confirmation_methods"]:
                 branch = (args.primary/"raw"/case/method if phase == "development" and method in {"mapex","uncertainty"}
                           else folder/method)

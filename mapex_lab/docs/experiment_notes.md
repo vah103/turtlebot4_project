@@ -327,3 +327,13 @@ Pilot report and all lightweight evidence are under pilots/active_verification_2
 ## 2026-10-07 — V2 diagnostic and frozen design
 
 V1 audit confirms hypothetical consequence alone does not identify prediction error, and several VERIFY actions fail to reveal their chosen patch. The V2 estimator uses mean ambiguity, variance, votes, observed-distance and local edge features; fitted offline on V1 labels only. Patch-mean cell error is a heuristic weight, not a probability that the entire open/close hypothesis is true. Route sensor coverage and target-directed first-hit patch visibility predict actual partial correction rather than assuming a fully observed gate. A separate route_error control is mandatory. Risk cross-layout diagnostics are mixed (2 improvements, 1 degradation); no tuning from those folds. Largest new layout uses conservative odd-dimension padding; preprocessing exactly reproduces the original V1 KTH asset. New results pending.
+
+## 2026-10-07 — V2 completed results and analysis export fix
+
+V2 completed 48 new branches (18 development, 30 new-layout), all at 8 m with zero collisions. All 11 VERIFY actions reached their goals and revealed some selected patch, fixing V1 feasibility failures. On the new cohort structural_v2 beats MapEx 6/6, but is worse than route_error on layout-macro mismatch by +6.476667 m2 (1 win, 3 ties, 2 losses). Static navigation safe-plan fraction is 55.00%, below route_error 61.67% and MapEx 59.17%. Do not describe this as a positive structural-contribution result.
+
+The largest-layout hypothesis forecast a large component change while only one newly seen patch cell was wrong. Policy score covers unknown canvas; the endpoint has a fixed evaluator domain. Cell-error means are heuristic hypothesis weights, not probabilities that an entire gate is wrong; frozen local correction also omits later global LaMa updates. These limitations explain the next review target without asserting a confirmed research gap.
+
+A NumPy integer in generated navigation goals blocked JSON serialization after the analysis had run. Query coordinates are now converted to native ints, with deterministic/reachable/JSON regression checks. Only supplementary analysis and rendering were repeated; execution policy/model/protocol/results were not rerun or retuned. Final checks: 24/24 tests, 863/863 primary V2 checks, 43/43 analysis checks. This is self-validation; formal independent QA remains open.
+
+The Vietnamese V2 report, model, source seal, per-branch rows/actions and figures are retained in the draft branch. Raw arrays/cache remain on DELL. This negative pilot result is not promoted into Company Hub or the teacher-facing Google Doc as an accepted contribution.

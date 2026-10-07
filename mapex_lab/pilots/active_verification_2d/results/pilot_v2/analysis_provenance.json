@@ -1,0 +1,14 @@
+{
+  "status": "SUPPLEMENTARY_EVALUATION_ONLY",
+  "analysis_code_sha256": "984ba2b8c235104ba53906dc1e58388ecc4dfe22ddbe6f0b851d71cc286dfd0f",
+  "seal_sha256": "4b4d167552163894ea2a189ee96d59cdad2137f9e1441fb072d0f18ca1ef563c",
+  "output_sha256": {
+    "risk_reliability.csv": "3c3b55c1c2260925a7942f7bbfc99d2d3e73553af4b034a248be6c7175b5dc53",
+    "navigation_audit.csv": "cde6a1309832f6099fd43877a1217fd7f9974017db861a14e5ff619a0c16e900",
+    "navigation_queries.json": "67915a082674a3837bd0000792eb025b372b221f8e5cbfcaf091a8e2a18942f9",
+    "diagnostic_summary.json": "3ee9a84f4b10cd3e8aced4a434743a8513488b7c6f1b6f703c8e1dcbb27bd79d"
+  },
+  "navigation_seed": 6100703,
+  "navigation_queries_per_state": 40,
+  "interpretation": "Model was frozen before confirmation; confirmation labels are used here only for evaluation. Navigation audit is supplementary, not the registered primary endpoint."
+}

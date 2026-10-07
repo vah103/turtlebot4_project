@@ -1,0 +1,522 @@
+[
+  {
+    "action": "OBSERVE_UNCERTAINTY",
+    "goal": [
+      223,
+      295
+    ],
+    "score": 22.187929153442383,
+    "path_m": 0.1,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 0,
+    "observation_poses": 18,
+    "raw_frontiers": 5,
+    "reachable_frontiers": 5,
+    "near_frontier_fallback": false,
+    "geometry_proposals": 80,
+    "consequence_proposals": 0,
+    "case": "kth_50015847__warm15",
+    "method": "uncertainty",
+    "decision": 0,
+    "start_pose": [
+      224,
+      295
+    ],
+    "distance_before_m": 0.0,
+    "policy_compute_s": 9.246975668000232,
+    "observed_hash": "0f87b1ce505736a5b6931ad63a13208409a9e62c6c43672f8a4cf11b19fc7a76",
+    "distance_after_m": 0.1,
+    "path_taken": [
+      [
+        224,
+        295
+      ],
+      [
+        223,
+        295
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 0,
+    "revealed_wrong_cells": 0,
+    "revealed_low_u_wrong_cells": 0
+  },
+  {
+    "action": "OBSERVE_UNCERTAINTY",
+    "goal": [
+      222,
+      295
+    ],
+    "score": 42.544589042663574,
+    "path_m": 0.1,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 0,
+    "observation_poses": 18,
+    "raw_frontiers": 5,
+    "reachable_frontiers": 5,
+    "near_frontier_fallback": false,
+    "geometry_proposals": 80,
+    "consequence_proposals": 0,
+    "case": "kth_50015847__warm15",
+    "method": "uncertainty",
+    "decision": 1,
+    "start_pose": [
+      223,
+      295
+    ],
+    "distance_before_m": 0.1,
+    "policy_compute_s": 9.529321713998797,
+    "observed_hash": "0f87b1ce505736a5b6931ad63a13208409a9e62c6c43672f8a4cf11b19fc7a76",
+    "distance_after_m": 0.2,
+    "path_taken": [
+      [
+        223,
+        295
+      ],
+      [
+        222,
+        295
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 39,
+    "revealed_wrong_cells": 0,
+    "revealed_low_u_wrong_cells": 0
+  },
+  {
+    "action": "OBSERVE_UNCERTAINTY",
+    "goal": [
+      221,
+      295
+    ],
+    "score": 30.44180154800415,
+    "path_m": 0.1,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 0,
+    "observation_poses": 18,
+    "raw_frontiers": 5,
+    "reachable_frontiers": 5,
+    "near_frontier_fallback": false,
+    "geometry_proposals": 80,
+    "consequence_proposals": 0,
+    "case": "kth_50015847__warm15",
+    "method": "uncertainty",
+    "decision": 2,
+    "start_pose": [
+      222,
+      295
+    ],
+    "distance_before_m": 0.2,
+    "policy_compute_s": 9.466739215000416,
+    "observed_hash": "81a45e5a38347e074863cf450d549b3a89c8c3dc9d64ca362c81e2ba34be2462",
+    "distance_after_m": 0.30000000000000004,
+    "path_taken": [
+      [
+        222,
+        295
+      ],
+      [
+        221,
+        295
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 260,
+    "revealed_wrong_cells": 5,
+    "revealed_low_u_wrong_cells": 5
+  },
+  {
+    "action": "OBSERVE_UNCERTAINTY",
+    "goal": [
+      242,
+      322
+    ],
+    "score": 10.63423713048299,
+    "path_m": 4.800000000000001,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 0,
+    "observation_poses": 20,
+    "raw_frontiers": 6,
+    "reachable_frontiers": 5,
+    "near_frontier_fallback": false,
+    "geometry_proposals": 80,
+    "consequence_proposals": 0,
+    "case": "kth_50015847__warm15",
+    "method": "uncertainty",
+    "decision": 3,
+    "start_pose": [
+      221,
+      295
+    ],
+    "distance_before_m": 0.30000000000000004,
+    "policy_compute_s": 9.410718746003113,
+    "observed_hash": "6b13ac564b1a7e3a254eba759f535ce129e7e6403ad80e5cc025ced1ac4fe374",
+    "distance_after_m": 5.099999999999998,
+    "path_taken": [
+      [
+        221,
+        295
+      ],
+      [
+        222,
+        295
+      ],
+      [
+        223,
+        295
+      ],
+      [
+        224,
+        295
+      ],
+      [
+        224,
+        296
+      ],
+      [
+        224,
+        297
+      ],
+      [
+        224,
+        298
+      ],
+      [
+        224,
+        299
+      ],
+      [
+        224,
+        300
+      ],
+      [
+        224,
+        301
+      ],
+      [
+        224,
+        302
+      ],
+      [
+        224,
+        303
+      ],
+      [
+        224,
+        304
+      ],
+      [
+        224,
+        305
+      ],
+      [
+        224,
+        306
+      ],
+      [
+        224,
+        307
+      ],
+      [
+        224,
+        308
+      ],
+      [
+        224,
+        309
+      ],
+      [
+        224,
+        310
+      ],
+      [
+        224,
+        311
+      ],
+      [
+        224,
+        312
+      ],
+      [
+        224,
+        313
+      ],
+      [
+        224,
+        314
+      ],
+      [
+        224,
+        315
+      ],
+      [
+        224,
+        316
+      ],
+      [
+        224,
+        317
+      ],
+      [
+        224,
+        318
+      ],
+      [
+        225,
+        318
+      ],
+      [
+        225,
+        319
+      ],
+      [
+        226,
+        319
+      ],
+      [
+        227,
+        319
+      ],
+      [
+        228,
+        319
+      ],
+      [
+        229,
+        319
+      ],
+      [
+        230,
+        319
+      ],
+      [
+        231,
+        319
+      ],
+      [
+        232,
+        319
+      ],
+      [
+        233,
+        319
+      ],
+      [
+        234,
+        319
+      ],
+      [
+        234,
+        320
+      ],
+      [
+        235,
+        320
+      ],
+      [
+        236,
+        320
+      ],
+      [
+        237,
+        320
+      ],
+      [
+        238,
+        320
+      ],
+      [
+        238,
+        321
+      ],
+      [
+        239,
+        321
+      ],
+      [
+        240,
+        321
+      ],
+      [
+        241,
+        321
+      ],
+      [
+        242,
+        321
+      ],
+      [
+        242,
+        322
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 9524,
+    "revealed_wrong_cells": 382,
+    "revealed_low_u_wrong_cells": 103
+  },
+  {
+    "action": "OBSERVE_UNCERTAINTY",
+    "goal": [
+      179,
+      397
+    ],
+    "score": 7.985193441202353,
+    "path_m": 18.2,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 0,
+    "observation_poses": 24,
+    "raw_frontiers": 16,
+    "reachable_frontiers": 12,
+    "near_frontier_fallback": false,
+    "geometry_proposals": 80,
+    "consequence_proposals": 0,
+    "case": "kth_50015847__warm15",
+    "method": "uncertainty",
+    "decision": 4,
+    "start_pose": [
+      242,
+      322
+    ],
+    "distance_before_m": 5.099999999999998,
+    "policy_compute_s": 9.814609731998644,
+    "observed_hash": "21a9976adf7cb4550c45adb309a91a4070a4f6311e22726c2ba65256c3bd3c12",
+    "distance_after_m": 7.999999999999988,
+    "path_taken": [
+      [
+        242,
+        322
+      ],
+      [
+        241,
+        322
+      ],
+      [
+        240,
+        322
+      ],
+      [
+        239,
+        322
+      ],
+      [
+        238,
+        322
+      ],
+      [
+        237,
+        322
+      ],
+      [
+        236,
+        322
+      ],
+      [
+        235,
+        322
+      ],
+      [
+        234,
+        322
+      ],
+      [
+        233,
+        322
+      ],
+      [
+        232,
+        322
+      ],
+      [
+        231,
+        322
+      ],
+      [
+        230,
+        322
+      ],
+      [
+        229,
+        322
+      ],
+      [
+        228,
+        322
+      ],
+      [
+        227,
+        322
+      ],
+      [
+        226,
+        322
+      ],
+      [
+        225,
+        322
+      ],
+      [
+        224,
+        322
+      ],
+      [
+        223,
+        322
+      ],
+      [
+        222,
+        322
+      ],
+      [
+        221,
+        322
+      ],
+      [
+        220,
+        322
+      ],
+      [
+        219,
+        322
+      ],
+      [
+        218,
+        322
+      ],
+      [
+        217,
+        322
+      ],
+      [
+        216,
+        322
+      ],
+      [
+        215,
+        322
+      ],
+      [
+        214,
+        322
+      ],
+      [
+        213,
+        322
+      ]
+    ],
+    "goal_reached": false,
+    "collision": false,
+    "revealed_cells": 107,
+    "revealed_wrong_cells": 1,
+    "revealed_low_u_wrong_cells": 0
+  }
+]

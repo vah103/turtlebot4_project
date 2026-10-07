@@ -137,3 +137,7 @@ python -m active_verification_2d.headroom
 đã sinh, trong budget, giữ prediction phần chưa quan sát cố định rồi đo tác
 dụng trực tiếp của sensor correction. Đây không phải oracle toàn cục, không
 phản ánh mọi cập nhật LaMa về sau, và không được dùng để chọn hành động online.
+
+## Follow-up V2
+
+V1 files/results stay frozen. See [README_V2.md](README_V2.md) for route/risk methods and rerun commands, and [REPORT_V2_VI.md](REPORT_V2_VI.md) for all results and limitations. V2 completed 48 new 2D branches; it improves over MapEx on the new cohort but does not establish benefit of the structural component over route_error.

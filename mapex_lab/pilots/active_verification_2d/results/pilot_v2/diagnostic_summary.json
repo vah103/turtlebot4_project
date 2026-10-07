@@ -1,0 +1,64 @@
+{
+  "development": {
+    "risk_brier_better_cases": 6,
+    "risk_cases": 6,
+    "mean_risk_delta_brier": -0.014210034836492608,
+    "verify_actions": 4,
+    "verify_goals_reached": 4,
+    "verify_no_patch_observed": 0,
+    "verify_wrong_patch_observed": 65,
+    "navigation": {
+      "mapex": {
+        "mean_safe_plan_fraction": 0.7291666666666669,
+        "mean_unsafe_plan_fraction": 0.17335895803637738
+      },
+      "uncertainty": {
+        "mean_safe_plan_fraction": 0.7583333333333333,
+        "mean_unsafe_plan_fraction": 0.1469720448073589
+      },
+      "route_uncertainty": {
+        "mean_safe_plan_fraction": 0.7625000000000001,
+        "mean_unsafe_plan_fraction": 0.13910354878096812
+      },
+      "route_error": {
+        "mean_safe_plan_fraction": 0.7708333333333334,
+        "mean_unsafe_plan_fraction": 0.16340183509301157
+      },
+      "structural_v2": {
+        "mean_safe_plan_fraction": 0.7541666666666668,
+        "mean_unsafe_plan_fraction": 0.17712203302373583
+      }
+    }
+  },
+  "confirmation": {
+    "risk_brier_better_cases": 4,
+    "risk_cases": 6,
+    "mean_risk_delta_brier": -0.00904692244855241,
+    "verify_actions": 7,
+    "verify_goals_reached": 7,
+    "verify_no_patch_observed": 0,
+    "verify_wrong_patch_observed": 35,
+    "navigation": {
+      "mapex": {
+        "mean_safe_plan_fraction": 0.5916666666666667,
+        "mean_unsafe_plan_fraction": 0.37360533610533614
+      },
+      "uncertainty": {
+        "mean_safe_plan_fraction": 0.5625,
+        "mean_unsafe_plan_fraction": 0.39344165594165603
+      },
+      "route_uncertainty": {
+        "mean_safe_plan_fraction": 0.6083333333333333,
+        "mean_unsafe_plan_fraction": 0.3420893420893421
+      },
+      "route_error": {
+        "mean_safe_plan_fraction": 0.6166666666666666,
+        "mean_unsafe_plan_fraction": 0.3330803330803331
+      },
+      "structural_v2": {
+        "mean_safe_plan_fraction": 0.5499999999999999,
+        "mean_unsafe_plan_fraction": 0.4099581724581725
+      }
+    }
+  }
+}

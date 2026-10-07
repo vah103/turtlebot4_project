@@ -1,0 +1,278 @@
+{
+  "status": "PRELIMINARY_NEW_LAYOUT_CHECK",
+  "phase": "confirmation",
+  "branches": 30,
+  "new_branches": 30,
+  "reused_baselines": 0,
+  "cases": 6,
+  "layouts": 3,
+  "complete_branches": 30,
+  "collision_branches": 0,
+  "comparisons": {
+    "mapex": {
+      "cases": 6,
+      "layouts": 3,
+      "wins": 6,
+      "ties": 0,
+      "losses": 0,
+      "layout_macro_delta_mismatch_m2": -7.886666666666668,
+      "mean_delta_macro_iou": 0.015188249940178367,
+      "equal_budget_pairs": 6
+    },
+    "uncertainty": {
+      "cases": 6,
+      "layouts": 3,
+      "wins": 3,
+      "ties": 2,
+      "losses": 1,
+      "layout_macro_delta_mismatch_m2": -2.756666666666663,
+      "mean_delta_macro_iou": 0.0038133552193240217,
+      "equal_budget_pairs": 6
+    },
+    "route_uncertainty": {
+      "cases": 6,
+      "layouts": 3,
+      "wins": 2,
+      "ties": 2,
+      "losses": 2,
+      "layout_macro_delta_mismatch_m2": 5.826666666666665,
+      "mean_delta_macro_iou": -0.012016147762056284,
+      "equal_budget_pairs": 6
+    },
+    "route_error": {
+      "cases": 6,
+      "layouts": 3,
+      "wins": 1,
+      "ties": 3,
+      "losses": 2,
+      "layout_macro_delta_mismatch_m2": 6.476666666666667,
+      "mean_delta_macro_iou": -0.012630328756102907,
+      "equal_budget_pairs": 6
+    }
+  },
+  "paired": [
+    {
+      "case": "kth_50015847__warm15",
+      "layout": "kth_50015847",
+      "baseline": "mapex",
+      "delta_mismatch_m2": -27.439999999999998,
+      "delta_macro_iou": 0.05000281092670944,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50015847__warm15",
+      "layout": "kth_50015847",
+      "baseline": "uncertainty",
+      "delta_mismatch_m2": -0.7299999999999898,
+      "delta_macro_iou": 0.004789622357254664,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50015847__warm15",
+      "layout": "kth_50015847",
+      "baseline": "route_uncertainty",
+      "delta_mismatch_m2": 0.0,
+      "delta_macro_iou": 0.0,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50015847__warm15",
+      "layout": "kth_50015847",
+      "baseline": "route_error",
+      "delta_mismatch_m2": 0.0,
+      "delta_macro_iou": 0.0,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50015847__warm5",
+      "layout": "kth_50015847",
+      "baseline": "mapex",
+      "delta_mismatch_m2": -5.72999999999999,
+      "delta_macro_iou": 0.005100083960058011,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50015847__warm5",
+      "layout": "kth_50015847",
+      "baseline": "uncertainty",
+      "delta_mismatch_m2": -5.72999999999999,
+      "delta_macro_iou": 0.005100083960058011,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50015847__warm5",
+      "layout": "kth_50015847",
+      "baseline": "route_uncertainty",
+      "delta_mismatch_m2": 25.870000000000005,
+      "delta_macro_iou": -0.037542919456017065,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50015847__warm5",
+      "layout": "kth_50015847",
+      "baseline": "route_error",
+      "delta_mismatch_m2": 25.870000000000005,
+      "delta_macro_iou": -0.037542919456017065,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50052753__warm15",
+      "layout": "kth_50052753",
+      "baseline": "mapex",
+      "delta_mismatch_m2": -6.550000000000011,
+      "delta_macro_iou": 0.006475521884518387,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50052753__warm15",
+      "layout": "kth_50052753",
+      "baseline": "uncertainty",
+      "delta_mismatch_m2": 0.0,
+      "delta_macro_iou": 0.0,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50052753__warm15",
+      "layout": "kth_50052753",
+      "baseline": "route_uncertainty",
+      "delta_mismatch_m2": 0.0,
+      "delta_macro_iou": 0.0,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50052753__warm15",
+      "layout": "kth_50052753",
+      "baseline": "route_error",
+      "delta_mismatch_m2": 0.0,
+      "delta_macro_iou": 0.0,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50052753__warm5",
+      "layout": "kth_50052753",
+      "baseline": "mapex",
+      "delta_mismatch_m2": -5.040000000000006,
+      "delta_macro_iou": 0.02139408558108591,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50052753__warm5",
+      "layout": "kth_50052753",
+      "baseline": "uncertainty",
+      "delta_mismatch_m2": -10.909999999999997,
+      "delta_macro_iou": 0.014663824602352604,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50052753__warm5",
+      "layout": "kth_50052753",
+      "baseline": "route_uncertainty",
+      "delta_mismatch_m2": 13.689999999999998,
+      "delta_macro_iou": -0.04331936577298634,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50052753__warm5",
+      "layout": "kth_50052753",
+      "baseline": "route_error",
+      "delta_mismatch_m2": 13.689999999999998,
+      "delta_macro_iou": -0.04331936577298634,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50052754__warm15",
+      "layout": "kth_50052754",
+      "baseline": "mapex",
+      "delta_mismatch_m2": -1.7399999999999949,
+      "delta_macro_iou": 0.010225079824384142,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50052754__warm15",
+      "layout": "kth_50052754",
+      "baseline": "uncertainty",
+      "delta_mismatch_m2": 0.0,
+      "delta_macro_iou": 0.0,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50052754__warm15",
+      "layout": "kth_50052754",
+      "baseline": "route_uncertainty",
+      "delta_mismatch_m2": -2.6599999999999966,
+      "delta_macro_iou": 0.007868941472518265,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50052754__warm15",
+      "layout": "kth_50052754",
+      "baseline": "route_error",
+      "delta_mismatch_m2": -0.7000000000000028,
+      "delta_macro_iou": 0.005080312692385958,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50052754__warm5",
+      "layout": "kth_50052754",
+      "baseline": "mapex",
+      "delta_mismatch_m2": -0.8200000000000074,
+      "delta_macro_iou": -0.002068082535685689,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50052754__warm5",
+      "layout": "kth_50052754",
+      "baseline": "uncertainty",
+      "delta_mismatch_m2": 0.8299999999999983,
+      "delta_macro_iou": -0.0016733996037211485,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50052754__warm5",
+      "layout": "kth_50052754",
+      "baseline": "route_uncertainty",
+      "delta_mismatch_m2": -1.940000000000012,
+      "delta_macro_iou": 0.0008964571841474367,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    },
+    {
+      "case": "kth_50052754__warm5",
+      "layout": "kth_50052754",
+      "baseline": "route_error",
+      "delta_mismatch_m2": 0.0,
+      "delta_macro_iou": 0.0,
+      "delta_distance_m": 0.0,
+      "equal_budget_completed": true
+    }
+  ],
+  "limits": [
+    "New layouts are held out from this error estimator and policy development, not a verified new-building or LaMa-training holdout.",
+    "Risk is a cell error estimate from six correlated development states; its patch mean is only a heuristic weight, not P(full hypothesis true).",
+    "First-hit hard-map route scans and target-directed patch rays approximate visibility. The pathwise control is PIPE-inspired, not an exact PIPE implementation.",
+    "Counterfactual correction holds unseen predictions fixed; closed-loop LaMa changes may differ.",
+    "Three new layouts with two related states each are preliminary confirmation, not a statistical generalization claim."
+  ]
+}

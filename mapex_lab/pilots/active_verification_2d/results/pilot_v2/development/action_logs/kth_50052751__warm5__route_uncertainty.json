@@ -1,0 +1,818 @@
+[
+  {
+    "action": "OBSERVE_ROUTE_UNCERTAINTY",
+    "goal": [
+      74,
+      138
+    ],
+    "score": 0.41684479780600103,
+    "path_m": 7.1000000000000005,
+    "hypothesis": null,
+    "selected_route": {
+      "pose": [
+        74,
+        138
+      ],
+      "original_target": [
+        74,
+        138
+      ],
+      "path_m": 7.1000000000000005,
+      "score": 0.41684479780600103,
+      "visible_unknown_cells": 4514,
+      "route_uncertainty_m2": 2.9595980644226074,
+      "estimated_wrong_area_m2": 0.0,
+      "weighted_structural_correction_m2": 0.0,
+      "hypothetical_correction": null,
+      "hypothesis_centre": null
+    },
+    "candidate_records": [
+      {
+        "pose": [
+          74,
+          138
+        ],
+        "original_target": [
+          74,
+          138
+        ],
+        "path_m": 7.1000000000000005,
+        "score": 0.41684479780600103,
+        "visible_unknown_cells": 4514,
+        "route_uncertainty_m2": 2.9595980644226074,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          74,
+          137
+        ],
+        "original_target": [
+          74,
+          137
+        ],
+        "path_m": 7.2,
+        "score": 0.4105922910902235,
+        "visible_unknown_cells": 4541,
+        "route_uncertainty_m2": 2.9562644958496094,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          65,
+          120
+        ],
+        "original_target": [
+          68,
+          15
+        ],
+        "path_m": 8.0,
+        "score": 0.39607349038124084,
+        "visible_unknown_cells": 4554,
+        "route_uncertainty_m2": 3.1685879230499268,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          71,
+          126
+        ],
+        "original_target": [
+          73,
+          98
+        ],
+        "path_m": 8.0,
+        "score": 0.33928245306015015,
+        "visible_unknown_cells": 4461,
+        "route_uncertainty_m2": 2.714259624481201,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          74,
+          259
+        ],
+        "original_target": [
+          74,
+          259
+        ],
+        "path_m": 8.0,
+        "score": 0.2821548283100128,
+        "visible_unknown_cells": 3731,
+        "route_uncertainty_m2": 2.2572386264801025,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          74,
+          258
+        ],
+        "original_target": [
+          74,
+          258
+        ],
+        "path_m": 7.9,
+        "score": 0.2816551546507244,
+        "visible_unknown_cells": 3682,
+        "route_uncertainty_m2": 2.2250757217407227,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          56,
+          271
+        ],
+        "original_target": [
+          54,
+          284
+        ],
+        "path_m": 8.0,
+        "score": 0.2673366665840149,
+        "visible_unknown_cells": 3041,
+        "route_uncertainty_m2": 2.138693332672119,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          71,
+          262
+        ],
+        "original_target": [
+          73,
+          347
+        ],
+        "path_m": 8.0,
+        "score": 0.22036422789096832,
+        "visible_unknown_cells": 2988,
+        "route_uncertainty_m2": 1.7629138231277466,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          92,
+          193
+        ],
+        "original_target": [
+          92,
+          193
+        ],
+        "path_m": 3.8000000000000003,
+        "score": 0.05724926920313584,
+        "visible_unknown_cells": 674,
+        "route_uncertainty_m2": 0.2175472229719162,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          93,
+          193
+        ],
+        "original_target": [
+          93,
+          193
+        ],
+        "path_m": 3.9000000000000004,
+        "score": 0.05663603544235229,
+        "visible_unknown_cells": 673,
+        "route_uncertainty_m2": 0.22088053822517395,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          101,
+          192
+        ],
+        "original_target": [
+          101,
+          192
+        ],
+        "path_m": 4.800000000000001,
+        "score": 0.04671122257908185,
+        "visible_unknown_cells": 675,
+        "route_uncertainty_m2": 0.2242138683795929,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          102,
+          192
+        ],
+        "original_target": [
+          102,
+          192
+        ],
+        "path_m": 4.9,
+        "score": 0.0464382068235047,
+        "visible_unknown_cells": 677,
+        "route_uncertainty_m2": 0.22754721343517303,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          104,
+          192
+        ],
+        "original_target": [
+          104,
+          192
+        ],
+        "path_m": 5.1000000000000005,
+        "score": 0.04461710067356334,
+        "visible_unknown_cells": 677,
+        "route_uncertainty_m2": 0.22754721343517303,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          105,
+          192
+        ],
+        "original_target": [
+          105,
+          192
+        ],
+        "path_m": 5.2,
+        "score": 0.04375907950676405,
+        "visible_unknown_cells": 677,
+        "route_uncertainty_m2": 0.22754721343517303,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          112,
+          191
+        ],
+        "original_target": [
+          112,
+          191
+        ],
+        "path_m": 6.0,
+        "score": 0.03792453557252884,
+        "visible_unknown_cells": 677,
+        "route_uncertainty_m2": 0.22754721343517303,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          113,
+          191
+        ],
+        "original_target": [
+          113,
+          191
+        ],
+        "path_m": 6.1000000000000005,
+        "score": 0.03730282187461853,
+        "visible_unknown_cells": 677,
+        "route_uncertainty_m2": 0.22754721343517303,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      }
+    ],
+    "raw_frontiers": 13,
+    "hypotheses": 12,
+    "observation_poses": 24,
+    "executable_routes": 16,
+    "variant": "ROUTE_RISK_V2",
+    "geometry_proposals": 56,
+    "consequence_proposals": 12,
+    "case": "kth_50052751__warm5",
+    "method": "route_uncertainty",
+    "decision": 0,
+    "start_pose": [
+      59,
+      194
+    ],
+    "distance_before_m": 0.0,
+    "policy_compute_s": 0.8664907790007419,
+    "observed_hash": "dc0a3352ddfd82f8fee1a8d76be114e33a1cb5bc01d331166c4cc1c4ae86ffc0",
+    "distance_after_m": 7.099999999999991,
+    "path_taken": [
+      [
+        59,
+        194
+      ],
+      [
+        60,
+        194
+      ],
+      [
+        61,
+        194
+      ],
+      [
+        62,
+        194
+      ],
+      [
+        63,
+        194
+      ],
+      [
+        64,
+        194
+      ],
+      [
+        65,
+        194
+      ],
+      [
+        66,
+        194
+      ],
+      [
+        67,
+        194
+      ],
+      [
+        68,
+        194
+      ],
+      [
+        69,
+        194
+      ],
+      [
+        70,
+        194
+      ],
+      [
+        71,
+        194
+      ],
+      [
+        71,
+        193
+      ],
+      [
+        71,
+        192
+      ],
+      [
+        71,
+        191
+      ],
+      [
+        71,
+        190
+      ],
+      [
+        71,
+        189
+      ],
+      [
+        71,
+        188
+      ],
+      [
+        71,
+        187
+      ],
+      [
+        71,
+        186
+      ],
+      [
+        71,
+        185
+      ],
+      [
+        71,
+        184
+      ],
+      [
+        71,
+        183
+      ],
+      [
+        71,
+        182
+      ],
+      [
+        71,
+        181
+      ],
+      [
+        71,
+        180
+      ],
+      [
+        71,
+        179
+      ],
+      [
+        71,
+        178
+      ],
+      [
+        71,
+        177
+      ],
+      [
+        71,
+        176
+      ],
+      [
+        71,
+        175
+      ],
+      [
+        71,
+        174
+      ],
+      [
+        71,
+        173
+      ],
+      [
+        71,
+        172
+      ],
+      [
+        71,
+        171
+      ],
+      [
+        71,
+        170
+      ],
+      [
+        71,
+        169
+      ],
+      [
+        71,
+        168
+      ],
+      [
+        71,
+        167
+      ],
+      [
+        71,
+        166
+      ],
+      [
+        71,
+        165
+      ],
+      [
+        71,
+        164
+      ],
+      [
+        71,
+        163
+      ],
+      [
+        71,
+        162
+      ],
+      [
+        71,
+        161
+      ],
+      [
+        71,
+        160
+      ],
+      [
+        71,
+        159
+      ],
+      [
+        71,
+        158
+      ],
+      [
+        71,
+        157
+      ],
+      [
+        71,
+        156
+      ],
+      [
+        71,
+        155
+      ],
+      [
+        71,
+        154
+      ],
+      [
+        71,
+        153
+      ],
+      [
+        71,
+        152
+      ],
+      [
+        71,
+        151
+      ],
+      [
+        71,
+        150
+      ],
+      [
+        71,
+        149
+      ],
+      [
+        71,
+        148
+      ],
+      [
+        71,
+        147
+      ],
+      [
+        71,
+        146
+      ],
+      [
+        71,
+        145
+      ],
+      [
+        71,
+        144
+      ],
+      [
+        71,
+        143
+      ],
+      [
+        71,
+        142
+      ],
+      [
+        71,
+        141
+      ],
+      [
+        71,
+        140
+      ],
+      [
+        72,
+        140
+      ],
+      [
+        73,
+        140
+      ],
+      [
+        73,
+        139
+      ],
+      [
+        74,
+        139
+      ],
+      [
+        74,
+        138
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 4899,
+    "revealed_wrong_cells": 443,
+    "revealed_low_u_wrong_cells": 92
+  },
+  {
+    "action": "OBSERVE_ROUTE_UNCERTAINTY",
+    "goal": [
+      83,
+      138
+    ],
+    "score": 0.21315089530415005,
+    "path_m": 0.9,
+    "hypothesis": null,
+    "selected_route": {
+      "pose": [
+        83,
+        138
+      ],
+      "original_target": [
+        83,
+        129
+      ],
+      "path_m": 0.9,
+      "score": 0.21315089530415005,
+      "visible_unknown_cells": 825,
+      "route_uncertainty_m2": 0.19183580577373505,
+      "estimated_wrong_area_m2": 0.0,
+      "weighted_structural_correction_m2": 0.0,
+      "hypothetical_correction": null,
+      "hypothesis_centre": null
+    },
+    "candidate_records": [
+      {
+        "pose": [
+          83,
+          138
+        ],
+        "original_target": [
+          83,
+          129
+        ],
+        "path_m": 0.9,
+        "score": 0.21315089530415005,
+        "visible_unknown_cells": 825,
+        "route_uncertainty_m2": 0.19183580577373505,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          71,
+          132
+        ],
+        "original_target": [
+          71,
+          102
+        ],
+        "path_m": 0.9,
+        "score": 0.129837766289711,
+        "visible_unknown_cells": 161,
+        "route_uncertainty_m2": 0.1168539896607399,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          65,
+          138
+        ],
+        "original_target": [
+          44,
+          127
+        ],
+        "path_m": 0.9,
+        "score": 2.976405387587909e-11,
+        "visible_unknown_cells": 1,
+        "route_uncertainty_m2": 2.6787648488291183e-11,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          73,
+          138
+        ],
+        "original_target": [
+          73,
+          138
+        ],
+        "path_m": 0.1,
+        "score": 0.0,
+        "visible_unknown_cells": 0,
+        "route_uncertainty_m2": 0.0,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          71,
+          144
+        ],
+        "original_target": [
+          73,
+          347
+        ],
+        "path_m": 0.9,
+        "score": 0.0,
+        "visible_unknown_cells": 0,
+        "route_uncertainty_m2": 0.0,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      }
+    ],
+    "raw_frontiers": 15,
+    "hypotheses": 6,
+    "observation_poses": 24,
+    "executable_routes": 5,
+    "variant": "ROUTE_RISK_V2",
+    "geometry_proposals": 49,
+    "consequence_proposals": 6,
+    "case": "kth_50052751__warm5",
+    "method": "route_uncertainty",
+    "decision": 1,
+    "start_pose": [
+      74,
+      138
+    ],
+    "distance_before_m": 7.099999999999991,
+    "policy_compute_s": 0.7065148320034496,
+    "observed_hash": "6d6be21745ddf3b6522ed06ea2d902e267cbeee013107ca07bef68b2cf87f862",
+    "distance_after_m": 7.999999999999988,
+    "path_taken": [
+      [
+        74,
+        138
+      ],
+      [
+        75,
+        138
+      ],
+      [
+        76,
+        138
+      ],
+      [
+        77,
+        138
+      ],
+      [
+        78,
+        138
+      ],
+      [
+        79,
+        138
+      ],
+      [
+        80,
+        138
+      ],
+      [
+        81,
+        138
+      ],
+      [
+        82,
+        138
+      ],
+      [
+        83,
+        138
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 827,
+    "revealed_wrong_cells": 20,
+    "revealed_low_u_wrong_cells": 0
+  }
+]

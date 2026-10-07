@@ -1,0 +1,402 @@
+[
+  {
+    "action": "OBSERVE_UNCERTAINTY",
+    "goal": [
+      54,
+      104
+    ],
+    "score": 10.622553270916606,
+    "path_m": 4.3,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 10,
+    "observation_poses": 24,
+    "raw_frontiers": 3,
+    "reachable_frontiers": 2,
+    "near_frontier_fallback": false,
+    "geometry_proposals": 39,
+    "consequence_proposals": 10,
+    "case": "kth_50052754__warm15",
+    "method": "uncertainty",
+    "decision": 0,
+    "start_pose": [
+      56,
+      63
+    ],
+    "distance_before_m": 0.0,
+    "policy_compute_s": 2.2142555870013894,
+    "observed_hash": "606a56d79085504c73d06dd7841cdfcd3b8546474697c9788631c7dffd5000fd",
+    "distance_after_m": 4.300000000000001,
+    "path_taken": [
+      [
+        56,
+        63
+      ],
+      [
+        56,
+        64
+      ],
+      [
+        56,
+        65
+      ],
+      [
+        56,
+        66
+      ],
+      [
+        56,
+        67
+      ],
+      [
+        56,
+        68
+      ],
+      [
+        56,
+        69
+      ],
+      [
+        56,
+        70
+      ],
+      [
+        56,
+        71
+      ],
+      [
+        56,
+        72
+      ],
+      [
+        56,
+        73
+      ],
+      [
+        56,
+        74
+      ],
+      [
+        56,
+        75
+      ],
+      [
+        56,
+        76
+      ],
+      [
+        56,
+        77
+      ],
+      [
+        56,
+        78
+      ],
+      [
+        56,
+        79
+      ],
+      [
+        56,
+        80
+      ],
+      [
+        56,
+        81
+      ],
+      [
+        56,
+        82
+      ],
+      [
+        56,
+        83
+      ],
+      [
+        56,
+        84
+      ],
+      [
+        56,
+        85
+      ],
+      [
+        56,
+        86
+      ],
+      [
+        56,
+        87
+      ],
+      [
+        56,
+        88
+      ],
+      [
+        56,
+        89
+      ],
+      [
+        56,
+        90
+      ],
+      [
+        56,
+        91
+      ],
+      [
+        56,
+        92
+      ],
+      [
+        56,
+        93
+      ],
+      [
+        56,
+        94
+      ],
+      [
+        56,
+        95
+      ],
+      [
+        56,
+        96
+      ],
+      [
+        56,
+        97
+      ],
+      [
+        56,
+        98
+      ],
+      [
+        56,
+        99
+      ],
+      [
+        56,
+        100
+      ],
+      [
+        56,
+        101
+      ],
+      [
+        56,
+        102
+      ],
+      [
+        56,
+        103
+      ],
+      [
+        56,
+        104
+      ],
+      [
+        55,
+        104
+      ],
+      [
+        54,
+        104
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 3751,
+    "revealed_wrong_cells": 284,
+    "revealed_low_u_wrong_cells": 102
+  },
+  {
+    "action": "OBSERVE_UNCERTAINTY",
+    "goal": [
+      54,
+      194
+    ],
+    "score": 7.7015556173121675,
+    "path_m": 9.4,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 9,
+    "observation_poses": 24,
+    "raw_frontiers": 7,
+    "reachable_frontiers": 6,
+    "near_frontier_fallback": false,
+    "geometry_proposals": 48,
+    "consequence_proposals": 9,
+    "case": "kth_50052754__warm15",
+    "method": "uncertainty",
+    "decision": 1,
+    "start_pose": [
+      54,
+      104
+    ],
+    "distance_before_m": 4.300000000000001,
+    "policy_compute_s": 2.0501178999984404,
+    "observed_hash": "06c3f37bbfd7ad870f88cdbf2a59755344d8794c9e5a1786fb717e2e507aaba4",
+    "distance_after_m": 7.999999999999988,
+    "path_taken": [
+      [
+        54,
+        104
+      ],
+      [
+        55,
+        104
+      ],
+      [
+        56,
+        104
+      ],
+      [
+        56,
+        105
+      ],
+      [
+        56,
+        106
+      ],
+      [
+        56,
+        107
+      ],
+      [
+        56,
+        108
+      ],
+      [
+        56,
+        109
+      ],
+      [
+        56,
+        110
+      ],
+      [
+        56,
+        111
+      ],
+      [
+        56,
+        112
+      ],
+      [
+        56,
+        113
+      ],
+      [
+        56,
+        114
+      ],
+      [
+        56,
+        115
+      ],
+      [
+        56,
+        116
+      ],
+      [
+        56,
+        117
+      ],
+      [
+        56,
+        118
+      ],
+      [
+        56,
+        119
+      ],
+      [
+        56,
+        120
+      ],
+      [
+        56,
+        121
+      ],
+      [
+        56,
+        122
+      ],
+      [
+        56,
+        123
+      ],
+      [
+        56,
+        124
+      ],
+      [
+        56,
+        125
+      ],
+      [
+        56,
+        126
+      ],
+      [
+        56,
+        127
+      ],
+      [
+        56,
+        128
+      ],
+      [
+        56,
+        129
+      ],
+      [
+        56,
+        130
+      ],
+      [
+        56,
+        131
+      ],
+      [
+        56,
+        132
+      ],
+      [
+        56,
+        133
+      ],
+      [
+        56,
+        134
+      ],
+      [
+        56,
+        135
+      ],
+      [
+        56,
+        136
+      ],
+      [
+        56,
+        137
+      ],
+      [
+        56,
+        138
+      ],
+      [
+        56,
+        139
+      ]
+    ],
+    "goal_reached": false,
+    "collision": false,
+    "revealed_cells": 2739,
+    "revealed_wrong_cells": 146,
+    "revealed_low_u_wrong_cells": 61
+  }
+]

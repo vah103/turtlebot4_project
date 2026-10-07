@@ -1,0 +1,453 @@
+[
+  {
+    "action": "OBSERVE_ROUTE_ERROR",
+    "goal": [
+      144,
+      96
+    ],
+    "score": 0.2089824704219195,
+    "path_m": 8.0,
+    "hypothesis": null,
+    "selected_route": {
+      "pose": [
+        144,
+        96
+      ],
+      "original_target": [
+        144,
+        56
+      ],
+      "path_m": 8.0,
+      "score": 0.2089824704219195,
+      "visible_unknown_cells": 1257,
+      "route_uncertainty_m2": 0.28320345282554626,
+      "estimated_wrong_area_m2": 1.671859763375356,
+      "weighted_structural_correction_m2": 0.0,
+      "hypothetical_correction": null,
+      "hypothesis_centre": null
+    },
+    "candidate_records": [
+      {
+        "pose": [
+          144,
+          96
+        ],
+        "original_target": [
+          144,
+          56
+        ],
+        "path_m": 8.0,
+        "score": 0.2089824704219195,
+        "visible_unknown_cells": 1257,
+        "route_uncertainty_m2": 0.28320345282554626,
+        "estimated_wrong_area_m2": 1.671859763375356,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          146,
+          190
+        ],
+        "original_target": [
+          93,
+          212
+        ],
+        "path_m": 8.0,
+        "score": 0.19251813922294017,
+        "visible_unknown_cells": 1001,
+        "route_uncertainty_m2": 0.4264264702796936,
+        "estimated_wrong_area_m2": 1.5401451137835214,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          123,
+          117
+        ],
+        "original_target": [
+          47,
+          62
+        ],
+        "path_m": 8.0,
+        "score": 0.09392744212329754,
+        "visible_unknown_cells": 531,
+        "route_uncertainty_m2": 0.20896519720554352,
+        "estimated_wrong_area_m2": 0.7514195369863803,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          187,
+          179
+        ],
+        "original_target": [
+          187,
+          179
+        ],
+        "path_m": 4.6000000000000005,
+        "score": 0.03906505853302855,
+        "visible_unknown_cells": 118,
+        "route_uncertainty_m2": 0.05171823501586914,
+        "estimated_wrong_area_m2": 0.17969926925193136,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      }
+    ],
+    "raw_frontiers": 17,
+    "hypotheses": 3,
+    "observation_poses": 24,
+    "executable_routes": 4,
+    "variant": "ROUTE_RISK_V2",
+    "geometry_proposals": 63,
+    "consequence_proposals": 3,
+    "case": "new_room__warm15",
+    "method": "route_error",
+    "decision": 0,
+    "start_pose": [
+      178,
+      142
+    ],
+    "distance_before_m": 0.0,
+    "policy_compute_s": 0.9646670980000636,
+    "observed_hash": "5b11f1e3205174539c3df0bfc5323beccfd577a1e8a9e85dd12b77532808c069",
+    "distance_after_m": 7.999999999999988,
+    "path_taken": [
+      [
+        178,
+        142
+      ],
+      [
+        177,
+        142
+      ],
+      [
+        176,
+        142
+      ],
+      [
+        175,
+        142
+      ],
+      [
+        174,
+        142
+      ],
+      [
+        173,
+        142
+      ],
+      [
+        172,
+        142
+      ],
+      [
+        171,
+        142
+      ],
+      [
+        170,
+        142
+      ],
+      [
+        169,
+        142
+      ],
+      [
+        168,
+        142
+      ],
+      [
+        168,
+        141
+      ],
+      [
+        168,
+        140
+      ],
+      [
+        168,
+        139
+      ],
+      [
+        168,
+        138
+      ],
+      [
+        168,
+        137
+      ],
+      [
+        168,
+        136
+      ],
+      [
+        168,
+        135
+      ],
+      [
+        168,
+        134
+      ],
+      [
+        168,
+        133
+      ],
+      [
+        168,
+        132
+      ],
+      [
+        167,
+        132
+      ],
+      [
+        166,
+        132
+      ],
+      [
+        165,
+        132
+      ],
+      [
+        164,
+        132
+      ],
+      [
+        163,
+        132
+      ],
+      [
+        162,
+        132
+      ],
+      [
+        161,
+        132
+      ],
+      [
+        160,
+        132
+      ],
+      [
+        159,
+        132
+      ],
+      [
+        158,
+        132
+      ],
+      [
+        157,
+        132
+      ],
+      [
+        156,
+        132
+      ],
+      [
+        155,
+        132
+      ],
+      [
+        154,
+        132
+      ],
+      [
+        153,
+        132
+      ],
+      [
+        152,
+        132
+      ],
+      [
+        151,
+        132
+      ],
+      [
+        150,
+        132
+      ],
+      [
+        149,
+        132
+      ],
+      [
+        149,
+        131
+      ],
+      [
+        149,
+        130
+      ],
+      [
+        149,
+        129
+      ],
+      [
+        149,
+        128
+      ],
+      [
+        149,
+        127
+      ],
+      [
+        149,
+        126
+      ],
+      [
+        149,
+        125
+      ],
+      [
+        149,
+        124
+      ],
+      [
+        149,
+        123
+      ],
+      [
+        149,
+        122
+      ],
+      [
+        149,
+        121
+      ],
+      [
+        149,
+        120
+      ],
+      [
+        149,
+        119
+      ],
+      [
+        148,
+        119
+      ],
+      [
+        147,
+        119
+      ],
+      [
+        146,
+        119
+      ],
+      [
+        145,
+        119
+      ],
+      [
+        144,
+        119
+      ],
+      [
+        144,
+        118
+      ],
+      [
+        144,
+        117
+      ],
+      [
+        144,
+        116
+      ],
+      [
+        144,
+        115
+      ],
+      [
+        144,
+        114
+      ],
+      [
+        144,
+        113
+      ],
+      [
+        144,
+        112
+      ],
+      [
+        144,
+        111
+      ],
+      [
+        144,
+        110
+      ],
+      [
+        144,
+        109
+      ],
+      [
+        144,
+        108
+      ],
+      [
+        144,
+        107
+      ],
+      [
+        144,
+        106
+      ],
+      [
+        144,
+        105
+      ],
+      [
+        144,
+        104
+      ],
+      [
+        144,
+        103
+      ],
+      [
+        144,
+        102
+      ],
+      [
+        144,
+        101
+      ],
+      [
+        144,
+        100
+      ],
+      [
+        144,
+        99
+      ],
+      [
+        144,
+        98
+      ],
+      [
+        144,
+        97
+      ],
+      [
+        144,
+        96
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 1972,
+    "revealed_wrong_cells": 117,
+    "revealed_low_u_wrong_cells": 74
+  }
+]

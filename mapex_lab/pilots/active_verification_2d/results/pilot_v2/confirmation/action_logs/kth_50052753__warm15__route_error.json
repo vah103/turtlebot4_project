@@ -1,0 +1,417 @@
+[
+  {
+    "action": "OBSERVE_ROUTE_ERROR",
+    "goal": [
+      71,
+      66
+    ],
+    "score": 0.10413583425723065,
+    "path_m": 8.0,
+    "hypothesis": null,
+    "selected_route": {
+      "pose": [
+        71,
+        66
+      ],
+      "original_target": [
+        72,
+        229
+      ],
+      "path_m": 8.0,
+      "score": 0.10413583425723065,
+      "visible_unknown_cells": 598,
+      "route_uncertainty_m2": 0.06924789398908615,
+      "estimated_wrong_area_m2": 0.8330866740578452,
+      "weighted_structural_correction_m2": 0.0,
+      "hypothetical_correction": null,
+      "hypothesis_centre": null
+    },
+    "candidate_records": [
+      {
+        "pose": [
+          71,
+          66
+        ],
+        "original_target": [
+          72,
+          229
+        ],
+        "path_m": 8.0,
+        "score": 0.10413583425723065,
+        "visible_unknown_cells": 598,
+        "route_uncertainty_m2": 0.06924789398908615,
+        "estimated_wrong_area_m2": 0.8330866740578452,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          56,
+          63
+        ],
+        "original_target": [
+          52,
+          77
+        ],
+        "path_m": 8.0,
+        "score": 0.05121689911038121,
+        "visible_unknown_cells": 299,
+        "route_uncertainty_m2": 0.06228168308734894,
+        "estimated_wrong_area_m2": 0.40973519288304966,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      }
+    ],
+    "raw_frontiers": 5,
+    "hypotheses": 9,
+    "observation_poses": 24,
+    "executable_routes": 2,
+    "variant": "ROUTE_RISK_V2",
+    "geometry_proposals": 47,
+    "consequence_proposals": 9,
+    "case": "kth_50052753__warm15",
+    "method": "route_error",
+    "decision": 0,
+    "start_pose": [
+      89,
+      16
+    ],
+    "distance_before_m": 0.0,
+    "policy_compute_s": 0.6642484359981609,
+    "observed_hash": "c6461e388eda8e3e1a8c96f7a0255fb53bc927e6fcf4a91864f6746b58fab7ad",
+    "distance_after_m": 7.999999999999988,
+    "path_taken": [
+      [
+        89,
+        16
+      ],
+      [
+        88,
+        16
+      ],
+      [
+        87,
+        16
+      ],
+      [
+        86,
+        16
+      ],
+      [
+        85,
+        16
+      ],
+      [
+        84,
+        16
+      ],
+      [
+        83,
+        16
+      ],
+      [
+        82,
+        16
+      ],
+      [
+        81,
+        16
+      ],
+      [
+        80,
+        16
+      ],
+      [
+        79,
+        16
+      ],
+      [
+        78,
+        16
+      ],
+      [
+        77,
+        16
+      ],
+      [
+        76,
+        16
+      ],
+      [
+        75,
+        16
+      ],
+      [
+        74,
+        16
+      ],
+      [
+        73,
+        16
+      ],
+      [
+        72,
+        16
+      ],
+      [
+        71,
+        16
+      ],
+      [
+        70,
+        16
+      ],
+      [
+        69,
+        16
+      ],
+      [
+        68,
+        16
+      ],
+      [
+        67,
+        16
+      ],
+      [
+        66,
+        16
+      ],
+      [
+        65,
+        16
+      ],
+      [
+        65,
+        17
+      ],
+      [
+        65,
+        18
+      ],
+      [
+        65,
+        19
+      ],
+      [
+        65,
+        20
+      ],
+      [
+        65,
+        21
+      ],
+      [
+        65,
+        22
+      ],
+      [
+        65,
+        23
+      ],
+      [
+        65,
+        24
+      ],
+      [
+        65,
+        25
+      ],
+      [
+        65,
+        26
+      ],
+      [
+        65,
+        27
+      ],
+      [
+        65,
+        28
+      ],
+      [
+        65,
+        29
+      ],
+      [
+        65,
+        30
+      ],
+      [
+        65,
+        31
+      ],
+      [
+        65,
+        32
+      ],
+      [
+        65,
+        33
+      ],
+      [
+        65,
+        34
+      ],
+      [
+        65,
+        35
+      ],
+      [
+        65,
+        36
+      ],
+      [
+        66,
+        36
+      ],
+      [
+        67,
+        36
+      ],
+      [
+        68,
+        36
+      ],
+      [
+        69,
+        36
+      ],
+      [
+        70,
+        36
+      ],
+      [
+        71,
+        36
+      ],
+      [
+        71,
+        37
+      ],
+      [
+        71,
+        38
+      ],
+      [
+        71,
+        39
+      ],
+      [
+        71,
+        40
+      ],
+      [
+        71,
+        41
+      ],
+      [
+        71,
+        42
+      ],
+      [
+        71,
+        43
+      ],
+      [
+        71,
+        44
+      ],
+      [
+        71,
+        45
+      ],
+      [
+        71,
+        46
+      ],
+      [
+        71,
+        47
+      ],
+      [
+        71,
+        48
+      ],
+      [
+        71,
+        49
+      ],
+      [
+        71,
+        50
+      ],
+      [
+        71,
+        51
+      ],
+      [
+        71,
+        52
+      ],
+      [
+        71,
+        53
+      ],
+      [
+        71,
+        54
+      ],
+      [
+        71,
+        55
+      ],
+      [
+        71,
+        56
+      ],
+      [
+        71,
+        57
+      ],
+      [
+        71,
+        58
+      ],
+      [
+        71,
+        59
+      ],
+      [
+        71,
+        60
+      ],
+      [
+        71,
+        61
+      ],
+      [
+        71,
+        62
+      ],
+      [
+        71,
+        63
+      ],
+      [
+        71,
+        64
+      ],
+      [
+        71,
+        65
+      ],
+      [
+        71,
+        66
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 1166,
+    "revealed_wrong_cells": 230,
+    "revealed_low_u_wrong_cells": 62
+  }
+]

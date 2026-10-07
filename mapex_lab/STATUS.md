@@ -422,9 +422,16 @@ This branch-only pilot follows the USER request to implement and test active ver
 - LATEST RESULT: V1 structural beats uncertainty in 1/6 states on reachability mismatch; layout-macro mismatch is +7.515 m2 worse. Budget-feasible variant beats uncertainty in 0/6; mismatch remains +1.64 m2 worse. No algorithm promotion or STOP claim.
 - CHECKS: 14/14 tests; primary artifact recomputation 147/147, ablation 51/51. Self-validation only; not independent QA ACCEPT.
 - IN PROGRESS: independent scientific review remains outstanding.
-- NEXT ACTION: inspect proposal/visibility/ranking against the evaluation-only one-action oracle before considering a new confirmation cohort or STOP policy.
+- FOLLOW-UP: proposal/visibility/ranking diagnosis and a separately frozen V2 cohort completed below; V1 evidence remains unchanged.
 - Evidence: [pilot report](pilots/active_verification_2d/REPORT_VI.md), [protocol and commands](pilots/active_verification_2d/README.md), [independent review scope](pilots/active_verification_2d/QA_REVIEW.md).
 
-## 2026-10-07 — V2 route/risk pilot IN PROGRESS
+## 2026-10-07 — V2 route/risk pilot DONE (research pilot, self-validation)
 
-USER requested continuation. V1 results remain frozen. V2 adds a development-only logistic cell-error estimator, route sensing, and the reachable-component effect of partial local counterfactual observations. Controls are route_uncertainty and route_error; structural_v2 must be compared to route_error to isolate structural benefit. Three new policy-development-excluded layouts are fixed in protocol_v2.json (50015847, 50052753, 50052754), before inference/outcomes. 22/22 tests PASS. Fit uses only six V1 states; leave-layout-out Brier improves over a constant prior on 2/3 development layouts, worsens on 1/3. No calibration/novelty guarantee. Confirmation outcomes pending.
+- DONE: development-only logistic cell-error model, shared route sensing, budget-feasible goal selection and partial-observation structural scoring. V1 remains frozen.
+- DONE: 18 new development branches plus 30 new branches on three preselected policy-development-excluded layouts (50015847, 50052753, 50052754). All 48 used 8 m, zero collisions, no Gazebo.
+- LATEST RESULT: on six new-layout states, structural_v2 beats MapEx 6/6 (layout-macro mismatch delta -7.886667 m2), but versus the primary route_error control wins/ties/loses 1/3/2 and is +6.476667 m2 worse. Structural benefit is not established.
+- LATEST RESULT: supplementary static navigation audit gives safe plans/all queries 55.00% for structural_v2 versus 61.67% for route_error and 59.17% for MapEx. Area improvement is not evidence of improved downstream paths.
+- CHECKS: 24/24 tests; V2 artifact checks 863/863 and analysis checks 43/43 PASS. Source/model/inputs were sealed before confirmation. No policy retuning after results; self-validation is not independent QA ACCEPT.
+- IN PROGRESS: independent scientific review remains outstanding. New layouts are not verified building or LaMa-training holdouts.
+- NEXT ACTION: review the route_error control, calibration transfer, and mismatch between pixel/gate hypotheses and navigation events before selecting a thesis contribution. Do not promote the current gate heuristic or start threshold tuning/STOP collection from these results.
+- Evidence: [V2 report](pilots/active_verification_2d/REPORT_V2_VI.md), [method and rerun](pilots/active_verification_2d/README_V2.md), [independent review scope](pilots/active_verification_2d/QA_REVIEW.md).
