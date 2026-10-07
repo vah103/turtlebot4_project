@@ -324,3 +324,8 @@ MapEx:   chọn max IG / Euclidean distance
 ```
 
 Execution adapter và recorder phải được chia sẻ tối đa để khác biệt kết quả không đến từ hạ tầng thí nghiệm.
+
+
+## Separate 2D active-verification pilot — USER-authorized 2026-10-07
+
+The exploratory protocol is frozen in [protocol.json](pilots/active_verification_2d/protocol.json), with semantics and reproduction commands in [README](pilots/active_verification_2d/README.md). It uses ideal static 2D grids, real LaMa, paired warm states and a common 8 m branch budget. It does not replace hospital_v2, modify Gazebo baselines, fit a STOP threshold or reopen accepted historical experiments. A post-hoc budget-feasibility ablation is separately identified and preserves V1 results. Reports distinguish self-validation from independent QA and do not infer robot time savings from shared prediction-cache timing.

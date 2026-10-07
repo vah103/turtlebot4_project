@@ -39,7 +39,11 @@ def summary_plot(rows, output):
         for j, case in enumerate(cases):
             if by_case[case]["termination"] != "DISTANCE_BUDGET":
                 axes[0].text(j+(i-1)*width, float(by_case[case]["reachable_mismatch_m2"]), "*", ha="center")
-    labels = [c.replace("kth_", "KTH ").replace("new_room", "New Room").replace("__warm", "\nstart @ ")+" m" for c in cases]
+    labels = []
+    for case in cases:
+        layout, warm = case.split("__warm")
+        label = "New Room" if layout == "new_room" else "KTH " + layout[-3:]
+        labels.append(label + "\nstart @ " + warm + " m")
     for axis in axes:
         axis.set_xticks(x, labels, fontsize=9)
         axis.spines[["right", "top"]].set_visible(False)
@@ -60,7 +64,7 @@ def case_plot(case, rows, output):
     with np.load(BASE/"assets"/(layout+".npz")) as z:
         occupied, domain = z["occupied"], z["domain"]
     initial = np.load(output/"raw"/case/"initial.npz")
-    fig, axes = plt.subplots(2, 3, figsize=(12, 7))
+    fig, axes = plt.subplots(2, 3, figsize=(12, 8.5))
     methods = ["mapex", "uncertainty", "structural"]
     axes[0, 0].imshow(~occupied, cmap="gray", origin="lower")
     axes[0, 0].set_title("Ground truth — evaluation only")
@@ -88,7 +92,7 @@ def case_plot(case, rows, output):
         ax.set_xticks([])
         ax.set_yticks([])
     fig.suptitle(case+" — blue/orange/gray: paths; orange crosses: proposed gates", fontsize=12)
-    fig.tight_layout()
+    fig.subplots_adjust(top=.90, bottom=.03, hspace=.32, wspace=.07)
     fig.savefig(output/(case+".png"), dpi=150)
     plt.close(fig)
 

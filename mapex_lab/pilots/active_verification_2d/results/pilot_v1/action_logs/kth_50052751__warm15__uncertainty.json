@@ -1,0 +1,442 @@
+[
+  {
+    "action": "OBSERVE_UNCERTAINTY",
+    "goal": [
+      74,
+      258
+    ],
+    "score": 13.28940158420139,
+    "path_m": 4.5,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 6,
+    "observation_poses": 24,
+    "raw_frontiers": 9,
+    "reachable_frontiers": 8,
+    "near_frontier_fallback": false,
+    "geometry_proposals": 49,
+    "consequence_proposals": 6,
+    "case": "kth_50052751__warm15",
+    "method": "uncertainty",
+    "decision": 0,
+    "start_pose": [
+      71,
+      216
+    ],
+    "distance_before_m": 0.0,
+    "policy_compute_s": 1.9281050390054588,
+    "observed_hash": "9e9ceb7c6fe4a478adba2496862d4a7cdcd2baa513ee3f276951714e586af176",
+    "distance_after_m": 4.5,
+    "path_taken": [
+      [
+        71,
+        216
+      ],
+      [
+        71,
+        217
+      ],
+      [
+        71,
+        218
+      ],
+      [
+        71,
+        219
+      ],
+      [
+        71,
+        220
+      ],
+      [
+        71,
+        221
+      ],
+      [
+        71,
+        222
+      ],
+      [
+        71,
+        223
+      ],
+      [
+        71,
+        224
+      ],
+      [
+        71,
+        225
+      ],
+      [
+        71,
+        226
+      ],
+      [
+        71,
+        227
+      ],
+      [
+        71,
+        228
+      ],
+      [
+        71,
+        229
+      ],
+      [
+        71,
+        230
+      ],
+      [
+        71,
+        231
+      ],
+      [
+        71,
+        232
+      ],
+      [
+        71,
+        233
+      ],
+      [
+        71,
+        234
+      ],
+      [
+        71,
+        235
+      ],
+      [
+        71,
+        236
+      ],
+      [
+        71,
+        237
+      ],
+      [
+        71,
+        238
+      ],
+      [
+        71,
+        239
+      ],
+      [
+        71,
+        240
+      ],
+      [
+        71,
+        241
+      ],
+      [
+        71,
+        242
+      ],
+      [
+        71,
+        243
+      ],
+      [
+        71,
+        244
+      ],
+      [
+        71,
+        245
+      ],
+      [
+        71,
+        246
+      ],
+      [
+        71,
+        247
+      ],
+      [
+        71,
+        248
+      ],
+      [
+        71,
+        249
+      ],
+      [
+        71,
+        250
+      ],
+      [
+        71,
+        251
+      ],
+      [
+        71,
+        252
+      ],
+      [
+        71,
+        253
+      ],
+      [
+        71,
+        254
+      ],
+      [
+        71,
+        255
+      ],
+      [
+        71,
+        256
+      ],
+      [
+        72,
+        256
+      ],
+      [
+        73,
+        256
+      ],
+      [
+        73,
+        257
+      ],
+      [
+        73,
+        258
+      ],
+      [
+        74,
+        258
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 2432,
+    "revealed_wrong_cells": 113,
+    "revealed_low_u_wrong_cells": 70
+  },
+  {
+    "action": "OBSERVE_UNCERTAINTY",
+    "goal": [
+      73,
+      287
+    ],
+    "score": 18.786538067985983,
+    "path_m": 3.4000000000000004,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 12,
+    "observation_poses": 24,
+    "raw_frontiers": 13,
+    "reachable_frontiers": 13,
+    "near_frontier_fallback": false,
+    "geometry_proposals": 36,
+    "consequence_proposals": 12,
+    "case": "kth_50052751__warm15",
+    "method": "uncertainty",
+    "decision": 1,
+    "start_pose": [
+      74,
+      258
+    ],
+    "distance_before_m": 4.5,
+    "policy_compute_s": 1.735286189999897,
+    "observed_hash": "f4d917e72e8e7e2d613bd08aca1697f212b11265c7c99d945175bfeba83e41da",
+    "distance_after_m": 7.899999999999988,
+    "path_taken": [
+      [
+        74,
+        258
+      ],
+      [
+        73,
+        258
+      ],
+      [
+        72,
+        258
+      ],
+      [
+        71,
+        258
+      ],
+      [
+        71,
+        259
+      ],
+      [
+        71,
+        260
+      ],
+      [
+        71,
+        261
+      ],
+      [
+        71,
+        262
+      ],
+      [
+        71,
+        263
+      ],
+      [
+        71,
+        264
+      ],
+      [
+        71,
+        265
+      ],
+      [
+        71,
+        266
+      ],
+      [
+        71,
+        267
+      ],
+      [
+        71,
+        268
+      ],
+      [
+        71,
+        269
+      ],
+      [
+        71,
+        270
+      ],
+      [
+        71,
+        271
+      ],
+      [
+        71,
+        272
+      ],
+      [
+        71,
+        273
+      ],
+      [
+        71,
+        274
+      ],
+      [
+        71,
+        275
+      ],
+      [
+        71,
+        276
+      ],
+      [
+        71,
+        277
+      ],
+      [
+        71,
+        278
+      ],
+      [
+        71,
+        279
+      ],
+      [
+        71,
+        280
+      ],
+      [
+        71,
+        281
+      ],
+      [
+        71,
+        282
+      ],
+      [
+        71,
+        283
+      ],
+      [
+        71,
+        284
+      ],
+      [
+        71,
+        285
+      ],
+      [
+        71,
+        286
+      ],
+      [
+        72,
+        286
+      ],
+      [
+        73,
+        286
+      ],
+      [
+        73,
+        287
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 2544,
+    "revealed_wrong_cells": 186,
+    "revealed_low_u_wrong_cells": 87
+  },
+  {
+    "action": "OBSERVE_UNCERTAINTY",
+    "goal": [
+      73,
+      317
+    ],
+    "score": 13.859451518339268,
+    "path_m": 3.4000000000000004,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 8,
+    "observation_poses": 24,
+    "raw_frontiers": 16,
+    "reachable_frontiers": 16,
+    "near_frontier_fallback": false,
+    "geometry_proposals": 24,
+    "consequence_proposals": 8,
+    "case": "kth_50052751__warm15",
+    "method": "uncertainty",
+    "decision": 2,
+    "start_pose": [
+      73,
+      287
+    ],
+    "distance_before_m": 7.899999999999988,
+    "policy_compute_s": 1.73902781700599,
+    "observed_hash": "9f43082d72d0ff28ea3d70c160dfe9b6fe6ca340f61a3682d51afe242f39681b",
+    "distance_after_m": 7.999999999999988,
+    "path_taken": [
+      [
+        73,
+        287
+      ],
+      [
+        72,
+        287
+      ]
+    ],
+    "goal_reached": false,
+    "collision": false,
+    "revealed_cells": 3,
+    "revealed_wrong_cells": 0,
+    "revealed_low_u_wrong_cells": 0
+  }
+]

@@ -1,0 +1,171 @@
+{
+  "status": "POST_HOC_DEVELOPMENT_ABLATION",
+  "branches": 18,
+  "cases": 6,
+  "layouts": 3,
+  "budget_complete_branches": 18,
+  "collision_branches": 0,
+  "verify_actions": 5,
+  "cases_with_initial_structural_hypotheses": 6,
+  "comparisons": {
+    "mapex": {
+      "all_executed": {
+        "n_cases": 6,
+        "n_layouts": 3,
+        "structural_mismatch_wins": 2,
+        "structural_iou_wins": 3,
+        "layout_macro_mean_delta_mismatch_m2": 0.8566666666666677,
+        "mean_delta_macro_iou": 0.004035949937830445
+      },
+      "equal_budget_only": {
+        "n_cases": 6,
+        "n_layouts": 3,
+        "structural_mismatch_wins": 2,
+        "structural_iou_wins": 3,
+        "layout_macro_mean_delta_mismatch_m2": 0.8566666666666677,
+        "mean_delta_macro_iou": 0.004035949937830445
+      }
+    },
+    "uncertainty": {
+      "all_executed": {
+        "n_cases": 6,
+        "n_layouts": 3,
+        "structural_mismatch_wins": 0,
+        "structural_iou_wins": 0,
+        "layout_macro_mean_delta_mismatch_m2": 1.6400000000000008,
+        "mean_delta_macro_iou": -0.01737639934409102
+      },
+      "equal_budget_only": {
+        "n_cases": 6,
+        "n_layouts": 3,
+        "structural_mismatch_wins": 0,
+        "structural_iou_wins": 0,
+        "layout_macro_mean_delta_mismatch_m2": 1.6400000000000008,
+        "mean_delta_macro_iou": -0.01737639934409102
+      }
+    }
+  },
+  "paired": [
+    {
+      "case": "kth_50052751__warm15",
+      "layout": "kth_50052751",
+      "baseline": "mapex",
+      "equal_budget_completed": true,
+      "delta_mismatch_m2": 7.310000000000002,
+      "delta_macro_iou": 0.004631912927487214,
+      "delta_distance_m": 0.0
+    },
+    {
+      "case": "kth_50052751__warm15",
+      "layout": "kth_50052751",
+      "baseline": "uncertainty",
+      "equal_budget_completed": true,
+      "delta_mismatch_m2": 0.0,
+      "delta_macro_iou": 0.0,
+      "delta_distance_m": 0.0
+    },
+    {
+      "case": "kth_50052751__warm5",
+      "layout": "kth_50052751",
+      "baseline": "mapex",
+      "equal_budget_completed": true,
+      "delta_mismatch_m2": -0.519999999999996,
+      "delta_macro_iou": 0.00039128672885391236,
+      "delta_distance_m": 0.0
+    },
+    {
+      "case": "kth_50052751__warm5",
+      "layout": "kth_50052751",
+      "baseline": "uncertainty",
+      "equal_budget_completed": true,
+      "delta_mismatch_m2": 4.230000000000004,
+      "delta_macro_iou": -0.05941223883783653,
+      "delta_distance_m": 0.0
+    },
+    {
+      "case": "kth_50052752__warm15",
+      "layout": "kth_50052752",
+      "baseline": "mapex",
+      "equal_budget_completed": true,
+      "delta_mismatch_m2": 0.0,
+      "delta_macro_iou": 0.0,
+      "delta_distance_m": 0.0
+    },
+    {
+      "case": "kth_50052752__warm15",
+      "layout": "kth_50052752",
+      "baseline": "uncertainty",
+      "equal_budget_completed": true,
+      "delta_mismatch_m2": 2.780000000000001,
+      "delta_macro_iou": -0.03081240244850658,
+      "delta_distance_m": 0.0
+    },
+    {
+      "case": "kth_50052752__warm5",
+      "layout": "kth_50052752",
+      "baseline": "mapex",
+      "equal_budget_completed": true,
+      "delta_mismatch_m2": -1.6500000000000004,
+      "delta_macro_iou": 0.01919249997064154,
+      "delta_distance_m": 0.0
+    },
+    {
+      "case": "kth_50052752__warm5",
+      "layout": "kth_50052752",
+      "baseline": "uncertainty",
+      "equal_budget_completed": true,
+      "delta_mismatch_m2": 2.83,
+      "delta_macro_iou": -0.014033754778203011,
+      "delta_distance_m": 0.0
+    },
+    {
+      "case": "new_room__warm15",
+      "layout": "new_room",
+      "baseline": "mapex",
+      "equal_budget_completed": true,
+      "delta_mismatch_m2": 0.0,
+      "delta_macro_iou": 0.0,
+      "delta_distance_m": 0.0
+    },
+    {
+      "case": "new_room__warm15",
+      "layout": "new_room",
+      "baseline": "uncertainty",
+      "equal_budget_completed": true,
+      "delta_mismatch_m2": 0.0,
+      "delta_macro_iou": 0.0,
+      "delta_distance_m": 0.0
+    },
+    {
+      "case": "new_room__warm5",
+      "layout": "new_room",
+      "baseline": "mapex",
+      "equal_budget_completed": true,
+      "delta_mismatch_m2": 0.0,
+      "delta_macro_iou": 0.0,
+      "delta_distance_m": 0.0
+    },
+    {
+      "case": "new_room__warm5",
+      "layout": "new_room",
+      "baseline": "uncertainty",
+      "equal_budget_completed": true,
+      "delta_mismatch_m2": 0.0,
+      "delta_macro_iou": 0.0,
+      "delta_distance_m": 0.0
+    }
+  ],
+  "limits": [
+    "Development pilot on three layouts; paired warm states are not independent environments.",
+    "No STOP algorithm or threshold is fitted or validated.",
+    "Ideal localization, static 2D geometry, first-hit noiseless sensing; no robot/Gazebo evidence.",
+    "Gate sensitivity is not a calibrated error probability or a guarantee of map correctness."
+  ],
+  "new_branches": 6,
+  "reused_baseline_branches": 12,
+  "inference": {
+    "calls": 2,
+    "cache_hits": 9,
+    "inference_s": 7.209534402005374
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "python": "3.11.16 (main, Sep  2 2026, 23:39:52) [GCC 15.3.0]",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "matplotlib": "3.11.2",
+  "pillow": "12.3.0",
+  "shapely": "2.1.2",
+  "worker": {
+    "python": "3.6.13 |Anaconda, Inc.| (default, Jun  4 2021, 14:25:59) \n[GCC 7.5.0]",
+    "torch": "1.10.2",
+    "numpy": "1.19.5",
+    "cuda_available": false
+  }
+}

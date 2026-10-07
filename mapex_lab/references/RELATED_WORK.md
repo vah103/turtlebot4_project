@@ -123,3 +123,14 @@ Khi đã xác định bottleneck:
 4. ghi phần paper chưa giải quyết;
 5. chỉ sau đó mới kết luận research gap;
 6. nếu thêm paper mới quan trọng, tạo file riêng trong `references/` thay vì nhồi toàn bộ vào file này.
+
+
+## 2026-10-07 — active-verification exploratory pilot
+
+The new pilot treats verification as a hypothesis to test, not an established research gap. MapEx global map prediction remains the backend. Closest references include:
+
+- MapEx: https://arxiv.org/abs/2409.15590 — prediction/uncertainty/visibility-based exploration.
+- Action-Aware Pro-Active Safe Exploration for Mobile Robot Mapping: https://arxiv.org/abs/2503.09515 — actionable information, motion costs and termination; cost-aware gating alone is not sufficient novelty.
+- Hypothesis Graph Refinement: https://chenpppx.github.io/Hypothesis_Graph_Refinement/ — revisable semantic hypotheses and verification/cascade correction for embodied navigation. Hypothesis verification itself is not claimed as new here.
+
+The pilot asks whether local structural consequence can improve action selection for predicted 2D map completion, including ensemble consensus errors. Current results do not establish superiority or novelty; see the branch-only [pilot report](../pilots/active_verification_2d/REPORT_VI.md).

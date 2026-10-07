@@ -411,3 +411,16 @@ Conclusion: Way1 works in New Room but does not transfer cleanly to Hospital wit
 - `scripts/evaluate_way2_adaptive_confirmation.py`
 - `scripts/sweep_way2_adaptive_candidate_count.py`
 - `scripts/sweep_way2_adaptive_rule_neighborhood.py`
+
+
+## 2026-10-07 — separate USER-authorized 2D active-verification development pilot
+
+This branch-only pilot follows the USER request to implement and test active verification without Gazebo. It does not alter Company Hub MX067, MX060 collection, historical D1 gates or deployed robot behavior.
+
+- DONE: ROS-free ideal 2D simulator, real CPU three-member LaMa inference, geometry-based verification and two baselines.
+- DONE: 18 paired branches on 3 layouts x 2 warm states, plus 6 post-hoc budget-feasibility branches. All 24 used 8 m, zero collisions.
+- LATEST RESULT: V1 structural beats uncertainty in 1/6 states on reachability mismatch; layout-macro mismatch is +7.515 m2 worse. Budget-feasible variant beats uncertainty in 0/6; mismatch remains +1.64 m2 worse. No algorithm promotion or STOP claim.
+- CHECKS: 14/14 tests; primary artifact recomputation 147/147, ablation 51/51. Self-validation only; not independent QA ACCEPT.
+- IN PROGRESS: independent scientific review remains outstanding.
+- NEXT ACTION: inspect proposal/visibility/ranking against the evaluation-only one-action oracle before considering a new confirmation cohort or STOP policy.
+- Evidence: [pilot report](pilots/active_verification_2d/REPORT_VI.md), [protocol and commands](pilots/active_verification_2d/README.md), [independent review scope](pilots/active_verification_2d/QA_REVIEW.md).
