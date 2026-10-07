@@ -1,0 +1,6 @@
+{
+  "status": "POST_HOC_EVALUATION_ONLY_ONE_ACTION_FROZEN_PREDICTION",
+  "cases": 6,
+  "cases_with_positive_direct_structural_headroom": 4,
+  "limitation": "Enumerated existing budget-feasible views, one action, no LaMa rerun. This is a candidate-set oracle diagnostic, not an online algorithm or an upper bound on full closed-loop performance."
+}

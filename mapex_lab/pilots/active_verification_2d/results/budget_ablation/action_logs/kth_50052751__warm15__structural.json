@@ -1,0 +1,1457 @@
+[
+  {
+    "action": "VERIFY",
+    "goal": [
+      74,
+      258
+    ],
+    "score": 1.1009523809523811,
+    "path_m": 4.5,
+    "hypothesis": {
+      "centre": [
+        78,
+        258
+      ],
+      "intervention": "close",
+      "orientation": "horizontal",
+      "impact_m2": 11.560000000000002,
+      "agreement": 0.9298245614035087,
+      "variance": 0.06646296381950378,
+      "patch_cells": [
+        [
+          77,
+          249
+        ],
+        [
+          77,
+          250
+        ],
+        [
+          77,
+          251
+        ],
+        [
+          77,
+          252
+        ],
+        [
+          77,
+          253
+        ],
+        [
+          77,
+          254
+        ],
+        [
+          77,
+          255
+        ],
+        [
+          77,
+          256
+        ],
+        [
+          77,
+          257
+        ],
+        [
+          77,
+          258
+        ],
+        [
+          77,
+          259
+        ],
+        [
+          77,
+          260
+        ],
+        [
+          77,
+          261
+        ],
+        [
+          77,
+          262
+        ],
+        [
+          77,
+          263
+        ],
+        [
+          77,
+          264
+        ],
+        [
+          77,
+          265
+        ],
+        [
+          77,
+          266
+        ],
+        [
+          77,
+          267
+        ],
+        [
+          78,
+          249
+        ],
+        [
+          78,
+          250
+        ],
+        [
+          78,
+          251
+        ],
+        [
+          78,
+          252
+        ],
+        [
+          78,
+          253
+        ],
+        [
+          78,
+          254
+        ],
+        [
+          78,
+          255
+        ],
+        [
+          78,
+          256
+        ],
+        [
+          78,
+          257
+        ],
+        [
+          78,
+          258
+        ],
+        [
+          78,
+          259
+        ],
+        [
+          78,
+          260
+        ],
+        [
+          78,
+          261
+        ],
+        [
+          78,
+          262
+        ],
+        [
+          78,
+          263
+        ],
+        [
+          78,
+          264
+        ],
+        [
+          78,
+          265
+        ],
+        [
+          78,
+          266
+        ],
+        [
+          78,
+          267
+        ],
+        [
+          79,
+          249
+        ],
+        [
+          79,
+          250
+        ],
+        [
+          79,
+          251
+        ],
+        [
+          79,
+          252
+        ],
+        [
+          79,
+          253
+        ],
+        [
+          79,
+          254
+        ],
+        [
+          79,
+          255
+        ],
+        [
+          79,
+          256
+        ],
+        [
+          79,
+          257
+        ],
+        [
+          79,
+          258
+        ],
+        [
+          79,
+          259
+        ],
+        [
+          79,
+          260
+        ],
+        [
+          79,
+          261
+        ],
+        [
+          79,
+          262
+        ],
+        [
+          79,
+          263
+        ],
+        [
+          79,
+          264
+        ],
+        [
+          79,
+          265
+        ],
+        [
+          79,
+          266
+        ],
+        [
+          79,
+          267
+        ]
+      ],
+      "patch_revealed_cells": 27,
+      "patch_wrong_revealed_cells": 1
+    },
+    "candidate_records": [
+      {
+        "pose": [
+          74,
+          258
+        ],
+        "hypothesis": [
+          78,
+          258
+        ],
+        "impact_m2": 11.560000000000002,
+        "observable_fraction": 0.42857142857142855,
+        "path_m": 4.5,
+        "score": 1.1009523809523811,
+        "intervention": "close",
+        "orientation": "horizontal",
+        "agreement": 0.9298245614035087,
+        "variance": 0.06646296381950378
+      },
+      {
+        "pose": [
+          74,
+          259
+        ],
+        "hypothesis": [
+          78,
+          258
+        ],
+        "impact_m2": 11.560000000000002,
+        "observable_fraction": 0.42857142857142855,
+        "path_m": 4.6000000000000005,
+        "score": 1.0770186335403726,
+        "intervention": "close",
+        "orientation": "horizontal",
+        "agreement": 0.9298245614035087,
+        "variance": 0.06646296381950378
+      },
+      {
+        "pose": [
+          50,
+          257
+        ],
+        "hypothesis": [
+          78,
+          258
+        ],
+        "impact_m2": 11.560000000000002,
+        "observable_fraction": 0.42857142857142855,
+        "path_m": 6.2,
+        "score": 0.7990783410138249,
+        "intervention": "close",
+        "orientation": "horizontal",
+        "agreement": 0.9298245614035087,
+        "variance": 0.06646296381950378
+      },
+      {
+        "pose": [
+          49,
+          257
+        ],
+        "hypothesis": [
+          78,
+          258
+        ],
+        "impact_m2": 11.560000000000002,
+        "observable_fraction": 0.42857142857142855,
+        "path_m": 6.300000000000001,
+        "score": 0.7863945578231292,
+        "intervention": "close",
+        "orientation": "horizontal",
+        "agreement": 0.9298245614035087,
+        "variance": 0.06646296381950378
+      },
+      {
+        "pose": [
+          73,
+          287
+        ],
+        "hypothesis": [
+          78,
+          288
+        ],
+        "impact_m2": 10.680000000000001,
+        "observable_fraction": 0.42857142857142855,
+        "path_m": 7.300000000000001,
+        "score": 0.6270058708414873,
+        "intervention": "close",
+        "orientation": "horizontal",
+        "agreement": 0.9298245614035088,
+        "variance": 0.05745973065495491
+      },
+      {
+        "pose": [
+          73,
+          288
+        ],
+        "hypothesis": [
+          78,
+          288
+        ],
+        "impact_m2": 10.680000000000001,
+        "observable_fraction": 0.42857142857142855,
+        "path_m": 7.4,
+        "score": 0.6185328185328185,
+        "intervention": "close",
+        "orientation": "horizontal",
+        "agreement": 0.9298245614035088,
+        "variance": 0.05745973065495491
+      },
+      {
+        "pose": [
+          73,
+          288
+        ],
+        "hypothesis": [
+          51,
+          345
+        ],
+        "impact_m2": 13.520000000000003,
+        "observable_fraction": 0.14285714285714285,
+        "path_m": 7.4,
+        "score": 0.261003861003861,
+        "intervention": "close",
+        "orientation": "horizontal",
+        "agreement": 0.847953216374269,
+        "variance": 0.12993983924388885
+      }
+    ],
+    "hypotheses": 6,
+    "observation_poses": 24,
+    "budget_feasible_views": 12,
+    "raw_frontiers": 9,
+    "variant": "BUDGET_FEASIBILITY_ONLY",
+    "geometry_proposals": 49,
+    "consequence_proposals": 6,
+    "case": "kth_50052751__warm15",
+    "method": "structural",
+    "decision": 0,
+    "start_pose": [
+      71,
+      216
+    ],
+    "distance_before_m": 0.0,
+    "policy_compute_s": 0.6648597339953994,
+    "observed_hash": "9e9ceb7c6fe4a478adba2496862d4a7cdcd2baa513ee3f276951714e586af176",
+    "distance_after_m": 4.5,
+    "path_taken": [
+      [
+        71,
+        216
+      ],
+      [
+        71,
+        217
+      ],
+      [
+        71,
+        218
+      ],
+      [
+        71,
+        219
+      ],
+      [
+        71,
+        220
+      ],
+      [
+        71,
+        221
+      ],
+      [
+        71,
+        222
+      ],
+      [
+        71,
+        223
+      ],
+      [
+        71,
+        224
+      ],
+      [
+        71,
+        225
+      ],
+      [
+        71,
+        226
+      ],
+      [
+        71,
+        227
+      ],
+      [
+        71,
+        228
+      ],
+      [
+        71,
+        229
+      ],
+      [
+        71,
+        230
+      ],
+      [
+        71,
+        231
+      ],
+      [
+        71,
+        232
+      ],
+      [
+        71,
+        233
+      ],
+      [
+        71,
+        234
+      ],
+      [
+        71,
+        235
+      ],
+      [
+        71,
+        236
+      ],
+      [
+        71,
+        237
+      ],
+      [
+        71,
+        238
+      ],
+      [
+        71,
+        239
+      ],
+      [
+        71,
+        240
+      ],
+      [
+        71,
+        241
+      ],
+      [
+        71,
+        242
+      ],
+      [
+        71,
+        243
+      ],
+      [
+        71,
+        244
+      ],
+      [
+        71,
+        245
+      ],
+      [
+        71,
+        246
+      ],
+      [
+        71,
+        247
+      ],
+      [
+        71,
+        248
+      ],
+      [
+        71,
+        249
+      ],
+      [
+        71,
+        250
+      ],
+      [
+        71,
+        251
+      ],
+      [
+        71,
+        252
+      ],
+      [
+        71,
+        253
+      ],
+      [
+        71,
+        254
+      ],
+      [
+        71,
+        255
+      ],
+      [
+        71,
+        256
+      ],
+      [
+        72,
+        256
+      ],
+      [
+        73,
+        256
+      ],
+      [
+        73,
+        257
+      ],
+      [
+        73,
+        258
+      ],
+      [
+        74,
+        258
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 2432,
+    "revealed_wrong_cells": 113,
+    "revealed_low_u_wrong_cells": 70
+  },
+  {
+    "action": "VERIFY",
+    "goal": [
+      73,
+      258
+    ],
+    "score": 17.571428571428573,
+    "path_m": 0.1,
+    "hypothesis": {
+      "centre": [
+        51,
+        315
+      ],
+      "intervention": "close",
+      "orientation": "horizontal",
+      "impact_m2": 12.300000000000002,
+      "agreement": 0.9151515151515149,
+      "variance": 0.07229243218898773,
+      "patch_cells": [
+        [
+          50,
+          306
+        ],
+        [
+          50,
+          307
+        ],
+        [
+          50,
+          308
+        ],
+        [
+          50,
+          309
+        ],
+        [
+          50,
+          310
+        ],
+        [
+          50,
+          311
+        ],
+        [
+          50,
+          312
+        ],
+        [
+          50,
+          313
+        ],
+        [
+          50,
+          314
+        ],
+        [
+          50,
+          315
+        ],
+        [
+          50,
+          316
+        ],
+        [
+          50,
+          317
+        ],
+        [
+          50,
+          318
+        ],
+        [
+          50,
+          319
+        ],
+        [
+          50,
+          320
+        ],
+        [
+          50,
+          321
+        ],
+        [
+          50,
+          322
+        ],
+        [
+          50,
+          323
+        ],
+        [
+          50,
+          324
+        ],
+        [
+          51,
+          306
+        ],
+        [
+          51,
+          307
+        ],
+        [
+          51,
+          308
+        ],
+        [
+          51,
+          309
+        ],
+        [
+          51,
+          310
+        ],
+        [
+          51,
+          311
+        ],
+        [
+          51,
+          312
+        ],
+        [
+          51,
+          313
+        ],
+        [
+          51,
+          314
+        ],
+        [
+          51,
+          315
+        ],
+        [
+          51,
+          316
+        ],
+        [
+          51,
+          317
+        ],
+        [
+          51,
+          318
+        ],
+        [
+          51,
+          319
+        ],
+        [
+          51,
+          320
+        ],
+        [
+          51,
+          321
+        ],
+        [
+          51,
+          322
+        ],
+        [
+          51,
+          323
+        ],
+        [
+          51,
+          324
+        ],
+        [
+          52,
+          306
+        ],
+        [
+          52,
+          307
+        ],
+        [
+          52,
+          308
+        ],
+        [
+          52,
+          309
+        ],
+        [
+          52,
+          310
+        ],
+        [
+          52,
+          311
+        ],
+        [
+          52,
+          312
+        ],
+        [
+          52,
+          313
+        ],
+        [
+          52,
+          314
+        ],
+        [
+          52,
+          315
+        ],
+        [
+          52,
+          316
+        ],
+        [
+          52,
+          317
+        ],
+        [
+          52,
+          320
+        ],
+        [
+          52,
+          321
+        ],
+        [
+          52,
+          322
+        ],
+        [
+          52,
+          323
+        ],
+        [
+          52,
+          324
+        ]
+      ],
+      "patch_revealed_cells": 0,
+      "patch_wrong_revealed_cells": 0
+    },
+    "candidate_records": [
+      {
+        "pose": [
+          73,
+          258
+        ],
+        "hypothesis": [
+          51,
+          315
+        ],
+        "impact_m2": 12.300000000000002,
+        "observable_fraction": 0.14285714285714285,
+        "path_m": 0.1,
+        "score": 17.571428571428573,
+        "intervention": "close",
+        "orientation": "horizontal",
+        "agreement": 0.9151515151515149,
+        "variance": 0.07229243218898773
+      },
+      {
+        "pose": [
+          73,
+          287
+        ],
+        "hypothesis": [
+          78,
+          288
+        ],
+        "impact_m2": 12.350000000000003,
+        "observable_fraction": 0.42857142857142855,
+        "path_m": 3.4000000000000004,
+        "score": 1.5567226890756303,
+        "intervention": "close",
+        "orientation": "horizontal",
+        "agreement": 0.9005847953216374,
+        "variance": 0.08397641032934189
+      },
+      {
+        "pose": [
+          73,
+          288
+        ],
+        "hypothesis": [
+          78,
+          288
+        ],
+        "impact_m2": 12.350000000000003,
+        "observable_fraction": 0.42857142857142855,
+        "path_m": 3.5,
+        "score": 1.5122448979591838,
+        "intervention": "close",
+        "orientation": "horizontal",
+        "agreement": 0.9005847953216374,
+        "variance": 0.08397641032934189
+      },
+      {
+        "pose": [
+          73,
+          288
+        ],
+        "hypothesis": [
+          51,
+          345
+        ],
+        "impact_m2": 13.450000000000003,
+        "observable_fraction": 0.14285714285714285,
+        "path_m": 3.5,
+        "score": 0.5489795918367347,
+        "intervention": "close",
+        "orientation": "horizontal",
+        "agreement": 0.8713450292397661,
+        "variance": 0.09703268855810165
+      }
+    ],
+    "hypotheses": 12,
+    "observation_poses": 24,
+    "budget_feasible_views": 5,
+    "raw_frontiers": 13,
+    "variant": "BUDGET_FEASIBILITY_ONLY",
+    "geometry_proposals": 36,
+    "consequence_proposals": 12,
+    "case": "kth_50052751__warm15",
+    "method": "structural",
+    "decision": 1,
+    "start_pose": [
+      74,
+      258
+    ],
+    "distance_before_m": 4.5,
+    "policy_compute_s": 0.5486097320026602,
+    "observed_hash": "f4d917e72e8e7e2d613bd08aca1697f212b11265c7c99d945175bfeba83e41da",
+    "distance_after_m": 4.6,
+    "path_taken": [
+      [
+        74,
+        258
+      ],
+      [
+        73,
+        258
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 11,
+    "revealed_wrong_cells": 0,
+    "revealed_low_u_wrong_cells": 0
+  },
+  {
+    "action": "VERIFY",
+    "goal": [
+      73,
+      287
+    ],
+    "score": 1.603896103896104,
+    "path_m": 3.3000000000000003,
+    "hypothesis": {
+      "centre": [
+        78,
+        288
+      ],
+      "intervention": "close",
+      "orientation": "horizontal",
+      "impact_m2": 12.350000000000003,
+      "agreement": 0.9005847953216374,
+      "variance": 0.08421538025140762,
+      "patch_cells": [
+        [
+          77,
+          279
+        ],
+        [
+          77,
+          280
+        ],
+        [
+          77,
+          281
+        ],
+        [
+          77,
+          282
+        ],
+        [
+          77,
+          283
+        ],
+        [
+          77,
+          284
+        ],
+        [
+          77,
+          285
+        ],
+        [
+          77,
+          286
+        ],
+        [
+          77,
+          287
+        ],
+        [
+          77,
+          288
+        ],
+        [
+          77,
+          289
+        ],
+        [
+          77,
+          290
+        ],
+        [
+          77,
+          291
+        ],
+        [
+          77,
+          292
+        ],
+        [
+          77,
+          293
+        ],
+        [
+          77,
+          294
+        ],
+        [
+          77,
+          295
+        ],
+        [
+          77,
+          296
+        ],
+        [
+          77,
+          297
+        ],
+        [
+          78,
+          279
+        ],
+        [
+          78,
+          280
+        ],
+        [
+          78,
+          281
+        ],
+        [
+          78,
+          282
+        ],
+        [
+          78,
+          283
+        ],
+        [
+          78,
+          284
+        ],
+        [
+          78,
+          285
+        ],
+        [
+          78,
+          286
+        ],
+        [
+          78,
+          287
+        ],
+        [
+          78,
+          288
+        ],
+        [
+          78,
+          289
+        ],
+        [
+          78,
+          290
+        ],
+        [
+          78,
+          291
+        ],
+        [
+          78,
+          292
+        ],
+        [
+          78,
+          293
+        ],
+        [
+          78,
+          294
+        ],
+        [
+          78,
+          295
+        ],
+        [
+          78,
+          296
+        ],
+        [
+          78,
+          297
+        ],
+        [
+          79,
+          279
+        ],
+        [
+          79,
+          280
+        ],
+        [
+          79,
+          281
+        ],
+        [
+          79,
+          282
+        ],
+        [
+          79,
+          283
+        ],
+        [
+          79,
+          284
+        ],
+        [
+          79,
+          285
+        ],
+        [
+          79,
+          286
+        ],
+        [
+          79,
+          287
+        ],
+        [
+          79,
+          288
+        ],
+        [
+          79,
+          289
+        ],
+        [
+          79,
+          290
+        ],
+        [
+          79,
+          291
+        ],
+        [
+          79,
+          292
+        ],
+        [
+          79,
+          293
+        ],
+        [
+          79,
+          294
+        ],
+        [
+          79,
+          295
+        ],
+        [
+          79,
+          296
+        ],
+        [
+          79,
+          297
+        ]
+      ],
+      "patch_revealed_cells": 27,
+      "patch_wrong_revealed_cells": 3
+    },
+    "candidate_records": [
+      {
+        "pose": [
+          73,
+          287
+        ],
+        "hypothesis": [
+          78,
+          288
+        ],
+        "impact_m2": 12.350000000000003,
+        "observable_fraction": 0.42857142857142855,
+        "path_m": 3.3000000000000003,
+        "score": 1.603896103896104,
+        "intervention": "close",
+        "orientation": "horizontal",
+        "agreement": 0.9005847953216374,
+        "variance": 0.08421538025140762
+      },
+      {
+        "pose": [
+          73,
+          288
+        ],
+        "hypothesis": [
+          78,
+          288
+        ],
+        "impact_m2": 12.350000000000003,
+        "observable_fraction": 0.42857142857142855,
+        "path_m": 3.4000000000000004,
+        "score": 1.5567226890756303,
+        "intervention": "close",
+        "orientation": "horizontal",
+        "agreement": 0.9005847953216374,
+        "variance": 0.08421538025140762
+      },
+      {
+        "pose": [
+          73,
+          288
+        ],
+        "hypothesis": [
+          51,
+          345
+        ],
+        "impact_m2": 13.460000000000003,
+        "observable_fraction": 0.14285714285714285,
+        "path_m": 3.4000000000000004,
+        "score": 0.565546218487395,
+        "intervention": "close",
+        "orientation": "horizontal",
+        "agreement": 0.8713450292397661,
+        "variance": 0.09784165024757385
+      }
+    ],
+    "hypotheses": 12,
+    "observation_poses": 24,
+    "budget_feasible_views": 5,
+    "raw_frontiers": 13,
+    "variant": "BUDGET_FEASIBILITY_ONLY",
+    "geometry_proposals": 36,
+    "consequence_proposals": 12,
+    "case": "kth_50052751__warm15",
+    "method": "structural",
+    "decision": 2,
+    "start_pose": [
+      73,
+      258
+    ],
+    "distance_before_m": 4.6,
+    "policy_compute_s": 0.5596267720029573,
+    "observed_hash": "f0af8eadfb9c5548fc6d6330adfe2d52642f26f33ec8235d259b2d43df4b521d",
+    "distance_after_m": 7.899999999999988,
+    "path_taken": [
+      [
+        73,
+        258
+      ],
+      [
+        72,
+        258
+      ],
+      [
+        71,
+        258
+      ],
+      [
+        71,
+        259
+      ],
+      [
+        71,
+        260
+      ],
+      [
+        71,
+        261
+      ],
+      [
+        71,
+        262
+      ],
+      [
+        71,
+        263
+      ],
+      [
+        71,
+        264
+      ],
+      [
+        71,
+        265
+      ],
+      [
+        71,
+        266
+      ],
+      [
+        71,
+        267
+      ],
+      [
+        71,
+        268
+      ],
+      [
+        71,
+        269
+      ],
+      [
+        71,
+        270
+      ],
+      [
+        71,
+        271
+      ],
+      [
+        71,
+        272
+      ],
+      [
+        71,
+        273
+      ],
+      [
+        71,
+        274
+      ],
+      [
+        71,
+        275
+      ],
+      [
+        71,
+        276
+      ],
+      [
+        71,
+        277
+      ],
+      [
+        71,
+        278
+      ],
+      [
+        71,
+        279
+      ],
+      [
+        71,
+        280
+      ],
+      [
+        71,
+        281
+      ],
+      [
+        71,
+        282
+      ],
+      [
+        71,
+        283
+      ],
+      [
+        71,
+        284
+      ],
+      [
+        71,
+        285
+      ],
+      [
+        71,
+        286
+      ],
+      [
+        72,
+        286
+      ],
+      [
+        73,
+        286
+      ],
+      [
+        73,
+        287
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 2533,
+    "revealed_wrong_cells": 202,
+    "revealed_low_u_wrong_cells": 87
+  },
+  {
+    "action": "EXPLORE_BUDGET_FALLBACK",
+    "goal": [
+      52,
+      315
+    ],
+    "score": 13.292650495256696,
+    "path_m": 4.9,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 8,
+    "observation_poses": 24,
+    "raw_frontiers": 16,
+    "reachable_frontiers": 16,
+    "near_frontier_fallback": false,
+    "budget_feasible_views": 1,
+    "variant": "BUDGET_FEASIBILITY_ONLY",
+    "geometry_proposals": 24,
+    "consequence_proposals": 8,
+    "case": "kth_50052751__warm15",
+    "method": "structural",
+    "decision": 3,
+    "start_pose": [
+      73,
+      287
+    ],
+    "distance_before_m": 7.899999999999988,
+    "policy_compute_s": 1.1833935280010337,
+    "observed_hash": "9f43082d72d0ff28ea3d70c160dfe9b6fe6ca340f61a3682d51afe242f39681b",
+    "distance_after_m": 7.999999999999988,
+    "path_taken": [
+      [
+        73,
+        287
+      ],
+      [
+        72,
+        287
+      ]
+    ],
+    "goal_reached": false,
+    "collision": false,
+    "revealed_cells": 3,
+    "revealed_wrong_cells": 0,
+    "revealed_low_u_wrong_cells": 0
+  }
+]

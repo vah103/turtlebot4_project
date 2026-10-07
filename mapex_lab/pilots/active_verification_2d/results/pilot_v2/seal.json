@@ -1,0 +1,158 @@
+{
+  "status": "SEALED_BEFORE_CONFIRMATION_INFERENCE",
+  "config": {
+    "identity": "active_verification_2d_route_risk_v2",
+    "status": "FROZEN_DEVELOPMENT_PLUS_UNSEEN_POLICY_LAYOUT_CHECK",
+    "layouts": [
+      "new_room",
+      "kth_50052751",
+      "kth_50052752"
+    ],
+    "warm_start_distance_m": [
+      5.0,
+      15.0
+    ],
+    "warm_start_policy": "nearest_frontier",
+    "branch_budget_m": 8.0,
+    "methods": [
+      "mapex",
+      "uncertainty",
+      "structural"
+    ],
+    "resolution_m": 0.1,
+    "robot_radius_m": 0.15,
+    "sensor_range_m": 20.0,
+    "sensor_rays": 2500,
+    "sense_every_motion_steps": 3,
+    "prediction_visibility_rays": 250,
+    "frontier_min_size_strict": 10,
+    "gate_span_m": 1.8,
+    "gate_depth_m": 0.3,
+    "open_side_offset_m": 0.5,
+    "gate_sampling_stride_cells": 3,
+    "gate_nms_m": 0.6,
+    "min_unknown_gate_cells": 6,
+    "max_geometry_proposals": 80,
+    "min_structural_impact_m2": 1.0,
+    "max_hypotheses": 20,
+    "view_band_m": 1.0,
+    "views_per_query": 2,
+    "uniform_extra_views": 8,
+    "max_observation_poses": 24,
+    "probe_target_samples": 7,
+    "max_policy_decisions": 32,
+    "low_variance_diagnostic_threshold": 0.01,
+    "random_seed": 6100701,
+    "primary_endpoint": "reachable_mismatch_m2",
+    "secondary_endpoints": [
+      "macro_iou",
+      "missed_reachable_free_m2",
+      "reachable_retention",
+      "observed_free_coverage"
+    ],
+    "interpretation": "Six warm states from three layouts, not six independent environments. Geometry and parameters are development choices, not fitted or validated STOP thresholds. No operational STOP rule is implemented.",
+    "development_layouts": [
+      "new_room",
+      "kth_50052751",
+      "kth_50052752"
+    ],
+    "confirmation_layouts": [
+      "kth_50015847",
+      "kth_50052753",
+      "kth_50052754"
+    ],
+    "confirmation_selection": "Fixed before inference/results: first unused numeric test ID plus next two IDs after V1 50052751/752. No selection by model error or policy outcome.",
+    "route_methods": [
+      "route_uncertainty",
+      "route_error",
+      "structural_v2"
+    ],
+    "confirmation_methods": [
+      "mapex",
+      "uncertainty",
+      "route_uncertainty",
+      "route_error",
+      "structural_v2"
+    ],
+    "route_scan_rays": 360,
+    "route_scan_step_cells": 0.5,
+    "route_scan_stride_cells": 10,
+    "preferred_route_length_m": 1.0,
+    "minimum_route_score": 1e-12,
+    "risk_l2": 0.01,
+    "risk_max_cells_per_state": 20000,
+    "risk_sampling_seed": 6100702,
+    "structural_term_weight": 1.0,
+    "primary_structural_comparator": "route_error",
+    "success_description": "Report paired endpoints on all states; structural benefit requires improvement over route_error on new layouts, not only over pointwise MapEx. No reranking of endpoints, model/threshold retuning or confirmation-map removal after observing results.",
+    "limits": [
+      "New layouts are held out from this error estimator and policy development, not a verified new-building or LaMa-training holdout.",
+      "Risk is a cell error estimate from six correlated development states; its patch mean is only a heuristic weight, not P(full hypothesis true).",
+      "First-hit hard-map route scans and target-directed patch rays approximate visibility. The pathwise control is PIPE-inspired, not an exact PIPE implementation.",
+      "Counterfactual correction holds unseen predictions fixed; closed-loop LaMa changes may differ.",
+      "Three new layouts with two related states each are preliminary confirmation, not a statistical generalization claim."
+    ]
+  },
+  "config_v1_sha256": "71d56d3ffaf48006f8910eb678bd556a92aa20c1780986bbd9075f20971be39c",
+  "config_v2_sha256": "8834d3d6795de0ae71ada2a081885bd287008011146baa4e042fcc9ca56075b9",
+  "execution_code_sha256": {
+    "core.py": "0cf86dab2d6782ba568b47ea69277adc7080610167a7959c9d24e6723c7f2a68",
+    "policy.py": "288ad0e29e8a0d9995bb6b8178ae744e72ab022030d30f994c1dc5a3a18b9590",
+    "predictor.py": "d1cb8f0e90e8f8cc4d192b4cf8efcb539b4cc38add090aa50a565c7cabc3fbdc",
+    "run.py": "51a84740d9602c37c7d796a8d3d8e283c380ca7e570d00d6c4028af360e046d6",
+    "policy_v2.py": "7533235b9a36dc307a110dd20638cac8048329c7dbd193689691614e2beb653d",
+    "risk_model.py": "6166c9d8631439362040f7f39e719cf9d2566e8426f02d0724a20235da1622f0",
+    "run_v2.py": "8071e4b11b1858d7f110654f0caa65c21230ba7d7b8cfb5ba6c11d0d5d3187a7",
+    "calibrate_v2.py": "9c5fffcda6bec1b45b284f12c9d054071aa5be12dd6bdda40511d955cabc24e7"
+  },
+  "asset_sha256": {
+    "new_room": "c6c494b2869a00a47f83baeec2c6181a871b53fc564ad5ba626798da620ade4f",
+    "kth_50052751": "1b393ac35f8945d1852efccc49040d6db27ec73ebcbe966be00cd14b9a56f4ea",
+    "kth_50052752": "a49b0f23a6e8a121de65cccde1b2ac20d2a3c8459166885e8c6c182560fabe53",
+    "kth_50015847": "288cffd35937e80b9ceb3ad6989c6c9b8c357529c7b6410ef9ff6f75b78267b3",
+    "kth_50052753": "ad6ef0e656db4b6fe4517d8232711a0323a84d5b60491b3ce8325fa81bbee286",
+    "kth_50052754": "f3e891f8aee0e3bf637c6626f5218b06728d45d49f96277ee70943f6e68c0577"
+  },
+  "risk_model_sha256": "d27e7accedc13b8570499b503a5728492972c6c9237bc113262091f78e1f2880",
+  "parent_provenance_sha256": "cfa5fbda73b0a73fbdc0035a12a4f70a9c34312749f93c938db1d4a081c0a30c",
+  "parent_branch_csv_sha256": "e58c626eda5edea436a6dae38086198fe663446b0da95254decd6f8bfe76cca6",
+  "prediction": {
+    "type": "REAL_LAMA_ENSEMBLE_NO_SYNTHETIC_PREDICTION",
+    "device": "cpu",
+    "transform": "default_map_eval",
+    "worker_sha256": "f401211e1698401ec2b58784a394646ab7b58fc2166d52335c0c77f03cdd8c3e",
+    "bridge_sha256": "8a279d02706b59faf015e452b0dd2654ef81421c9abdb29c9b04da683cc18579",
+    "upstream_preprocessing_sha256": "0e93d4b6628b327d7b4601efeb391c29669c46154282aed259396e558ceb01e2",
+    "model_checkpoints": [
+      {
+        "path": "/home/dell/MapEx/pretrained_models/weights/lama_ensemble/train_1/models/best.ckpt",
+        "sha256": "b37bfef69138806708d6e087b8db89836021f06db987cb3ef3db21fbf28422ca"
+      },
+      {
+        "path": "/home/dell/MapEx/pretrained_models/weights/lama_ensemble/train_2/models/best.ckpt",
+        "sha256": "7880d164ccd88da58ddb0e6875f358bea02a232c452eff86b5e226957a489c26"
+      },
+      {
+        "path": "/home/dell/MapEx/pretrained_models/weights/lama_ensemble/train_3/models/best.ckpt",
+        "sha256": "fcb43d1102d48ab6b14f5bfded859077d6da0c7efbfbda10d4acbb754c3d3bc1"
+      }
+    ],
+    "model_configs": [
+      {
+        "path": "/home/dell/MapEx/pretrained_models/weights/lama_ensemble/train_1/config.yaml",
+        "sha256": "58743088778222c4a71c1038bace0ab6a8ebad5494c6f6abff553c15003bad48"
+      },
+      {
+        "path": "/home/dell/MapEx/pretrained_models/weights/lama_ensemble/train_2/config.yaml",
+        "sha256": "23e4b6c3850a8bef02daf58ae630b96693d44b97488adef050261d308b44ceb3"
+      },
+      {
+        "path": "/home/dell/MapEx/pretrained_models/weights/lama_ensemble/train_3/config.yaml",
+        "sha256": "1dc07c6b4a244a335aa0a3499fce3b6178140cea16ee2b9cc5d5e497cfa73810"
+      }
+    ]
+  },
+  "mapex_numerics_sha256": "034c033d0a5d3b243b3cff200a3f9730f9dc4e056f475047d72fb3c538f79863",
+  "python": "3.11.16",
+  "experiment_identity": "3de5716084bd572f7b465a211dec5f918f09129e220457c186b572a0c073c15b"
+}

@@ -1,0 +1,6 @@
+{
+  "status": "DIAGNOSTIC_ONLY_NOT_FROZEN_BENCHMARK",
+  "rows": 6,
+  "interpretation": "Recorded SLAM occupancy and structural solids differ, especially occupied surfaces. Do not splice these observations into a perfect-sensing physical world without explicitly modelling disagreement. This does not prove a coordinate-frame bug, does not calibrate or replace frozen metrics, and does not change accepted historical results.",
+  "pilot_choice": "Generate shared warm states by ideal sensor rollout on static 2D assets; retain historical data unmodified."
+}

@@ -1,0 +1,1475 @@
+[
+  {
+    "action": "VERIFY",
+    "goal": [
+      70,
+      87
+    ],
+    "score": 2.654125365306042,
+    "path_m": 5.800000000000001,
+    "hypothesis": {
+      "centre": [
+        111,
+        60
+      ],
+      "intervention": "open",
+      "orientation": "vertical",
+      "impact_m2": 7.3900000000000015,
+      "agreement": 0.6783625730994152,
+      "variance": 0.30987805128097534,
+      "patch_cells": [
+        [
+          102,
+          59
+        ],
+        [
+          102,
+          60
+        ],
+        [
+          102,
+          61
+        ],
+        [
+          103,
+          59
+        ],
+        [
+          103,
+          60
+        ],
+        [
+          103,
+          61
+        ],
+        [
+          104,
+          59
+        ],
+        [
+          104,
+          60
+        ],
+        [
+          104,
+          61
+        ],
+        [
+          105,
+          59
+        ],
+        [
+          105,
+          60
+        ],
+        [
+          105,
+          61
+        ],
+        [
+          106,
+          59
+        ],
+        [
+          106,
+          60
+        ],
+        [
+          106,
+          61
+        ],
+        [
+          107,
+          59
+        ],
+        [
+          107,
+          60
+        ],
+        [
+          107,
+          61
+        ],
+        [
+          108,
+          59
+        ],
+        [
+          108,
+          60
+        ],
+        [
+          108,
+          61
+        ],
+        [
+          109,
+          59
+        ],
+        [
+          109,
+          60
+        ],
+        [
+          109,
+          61
+        ],
+        [
+          110,
+          59
+        ],
+        [
+          110,
+          60
+        ],
+        [
+          110,
+          61
+        ],
+        [
+          111,
+          59
+        ],
+        [
+          111,
+          60
+        ],
+        [
+          111,
+          61
+        ],
+        [
+          112,
+          59
+        ],
+        [
+          112,
+          60
+        ],
+        [
+          112,
+          61
+        ],
+        [
+          113,
+          59
+        ],
+        [
+          113,
+          60
+        ],
+        [
+          113,
+          61
+        ],
+        [
+          114,
+          59
+        ],
+        [
+          114,
+          60
+        ],
+        [
+          114,
+          61
+        ],
+        [
+          115,
+          59
+        ],
+        [
+          115,
+          60
+        ],
+        [
+          115,
+          61
+        ],
+        [
+          116,
+          59
+        ],
+        [
+          116,
+          60
+        ],
+        [
+          116,
+          61
+        ],
+        [
+          117,
+          59
+        ],
+        [
+          117,
+          60
+        ],
+        [
+          117,
+          61
+        ],
+        [
+          118,
+          59
+        ],
+        [
+          118,
+          60
+        ],
+        [
+          118,
+          61
+        ],
+        [
+          119,
+          59
+        ],
+        [
+          119,
+          60
+        ],
+        [
+          119,
+          61
+        ],
+        [
+          120,
+          59
+        ],
+        [
+          120,
+          60
+        ],
+        [
+          120,
+          61
+        ]
+      ],
+      "error_weight": 0.34095656940404995,
+      "predicted_patch_revealed_cells": 27,
+      "counterfactual_correction_m2": 6.9300000000000015,
+      "patch_revealed_cells": 12,
+      "patch_wrong_revealed_cells": 5
+    },
+    "selected_route": {
+      "pose": [
+        70,
+        87
+      ],
+      "original_target": [
+        70,
+        87
+      ],
+      "path_m": 5.800000000000001,
+      "score": 2.654125365306042,
+      "visible_unknown_cells": 9494,
+      "route_uncertainty_m2": 2.4733994007110596,
+      "estimated_wrong_area_m2": 13.031098092804978,
+      "weighted_structural_correction_m2": 2.3628290259700666,
+      "hypothetical_correction": {
+        "error_weight": 0.34095656940404995,
+        "predicted_patch_revealed_cells": 27,
+        "counterfactual_correction_m2": 6.9300000000000015
+      },
+      "hypothesis_centre": [
+        111,
+        60
+      ]
+    },
+    "candidate_records": [
+      {
+        "pose": [
+          70,
+          87
+        ],
+        "original_target": [
+          70,
+          87
+        ],
+        "path_m": 5.800000000000001,
+        "score": 2.654125365306042,
+        "visible_unknown_cells": 9494,
+        "route_uncertainty_m2": 2.4733994007110596,
+        "estimated_wrong_area_m2": 13.031098092804978,
+        "weighted_structural_correction_m2": 2.3628290259700666,
+        "hypothetical_correction": {
+          "error_weight": 0.34095656940404995,
+          "predicted_patch_revealed_cells": 27,
+          "counterfactual_correction_m2": 6.9300000000000015
+        },
+        "hypothesis_centre": [
+          111,
+          60
+        ]
+      },
+      {
+        "pose": [
+          64,
+          115
+        ],
+        "original_target": [
+          64,
+          128
+        ],
+        "path_m": 8.0,
+        "score": 2.1494845427133815,
+        "visible_unknown_cells": 11962,
+        "route_uncertainty_m2": 3.583868980407715,
+        "estimated_wrong_area_m2": 17.195876341707052,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          65,
+          114
+        ],
+        "original_target": [
+          65,
+          128
+        ],
+        "path_m": 8.0,
+        "score": 2.091577736727532,
+        "visible_unknown_cells": 11709,
+        "route_uncertainty_m2": 3.3976268768310547,
+        "estimated_wrong_area_m2": 16.732621893820255,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          71,
+          108
+        ],
+        "original_target": [
+          71,
+          183
+        ],
+        "path_m": 8.0,
+        "score": 1.941910445093943,
+        "visible_unknown_cells": 10982,
+        "route_uncertainty_m2": 3.0931689739227295,
+        "estimated_wrong_area_m2": 15.535283560751544,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          87,
+          42
+        ],
+        "original_target": [
+          87,
+          42
+        ],
+        "path_m": 3.6,
+        "score": 1.8950245013861065,
+        "visible_unknown_cells": 5181,
+        "route_uncertainty_m2": 1.1242008209228516,
+        "estimated_wrong_area_m2": 6.822088204989983,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          70,
+          38
+        ],
+        "original_target": [
+          70,
+          38
+        ],
+        "path_m": 2.3000000000000003,
+        "score": 1.8782649339259778,
+        "visible_unknown_cells": 3329,
+        "route_uncertainty_m2": 0.7426300048828125,
+        "estimated_wrong_area_m2": 4.32000934802975,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          86,
+          81
+        ],
+        "original_target": [
+          86,
+          81
+        ],
+        "path_m": 6.800000000000001,
+        "score": 1.7744769984768607,
+        "visible_unknown_cells": 7102,
+        "route_uncertainty_m2": 1.7598031759262085,
+        "estimated_wrong_area_m2": 9.557003238828846,
+        "weighted_structural_correction_m2": 2.509440350813808,
+        "hypothetical_correction": {
+          "error_weight": 0.34095656940404995,
+          "predicted_patch_revealed_cells": 56,
+          "counterfactual_correction_m2": 7.360000000000001
+        },
+        "hypothesis_centre": [
+          111,
+          60
+        ]
+      },
+      {
+        "pose": [
+          87,
+          59
+        ],
+        "original_target": [
+          87,
+          59
+        ],
+        "path_m": 4.7,
+        "score": 1.671405235759117,
+        "visible_unknown_cells": 5913,
+        "route_uncertainty_m2": 1.3817874193191528,
+        "estimated_wrong_area_m2": 7.85560460806785,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          87,
+          60
+        ],
+        "original_target": [
+          87,
+          60
+        ],
+        "path_m": 4.800000000000001,
+        "score": 1.6487219588760784,
+        "visible_unknown_cells": 5948,
+        "route_uncertainty_m2": 1.4109652042388916,
+        "estimated_wrong_area_m2": 7.913865402605178,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          97,
+          78
+        ],
+        "original_target": [
+          97,
+          78
+        ],
+        "path_m": 7.6000000000000005,
+        "score": 1.623390273721697,
+        "visible_unknown_cells": 7265,
+        "route_uncertainty_m2": 1.8149616718292236,
+        "estimated_wrong_area_m2": 9.818097032388968,
+        "weighted_structural_correction_m2": 2.51966904789593,
+        "hypothetical_correction": {
+          "error_weight": 0.34095656940404995,
+          "predicted_patch_revealed_cells": 57,
+          "counterfactual_correction_m2": 7.3900000000000015
+        },
+        "hypothesis_centre": [
+          111,
+          60
+        ]
+      },
+      {
+        "pose": [
+          97,
+          79
+        ],
+        "original_target": [
+          97,
+          79
+        ],
+        "path_m": 7.7,
+        "score": 1.6027124545108602,
+        "visible_unknown_cells": 7266,
+        "route_uncertainty_m2": 1.8177618980407715,
+        "estimated_wrong_area_m2": 9.821216851837695,
+        "weighted_structural_correction_m2": 2.51966904789593,
+        "hypothetical_correction": {
+          "error_weight": 0.34095656940404995,
+          "predicted_patch_revealed_cells": 57,
+          "counterfactual_correction_m2": 7.3900000000000015
+        },
+        "hypothesis_centre": [
+          111,
+          60
+        ]
+      },
+      {
+        "pose": [
+          98,
+          79
+        ],
+        "original_target": [
+          98,
+          79
+        ],
+        "path_m": 7.800000000000001,
+        "score": 1.5824504537212423,
+        "visible_unknown_cells": 7266,
+        "route_uncertainty_m2": 1.8210952281951904,
+        "estimated_wrong_area_m2": 9.823444491129761,
+        "weighted_structural_correction_m2": 2.51966904789593,
+        "hypothetical_correction": {
+          "error_weight": 0.34095656940404995,
+          "predicted_patch_revealed_cells": 57,
+          "counterfactual_correction_m2": 7.3900000000000015
+        },
+        "hypothesis_centre": [
+          111,
+          60
+        ]
+      },
+      {
+        "pose": [
+          95,
+          82
+        ],
+        "original_target": [
+          95,
+          82
+        ],
+        "path_m": 7.800000000000001,
+        "score": 1.5815946503205067,
+        "visible_unknown_cells": 7262,
+        "route_uncertainty_m2": 1.8177618980407715,
+        "estimated_wrong_area_m2": 9.816769224604025,
+        "weighted_structural_correction_m2": 2.51966904789593,
+        "hypothetical_correction": {
+          "error_weight": 0.34095656940404995,
+          "predicted_patch_revealed_cells": 57,
+          "counterfactual_correction_m2": 7.3900000000000015
+        },
+        "hypothesis_centre": [
+          111,
+          60
+        ]
+      },
+      {
+        "pose": [
+          95,
+          83
+        ],
+        "original_target": [
+          95,
+          83
+        ],
+        "path_m": 7.9,
+        "score": 1.5614607924184085,
+        "visible_unknown_cells": 7261,
+        "route_uncertainty_m2": 1.8177618980407715,
+        "estimated_wrong_area_m2": 9.8158712122095,
+        "weighted_structural_correction_m2": 2.51966904789593,
+        "hypothetical_correction": {
+          "error_weight": 0.34095656940404995,
+          "predicted_patch_revealed_cells": 57,
+          "counterfactual_correction_m2": 7.3900000000000015
+        },
+        "hypothesis_centre": [
+          111,
+          60
+        ]
+      },
+      {
+        "pose": [
+          70,
+          19
+        ],
+        "original_target": [
+          70,
+          19
+        ],
+        "path_m": 4.2,
+        "score": 1.1933656769861576,
+        "visible_unknown_cells": 3861,
+        "route_uncertainty_m2": 0.7751718759536743,
+        "estimated_wrong_area_m2": 5.012135843341862,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          70,
+          18
+        ],
+        "original_target": [
+          70,
+          18
+        ],
+        "path_m": 4.3,
+        "score": 1.1665689849979224,
+        "visible_unknown_cells": 3864,
+        "route_uncertainty_m2": 0.7751716375350952,
+        "estimated_wrong_area_m2": 5.016246635491066,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          90,
+          17
+        ],
+        "original_target": [
+          90,
+          17
+        ],
+        "path_m": 6.4,
+        "score": 0.7836641984773431,
+        "visible_unknown_cells": 3871,
+        "route_uncertainty_m2": 0.7630922794342041,
+        "estimated_wrong_area_m2": 5.0154508702549965,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          91,
+          17
+        ],
+        "original_target": [
+          91,
+          17
+        ],
+        "path_m": 6.5,
+        "score": 0.7716273438964033,
+        "visible_unknown_cells": 3871,
+        "route_uncertainty_m2": 0.7630922794342041,
+        "estimated_wrong_area_m2": 5.015577735326621,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          10,
+          9
+        ],
+        "original_target": [
+          10,
+          7
+        ],
+        "path_m": 8.0,
+        "score": 0.0001356522586778677,
+        "visible_unknown_cells": 1,
+        "route_uncertainty_m2": 0.0,
+        "estimated_wrong_area_m2": 0.0010852180694229416,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          14,
+          54
+        ],
+        "original_target": [
+          14,
+          54
+        ],
+        "path_m": 4.9,
+        "score": 0.0,
+        "visible_unknown_cells": 0,
+        "route_uncertainty_m2": 0.0,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      }
+    ],
+    "raw_frontiers": 5,
+    "hypotheses": 4,
+    "observation_poses": 21,
+    "executable_routes": 20,
+    "variant": "ROUTE_RISK_V2",
+    "geometry_proposals": 61,
+    "consequence_proposals": 4,
+    "case": "kth_50052754__warm5",
+    "method": "structural_v2",
+    "decision": 0,
+    "start_pose": [
+      54,
+      45
+    ],
+    "distance_before_m": 0.0,
+    "policy_compute_s": 1.1172680879972177,
+    "observed_hash": "b5389bb5162e9cc96c9323232e2d1c162b74fbbe47b1b2b2ed6037e99fc85547",
+    "distance_after_m": 5.799999999999995,
+    "path_taken": [
+      [
+        54,
+        45
+      ],
+      [
+        55,
+        45
+      ],
+      [
+        56,
+        45
+      ],
+      [
+        57,
+        45
+      ],
+      [
+        58,
+        45
+      ],
+      [
+        59,
+        45
+      ],
+      [
+        60,
+        45
+      ],
+      [
+        61,
+        45
+      ],
+      [
+        62,
+        45
+      ],
+      [
+        63,
+        45
+      ],
+      [
+        64,
+        45
+      ],
+      [
+        65,
+        45
+      ],
+      [
+        66,
+        45
+      ],
+      [
+        67,
+        45
+      ],
+      [
+        68,
+        45
+      ],
+      [
+        69,
+        45
+      ],
+      [
+        70,
+        45
+      ],
+      [
+        70,
+        46
+      ],
+      [
+        70,
+        47
+      ],
+      [
+        70,
+        48
+      ],
+      [
+        70,
+        49
+      ],
+      [
+        70,
+        50
+      ],
+      [
+        70,
+        51
+      ],
+      [
+        70,
+        52
+      ],
+      [
+        70,
+        53
+      ],
+      [
+        70,
+        54
+      ],
+      [
+        70,
+        55
+      ],
+      [
+        70,
+        56
+      ],
+      [
+        70,
+        57
+      ],
+      [
+        70,
+        58
+      ],
+      [
+        70,
+        59
+      ],
+      [
+        70,
+        60
+      ],
+      [
+        70,
+        61
+      ],
+      [
+        70,
+        62
+      ],
+      [
+        70,
+        63
+      ],
+      [
+        70,
+        64
+      ],
+      [
+        70,
+        65
+      ],
+      [
+        70,
+        66
+      ],
+      [
+        70,
+        67
+      ],
+      [
+        70,
+        68
+      ],
+      [
+        70,
+        69
+      ],
+      [
+        70,
+        70
+      ],
+      [
+        70,
+        71
+      ],
+      [
+        70,
+        72
+      ],
+      [
+        70,
+        73
+      ],
+      [
+        70,
+        74
+      ],
+      [
+        70,
+        75
+      ],
+      [
+        70,
+        76
+      ],
+      [
+        70,
+        77
+      ],
+      [
+        70,
+        78
+      ],
+      [
+        70,
+        79
+      ],
+      [
+        70,
+        80
+      ],
+      [
+        70,
+        81
+      ],
+      [
+        70,
+        82
+      ],
+      [
+        70,
+        83
+      ],
+      [
+        70,
+        84
+      ],
+      [
+        70,
+        85
+      ],
+      [
+        70,
+        86
+      ],
+      [
+        70,
+        87
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 6486,
+    "revealed_wrong_cells": 382,
+    "revealed_low_u_wrong_cells": 137
+  },
+  {
+    "action": "VERIFY",
+    "goal": [
+      71,
+      108
+    ],
+    "score": 0.27700615210792046,
+    "path_m": 2.2,
+    "hypothesis": {
+      "centre": [
+        54,
+        315
+      ],
+      "intervention": "close",
+      "orientation": "horizontal",
+      "impact_m2": 12.140000000000002,
+      "agreement": 0.8362573099415205,
+      "variance": 0.1600947082042694,
+      "patch_cells": [
+        [
+          53,
+          306
+        ],
+        [
+          53,
+          307
+        ],
+        [
+          53,
+          308
+        ],
+        [
+          53,
+          309
+        ],
+        [
+          53,
+          310
+        ],
+        [
+          53,
+          311
+        ],
+        [
+          53,
+          312
+        ],
+        [
+          53,
+          313
+        ],
+        [
+          53,
+          314
+        ],
+        [
+          53,
+          315
+        ],
+        [
+          53,
+          316
+        ],
+        [
+          53,
+          317
+        ],
+        [
+          53,
+          318
+        ],
+        [
+          53,
+          319
+        ],
+        [
+          53,
+          320
+        ],
+        [
+          53,
+          321
+        ],
+        [
+          53,
+          322
+        ],
+        [
+          53,
+          323
+        ],
+        [
+          53,
+          324
+        ],
+        [
+          54,
+          306
+        ],
+        [
+          54,
+          307
+        ],
+        [
+          54,
+          308
+        ],
+        [
+          54,
+          309
+        ],
+        [
+          54,
+          310
+        ],
+        [
+          54,
+          311
+        ],
+        [
+          54,
+          312
+        ],
+        [
+          54,
+          313
+        ],
+        [
+          54,
+          314
+        ],
+        [
+          54,
+          315
+        ],
+        [
+          54,
+          316
+        ],
+        [
+          54,
+          317
+        ],
+        [
+          54,
+          318
+        ],
+        [
+          54,
+          319
+        ],
+        [
+          54,
+          320
+        ],
+        [
+          54,
+          321
+        ],
+        [
+          54,
+          322
+        ],
+        [
+          54,
+          323
+        ],
+        [
+          54,
+          324
+        ],
+        [
+          55,
+          306
+        ],
+        [
+          55,
+          307
+        ],
+        [
+          55,
+          308
+        ],
+        [
+          55,
+          309
+        ],
+        [
+          55,
+          310
+        ],
+        [
+          55,
+          311
+        ],
+        [
+          55,
+          312
+        ],
+        [
+          55,
+          313
+        ],
+        [
+          55,
+          314
+        ],
+        [
+          55,
+          315
+        ],
+        [
+          55,
+          316
+        ],
+        [
+          55,
+          317
+        ],
+        [
+          55,
+          318
+        ],
+        [
+          55,
+          319
+        ],
+        [
+          55,
+          320
+        ],
+        [
+          55,
+          321
+        ],
+        [
+          55,
+          322
+        ],
+        [
+          55,
+          323
+        ],
+        [
+          55,
+          324
+        ]
+      ],
+      "error_weight": 0.2252756770439349,
+      "predicted_patch_revealed_cells": 1,
+      "counterfactual_correction_m2": 0.030000000000000006,
+      "patch_revealed_cells": 3,
+      "patch_wrong_revealed_cells": 0
+    },
+    "selected_route": {
+      "pose": [
+        71,
+        108
+      ],
+      "original_target": [
+        71,
+        215
+      ],
+      "path_m": 2.2,
+      "score": 0.27700615210792046,
+      "visible_unknown_cells": 503,
+      "route_uncertainty_m2": 0.023801211267709732,
+      "estimated_wrong_area_m2": 0.602655264326107,
+      "weighted_structural_correction_m2": 0.006758270311318048,
+      "hypothetical_correction": {
+        "error_weight": 0.2252756770439349,
+        "predicted_patch_revealed_cells": 1,
+        "counterfactual_correction_m2": 0.030000000000000006
+      },
+      "hypothesis_centre": [
+        54,
+        315
+      ]
+    },
+    "candidate_records": [
+      {
+        "pose": [
+          71,
+          108
+        ],
+        "original_target": [
+          71,
+          215
+        ],
+        "path_m": 2.2,
+        "score": 0.27700615210792046,
+        "visible_unknown_cells": 503,
+        "route_uncertainty_m2": 0.023801211267709732,
+        "estimated_wrong_area_m2": 0.602655264326107,
+        "weighted_structural_correction_m2": 0.006758270311318048,
+        "hypothetical_correction": {
+          "error_weight": 0.2252756770439349,
+          "predicted_patch_revealed_cells": 1,
+          "counterfactual_correction_m2": 0.030000000000000006
+        },
+        "hypothesis_centre": [
+          54,
+          315
+        ]
+      },
+      {
+        "pose": [
+          70,
+          109
+        ],
+        "original_target": [
+          70,
+          126
+        ],
+        "path_m": 2.2,
+        "score": 0.27631957644100064,
+        "visible_unknown_cells": 519,
+        "route_uncertainty_m2": 0.013891590759158134,
+        "estimated_wrong_area_m2": 0.6011447978588834,
+        "weighted_structural_correction_m2": 0.006758270311318048,
+        "hypothetical_correction": {
+          "error_weight": 0.2252756770439349,
+          "predicted_patch_revealed_cells": 1,
+          "counterfactual_correction_m2": 0.030000000000000006
+        },
+        "hypothesis_centre": [
+          54,
+          315
+        ]
+      },
+      {
+        "pose": [
+          87,
+          82
+        ],
+        "original_target": [
+          94,
+          83
+        ],
+        "path_m": 2.2,
+        "score": 0.18509077669353208,
+        "visible_unknown_cells": 244,
+        "route_uncertainty_m2": 0.15841783583164215,
+        "estimated_wrong_area_m2": 0.4071997087257706,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          58,
+          97
+        ],
+        "original_target": [
+          58,
+          150
+        ],
+        "path_m": 2.2,
+        "score": 0.04512697163893088,
+        "visible_unknown_cells": 76,
+        "route_uncertainty_m2": 1.090584191842936e-06,
+        "estimated_wrong_area_m2": 0.09927933760564794,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          57,
+          96
+        ],
+        "original_target": [
+          57,
+          214
+        ],
+        "path_m": 2.2,
+        "score": 0.028757105394581078,
+        "visible_unknown_cells": 59,
+        "route_uncertainty_m2": 1.090584191842936e-06,
+        "estimated_wrong_area_m2": 0.06326563186807838,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          56,
+          95
+        ],
+        "original_target": [
+          53,
+          136
+        ],
+        "path_m": 2.2,
+        "score": 0.026093877363932892,
+        "visible_unknown_cells": 49,
+        "route_uncertainty_m2": 0.002749531762674451,
+        "estimated_wrong_area_m2": 0.05740653020065237,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      }
+    ],
+    "raw_frontiers": 9,
+    "hypotheses": 8,
+    "observation_poses": 24,
+    "executable_routes": 6,
+    "variant": "ROUTE_RISK_V2",
+    "geometry_proposals": 53,
+    "consequence_proposals": 8,
+    "case": "kth_50052754__warm5",
+    "method": "structural_v2",
+    "decision": 1,
+    "start_pose": [
+      70,
+      87
+    ],
+    "distance_before_m": 5.799999999999995,
+    "policy_compute_s": 0.8532443980002427,
+    "observed_hash": "cf63dc20ab9187c71b52e54cb25f685bb8773bfbf11a88a644a30e7d5822b8c9",
+    "distance_after_m": 7.999999999999988,
+    "path_taken": [
+      [
+        70,
+        87
+      ],
+      [
+        71,
+        87
+      ],
+      [
+        71,
+        88
+      ],
+      [
+        71,
+        89
+      ],
+      [
+        71,
+        90
+      ],
+      [
+        71,
+        91
+      ],
+      [
+        71,
+        92
+      ],
+      [
+        71,
+        93
+      ],
+      [
+        71,
+        94
+      ],
+      [
+        71,
+        95
+      ],
+      [
+        71,
+        96
+      ],
+      [
+        71,
+        97
+      ],
+      [
+        71,
+        98
+      ],
+      [
+        71,
+        99
+      ],
+      [
+        71,
+        100
+      ],
+      [
+        71,
+        101
+      ],
+      [
+        71,
+        102
+      ],
+      [
+        71,
+        103
+      ],
+      [
+        71,
+        104
+      ],
+      [
+        71,
+        105
+      ],
+      [
+        71,
+        106
+      ],
+      [
+        71,
+        107
+      ],
+      [
+        71,
+        108
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 850,
+    "revealed_wrong_cells": 2,
+    "revealed_low_u_wrong_cells": 1
+  }
+]

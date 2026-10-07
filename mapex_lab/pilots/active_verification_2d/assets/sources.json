@@ -1,0 +1,46 @@
+[
+  {
+    "layout": "new_room",
+    "source": "/home/dell/turtlebot4_project/mapex_lab/ground_truth/new_room/generated/new_room_structural_gt_v2.npz",
+    "sha256": "89954e9e4d52f5277e786a0ff43075ba714c4aadc804b50a58520d9182ae1ad4",
+    "preprocess": "2x2 any occupied; crop evaluation bounding box plus 4 cells; outside evaluation occupied",
+    "shape": [
+      210,
+      270
+    ],
+    "start": [
+      135,
+      135
+    ]
+  },
+  {
+    "layout": "kth_50052751",
+    "source": "/home/dell/MapEx/kth_test_maps/50052751/occ_map.npy",
+    "sha256": "0da308b850adaf5d2baa0787cb6eed3d9cdb31e93f3562b9561bb9592fdcc07b",
+    "valid_source_sha256": "a4f18fbc7682742cc32461a62ce138358084863eabbc54df5554bf4c3fe30edd",
+    "preprocess": "2x2 any occupied; valid-space mask; largest free component is evaluation domain; max-clearance start",
+    "shape": [
+      128,
+      393
+    ],
+    "start": [
+      25,
+      210
+    ]
+  },
+  {
+    "layout": "kth_50052752",
+    "source": "/home/dell/MapEx/kth_test_maps/50052752/occ_map.npy",
+    "sha256": "41ac4e67b4bb8ebdae3d0186f23fd2336b4d37ca5876fc26745bf4ec8d9075f4",
+    "valid_source_sha256": "4f64bfb220c6a497b6e8e9adafebaac1ca0c39e241c382ea94a5469ebeb8ab1d",
+    "preprocess": "2x2 any occupied; valid-space mask; largest free component is evaluation domain; max-clearance start",
+    "shape": [
+      128,
+      393
+    ],
+    "start": [
+      72,
+      54
+    ]
+  }
+]

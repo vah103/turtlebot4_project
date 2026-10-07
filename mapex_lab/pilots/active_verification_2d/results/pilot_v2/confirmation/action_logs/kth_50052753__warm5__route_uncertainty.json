@@ -1,0 +1,705 @@
+[
+  {
+    "action": "OBSERVE_ROUTE_UNCERTAINTY",
+    "goal": [
+      56,
+      123
+    ],
+    "score": 0.1054413691163063,
+    "path_m": 8.0,
+    "hypothesis": null,
+    "selected_route": {
+      "pose": [
+        56,
+        123
+      ],
+      "original_target": [
+        55,
+        170
+      ],
+      "path_m": 8.0,
+      "score": 0.1054413691163063,
+      "visible_unknown_cells": 3648,
+      "route_uncertainty_m2": 0.8435309529304504,
+      "estimated_wrong_area_m2": 0.0,
+      "weighted_structural_correction_m2": 0.0,
+      "hypothetical_correction": null,
+      "hypothesis_centre": null
+    },
+    "candidate_records": [
+      {
+        "pose": [
+          56,
+          123
+        ],
+        "original_target": [
+          55,
+          170
+        ],
+        "path_m": 8.0,
+        "score": 0.1054413691163063,
+        "visible_unknown_cells": 3648,
+        "route_uncertainty_m2": 0.8435309529304504,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          98,
+          79
+        ],
+        "original_target": [
+          98,
+          79
+        ],
+        "path_m": 7.800000000000001,
+        "score": 0.1050367874976916,
+        "visible_unknown_cells": 2327,
+        "route_uncertainty_m2": 0.8192869424819946,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          97,
+          79
+        ],
+        "original_target": [
+          97,
+          79
+        ],
+        "path_m": 7.7,
+        "score": 0.10472720319574529,
+        "visible_unknown_cells": 2316,
+        "route_uncertainty_m2": 0.8063994646072388,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          95,
+          82
+        ],
+        "original_target": [
+          95,
+          82
+        ],
+        "path_m": 7.800000000000001,
+        "score": 0.10082837098684065,
+        "visible_unknown_cells": 2247,
+        "route_uncertainty_m2": 0.7864612936973572,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          96,
+          82
+        ],
+        "original_target": [
+          96,
+          82
+        ],
+        "path_m": 7.9,
+        "score": 0.09920594058459317,
+        "visible_unknown_cells": 2246,
+        "route_uncertainty_m2": 0.7837269306182861,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          57,
+          120
+        ],
+        "original_target": [
+          57,
+          120
+        ],
+        "path_m": 7.800000000000001,
+        "score": 0.09913582068223219,
+        "visible_unknown_cells": 3362,
+        "route_uncertainty_m2": 0.7732594013214111,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          70,
+          18
+        ],
+        "original_target": [
+          70,
+          18
+        ],
+        "path_m": 4.1000000000000005,
+        "score": 0.09749294054217454,
+        "visible_unknown_cells": 1768,
+        "route_uncertainty_m2": 0.39972105622291565,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          70,
+          19
+        ],
+        "original_target": [
+          70,
+          19
+        ],
+        "path_m": 4.0,
+        "score": 0.0970374122262001,
+        "visible_unknown_cells": 1759,
+        "route_uncertainty_m2": 0.3881496489048004,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          60,
+          119
+        ],
+        "original_target": [
+          60,
+          200
+        ],
+        "path_m": 8.0,
+        "score": 0.09512823075056076,
+        "visible_unknown_cells": 3174,
+        "route_uncertainty_m2": 0.7610258460044861,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          61,
+          118
+        ],
+        "original_target": [
+          61,
+          150
+        ],
+        "path_m": 8.0,
+        "score": 0.09468553215265274,
+        "visible_unknown_cells": 3252,
+        "route_uncertainty_m2": 0.7574842572212219,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          71,
+          108
+        ],
+        "original_target": [
+          71,
+          243
+        ],
+        "path_m": 8.0,
+        "score": 0.0865127295255661,
+        "visible_unknown_cells": 2998,
+        "route_uncertainty_m2": 0.6921018362045288,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          80,
+          20
+        ],
+        "original_target": [
+          80,
+          20
+        ],
+        "path_m": 4.9,
+        "score": 0.08110830978471405,
+        "visible_unknown_cells": 1772,
+        "route_uncertainty_m2": 0.3974307179450989,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          89,
+          17
+        ],
+        "original_target": [
+          89,
+          17
+        ],
+        "path_m": 6.1000000000000005,
+        "score": 0.0692671781680623,
+        "visible_unknown_cells": 1782,
+        "route_uncertainty_m2": 0.42252978682518005,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          90,
+          17
+        ],
+        "original_target": [
+          90,
+          17
+        ],
+        "path_m": 6.2,
+        "score": 0.06768365540812092,
+        "visible_unknown_cells": 1781,
+        "route_uncertainty_m2": 0.41963866353034973,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          88,
+          59
+        ],
+        "original_target": [
+          88,
+          59
+        ],
+        "path_m": 4.800000000000001,
+        "score": 0.0672446625928084,
+        "visible_unknown_cells": 910,
+        "route_uncertainty_m2": 0.32277438044548035,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          78,
+          5
+        ],
+        "original_target": [
+          78,
+          5
+        ],
+        "path_m": 6.2,
+        "score": 0.06717961642049974,
+        "visible_unknown_cells": 1780,
+        "route_uncertainty_m2": 0.4165136218070984,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          88,
+          60
+        ],
+        "original_target": [
+          88,
+          60
+        ],
+        "path_m": 4.9,
+        "score": 0.06585320039671294,
+        "visible_unknown_cells": 919,
+        "route_uncertainty_m2": 0.32268068194389343,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      },
+      {
+        "pose": [
+          43,
+          25
+        ],
+        "original_target": [
+          43,
+          25
+        ],
+        "path_m": 3.1,
+        "score": 0.0,
+        "visible_unknown_cells": 0,
+        "route_uncertainty_m2": 0.0,
+        "estimated_wrong_area_m2": 0.0,
+        "weighted_structural_correction_m2": 0.0,
+        "hypothetical_correction": null,
+        "hypothesis_centre": null
+      }
+    ],
+    "raw_frontiers": 5,
+    "hypotheses": 3,
+    "observation_poses": 20,
+    "executable_routes": 18,
+    "variant": "ROUTE_RISK_V2",
+    "geometry_proposals": 34,
+    "consequence_proposals": 3,
+    "case": "kth_50052753__warm5",
+    "method": "route_uncertainty",
+    "decision": 0,
+    "start_pose": [
+      55,
+      44
+    ],
+    "distance_before_m": 0.0,
+    "policy_compute_s": 0.7342641709983582,
+    "observed_hash": "e47d28de4a086ec0299ff072562b319882eedf19f63ae1431a951924654f5146",
+    "distance_after_m": 7.999999999999988,
+    "path_taken": [
+      [
+        55,
+        44
+      ],
+      [
+        56,
+        44
+      ],
+      [
+        56,
+        45
+      ],
+      [
+        56,
+        46
+      ],
+      [
+        56,
+        47
+      ],
+      [
+        56,
+        48
+      ],
+      [
+        56,
+        49
+      ],
+      [
+        56,
+        50
+      ],
+      [
+        56,
+        51
+      ],
+      [
+        56,
+        52
+      ],
+      [
+        56,
+        53
+      ],
+      [
+        56,
+        54
+      ],
+      [
+        56,
+        55
+      ],
+      [
+        56,
+        56
+      ],
+      [
+        56,
+        57
+      ],
+      [
+        56,
+        58
+      ],
+      [
+        56,
+        59
+      ],
+      [
+        56,
+        60
+      ],
+      [
+        56,
+        61
+      ],
+      [
+        56,
+        62
+      ],
+      [
+        56,
+        63
+      ],
+      [
+        56,
+        64
+      ],
+      [
+        56,
+        65
+      ],
+      [
+        56,
+        66
+      ],
+      [
+        56,
+        67
+      ],
+      [
+        56,
+        68
+      ],
+      [
+        56,
+        69
+      ],
+      [
+        56,
+        70
+      ],
+      [
+        56,
+        71
+      ],
+      [
+        56,
+        72
+      ],
+      [
+        56,
+        73
+      ],
+      [
+        56,
+        74
+      ],
+      [
+        56,
+        75
+      ],
+      [
+        56,
+        76
+      ],
+      [
+        56,
+        77
+      ],
+      [
+        56,
+        78
+      ],
+      [
+        56,
+        79
+      ],
+      [
+        56,
+        80
+      ],
+      [
+        56,
+        81
+      ],
+      [
+        56,
+        82
+      ],
+      [
+        56,
+        83
+      ],
+      [
+        56,
+        84
+      ],
+      [
+        56,
+        85
+      ],
+      [
+        56,
+        86
+      ],
+      [
+        56,
+        87
+      ],
+      [
+        56,
+        88
+      ],
+      [
+        56,
+        89
+      ],
+      [
+        56,
+        90
+      ],
+      [
+        56,
+        91
+      ],
+      [
+        56,
+        92
+      ],
+      [
+        56,
+        93
+      ],
+      [
+        56,
+        94
+      ],
+      [
+        56,
+        95
+      ],
+      [
+        56,
+        96
+      ],
+      [
+        56,
+        97
+      ],
+      [
+        56,
+        98
+      ],
+      [
+        56,
+        99
+      ],
+      [
+        56,
+        100
+      ],
+      [
+        56,
+        101
+      ],
+      [
+        56,
+        102
+      ],
+      [
+        56,
+        103
+      ],
+      [
+        56,
+        104
+      ],
+      [
+        56,
+        105
+      ],
+      [
+        56,
+        106
+      ],
+      [
+        56,
+        107
+      ],
+      [
+        56,
+        108
+      ],
+      [
+        56,
+        109
+      ],
+      [
+        56,
+        110
+      ],
+      [
+        56,
+        111
+      ],
+      [
+        56,
+        112
+      ],
+      [
+        56,
+        113
+      ],
+      [
+        56,
+        114
+      ],
+      [
+        56,
+        115
+      ],
+      [
+        56,
+        116
+      ],
+      [
+        56,
+        117
+      ],
+      [
+        56,
+        118
+      ],
+      [
+        56,
+        119
+      ],
+      [
+        56,
+        120
+      ],
+      [
+        56,
+        121
+      ],
+      [
+        56,
+        122
+      ],
+      [
+        56,
+        123
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 5672,
+    "revealed_wrong_cells": 469,
+    "revealed_low_u_wrong_cells": 198
+  }
+]

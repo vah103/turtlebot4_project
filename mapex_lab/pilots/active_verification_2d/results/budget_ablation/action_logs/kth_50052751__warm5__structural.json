@@ -1,0 +1,863 @@
+[
+  {
+    "action": "VERIFY",
+    "goal": [
+      92,
+      193
+    ],
+    "score": 3.8447368421052635,
+    "path_m": 3.8000000000000003,
+    "hypothesis": {
+      "centre": [
+        105,
+        186
+      ],
+      "intervention": "open",
+      "orientation": "vertical",
+      "impact_m2": 14.610000000000003,
+      "agreement": 0.7777777777777777,
+      "variance": 0.2222222238779068,
+      "patch_cells": [
+        [
+          96,
+          185
+        ],
+        [
+          96,
+          186
+        ],
+        [
+          96,
+          187
+        ],
+        [
+          97,
+          185
+        ],
+        [
+          97,
+          186
+        ],
+        [
+          97,
+          187
+        ],
+        [
+          98,
+          185
+        ],
+        [
+          98,
+          186
+        ],
+        [
+          98,
+          187
+        ],
+        [
+          99,
+          185
+        ],
+        [
+          99,
+          186
+        ],
+        [
+          99,
+          187
+        ],
+        [
+          100,
+          185
+        ],
+        [
+          100,
+          186
+        ],
+        [
+          100,
+          187
+        ],
+        [
+          101,
+          185
+        ],
+        [
+          101,
+          186
+        ],
+        [
+          101,
+          187
+        ],
+        [
+          102,
+          185
+        ],
+        [
+          102,
+          186
+        ],
+        [
+          102,
+          187
+        ],
+        [
+          103,
+          185
+        ],
+        [
+          103,
+          186
+        ],
+        [
+          103,
+          187
+        ],
+        [
+          104,
+          185
+        ],
+        [
+          104,
+          186
+        ],
+        [
+          104,
+          187
+        ],
+        [
+          105,
+          185
+        ],
+        [
+          105,
+          186
+        ],
+        [
+          105,
+          187
+        ],
+        [
+          106,
+          185
+        ],
+        [
+          106,
+          186
+        ],
+        [
+          106,
+          187
+        ],
+        [
+          107,
+          185
+        ],
+        [
+          107,
+          186
+        ],
+        [
+          107,
+          187
+        ],
+        [
+          108,
+          185
+        ],
+        [
+          108,
+          186
+        ],
+        [
+          108,
+          187
+        ],
+        [
+          109,
+          185
+        ],
+        [
+          109,
+          186
+        ],
+        [
+          109,
+          187
+        ],
+        [
+          110,
+          185
+        ],
+        [
+          110,
+          186
+        ],
+        [
+          110,
+          187
+        ],
+        [
+          111,
+          185
+        ],
+        [
+          111,
+          186
+        ],
+        [
+          111,
+          187
+        ],
+        [
+          112,
+          185
+        ],
+        [
+          112,
+          186
+        ],
+        [
+          112,
+          187
+        ],
+        [
+          113,
+          185
+        ],
+        [
+          113,
+          186
+        ],
+        [
+          113,
+          187
+        ],
+        [
+          114,
+          185
+        ],
+        [
+          114,
+          186
+        ],
+        [
+          114,
+          187
+        ]
+      ],
+      "patch_revealed_cells": 57,
+      "patch_wrong_revealed_cells": 38
+    },
+    "candidate_records": [
+      {
+        "pose": [
+          92,
+          193
+        ],
+        "hypothesis": [
+          105,
+          186
+        ],
+        "impact_m2": 14.610000000000003,
+        "observable_fraction": 1.0,
+        "path_m": 3.8000000000000003,
+        "score": 3.8447368421052635,
+        "intervention": "open",
+        "orientation": "vertical",
+        "agreement": 0.7777777777777777,
+        "variance": 0.2222222238779068
+      },
+      {
+        "pose": [
+          92,
+          193
+        ],
+        "hypothesis": [
+          111,
+          186
+        ],
+        "impact_m2": 14.610000000000003,
+        "observable_fraction": 1.0,
+        "path_m": 3.8000000000000003,
+        "score": 3.8447368421052635,
+        "intervention": "open",
+        "orientation": "vertical",
+        "agreement": 0.7777777777777777,
+        "variance": 0.2222222238779068
+      },
+      {
+        "pose": [
+          92,
+          193
+        ],
+        "hypothesis": [
+          99,
+          186
+        ],
+        "impact_m2": 14.570000000000002,
+        "observable_fraction": 1.0,
+        "path_m": 3.8000000000000003,
+        "score": 3.8342105263157897,
+        "intervention": "open",
+        "orientation": "vertical",
+        "agreement": 0.7777777777777777,
+        "variance": 0.2222222238779068
+      },
+      {
+        "pose": [
+          92,
+          193
+        ],
+        "hypothesis": [
+          93,
+          186
+        ],
+        "impact_m2": 14.450000000000003,
+        "observable_fraction": 1.0,
+        "path_m": 3.8000000000000003,
+        "score": 3.802631578947369,
+        "intervention": "open",
+        "orientation": "vertical",
+        "agreement": 0.7777777777777777,
+        "variance": 0.22222153842449188
+      },
+      {
+        "pose": [
+          93,
+          193
+        ],
+        "hypothesis": [
+          105,
+          186
+        ],
+        "impact_m2": 14.610000000000003,
+        "observable_fraction": 1.0,
+        "path_m": 3.9000000000000004,
+        "score": 3.7461538461538466,
+        "intervention": "open",
+        "orientation": "vertical",
+        "agreement": 0.7777777777777777,
+        "variance": 0.2222222238779068
+      },
+      {
+        "pose": [
+          93,
+          193
+        ],
+        "hypothesis": [
+          111,
+          186
+        ],
+        "impact_m2": 14.610000000000003,
+        "observable_fraction": 1.0,
+        "path_m": 3.9000000000000004,
+        "score": 3.7461538461538466,
+        "intervention": "open",
+        "orientation": "vertical",
+        "agreement": 0.7777777777777777,
+        "variance": 0.2222222238779068
+      },
+      {
+        "pose": [
+          93,
+          193
+        ],
+        "hypothesis": [
+          99,
+          186
+        ],
+        "impact_m2": 14.570000000000002,
+        "observable_fraction": 1.0,
+        "path_m": 3.9000000000000004,
+        "score": 3.735897435897436,
+        "intervention": "open",
+        "orientation": "vertical",
+        "agreement": 0.7777777777777777,
+        "variance": 0.2222222238779068
+      },
+      {
+        "pose": [
+          93,
+          193
+        ],
+        "hypothesis": [
+          93,
+          186
+        ],
+        "impact_m2": 14.450000000000003,
+        "observable_fraction": 1.0,
+        "path_m": 3.9000000000000004,
+        "score": 3.7051282051282057,
+        "intervention": "open",
+        "orientation": "vertical",
+        "agreement": 0.7777777777777777,
+        "variance": 0.22222153842449188
+      },
+      {
+        "pose": [
+          101,
+          192
+        ],
+        "hypothesis": [
+          105,
+          186
+        ],
+        "impact_m2": 14.610000000000003,
+        "observable_fraction": 1.0,
+        "path_m": 4.800000000000001,
+        "score": 3.04375,
+        "intervention": "open",
+        "orientation": "vertical",
+        "agreement": 0.7777777777777777,
+        "variance": 0.2222222238779068
+      },
+      {
+        "pose": [
+          101,
+          192
+        ],
+        "hypothesis": [
+          111,
+          186
+        ],
+        "impact_m2": 14.610000000000003,
+        "observable_fraction": 1.0,
+        "path_m": 4.800000000000001,
+        "score": 3.04375,
+        "intervention": "open",
+        "orientation": "vertical",
+        "agreement": 0.7777777777777777,
+        "variance": 0.2222222238779068
+      },
+      {
+        "pose": [
+          101,
+          192
+        ],
+        "hypothesis": [
+          99,
+          186
+        ],
+        "impact_m2": 14.570000000000002,
+        "observable_fraction": 1.0,
+        "path_m": 4.800000000000001,
+        "score": 3.0354166666666664,
+        "intervention": "open",
+        "orientation": "vertical",
+        "agreement": 0.7777777777777777,
+        "variance": 0.2222222238779068
+      },
+      {
+        "pose": [
+          101,
+          192
+        ],
+        "hypothesis": [
+          93,
+          186
+        ],
+        "impact_m2": 14.450000000000003,
+        "observable_fraction": 1.0,
+        "path_m": 4.800000000000001,
+        "score": 3.010416666666667,
+        "intervention": "open",
+        "orientation": "vertical",
+        "agreement": 0.7777777777777777,
+        "variance": 0.22222153842449188
+      }
+    ],
+    "hypotheses": 12,
+    "observation_poses": 24,
+    "budget_feasible_views": 13,
+    "raw_frontiers": 13,
+    "variant": "BUDGET_FEASIBILITY_ONLY",
+    "geometry_proposals": 56,
+    "consequence_proposals": 12,
+    "case": "kth_50052751__warm5",
+    "method": "structural",
+    "decision": 0,
+    "start_pose": [
+      59,
+      194
+    ],
+    "distance_before_m": 0.0,
+    "policy_compute_s": 0.7287644440002623,
+    "observed_hash": "dc0a3352ddfd82f8fee1a8d76be114e33a1cb5bc01d331166c4cc1c4ae86ffc0",
+    "distance_after_m": 3.800000000000002,
+    "path_taken": [
+      [
+        59,
+        194
+      ],
+      [
+        60,
+        194
+      ],
+      [
+        61,
+        194
+      ],
+      [
+        62,
+        194
+      ],
+      [
+        63,
+        194
+      ],
+      [
+        64,
+        194
+      ],
+      [
+        65,
+        194
+      ],
+      [
+        66,
+        194
+      ],
+      [
+        67,
+        194
+      ],
+      [
+        68,
+        194
+      ],
+      [
+        69,
+        194
+      ],
+      [
+        70,
+        194
+      ],
+      [
+        71,
+        194
+      ],
+      [
+        71,
+        195
+      ],
+      [
+        71,
+        196
+      ],
+      [
+        72,
+        196
+      ],
+      [
+        73,
+        196
+      ],
+      [
+        74,
+        196
+      ],
+      [
+        75,
+        196
+      ],
+      [
+        76,
+        196
+      ],
+      [
+        77,
+        196
+      ],
+      [
+        78,
+        196
+      ],
+      [
+        79,
+        196
+      ],
+      [
+        80,
+        196
+      ],
+      [
+        81,
+        196
+      ],
+      [
+        82,
+        196
+      ],
+      [
+        83,
+        196
+      ],
+      [
+        84,
+        196
+      ],
+      [
+        85,
+        196
+      ],
+      [
+        86,
+        196
+      ],
+      [
+        87,
+        196
+      ],
+      [
+        88,
+        196
+      ],
+      [
+        89,
+        196
+      ],
+      [
+        90,
+        196
+      ],
+      [
+        91,
+        196
+      ],
+      [
+        92,
+        196
+      ],
+      [
+        92,
+        195
+      ],
+      [
+        92,
+        194
+      ],
+      [
+        92,
+        193
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 1217,
+    "revealed_wrong_cells": 167,
+    "revealed_low_u_wrong_cells": 46
+  },
+  {
+    "action": "EXPLORE_BUDGET_FALLBACK",
+    "goal": [
+      52,
+      165
+    ],
+    "score": 11.46633739890138,
+    "path_m": 7.4,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 5,
+    "observation_poses": 24,
+    "raw_frontiers": 7,
+    "reachable_frontiers": 7,
+    "near_frontier_fallback": false,
+    "budget_feasible_views": 2,
+    "variant": "BUDGET_FEASIBILITY_ONLY",
+    "geometry_proposals": 38,
+    "consequence_proposals": 5,
+    "case": "kth_50052751__warm5",
+    "method": "structural",
+    "decision": 1,
+    "start_pose": [
+      92,
+      193
+    ],
+    "distance_before_m": 3.800000000000002,
+    "policy_compute_s": 0.9666523970008711,
+    "observed_hash": "36ad4564d188b47fe3df6965aea0ed769ec54294b6804af70de82db05d578fba",
+    "distance_after_m": 7.999999999999988,
+    "path_taken": [
+      [
+        92,
+        193
+      ],
+      [
+        91,
+        193
+      ],
+      [
+        90,
+        193
+      ],
+      [
+        89,
+        193
+      ],
+      [
+        88,
+        193
+      ],
+      [
+        87,
+        193
+      ],
+      [
+        86,
+        193
+      ],
+      [
+        85,
+        193
+      ],
+      [
+        84,
+        193
+      ],
+      [
+        83,
+        193
+      ],
+      [
+        82,
+        193
+      ],
+      [
+        81,
+        193
+      ],
+      [
+        81,
+        194
+      ],
+      [
+        81,
+        195
+      ],
+      [
+        80,
+        195
+      ],
+      [
+        80,
+        196
+      ],
+      [
+        79,
+        196
+      ],
+      [
+        78,
+        196
+      ],
+      [
+        77,
+        196
+      ],
+      [
+        76,
+        196
+      ],
+      [
+        75,
+        196
+      ],
+      [
+        74,
+        196
+      ],
+      [
+        73,
+        196
+      ],
+      [
+        72,
+        196
+      ],
+      [
+        71,
+        196
+      ],
+      [
+        70,
+        196
+      ],
+      [
+        69,
+        196
+      ],
+      [
+        68,
+        196
+      ],
+      [
+        67,
+        196
+      ],
+      [
+        66,
+        196
+      ],
+      [
+        65,
+        196
+      ],
+      [
+        64,
+        196
+      ],
+      [
+        63,
+        196
+      ],
+      [
+        62,
+        196
+      ],
+      [
+        61,
+        196
+      ],
+      [
+        60,
+        196
+      ],
+      [
+        59,
+        196
+      ],
+      [
+        58,
+        196
+      ],
+      [
+        57,
+        196
+      ],
+      [
+        56,
+        196
+      ],
+      [
+        56,
+        195
+      ],
+      [
+        56,
+        194
+      ],
+      [
+        56,
+        193
+      ]
+    ],
+    "goal_reached": false,
+    "collision": false,
+    "revealed_cells": 27,
+    "revealed_wrong_cells": 1,
+    "revealed_low_u_wrong_cells": 0
+  }
+]

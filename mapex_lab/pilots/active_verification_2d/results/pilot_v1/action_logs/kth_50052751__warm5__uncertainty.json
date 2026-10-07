@@ -1,0 +1,482 @@
+[
+  {
+    "action": "OBSERVE_UNCERTAINTY",
+    "goal": [
+      58,
+      194
+    ],
+    "score": 29.77299690246582,
+    "path_m": 0.1,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 12,
+    "observation_poses": 24,
+    "raw_frontiers": 13,
+    "reachable_frontiers": 9,
+    "near_frontier_fallback": false,
+    "geometry_proposals": 56,
+    "consequence_proposals": 12,
+    "case": "kth_50052751__warm5",
+    "method": "uncertainty",
+    "decision": 0,
+    "start_pose": [
+      59,
+      194
+    ],
+    "distance_before_m": 0.0,
+    "policy_compute_s": 1.9244745449977927,
+    "observed_hash": "dc0a3352ddfd82f8fee1a8d76be114e33a1cb5bc01d331166c4cc1c4ae86ffc0",
+    "distance_after_m": 0.1,
+    "path_taken": [
+      [
+        59,
+        194
+      ],
+      [
+        58,
+        194
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 27,
+    "revealed_wrong_cells": 1,
+    "revealed_low_u_wrong_cells": 0
+  },
+  {
+    "action": "OBSERVE_UNCERTAINTY",
+    "goal": [
+      57,
+      194
+    ],
+    "score": 44.468021392822266,
+    "path_m": 0.1,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 12,
+    "observation_poses": 24,
+    "raw_frontiers": 13,
+    "reachable_frontiers": 9,
+    "near_frontier_fallback": false,
+    "geometry_proposals": 53,
+    "consequence_proposals": 12,
+    "case": "kth_50052751__warm5",
+    "method": "uncertainty",
+    "decision": 1,
+    "start_pose": [
+      58,
+      194
+    ],
+    "distance_before_m": 0.1,
+    "policy_compute_s": 1.8862780240015127,
+    "observed_hash": "56f4c3ade19fee397288f9344901fce201628f9877bb36504be8d0284acb80ae",
+    "distance_after_m": 0.2,
+    "path_taken": [
+      [
+        58,
+        194
+      ],
+      [
+        57,
+        194
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 0,
+    "revealed_wrong_cells": 0,
+    "revealed_low_u_wrong_cells": 0
+  },
+  {
+    "action": "OBSERVE_UNCERTAINTY",
+    "goal": [
+      56,
+      194
+    ],
+    "score": 38.96331310272217,
+    "path_m": 0.1,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 12,
+    "observation_poses": 24,
+    "raw_frontiers": 13,
+    "reachable_frontiers": 9,
+    "near_frontier_fallback": false,
+    "geometry_proposals": 53,
+    "consequence_proposals": 12,
+    "case": "kth_50052751__warm5",
+    "method": "uncertainty",
+    "decision": 2,
+    "start_pose": [
+      57,
+      194
+    ],
+    "distance_before_m": 0.2,
+    "policy_compute_s": 1.936770735999744,
+    "observed_hash": "56f4c3ade19fee397288f9344901fce201628f9877bb36504be8d0284acb80ae",
+    "distance_after_m": 0.30000000000000004,
+    "path_taken": [
+      [
+        57,
+        194
+      ],
+      [
+        56,
+        194
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 3,
+    "revealed_wrong_cells": 0,
+    "revealed_low_u_wrong_cells": 0
+  },
+  {
+    "action": "OBSERVE_UNCERTAINTY",
+    "goal": [
+      74,
+      258
+    ],
+    "score": 8.750213064798494,
+    "path_m": 8.200000000000001,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 12,
+    "observation_poses": 24,
+    "raw_frontiers": 12,
+    "reachable_frontiers": 9,
+    "near_frontier_fallback": false,
+    "geometry_proposals": 53,
+    "consequence_proposals": 12,
+    "case": "kth_50052751__warm5",
+    "method": "uncertainty",
+    "decision": 3,
+    "start_pose": [
+      56,
+      194
+    ],
+    "distance_before_m": 0.30000000000000004,
+    "policy_compute_s": 2.2860817079999833,
+    "observed_hash": "5d8ad653acb3c3c9ff40975aad196813176e471bf6141e2ef8ac67a7c50b6732",
+    "distance_after_m": 7.999999999999988,
+    "path_taken": [
+      [
+        56,
+        194
+      ],
+      [
+        57,
+        194
+      ],
+      [
+        58,
+        194
+      ],
+      [
+        59,
+        194
+      ],
+      [
+        60,
+        194
+      ],
+      [
+        61,
+        194
+      ],
+      [
+        62,
+        194
+      ],
+      [
+        63,
+        194
+      ],
+      [
+        64,
+        194
+      ],
+      [
+        65,
+        194
+      ],
+      [
+        66,
+        194
+      ],
+      [
+        67,
+        194
+      ],
+      [
+        68,
+        194
+      ],
+      [
+        69,
+        194
+      ],
+      [
+        70,
+        194
+      ],
+      [
+        71,
+        194
+      ],
+      [
+        71,
+        195
+      ],
+      [
+        71,
+        196
+      ],
+      [
+        71,
+        197
+      ],
+      [
+        71,
+        198
+      ],
+      [
+        71,
+        199
+      ],
+      [
+        71,
+        200
+      ],
+      [
+        71,
+        201
+      ],
+      [
+        71,
+        202
+      ],
+      [
+        71,
+        203
+      ],
+      [
+        71,
+        204
+      ],
+      [
+        71,
+        205
+      ],
+      [
+        71,
+        206
+      ],
+      [
+        71,
+        207
+      ],
+      [
+        71,
+        208
+      ],
+      [
+        71,
+        209
+      ],
+      [
+        71,
+        210
+      ],
+      [
+        71,
+        211
+      ],
+      [
+        71,
+        212
+      ],
+      [
+        71,
+        213
+      ],
+      [
+        71,
+        214
+      ],
+      [
+        71,
+        215
+      ],
+      [
+        71,
+        216
+      ],
+      [
+        71,
+        217
+      ],
+      [
+        71,
+        218
+      ],
+      [
+        71,
+        219
+      ],
+      [
+        71,
+        220
+      ],
+      [
+        71,
+        221
+      ],
+      [
+        71,
+        222
+      ],
+      [
+        71,
+        223
+      ],
+      [
+        71,
+        224
+      ],
+      [
+        71,
+        225
+      ],
+      [
+        71,
+        226
+      ],
+      [
+        71,
+        227
+      ],
+      [
+        71,
+        228
+      ],
+      [
+        71,
+        229
+      ],
+      [
+        71,
+        230
+      ],
+      [
+        71,
+        231
+      ],
+      [
+        71,
+        232
+      ],
+      [
+        71,
+        233
+      ],
+      [
+        71,
+        234
+      ],
+      [
+        71,
+        235
+      ],
+      [
+        71,
+        236
+      ],
+      [
+        71,
+        237
+      ],
+      [
+        71,
+        238
+      ],
+      [
+        71,
+        239
+      ],
+      [
+        71,
+        240
+      ],
+      [
+        71,
+        241
+      ],
+      [
+        71,
+        242
+      ],
+      [
+        71,
+        243
+      ],
+      [
+        71,
+        244
+      ],
+      [
+        71,
+        245
+      ],
+      [
+        71,
+        246
+      ],
+      [
+        71,
+        247
+      ],
+      [
+        71,
+        248
+      ],
+      [
+        71,
+        249
+      ],
+      [
+        71,
+        250
+      ],
+      [
+        71,
+        251
+      ],
+      [
+        71,
+        252
+      ],
+      [
+        71,
+        253
+      ],
+      [
+        71,
+        254
+      ],
+      [
+        71,
+        255
+      ],
+      [
+        71,
+        256
+      ]
+    ],
+    "goal_reached": false,
+    "collision": false,
+    "revealed_cells": 4305,
+    "revealed_wrong_cells": 494,
+    "revealed_low_u_wrong_cells": 135
+  }
+]

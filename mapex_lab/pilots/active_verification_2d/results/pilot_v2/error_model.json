@@ -1,0 +1,134 @@
+{
+  "status": "FROZEN_DEVELOPMENT_ONLY_ERROR_ESTIMATOR",
+  "model": {
+    "features": [
+      "predicted_occupied",
+      "soft_ambiguity",
+      "ensemble_variance",
+      "vote_disagreement",
+      "distance_from_known",
+      "local_edge_density"
+    ],
+    "centre": [
+      0.14855827501046417,
+      0.15625242722883173,
+      0.05404643425030548,
+      0.11347718315034537,
+      0.17790153129568223,
+      0.23901805258877862
+    ],
+    "scale": [
+      0.35565251852961516,
+      0.3331759304303013,
+      0.11990211118460131,
+      0.2505481676999671,
+      0.18149732786544415,
+      0.379238322938351
+    ],
+    "coefficients": [
+      -1.703537707849909,
+      -0.32464799218898593,
+      0.40114275636371516,
+      -0.017689122334159136,
+      0.10239810262520901,
+      0.19266944764856003,
+      0.43608567358576816
+    ],
+    "l2": 0.01,
+    "prevalence": 0.17353562862337749,
+    "optimizer": "scipy L-BFGS-B",
+    "iterations": 20
+  },
+  "protocol_sha256": "8834d3d6795de0ae71ada2a081885bd287008011146baa4e042fcc9ca56075b9",
+  "training_code_sha256": "9c5fffcda6bec1b45b284f12c9d054071aa5be12dd6bdda40511d955cabc24e7",
+  "risk_code_sha256": "6166c9d8631439362040f7f39e719cf9d2566e8426f02d0724a20235da1622f0",
+  "primary_provenance_sha256": "cfa5fbda73b0a73fbdc0035a12a4f70a9c34312749f93c938db1d4a081c0a30c",
+  "sources": [
+    {
+      "case": "new_room__warm5",
+      "initial_sha256": "1f1d9c0db1e5ebb0487b4f57cf9ea5ffc232325a843bfc5e8accaf5ee8dc9464",
+      "cells": 20000,
+      "errors": 3338,
+      "asset_sha256": "c6c494b2869a00a47f83baeec2c6181a871b53fc564ad5ba626798da620ade4f"
+    },
+    {
+      "case": "new_room__warm15",
+      "initial_sha256": "e6d07a3d7161162e6e3f762cf201ce2fc1e95bb6ef1c7ff866ec4e53cd5788a7",
+      "cells": 20000,
+      "errors": 3598,
+      "asset_sha256": "c6c494b2869a00a47f83baeec2c6181a871b53fc564ad5ba626798da620ade4f"
+    },
+    {
+      "case": "kth_50052751__warm5",
+      "initial_sha256": "a82f36931155a90ba256224d36388eb2958e86537b06f7bf2fd6b4c3bb9f962d",
+      "cells": 20000,
+      "errors": 3439,
+      "asset_sha256": "1b393ac35f8945d1852efccc49040d6db27ec73ebcbe966be00cd14b9a56f4ea"
+    },
+    {
+      "case": "kth_50052751__warm15",
+      "initial_sha256": "8688b25bf5a74f95c4b36cad32a214f18e4c9245bf55f0fa46661ca6b384a9f2",
+      "cells": 20000,
+      "errors": 3196,
+      "asset_sha256": "1b393ac35f8945d1852efccc49040d6db27ec73ebcbe966be00cd14b9a56f4ea"
+    },
+    {
+      "case": "kth_50052752__warm5",
+      "initial_sha256": "3024e1aff0491b8b3cbf2b7ffa1f52a2632e760d1c2eab3326b7d975b7103ae1",
+      "cells": 8506,
+      "errors": 1536,
+      "asset_sha256": "a49b0f23a6e8a121de65cccde1b2ac20d2a3c8459166885e8c6c182560fabe53"
+    },
+    {
+      "case": "kth_50052752__warm15",
+      "initial_sha256": "f62428ba830cd838f305bab3c7693f0c346d9312ab545aad6d67571ca424da9b",
+      "cells": 7826,
+      "errors": 1425,
+      "asset_sha256": "a49b0f23a6e8a121de65cccde1b2ac20d2a3c8459166885e8c6c182560fabe53"
+    }
+  ],
+  "confirmation_layouts_excluded": [
+    "kth_50015847",
+    "kth_50052753",
+    "kth_50052754"
+  ],
+  "leave_layout_out": [
+    {
+      "layout": "new_room",
+      "cells": 40000,
+      "brier": 0.13325454569400647,
+      "log_loss": 0.4297688336296204,
+      "observed_error_rate": 0.17339999999999997,
+      "estimated_error_rate": 0.17023616467336855,
+      "constant_prior_brier": 0.1433324813890278,
+      "delta_brier": -0.010077935695021328
+    },
+    {
+      "layout": "kth_50052751",
+      "cells": 40000,
+      "brier": 0.12250606758304196,
+      "log_loss": 0.39938598472473213,
+      "observed_error_rate": 0.16587499999999994,
+      "estimated_error_rate": 0.18378132548951925,
+      "constant_prior_brier": 0.13849252614453694,
+      "delta_brier": -0.015986458561494984
+    },
+    {
+      "layout": "kth_50052752",
+      "cells": 16332,
+      "brier": 0.1546821177760212,
+      "log_loss": 0.48764897434514776,
+      "observed_error_rate": 0.18133188587013246,
+      "estimated_error_rate": 0.21538687310422772,
+      "constant_prior_brier": 0.14858739169779328,
+      "delta_brier": 0.006094726078227919
+    }
+  ],
+  "fit_metrics": {
+    "brier": 0.129241937780662,
+    "log_loss": 0.416561279716158,
+    "observed_error_rate": 0.17353562862337749,
+    "estimated_error_rate": 0.17353568053248103
+  },
+  "caveat": "Cross-layout folds are diagnostics on development. No tuning from these outcomes; no certified calibration, no confirmation labels used."
+}

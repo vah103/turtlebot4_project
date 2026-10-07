@@ -1,0 +1,31 @@
+{
+  "identity": "active_verification_2d_route_risk_v2",
+  "status": "FROZEN_DEVELOPMENT_PLUS_UNSEEN_POLICY_LAYOUT_CHECK",
+  "development_layouts": ["new_room", "kth_50052751", "kth_50052752"],
+  "confirmation_layouts": ["kth_50015847", "kth_50052753", "kth_50052754"],
+  "confirmation_selection": "Fixed before inference/results: first unused numeric test ID plus next two IDs after V1 50052751/752. No selection by model error or policy outcome.",
+  "warm_start_distance_m": [5.0, 15.0],
+  "branch_budget_m": 8.0,
+  "route_methods": ["route_uncertainty", "route_error", "structural_v2"],
+  "confirmation_methods": ["mapex", "uncertainty", "route_uncertainty", "route_error", "structural_v2"],
+  "route_scan_rays": 360,
+  "route_scan_step_cells": 0.5,
+  "route_scan_stride_cells": 10,
+  "preferred_route_length_m": 1.0,
+  "minimum_route_score": 1e-12,
+  "risk_l2": 0.01,
+  "risk_max_cells_per_state": 20000,
+  "risk_sampling_seed": 6100702,
+  "structural_term_weight": 1.0,
+  "max_policy_decisions": 32,
+  "primary_endpoint": "reachable_mismatch_m2",
+  "primary_structural_comparator": "route_error",
+  "success_description": "Report paired endpoints on all states; structural benefit requires improvement over route_error on new layouts, not only over pointwise MapEx. No reranking of endpoints, model/threshold retuning or confirmation-map removal after observing results.",
+  "limits": [
+    "New layouts are held out from this error estimator and policy development, not a verified new-building or LaMa-training holdout.",
+    "Risk is a cell error estimate from six correlated development states; its patch mean is only a heuristic weight, not P(full hypothesis true).",
+    "First-hit hard-map route scans and target-directed patch rays approximate visibility. The pathwise control is PIPE-inspired, not an exact PIPE implementation.",
+    "Counterfactual correction holds unseen predictions fixed; closed-loop LaMa changes may differ.",
+    "Three new layouts with two related states each are preliminary confirmation, not a statistical generalization claim."
+  ]
+}

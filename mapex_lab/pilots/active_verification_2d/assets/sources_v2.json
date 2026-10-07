@@ -1,0 +1,65 @@
+[
+  {
+    "layout": "kth_50015847",
+    "source": "/home/dell/MapEx/kth_test_maps/50015847/occ_map.npy",
+    "sha256": "d6c3f2916c057c423ddc26a2714ca972413adffae341b54a4b1326e7599602cb",
+    "valid_source": "/home/dell/MapEx/kth_test_maps/50015847/valid_space.npy",
+    "valid_source_sha256": "ede61b821caf877d1e1a2678a54c080440f2a468bf4aafbb49025073a5910806",
+    "raw_shape": [
+      883,
+      2653
+    ],
+    "shape": [
+      442,
+      1327
+    ],
+    "start": [
+      86,
+      283
+    ],
+    "asset_sha256": "288cffd35937e80b9ceb3ad6989c6c9b8c357529c7b6410ef9ff6f75b78267b3",
+    "preprocess": "V1: 2x2 any occupied, any valid (>0); outside valid occupied; largest 4-connected free domain, max-clearance start. Odd dimensions padded occupied/invalid."
+  },
+  {
+    "layout": "kth_50052753",
+    "source": "/home/dell/MapEx/kth_test_maps/50052753/occ_map.npy",
+    "sha256": "2f3e2542d4a63a0e411f384482c8742ba946cc2b2bf4fe3403ae19a7aadb7749",
+    "valid_source": "/home/dell/MapEx/kth_test_maps/50052753/valid_space.npy",
+    "valid_source_sha256": "db36f9a922188faacc043b515145943028057f701d7183585628344905c24ed3",
+    "raw_shape": [
+      256,
+      786
+    ],
+    "shape": [
+      128,
+      393
+    ],
+    "start": [
+      25,
+      24
+    ],
+    "asset_sha256": "ad6ef0e656db4b6fe4517d8232711a0323a84d5b60491b3ce8325fa81bbee286",
+    "preprocess": "V1: 2x2 any occupied, any valid (>0); outside valid occupied; largest 4-connected free domain, max-clearance start. Odd dimensions padded occupied/invalid."
+  },
+  {
+    "layout": "kth_50052754",
+    "source": "/home/dell/MapEx/kth_test_maps/50052754/occ_map.npy",
+    "sha256": "afc40cd86c498fe34aee977a5dcfebf87b4034d1c1249e935c145fe0904b83d4",
+    "valid_source": "/home/dell/MapEx/kth_test_maps/50052754/valid_space.npy",
+    "valid_source_sha256": "43435da8a466a11115f01ea7db7a556dfaf1bf036236372ba2e708b5a9ecbb68",
+    "raw_shape": [
+      256,
+      786
+    ],
+    "shape": [
+      128,
+      393
+    ],
+    "start": [
+      24,
+      25
+    ],
+    "asset_sha256": "f3e891f8aee0e3bf637c6626f5218b06728d45d49f96277ee70943f6e68c0577",
+    "preprocess": "V1: 2x2 any occupied, any valid (>0); outside valid occupied; largest 4-connected free domain, max-clearance start. Odd dimensions padded occupied/invalid."
+  }
+]

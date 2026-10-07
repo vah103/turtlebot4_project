@@ -324,3 +324,18 @@ MapEx:   chọn max IG / Euclidean distance
 ```
 
 Execution adapter và recorder phải được chia sẻ tối đa để khác biệt kết quả không đến từ hạ tầng thí nghiệm.
+
+
+## Separate 2D active-verification pilot — USER-authorized 2026-10-07
+
+The exploratory protocol is frozen in [protocol.json](pilots/active_verification_2d/protocol.json), with semantics and reproduction commands in [README](pilots/active_verification_2d/README.md). It uses ideal static 2D grids, real LaMa, paired warm states and a common 8 m branch budget. It does not replace hospital_v2, modify Gazebo baselines, fit a STOP threshold or reopen accepted historical experiments. A post-hoc budget-feasibility ablation is separately identified and preserves V1 results. Reports distinguish self-validation from independent QA and do not infer robot time savings from shared prediction-cache timing.
+
+### V2 route/risk development and new-layout check
+
+Separate frozen protocol: pilots/active_verification_2d/protocol_v2.json. V1 simulator/model/endpoint remain unchanged. Six V1 warm states are development; three preselected new layouts each provide 5 m/15 m warm states. Error-model fitting uses only V1 labels, with equal warm-state weights and leave-layout-out diagnostics. No confirmation labels fit the model. New route methods share candidates, path prefixes, 1 m preference, 360-ray hard-map scans sampled every 1 m, and 8 m execution budget. route_uncertainty is a PIPE-inspired control, not exact PIPE. route_error isolates the learned cell-error area; structural_v2 adds a local partial-observation structural-correction term. All confirmation branches newly run; 12 V1 development baselines explicitly reused. Code/model/assets sealed before confirmation inference; no retuning or dropping new layouts after outcomes.
+
+## 2026-10-07 — V2 completion record (frozen primary protocol unchanged)
+
+The branch-only V2 pilot completed 18 new development and 30 new-layout branches, with all branches using 8 m and no collision. Twelve V1 baseline branches are explicitly reused only in development. Primary endpoint and comparator remain reachable mismatch versus route_error as frozen in protocol_v2.json before confirmation; no parameter/model/layout changes followed the outcomes.
+
+Supplementary static navigation auditing uses 40 fixed truth-reachable goals per state, the same goals for every method, seed 6100703. It was added as a development diagnostic, not an exact MapEx TU reproduction or a replacement primary endpoint. Report safe plans / all queries separately from unsafe plans / produced plans. Two states of a layout are dependent; the three new layouts exclude pilot model/policy development, without a verified building or LaMa-training holdout claim. Full details, result tables and provenance are in pilots/active_verification_2d/REPORT_V2_VI.md.

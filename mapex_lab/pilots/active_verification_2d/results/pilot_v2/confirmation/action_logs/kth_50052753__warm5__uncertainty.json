@@ -1,0 +1,402 @@
+[
+  {
+    "action": "OBSERVE_UNCERTAINTY",
+    "goal": [
+      70,
+      19
+    ],
+    "score": 8.342309951782227,
+    "path_m": 4.0,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 3,
+    "observation_poses": 20,
+    "raw_frontiers": 5,
+    "reachable_frontiers": 5,
+    "near_frontier_fallback": false,
+    "geometry_proposals": 34,
+    "consequence_proposals": 3,
+    "case": "kth_50052753__warm5",
+    "method": "uncertainty",
+    "decision": 0,
+    "start_pose": [
+      55,
+      44
+    ],
+    "distance_before_m": 0.0,
+    "policy_compute_s": 1.4304362760012737,
+    "observed_hash": "e47d28de4a086ec0299ff072562b319882eedf19f63ae1431a951924654f5146",
+    "distance_after_m": 4.000000000000002,
+    "path_taken": [
+      [
+        55,
+        44
+      ],
+      [
+        56,
+        44
+      ],
+      [
+        57,
+        44
+      ],
+      [
+        58,
+        44
+      ],
+      [
+        59,
+        44
+      ],
+      [
+        60,
+        44
+      ],
+      [
+        61,
+        44
+      ],
+      [
+        62,
+        44
+      ],
+      [
+        63,
+        44
+      ],
+      [
+        64,
+        44
+      ],
+      [
+        65,
+        44
+      ],
+      [
+        65,
+        43
+      ],
+      [
+        65,
+        42
+      ],
+      [
+        65,
+        41
+      ],
+      [
+        65,
+        40
+      ],
+      [
+        65,
+        39
+      ],
+      [
+        65,
+        38
+      ],
+      [
+        65,
+        37
+      ],
+      [
+        65,
+        36
+      ],
+      [
+        65,
+        35
+      ],
+      [
+        65,
+        34
+      ],
+      [
+        65,
+        33
+      ],
+      [
+        65,
+        32
+      ],
+      [
+        65,
+        31
+      ],
+      [
+        66,
+        31
+      ],
+      [
+        67,
+        31
+      ],
+      [
+        68,
+        31
+      ],
+      [
+        69,
+        31
+      ],
+      [
+        70,
+        31
+      ],
+      [
+        70,
+        30
+      ],
+      [
+        70,
+        29
+      ],
+      [
+        70,
+        28
+      ],
+      [
+        70,
+        27
+      ],
+      [
+        70,
+        26
+      ],
+      [
+        70,
+        25
+      ],
+      [
+        70,
+        24
+      ],
+      [
+        70,
+        23
+      ],
+      [
+        70,
+        22
+      ],
+      [
+        70,
+        21
+      ],
+      [
+        70,
+        20
+      ],
+      [
+        70,
+        19
+      ]
+    ],
+    "goal_reached": true,
+    "collision": false,
+    "revealed_cells": 1293,
+    "revealed_wrong_cells": 75,
+    "revealed_low_u_wrong_cells": 38
+  },
+  {
+    "action": "OBSERVE_UNCERTAINTY",
+    "goal": [
+      72,
+      229
+    ],
+    "score": 6.208508465741131,
+    "path_m": 22.200000000000003,
+    "hypothesis": null,
+    "candidate_records": [],
+    "hypotheses": 9,
+    "observation_poses": 24,
+    "raw_frontiers": 6,
+    "reachable_frontiers": 4,
+    "near_frontier_fallback": false,
+    "geometry_proposals": 55,
+    "consequence_proposals": 9,
+    "case": "kth_50052753__warm5",
+    "method": "uncertainty",
+    "decision": 1,
+    "start_pose": [
+      70,
+      19
+    ],
+    "distance_before_m": 4.000000000000002,
+    "policy_compute_s": 2.051178631998482,
+    "observed_hash": "c64e8ffa3f5729efe37fc470acb7978b9467db7bf6e00dfd7f2ab4c0aa0049e4",
+    "distance_after_m": 7.999999999999988,
+    "path_taken": [
+      [
+        70,
+        19
+      ],
+      [
+        69,
+        19
+      ],
+      [
+        68,
+        19
+      ],
+      [
+        67,
+        19
+      ],
+      [
+        66,
+        19
+      ],
+      [
+        65,
+        19
+      ],
+      [
+        65,
+        20
+      ],
+      [
+        65,
+        21
+      ],
+      [
+        65,
+        22
+      ],
+      [
+        65,
+        23
+      ],
+      [
+        65,
+        24
+      ],
+      [
+        65,
+        25
+      ],
+      [
+        65,
+        26
+      ],
+      [
+        65,
+        27
+      ],
+      [
+        65,
+        28
+      ],
+      [
+        65,
+        29
+      ],
+      [
+        65,
+        30
+      ],
+      [
+        65,
+        31
+      ],
+      [
+        65,
+        32
+      ],
+      [
+        65,
+        33
+      ],
+      [
+        65,
+        34
+      ],
+      [
+        65,
+        35
+      ],
+      [
+        65,
+        36
+      ],
+      [
+        66,
+        36
+      ],
+      [
+        67,
+        36
+      ],
+      [
+        68,
+        36
+      ],
+      [
+        69,
+        36
+      ],
+      [
+        70,
+        36
+      ],
+      [
+        71,
+        36
+      ],
+      [
+        71,
+        37
+      ],
+      [
+        71,
+        38
+      ],
+      [
+        71,
+        39
+      ],
+      [
+        71,
+        40
+      ],
+      [
+        71,
+        41
+      ],
+      [
+        71,
+        42
+      ],
+      [
+        71,
+        43
+      ],
+      [
+        71,
+        44
+      ],
+      [
+        71,
+        45
+      ],
+      [
+        71,
+        46
+      ],
+      [
+        71,
+        47
+      ],
+      [
+        71,
+        48
+      ]
+    ],
+    "goal_reached": false,
+    "collision": false,
+    "revealed_cells": 132,
+    "revealed_wrong_cells": 3,
+    "revealed_low_u_wrong_cells": 2
+  }
+]

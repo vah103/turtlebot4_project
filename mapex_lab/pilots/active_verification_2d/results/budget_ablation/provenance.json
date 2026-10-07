@@ -1,0 +1,69 @@
+{
+  "status": "POST_HOC_DEVELOPMENT_ABLATION",
+  "config": {
+    "identity": "active_verification_2d_budget_feasibility_ablation",
+    "status": "EXPLORATORY_PILOT_NOT_CONFIRMATORY",
+    "layouts": [
+      "new_room",
+      "kth_50052751",
+      "kth_50052752"
+    ],
+    "warm_start_distance_m": [
+      5.0,
+      15.0
+    ],
+    "warm_start_policy": "nearest_frontier",
+    "branch_budget_m": 8.0,
+    "methods": [
+      "mapex",
+      "uncertainty",
+      "structural"
+    ],
+    "resolution_m": 0.1,
+    "robot_radius_m": 0.15,
+    "sensor_range_m": 20.0,
+    "sensor_rays": 2500,
+    "sense_every_motion_steps": 3,
+    "prediction_visibility_rays": 250,
+    "frontier_min_size_strict": 10,
+    "gate_span_m": 1.8,
+    "gate_depth_m": 0.3,
+    "open_side_offset_m": 0.5,
+    "gate_sampling_stride_cells": 3,
+    "gate_nms_m": 0.6,
+    "min_unknown_gate_cells": 6,
+    "max_geometry_proposals": 80,
+    "min_structural_impact_m2": 1.0,
+    "max_hypotheses": 20,
+    "view_band_m": 1.0,
+    "views_per_query": 2,
+    "uniform_extra_views": 8,
+    "max_observation_poses": 24,
+    "probe_target_samples": 7,
+    "max_policy_decisions": 32,
+    "low_variance_diagnostic_threshold": 0.01,
+    "random_seed": 6100701,
+    "primary_endpoint": "reachable_mismatch_m2",
+    "secondary_endpoints": [
+      "macro_iou",
+      "missed_reachable_free_m2",
+      "reachable_retention",
+      "observed_free_coverage"
+    ],
+    "interpretation": "Post-hoc development ablation; only verification goal budget eligibility changes; original baselines reused explicitly."
+  },
+  "parent_experiment_identity": "4e343e7c68bd5f5cb757b3c5ae574d06ac1441c7fb25fbbd4fe242272c051e8d",
+  "parent_branch_csv_sha256": "e58c626eda5edea436a6dae38086198fe663446b0da95254decd6f8bfe76cca6",
+  "variant_code_sha256": "f1928a2dd28dc998e36b20f40a1c6a71c31ad03de8eb77c94a7b1726c9667dfa",
+  "frozen_execution_code_sha256": {
+    "core.py": "0cf86dab2d6782ba568b47ea69277adc7080610167a7959c9d24e6723c7f2a68",
+    "policy.py": "288ad0e29e8a0d9995bb6b8178ae744e72ab022030d30f994c1dc5a3a18b9590",
+    "predictor.py": "d1cb8f0e90e8f8cc4d192b4cf8efcb539b4cc38add090aa50a565c7cabc3fbdc",
+    "run.py": "51a84740d9602c37c7d796a8d3d8e283c380ca7e570d00d6c4028af360e046d6"
+  },
+  "prediction_identity": "b251dceb684cb7a12aeb0dc5c9bafd2787a6e99ce2d3329ef68fd7b4349bd394",
+  "change": "Filter verification viewpoints by shortest_path_m <= remaining_m. Ordinary exploration may still use partial paths.",
+  "original_baselines_reused": 12,
+  "new_structural_branches": 6,
+  "experiment_identity": "1ff04129a5dbdc03984fbff046c7a4af117f96cdb54d5f6fc6f78a5e588b5ad4"
+}

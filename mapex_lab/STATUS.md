@@ -411,3 +411,27 @@ Conclusion: Way1 works in New Room but does not transfer cleanly to Hospital wit
 - `scripts/evaluate_way2_adaptive_confirmation.py`
 - `scripts/sweep_way2_adaptive_candidate_count.py`
 - `scripts/sweep_way2_adaptive_rule_neighborhood.py`
+
+
+## 2026-10-07 — separate USER-authorized 2D active-verification development pilot
+
+This branch-only pilot follows the USER request to implement and test active verification without Gazebo. It does not alter Company Hub MX067, MX060 collection, historical D1 gates or deployed robot behavior.
+
+- DONE: ROS-free ideal 2D simulator, real CPU three-member LaMa inference, geometry-based verification and two baselines.
+- DONE: 18 paired branches on 3 layouts x 2 warm states, plus 6 post-hoc budget-feasibility branches. All 24 used 8 m, zero collisions.
+- LATEST RESULT: V1 structural beats uncertainty in 1/6 states on reachability mismatch; layout-macro mismatch is +7.515 m2 worse. Budget-feasible variant beats uncertainty in 0/6; mismatch remains +1.64 m2 worse. No algorithm promotion or STOP claim.
+- CHECKS: 14/14 tests; primary artifact recomputation 147/147, ablation 51/51. Self-validation only; not independent QA ACCEPT.
+- IN PROGRESS: independent scientific review remains outstanding.
+- FOLLOW-UP: proposal/visibility/ranking diagnosis and a separately frozen V2 cohort completed below; V1 evidence remains unchanged.
+- Evidence: [pilot report](pilots/active_verification_2d/REPORT_VI.md), [protocol and commands](pilots/active_verification_2d/README.md), [independent review scope](pilots/active_verification_2d/QA_REVIEW.md).
+
+## 2026-10-07 — V2 route/risk pilot DONE (research pilot, self-validation)
+
+- DONE: development-only logistic cell-error model, shared route sensing, budget-feasible goal selection and partial-observation structural scoring. V1 remains frozen.
+- DONE: 18 new development branches plus 30 new branches on three preselected policy-development-excluded layouts (50015847, 50052753, 50052754). All 48 used 8 m, zero collisions, no Gazebo.
+- LATEST RESULT: on six new-layout states, structural_v2 beats MapEx 6/6 (layout-macro mismatch delta -7.886667 m2), but versus the primary route_error control wins/ties/loses 1/3/2 and is +6.476667 m2 worse. Structural benefit is not established.
+- LATEST RESULT: supplementary static navigation audit gives safe plans/all queries 55.00% for structural_v2 versus 61.67% for route_error and 59.17% for MapEx. Area improvement is not evidence of improved downstream paths.
+- CHECKS: 24/24 tests; V2 artifact checks 863/863 and analysis checks 43/43 PASS. Source/model/inputs were sealed before confirmation. No policy retuning after results; self-validation is not independent QA ACCEPT.
+- IN PROGRESS: independent scientific review remains outstanding. New layouts are not verified building or LaMa-training holdouts.
+- NEXT ACTION: review the route_error control, calibration transfer, and mismatch between pixel/gate hypotheses and navigation events before selecting a thesis contribution. Do not promote the current gate heuristic or start threshold tuning/STOP collection from these results.
+- Evidence: [V2 report](pilots/active_verification_2d/REPORT_V2_VI.md), [method and rerun](pilots/active_verification_2d/README_V2.md), [independent review scope](pilots/active_verification_2d/QA_REVIEW.md).

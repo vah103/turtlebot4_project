@@ -1,0 +1,13 @@
+case,layout,baseline,equal_budget_completed,delta_mismatch_m2,delta_macro_iou,delta_distance_m
+kth_50052751__warm15,kth_50052751,mapex,True,7.310000000000002,0.004631912927487214,0.0
+kth_50052751__warm15,kth_50052751,uncertainty,True,0.0,0.0,0.0
+kth_50052751__warm5,kth_50052751,mapex,True,-0.519999999999996,0.00039128672885391236,0.0
+kth_50052751__warm5,kth_50052751,uncertainty,True,4.230000000000004,-0.05941223883783653,0.0
+kth_50052752__warm15,kth_50052752,mapex,True,0.0,0.0,0.0
+kth_50052752__warm15,kth_50052752,uncertainty,True,2.780000000000001,-0.03081240244850658,0.0
+kth_50052752__warm5,kth_50052752,mapex,True,-1.6500000000000004,0.01919249997064154,0.0
+kth_50052752__warm5,kth_50052752,uncertainty,True,2.83,-0.014033754778203011,0.0
+new_room__warm15,new_room,mapex,True,0.0,0.0,0.0
+new_room__warm15,new_room,uncertainty,True,0.0,0.0,0.0
+new_room__warm5,new_room,mapex,True,0.0,0.0,0.0
+new_room__warm5,new_room,uncertainty,True,0.0,0.0,0.0
