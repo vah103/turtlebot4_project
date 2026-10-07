@@ -86,7 +86,7 @@ def case_plot(case, rows, output):
                 r, c = hypothesis["centre"]
                 ax.scatter(c, r, marker="x", color="#f97316", s=35)
         row = next(r for r in rows if r["case"] == case and r["method"] == method)
-        ax.set_title("%s\nmismatch %.2f m²; IoU %.3f; moved %.1f m" %
+        ax.set_title("%s\nmismatch %.2f m²\nIoU %.3f; moved %.1f m" %
                      (LABELS[method], float(row["reachable_mismatch_m2"]), float(row["macro_iou"]), float(row["distance_m"])), fontsize=10)
     for ax in axes.ravel():
         ax.set_xticks([])
