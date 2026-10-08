@@ -195,8 +195,9 @@ class GeometrySolver:
                 corrected.append(flat)
         return mean, {'kind': 'sparse', 'corrected_flat': sorted(corrected)}
 
-    def seed_witnesses(self):
-        witness = {}
+    def seed_witnesses(self, witness=None):
+        if witness is None:
+            witness = {}
         for kind, mean in [('none', self.mean), ('all_unknown', np.where(self.unknown, self.truth, self.mean))]:
             action = self.winner(self.scores(mean))
             witness.setdefault(action, {'kind': kind})
@@ -213,7 +214,7 @@ class GeometrySolver:
         previous = signal.signal(signal.SIGALRM, alarm_handler)
         signal.setitimer(signal.ITIMER_REAL, max(0.001, seconds))
         try:
-            witnesses = self.seed_witnesses()
+            self.seed_witnesses(witnesses)
             while stack and nodes < max_nodes:
                 partial = stack[-1]
                 current_partial = dict(partial)

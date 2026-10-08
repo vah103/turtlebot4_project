@@ -3,4 +3,10 @@ results/**/uncached_determinism/
 results/**/*.npz
 results/**/*.log
 results/**/*.tmp
+results/run_*/p1/summary.json
+results/run_*/p1/progress.json
+results/run_*/p1/*/result.json
+results/run_*/p2/baseline_partial.json
+results/run_*/p2/queue.json
+results/run_*/p2/search_nodes.json
 __pycache__/

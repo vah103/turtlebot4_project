@@ -426,3 +426,7 @@ Conclusion: Way1 works in New Room but does not transfer cleanly to Hospital wit
 - IN PROGRESS: user-authorized bounded P1 (four initial states), then P2 (one fixed 2D task, 900s/120 nodes).
 - NEXT ACTION: preserve certified action/task intervals and witnesses, then report feasibility and scope.
 - LATEST RESULT: no new mission-impact estimate yet. This is not held-out confirmation or an online policy. COM1 is offline; DELL uses the same checkpoint/source bytes.
+
+## Geometry-impact development run, 2026-10-08
+
+Pinned R4 A1 development diagnostic on DELL: P1 completed on four initial states; three action sets exact, one unresolved. Byte-identical uncached anchor. P2 begins after geometry/task-bound checks pass. No whole-task harm, population frequency, held-out generalization or online-method claim yet. Details: `pilots/geometry_impact/README.md`.

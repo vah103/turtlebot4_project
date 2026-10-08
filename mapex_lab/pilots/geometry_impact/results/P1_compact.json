@@ -1,0 +1,217 @@
+{
+  "status": "P1_VALID_BOUNDS_PREFLIGHT",
+  "determinism_anchor_checked": true,
+  "scope": "four development initial states; not whole-task impact or population evidence",
+  "model_calls": 4,
+  "cache_hits": 1,
+  "inference_s": 92.87695583700406,
+  "maxrss_kb": 1434324,
+  "confirmation": "NOT_OPENED_TRAIN_SPLIT_UNVERIFIED",
+  "online_method": "NOT_TRAINED",
+  "raw_summary_sha256": "566899a4da2fbd918c7081e6e67dff19c5730548d8a4ca0254db5ee8ab10d1db",
+  "results": [
+    {
+      "layout": "kth_50052748",
+      "status": "VALID_ACTION_BOUNDS_COMPLETE",
+      "shape": [
+        218,
+        429
+      ],
+      "start": [
+        181,
+        282
+      ],
+      "native_baseline_index": 0,
+      "baseline_scores": [
+        0.5560129519264624
+      ],
+      "parity_checks": 12,
+      "solver_stage_s": 1.4985223099938594,
+      "wall_s": 1.6035164770000847,
+      "observed_hash": "0ec1663d6457b8533873b2c506bfbeacea079606638c34683984a6212eff00aa",
+      "mean_hash": "51e4aad8a1cee89c78edae98cfe923f6b28cc1d54c6836548b0159779577fe6d",
+      "variance_hash": "872a0dd14c7a4dd2aaecc4d56239880477de5ade39f296d05b2690634edca6d9",
+      "candidate_count": 1,
+      "bounds": {
+        "reachable_lower": [
+          0
+        ],
+        "reachable_upper": [
+          0
+        ],
+        "complete": true,
+        "timed_out": false,
+        "nodes": 1,
+        "open_subcubes": 0,
+        "fixed_root": [],
+        "correctable_relevant_cells": 12054,
+        "candidates": 1,
+        "native_mask_evaluations": 4,
+        "parity_checks": 12,
+        "wall_s": 0.0025131180009339005
+      },
+      "witness_action_indices": [
+        0
+      ]
+    },
+    {
+      "layout": "kth_50037764_PLAN1",
+      "status": "VALID_ACTION_BOUNDS_COMPLETE",
+      "shape": [
+        211,
+        1354
+      ],
+      "start": [
+        21,
+        915
+      ],
+      "native_baseline_index": 0,
+      "baseline_scores": [
+        33.04859891759558
+      ],
+      "parity_checks": 12,
+      "solver_stage_s": 1.5219995669976925,
+      "wall_s": 23.277709022004274,
+      "observed_hash": "e1e9b06c75f98771022c8c4270095c7b42498e1d38dc60b1603557a0584a4f52",
+      "mean_hash": "075c7a00af89fc410d71e8b04d86e2400e63546d8f0108f248cbcffff7dd689c",
+      "variance_hash": "0933e558cbcbcae7a3c12f9f6d3fb7b797edd5ffb6db2f789848a05969e977f6",
+      "candidate_count": 1,
+      "bounds": {
+        "reachable_lower": [
+          0
+        ],
+        "reachable_upper": [
+          0
+        ],
+        "complete": true,
+        "timed_out": false,
+        "nodes": 1,
+        "open_subcubes": 0,
+        "fixed_root": [],
+        "correctable_relevant_cells": 25544,
+        "candidates": 1,
+        "native_mask_evaluations": 4,
+        "parity_checks": 12,
+        "wall_s": 0.0031126089961617254
+      },
+      "witness_action_indices": [
+        0
+      ]
+    },
+    {
+      "layout": "kth_50010535_PLAN1",
+      "status": "VALID_ACTION_BOUNDS_UNRESOLVED",
+      "shape": [
+        298,
+        1029
+      ],
+      "start": [
+        173,
+        493
+      ],
+      "native_baseline_index": 6,
+      "baseline_scores": [
+        6.736144386544466,
+        7.023905450174619,
+        4.419425908811916,
+        4.382762127408974,
+        3.602955255054172,
+        3.809786668323932,
+        12.020195750742712,
+        9.748136263372981,
+        3.6487476266081362,
+        4.210446688588844,
+        2.87756137740189,
+        7.868298192235599
+      ],
+      "parity_checks": 100,
+      "solver_stage_s": 64.74828823999997,
+      "wall_s": 87.17059758999676,
+      "observed_hash": "d92cfe4a286a944cc11dae6f83d11b40fa041d6f7f188acc06072f28a86f7c89",
+      "mean_hash": "eb0ed38b1b37b62c059976d65d5e0b315def52a95bca5d683a842378690fbd22",
+      "variance_hash": "ff6a8542e7dff799fa3ba0342b878327b18d5b5a09790865dd83ccd890948260",
+      "candidate_count": 12,
+      "bounds": {
+        "reachable_lower": [
+          6
+        ],
+        "reachable_upper": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "complete": false,
+        "timed_out": true,
+        "nodes": 2394,
+        "open_subcubes": 2396,
+        "fixed_root": [],
+        "correctable_relevant_cells": 110410,
+        "candidates": 12,
+        "native_mask_evaluations": 48,
+        "parity_checks": 100,
+        "wall_s": 44.96479379800439
+      },
+      "witness_action_indices": [
+        6
+      ]
+    },
+    {
+      "layout": "kth_50015848",
+      "status": "VALID_ACTION_BOUNDS_COMPLETE",
+      "shape": [
+        440,
+        1321
+      ],
+      "start": [
+        53,
+        703
+      ],
+      "native_baseline_index": 0,
+      "baseline_scores": [
+        3.589474250530374,
+        3.2853211566291973
+      ],
+      "parity_checks": 20,
+      "solver_stage_s": 2.334337690997927,
+      "wall_s": 46.121296494005946,
+      "observed_hash": "eced25c73b06ad12e4de4a62651e05de9765ea614f84ad2a2e75bb9ecdae4a8b",
+      "mean_hash": "99026dd2ff476c94881b3992309161f9ec35670c03a03b54c3500d3cd5510930",
+      "variance_hash": "654bd1302b77bf8edf7d86324cf41b07c793f8181e70250bde2d6d4530a29f0f",
+      "candidate_count": 2,
+      "bounds": {
+        "reachable_lower": [
+          0,
+          1
+        ],
+        "reachable_upper": [
+          0,
+          1
+        ],
+        "complete": true,
+        "timed_out": false,
+        "nodes": 1,
+        "open_subcubes": 0,
+        "fixed_root": [],
+        "correctable_relevant_cells": 26199,
+        "candidates": 2,
+        "native_mask_evaluations": 8,
+        "parity_checks": 20,
+        "wall_s": 0.00783533100184286
+      },
+      "witness_action_indices": [
+        0,
+        1
+      ]
+    }
+  ],
+  "budget_note": "60s numerical-stage cap; native validation and result serialization can overrun. Largest measured stage: 64.74828824s. No whole-task effect or population-frequency conclusion."
+}
