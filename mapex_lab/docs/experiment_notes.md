@@ -334,3 +334,19 @@ Downloaded the original KTH XML archive linked by the FloorGenT authors (`https:
 The independent audit passes on all five completed paired episodes: 76 eligible reference decisions and 30 fixed sampled states. It independently replays the physical reference sensor/state trace and verifies C_bar, strict occupied IoU, known-cell preservation, fixed SRS seed/IDs, predictor identity, sealed source/data hashes, branch-context keys, same-action zeros and recomputed estimators. Every completed branch also fits the algebraic coverage-AUC bounds implied by its fixed common past and monotone observed coverage to the same total 150m budget. These are integrity checks, not evidence of a useful learned correction.
 
 Auditing all 14 supplied raw floor assets against the original XML still yields the same four buildings. MapEx paper V-A reports a building-disjoint 80:20 split; the training-building list for these exact checkpoints remains unavailable for independent overlap verification. Do not describe the lack of that list as evidence that the authors trained on test buildings.
+
+
+### R4 A1 alternate-suffix replay integrity check
+
+`controller_v2/replay_selected.py` re-executes three fixed actual suffixes using recorded prediction caches only: `kth_50037764_PLAN1`, state 2/native_GT_U and state 3/sensor_P_uniform + sensor_GT_uniform. These were chosen after inspecting the first five development episodes to verify a large negative primary effect and a positive sensitivity contrast; they are not extra research samples or independent replication evidence. All final observed-map hashes, C_bar, strict IoU, distance, collisions and terminal states match exactly (float tolerance 1e-9). No new inference was permitted; 36 recorded prediction-cache hits, three complete 150m outcomes, zero collisions. The positive sensitivity contrast is relative to sensor_P_uniform, not evidence of an equal improvement over the native baseline.
+
+The original MapEx checkout has 64 available commits. A read-only history search found neither data_factory history nor object paths matching split/train_test/train_world/test_world; the exact checkpoint training-building manifest is still not recovered. The published building-disjoint split claim is retained separately from an independent overlap audit.
+
+
+### R4 A1 complete development result — 2026-10-08
+
+A1 finished at 2026-10-08 16:49:38 UTC+07, wall 5467.55s. Final audit passes all six fixed reference episodes, 91 decisions, 75 union action-flip states, 36 fixed sampled states and 100 distinct action outcome artifacts (36 baseline suffixes + 64 alternatives). All recorded outcomes reached 150m with zero collisions. A1 used 511 new ensemble calls, 380 cache hits, 4590.37s new inference; these timings exclude A0 and engineering preflight.
+
+Primary native_P_U -> native_GT_U: 0/36 sampled practical successes; exact action flips 51/91. The four-building hierarchy gives rate estimate 0, finite-cohort sampling bounds [0,0.38070818070818074], mean first-action C_bar effect -0.007218875184210486, conservative mean bounds [-0.8286782661782662,+0.8286782661782662]. Each interval family is simultaneous separately; no new-building interval. Some controls have positive cases (3 sensor/U, 2 native/uniform, 4 sensor/uniform), compared with their own P/renderer/weighting arm. They do not establish equal gains over the native reference.
+
+Scientific verdict remains INCONCLUSIVE for frequency/severity adequate to prioritize a learned visibility contribution. Zero sampled primary successes is not proof of zero loss or an exhausted research space. Six floor/start episodes are four buildings; f/g, mechanism edits, full-policy confirmation and its power remain undone. Human report: `pilots/visibility_impact_r4/RESULTS.md`; exact audited estimates: `results/controller_v2_verified_development_summary.json`.

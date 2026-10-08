@@ -1,0 +1,62 @@
+{
+  "status": "PASS",
+  "scope": "Post-outcome deterministic integrity checks; not extra research samples",
+  "layout": "kth_50037764_PLAN1",
+  "results": [
+    {
+      "state": 2,
+      "arm": "native_GT_U",
+      "action_id": "e3067ddd825bf3392a49c3e2603c46e1505bf29cdded71d5a624c583de9385c8",
+      "status": "EXACT_REPLAY",
+      "outcome": {
+        "status": "COMPLETE",
+        "terminal": "BUDGET_REACHED",
+        "C_bar": 0.09849828424918294,
+        "Q": 0.3268699315906311,
+        "final_coverage": 0.10315939029095296,
+        "distance_m": 149.99999999999577,
+        "collisions": 0,
+        "observed_hash": "cbe69a14c3069359b69c866a2e9a142431ecca7a8b903bdc798836e5919dead3"
+      },
+      "elapsed_s": 7.399354031000257
+    },
+    {
+      "state": 3,
+      "arm": "sensor_P_uniform",
+      "action_id": "d142ef73e74f5eac2a991183458197723efcfb65c8b731e12353d66a92a1ee1e",
+      "status": "EXACT_REPLAY",
+      "outcome": {
+        "status": "COMPLETE",
+        "terminal": "BUDGET_REACHED",
+        "C_bar": 0.216088235113999,
+        "Q": 0.3421800065186013,
+        "final_coverage": 0.28801342388741574,
+        "distance_m": 149.99999999999577,
+        "collisions": 0,
+        "observed_hash": "3f34649433318873b3f3548f617fd073c0704f33778f45cc0a883384b910335b"
+      },
+      "elapsed_s": 8.088961114997801
+    },
+    {
+      "state": 3,
+      "arm": "sensor_GT_uniform",
+      "action_id": "2ed79bfc256e38dddf3fba48d70345598f2e667c1a20e7eacf5238c9caa8e2df",
+      "status": "EXACT_REPLAY",
+      "outcome": {
+        "status": "COMPLETE",
+        "terminal": "BUDGET_REACHED",
+        "C_bar": 0.29089383983196254,
+        "Q": 0.7199537362968923,
+        "final_coverage": 0.6376162801379133,
+        "distance_m": 149.99999999999577,
+        "collisions": 0,
+        "observed_hash": "7f0ebaab9f3740c7e49220d9820ba44bc233398038dcca7d816da04ab0b67343"
+      },
+      "elapsed_s": 15.76313454800038
+    }
+  ],
+  "new_model_inferences": 0,
+  "cache_hits": 36,
+  "source_sha256": "4064418a3b65f34d6f803334cae31f771e2a82e7f398ae4465ac78771926f911",
+  "run_seal_sha256": "caab092a8f18355aba0ccc315fbfbdc6fc623b29aca4774c4f735be978f007d9"
+}

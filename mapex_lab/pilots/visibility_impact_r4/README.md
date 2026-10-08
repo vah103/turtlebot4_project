@@ -78,3 +78,10 @@ Bounds are simultaneous within each rate or mean-effect family separately;
 they are not jointly 95% over both families and do not cover unseen buildings.
 Stage B's physical label replay must also preserve scan timing and measured-path
 abort semantics, rather than rendering from unsafe virtual path poses.
+
+A1 completed on all six fixed layout/start episodes; the final audit passed.
+See `RESULTS.md` for the four-building development estimates and limitations.
+There were no sampled practical successes for the primary native P-to-GT
+intervention, but its finite-cohort rate interval remains 0..38.07% and its
+bounded-mean interval is too wide to conclude negligible impact. Online f/g
+and full-policy R4 confirmation are not completed.

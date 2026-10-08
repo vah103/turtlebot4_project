@@ -1,0 +1,3181 @@
+{
+  "status": "COMPLETE_DEVELOPMENT_PILOT",
+  "complete_layouts": 6,
+  "planned_layouts": 6,
+  "failure": null,
+  "model_inference_s": 4590.370206379957,
+  "model_calls": 511,
+  "cache_hits": 380,
+  "confirmation_status": "BLOCKED_UNVERIFIED_BUILDING_AND_PREDICTOR_SPLIT",
+  "online_f_g_status": "NOT_TRAINED_NOT_TESTED",
+  "results": [
+    {
+      "status": "COMPLETE_DEVELOPMENT_ONLY",
+      "reference": {
+        "status": "COMPLETE",
+        "terminal": "BUDGET_REACHED",
+        "C_bar": 0.5889170429364063,
+        "Q": 0.9324644549763034,
+        "final_coverage": 0.930571985537913,
+        "distance_m": 149.99999999999577,
+        "collisions": 0,
+        "observed_hash": "166f3ae2f2fc79a29df33c25a42fbbb847e01620d5bdc74ed0526d80fe3c0933"
+      },
+      "sampling": {
+        "T": 15,
+        "M": 13,
+        "k": 6,
+        "selected": [
+          1,
+          2,
+          3,
+          4,
+          8,
+          11
+        ],
+        "inclusion_probability": 0.46153846153846156,
+        "flip_ids": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13
+        ]
+      },
+      "estimates": {
+        "native_P_U__native_GT_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 15,
+          "M": 13,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": -0.0012846480096117368,
+          "sampled_quality_differences": [
+            0.0,
+            0.0,
+            0.0,
+            -0.006860360225678486,
+            0.0,
+            0.00048187839651980813
+          ],
+          "sampled_effects": [
+            0.0,
+            0.0,
+            0.0,
+            -0.004921530404261132,
+            0.0,
+            -0.003972186585358584
+          ],
+          "rate_interval": [
+            0.0,
+            0.4
+          ],
+          "mean_interval": [
+            -0.8666666666666667,
+            0.8666666666666667
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "sensor_P_U__sensor_GT_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 15,
+          "M": 13,
+          "k": 6,
+          "successes": 1,
+          "rate": 0.14444444444444443,
+          "mean_effect": 0.003408490027540398,
+          "sampled_quality_differences": [
+            0.0,
+            0.0,
+            0.014482259130606079,
+            -0.006860360225678486,
+            0.0,
+            0.0
+          ],
+          "sampled_effects": [
+            0.0,
+            0.0,
+            0.02851876905646389,
+            -0.004921530404261132,
+            0.0,
+            0.0
+          ],
+          "rate_interval": [
+            0.06666666666666667,
+            0.5333333333333333
+          ],
+          "mean_interval": [
+            -0.8666666666666667,
+            0.8666666666666667
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "native_P_uniform__native_GT_uniform": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 15,
+          "M": 13,
+          "k": 6,
+          "successes": 1,
+          "rate": 0.14444444444444443,
+          "mean_effect": -0.0024229751936581108,
+          "sampled_quality_differences": [
+            -0.0008688783570299785,
+            0.00517019801952423,
+            0.014482259130606079,
+            0.0,
+            0.0,
+            -0.00451840670370518
+          ],
+          "sampled_effects": [
+            -0.03888713018655132,
+            -0.0062287497847915985,
+            0.02851876905646389,
+            0.0,
+            0.0,
+            -0.00017733273352327217
+          ],
+          "rate_interval": [
+            0.06666666666666667,
+            0.5333333333333333
+          ],
+          "mean_interval": [
+            -0.8666666666666667,
+            0.8666666666666667
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "sensor_P_uniform__sensor_GT_uniform": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 15,
+          "M": 13,
+          "k": 6,
+          "successes": 1,
+          "rate": 0.14444444444444443,
+          "mean_effect": 0.004667523308976552,
+          "sampled_quality_differences": [
+            0.0,
+            0.0,
+            0.014482259130606079,
+            0.0,
+            0.0,
+            -0.005000285100224988
+          ],
+          "sampled_effects": [
+            0.0,
+            0.0,
+            0.02851876905646389,
+            0.0,
+            0.0,
+            0.0037948538518353114
+          ],
+          "rate_interval": [
+            0.06666666666666667,
+            0.5333333333333333
+          ],
+          "mean_interval": [
+            -0.8666666666666667,
+            0.8666666666666667
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "native_P_U__sensor_P_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 15,
+          "M": 13,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": -0.004693138037152135,
+          "sampled_quality_differences": [
+            0.0,
+            0.0,
+            -0.014482259130606079,
+            0.0,
+            0.0,
+            0.00048187839651980813
+          ],
+          "sampled_effects": [
+            0.0,
+            0.0,
+            -0.02851876905646389,
+            0.0,
+            0.0,
+            -0.003972186585358584
+          ],
+          "rate_interval": [
+            0.0,
+            0.4
+          ],
+          "mean_interval": [
+            -0.8666666666666667,
+            0.8666666666666667
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        }
+      },
+      "action_flip_rates": {
+        "native_P_U__native_GT_U": {
+          "count": 7,
+          "T": 15,
+          "rate": 0.4666666666666667
+        },
+        "sensor_P_U__sensor_GT_U": {
+          "count": 5,
+          "T": 15,
+          "rate": 0.3333333333333333
+        },
+        "native_P_uniform__native_GT_uniform": {
+          "count": 7,
+          "T": 15,
+          "rate": 0.4666666666666667
+        },
+        "sensor_P_uniform__sensor_GT_uniform": {
+          "count": 5,
+          "T": 15,
+          "rate": 0.3333333333333333
+        },
+        "native_P_U__sensor_P_U": {
+          "count": 4,
+          "T": 15,
+          "rate": 0.26666666666666666
+        }
+      },
+      "effects": [
+        {
+          "state": 1,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": -0.03888713018655132,
+          "delta_Q": -0.0008688783570299785,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 2,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 2,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 2,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": -0.0062287497847915985,
+          "delta_Q": 0.00517019801952423,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 2,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 2,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 3,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 3,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.02851876905646389,
+          "delta_Q": 0.014482259130606079,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 3,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.02851876905646389,
+          "delta_Q": 0.014482259130606079,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 3,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.02851876905646389,
+          "delta_Q": 0.014482259130606079,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 3,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": -0.02851876905646389,
+          "delta_Q": -0.014482259130606079,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": -0.004921530404261132,
+          "delta_Q": -0.006860360225678486,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": -0.004921530404261132,
+          "delta_Q": -0.006860360225678486,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 8,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 8,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 8,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 8,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 8,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 11,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": -0.003972186585358584,
+          "delta_Q": 0.00048187839651980813,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 11,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 11,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": -0.00017733273352327217,
+          "delta_Q": -0.00451840670370518,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 11,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0037948538518353114,
+          "delta_Q": -0.005000285100224988,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 11,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": -0.003972186585358584,
+          "delta_Q": 0.00048187839651980813,
+          "same_action": false,
+          "replay_parity": true
+        }
+      ],
+      "independent_building_verified": false
+    },
+    {
+      "status": "COMPLETE_DEVELOPMENT_ONLY",
+      "reference": {
+        "status": "COMPLETE",
+        "terminal": "BUDGET_REACHED",
+        "C_bar": 0.273640731373237,
+        "Q": 0.6615200119922051,
+        "final_coverage": 0.5222700577496616,
+        "distance_m": 149.99999999999577,
+        "collisions": 0,
+        "observed_hash": "b2772470e29516b469874061779ba9f9afb763277dd34c05f4a916ec8deb3a1e"
+      },
+      "sampling": {
+        "T": 21,
+        "M": 16,
+        "k": 6,
+        "selected": [
+          2,
+          3,
+          9,
+          13,
+          18,
+          20
+        ],
+        "inclusion_probability": 0.375,
+        "flip_ids": [
+          2,
+          3,
+          4,
+          6,
+          7,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          16,
+          17,
+          18,
+          19,
+          20
+        ]
+      },
+      "estimates": {
+        "native_P_U__native_GT_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 21,
+          "M": 16,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": -0.02095190891555705,
+          "sampled_quality_differences": [
+            -0.334650080401574,
+            0.0,
+            -0.0036174274991633837,
+            0.010616056041811928,
+            0.0,
+            0.005146654674461515
+          ],
+          "sampled_effects": [
+            -0.17514244712405408,
+            0.0,
+            0.003986020866632856,
+            0.006070683626164475,
+            0.0,
+            8.945992124498314e-05
+          ],
+          "rate_interval": [
+            0.0,
+            0.42857142857142855
+          ],
+          "mean_interval": [
+            -0.7619047619047619,
+            0.7619047619047619
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "sensor_P_U__sensor_GT_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 21,
+          "M": 16,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": -0.020736781437910193,
+          "sampled_quality_differences": [
+            -0.01897518379749258,
+            0.02218900836714821,
+            -0.0036174274991633837,
+            0.0,
+            0.0,
+            0.002362996480643531
+          ],
+          "sampled_effects": [
+            -0.12730038193572665,
+            -0.040077791590882234,
+            0.003986020866632856,
+            0.0,
+            0.0,
+            8.999883643323603e-05
+          ],
+          "rate_interval": [
+            0.0,
+            0.42857142857142855
+          ],
+          "mean_interval": [
+            -0.7619047619047619,
+            0.7619047619047619
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "native_P_uniform__native_GT_uniform": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 21,
+          "M": 16,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": 0.0031277123688589737,
+          "sampled_quality_differences": [
+            0.0,
+            0.0,
+            0.05266207574292214,
+            0.08721337051221789,
+            0.0009039292885145711,
+            0.005146654674461515
+          ],
+          "sampled_effects": [
+            0.0,
+            0.0,
+            0.014251244710364985,
+            0.01066169394925015,
+            -0.0003716636760957015,
+            8.945992124498314e-05
+          ],
+          "rate_interval": [
+            0.0,
+            0.42857142857142855
+          ],
+          "mean_interval": [
+            -0.7619047619047619,
+            0.7619047619047619
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "sensor_P_uniform__sensor_GT_uniform": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 21,
+          "M": 16,
+          "k": 6,
+          "successes": 1,
+          "rate": 0.12698412698412698,
+          "mean_effect": 0.010861022450296647,
+          "sampled_quality_differences": [
+            0.0,
+            0.377773729778291,
+            0.0,
+            0.08721337051221789,
+            -0.0014045776206258465,
+            0.002362996480643531
+          ],
+          "sampled_effects": [
+            0.0,
+            0.07480560471796355,
+            0.0,
+            0.01066169394925015,
+            -2.674570756083794e-05,
+            8.999883643323603e-05
+          ],
+          "rate_interval": [
+            0.047619047619047616,
+            0.5238095238095237
+          ],
+          "mean_interval": [
+            -0.7619047619047619,
+            0.7619047619047619
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "native_P_U__sensor_P_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 21,
+          "M": 16,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": -0.012612624347503393,
+          "sampled_quality_differences": [
+            -0.31567489660408143,
+            -0.3193400054736038,
+            0.0,
+            0.010616056041811928,
+            0.0,
+            0.002783658193817984
+          ],
+          "sampled_effects": [
+            -0.047842065188327426,
+            -0.05755249625923803,
+            0.0,
+            0.006070683626164475,
+            0.0,
+            -5.389151882528864e-07
+          ],
+          "rate_interval": [
+            0.0,
+            0.42857142857142855
+          ],
+          "mean_interval": [
+            -0.7619047619047619,
+            0.7619047619047619
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        }
+      },
+      "action_flip_rates": {
+        "native_P_U__native_GT_U": {
+          "count": 12,
+          "T": 21,
+          "rate": 0.5714285714285714
+        },
+        "sensor_P_U__sensor_GT_U": {
+          "count": 12,
+          "T": 21,
+          "rate": 0.5714285714285714
+        },
+        "native_P_uniform__native_GT_uniform": {
+          "count": 10,
+          "T": 21,
+          "rate": 0.47619047619047616
+        },
+        "sensor_P_uniform__sensor_GT_uniform": {
+          "count": 10,
+          "T": 21,
+          "rate": 0.47619047619047616
+        },
+        "native_P_U__sensor_P_U": {
+          "count": 7,
+          "T": 21,
+          "rate": 0.3333333333333333
+        }
+      },
+      "effects": [
+        {
+          "state": 2,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": -0.17514244712405408,
+          "delta_Q": -0.334650080401574,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 2,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": -0.12730038193572665,
+          "delta_Q": -0.01897518379749258,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 2,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 2,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 2,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": -0.047842065188327426,
+          "delta_Q": -0.31567489660408143,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 3,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 3,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": -0.040077791590882234,
+          "delta_Q": 0.02218900836714821,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 3,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 3,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.07480560471796355,
+          "delta_Q": 0.377773729778291,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 3,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": -0.05755249625923803,
+          "delta_Q": -0.3193400054736038,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 9,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.003986020866632856,
+          "delta_Q": -0.0036174274991633837,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 9,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.003986020866632856,
+          "delta_Q": -0.0036174274991633837,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 9,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.014251244710364985,
+          "delta_Q": 0.05266207574292214,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 9,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 9,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 13,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.006070683626164475,
+          "delta_Q": 0.010616056041811928,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 13,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 13,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.01066169394925015,
+          "delta_Q": 0.08721337051221789,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 13,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.01066169394925015,
+          "delta_Q": 0.08721337051221789,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 13,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.006070683626164475,
+          "delta_Q": 0.010616056041811928,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 18,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 18,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 18,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": -0.0003716636760957015,
+          "delta_Q": 0.0009039292885145711,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 18,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": -2.674570756083794e-05,
+          "delta_Q": -0.0014045776206258465,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 18,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 20,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 8.945992124498314e-05,
+          "delta_Q": 0.005146654674461515,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 20,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 8.999883643323603e-05,
+          "delta_Q": 0.002362996480643531,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 20,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 8.945992124498314e-05,
+          "delta_Q": 0.005146654674461515,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 20,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 8.999883643323603e-05,
+          "delta_Q": 0.002362996480643531,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 20,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": -5.389151882528864e-07,
+          "delta_Q": 0.002783658193817984,
+          "same_action": false,
+          "replay_parity": true
+        }
+      ],
+      "independent_building_verified": false
+    },
+    {
+      "status": "COMPLETE_DEVELOPMENT_ONLY",
+      "reference": {
+        "status": "COMPLETE",
+        "terminal": "BUDGET_REACHED",
+        "C_bar": 0.34441765204566765,
+        "Q": 0.615584128911208,
+        "final_coverage": 0.6383513918405741,
+        "distance_m": 149.99999999999577,
+        "collisions": 0,
+        "observed_hash": "80495456182530afdaefca83c271ae2f1aafd8b959274b4de474013ce5169fca"
+      },
+      "sampling": {
+        "T": 13,
+        "M": 12,
+        "k": 6,
+        "selected": [
+          1,
+          4,
+          5,
+          6,
+          7,
+          9
+        ],
+        "inclusion_probability": 0.5,
+        "flip_ids": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          12
+        ]
+      },
+      "estimates": {
+        "native_P_U__native_GT_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 13,
+          "M": 12,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": -0.006839959014382203,
+          "sampled_quality_differences": [
+            -0.07105597020341892,
+            0.0,
+            -0.2208162507081416,
+            0.0,
+            -0.28809446435523955,
+            -0.053895640836019165
+          ],
+          "sampled_effects": [
+            0.018948305055216552,
+            0.0,
+            -0.03273074359242756,
+            0.0,
+            -0.03265817974892743,
+            0.001980884692654117
+          ],
+          "rate_interval": [
+            0.0,
+            0.46153846153846156
+          ],
+          "mean_interval": [
+            -0.9230769230769231,
+            0.9230769230769231
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "sensor_P_U__sensor_GT_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 13,
+          "M": 12,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": -0.00916541807029999,
+          "sampled_quality_differences": [
+            0.0,
+            0.06663916480418164,
+            -0.2208162507081416,
+            0.0,
+            -0.29835727535295087,
+            0.0
+          ],
+          "sampled_effects": [
+            0.0,
+            0.01188504337525953,
+            -0.03273074359242756,
+            0.0,
+            -0.03872951723978191,
+            0.0
+          ],
+          "rate_interval": [
+            0.0,
+            0.46153846153846156
+          ],
+          "mean_interval": [
+            -0.9230769230769231,
+            0.9230769230769231
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "native_P_uniform__native_GT_uniform": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 13,
+          "M": 12,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": 0.006276921647606583,
+          "sampled_quality_differences": [
+            -0.07105597020341892,
+            -0.031164851473486577,
+            0.0,
+            0.018408049176988683,
+            0.0,
+            -0.014762497762078608
+          ],
+          "sampled_effects": [
+            0.018948305055216552,
+            0.02084812505080491,
+            0.0,
+            -0.008379820924640735,
+            0.0,
+            0.009383381528062062
+          ],
+          "rate_interval": [
+            0.0,
+            0.46153846153846156
+          ],
+          "mean_interval": [
+            -0.9230769230769231,
+            0.9230769230769231
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "sensor_P_uniform__sensor_GT_uniform": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 13,
+          "M": 12,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": 0.006122527708618686,
+          "sampled_quality_differences": [
+            -0.07105597020341892,
+            -0.031164851473486577,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "sampled_effects": [
+            0.018948305055216552,
+            0.02084812505080491,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rate_interval": [
+            0.0,
+            0.46153846153846156
+          ],
+          "mean_interval": [
+            -0.9230769230769231,
+            0.9230769230769231
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "native_P_U__sensor_P_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 13,
+          "M": 12,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": 0.002325459055917787,
+          "sampled_quality_differences": [
+            -0.07105597020341892,
+            -0.06663916480418164,
+            0.0,
+            0.0,
+            0.010262810997711314,
+            -0.053895640836019165
+          ],
+          "sampled_effects": [
+            0.018948305055216552,
+            -0.01188504337525953,
+            0.0,
+            0.0,
+            0.006071337490854478,
+            0.001980884692654117
+          ],
+          "rate_interval": [
+            0.0,
+            0.46153846153846156
+          ],
+          "mean_interval": [
+            -0.9230769230769231,
+            0.9230769230769231
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        }
+      },
+      "action_flip_rates": {
+        "native_P_U__native_GT_U": {
+          "count": 8,
+          "T": 13,
+          "rate": 0.6153846153846154
+        },
+        "sensor_P_U__sensor_GT_U": {
+          "count": 6,
+          "T": 13,
+          "rate": 0.46153846153846156
+        },
+        "native_P_uniform__native_GT_uniform": {
+          "count": 9,
+          "T": 13,
+          "rate": 0.6923076923076923
+        },
+        "sensor_P_uniform__sensor_GT_uniform": {
+          "count": 6,
+          "T": 13,
+          "rate": 0.46153846153846156
+        },
+        "native_P_U__sensor_P_U": {
+          "count": 7,
+          "T": 13,
+          "rate": 0.5384615384615384
+        }
+      },
+      "effects": [
+        {
+          "state": 1,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.018948305055216552,
+          "delta_Q": -0.07105597020341892,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.018948305055216552,
+          "delta_Q": -0.07105597020341892,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.018948305055216552,
+          "delta_Q": -0.07105597020341892,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.018948305055216552,
+          "delta_Q": -0.07105597020341892,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.01188504337525953,
+          "delta_Q": 0.06663916480418164,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.02084812505080491,
+          "delta_Q": -0.031164851473486577,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.02084812505080491,
+          "delta_Q": -0.031164851473486577,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": -0.01188504337525953,
+          "delta_Q": -0.06663916480418164,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 5,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": -0.03273074359242756,
+          "delta_Q": -0.2208162507081416,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 5,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": -0.03273074359242756,
+          "delta_Q": -0.2208162507081416,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 5,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 5,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 5,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 6,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 6,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 6,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": -0.008379820924640735,
+          "delta_Q": 0.018408049176988683,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 6,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 6,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 7,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": -0.03265817974892743,
+          "delta_Q": -0.28809446435523955,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 7,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": -0.03872951723978191,
+          "delta_Q": -0.29835727535295087,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 7,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 7,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 7,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.006071337490854478,
+          "delta_Q": 0.010262810997711314,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 9,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.001980884692654117,
+          "delta_Q": -0.053895640836019165,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 9,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 9,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.009383381528062062,
+          "delta_Q": -0.014762497762078608,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 9,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 9,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.001980884692654117,
+          "delta_Q": -0.053895640836019165,
+          "same_action": false,
+          "replay_parity": true
+        }
+      ],
+      "independent_building_verified": false
+    },
+    {
+      "status": "COMPLETE_DEVELOPMENT_ONLY",
+      "reference": {
+        "status": "COMPLETE",
+        "terminal": "BUDGET_REACHED",
+        "C_bar": 0.366222671514765,
+        "Q": 0.5063695493207097,
+        "final_coverage": 0.46536940104686936,
+        "distance_m": 149.99999999999577,
+        "collisions": 0,
+        "observed_hash": "6a7224ead92fe11dd0f8012f434365924237f630b82225be4982937116ade51b"
+      },
+      "sampling": {
+        "T": 9,
+        "M": 7,
+        "k": 6,
+        "selected": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          6
+        ],
+        "inclusion_probability": 0.8571428571428571,
+        "flip_ids": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          6,
+          8
+        ]
+      },
+      "estimates": {
+        "native_P_U__native_GT_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 9,
+          "M": 7,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": 0.0032823401097185592,
+          "sampled_quality_differences": [
+            0.0,
+            0.00997315461809889,
+            0.0,
+            -0.08734785071508738,
+            0.014745804144522312,
+            0.0
+          ],
+          "sampled_effects": [
+            0.0,
+            0.010418734433479848,
+            0.0,
+            0.006852996097546971,
+            0.008049178886802066,
+            0.0
+          ],
+          "rate_interval": [
+            0.0,
+            0.1111111111111111
+          ],
+          "mean_interval": [
+            -0.7777777777777778,
+            0.7777777777777778
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "sensor_P_U__sensor_GT_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 9,
+          "M": 7,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": -0.001024197175692463,
+          "sampled_quality_differences": [
+            0.0,
+            -0.00997315461809889,
+            0.0,
+            0.0,
+            -0.00775634523769031,
+            0.0
+          ],
+          "sampled_effects": [
+            0.0,
+            -0.010418734433479848,
+            0.0,
+            0.0,
+            0.002517784792423705,
+            0.0
+          ],
+          "rate_interval": [
+            0.0,
+            0.1111111111111111
+          ],
+          "mean_interval": [
+            -0.7777777777777778,
+            0.7777777777777778
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "native_P_uniform__native_GT_uniform": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 9,
+          "M": 7,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": -0.01039460533241435,
+          "sampled_quality_differences": [
+            0.03856355581968668,
+            0.002659904243508926,
+            0.09425871958735649,
+            -0.1533036499270743,
+            -0.08220249603127044,
+            0.00500993264588484
+          ],
+          "sampled_effects": [
+            -0.020696668930887063,
+            -0.04428275329310988,
+            0.0011142605985542398,
+            -0.014818183029000398,
+            -0.0023324010069139534,
+            0.0008287902398749214
+          ],
+          "rate_interval": [
+            0.0,
+            0.1111111111111111
+          ],
+          "mean_interval": [
+            -0.7777777777777778,
+            0.7777777777777778
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "sensor_P_uniform__sensor_GT_uniform": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 9,
+          "M": 7,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": -0.008618170943282441,
+          "sampled_quality_differences": [
+            0.03856355581968668,
+            0.002659904243508926,
+            0.0,
+            0.0,
+            -0.08220249603127044,
+            0.00500993264588484
+          ],
+          "sampled_effects": [
+            -0.020696668930887063,
+            -0.04428275329310988,
+            0.0,
+            0.0,
+            -0.0023324010069139534,
+            0.0008287902398749214
+          ],
+          "rate_interval": [
+            0.0,
+            0.1111111111111111
+          ],
+          "mean_interval": [
+            -0.7777777777777778,
+            0.7777777777777778
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "native_P_U__sensor_P_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 9,
+          "M": 7,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": 0.0029559605995895604,
+          "sampled_quality_differences": [
+            0.0,
+            0.00997315461809889,
+            0.0,
+            -0.08734785071508738,
+            0.02250214938221262,
+            0.0
+          ],
+          "sampled_effects": [
+            0.0,
+            0.010418734433479848,
+            0.0,
+            0.006852996097546971,
+            0.005531394094378361,
+            0.0
+          ],
+          "rate_interval": [
+            0.0,
+            0.1111111111111111
+          ],
+          "mean_interval": [
+            -0.7777777777777778,
+            0.7777777777777778
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        }
+      },
+      "action_flip_rates": {
+        "native_P_U__native_GT_U": {
+          "count": 3,
+          "T": 9,
+          "rate": 0.3333333333333333
+        },
+        "sensor_P_U__sensor_GT_U": {
+          "count": 2,
+          "T": 9,
+          "rate": 0.2222222222222222
+        },
+        "native_P_uniform__native_GT_uniform": {
+          "count": 6,
+          "T": 9,
+          "rate": 0.6666666666666666
+        },
+        "sensor_P_uniform__sensor_GT_uniform": {
+          "count": 5,
+          "T": 9,
+          "rate": 0.5555555555555556
+        },
+        "native_P_U__sensor_P_U": {
+          "count": 3,
+          "T": 9,
+          "rate": 0.3333333333333333
+        }
+      },
+      "effects": [
+        {
+          "state": 0,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 0,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 0,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": -0.020696668930887063,
+          "delta_Q": 0.03856355581968668,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 0,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": -0.020696668930887063,
+          "delta_Q": 0.03856355581968668,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 0,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.010418734433479848,
+          "delta_Q": 0.00997315461809889,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": -0.010418734433479848,
+          "delta_Q": -0.00997315461809889,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": -0.04428275329310988,
+          "delta_Q": 0.002659904243508926,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": -0.04428275329310988,
+          "delta_Q": 0.002659904243508926,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.010418734433479848,
+          "delta_Q": 0.00997315461809889,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 2,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 2,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 2,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.0011142605985542398,
+          "delta_Q": 0.09425871958735649,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 2,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 2,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.006852996097546971,
+          "delta_Q": -0.08734785071508738,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": -0.014818183029000398,
+          "delta_Q": -0.1533036499270743,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.006852996097546971,
+          "delta_Q": -0.08734785071508738,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 5,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.008049178886802066,
+          "delta_Q": 0.014745804144522312,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 5,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.002517784792423705,
+          "delta_Q": -0.00775634523769031,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 5,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": -0.0023324010069139534,
+          "delta_Q": -0.08220249603127044,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 5,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": -0.0023324010069139534,
+          "delta_Q": -0.08220249603127044,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 5,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.005531394094378361,
+          "delta_Q": 0.02250214938221262,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 6,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 6,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 6,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.0008287902398749214,
+          "delta_Q": 0.00500993264588484,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 6,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0008287902398749214,
+          "delta_Q": 0.00500993264588484,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 6,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        }
+      ],
+      "independent_building_verified": false
+    },
+    {
+      "status": "COMPLETE_DEVELOPMENT_ONLY",
+      "reference": {
+        "status": "COMPLETE",
+        "terminal": "BUDGET_REACHED",
+        "C_bar": 0.3260752966699702,
+        "Q": 0.5068449311951072,
+        "final_coverage": 0.4924576354197277,
+        "distance_m": 149.99999999999577,
+        "collisions": 0,
+        "observed_hash": "b26b4a5c3c7f52f1718c2512f8c9780e183b3b1b1656e761bda4d5a2d2727714"
+      },
+      "sampling": {
+        "T": 18,
+        "M": 15,
+        "k": 6,
+        "selected": [
+          1,
+          8,
+          10,
+          11,
+          13,
+          14
+        ],
+        "inclusion_probability": 0.4,
+        "flip_ids": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ]
+      },
+      "estimates": {
+        "native_P_U__native_GT_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 18,
+          "M": 15,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": -0.008597005204397047,
+          "sampled_quality_differences": [
+            0.0,
+            -0.03087069949165383,
+            -0.058158833011125954,
+            0.0009436739688447604,
+            0.0,
+            0.010202944923659696
+          ],
+          "sampled_effects": [
+            0.0,
+            -0.026894319826732294,
+            -0.040136266837904,
+            0.0033608580664118426,
+            0.0,
+            0.0017712911265657105
+          ],
+          "rate_interval": [
+            0.0,
+            0.4444444444444445
+          ],
+          "mean_interval": [
+            -0.8333333333333334,
+            0.8333333333333334
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "sensor_P_U__sensor_GT_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 18,
+          "M": 15,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": -0.004572220932309039,
+          "sampled_quality_differences": [
+            0.0,
+            0.0,
+            -0.058158833011125954,
+            0.0,
+            0.0,
+            -0.006761647690756933
+          ],
+          "sampled_effects": [
+            0.0,
+            0.0,
+            -0.040136266837904,
+            0.0,
+            0.0,
+            0.00721627612527892
+          ],
+          "rate_interval": [
+            0.0,
+            0.4444444444444445
+          ],
+          "mean_interval": [
+            -0.8333333333333334,
+            0.8333333333333334
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "native_P_uniform__native_GT_uniform": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 18,
+          "M": 15,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": 0.0012769546518906572,
+          "sampled_quality_differences": [
+            -0.007081520281834286,
+            -0.019400322627898925,
+            0.0029684082484612295,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "sampled_effects": [
+            0.021189847012259677,
+            -0.012111209063899397,
+            0.00011543554525245137,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rate_interval": [
+            0.0,
+            0.4444444444444445
+          ],
+          "mean_interval": [
+            -0.8333333333333334,
+            0.8333333333333334
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "sensor_P_uniform__sensor_GT_uniform": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 18,
+          "M": 15,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": 0.0031678772703984085,
+          "sampled_quality_differences": [
+            0.0,
+            0.009120858170368895,
+            0.0029684082484612295,
+            -0.011532852106856617,
+            -0.009502586535389268,
+            -0.000998529193485309
+          ],
+          "sampled_effects": [
+            0.0,
+            0.01582379382026583,
+            0.00011543554525245137,
+            -0.005658830443725726,
+            0.004479667540985888,
+            0.008048649884090098
+          ],
+          "rate_interval": [
+            0.0,
+            0.4444444444444445
+          ],
+          "mean_interval": [
+            -0.8333333333333334,
+            0.8333333333333334
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "native_P_U__sensor_P_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 18,
+          "M": 15,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": -0.004491570114645209,
+          "sampled_quality_differences": [
+            0.0,
+            -0.03087069949165383,
+            0.0,
+            0.0,
+            0.0,
+            0.01696459261441663
+          ],
+          "sampled_effects": [
+            0.0,
+            -0.026894319826732294,
+            0.0,
+            0.0,
+            0.0,
+            -0.005444984998713209
+          ],
+          "rate_interval": [
+            0.0,
+            0.4444444444444445
+          ],
+          "mean_interval": [
+            -0.8333333333333334,
+            0.8333333333333334
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        }
+      },
+      "action_flip_rates": {
+        "native_P_U__native_GT_U": {
+          "count": 10,
+          "T": 18,
+          "rate": 0.5555555555555556
+        },
+        "sensor_P_U__sensor_GT_U": {
+          "count": 8,
+          "T": 18,
+          "rate": 0.4444444444444444
+        },
+        "native_P_uniform__native_GT_uniform": {
+          "count": 7,
+          "T": 18,
+          "rate": 0.3888888888888889
+        },
+        "sensor_P_uniform__sensor_GT_uniform": {
+          "count": 13,
+          "T": 18,
+          "rate": 0.7222222222222222
+        },
+        "native_P_U__sensor_P_U": {
+          "count": 8,
+          "T": 18,
+          "rate": 0.4444444444444444
+        }
+      },
+      "effects": [
+        {
+          "state": 1,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.021189847012259677,
+          "delta_Q": -0.007081520281834286,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 8,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": -0.026894319826732294,
+          "delta_Q": -0.03087069949165383,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 8,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 8,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": -0.012111209063899397,
+          "delta_Q": -0.019400322627898925,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 8,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.01582379382026583,
+          "delta_Q": 0.009120858170368895,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 8,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": -0.026894319826732294,
+          "delta_Q": -0.03087069949165383,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 10,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": -0.040136266837904,
+          "delta_Q": -0.058158833011125954,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 10,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": -0.040136266837904,
+          "delta_Q": -0.058158833011125954,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 10,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.00011543554525245137,
+          "delta_Q": 0.0029684082484612295,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 10,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.00011543554525245137,
+          "delta_Q": 0.0029684082484612295,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 10,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 11,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.0033608580664118426,
+          "delta_Q": 0.0009436739688447604,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 11,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 11,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 11,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": -0.005658830443725726,
+          "delta_Q": -0.011532852106856617,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 11,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 13,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 13,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 13,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 13,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.004479667540985888,
+          "delta_Q": -0.009502586535389268,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 13,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 14,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.0017712911265657105,
+          "delta_Q": 0.010202944923659696,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 14,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.00721627612527892,
+          "delta_Q": -0.006761647690756933,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 14,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 14,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.008048649884090098,
+          "delta_Q": -0.000998529193485309,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 14,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": -0.005444984998713209,
+          "delta_Q": 0.01696459261441663,
+          "same_action": false,
+          "replay_parity": true
+        }
+      ],
+      "independent_building_verified": false
+    },
+    {
+      "status": "COMPLETE_DEVELOPMENT_ONLY",
+      "reference": {
+        "status": "COMPLETE",
+        "terminal": "BUDGET_REACHED",
+        "C_bar": 0.17425328313453714,
+        "Q": 0.43880447164674763,
+        "final_coverage": 0.3353302454253666,
+        "distance_m": 149.99999999999577,
+        "collisions": 0,
+        "observed_hash": "beab722bafa1fd24aeb8d3fbee8dd86a34e940d0119ab241ac32bd64ce3d52c9"
+      },
+      "sampling": {
+        "T": 15,
+        "M": 12,
+        "k": 6,
+        "selected": [
+          1,
+          4,
+          5,
+          6,
+          10,
+          12
+        ],
+        "inclusion_probability": 0.5,
+        "flip_ids": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          8,
+          10,
+          11,
+          12,
+          13
+        ]
+      },
+      "estimates": {
+        "native_P_U__native_GT_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 15,
+          "M": 12,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": -0.011037586214921336,
+          "sampled_quality_differences": [
+            -0.024858377810092924,
+            0.009620339733774186,
+            -0.07481900004143571,
+            -0.03334474003888349,
+            -0.023310451199318627,
+            0.0
+          ],
+          "sampled_effects": [
+            -0.01824612347410831,
+            0.01175999389561777,
+            -0.04551324050127528,
+            -0.030726327256550973,
+            -5.619927559322169e-05,
+            0.0
+          ],
+          "rate_interval": [
+            0.0,
+            0.4
+          ],
+          "mean_interval": [
+            -0.8,
+            0.8
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "sensor_P_U__sensor_GT_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 15,
+          "M": 12,
+          "k": 6,
+          "successes": 2,
+          "rate": 0.26666666666666666,
+          "mean_effect": 0.0018926040112495453,
+          "sampled_quality_differences": [
+            0.016297537278449015,
+            0.06762494226138982,
+            -0.07481900004143571,
+            -0.03334474003888349,
+            -0.023310451199318627,
+            0.0
+          ],
+          "sampled_effects": [
+            0.02357054213728013,
+            0.06691975498051093,
+            -0.04551324050127528,
+            -0.030726327256550973,
+            -5.619927559322169e-05,
+            0.0
+          ],
+          "rate_interval": [
+            0.13333333333333333,
+            0.5333333333333333
+          ],
+          "mean_interval": [
+            -0.8,
+            0.8
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "native_P_uniform__native_GT_uniform": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 15,
+          "M": 12,
+          "k": 6,
+          "successes": 1,
+          "rate": 0.13333333333333333,
+          "mean_effect": 0.0026954912539039052,
+          "sampled_quality_differences": [
+            -0.02774961107064755,
+            0.077245281995164,
+            0.0,
+            -0.03334474003888349,
+            0.0,
+            -0.0035290195689099413
+          ],
+          "sampled_effects": [
+            -0.02935241277309425,
+            0.0786797488761287,
+            0.0,
+            -0.030726327256550973,
+            0.0,
+            0.001615175557795806
+          ],
+          "rate_interval": [
+            0.06666666666666667,
+            0.46666666666666673
+          ],
+          "mean_interval": [
+            -0.8,
+            0.8
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "sensor_P_uniform__sensor_GT_uniform": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 15,
+          "M": 12,
+          "k": 6,
+          "successes": 2,
+          "rate": 0.26666666666666666,
+          "mean_effect": 0.009751885241953823,
+          "sampled_quality_differences": [
+            0.016297537278449015,
+            0.077245281995164,
+            0.0,
+            -0.03334474003888349,
+            0.0,
+            -0.0035290195689099413
+          ],
+          "sampled_effects": [
+            0.02357054213728013,
+            0.0786797488761287,
+            0.0,
+            -0.030726327256550973,
+            0.0,
+            0.001615175557795806
+          ],
+          "rate_interval": [
+            0.13333333333333333,
+            0.5333333333333333
+          ],
+          "mean_interval": [
+            -0.8,
+            0.8
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        },
+        "native_P_U__sensor_P_U": {
+          "status": "WEIGHTED_SUBSAMPLE",
+          "T": 15,
+          "M": 12,
+          "k": 6,
+          "successes": 0,
+          "rate": 0.0,
+          "mean_effect": -0.014498189412253252,
+          "sampled_quality_differences": [
+            -0.04115591508854194,
+            -0.06762494226138982,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "sampled_effects": [
+            -0.04181666561138844,
+            -0.06691975498051093,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rate_interval": [
+            0.0,
+            0.4
+          ],
+          "mean_interval": [
+            -0.8,
+            0.8
+          ],
+          "interval_scope": "finite observed reference episode; not new buildings"
+        }
+      },
+      "action_flip_rates": {
+        "native_P_U__native_GT_U": {
+          "count": 11,
+          "T": 15,
+          "rate": 0.7333333333333333
+        },
+        "sensor_P_U__sensor_GT_U": {
+          "count": 9,
+          "T": 15,
+          "rate": 0.6
+        },
+        "native_P_uniform__native_GT_uniform": {
+          "count": 8,
+          "T": 15,
+          "rate": 0.5333333333333333
+        },
+        "sensor_P_uniform__sensor_GT_uniform": {
+          "count": 7,
+          "T": 15,
+          "rate": 0.4666666666666667
+        },
+        "native_P_U__sensor_P_U": {
+          "count": 6,
+          "T": 15,
+          "rate": 0.4
+        }
+      },
+      "effects": [
+        {
+          "state": 1,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": -0.01824612347410831,
+          "delta_Q": -0.024858377810092924,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.02357054213728013,
+          "delta_Q": 0.016297537278449015,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": -0.02935241277309425,
+          "delta_Q": -0.02774961107064755,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.02357054213728013,
+          "delta_Q": 0.016297537278449015,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 1,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": -0.04181666561138844,
+          "delta_Q": -0.04115591508854194,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.01175999389561777,
+          "delta_Q": 0.009620339733774186,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.06691975498051093,
+          "delta_Q": 0.06762494226138982,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.0786797488761287,
+          "delta_Q": 0.077245281995164,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0786797488761287,
+          "delta_Q": 0.077245281995164,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 4,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": -0.06691975498051093,
+          "delta_Q": -0.06762494226138982,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 5,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": -0.04551324050127528,
+          "delta_Q": -0.07481900004143571,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 5,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": -0.04551324050127528,
+          "delta_Q": -0.07481900004143571,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 5,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 5,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 5,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 6,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": -0.030726327256550973,
+          "delta_Q": -0.03334474003888349,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 6,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": -0.030726327256550973,
+          "delta_Q": -0.03334474003888349,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 6,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": -0.030726327256550973,
+          "delta_Q": -0.03334474003888349,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 6,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": -0.030726327256550973,
+          "delta_Q": -0.03334474003888349,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 6,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 10,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": -5.619927559322169e-05,
+          "delta_Q": -0.023310451199318627,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 10,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": -5.619927559322169e-05,
+          "delta_Q": -0.023310451199318627,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 10,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 10,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 10,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 12,
+          "before": "native_P_U",
+          "after": "native_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 12,
+          "before": "sensor_P_U",
+          "after": "sensor_GT_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        },
+        {
+          "state": 12,
+          "before": "native_P_uniform",
+          "after": "native_GT_uniform",
+          "delta_C": 0.001615175557795806,
+          "delta_Q": -0.0035290195689099413,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 12,
+          "before": "sensor_P_uniform",
+          "after": "sensor_GT_uniform",
+          "delta_C": 0.001615175557795806,
+          "delta_Q": -0.0035290195689099413,
+          "same_action": false,
+          "replay_parity": true
+        },
+        {
+          "state": 12,
+          "before": "native_P_U",
+          "after": "sensor_P_U",
+          "delta_C": 0.0,
+          "delta_Q": 0.0,
+          "same_action": true,
+          "replay_parity": true
+        }
+      ],
+      "independent_building_verified": false
+    }
+  ],
+  "cohort": {
+    "unit": "layout; building independence unverified",
+    "valid_episodes": 6,
+    "zero_decision_episodes": 0,
+    "contrasts": {
+      "native_P_U__native_GT_U": {
+        "equal_layout_rate": 0.0,
+        "equal_layout_mean_effect": -0.007571461208191803,
+        "cohort_rate_interval": [
+          0.0,
+          0.3742775742775743
+        ],
+        "cohort_mean_interval": [
+          -0.827126577126577,
+          0.827126577126577
+        ],
+        "pooled_decision_rate": 0.0,
+        "pooled_decision_mean_effect": -0.009219209895311458,
+        "interval_scope": "finite completed reference cohort; 95% simultaneous across planned layout/contrast estimates; bounded mean intervals conservative",
+        "generalization_interval": null
+      },
+      "sensor_P_U__sensor_GT_U": {
+        "equal_layout_rate": 0.06851851851851852,
+        "equal_layout_mean_effect": -0.005032920596236957,
+        "cohort_rate_interval": [
+          0.03333333333333333,
+          0.4187220187220187
+        ],
+        "cohort_mean_interval": [
+          -0.827126577126577,
+          0.827126577126577
+        ],
+        "pooled_decision_rate": 0.06776556776556776,
+        "pooled_decision_mean_effect": -0.006226639405395161,
+        "interval_scope": "finite completed reference cohort; 95% simultaneous across planned layout/contrast estimates; bounded mean intervals conservative",
+        "generalization_interval": null
+      },
+      "native_P_uniform__native_GT_uniform": {
+        "equal_layout_rate": 0.0462962962962963,
+        "equal_layout_mean_effect": 9.324989936460966e-05,
+        "cohort_rate_interval": [
+          0.022222222222222223,
+          0.40761090761090757
+        ],
+        "cohort_mean_interval": [
+          -0.827126577126577,
+          0.827126577126577
+        ],
+        "pooled_decision_rate": 0.045787545787545784,
+        "pooled_decision_mean_effect": 0.000887949646273776,
+        "interval_scope": "finite completed reference cohort; 95% simultaneous across planned layout/contrast estimates; bounded mean intervals conservative",
+        "generalization_interval": null
+      },
+      "sensor_P_uniform__sensor_GT_uniform": {
+        "equal_layout_rate": 0.08968253968253968,
+        "equal_layout_mean_effect": 0.004325444172826946,
+        "cohort_rate_interval": [
+          0.04126984126984127,
+          0.4345950345950346
+        ],
+        "cohort_mean_interval": [
+          -0.827126577126577,
+          0.827126577126577
+        ],
+        "pooled_decision_rate": 0.09706959706959706,
+        "pooled_decision_mean_effect": 0.005532128706701731,
+        "interval_scope": "finite completed reference cohort; 95% simultaneous across planned layout/contrast estimates; bounded mean intervals conservative",
+        "generalization_interval": null
+      },
+      "native_P_U__sensor_P_U": {
+        "equal_layout_rate": 0.0,
+        "equal_layout_mean_effect": -0.005169017042674441,
+        "cohort_rate_interval": [
+          0.0,
+          0.3742775742775743
+        ],
+        "cohort_mean_interval": [
+          -0.827126577126577,
+          0.827126577126577
+        ],
+        "pooled_decision_rate": 0.0,
+        "pooled_decision_mean_effect": -0.00633789749427504,
+        "interval_scope": "finite completed reference cohort; 95% simultaneous across planned layout/contrast estimates; bounded mean intervals conservative",
+        "generalization_interval": null
+      }
+    }
+  }
+}
