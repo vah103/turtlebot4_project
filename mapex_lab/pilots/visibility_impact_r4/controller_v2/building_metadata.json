@@ -1,0 +1,71 @@
+{
+  "status": "BUILDING_IDS_VERIFIED_FROM_ORIGINAL_XML",
+  "source_url": "https://bsg.lericson.se/kth_floorplans_xml.zip",
+  "source_link_page": "https://lericson.se/floorgent/",
+  "archive_sha256": "5dc8bb4768937f36fca765fe30a405ace8fa195e998e10361a42d0c82344bdd7",
+  "lookup_rule": "Exact official MapEx layout ID equals XML FloorName; BuildingName and archive directory agree",
+  "layouts": [
+    {
+      "layout": "kth_50052748",
+      "building_id": "A0043022",
+      "floor_id": "50052748",
+      "xml_entry": "A0043022/50052748.xml",
+      "xml_sha256": "c29bfb4b590dbd68ae79bc87770a054bfe79abe6c3d0b88d0b433d2c369d51c2"
+    },
+    {
+      "layout": "kth_50037764_PLAN1",
+      "building_id": "A0043040",
+      "floor_id": "50037764_PLAN1",
+      "xml_entry": "A0043040/50037764_PLAN1.xml",
+      "xml_sha256": "216aad65fec70dc5e0268ff756e87c2473dc936bbe57da8e073adbd110114cf6"
+    },
+    {
+      "layout": "kth_50037765_PLAN3",
+      "building_id": "A0043040",
+      "floor_id": "50037765_PLAN3",
+      "xml_entry": "A0043040/50037765_PLAN3.xml",
+      "xml_sha256": "db6a6bd8a25acd40111477c8b81e189524f460bb51828886dea9bd733c4ebcd6"
+    },
+    {
+      "layout": "kth_50010535_PLAN1",
+      "building_id": "A0043034",
+      "floor_id": "50010535_PLAN1",
+      "xml_entry": "A0043034/50010535_PLAN1.xml",
+      "xml_sha256": "215da16f0a9837fdab41db72c1bcae5a24a0b60ebeaa293a044a41ac8c088390"
+    },
+    {
+      "layout": "kth_50010536_PLAN3",
+      "building_id": "A0043034",
+      "floor_id": "50010536_PLAN3",
+      "xml_entry": "A0043034/50010536_PLAN3.xml",
+      "xml_sha256": "fca42814208e21222741c107a0955c7d730089907f4a2242d3293deafa34405f"
+    },
+    {
+      "layout": "kth_50015848",
+      "building_id": "A0043035",
+      "floor_id": "50015848",
+      "xml_entry": "A0043035/50015848.xml",
+      "xml_sha256": "f0ab9ac37e061a01631570a8d526c1936a6872cec4531175c0c272ad3468895b"
+    }
+  ],
+  "groups": {
+    "A0043022": [
+      "kth_50052748"
+    ],
+    "A0043034": [
+      "kth_50010535_PLAN1",
+      "kth_50010536_PLAN3"
+    ],
+    "A0043035": [
+      "kth_50015848"
+    ],
+    "A0043040": [
+      "kth_50037764_PLAN1",
+      "kth_50037765_PLAN3"
+    ]
+  },
+  "verified_buildings": 4,
+  "predictor_training_overlap": "UNVERIFIED_ORIGINAL_TRAIN_SPLIT_NOT_AVAILABLE",
+  "confirmation_status": "DEVELOPMENT_ONLY_FOUR_BUILDINGS_NOT_SIX",
+  "grouping_method": "Average the fixed floor/start episodes within building, then give each building equal weight; no sampling or outcome changes."
+}

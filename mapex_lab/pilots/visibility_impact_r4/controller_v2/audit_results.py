@@ -5,6 +5,7 @@ No new actions, sampling changes, model training, or research outcome runs.
 import argparse
 import hashlib
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 import numpy as np
 import runner
@@ -12,6 +13,34 @@ import runner
 def close(a,b):
     if isinstance(a,(float,int)) and isinstance(b,(float,int)):return abs(a-b)<1e-9
     return a==b
+
+def aggregate_buildings(rows,metadata):
+    if set(r['layout'] for r in rows)!=set(x['layout'] for x in metadata['layouts']):
+        return dict(status='WAIT_FOR_ALL_FIXED_REFERENCE_EPISODES',planned_buildings=metadata['verified_buildings'])
+    valid={r['layout']:r for r in rows if r['T']>0};groups={}
+    for building,layouts in metadata['groups'].items():
+        episodes=[valid[x] for x in layouts if x in valid]
+        if not episodes:continue
+        values={}
+        for before,after in runner.CONTRASTS:
+            key=before+'__'+after;es=[r['all_contrasts'][key] for r in episodes]
+            values[key]=dict(rate=float(np.mean([e['rate'] for e in es])),
+                            mean_effect=float(np.mean([e['mean_effect'] for e in es])),
+                            rate_interval=np.mean([e['rate_interval'] for e in es],axis=0).tolist(),
+                            mean_interval=np.mean([e['mean_interval'] for e in es],axis=0).tolist())
+        groups[building]=dict(valid_floor_start_episodes=len(episodes),contrasts=values)
+    result=dict(status='FINITE_DEVELOPMENT_COHORT_ONLY',planned_buildings=metadata['verified_buildings'],
+                valid_buildings=len(groups),groups=groups,contrasts={},generalization_interval=None)
+    if not groups:return result
+    for before,after in runner.CONTRASTS:
+        key=before+'__'+after;es=[g['contrasts'][key] for g in groups.values()]
+        result['contrasts'][key]=dict(rate=float(np.mean([e['rate'] for e in es])),
+                            mean_effect=float(np.mean([e['mean_effect'] for e in es])),
+                            rate_interval=np.mean([e['rate_interval'] for e in es],axis=0).tolist(),
+                            mean_interval=np.mean([e['mean_interval'] for e in es],axis=0).tolist())
+    result['weighting']='Equal fixed floor/start episodes within each building, then equal buildings; zero-decision episodes excluded only from decision frequency'
+    result['interval_scope']='Known finite cohort; simultaneous episode sampling bounds propagated through fixed positive weights; not uncertainty over new buildings'
+    return result
 
 def audit(cfg):
     root=Path(cfg['output']);seal=json.loads((root/'seal.json').read_text())
@@ -52,14 +81,36 @@ def audit(cfg):
                 assert hashlib.sha256(np.asarray(path,dtype=np.int32).tobytes()).hexdigest()==candidate['action_id']
                 assert all(abs(x[0]-y[0])+abs(x[1]-y[1])==1 for x,y in zip(path,path[1:]))
             path=record['candidates'][record['chosen'][runner.BASE]]['path']
+            if cfg.get('controller_revision'):
+                following=(records[record['id']+1]['distance_m'] if record['id']+1<T else summary['reference']['distance_m'])
+                steps=int(round((following-record['distance_m'])/cfg['resolution_m']))
+                assert 0<=steps<len(path)
+                for pose in path[1:steps+1]:
+                    assert w.step(tuple(pose)),'Replayed measured-safe prefix collided'
+                    if round(w.distance_m/w.resolution)%cfg['scan_stride_steps']==0:
+                        w.sense();trace.append([w.distance_m,runner.coverage(w,a)])
+                status=record['execution_status']
+                if status=='OBSERVED_PATH_BLOCKED':
+                    assert steps+1<len(path)
+                    safe=core.observed_traversable(w.observed,cfg['robot_radius_m']/cfg['resolution_m'])
+                    assert not safe[tuple(path[steps+1])],'Action abort not supported by measurements'
+                    w.sense();trace.append([w.distance_m,runner.coverage(w,a)])
+                elif status=='COLLISION':
+                    assert steps+1<len(path)
+                    safe=core.observed_traversable(w.observed,cfg['robot_radius_m']/cfg['resolution_m'])
+                    assert safe[tuple(path[steps+1])],'Known-blocked collision reproduced A0 defect'
+                    assert not w.step(tuple(path[steps+1]))
+                    trace.append([w.distance_m,runner.coverage(w,a)]);terminal='COLLISION'
+                    collision_probe=dict(next_pose=path[steps+1],blocked_in_updated_observation=False,
+                                         decision_distance_m=record['distance_m'],collision_distance_m=w.distance_m)
+                    break
+                else:
+                    assert status=='DONE' and steps==len(path)-1
+                    if steps:w.sense();trace.append([w.distance_m,runner.coverage(w,a)])
+                continue
             moved=False
             for pose in path[1:]:
                 pose=tuple(pose)
-                if cfg.get('controller_revision'):
-                    safe=core.observed_traversable(w.observed,cfg['robot_radius_m']/cfg['resolution_m'])
-                    if not safe[pose]:
-                        w.sense();trace.append([w.distance_m,runner.coverage(w,a)])
-                        break
                 if not w._physical_free[pose]:
                     current_safe=core.observed_traversable(w.observed,cfg['robot_radius_m']/cfg['resolution_m'])
                     collision_probe=dict(next_pose=list(pose),
@@ -71,7 +122,7 @@ def audit(cfg):
                 if round(w.distance_m/w.resolution)%cfg['scan_stride_steps']==0:
                     w.sense();trace.append([w.distance_m,runner.coverage(w,a)])
             if terminal=='COLLISION':break
-            if moved and not (cfg.get('controller_revision') and record.get('execution_status')=='OBSERVED_PATH_BLOCKED'):
+            if moved:
                 w.sense();trace.append([w.distance_m,runner.coverage(w,a)])
         ref=summary['reference'];assert hashlib.sha256(w.observed.tobytes()).hexdigest()==ref['observed_hash']
         assert close(w.distance_m,ref['distance_m']) and w.collisions==ref['collisions']
@@ -120,14 +171,28 @@ def audit(cfg):
                          candidates=sum(len(r['candidates']) for r in records),
                          mean_candidate_native_false_visible_cells=float(np.mean([x['native_false_visible'] for x in mismatch])) if mismatch else None,
                          mean_candidate_native_missed_visible_cells=float(np.mean([x['native_missed_visible'] for x in mismatch])) if mismatch else None,
-                         physical_reference_replay='EXACT',independent_building_verified=False))
+                         physical_reference_replay='EXACT',predictor_training_overlap_verified=False))
     result=dict(status='AUDITED_COMPLETE_DEVELOPMENT_ONLY' if not missing else 'AUDITED_PARTIAL_INCONCLUSIVE',
                 planned_layouts=len(cfg['layouts']),completed_layouts=len(rows),missing_layouts=missing,
                 total_valid_decisions=sum(x['T'] for x in rows),total_action_flip_states=sum(x['M'] for x in rows),
                 total_sampled_states=sum(x['k'] for x in rows),rows=rows,
-                cohort=runner.aggregate([json.loads((root/x['layout']/'summary.json').read_text()) for x in rows]),
+                secondary_layout_aggregate=runner.aggregate([json.loads((root/x['layout']/'summary.json').read_text()) for x in rows]),
                 generalization='NOT_ESTABLISHED',online_f_g='NOT_TRAINED_NOT_TESTED',
                 scope='frozen 2D adapter, endpoint diagnosis, reference population only')
+    result['secondary_layout_aggregate']['unit']='layout; secondary descriptive aggregate; use verified building hierarchy for primary'
+    result['primary_contrast']=primary
+    result['practical_gate']=dict(delta_C_at_least=.02,delta_Q_at_least=-.005)
+    result['interval_families']='95% simultaneous across planned six episodes and five contrasts within each rate or mean-effect family separately; no joint 95% claim over both families'
+    result['audit_timestamp_utc']=datetime.now(timezone.utc).isoformat()
+    result['audit_source_sha256']=runner.digest(__file__)
+    result['run_seal_sha256']=runner.digest(root/'seal.json')
+    metadata_path=Path(__file__).with_name('building_metadata.json')
+    if metadata_path.exists():
+        metadata=json.loads(metadata_path.read_text())
+        ids={x['layout']:x['building_id'] for x in metadata['layouts']}
+        for r in rows:r['building_id']=ids[r['layout']];r['building_id_verified']=True
+        result['building_metadata']=metadata
+        result['primary_building_aggregate']=aggregate_buildings(rows,metadata)
     runner.save(root.parent/(cfg.get('preflight_prefix','')+'verified_development_summary.json'),result);print(json.dumps(result,indent=2))
 
 def main():

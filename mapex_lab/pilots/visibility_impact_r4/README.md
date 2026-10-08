@@ -27,8 +27,10 @@ sample is drawn only after the full reference decision census is complete.
 An intervention changes the first action only. Continuation is always the
 same native controller; local effects are never added as episode regret.
 
-The six existing KTH assets have unverified building identities and predictor
-training overlap. They are DEVELOPMENT_ONLY. No building-level confirmation,
+The original XML metadata now establishes that the six fixed KTH assets are
+four buildings; see `controller_v2/building_metadata.json`. Predictor training
+overlap remains unverified. They are DEVELOPMENT_ONLY, below R4's proposed
+six-building pilot. No building-level confirmation,
 fine-tuned predictor result or formal QA verdict is claimed. R4's online f/g
 confirmation requires verified building splits and frozen models; it remains
 a distinct stage. Its path-visibility target must be matched to the online
