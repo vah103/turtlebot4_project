@@ -1,5 +1,14 @@
 # R4 visibility-impact pilot
 
+Current entry point is `controller_v2/runner.py` with
+`controller_v2/protocol_com1_controller_v2.json`. The first A0 execution is
+invalid for impact interpretation: its controller did not stop a stale path
+when new measurements made the next footprint unsafe. Its raw evidence and
+source are retained for debugging. A1 stops that action using observations
+only, then returns to the same native decision controller for every arm.
+The A1 protocol was sealed separately before its outcomes; budgets, starts,
+sampling seed, eight arms, reporter and practical thresholds are unchanged.
+
 Implements the R4 decision census, action-flip sampling, paired full-budget
 rollouts, and finite reference-population estimation. Raw data stay local.
 
@@ -30,8 +39,10 @@ Preflight verifies physical replay, estimator bookkeeping, source/model hashes,
 known-cell preservation, inference latency and dataset metadata. No robot,
 ROS, Gazebo, STOP policy or modification of the baseline scripts is involved.
 
-Run order: `prepare_assets.py`, `test_preflight.py`, `model_preflight.py`, then
-`runner.py`, each with `--protocol protocol_com1.json`. Review both preflight
+Run order: `prepare_assets.py` using the original asset protocol, then
+`controller_v2/test_preflight.py`, then `controller_v2/runner.py`, each of the
+latter with `--protocol controller_v2/protocol_com1_controller_v2.json`.
+The unchanged ensemble is verified by `model_preflight.py`. Review both preflight
 JSON files before starting `runner.py`. A sealed output refuses changes to
 runner, numerical dependencies, assets, protocol or predictor provenance.
 Raw snapshots and model cache are ignored by git; the seal and small summary

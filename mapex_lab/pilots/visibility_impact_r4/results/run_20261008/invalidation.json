@@ -1,0 +1,6 @@
+{
+  "status": "INVALID_FOR_INTENDED_IMPACT_INFERENCE",
+  "reason": "A0 controller followed stale path into newly observed unsafe footprint; all four completed baseline collisions were already blocked in updated observation. Preserve as debug only.",
+  "next_run": "run_20261008_controller_v2",
+  "timestamp": "2026-10-08T08:15:30.376552+00:00"
+}

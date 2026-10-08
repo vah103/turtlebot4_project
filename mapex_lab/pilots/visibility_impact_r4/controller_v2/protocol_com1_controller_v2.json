@@ -1,0 +1,74 @@
+{
+  "design": "R4_STAGE_A_DEVELOPMENT_DIAGNOSIS",
+  "preflight_prefix": "controller_v2_",
+  "repo": "/work/com1/turtlebot4_project_visibility_r4",
+  "mapex": "/home/com1/MapEx",
+  "pilot": "/work/com1/turtlebot4_project_visibility_r4/mapex_lab/pilots/visibility_impact_r4/dependencies/active_verification_2d",
+  "fast_bfs": "/work/com1/turtlebot4_project_visibility_r4/mapex_lab/pilots/visibility_impact_r4/dependencies/fast_bfs.py",
+  "worker_python": "/work/conda-envs/lama/bin/python",
+  "ensemble_dir": "/work/com1/mapex_weights/weights/lama_ensemble",
+  "assets": "/work/com1/turtlebot4_project_visibility_r4/mapex_lab/pilots/visibility_impact_r4/assets",
+  "output": "/work/com1/turtlebot4_project_visibility_r4/mapex_lab/pilots/visibility_impact_r4/results/run_20261008_controller_v2",
+  "layouts": [
+    "kth_50052748",
+    "kth_50037764_PLAN1",
+    "kth_50037765_PLAN3",
+    "kth_50010535_PLAN1",
+    "kth_50010536_PLAN3",
+    "kth_50015848"
+  ],
+  "resolution_m": 0.1,
+  "budget_m": 150,
+  "sensor_range_m": 20,
+  "sensor_rays": 2500,
+  "native_rays": 250,
+  "native_epsilon": 0.8,
+  "robot_radius_m": 0.15,
+  "scan_stride_steps": 3,
+  "action_end_scan": true,
+  "sample_cap": 6,
+  "seed": 2026100804,
+  "maximum_inference_seconds": 7200,
+  "single_inference_timeout_s": 180,
+  "maximum_decisions": 300,
+  "maximum_wall_seconds": 10800,
+  "resource_abort_disposition": "INCOMPLETE_INCONCLUSIVE_RETAIN_ALL_DATA",
+  "coverage_domain": "2x2-any pooled original valid_space; true-free cells only",
+  "quality_domain": "same fixed valid_space ROI; strict occupied IoU; frozen real ensemble reporter",
+  "auc_rule": "right-continuous observed-coverage step curve; terminal holds final coverage to 150m",
+  "continuation": "native_P_U after first-action intervention; refresh P/U after each action",
+  "query_geometry": "frontier endpoint for all eight diagnosis arms; not pathwise f/g experiment",
+  "prediction_to_sensor_occupancy": "ensemble mean >= 0.5; preserve known cells",
+  "contrasts": [
+    [
+      "native_P_U",
+      "native_GT_U"
+    ],
+    [
+      "sensor_P_U",
+      "sensor_GT_U"
+    ],
+    [
+      "native_P_uniform",
+      "native_GT_uniform"
+    ],
+    [
+      "sensor_P_uniform",
+      "sensor_GT_uniform"
+    ],
+    [
+      "native_P_U",
+      "sensor_P_U"
+    ]
+  ],
+  "practical_coverage_gain": 0.02,
+  "quality_loss_margin": 0.005,
+  "sampling": "all valid reference decisions; eight-arm census; SRSWOR in union of different complete executed paths",
+  "intervals": "hypergeometric finite-population rate; conservative bounded-mean interval; Bonferroni alpha=0.05/(6 layouts * 5 diagnosis contrasts); mean interval endpoints for finite-cohort aggregation",
+  "cohort_status": "DEVELOPMENT_ONLY_BUILDING_IDS_AND_PREDICTOR_SPLIT_UNVERIFIED",
+  "layout_order_reason": "ascending grid area for execution cost, fixed before effect outcomes",
+  "online_f_g_status": "STAGE_B_BLOCKED_PENDING_VERIFIED_SPLIT_AND_PATHWISE_COMPATIBILITY_PREFLIGHT",
+  "controller_revision": "A1_STOP_ACTION_ON_NEWLY_MEASURED_UNSAFE_PATH",
+  "action_termination": "DONE, measured-costmap path blocked -> sense and common-controller decision, or genuine physical collision -> terminal",
+  "invalid_debug_run": "run_20261008 (A0 blind-path controller; no research conclusion)"
+}
