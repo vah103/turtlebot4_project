@@ -1,0 +1,181 @@
+{
+  "status": "VALID_REFERENCE",
+  "terminal": "BUDGET_REACHED",
+  "reference": {
+    "coverage": 0.930571985537913,
+    "occupied_iou": 0.9324644549763034,
+    "TU": 0.95,
+    "counts": [
+      55852,
+      7870,
+      8440,
+      95
+    ]
+  },
+  "first_hit_steps": 1468,
+  "R4_reference_parity": {
+    "C_bar": true,
+    "Q": true,
+    "final_coverage": true,
+    "distance_m": true
+  },
+  "physical_replay": true,
+  "outcome": {
+    "status": "COMPLETE",
+    "terminal": "BUDGET_REACHED",
+    "C_bar": 0.5889170429364063,
+    "Q": 0.9324644549763034,
+    "final_coverage": 0.930571985537913,
+    "distance_m": 149.99999999999577,
+    "collisions": 0,
+    "observed_hash": "166f3ae2f2fc79a29df33c25a42fbbb847e01620d5bdc74ed0526d80fe3c0933"
+  },
+  "frame_count": 16,
+  "action_count": 15,
+  "frame_metrics": [
+    {
+      "distance_m": 0.0,
+      "counts": [
+        11201,
+        1287,
+        8889,
+        24
+      ]
+    },
+    {
+      "distance_m": 12.600000000000001,
+      "counts": [
+        11625,
+        1407,
+        8792,
+        29
+      ]
+    },
+    {
+      "distance_m": 19.1,
+      "counts": [
+        13402,
+        2980,
+        9160,
+        31
+      ]
+    },
+    {
+      "distance_m": 30.0,
+      "counts": [
+        17235,
+        2803,
+        8758,
+        38
+      ]
+    },
+    {
+      "distance_m": 41.0,
+      "counts": [
+        23343,
+        4410,
+        9175,
+        58
+      ]
+    },
+    {
+      "distance_m": 44.900000000000006,
+      "counts": [
+        27076,
+        5078,
+        9283,
+        65
+      ]
+    },
+    {
+      "distance_m": 48.2,
+      "counts": [
+        30040,
+        5011,
+        9221,
+        66
+      ]
+    },
+    {
+      "distance_m": 52.900000000000006,
+      "counts": [
+        33333,
+        5224,
+        9014,
+        70
+      ]
+    },
+    {
+      "distance_m": 70.0,
+      "counts": [
+        37436,
+        5377,
+        9060,
+        71
+      ]
+    },
+    {
+      "distance_m": 80.7,
+      "counts": [
+        41311,
+        6564,
+        9051,
+        77
+      ]
+    },
+    {
+      "distance_m": 93.5,
+      "counts": [
+        46293,
+        6889,
+        8754,
+        82
+      ]
+    },
+    {
+      "distance_m": 101.30000000000001,
+      "counts": [
+        47064,
+        7029,
+        8798,
+        83
+      ]
+    },
+    {
+      "distance_m": 134.8,
+      "counts": [
+        55349,
+        7787,
+        8497,
+        95
+      ]
+    },
+    {
+      "distance_m": 138.1,
+      "counts": [
+        55667,
+        7841,
+        8449,
+        95
+      ]
+    },
+    {
+      "distance_m": 146.8,
+      "counts": [
+        55852,
+        7870,
+        8440,
+        95
+      ]
+    },
+    {
+      "distance_m": 150.0,
+      "counts": [
+        55852,
+        7870,
+        8440,
+        95
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "status": "P2_VALID_BOUNDS_BUT_UNRESOLVED",
+  "completed_local_date": "2026-10-08",
+  "loss_interval_m": [
+    0.0,
+    130.1
+  ],
+  "upper_width_m": 130.1,
+  "earliest_open_distance_m": 16.7,
+  "earliest_open_branches": [
+    {
+      "id": 4,
+      "distance_m": 16.7,
+      "attainable_prefix": false,
+      "decisions": 2,
+      "input_action_witness_kinds": [
+        "none",
+        null
+      ]
+    }
+  ],
+  "open_attainable_prefixes": 4,
+  "open_unproved_prefixes": 360,
+  "completed_search_nodes": 42,
+  "inflight_search_nodes": 1,
+  "branched_nodes": 42,
+  "exact_geometry_action_sets": 1,
+  "unresolved_geometry_action_sets": 41,
+  "raw_file_hashes": {
+    "queue.json": "0b61f898655ddf071480c2684e7ff551411b07a1a36fcbeff6e268529a11cf09",
+    "search_nodes.json": "f2b363febfa0518f38c58ea26688f839a78c829866e13723010d9fbc1f4e2b7b",
+    "baseline.json": "8ec761d0e5554ad4a7d15c31d56b1bd6d8fd66a9778bd2d8322dd08d39c85001"
+  },
+  "meaning": "Loss upper is a retained-branch distance envelope, not an attained saving; zero lower is not a no-harm proof."
+}

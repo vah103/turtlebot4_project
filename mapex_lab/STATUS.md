@@ -430,3 +430,7 @@ Conclusion: Way1 works in New Room but does not transfer cleanly to Hospital wit
 ## Geometry-impact development run, 2026-10-08
 
 Pinned R4 A1 development diagnostic on DELL: P1 completed on four initial states; three action sets exact, one unresolved. Byte-identical uncached anchor. P2 begins after geometry/task-bound checks pass. No whole-task harm, population frequency, held-out generalization or online-method claim yet. Details: `pilots/geometry_impact/README.md`.
+
+## Geometry-impact P1/P2 completed — 2026-10-08
+
+P1 completed on four real initial states. P2 one 2D mission completed its bounded search: loss [0,130.1] m; 43 nodes started, 42 completed, 364 retained branches; no positive saving witness. Source/baseline/cache/queue audit PASS. Precision target <=1 m NOT MET. Geometry can change decisions, but adverse mission impact and prediction adequacy are both unproved. Frequency, secondary-area search, online method and confirmation remain unopened. Details: `pilots/geometry_impact/RESULTS.md`. No Company formal QA or teacher milestone claimed.

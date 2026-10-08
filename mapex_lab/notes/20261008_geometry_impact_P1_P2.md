@@ -1,0 +1,3 @@
+# Geometry-impact preflight outcome
+
+The new real-model diagnostic establishes action sensitivity to geometry, but does not establish adverse task impact. Whole-task bounds [0,130.1] m remain too wide after the sealed bounded pilot. Earliest unproved prefix at16.7m controls the distance upper; 360/364 open prefixes are unproved. Completing 42 nodes left41 unresolved geometry action sets. More missions would not by themselves resolve within-mission bounds. Do not treat zero lower as harmlessness, or130.1m upper as observed harm. Detailed evidence/provenance: `../pilots/geometry_impact/RESULTS.md`.

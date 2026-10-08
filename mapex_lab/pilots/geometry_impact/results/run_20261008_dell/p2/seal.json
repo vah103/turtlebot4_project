@@ -1,0 +1,200 @@
+{
+  "status": "SEALED_BEFORE_PHASE_OUTCOMES",
+  "config": {
+    "design": "GEO_IMPACT_DESIGN_V1_P1_P2_DEVELOPMENT",
+    "preflight_prefix": "geometry_impact_",
+    "repo": "/home/dell/turtlebot4_project_geometry_impact_20261008",
+    "mapex": "/home/dell/MapEx",
+    "pilot": "/home/dell/turtlebot4_project_geometry_impact_20261008/mapex_lab/pilots/visibility_impact_r4/dependencies/active_verification_2d",
+    "fast_bfs": "/home/dell/turtlebot4_project_geometry_impact_20261008/mapex_lab/pilots/visibility_impact_r4/dependencies/fast_bfs.py",
+    "worker_python": "/home/dell/miniforge3/envs/lama/bin/python",
+    "ensemble_dir": "/home/dell/MapEx/pretrained_models/weights/lama_ensemble",
+    "assets": "/home/dell/mapex_completion_alltrain_2d_20261007/results_v2/assets",
+    "output": "/home/dell/turtlebot4_project_geometry_impact_20261008/mapex_lab/pilots/geometry_impact/results/run_20261008_dell",
+    "layouts": [
+      "kth_50052748",
+      "kth_50037764_PLAN1",
+      "kth_50037765_PLAN3",
+      "kth_50010535_PLAN1",
+      "kth_50010536_PLAN3",
+      "kth_50015848"
+    ],
+    "resolution_m": 0.1,
+    "budget_m": 150,
+    "sensor_range_m": 20,
+    "sensor_rays": 2500,
+    "native_rays": 250,
+    "native_epsilon": 0.8,
+    "robot_radius_m": 0.15,
+    "scan_stride_steps": 3,
+    "action_end_scan": true,
+    "seed": 2026100804,
+    "maximum_inference_seconds": 1500,
+    "single_inference_timeout_s": 180,
+    "maximum_decisions": 300,
+    "maximum_wall_seconds": 1800,
+    "resource_abort_disposition": "INCOMPLETE_INCONCLUSIVE_RETAIN_ALL_DATA",
+    "coverage_domain": "2x2-any pooled original valid_space; true-free cells only",
+    "quality_domain": "same fixed valid_space ROI; strict occupied IoU; frozen real ensemble reporter",
+    "auc_rule": "right-continuous observed-coverage step curve; terminal holds final coverage to 150m",
+    "query_geometry": "native endpoint geometry; selective unknown-cell GT corrections; fixed U",
+    "prediction_to_sensor_occupancy": "ensemble mean >= 0.5; preserve known cells",
+    "cohort_status": "DEVELOPMENT_FOUR_VERIFIED_BUILDINGS_TRAIN_OVERLAP_UNVERIFIED",
+    "layout_order_reason": "ascending grid area for execution cost, fixed before effect outcomes",
+    "controller_revision": "A1_STOP_ACTION_ON_NEWLY_MEASURED_UNSAFE_PATH",
+    "action_termination": "DONE, measured-costmap path blocked -> sense and common-controller decision, or genuine physical collision -> terminal",
+    "invalid_debug_run": "run_20261008 (A0 blind-path controller; no research conclusion)",
+    "p1_layouts": [
+      "kth_50052748",
+      "kth_50037764_PLAN1",
+      "kth_50010535_PLAN1",
+      "kth_50015848"
+    ],
+    "p2_layout": "kth_50052748",
+    "p1_state_seconds": 60.0,
+    "p1_geometry_nodes": 4096,
+    "p2_seconds": 900.0,
+    "p2_task_nodes": 120,
+    "p2_geometry_seconds": 1.0,
+    "p2_geometry_nodes": 64,
+    "tu_seed": 2026100809,
+    "reuse_cache_dirs": [
+      "/home/dell/turtlebot4_project_visibility_r4/mapex_lab/pilots/visibility_impact_r4/results/preflight/cache"
+    ]
+  },
+  "phase": "p2",
+  "source_hashes": {
+    "run_preflight.py": "19e18d7f379d308777883d60b4e110d449a10725476e05a4ca50a0a86c68dff7",
+    "geometry_solver.py": "4e6f600d8ee68141a9a2154bec326c6aa78366ee04b257c05a9f3f2a18a92a4b",
+    "protocol.json": "09276e054defe573dc9e9d6358a1a93f293cb726aba26d46f771d5b5c13702ce",
+    "task_search.py": "4bafd1f5c98a2461793ad0ce92b62c47c1479f070904d2068ec64a6649c1cae9"
+  },
+  "r4_source_parity": {
+    "mapex_lab/pilots/visibility_impact_r4/controller_v2/runner.py": {
+      "expected": "bc7b907ce883f413fe985f2c7bb0b0c2af44ac093db864da793e23a428c3eb50",
+      "actual": "bc7b907ce883f413fe985f2c7bb0b0c2af44ac093db864da793e23a428c3eb50",
+      "match": true
+    },
+    "mapex_lab/pilots/visibility_impact_r4/controller_v2/estimation.py": {
+      "expected": "af94a3391c289d24b1a8a30eaab12cc67be2692ab4c4f8afbe18469ca5ca2cb2",
+      "actual": "af94a3391c289d24b1a8a30eaab12cc67be2692ab4c4f8afbe18469ca5ca2cb2",
+      "match": true
+    },
+    "mapex_lab/pilots/visibility_impact_r4/dependencies/active_verification_2d/core.py": {
+      "expected": "0cf86dab2d6782ba568b47ea69277adc7080610167a7959c9d24e6723c7f2a68",
+      "actual": "0cf86dab2d6782ba568b47ea69277adc7080610167a7959c9d24e6723c7f2a68",
+      "match": true
+    },
+    "mapex_lab/pilots/visibility_impact_r4/dependencies/active_verification_2d/predictor.py": {
+      "expected": "d1cb8f0e90e8f8cc4d192b4cf8efcb539b4cc38add090aa50a565c7cabc3fbdc",
+      "actual": "d1cb8f0e90e8f8cc4d192b4cf8efcb539b4cc38add090aa50a565c7cabc3fbdc",
+      "match": true
+    },
+    "mapex_lab/pilots/visibility_impact_r4/dependencies/fast_bfs.py": {
+      "expected": "c3c134c41bcef781d2d389705c8500b103357c2afe70956de418a0617ea17ee1",
+      "actual": "c3c134c41bcef781d2d389705c8500b103357c2afe70956de418a0617ea17ee1",
+      "match": true
+    },
+    "mapex_lab/scripts/mapex.py": {
+      "expected": "034c033d0a5d3b243b3cff200a3f9730f9dc4e056f475047d72fb3c538f79863",
+      "actual": "034c033d0a5d3b243b3cff200a3f9730f9dc4e056f475047d72fb3c538f79863",
+      "match": true
+    },
+    "assets/kth_50052748.npz": {
+      "expected": "ef89924f30df6889b3a6ae7de6ada24af8d17990797f1a6dbc31f8cbe2183790",
+      "actual": "ef89924f30df6889b3a6ae7de6ada24af8d17990797f1a6dbc31f8cbe2183790",
+      "match": true
+    },
+    "assets/kth_50037764_PLAN1.npz": {
+      "expected": "047ea2a6fb695bb154790f08400279012e9211c27492940c29ca7424a7dd1862",
+      "actual": "047ea2a6fb695bb154790f08400279012e9211c27492940c29ca7424a7dd1862",
+      "match": true
+    },
+    "assets/kth_50037765_PLAN3.npz": {
+      "expected": "54d75184c90aac4164b2283b8db16f52cc8cd8cd9a5c7df8e1cdc010fb098ac6",
+      "actual": "54d75184c90aac4164b2283b8db16f52cc8cd8cd9a5c7df8e1cdc010fb098ac6",
+      "match": true
+    },
+    "assets/kth_50010535_PLAN1.npz": {
+      "expected": "9a084485dacbfde1987c4b908fa1e2ae02d043e44d7ad0195f3610dfac05f39c",
+      "actual": "9a084485dacbfde1987c4b908fa1e2ae02d043e44d7ad0195f3610dfac05f39c",
+      "match": true
+    },
+    "assets/kth_50010536_PLAN3.npz": {
+      "expected": "292bb3676029038864a7893d5e334529b1223d385d61bfc6c2354685180c5fb2",
+      "actual": "292bb3676029038864a7893d5e334529b1223d385d61bfc6c2354685180c5fb2",
+      "match": true
+    },
+    "assets/kth_50015848.npz": {
+      "expected": "96563c3c9e9c5733489bc565d2d101c8ec21b8ee71ed4a6959cf985f79f22eb4",
+      "actual": "96563c3c9e9c5733489bc565d2d101c8ec21b8ee71ed4a6959cf985f79f22eb4",
+      "match": true
+    },
+    "raw/kth_50052748/occ_map.npy": {
+      "expected": "4772aa6452a888fb72d667827a57afc96ce4f11f88d290cfedee424d3c9938e9",
+      "actual": "4772aa6452a888fb72d667827a57afc96ce4f11f88d290cfedee424d3c9938e9",
+      "match": true
+    },
+    "raw/kth_50052748/valid_space.npy": {
+      "expected": "8ee75bf5930f3acf8586418f5b9d6c0d7d5c565d4bd7118c2bf2e4813fc5c4ae",
+      "actual": "8ee75bf5930f3acf8586418f5b9d6c0d7d5c565d4bd7118c2bf2e4813fc5c4ae",
+      "match": true
+    },
+    "raw/kth_50037764_PLAN1/occ_map.npy": {
+      "expected": "e579d7f7e578cfda1e08635a2fb7b90dbdeba024f9af5d025818b4c8edccf747",
+      "actual": "e579d7f7e578cfda1e08635a2fb7b90dbdeba024f9af5d025818b4c8edccf747",
+      "match": true
+    },
+    "raw/kth_50037764_PLAN1/valid_space.npy": {
+      "expected": "83d62c3be115045a50d6123cc8adcc83df0f8e2348c9e6f7d064c10297282efb",
+      "actual": "83d62c3be115045a50d6123cc8adcc83df0f8e2348c9e6f7d064c10297282efb",
+      "match": true
+    },
+    "raw/kth_50037765_PLAN3/occ_map.npy": {
+      "expected": "d2da0d28a181cd46c247dcaff9599219e680cc9b8033c0df5e2ecda7b2098713",
+      "actual": "d2da0d28a181cd46c247dcaff9599219e680cc9b8033c0df5e2ecda7b2098713",
+      "match": true
+    },
+    "raw/kth_50037765_PLAN3/valid_space.npy": {
+      "expected": "db93688949016e28236385fdbfd1aa825f8b2591b79c4b475d98a4c3ccfb1ff3",
+      "actual": "db93688949016e28236385fdbfd1aa825f8b2591b79c4b475d98a4c3ccfb1ff3",
+      "match": true
+    },
+    "raw/kth_50010535_PLAN1/occ_map.npy": {
+      "expected": "c75b196fa46845edfdf129f788501f5f77754756b571b1371819e00613871564",
+      "actual": "c75b196fa46845edfdf129f788501f5f77754756b571b1371819e00613871564",
+      "match": true
+    },
+    "raw/kth_50010535_PLAN1/valid_space.npy": {
+      "expected": "8367efc9ba061cd393aa1c058e5a59a155f3f5b8fc8b14738dc980affccb759e",
+      "actual": "8367efc9ba061cd393aa1c058e5a59a155f3f5b8fc8b14738dc980affccb759e",
+      "match": true
+    },
+    "raw/kth_50010536_PLAN3/occ_map.npy": {
+      "expected": "dc5f28ee3409504b5c75576c8b6b16d6e210068f90498e4d28aa08822904a072",
+      "actual": "dc5f28ee3409504b5c75576c8b6b16d6e210068f90498e4d28aa08822904a072",
+      "match": true
+    },
+    "raw/kth_50010536_PLAN3/valid_space.npy": {
+      "expected": "8973fa2bdff68c8300ae521685a6b21b970c0013ffc7fab7e9cf33f83e1778ef",
+      "actual": "8973fa2bdff68c8300ae521685a6b21b970c0013ffc7fab7e9cf33f83e1778ef",
+      "match": true
+    },
+    "raw/kth_50015848/occ_map.npy": {
+      "expected": "0f39b37d21fdfded511bb31d573fc10efeffbe3c6a00a6cd0096da35486b899f",
+      "actual": "0f39b37d21fdfded511bb31d573fc10efeffbe3c6a00a6cd0096da35486b899f",
+      "match": true
+    },
+    "raw/kth_50015848/valid_space.npy": {
+      "expected": "329314058dfdc856d9c2df31b8412be37f8142a7d4ce926e819379d1b8818482",
+      "actual": "329314058dfdc856d9c2df31b8412be37f8142a7d4ce926e819379d1b8818482",
+      "match": true
+    }
+  },
+  "runtime": {
+    "python": "3.11.16",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "shapely": "2.1.2"
+  }
+}

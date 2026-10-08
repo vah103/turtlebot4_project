@@ -1,0 +1,48 @@
+{
+  "status": "P2_VALID_BOUNDS_BUT_UNRESOLVED",
+  "layout": "kth_50052748",
+  "baseline_first_hit_m": 146.8,
+  "baseline_budget_m": 150,
+  "baseline_reference": {
+    "coverage": 0.930571985537913,
+    "occupied_iou": 0.9324644549763034,
+    "TU": 0.95,
+    "counts": [
+      55852,
+      7870,
+      8440,
+      95
+    ]
+  },
+  "loss_lower_m": 0.0,
+  "loss_upper_m": 130.1,
+  "relative_lower": 0.0,
+  "relative_upper": 0.8862397820163488,
+  "best_witness_counts": [
+    55852,
+    7870,
+    8440,
+    95
+  ],
+  "best_witness_actions": 0,
+  "baseline_states": 16,
+  "processed_search_nodes": 43,
+  "open_nodes": 364,
+  "unproved_target_prefixes": 0,
+  "stop_reason": "900-second whole-task preflight cap",
+  "whole_task_bounds_certified": true,
+  "wall_s": 904.3026171009988,
+  "frequency_scope": "not estimated: one development task only",
+  "secondary_area": {
+    "status": "NOT_SEARCHED_TRIVIAL_BOUNDS_ONLY",
+    "lower_m2": 0.0,
+    "upper_m2": 41.67000000000001
+  },
+  "causal_scope": "GT geometry repair class only; no global prediction adequacy or online recoverability verdict",
+  "model_calls": 52,
+  "cache_hits": 8,
+  "inference_s": 379.6627346560126,
+  "maxrss_kb": 563380,
+  "confirmation": "NOT_OPENED_TRAIN_SPLIT_UNVERIFIED",
+  "online_method": "NOT_TRAINED"
+}

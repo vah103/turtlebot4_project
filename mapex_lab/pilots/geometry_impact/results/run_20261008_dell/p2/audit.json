@@ -1,0 +1,15 @@
+{
+  "status": "PASS_REAL_P2_SOURCE_BASELINE_CACHE_FRONTIER_AND_WITNESS_AUDIT",
+  "baseline_frames_recomputed": 16,
+  "baseline_native_selection_and_physical_replay": true,
+  "open_queue_states_checked": 364,
+  "completed_node_records": 42,
+  "unlogged_inflight_node": 1,
+  "lower_m": 0.0,
+  "upper_m": 130.1,
+  "positive_lower_witness_replayed": false,
+  "nodes_with_multiple_native_validated_actions": 17,
+  "proved_target_hits": 0,
+  "new_inference_calls": 0,
+  "limitations": "Audits recorded evidence and resource-stop ledger; finite tests do not establish universal software correctness."
+}

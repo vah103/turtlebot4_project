@@ -13,3 +13,5 @@ The packed ray reader uses fixed native Bresenham paths and float64 cumulative a
 Raw maps, inference cache and verbose logs stay local; lightweight code, seals and results are versioned. Results from four initial states and one task do not establish a population frequency or unseen-building result.
 
 P1 actual development run: four initial states, three exact action sets (two singleton candidate sets), one unresolved 12-candidate set. Fresh anchor prediction is byte-identical to cache. See `results/P1_compact.json`; this is not a task-loss estimate. P2 task-bound and route-evaluator checks pass before the real task launch.
+
+Final P2: valid conservative loss interval [0,130.1] m, unresolved after the 900 s control checkpoint (904.30 s recorded); no positive whole-task witness. Real source/baseline/cache/frontier audit PASS. See `RESULTS.md`. The 1 m precision target failed; no population or prediction-adequacy conclusion.
