@@ -419,3 +419,10 @@ Conclusion: Way1 works in New Room but does not transfer cleanly to Hospital wit
 - IN PROGRESS: full R4 online preparation remains unfinished; f/g are not trained or tested. No experiment process is still running. The available official 14-floor asset pool contains only four verified buildings, and the exact checkpoint training-building list has not been independently recovered.
 - NEXT ACTION: obtain a larger independently identified building cohort and checkpoint split provenance; preflight physical pathwise labels/scorer/controls, then train matched f/g and freeze full-policy validation with the required starts, intervals and power. Current Stage A endpoint diagnoses are not that confirmation.
 - LATEST RESULT: native_P_U -> native_GT_U has 0/36 sampled cases meeting delta C_bar>=0.02 and delta Q>=-0.005; building-weighted frequency interval is 0..38.07% for this finite cohort, with mean-effect estimate -0.722pp and very wide bounded interval +/-82.868pp. Verdict INCONCLUSIVE for practical frequency/severity and recoverable online contribution. GT changes the native action at 51/91 decisions; action changes alone do not prove harm. Some sensitivity contrasts have positive cases, relative to their own P/control arm. See `pilots/visibility_impact_r4/RESULTS.md`. No whole-R4 completion, building generalization or robot/ROS/Gazebo claim.
+
+## Geometry-impact P1/P2 development preflight — 2026-10-08
+
+- DONE: isolated A1 worktree and exact R4 source/asset/checkpoint parity; packed/native small-fixture checks passed on DELL (512 correction maps, 1,587 checks).
+- IN PROGRESS: user-authorized bounded P1 (four initial states), then P2 (one fixed 2D task, 900s/120 nodes).
+- NEXT ACTION: preserve certified action/task intervals and witnesses, then report feasibility and scope.
+- LATEST RESULT: no new mission-impact estimate yet. This is not held-out confirmation or an online policy. COM1 is offline; DELL uses the same checkpoint/source bytes.

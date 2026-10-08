@@ -1,0 +1,6 @@
+results/**/cache/
+results/**/uncached_determinism/
+results/**/*.npz
+results/**/*.log
+results/**/*.tmp
+__pycache__/
