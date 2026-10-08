@@ -63,3 +63,18 @@ from the active-verification pilot at source revision
 included because that pilot is not on the selected main revision and COM1
 has no copy of its worktree. `dependencies/fast_bfs.py` preserves the original
 FIFO neighbour order, verified against the reference implementation.
+
+Audit a completed or partial A1 output with:
+
+```bash
+python3 controller_v2/audit_results.py --protocol controller_v2/protocol_com1_controller_v2.json
+```
+
+The audit verifies sealed hashes, fixed SRS selection, reference sensor replay,
+prediction cache identity, branch context, common-past full-budget AUC bounds,
+strict final IoU, paired contrasts and finite-population estimators. The primary
+building aggregate is withheld until all six fixed episodes are complete.
+Bounds are simultaneous within each rate or mean-effect family separately;
+they are not jointly 95% over both families and do not cover unseen buildings.
+Stage B's physical label replay must also preserve scan timing and measured-path
+abort semantics, rather than rendering from unsafe virtual path poses.

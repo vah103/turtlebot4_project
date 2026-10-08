@@ -140,6 +140,11 @@ def audit(cfg):
         distinct=0;context_seal=runner.digest(root/'seal.json')
         for state in selected:
             record=records[state];outcomes={}
+            prefix=record['trace']+[[record['distance_m'],record['trace'][-1][1]]]
+            past=sum((b[0]-a0[0])*a0[1] for a0,b in zip(prefix,prefix[1:]))/cfg['budget_m']
+            remaining=(cfg['budget_m']-record['distance_m'])/cfg['budget_m']
+            min_auc=past+remaining*record['trace'][-1][1]
+            max_auc=past+remaining
             for action in set(record['actions'].values()):
                 artifact=folder/f'branch_{state:04d}_{action[:12]}.json';x=json.loads(artifact.read_text())
                 context=hashlib.sha256(json.dumps(dict(seal=context_seal,layout=layout,state=state,
@@ -147,6 +152,8 @@ def audit(cfg):
                             action=action,RNG='deterministic-no-random-controller'),sort_keys=True).encode()).hexdigest()
                 assert x['status']=='COMPLETE' and x['replay_context']==context and x['action_id']==action
                 assert x['distance_m']<=cfg['budget_m']+1e-7
+                assert min_auc-1e-9<=x['C_bar']<=max_auc+1e-9,'Suffix metric inconsistent with fixed common past and full-budget AUC'
+                assert 0<=x['Q']<=1
                 outcomes[action]=x
             distinct+=len(outcomes)-1
             native=outcomes[record['actions'][runner.BASE]]
@@ -171,7 +178,7 @@ def audit(cfg):
                          candidates=sum(len(r['candidates']) for r in records),
                          mean_candidate_native_false_visible_cells=float(np.mean([x['native_false_visible'] for x in mismatch])) if mismatch else None,
                          mean_candidate_native_missed_visible_cells=float(np.mean([x['native_missed_visible'] for x in mismatch])) if mismatch else None,
-                         physical_reference_replay='EXACT',predictor_training_overlap_verified=False))
+                         physical_reference_replay='EXACT',branch_auc_common_prefix_bounds='PASS',predictor_training_overlap_verified=False))
     result=dict(status='AUDITED_COMPLETE_DEVELOPMENT_ONLY' if not missing else 'AUDITED_PARTIAL_INCONCLUSIVE',
                 planned_layouts=len(cfg['layouts']),completed_layouts=len(rows),missing_layouts=missing,
                 total_valid_decisions=sum(x['T'] for x in rows),total_action_flip_states=sum(x['M'] for x in rows),

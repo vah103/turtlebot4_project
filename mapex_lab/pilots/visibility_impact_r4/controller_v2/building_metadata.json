@@ -67,5 +67,41 @@
   "verified_buildings": 4,
   "predictor_training_overlap": "UNVERIFIED_ORIGINAL_TRAIN_SPLIT_NOT_AVAILABLE",
   "confirmation_status": "DEVELOPMENT_ONLY_FOUR_BUILDINGS_NOT_SIX",
-  "grouping_method": "Average the fixed floor/start episodes within building, then give each building equal weight; no sampling or outcome changes."
+  "grouping_method": "Average the fixed floor/start episodes within building, then give each building equal weight; no sampling or outcome changes.",
+  "available_official_asset_pool": {
+    "raw_floor_assets": 14,
+    "verified_buildings": 4,
+    "groups": {
+      "A0043034": [
+        "50010535_PLAN1",
+        "50010535_PLAN2",
+        "50010536_PLAN3"
+      ],
+      "A0043035": [
+        "50015847",
+        "50015848"
+      ],
+      "A0043040": [
+        "50037764_PLAN1",
+        "50037765_PLAN3"
+      ],
+      "A0043022": [
+        "50052748",
+        "50052749",
+        "50052750",
+        "50052751",
+        "50052752",
+        "50052753",
+        "50052754"
+      ]
+    },
+    "limitation": "More floors from this pool do not add independent buildings"
+  },
+  "predictor_split_evidence": {
+    "paper_url": "https://arxiv.org/html/2409.15590v3",
+    "section": "V-A",
+    "author_report": "80:20 floor-plan split with buildings kept disjoint",
+    "audit_status": "AUTHOR_REPORTED_NOT_INDEPENDENTLY_MACHINE_AUDITED",
+    "limitation": "Original training-building list for the supplied checkpoint ensemble was not found; configs contain private training paths"
+  }
 }
