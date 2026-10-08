@@ -1,0 +1,48 @@
+{
+  "status": "REAL_MODEL_PREFLIGHT_PASSED",
+  "impact_results": false,
+  "startup_s": 5.118057249999765,
+  "inference_s": 2.482104527000047,
+  "cache_hits": 1,
+  "known_cells": 11666,
+  "mean_hash": "51e4aad8a1cee89c78edae98cfe923f6b28cc1d54c6836548b0159779577fe6d",
+  "variance_hash": "872a0dd14c7a4dd2aaecc4d56239880477de5ade39f296d05b2690634edca6d9",
+  "dell_mean_byte_parity": true,
+  "dell_variance_byte_parity": true,
+  "provenance": {
+    "type": "REAL_LAMA_ENSEMBLE_NO_SYNTHETIC_PREDICTION",
+    "device": "cpu",
+    "transform": "default_map_eval",
+    "worker_sha256": "f401211e1698401ec2b58784a394646ab7b58fc2166d52335c0c77f03cdd8c3e",
+    "bridge_sha256": "8a279d02706b59faf015e452b0dd2654ef81421c9abdb29c9b04da683cc18579",
+    "upstream_preprocessing_sha256": "0e93d4b6628b327d7b4601efeb391c29669c46154282aed259396e558ceb01e2",
+    "model_checkpoints": [
+      {
+        "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_1/models/best.ckpt",
+        "sha256": "b37bfef69138806708d6e087b8db89836021f06db987cb3ef3db21fbf28422ca"
+      },
+      {
+        "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_2/models/best.ckpt",
+        "sha256": "7880d164ccd88da58ddb0e6875f358bea02a232c452eff86b5e226957a489c26"
+      },
+      {
+        "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_3/models/best.ckpt",
+        "sha256": "fcb43d1102d48ab6b14f5bfded859077d6da0c7efbfbda10d4acbb754c3d3bc1"
+      }
+    ],
+    "model_configs": [
+      {
+        "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_1/config.yaml",
+        "sha256": "58743088778222c4a71c1038bace0ab6a8ebad5494c6f6abff553c15003bad48"
+      },
+      {
+        "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_2/config.yaml",
+        "sha256": "23e4b6c3850a8bef02daf58ae630b96693d44b97488adef050261d308b44ceb3"
+      },
+      {
+        "path": "/work/com1/mapex_weights/weights/lama_ensemble/train_3/config.yaml",
+        "sha256": "1dc07c6b4a244a335aa0a3499fce3b6178140cea16ee2b9cc5d5e497cfa73810"
+      }
+    ]
+  }
+}

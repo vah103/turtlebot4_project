@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+assets/
+results/*
+!results/engineering_preflight.json
+!results/model_preflight_com1.json
+!results/verified_development_summary.json
+!results/run_20261008/
+results/run_20261008/*
+!results/run_20261008/seal.json
+!results/run_20261008/predictor.json
+!results/run_20261008/summary.json

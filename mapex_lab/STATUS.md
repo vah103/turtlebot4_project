@@ -411,3 +411,11 @@ Conclusion: Way1 works in New Room but does not transfer cleanly to Hospital wit
 - `scripts/evaluate_way2_adaptive_confirmation.py`
 - `scripts/sweep_way2_adaptive_candidate_count.py`
 - `scripts/sweep_way2_adaptive_rule_neighborhood.py`
+
+
+## R4 visibility-impact pilot — 2026-10-08
+
+- DONE: isolated worktree from main `88fb673b`; decision census, SRS action-flip sampling, paired full suffixes, finite-population intervals and reproducible source/model/data seals implemented. Engineering preflight includes nontrivial alternate-action replay, exact FIFO BFS parents, physical-sensor parity and a complete 150 m fixture. Real three-member ensemble on COM1 preserves known cells and reproduces DELL mean/variance byte-for-byte on the initial small layout; inference 2.482 s (engineering check only).
+- IN PROGRESS: six-layout offline 2D development pilot; no scientific impact outcome reported yet.
+- NEXT ACTION: audit complete rollout results; verify building identities and predictor training overlap before an independent f/g confirmation; match pathwise visibility labels/scoring/controls before Stage B.
+- LATEST RESULT: technical preflight passed; research frequency, severity and recoverable online effect remain unmeasured at this checkpoint. No robot/ROS/Gazebo campaign and no revival of STOP heuristics.

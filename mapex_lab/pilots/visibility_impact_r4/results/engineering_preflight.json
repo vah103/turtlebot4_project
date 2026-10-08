@@ -1,0 +1,13 @@
+{
+  "status": "ENGINEERING_PREFLIGHT_PASSED",
+  "impact_results": false,
+  "checks": [
+    "hypergeometric coverage >=95% for every M<=10, sample size, true population count",
+    "SRS estimator unbiased by exhaustive samples; zero-flip and incomplete cases handled",
+    "accelerated BFS distances and every tied parent equal original FIFO BFS",
+    "physical sensor and diagnostic first-hit renderer identical on real layout poses",
+    "full 150m execution and coverage integration; strict IoU and known preservation",
+    "scoring eight arms does not mutate observed map, P, U or truth",
+    "closed-loop reference census and paired suffixes replay exactly on deterministic fixture"
+  ]
+}

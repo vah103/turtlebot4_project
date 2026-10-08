@@ -312,3 +312,8 @@ and must not be treated as a scientific prediction-quality verdict yet. Fixed
 total-support and class-composition sensitivities had no eligible final-bin
 decisions under the preregistered sample sizes; the evaluator reports this
 without relaxing the rule.
+
+
+## 2026-10-08 — R4 implementation preflight
+
+COM1 checkpoint/config checksums match the three original ensemble members; real mean and variance exactly match the DELL small-layout preflight. The first replay fixture naturally produced identical arm actions, so it was strengthened with an explicitly forced alternate path (engineering-only) to exercise actual paired suffix replay and context-verified branch cache reuse. This fixture is not impact evidence. Stage-A code preserves the lab native endpoint query and uses first-hit rendering at that same endpoint for diagnosis. R4's proposed f/g target is pathwise; mixing that label with the endpoint baseline without compatibility controls would confound Stage B, so its preflight is an explicit blocker. Six KTH layout IDs are not verified building IDs and cannot support building-level inference.

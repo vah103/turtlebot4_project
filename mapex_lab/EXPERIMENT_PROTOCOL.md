@@ -324,3 +324,10 @@ MapEx:   chọn max IG / Euclidean distance
 ```
 
 Execution adapter và recorder phải được chia sẻ tối đa để khác biệt kết quả không đến từ hạ tầng thí nghiệm.
+
+
+## R4 visibility-impact development pilot — 2026-10-08
+
+Frozen specification: `pilots/visibility_impact_r4/protocol_com1.json`; numerical implementation and limitations: its `README.md`. Stage A logs every eligible native reference decision, computes all eight P/GT × native/sensor × U/uniform choices, and samples at most six states without replacement from the union of complete-action changes. Unchanged states remain in the decision denominator. Paired suffixes use the same native continuation and total 150 m budget, refresh the real three-member LaMa ensemble at subsequent decisions, and verify reference replay before reuse. Coverage AUC uses a right-continuous step curve; Q is strict occupied IoU on the fixed pooled valid-space ROI with the same frozen reporting predictor. Scans occur every 0.3 m and at action ends. No 8 m truncation or frozen future U.
+
+Six existing KTH layouts have unverified building identity and predictor training overlap; this is DEVELOPMENT_ONLY, not six independent buildings. All diagnosis queries use the frontier endpoint to preserve native scoring. R4 pathwise f/g learning and full-episode confirmation are separate and require verified splits and a common pathwise-scoring compatibility preflight. No claim of learnable correction or fine-tuned predictor contribution follows from Stage A. Resource/implementation aborts remain INCOMPLETE/INCONCLUSIVE. No change to the existing Hospital/Nav2 protocol.
