@@ -4,7 +4,7 @@
 
 - DONE: isolated PIPE/pyastar2d/range_libc dependencies; sealed maps, two starts each, and three model identities; source parity, complete-state controller replay, scientific contract checks, and full-size CPU feasibility.
 - LATEST RESULT: first map `50052750` completed 2/8 source trajectories and 20 logical first-goal requests. Both sources used the 100 m budget. Six distinct snapshots cover seven target slots; one slot is retained as NA. A single map cannot satisfy the direction screening criteria.
-- IN PROGRESS: Stage 1 resumed on DELL from completed outputs after an ASCII locale error in Markdown report writing. The same sealed Python code now runs with an explicit UTF-8 locale; protected completed source/snapshot/branch hashes are unchanged.
+- IN PROGRESS: Stage 1 resumed on DELL with UTF-8 after an ASCII report-write error. A recorded resume-only guard now skips diagnostics for snapshot groups whose five selector outcomes are complete. Four focused checks PASS; numerical contracts and completed source/snapshot/branch data hashes are unchanged. Original and amended execution manifests are retained.
 - NEXT ACTION: finish the remaining six fixed source trajectories and their bounded paired requests, verify final integrity, and interpret only the complete preregistered support. Stage 2 remains CLOSED.
 - EVIDENCE: [runner and deployment notes](pilots/mx071_r2/README.md); [UTF-8 recovery ledger](pilots/mx071_r2/evidence/locale_utf8_resume_20261009.json). Heavy artifacts remain on DELL under `/home/dell/mx071_dell_20261009/artifacts/stage1`.
 - BOUNDARY: engineering checkpoint only; H1/H4/H7 screening is incomplete. MAP_ID_ONLY / TRAIN_OVERLAP_UNVERIFIED. No result acceptance, online STOP, robot motion, or MX072 execution is claimed.

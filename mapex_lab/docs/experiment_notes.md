@@ -323,3 +323,7 @@ without relaxing the rule.
 - Recovery recorded protected file hashes and kept the same sealed Python files. Resume uses `LC_ALL=C.UTF-8 LANG=C.UTF-8 PYTHONIOENCODING=utf-8`; completed sources and requests are skipped. The hash check after resume confirmed the protected numerical data unchanged.
 - Stage 2 remains closed. No replacement maps, threshold adjustment, robot run, or independent result verdict. This execution is MX071, separate from MX072.
 - Caveats: five-move replay is a technical fixture; map IDs are not verified building identities; interrupted physical branches restart from the original snapshot; complete cumulative cost telemetry across resumes is not claimed.
+
+### Same-session follow-up: completed-request resume guard
+
+The initial UTF-8 resume recomputed offline diagnostics for completed first-map snapshot groups before skipping their recorded selector outcomes. That process was stopped while recomputing diagnostics; no source or physical branch was interrupted. Added a three-line guard that skips only when all five selector contracts are recorded. The missing-selector negative case still enters execution. Four focused checks passed in 0.16 s after imports, without additional numerical rollouts; protected completed states/results remain unchanged. The original manifest and implementation commit `b008d997a3332c758347a09cc12c5cbe594cd487` are preserved, and the amended manifest binds RESUME_FIX1 with unchanged model/map/controller/scoring/budget fields. Active log: `/home/dell/mx071_dell_20261009/logs/stage1_resume_fix1.log`.

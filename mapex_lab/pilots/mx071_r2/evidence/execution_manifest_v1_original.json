@@ -90,7 +90,7 @@
     "native_adapter.py": "5bc055f436abd685534c85308a65d38cca04a4c0401718b9cf24d7329aa0d165",
     "preflight.py": "3b80a536d1dabf09fe5e4ff8c332780cc7290ba21fe09b26198af43f6a608a44",
     "probe_largest.py": "7fea9a45868320f592cf1fa1811ca6219a59a37fa8f801258590f6c292b958da",
-    "run_stage1.py": "8cc3346b244de3da284976dcf06e093b5f67e270fff2bae743b397cd7bc005d4",
+    "run_stage1.py": "99b953359ddfe73a03781cf8965f553b04bc599ed6eacb1ad772beee2b5b6d26",
     "scoring.py": "bc225d18cf365c877c49a47b349e1e9c30aa232f94fe51b55c6414d0be2696f7"
   },
   "infrastructure_retry_ceiling": 1,
@@ -391,14 +391,13 @@
   },
   "per_map_block_wall_ceiling_s": 86400,
   "pipe_commit": "e5bcb5ec4a9a13cbe14aa9f7850bc8b5989a2bb0",
-  "pipeline_version": "MX071_R2_STAGE1_V1_RESUME_FIX1",
+  "pipeline_version": "MX071_R2_STAGE1_V1",
   "predicted_renderer": {
     "laser_range_m": 20,
     "num_laser": 250,
     "pathwise_index": 3,
     "pixel_per_meter": 10
   },
-  "prior_execution_manifest_sha256": "50a17cadfabc99c813dba58758d6a48566ce734f1d4a3f6a61f87c205402ddfa",
   "pyastar_commit": "0bfc4c1051cc768c5e543cdbc4b8f0a554834096",
   "resource": {
     "cuda": false,
@@ -411,12 +410,6 @@
     "scoring_workers": 1,
     "torch_interop_threads": 1,
     "torch_threads": 2
-  },
-  "resume_fix": {
-    "behavior": "Skip diagnostic recomputation only when all five selector contracts have recorded outcomes",
-    "focused_checks_sha256": "cae6f0dd06b795ab335ba096a251cecf65c0a9e57f85438a1826a33403603314",
-    "ledger": "/home/dell/mx071_dell_20261009/recoveries/completed_request_resume_fix1.json",
-    "sha256": "cd6a7626729bfb3a8262a7b474bf95622ed8904be04fe1c6b4c7811bd78d6689"
   },
   "schema": "MX071_R2_DELL_PREFLIGHT_V1",
   "sealed_at_unix": 1791535503.6167417,

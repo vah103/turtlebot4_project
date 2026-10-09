@@ -213,6 +213,9 @@ def paired_requests(source,directory,map_info,manifest):
     completed={(x["snapshot_id"],x["selector"]) for x in existing}
     for snapshot in json.loads(index.read_text()):
         if not any(t in [20,60] for t in snapshot["target_slots_m"]): continue
+        # Completed logical contracts retain their recorded diagnostics and outcomes.
+        if all((snapshot["snapshot_id"],selector) in completed for selector in SELECTORS):
+            continue
         state=State.load(snapshot["state_file"],gt,component)
         online,(members,mean,variance)=reconstruct_online(snapshot,state.mapper.obs_map)
         if not online["pool"]:

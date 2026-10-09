@@ -10,6 +10,8 @@ On 2026-10-09 the first map block (`50052750`) completed both source trajectorie
 
 The original process then failed while writing the Markdown report: Python 3.6's default ASCII locale could not encode an em dash. The saved states and JSON/CSV outcomes survived. The same sealed Python implementation was resumed with `LC_ALL=C.UTF-8`, `LANG=C.UTF-8`, and `PYTHONIOENCODING=utf-8`. `evidence/locale_utf8_resume_20261009.json` records the failure phase and protected data hashes. No model, map, goal, score, controller, or budget changed.
 
+The UTF-8 resume exposed redundant recomputation of completed offline diagnostics. A subsequent recorded three-line guard skips a snapshot only when all five selector contracts already have outcomes. Four focused checks passed: completed groups do not reconstruct or diagnose again; completed data hashes stay unchanged; a missing selector still enters execution; Python 3.6 compilation passes. No source or branch was interrupted for this fix. The original execution manifest is retained; the current manifest records RESUME_FIX1 and its code hash. Original implementation commit: `b008d997a3332c758347a09cc12c5cbe594cd487`. See `evidence/completed_request_resume_fix1.json` and `evidence/resume_fix1_checks.json`.
+
 ## Source pins and machine
 
 | Asset | Exact identity |
@@ -36,7 +38,7 @@ env LC_ALL=C.UTF-8 LANG=C.UTF-8 PYTHONIOENCODING=utf-8 \
   /home/dell/mx071_dell_20261009/project/mapex_lab/pilots/mx071_r2/run_stage1.py
 ```
 
-The active resumed run logs to `/home/dell/mx071_dell_20261009/logs/stage1_resume_utf8.log`. The original failure log remains `logs/stage1.log`. Completed sources and completed logical requests are skipped on resume. Source progress is checkpointed every 25 successful moves. A physically interrupted branch restarts from its original complete snapshot; current branch state is saved but is not loaded by this version. The UTF-8 recovery occurred after all branches in a map block had completed and did not restart any physical branch.
+The active resumed run logs to `/home/dell/mx071_dell_20261009/logs/stage1_resume_fix1.log`. The first UTF-8 resume log remains `logs/stage1_resume_utf8.log`. The original failure log remains `logs/stage1.log`. Completed sources and completed logical requests are skipped on resume. Source progress is checkpointed every 25 successful moves. A physically interrupted branch restarts from its original complete snapshot; current branch state is saved but is not loaded by this version. The UTF-8 recovery occurred after all branches in a map block had completed and did not restart any physical branch.
 
 ## Numerical and execution contracts
 
