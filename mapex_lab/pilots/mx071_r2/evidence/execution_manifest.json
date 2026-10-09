@@ -1,0 +1,451 @@
+{
+  "adaptations": [
+    "ALIGNED_UNKNOWN_BLOCKED_V1: call inflate_map(...,unknown_as_occ=True)",
+    "ALIGNED_SINGLE_CELL_CONTROLLER_V1: one 4connected cell per successful move; scan every move",
+    "ALIGNED_CANONICAL_FRAME_V1: crop actual centered LaMa pad back to input map; no resize",
+    "ALIGNED_SERIAL_RENDER_V1: source process_path, one actual worker",
+    "ALIGNED_FAIL_CLOSED_V1: reject empty/zero paths and nonfinite/nonboolean renders; log reason",
+    "ALIGNED_STABLE_TIE_V1: deterministic first maximum in native cluster ordering",
+    "CPU_SEQUENTIAL_MODELS_V1: no gradient, frozen members, exact input, cost includes reloads",
+    "BUILD_RUNTIME_V1: system g++ linker and process-scoped libstdc++ preload; no system edits",
+    "LEAN_NATIVE_MAPPER_V1: drop unused constant visualization buffers",
+    "CPU_MEMBER_WORKER_V1: isolated member process, exact input, seed0; no GT",
+    "CPU_RSS_CAP_V3:5120MiB, available-memory guard256MiB",
+    "ALIGNED_REPLAN_ON_RELEASE_V1: unreachable/invalid/reached -> common PIPE decision",
+    "MAPEX_ENDPOINT_PROB_V1: native get_vis_mask(mean,prob,.8); omit overwritten binary pass",
+    "Coverage integral: right-continuous 0.1m travel/scan steps"
+  ],
+  "adapter_sha256": "a3793bf42e1e392e1ad0b1dd0371ba29e522335e5e3ac12fc945637af0194d90",
+  "asset_seal_sha256": "171f4b9fc75a830e68ecc497fbb9c8907091f70f853c42b113b29d20a72428c3",
+  "branch_request_ceiling": 80,
+  "branch_selectors": [
+    "P0",
+    "P1",
+    "P4",
+    "M0",
+    "MAPEX_ALIGNED"
+  ],
+  "branch_targets_m": [
+    20,
+    60
+  ],
+  "cache_limit_entries": 3,
+  "callback_quota": "stop at next map block boundary, no substitute maps",
+  "checkpoint_targets_m": [
+    20,
+    40,
+    60,
+    80
+  ],
+  "code_base_commit": "88fb673b7a19d2973cfb1c78b4d0a083fdf66b50",
+  "cohort": "MAP_ID_ONLY",
+  "design_commit": "e2987a65e23df7cd04fc60c19505492d771ce801",
+  "design_sha256": "e85156fa594fb164d02a7d521d13772eb24bfa9062ceac58469fcd9942479b8f",
+  "ensemble_generator_config": {
+    "add_out_act": "sigmoid",
+    "downsample_conv_kwargs": {
+      "enable_lfu": false,
+      "ratio_gin": "${generator.init_conv_kwargs.ratio_gout}",
+      "ratio_gout": "${generator.downsample_conv_kwargs.ratio_gin}"
+    },
+    "init_conv_kwargs": {
+      "enable_lfu": false,
+      "ratio_gin": 0,
+      "ratio_gout": 0
+    },
+    "input_nc": 4,
+    "kind": "ffc_resnet",
+    "n_blocks": 18,
+    "n_downsampling": 3,
+    "ngf": 64,
+    "output_nc": 3,
+    "resnet_conv_kwargs": {
+      "enable_lfu": false,
+      "ratio_gin": 0.75,
+      "ratio_gout": "${generator.resnet_conv_kwargs.ratio_gin}"
+    }
+  },
+  "gates": {
+    "controller_replay_parity": "a1a319a12700b80b7c84049406a2365f87f75da56a3cbbce18c6f476c489d008",
+    "cpu_probe_monitor": "6f26096f7899cf2067d7c040fba859323e28f66e1852077039326c93dad7c9bd",
+    "extended_parity": "160a1565f9465248a35b945c439108c51d7beccb2e509817259d5b0bf7feb8ba",
+    "largest_probe_v3_monitor": "f753b0b61d691bb37ad8bc122d6554bfb84f30a72cea5bbfcb1b57299929a028",
+    "preliminary_parity": "73fe5086194c447a6e339e46d371c3537f9c25fc38cabd4b96137dfe7e652419",
+    "scientific_contract_checks": "f3e40a5d3b2ed4d0583123e5e21e5cb7eeded2aaf05360552e9fd6fc6e01e8ec"
+  },
+  "goal_tolerance": "Euclidean strictly less than 10 cells",
+  "hardware_limits": {
+    "member_wall_s": 1200,
+    "minimum_available_mib": 256,
+    "minimum_disk_mib": 512,
+    "worker_rss_mib": 5120
+  },
+  "implementation_files": {
+    "check_replay.py": "a26012bb7f97aff17010487ec7c628178a673943d9a66d8f31ca49d1d6bfd126",
+    "check_scientific_contract.py": "f6884ee5793677b859a19c04e5fabcfb4cddfbf1e2ac54fb9a2672e23df262fd",
+    "check_source_contract.py": "4d769559bc7a51a33d7c6eb1f67a97c9df13874e45c25179b1c3e3b2d1f5d4c0",
+    "engine.py": "93d86de7674cf69ea5f1dbe1200105a81ea604a890eed0bf3a3c834276ece293",
+    "inference_worker.py": "7f6d99e4b69d89de304dda131e826d742fa1738f56543018bc0a5e216d1f77ff",
+    "monitor_probe.py": "4154917126555f6fed1809e73deb67454695a90bcc9792055a99841bdd2b9bce",
+    "native_adapter.py": "5bc055f436abd685534c85308a65d38cca04a4c0401718b9cf24d7329aa0d165",
+    "preflight.py": "3b80a536d1dabf09fe5e4ff8c332780cc7290ba21fe09b26198af43f6a608a44",
+    "probe_largest.py": "7fea9a45868320f592cf1fa1811ca6219a59a37fa8f801258590f6c292b958da",
+    "run_stage1.py": "99b953359ddfe73a03781cf8965f553b04bc599ed6eacb1ad772beee2b5b6d26",
+    "scoring.py": "bc225d18cf365c877c49a47b349e1e9c30aa232f94fe51b55c6414d0be2696f7"
+  },
+  "infrastructure_retry_ceiling": 1,
+  "mapex_commit": "53636bd1c79153acc3c74a532837d78c926bae5e",
+  "mapex_lama_commit": "b61dcb33e063fe9586b50e2dc7b70f97d5046c1d",
+  "maps": [
+    {
+      "building_id": "UNKNOWN",
+      "component_hash": "9d1a4d12f8a3b28e717911824b9f00d9498d26c228d58945dfd7ceb9325008df",
+      "coverage_denominator_cells": 50876,
+      "gt_hash": "7779cd628f69511ab4b9e0e37933d92022019cb0ee066dff900900a60bc5f7a4",
+      "map_id": "50052750",
+      "raw_asset_hashes": {
+        "occ_map.npy": "254d532173ef046ca9168bfca60bdfa1d9628b88501b3fcad367d34c464570d5",
+        "valid_space.npy": "432aff34c40769ecef4ae0f568a060c6a2d2b3a9aa5c268bcd0972cafad1f7d1"
+      },
+      "separation_status": "GEODESIC_SEPARATION_AT_LEAST_20M",
+      "shape": [
+        1326,
+        1428
+      ],
+      "start_separation_m": 27.3,
+      "starts": [
+        {
+          "downsampled_raw_row_col": [
+            106,
+            121
+          ],
+          "padded_row_col": [
+            606,
+            621
+          ],
+          "raw_block_top_left_row_col": [
+            212,
+            242
+          ],
+          "start_id": "S1",
+          "world_xy_m": [
+            12.1,
+            10.6
+          ]
+        },
+        {
+          "downsampled_raw_row_col": [
+            224,
+            276
+          ],
+          "padded_row_col": [
+            724,
+            776
+          ],
+          "raw_block_top_left_row_col": [
+            448,
+            552
+          ],
+          "start_id": "S2",
+          "world_xy_m": [
+            27.6,
+            22.4
+          ]
+        }
+      ],
+      "transform": {
+        "block_reduce": 2,
+        "kth_pad_each_side": 500,
+        "padded_map_grid_m": 0.1,
+        "raw_grid_m": 0.05,
+        "world_origin": "downsampled raw top-left; x=col*0.1,y=row*0.1"
+      },
+      "valid_hash": "44dc4ee3fc3c8c90b5f77ca9dc4c1ffff4c450a31a33627f58af89ce72ab724a"
+    },
+    {
+      "building_id": "UNKNOWN",
+      "component_hash": "aecb68a9c46a56f67200f8ddae5eb27e6e773cc9b1f740344b83957d290f5ba6",
+      "coverage_denominator_cells": 39984,
+      "gt_hash": "0e08b7593642486327aeadf346aec359c9c444611428fb79840764a97be286f0",
+      "map_id": "50010535_PLAN2",
+      "raw_asset_hashes": {
+        "occ_map.npy": "939aeeb2b3bfd46d05b6c31fc992f5cb972978fcdb64b450ba84155c61ed90be",
+        "valid_space.npy": "d8fdb59479cc995b2490c873f2fc71fa08d2905f718639952bf9196cbeb5e13e"
+      },
+      "separation_status": "GEODESIC_SEPARATION_AT_LEAST_20M",
+      "shape": [
+        1301,
+        2029
+      ],
+      "start_separation_m": 20.6,
+      "starts": [
+        {
+          "downsampled_raw_row_col": [
+            69,
+            4
+          ],
+          "padded_row_col": [
+            569,
+            504
+          ],
+          "raw_block_top_left_row_col": [
+            138,
+            8
+          ],
+          "start_id": "S1",
+          "world_xy_m": [
+            0.4,
+            6.9
+          ]
+        },
+        {
+          "downsampled_raw_row_col": [
+            146,
+            133
+          ],
+          "padded_row_col": [
+            646,
+            633
+          ],
+          "raw_block_top_left_row_col": [
+            292,
+            266
+          ],
+          "start_id": "S2",
+          "world_xy_m": [
+            13.3,
+            14.6
+          ]
+        }
+      ],
+      "transform": {
+        "block_reduce": 2,
+        "kth_pad_each_side": 500,
+        "padded_map_grid_m": 0.1,
+        "raw_grid_m": 0.05,
+        "world_origin": "downsampled raw top-left; x=col*0.1,y=row*0.1"
+      },
+      "valid_hash": "d1a4dbffd5a524fd59d1f7b8d74de3e5ac420137d45a76ed66094f40f7a38d96"
+    },
+    {
+      "building_id": "UNKNOWN",
+      "component_hash": "a45bcde4faf28207d59c211383b1d94988e87df61f863eafc8f22ff68a2daedf",
+      "coverage_denominator_cells": 169211,
+      "gt_hash": "29dd6d4655fcb16b79a480cef96224ff5a14021e8c489fd7ca410769fa8723d1",
+      "map_id": "50015847",
+      "raw_asset_hashes": {
+        "occ_map.npy": "d6c3f2916c057c423ddc26a2714ca972413adffae341b54a4b1326e7599602cb",
+        "valid_space.npy": "ede61b821caf877d1e1a2678a54c080440f2a468bf4aafbb49025073a5910806"
+      },
+      "separation_status": "GEODESIC_SEPARATION_AT_LEAST_20M",
+      "shape": [
+        1442,
+        2327
+      ],
+      "start_separation_m": 86.1,
+      "starts": [
+        {
+          "downsampled_raw_row_col": [
+            34,
+            112
+          ],
+          "padded_row_col": [
+            534,
+            612
+          ],
+          "raw_block_top_left_row_col": [
+            68,
+            224
+          ],
+          "start_id": "S1",
+          "world_xy_m": [
+            11.2,
+            3.4
+          ]
+        },
+        {
+          "downsampled_raw_row_col": [
+            156,
+            655
+          ],
+          "padded_row_col": [
+            656,
+            1155
+          ],
+          "raw_block_top_left_row_col": [
+            312,
+            1310
+          ],
+          "start_id": "S2",
+          "world_xy_m": [
+            65.5,
+            15.6
+          ]
+        }
+      ],
+      "transform": {
+        "block_reduce": 2,
+        "kth_pad_each_side": 500,
+        "padded_map_grid_m": 0.1,
+        "raw_grid_m": 0.05,
+        "world_origin": "downsampled raw top-left; x=col*0.1,y=row*0.1"
+      },
+      "valid_hash": "7a6bd6e2d941afb3ef440cd0987a2954903809c3a76cf01782fb4dc9e169e0bb"
+    },
+    {
+      "building_id": "UNKNOWN",
+      "component_hash": "281958dbf8119ccbacf9aada4ac2031a2d221fbb3013b8794f31ea2654d5f58f",
+      "coverage_denominator_cells": 37199,
+      "gt_hash": "aeff0fef8c59a546d4069e6845588bd7562e7210903bbfd201459740e5c2c1f1",
+      "map_id": "50037765_PLAN3",
+      "raw_asset_hashes": {
+        "occ_map.npy": "d2da0d28a181cd46c247dcaff9599219e680cc9b8033c0df5e2ecda7b2098713",
+        "valid_space.npy": "db93688949016e28236385fdbfd1aa825f8b2591b79c4b475d98a4c3ccfb1ff3"
+      },
+      "separation_status": "GEODESIC_SEPARATION_AT_LEAST_20M",
+      "shape": [
+        1214,
+        2354
+      ],
+      "start_separation_m": 45.0,
+      "starts": [
+        {
+          "downsampled_raw_row_col": [
+            28,
+            31
+          ],
+          "padded_row_col": [
+            528,
+            531
+          ],
+          "raw_block_top_left_row_col": [
+            56,
+            62
+          ],
+          "start_id": "S1",
+          "world_xy_m": [
+            3.1,
+            2.8
+          ]
+        },
+        {
+          "downsampled_raw_row_col": [
+            84,
+            423
+          ],
+          "padded_row_col": [
+            584,
+            923
+          ],
+          "raw_block_top_left_row_col": [
+            168,
+            846
+          ],
+          "start_id": "S2",
+          "world_xy_m": [
+            42.3,
+            8.4
+          ]
+        }
+      ],
+      "transform": {
+        "block_reduce": 2,
+        "kth_pad_each_side": 500,
+        "padded_map_grid_m": 0.1,
+        "raw_grid_m": 0.05,
+        "world_origin": "downsampled raw top-left; x=col*0.1,y=row*0.1"
+      },
+      "valid_hash": "3d7e2437bc3c12ab61b06516657a3af2204ac6b09069ea93dbbd8be1f24ad120"
+    }
+  ],
+  "matched_path_denominator": "full_4connected_path_m",
+  "matched_samples": "path[2::3] plus endpoint if absent, deduplicated",
+  "model_identity": "f90979bec4869aa111be8083bb8030765df37f57b60c6b62de106c941a280ff6",
+  "models": [
+    {
+      "checkpoint": "/home/dell/MapEx/pretrained_models/weights/lama_ensemble/train_1/models/best.ckpt",
+      "config_sha256": "58743088778222c4a71c1038bace0ab6a8ebad5494c6f6abff553c15003bad48",
+      "member": 1,
+      "sha256": "b37bfef69138806708d6e087b8db89836021f06db987cb3ef3db21fbf28422ca"
+    },
+    {
+      "checkpoint": "/home/dell/MapEx/pretrained_models/weights/lama_ensemble/train_2/models/best.ckpt",
+      "config_sha256": "23e4b6c3850a8bef02daf58ae630b96693d44b97488adef050261d308b44ceb3",
+      "member": 2,
+      "sha256": "7880d164ccd88da58ddb0e6875f358bea02a232c452eff86b5e226957a489c26"
+    },
+    {
+      "checkpoint": "/home/dell/MapEx/pretrained_models/weights/lama_ensemble/train_3/models/best.ckpt",
+      "config_sha256": "1dc07c6b4a244a335aa0a3499fce3b6178140cea16ee2b9cc5d5e497cfa73810",
+      "member": 3,
+      "sha256": "fcb43d1102d48ab6b14f5bfded859077d6da0c7efbfbda10d4acbb754c3d3bc1"
+    }
+  ],
+  "native_denominator": "max(1,len(sampled_path))",
+  "native_samples": "path[2::3]",
+  "optional": {
+    "H2": "NOT_EVALUATED",
+    "H3": "NOT_EVALUATED",
+    "H5": "DEFERRED_TRACE_ONLY",
+    "H6": "DEFERRED_CLUSTERS_ONLY"
+  },
+  "per_map_block_wall_ceiling_s": 86400,
+  "pipe_commit": "e5bcb5ec4a9a13cbe14aa9f7850bc8b5989a2bb0",
+  "pipeline_version": "MX071_R2_STAGE1_V1",
+  "predicted_renderer": {
+    "laser_range_m": 20,
+    "num_laser": 250,
+    "pathwise_index": 3,
+    "pixel_per_meter": 10
+  },
+  "pyastar_commit": "0bfc4c1051cc768c5e543cdbc4b8f0a554834096",
+  "resource": {
+    "cuda": false,
+    "device": "cpu",
+    "minimum_available_memory_mib": 256,
+    "minimum_disk_free_mib": 512,
+    "model_load": "SEQUENTIAL_MEMBERS_EXACT_INPUT_NO_RESIZE",
+    "probe_wall_ceiling_s": 1200,
+    "process_rss_ceiling_mib": 4608,
+    "scoring_workers": 1,
+    "torch_interop_threads": 1,
+    "torch_threads": 2
+  },
+  "schema": "MX071_R2_DELL_PREFLIGHT_V1",
+  "sealed_at_unix": 1791535503.6167417,
+  "sensor": {
+    "dilate_diam_for_planning": 3,
+    "laser_range_m": 20,
+    "num_laser": 2500,
+    "pixel_per_meter": 10
+  },
+  "source_files": {
+    "configs/base.yaml": "3c408be8e468da088478d5a8443293a85b9ee6f9989940dc1fa3c84d0598a522",
+    "lama/saicinpainting/training/data/datasets.py": "6fb6a1c13093be0d877a967229268b9c7be8bfc695bdcd6ee9d861049d8f0dc1",
+    "scripts/explore.py": "06a1139e84539da22bb59c07294917f92fb6235cc301951f37e712b20a71a480",
+    "scripts/lama_pred_utils.py": "0e93d4b6628b327d7b4601efeb391c29669c46154282aed259396e558ceb01e2",
+    "scripts/sim_utils.py": "e842a085f1c21876e9d9c17712ee3c596ed882c351aa9c86ddfb057e4322b2ea",
+    "scripts/simple_mask_utils.py": "1ca4a3da0b6a38eb171323672ca5a1da00b3fa79ccc8125be55cec29dbf4c036"
+  },
+  "source_trajectories": 8,
+  "stage": 1,
+  "stage_2": "CLOSED",
+  "stuck_attempts": 50,
+  "successful_4connected_move_ceiling": 1000,
+  "terminal_rules": [
+    "BUDGET_EXHAUSTED",
+    "NO_FRONTIER",
+    "NO_REACHABLE_FRONTIER",
+    "COLLISION",
+    "STUCK",
+    "PLANNER_ERROR",
+    "INFERENCE_ERROR",
+    "RESOURCE_ABORT"
+  ],
+  "tie_break": "candidate ordering from native cluster label, first maximal score",
+  "total_wall_ceiling_s": 345600,
+  "training_overlap": "TRAIN_OVERLAP_UNVERIFIED",
+  "travel_budget_m": 100,
+  "user_execution_authorization": "2026-10-09: the thoi ban chay tren dell nhe",
+  "variance": "torch.var(dim=0, unbiased=True), K=3, channel=0"
+}

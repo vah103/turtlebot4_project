@@ -1,0 +1,9 @@
+{
+  "stage": "PREFLIGHT_ONLY_NO_SCIENTIFIC_OUTCOMES",
+  "reason": "V2 stopped at conservative process cap while 831.7 MiB remained available; measure feasibility up to 5120 MiB with unchanged system-headroom guard",
+  "process_rss_ceiling_mib": 5120,
+  "minimum_available_memory_mib": 256,
+  "probe_wall_ceiling_s": 1200,
+  "method_inputs_changed": false,
+  "original_limits_retained_in": "manifest.json and V1/V2 monitor records"
+}

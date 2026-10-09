@@ -312,3 +312,14 @@ and must not be treated as a scientific prediction-quality verdict yet. Fixed
 total-support and class-composition sensitivities had no eligible final-bin
 decisions under the preregistered sample sizes; the evaluator reports this
 without relaxing the rule.
+
+## 2026-10-09 - MX071 R2 DELL deployment and report-write recovery
+
+- User chose DELL for MX071; only the accepted offline 2D Stage 1 is executed.
+- Built isolated Shapely 1.8.0, pyastar2d 1.0.2 (official source pin), and PIPE range_libc against the existing LaMa environment. System libstdc++ is preloaded per process; no system/environment overwrite.
+- Completed source parity, real-model complete-state five-move replay, 15 scientific contract checks, exact loading of all three generators, and full-size CPU probes. Largest-map G1 peak RSS was 4725.40 MiB with 631.70 MiB available; the three-member first-map inference sum was 158.25 s. Resource guard V3 was amended and tested before collection.
+- First map `50052750` finished both sources at 100 m, producing 20 logical first-goal requests. Six snapshots cover seven target slots; one target remains NA. H1/H4/H7 support is incomplete with one map, so no positive direction claim is made.
+- The batch then exited at `direction_screening.md` writing because Python 3.6 selected ASCII and the heading contained an em dash. All source final states, snapshots, model outputs, branch outcomes, and JSON/CSV summaries had already been saved.
+- Recovery recorded protected file hashes and kept the same sealed Python files. Resume uses `LC_ALL=C.UTF-8 LANG=C.UTF-8 PYTHONIOENCODING=utf-8`; completed sources and requests are skipped. The hash check after resume confirmed the protected numerical data unchanged.
+- Stage 2 remains closed. No replacement maps, threshold adjustment, robot run, or independent result verdict. This execution is MX071, separate from MX072.
+- Caveats: five-move replay is a technical fixture; map IDs are not verified building identities; interrupted physical branches restart from the original snapshot; complete cumulative cost telemetry across resumes is not claimed.

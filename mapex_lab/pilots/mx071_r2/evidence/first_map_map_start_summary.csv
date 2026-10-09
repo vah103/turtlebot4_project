@@ -1,0 +1,7 @@
+map_id,start_id,direction,paired_slots,non_equivalent_slots,mean_delta_Q,behavior_failure_difference
+50052750,S1,P1,2,0,0.0,0
+50052750,S2,P1,2,0,0.0,0
+50052750,S1,P4,2,1,-0.007908980670915508,0
+50052750,S2,P4,2,1,0.11406560093300126,0
+50052750,S1,H7,1,1,0.0,0
+50052750,S2,H7,2,2,0.11406602822937745,0

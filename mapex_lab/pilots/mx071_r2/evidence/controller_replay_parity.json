@@ -1,0 +1,21 @@
+{
+  "actual_model_members": 3,
+  "checks": {
+    "accumulated_hits_equal": true,
+    "actual_moved_cells": true,
+    "chosen_goal_equal": true,
+    "complete_state_equal": true,
+    "cost_maps_equal": true,
+    "expected_first_step": true,
+    "first_goal_intervention_equals_source_P0": true,
+    "full_astar_path_equal": true,
+    "observations_equal": true,
+    "pose_trace_equal": true,
+    "score_vectors_equal": true,
+    "termination_equal": true
+  },
+  "fixture_move_budget": 5,
+  "scientific_trajectories_collected": 0,
+  "status": "PASS",
+  "technical_gate": "serialized complete state + actual 4connected motion/source scan/termination"
+}

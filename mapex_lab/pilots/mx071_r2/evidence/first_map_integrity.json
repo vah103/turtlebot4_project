@@ -1,0 +1,17 @@
+{
+  "checks": {
+    "evaluated_Q_present": true,
+    "execution_alias_delta_exact_zero": true,
+    "residual_sensor_contract_labels_preserved": true,
+    "snapshot_files_exist": true,
+    "unique_snapshot_selector_ids": true,
+    "unique_source_ids": true
+  },
+  "completed_sources": 2,
+  "logical_branch_requests": 20,
+  "phase": "FIRST_MAP_COMPLETED_DATA_INTEGRITY",
+  "recorded_at_unix": 1791548391.7477126,
+  "scientific_screening": "INCOMPLETE_ONE_OF_FOUR_MAPS",
+  "stage_2": "CLOSED",
+  "status": "PASS"
+}

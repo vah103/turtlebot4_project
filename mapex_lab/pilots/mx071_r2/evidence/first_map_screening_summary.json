@@ -1,0 +1,43 @@
+{
+  "H4": "ORACLE_HEADROOM_NOT_ONLINE_RECOVERABLE_METHOD",
+  "H7": "BOUNDED_TESTED_ACTION_COMPARISONS_ONLY",
+  "cohort": "MAP_ID_ONLY / TRAIN_OVERLAP_UNVERIFIED",
+  "completed_sources": 2,
+  "logical_branch_requests": 20,
+  "screens": [
+    {
+      "direction": "P1",
+      "map_macro_delta_Q": 0.0,
+      "map_means": {
+        "50052750": 0.0
+      },
+      "unique_evaluable_map_start_units": 2,
+      "unique_non_equivalent_map_start_units": 0,
+      "verdict": "INCONCLUSIVE_OR_NO_QUALIFYING_SIGNAL"
+    },
+    {
+      "direction": "P4",
+      "map_macro_delta_Q": 0.053078310131042875,
+      "map_means": {
+        "50052750": 0.053078310131042875
+      },
+      "unique_evaluable_map_start_units": 2,
+      "unique_non_equivalent_map_start_units": 2,
+      "verdict": "INCONCLUSIVE_OR_NO_QUALIFYING_SIGNAL"
+    },
+    {
+      "direction": "H7",
+      "map_macro_delta_Q": 0.057033014114688724,
+      "map_means": {
+        "50052750": 0.057033014114688724
+      },
+      "unique_evaluable_map_start_units": 2,
+      "unique_non_equivalent_map_start_units": 2,
+      "verdict": "INCONCLUSIVE_OR_NO_QUALIFYING_SIGNAL"
+    }
+  ],
+  "snapshot_slots": 8,
+  "stage_2": "CLOSED",
+  "status": "RUNNING",
+  "unique_physical_execution_ids": 7
+}
