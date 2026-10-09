@@ -1,0 +1,32 @@
+{
+  "active_processes": [
+    {
+      "argv": [
+        "/home/dell/miniforge3/envs/lama/bin/python",
+        "/home/dell/mx071_dell_20261009/project/mapex_lab/pilots/mx071_r2/run_stage1.py"
+      ],
+      "pid": 5581
+    },
+    {
+      "argv": [
+        "/home/dell/miniforge3/envs/lama/bin/python",
+        "/home/dell/mx071_dell_20261009/project/mapex_lab/pilots/mx071_r2/inference_worker.py",
+        "3",
+        "/home/dell/mx071_dell_20261009/artifacts/prediction_cache/worker_input.npy",
+        "/home/dell/mx071_dell_20261009/artifacts/prediction_cache/worker_G3.npy",
+        "/home/dell/mx071_dell_20261009/artifacts/prediction_cache/worker_G3.json"
+      ],
+      "pid": 6153
+    }
+  ],
+  "checked_at_utc": "2026-10-09T12:28:54.445400+00:00",
+  "completed_branch_requests": 20,
+  "completed_sources": 2,
+  "current_map_id": "50010535_PLAN2",
+  "current_start_id": "S1",
+  "draft_pr": "https://github.com/vah103/turtlebot4_project/pull/40",
+  "scientific_screening": "INCOMPLETE",
+  "stage_2": "CLOSED",
+  "status": "RUNNING",
+  "utf8_report_write_pass": true
+}

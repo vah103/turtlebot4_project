@@ -4,13 +4,15 @@ This runner executes the accepted MX071 R2 Stage 1 design: four fixed KTH map ID
 
 Design: [MX071 R2](https://github.com/vah103/chat-gpt/blob/e2987a65e23df7cd04fc60c19505492d771ce801/company/projects/mapex/MAPEX_MULTI_DIRECTION_2D_PILOT_DESIGN_R2_20261009.md), SHA-256 `e85156fa594fb164d02a7d521d13772eb24bfa9062ceac58469fcd9942479b8f`. Focused methodology review: [PR #51](https://github.com/vah103/chat-gpt/pull/51). This implementation has not received an independent result verdict.
 
+Implementation review: [draft PR #40](https://github.com/vah103/turtlebot4_project/pull/40).
+
 ## Current execution checkpoint
 
 On 2026-10-09 the first map block (`50052750`) completed both source trajectories and 20 logical first-goal requests. Both sources reached the 100 m budget. Six distinct snapshots represent seven fulfilled target slots; the remaining 80 m slot is retained as NA. One map is insufficient for the preregistered direction screening decision.
 
 The original process then failed while writing the Markdown report: Python 3.6's default ASCII locale could not encode an em dash. The saved states and JSON/CSV outcomes survived. The same sealed Python implementation was resumed with `LC_ALL=C.UTF-8`, `LANG=C.UTF-8`, and `PYTHONIOENCODING=utf-8`. `evidence/locale_utf8_resume_20261009.json` records the failure phase and protected data hashes. No model, map, goal, score, controller, or budget changed.
 
-The UTF-8 resume exposed redundant recomputation of completed offline diagnostics. A subsequent recorded three-line guard skips a snapshot only when all five selector contracts already have outcomes. Four focused checks passed: completed groups do not reconstruct or diagnose again; completed data hashes stay unchanged; a missing selector still enters execution; Python 3.6 compilation passes. No source or branch was interrupted for this fix. The original execution manifest is retained; the current manifest records RESUME_FIX1 and its code hash. Original implementation commit: `b008d997a3332c758347a09cc12c5cbe594cd487`. See `evidence/completed_request_resume_fix1.json` and `evidence/resume_fix1_checks.json`.
+The UTF-8 resume exposed redundant recomputation of completed offline diagnostics. A subsequent recorded three-line guard skips a snapshot only when all five selector contracts already have outcomes. Four focused checks passed: completed groups do not reconstruct or diagnose again; completed data hashes stay unchanged; a missing selector still enters execution; Python 3.6 compilation passes. No source or branch was interrupted for this fix. The resumed batch successfully wrote the UTF-8 report and entered source 3/8 (`50010535_PLAN2/S1`); `evidence/continuation_started.json` records the live-process checkpoint. The original execution manifest is retained; the current manifest records RESUME_FIX1 and its code hash. Original implementation commit: `b008d997a3332c758347a09cc12c5cbe594cd487`. See `evidence/completed_request_resume_fix1.json` and `evidence/resume_fix1_checks.json`.
 
 ## Source pins and machine
 
