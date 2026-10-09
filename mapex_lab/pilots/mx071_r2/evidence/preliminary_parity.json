@@ -1,0 +1,24 @@
+{
+  "all_pass": true,
+  "checks": {
+    "aligned_blocks_unknown": true,
+    "full_path_immutable": true,
+    "gt_free_occ_direction": true,
+    "helper_forces_unknown_finite": true,
+    "mask_excludes_known": true,
+    "matched_endpoint_rule": true,
+    "native_endpoint_rule": true,
+    "native_sample_count_score_exact": true,
+    "reference_cost_parity": true,
+    "replay_cost_equal": true,
+    "sensor_replay_equal": true,
+    "source_renderer_exact_mask": true
+  },
+  "gaps": [
+    "Full chosen-goal/termination replay pending real predictor",
+    "Known source degenerate/NaN/MultiPolygon behavior requires ledger",
+    "No scientific trajectories collected"
+  ],
+  "phase": "PRELIMINARY_PARITY",
+  "source_renderer": "UNCHANGED process_path incl Polygon.buffer(1), union, holes"
+}

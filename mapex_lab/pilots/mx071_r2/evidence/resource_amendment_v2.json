@@ -1,0 +1,15 @@
+{
+  "stage": "PREFLIGHT_ONLY_NO_SCIENTIFIC_OUTCOMES",
+  "reason": "largest-map V1 hit 4608 MiB RSS ceiling at 4701.3 MiB, 523.5 MiB available",
+  "adaptation": "LEAN_NATIVE_MAPPER_V1: delete six constant unused visualization buffers after constructing exact native Mapper",
+  "unchanged": [
+    "models",
+    "map shapes",
+    "torch threads",
+    "source renderer",
+    "physical sensor",
+    "costmap",
+    "RAM/headroom/wall limits"
+  ],
+  "next_check": "rerun native sensor/cost/render parity then full largest map G1"
+}

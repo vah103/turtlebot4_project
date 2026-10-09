@@ -1,0 +1,65 @@
+{
+  "checks": {
+    "G1_complete_frozen_generator": true,
+    "G2_complete_frozen_generator": true,
+    "G3_complete_frozen_generator": true,
+    "Q_fixed_remaining_budget_carry_forward": true,
+    "all_five_selectors_available": true,
+    "collision_failure_retained": true,
+    "counter_change_breaks_alias": true,
+    "dense_same_declared_native_poses": true,
+    "frozen_inputs_unchanged": true,
+    "infrastructure_abort_missing_not_zero": true,
+    "mapex_endpoint_source_scores_equal": true,
+    "prefix_early_terminal_carry_forward": true,
+    "remaining_budget_change_breaks_alias": true,
+    "rng_change_breaks_alias": true,
+    "same_complete_state_goal_same_reuse_key": true
+  },
+  "five_selector_goals": {
+    "M0": [
+      616,
+      632
+    ],
+    "MAPEX_ALIGNED": [
+      616,
+      632
+    ],
+    "P0": [
+      616,
+      632
+    ],
+    "P1": [
+      616,
+      632
+    ],
+    "P4": [
+      616,
+      632
+    ]
+  },
+  "model_identity": "f90979bec4869aa111be8083bb8030765df37f57b60c6b62de106c941a280ff6",
+  "scientific_trajectories_collected": 0,
+  "status": "PASS",
+  "technical_fixture": "initial real model snapshot + explicit analytic AUC fixture",
+  "weight_audit": [
+    {
+      "generator_state_keys": 989,
+      "loaded_generator_equals_checkpoint": true,
+      "member": 1,
+      "missing_generator_keys": []
+    },
+    {
+      "generator_state_keys": 989,
+      "loaded_generator_equals_checkpoint": true,
+      "member": 2,
+      "missing_generator_keys": []
+    },
+    {
+      "generator_state_keys": 989,
+      "loaded_generator_equals_checkpoint": true,
+      "member": 3,
+      "missing_generator_keys": []
+    }
+  ]
+}

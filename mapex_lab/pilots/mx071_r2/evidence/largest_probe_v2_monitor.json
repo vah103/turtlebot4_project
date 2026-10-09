@@ -1,0 +1,22 @@
+{
+  "elapsed_s": 91.82826828956604,
+  "exit_code": -15,
+  "log": "/home/dell/mx071_dell_20261009/logs/largest_probe_v2.log",
+  "minimum_available_memory_mib": 831.67578125,
+  "peak_rss_mib": 4749.43359375,
+  "quota": {
+    "cuda": false,
+    "device": "cpu",
+    "minimum_available_memory_mib": 256,
+    "minimum_disk_free_mib": 512,
+    "model_load": "SEQUENTIAL_MEMBERS_EXACT_INPUT_NO_RESIZE",
+    "probe_wall_ceiling_s": 1200,
+    "process_rss_ceiling_mib": 4608,
+    "scoring_workers": 1,
+    "torch_interop_threads": 1,
+    "torch_threads": 2
+  },
+  "reason": "PROCESS_RSS_CEILING",
+  "scientific_trajectories_collected": 0,
+  "status": "RESOURCE_ABORT"
+}

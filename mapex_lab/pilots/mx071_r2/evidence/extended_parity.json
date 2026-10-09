@@ -1,0 +1,31 @@
+{
+  "aligned_worker_count": 1,
+  "checks": {
+    "aligned_chosen_goal_replay_equal": true,
+    "empty_source_case_audited": true,
+    "gt_isolation_signature": true,
+    "known_predictions_exact": true,
+    "paths_unchanged": true,
+    "source_best_mask_equal": true,
+    "source_costs_equal": true,
+    "source_hole_fixture": true,
+    "source_selected_goal_equal": true,
+    "variance_convention": true
+  },
+  "code_reference_candidates": 1,
+  "elapsed_s": 12.523803434000001,
+  "ledger": {
+    "aligned_nan_disposition": "SOURCE_RENDERER_NONFINITE: ALIGNED_FAIL_CLOSED_V1",
+    "empty_source_exception": "UnboundLocalError: local variable 'boundary_arrays' referenced before assignment",
+    "hole_center_excluded": true,
+    "multipolygon_source_disposition": "Last boundary overwrites previous initialized grid; preserved in source, no repair",
+    "nan_native_bool_score": 1024.0,
+    "ring_interior_visible": true,
+    "source_union_holes_preserved": true
+  },
+  "next_gate": "Full controller clone path/termination equality; resource feasibility",
+  "rejected": [],
+  "scientific_trajectories_collected": 0,
+  "source_worker_count": 3,
+  "status": "PASS"
+}

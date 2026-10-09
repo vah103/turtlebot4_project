@@ -324,3 +324,19 @@ MapEx:   chọn max IG / Euclidean distance
 ```
 
 Execution adapter và recorder phải được chia sẻ tối đa để khác biệt kết quả không đến từ hạ tầng thí nghiệm.
+
+## MX071 R2 - separate offline 2D pilot (2026-10-09)
+
+This section describes the accepted MX071 R2 pilot and does not alter the ROS/Hospital protocol above. Authority is the [exact R2 design](https://github.com/vah103/chat-gpt/blob/e2987a65e23df7cd04fc60c19505492d771ce801/company/projects/mapex/MAPEX_MULTI_DIRECTION_2D_PILOT_DESIGN_R2_20261009.md); implementation/deployment details and named adaptations are in [pilots/mx071_r2/README.md](pilots/mx071_r2/README.md).
+
+Stage 1 is fixed to four KTH map IDs, two deterministic starts per map, eight PIPE_ALIGNED sources, and targets 20/40/60/80 m. Only targets 20/60 m permit five first-goal requests each: at most 16 branch points and 80 logical requests before dedup/NA. Coincident target slots use one complete snapshot; exact execution aliases do not inflate N. Stage 2 is CLOSED.
+
+Unknown-blocked ALIGNED_SHARED planning is distinct from CODE_REFERENCE's audited native helper behavior. All policies share the source sensor, four-connected A*, full immutable paths, deterministic candidate ordering, the explicitly named one-cell/scan-every-move controller, and common PIPE_ALIGNED continuation. Native scoring retains `path[2::3]` without endpoint addition and the sampled-count denominator. Matched controls add/deduplicate the endpoint and use full path metres. Goal tolerance remains Euclidean strictly less than 1 m. The distance budget is 100 m / 1000 successful moves; no GT-IoU termination or near-goal fallback is added.
+
+P0/P1/P4 share observed state, candidate paths, frozen uncertainty, and source-render schedule. P0 online decisions never receive GT. GT is permitted only for environment/start/evaluation and explicit offline oracle diagnostics. MAPEX_ALIGNED retains the native probabilistic mean-map endpoint renderer. H4 is oracle headroom; declare EXECUTION_SENSOR_CONTRACT_GAP when scored-route and actual first-goal sensor contracts differ. H7 is restricted to distinct tested actions with the sealed remaining-budget support; optional directions remain unevaluated/deferred.
+
+Coverage uses a fixed initially reachable GT-valid free component. Q integrates incremental coverage against a common remaining travel budget, with early-terminal carry-forward and infrastructure outcomes missing. Aggregate checkpoint means within start, then start means within map, then equal map means. Positive direction screening requires all four maps, delta Q >= 0.01, at least three positive map means, at least six non-equivalent map/start units across at least three maps, and no increase in behavioral failures. Preserve NA and structural zeros.
+
+Models use exact checkpoint identities, channel 0, NumPy mean, unbiased K=3 Torch variance, and the upstream transform with actual LaMa padding cropped back; no resize. DELL CPU members run sequentially. Precollection resource V3 permits 5120 MiB per-worker RSS with unchanged 256 MiB minimum available memory, 512 MiB disk headroom, and 1200 s per-member timeout. Source hashes, models, code, maps, starts, adaptations and gates are sealed before collection.
+
+The first map block's report-writing ASCII error was recovered by process-local UTF-8 locale settings. The initial resume kept the Python implementation unchanged; a subsequent recorded RESUME_FIX1 adds only a completed-selector-group guard before repeated offline diagnostics. Both original and amended execution manifests are retained. Four focused checks PASS and all numerical contracts remain unchanged. Completed-data hashes and failure phase are preserved in the recovery ledger. The map-ID cohort remains TRAIN_OVERLAP_UNVERIFIED; partial or engineering data is not an accepted scientific result.

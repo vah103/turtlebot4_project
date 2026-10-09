@@ -312,3 +312,18 @@ and must not be treated as a scientific prediction-quality verdict yet. Fixed
 total-support and class-composition sensitivities had no eligible final-bin
 decisions under the preregistered sample sizes; the evaluator reports this
 without relaxing the rule.
+
+## 2026-10-09 - MX071 R2 DELL deployment and report-write recovery
+
+- User chose DELL for MX071; only the accepted offline 2D Stage 1 is executed.
+- Built isolated Shapely 1.8.0, pyastar2d 1.0.2 (official source pin), and PIPE range_libc against the existing LaMa environment. System libstdc++ is preloaded per process; no system/environment overwrite.
+- Completed source parity, real-model complete-state five-move replay, 15 scientific contract checks, exact loading of all three generators, and full-size CPU probes. Largest-map G1 peak RSS was 4725.40 MiB with 631.70 MiB available; the three-member first-map inference sum was 158.25 s. Resource guard V3 was amended and tested before collection.
+- First map `50052750` finished both sources at 100 m, producing 20 logical first-goal requests. Six snapshots cover seven target slots; one target remains NA. H1/H4/H7 support is incomplete with one map, so no positive direction claim is made.
+- The batch then exited at `direction_screening.md` writing because Python 3.6 selected ASCII and the heading contained an em dash. All source final states, snapshots, model outputs, branch outcomes, and JSON/CSV summaries had already been saved.
+- Recovery recorded protected file hashes and kept the same sealed Python files. Resume uses `LC_ALL=C.UTF-8 LANG=C.UTF-8 PYTHONIOENCODING=utf-8`; completed sources and requests are skipped. The hash check after resume confirmed the protected numerical data unchanged.
+- Stage 2 remains closed. No replacement maps, threshold adjustment, robot run, or independent result verdict. This execution is MX071, separate from MX072.
+- Caveats: five-move replay is a technical fixture; map IDs are not verified building identities; interrupted physical branches restart from the original snapshot; complete cumulative cost telemetry across resumes is not claimed.
+
+### Same-session follow-up: completed-request resume guard
+
+The initial UTF-8 resume recomputed offline diagnostics for completed first-map snapshot groups before skipping their recorded selector outcomes. That process was stopped while recomputing diagnostics; no source or physical branch was interrupted. Added a three-line guard that skips only when all five selector contracts are recorded. The missing-selector negative case still enters execution. Four focused checks passed in 0.16 s after imports, without additional numerical rollouts; protected completed states/results remain unchanged. The original manifest and implementation commit `b008d997a3332c758347a09cc12c5cbe594cd487` are preserved, and the amended manifest binds RESUME_FIX1 with unchanged model/map/controller/scoring/budget fields. Active log: `/home/dell/mx071_dell_20261009/logs/stage1_resume_fix1.log`.
