@@ -327,3 +327,12 @@ without relaxing the rule.
 ### Same-session follow-up: completed-request resume guard
 
 The initial UTF-8 resume recomputed offline diagnostics for completed first-map snapshot groups before skipping their recorded selector outcomes. That process was stopped while recomputing diagnostics; no source or physical branch was interrupted. Added a three-line guard that skips only when all five selector contracts are recorded. The missing-selector negative case still enters execution. Four focused checks passed in 0.16 s after imports, without additional numerical rollouts; protected completed states/results remain unchanged. The original manifest and implementation commit `b008d997a3332c758347a09cc12c5cbe594cd487` are preserved, and the amended manifest binds RESUME_FIX1 with unchanged model/map/controller/scoring/budget fields. Active log: `/home/dell/mx071_dell_20261009/logs/stage1_resume_fix1.log`.
+
+
+## 2026-10-10 — Correct MapEx/PIPE question provenance and open follow-up
+
+The original eight brainstormed omissions concern MapEx (Agent1 journal §17), including #8; verification of strong PIPE is a separate priority (§16/§17.5). MX071 R2 answers a subset on PIPE_ALIGNED source snapshots and common PIPE continuation. USER now requests a direct MapEx rerun and PIPE investigation, and selected all open questions; #7 remains dropped.
+
+Preparation branch `mx071-mapex-followup-pipe-audit-20261010` preserves the old sealed runner/data. The direct-source harness comes from technical commit 8bf7b96f388298361a1c0dd6c32d52041ffcb814, with imports/temp-prefix only changed. On DELL: pinned used-source bytes and G/G1/G2/G3 hashes match; preprocessing retains native unshifted candidate coordinates on padded tensors; runtime confirms unknown-as-occupied request is effectively False. Two four-step stand-in source repetitions are identical. This is bounded source repeatability, not universal branch parity or actual scientific acquisition.
+
+R0 records per-question evidence requirements. #2/#3 diagnostics alone do not identify policy benefit; #5 needs a commitment intervention and #6 an explicitly expanded pose pool. Full seven-question collection, real-model/resource preflight and native complete-state forks remain unimplemented/unsealed. No full preflight PASS, scientific READY, independent verdict, online improvement, teacher-facing result or COM1 modification.

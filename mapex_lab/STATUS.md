@@ -1,5 +1,14 @@
 # mapex_lab status
 
+## 2026-10-10 — MapEx follow-up and separate PIPE verification
+
+- DONE: USER selected all seven remaining open journal questions (#1–#6, #8); #7 remains dropped. Scope matrix and PIPE source/paper audit are in `pilots/mx071_followup/`. Used MapEx source bytes and four model identities match their pins on DELL. Two four-step direct-source fixture repeats are identical in pose/map/pool/score/goal.
+- IN PROGRESS: full MapEx intervention/continuation design for seven questions; dedicated native replay and resource contracts. MX072 on COM1 is not modified or adopted.
+- LATEST RESULT: SOURCE_IDENTITY_AND_FIXTURE_CHECKS_PASS only. Eight fixture control steps use stand-ins; real inference and new scientific sources/branches = 0. This is not complete preflight, methodology ACCEPT or source collection.
+- NEXT ACTION: freeze per-question controls and a new branch ceiling, implement native MapEx complete-state paired continuation, validate four-model/resource/replay gates, then run the authorized MapEx follow-up. PIPE requires its own precise failure test after mechanism audit.
+- Original MX071 execution is COMPLETE: 8/8 PIPE_ALIGNED sources and 75/75 evaluated logical requests. P1 macro ΔQ 0.0003783783; P4 macro ΔQ 0.0224081330. H8 tied-prefix divergence must not be described as a strict reversal. Raw sealed data are unchanged; no independent result ACCEPT is claimed.
+
+
 ## MX071 R2 - DELL offline 2D pilot (2026-10-09)
 
 - DONE: isolated PIPE/pyastar2d/range_libc dependencies; sealed maps, two starts each, and three model identities; source parity, complete-state controller replay, scientific contract checks, and full-size CPU feasibility.

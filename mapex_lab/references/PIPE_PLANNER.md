@@ -27,3 +27,8 @@ PIPE does not prove that Hospital failure is caused by path cost or pointwise IG
 
 ## Research-use rule
 If the diagnosis shows raw IG is good but `IG/d` or endpoint-only scoring is poor, PIPE is a high-priority related work reference and baseline/conceptual comparator before defining a new scoring/pathwise contribution.
+
+
+## 2026-10-10 source/paper audit
+
+Read paper v1 §IV-A–E and official code pin e5bcb5ec4a9a13cbe14aa9f7850bc8b5989a2bb0. Path visibility, overlap union, probabilistic occlusion handling and computational geometry are already addressed. Residual prediction error, cached-goal value, remaining-budget score support, alternative routes and downstream positioning are unverified task-level hypotheses, not omissions/novelty verdicts. Preserve source path[2::3] and sampled-pose-count denominator, and separate CODE_REFERENCE planning from ALIGNED_SHARED. See `../pilots/mx071_followup/PIPE_AUDIT_R0.md`.
