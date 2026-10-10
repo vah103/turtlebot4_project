@@ -1,0 +1,37 @@
+{
+  "screening_summary.json": {
+    "sha256": "65df91141fb803bdaaa1f2147476e337c685824ded0c711d8f571693b1389c32",
+    "bytes": 1628,
+    "copied_from_sealed_stage1": true
+  },
+  "branch_outcomes.jsonl": {
+    "sha256": "62dcded7248224de8fb6a1210b29f874358bc2bf0d0bbb2c5cf214a91defc715",
+    "bytes": 229539,
+    "copied_from_sealed_stage1": true
+  },
+  "h8_interpretation_qualification.json": {
+    "sha256": "bdf6582f3bc2dbc93fbdc2d9cc14c99e28c4efefaaf2e27482dfe46aeb1b592c",
+    "bytes": 617,
+    "copied_from_sealed_stage1": false
+  },
+  "map_start_summary.csv": {
+    "sha256": "973d92f8054174997d33e72a332e6b7acacfeccccea284539d340bf68c238a5c",
+    "bytes": 1024,
+    "copied_from_sealed_stage1": true
+  },
+  "h7_tested_action_summary.json": {
+    "sha256": "2dd4ce6c91a52f6db2041df126f7c2a5c461ede4087a6454d4ad7c3f9eead56e",
+    "bytes": 7625,
+    "copied_from_sealed_stage1": true
+  },
+  "snapshots.jsonl": {
+    "sha256": "b6916165e5c7390b25f69bcb6dc5c0f28d29339183f268e8ab6bafb585ecfd56",
+    "bytes": 173913,
+    "copied_from_sealed_stage1": true
+  },
+  "source_outcomes.jsonl": {
+    "sha256": "681d65936bc2d43d4ca43297413d89cc6b2a92c449889acd93adabf7ddb313de",
+    "bytes": 64548,
+    "copied_from_sealed_stage1": true
+  }
+}

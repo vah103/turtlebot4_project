@@ -327,3 +327,46 @@ without relaxing the rule.
 ### Same-session follow-up: completed-request resume guard
 
 The initial UTF-8 resume recomputed offline diagnostics for completed first-map snapshot groups before skipping their recorded selector outcomes. That process was stopped while recomputing diagnostics; no source or physical branch was interrupted. Added a three-line guard that skips only when all five selector contracts are recorded. The missing-selector negative case still enters execution. Four focused checks passed in 0.16 s after imports, without additional numerical rollouts; protected completed states/results remain unchanged. The original manifest and implementation commit `b008d997a3332c758347a09cc12c5cbe594cd487` are preserved, and the amended manifest binds RESUME_FIX1 with unchanged model/map/controller/scoring/budget fields. Active log: `/home/dell/mx071_dell_20261009/logs/stage1_resume_fix1.log`.
+
+
+## 2026-10-10 — Correct MapEx/PIPE question provenance and open follow-up
+
+The original eight brainstormed omissions concern MapEx (Agent1 journal §17), including #8; verification of strong PIPE is a separate priority (§16/§17.5). MX071 R2 answers a subset on PIPE_ALIGNED source snapshots and common PIPE continuation. USER now requests a direct MapEx rerun and PIPE investigation, and selected all open questions; #7 remains dropped.
+
+Preparation branch `mx071-mapex-followup-pipe-audit-20261010` preserves the old sealed runner/data. The direct-source harness comes from technical commit 8bf7b96f388298361a1c0dd6c32d52041ffcb814, with imports/temp-prefix only changed. On DELL: pinned used-source bytes and G/G1/G2/G3 hashes match; preprocessing retains native unshifted candidate coordinates on padded tensors; runtime confirms unknown-as-occupied request is effectively False. Two four-step stand-in source repetitions are identical. This is bounded source repeatability, not universal branch parity or actual scientific acquisition.
+
+R0 records per-question evidence requirements. #2/#3 diagnostics alone do not identify policy benefit; #5 needs a commitment intervention and #6 an explicitly expanded pose pool. Full seven-question collection, real-model/resource preflight and native complete-state forks remain unimplemented/unsealed. No full preflight PASS, scientific READY, independent verdict, online improvement, teacher-facing result or COM1 modification.
+
+## 2026-10-10 — IR1 R0 REVISE and bounded R1 corrections
+
+IR1 review 63cd2ce00166284ad298d6b9fafd4b33c058a3c3 / return 46758a76ae0c827afec5a962ddf116aea0cbb629 requests four corrections. Maker agrees: G/all-train alone is not MapEx visvarprob's final prediction state; native scoring epochs miss active-lock fresh observations; the 100m discrete crossing rule was ambiguous; and PIPE source-step and distance-prefix budgets were conflated.
+
+Current PLAN_R1.md and PIPE_AUDIT_R1.md fix those proposal semantics, including native-versus-shadow labels, two nomination strata, actual last post-scan pose/map at budget and common endpoint-held Q, and separate configured/effective PIPE limits. Exact PIPE explore.py uses category/log_iou-derived time_step as its loop bound; mission_time alone is not the effective-limit certificate. REVIEW_RESPONSE_R1.md maps the finite closure request and preserves PASS dimensions.
+
+This is a document correction, not an executable seven-question seal. R0 files, Python and both original readiness/completed-science evidence are retained unchanged; no fixture/model rerun, new source/branch, COM1 change or teacher-facing scientific result. Request IR1 focused R0-1..4 closure/regression; full interventions/replay/ceiling/resource/storage/time gates remain open.
+
+
+## 2026-10-10 — USER direct R2 drafting; full seven-question causal package
+
+IR1 independently ACCEPTED bounded R1 semantics at5f9a60339ebd4e96ffcf115e8f9ad520ab66f405, review5477923365. USER then published all-seven causal requirements and directly instructed this maker session to complete design and send it back to IR. This authoring authorization overrides waiting for PM pickup for the bounded draft only; no role self-bind, runtime, staff transfer or merge.
+
+R2 defines one shared native acquisition, complete-state replay/common continuation, paired actual action contracts for1–6/8, costed outcomes and positive/negative/insufficient-support gates. #5 includes KEEP/FRESH_ONCE/computation sham; #6 separates within-cluster views, expanded pool and cheap geometry. #8 separates unique G10 reversal, tied-prefix ambiguity and whether native actually chose the short winner. Topology/visibility/future-best oracles remain non-online.
+
+New request ceiling176 scientific+16 KEEP=192 before dedup, eight sources additional. Fresh-model/resource preflight and full P19 native suffix replay remain unperformed. A lossless CAS/verified decoder is specified; no quantization/crop/snapshot thinning/candidate or failed-run omission. Full48GiB/staged32GiB storage options are proposed, not selected. Read-only DELL facts: i3-7100U/8GB class, about6.6GiB free; current disk gates fail and time/RSS feasibility is uncertified. Scenario bounds are not measured ETA.
+
+Read pinned git objects, not a model/simulator import. Newly explicit source facts: configs/base.yaml has mission_time1000 and distance_transform=True; helper ignores requested unknownAsOcc and passesFalse. get_free_points resets accum_hit_prob at each cell, so retain source per-cell0.8 behavior rather than replacing it with a paper-derived accumulation rule. Capture G auxiliary before later batch-dict mutation and preserve its actual RGB/BGR extraction. These are fidelity facts, not demonstrated weaknesses or new PIPE hypotheses.
+
+PLAN_R1/PIPE_AUDIT_R1/R0/Python/readiness/old completed evidence are preserved. Only design documents/JSON and status/reference metadata change. No new source, branch, fixture, inference, teacher-facing result, MX072/COM1 change, independent ACCEPT, READY or START.
+
+## 2026-10-10 — R2 bounded corrections pending IR1 focused closure
+
+IR1 full R2 review0038e276 at PR42 head36027f2 returned REVISE only MX071-R2-1 and MX071-R2-2; the large architecture passed. See pilots/mx071_followup/REVIEW_RESPONSE_R2.md and corrected R2 bundle.
+
+#3 preserves size/error/direction/distance/L1 dose and adds pre-treatment exact native candidate-wise free-prefix/first-blocker/polygon-hit counts, full visible-unknown/origin bits, frozen variance bins and candidate-wise weighted opportunity. One deterministic or seeded construction; no redraw/bin widening/alternate patch. Missing exposure match -> CONTROL_SUPPORT_NA; native→TOPO is oracle headroom and topology specificity INCONCLUSIVE. No treated score/visibility or branch Q selects controls.
+
+#8 keeps the four actions and G10/Q10/Q_R but reports NATIVE_ACTION_HAS_TESTED_LONG_HORIZON_REGRET / TESTED_HORIZON_DISAGREEMENT_INVOLVING_NATIVE_ACTION. G10 alignment is descriptive; source predicted variance/distance does not optimize realized G10. Causal source short-horizon attribution would require a separately reviewed scorer intervention, absent here.
+
+Preserved:176 scientific+16 KEEP=192 replay requests,8 shared sources, S/O/full-state/own-scan/common continuation, native-step/100m/Q/failure/NA/tie rules, all P01–P19 and FULL_7/STAGED_CORE original numerical limits. Exposure records <=64MiB/S and <=2GiB across32 slots inside existing4GiB diagnostic bucket; <=8192 extra baseline renders within original600s/slot/worker RSS, no additional models, branch or quota. P08/P13/P15 need future technical verification; none was run.
+
+Status: focused closure/regression pending with same IR1 successor04; no self-issued CLOSED/ACCEPT. Static document/arithmetic checks only; genuine model/replay/RAM/time/storage feasibility remains uncertified and current DELL disk gate fails. R1/R0/PIPE/Python/readiness/completed evidence and original R2 verification preserved. No model/source/simulation/probe/batch/READY/START/merge, DELL cleanup/deletion, COM1/MX072 change or staff/task reallocation. Previous proposal/review checkpoints remain historical.
+

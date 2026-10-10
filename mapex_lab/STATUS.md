@@ -1,5 +1,44 @@
 # mapex_lab status
 
+## 2026-10-10 — R2 bounded corrections pending IR1 focused closure
+
+IR1 full R2 review0038e276 at PR42 head36027f2 returned REVISE only MX071-R2-1 and MX071-R2-2; the large architecture passed. See pilots/mx071_followup/REVIEW_RESPONSE_R2.md and corrected R2 bundle.
+
+#3 preserves size/error/direction/distance/L1 dose and adds pre-treatment exact native candidate-wise free-prefix/first-blocker/polygon-hit counts, full visible-unknown/origin bits, frozen variance bins and candidate-wise weighted opportunity. One deterministic or seeded construction; no redraw/bin widening/alternate patch. Missing exposure match -> CONTROL_SUPPORT_NA; native→TOPO is oracle headroom and topology specificity INCONCLUSIVE. No treated score/visibility or branch Q selects controls.
+
+#8 keeps the four actions and G10/Q10/Q_R but reports NATIVE_ACTION_HAS_TESTED_LONG_HORIZON_REGRET / TESTED_HORIZON_DISAGREEMENT_INVOLVING_NATIVE_ACTION. G10 alignment is descriptive; source predicted variance/distance does not optimize realized G10. Causal source short-horizon attribution would require a separately reviewed scorer intervention, absent here.
+
+Preserved:176 scientific+16 KEEP=192 replay requests,8 shared sources, S/O/full-state/own-scan/common continuation, native-step/100m/Q/failure/NA/tie rules, all P01–P19 and FULL_7/STAGED_CORE original numerical limits. Exposure records <=64MiB/S and <=2GiB across32 slots inside existing4GiB diagnostic bucket; <=8192 extra baseline renders within original600s/slot/worker RSS, no additional models, branch or quota. P08/P13/P15 need future technical verification; none was run.
+
+Status: focused closure/regression pending with same IR1 successor04; no self-issued CLOSED/ACCEPT. Static document/arithmetic checks only; genuine model/replay/RAM/time/storage feasibility remains uncertified and current DELL disk gate fails. R1/R0/PIPE/Python/readiness/completed evidence and original R2 verification preserved. No model/source/simulation/probe/batch/READY/START/merge, DELL cleanup/deletion, COM1/MX072 change or staff/task reallocation. Previous proposal/review checkpoints remain historical.
+
+## 2026-10-10 — R2 seven-question causal method candidate
+
+- DONE: under USER direct drafting instruction, specified all seven MapEx contracts (1–6,8), isolated controls, executable first decisions/common native continuation, full-state replay, endpoint-held100m Q, failure/NA/ties/censoring, prospective materiality/cost criteria and both resource options. R1 proposal ACCEPT at5f9a60339ebd4e96ffcf115e8f9ad520ab66f405 is retained; four R0 findings closed.
+- LATEST RESULT: document/source/arithmetic verification only. No fresh inference/fixture/source/paired simulation. Original completed MX071 PIPE_ALIGNED8/8 and75/75 evidence unchanged. DELL read-only metadata shows about6.6GiB free; resource feasibility is uncertified and proposed disk gates fail.
+- IN PROGRESS: independent **full R2 methodology review** by IR1; implementation, full-size resource/model/source parity, lossless codec and full native KEEP suffix replay are later gates.
+- NEXT ACTION: review exact PR42 R2 head using [PLAN_R2](pilots/mx071_followup/PLAN_R2.md), [contracts](pilots/mx071_followup/QUESTION_CONTRACTS_R2.md), [resources](pilots/mx071_followup/RESOURCE_AND_PREFLIGHT_R2.md), [machine contract](pilots/mx071_followup/METHOD_CONTRACT_R2.json) and [answer matrix](pilots/mx071_followup/USER_CAN_ANSWER_R2.md).
+- SCOPE:176 scientific requests+16 KEEP seals before dedup/NA; FULL_7 design only. No batch, probe, READY/START or merge. PIPE remains separate with0 requests; #7 dropped; MX072/COM1 unchanged. Prior checkpoints below are retained as history.
+
+
+## 2026-10-10 — Bounded R1 corrections after IR1 R0 REVISE
+
+- DONE: corrected the four R0 findings in `pilots/mx071_followup/PLAN_R1.md`, `PIPE_AUDIT_R1.md` and `REVIEW_RESPONSE_R1.md`: policy-relevant ensemble state for #2, distinct active-lock post-scan nominees for #2/#5, last-complete-observation 100m/Q convention, separate effective native PIPE step limit and distance-prefix adaptation. R0 documents/raw evidence/Python are unchanged.
+- LATEST RESULT: document/source verification only; R0 independent verdict is REVISE and bounded R1 awaits independent closure. Original stand-in evidence is not a test of the proposed recorder/boundary changes. No fresh inference/fixture or new scientific sources/branches.
+- IN PROGRESS: per-question interventions/controls and complete native MapEx execution contracts remain unsealed. #7 stays dropped; MX072/COM1 remains separate.
+- NEXT ACTION: exact bounded R1 to IR1 for R0-1..4 focused closure/regression; then the indicated Methodologist/Engineer/PM work for replay, failure/reuse, branch ceiling and resource/storage/time gates before any collection.
+- Existing completed MX071 PIPE_ALIGNED sources 8/8 and logical requests 75/75 remain unchanged; its accepted R2 method does not transfer to the follow-up.
+
+
+## 2026-10-10 — R0 preparation (historical; bounded R1 above is current)
+
+- DONE: USER selected all seven remaining open journal questions (#1–#6, #8); #7 remains dropped. Scope matrix and PIPE source/paper audit are in `pilots/mx071_followup/`. Used MapEx source bytes and four model identities match their pins on DELL. Two four-step direct-source fixture repeats are identical in pose/map/pool/score/goal.
+- IN PROGRESS: full MapEx intervention/continuation design for seven questions; dedicated native replay and resource contracts. MX072 on COM1 is not modified or adopted.
+- LATEST RESULT: SOURCE_IDENTITY_AND_FIXTURE_CHECKS_PASS only. Eight fixture control steps use stand-ins; real inference and new scientific sources/branches = 0. This is not complete preflight, methodology ACCEPT or source collection.
+- NEXT ACTION: freeze per-question controls and a new branch ceiling, implement native MapEx complete-state paired continuation, validate four-model/resource/replay gates, then run the authorized MapEx follow-up. PIPE requires its own precise failure test after mechanism audit.
+- Original MX071 execution is COMPLETE: 8/8 PIPE_ALIGNED sources and 75/75 evaluated logical requests. P1 macro ΔQ 0.0003783783; P4 macro ΔQ 0.0224081330. H8 tied-prefix divergence must not be described as a strict reversal. Raw sealed data are unchanged; no independent result ACCEPT is claimed.
+
+
 ## MX071 R2 - DELL offline 2D pilot (2026-10-09)
 
 - DONE: isolated PIPE/pyastar2d/range_libc dependencies; sealed maps, two starts each, and three model identities; source parity, complete-state controller replay, scientific contract checks, and full-size CPU feasibility.
@@ -420,3 +459,4 @@ Conclusion: Way1 works in New Room but does not transfer cleanly to Hospital wit
 - `scripts/evaluate_way2_adaptive_confirmation.py`
 - `scripts/sweep_way2_adaptive_candidate_count.py`
 - `scripts/sweep_way2_adaptive_rule_neighborhood.py`
+

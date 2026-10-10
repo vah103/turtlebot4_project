@@ -1,0 +1,316 @@
+{
+  "schema": "MX071_R2_STATIC_DESIGN_VERIFICATION_V1",
+  "verified_at_utc": "2026-10-10T08:02:56.210469+00:00",
+  "review_target_base": "5f9a60339ebd4e96ffcf115e8f9ad520ab66f405",
+  "status": "STATIC_DOCUMENT_CONSISTENCY_PASS_ONLY",
+  "method_acceptance": false,
+  "runtime_checks_run": false,
+  "new_model_inference_count": 0,
+  "new_simulation_count": 0,
+  "new_scientific_request_count": 0,
+  "checks": [
+    {
+      "id": "SEVEN_QUESTION_IDS",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "question_7_dropped": true
+      }
+    },
+    {
+      "id": "PER_QUESTION_CEILINGS",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "1": 16,
+        "2": 16,
+        "3": 40,
+        "4": 16,
+        "5": 24,
+        "6": 32,
+        "8": 32
+      }
+    },
+    {
+      "id": "176_SCIENTIFIC_REQUESTS",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "before_dedup_and_na": true
+      }
+    },
+    {
+      "id": "FULL_7_COUNTS",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "groups": 12992,
+        "forwards": 103936,
+        "total_traces": 200
+      }
+    },
+    {
+      "id": "FULL_7_HARD_TIME_BOUND",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "forecast_not_measured_eta": {
+          "120": {
+            "seconds": 2170640,
+            "days": 25.123148148148147
+          },
+          "300": {
+            "seconds": 4509200,
+            "days": 52.18981481481482
+          },
+          "600": {
+            "seconds": 8406800,
+            "days": 97.30092592592592
+          }
+        },
+        "elapsed_stop_days": 100
+      }
+    },
+    {
+      "id": "STAGED_CORE_COUNTS",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "groups": 5824,
+        "forwards": 46592,
+        "total_traces": 88
+      }
+    },
+    {
+      "id": "STAGED_CORE_HARD_TIME_BOUND",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "forecast_not_measured_eta": {
+          "120": {
+            "seconds": 999856,
+            "days": 11.572407407407407
+          },
+          "300": {
+            "seconds": 2048176,
+            "days": 23.70574074074074
+          },
+          "600": {
+            "seconds": 3795376,
+            "days": 43.927962962962965
+          }
+        },
+        "elapsed_stop_days": 45
+      }
+    },
+    {
+      "id": "SOURCE_NATIVE_CONFIG",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "ensemble_variance": "unbiased_sample",
+        "native_steps_separate_from_distance_prefix": true
+      }
+    },
+    {
+      "id": "HASH_FIELD_FORMAT",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "checkpoint_and_config_hashes": 8
+      }
+    },
+    {
+      "id": "NO_NEW_EXECUTION_AUTHORITY",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "scope": "design_and_IR1_handoff_only"
+      }
+    },
+    {
+      "id": "CONCLUSION_LADDER_DOCUMENTED",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": [
+        "SUPPORTED_MECHANISM",
+        "SUPPORTED_ACTION_MISMATCH",
+        "SUPPORTED_CAUSAL_TASK_HARM",
+        "SUPPORTED_ONLINE_RECOVERY",
+        "NOT_SUPPORTED",
+        "INCONCLUSIVE_INSUFFICIENT_SUPPORT",
+        "MECHANISM_PRESENT_BUT_NON_ACTIONABLE",
+        "METHOD_NOT_READY"
+      ]
+    },
+    {
+      "id": "SEVEN_DETAILED_CONTRACTS_AND_WORKED_EXAMPLES",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "worked_examples": "illustrative_not_observed_results"
+      }
+    },
+    {
+      "id": "REAL_MODEL_PREFLIGHT_PENDING",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "P01_P19": "specified_not_executed",
+        "disk_and_memory_feasibility": "uncertified"
+      }
+    },
+    {
+      "id": "SOURCE_PER_CELL_RESET_READBACK",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "loop_target": [
+          "i"
+        ],
+        "source_read_only_ast": true
+      }
+    },
+    {
+      "id": "NO_PROTECTED_FILE_IN_UPLOAD_SET",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "protected_baseline_count": 19
+      }
+    },
+    {
+      "id": "NO_RUNNER_CODE_IN_UPLOAD_SET",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "new_python_files": 0
+      }
+    },
+    {
+      "id": "README_LINK_PLAN_R2.md",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "target": "mapex_lab/pilots/mx071_followup/PLAN_R2.md"
+      }
+    },
+    {
+      "id": "README_LINK_QUESTION_CONTRACTS_R2.md",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "target": "mapex_lab/pilots/mx071_followup/QUESTION_CONTRACTS_R2.md"
+      }
+    },
+    {
+      "id": "README_LINK_RESOURCE_AND_PREFLIGHT_R2.md",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "target": "mapex_lab/pilots/mx071_followup/RESOURCE_AND_PREFLIGHT_R2.md"
+      }
+    },
+    {
+      "id": "README_LINK_METHOD_CONTRACT_R2.json",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "target": "mapex_lab/pilots/mx071_followup/METHOD_CONTRACT_R2.json"
+      }
+    },
+    {
+      "id": "README_LINK_USER_CAN_ANSWER_R2.md",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "target": "mapex_lab/pilots/mx071_followup/USER_CAN_ANSWER_R2.md"
+      }
+    },
+    {
+      "id": "README_LINK_PLAN_R1.md",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "target": "mapex_lab/pilots/mx071_followup/PLAN_R1.md"
+      }
+    },
+    {
+      "id": "README_LINK_REVIEW_RESPONSE_R1.md",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "target": "mapex_lab/pilots/mx071_followup/REVIEW_RESPONSE_R1.md"
+      }
+    },
+    {
+      "id": "README_LINK_PLAN_R0.md",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "target": "mapex_lab/pilots/mx071_followup/PLAN_R0.md"
+      }
+    },
+    {
+      "id": "README_LINK_PIPE_AUDIT_R0.md",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "target": "mapex_lab/pilots/mx071_followup/PIPE_AUDIT_R0.md"
+      }
+    },
+    {
+      "id": "README_LINK_PIPE_AUDIT_R1.md",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "target": "mapex_lab/pilots/mx071_followup/PIPE_AUDIT_R1.md"
+      }
+    },
+    {
+      "id": "README_LINK_evidence/native_source_readiness.json",
+      "status": "PASS_STATIC_DOCUMENT_CHECK",
+      "details": {
+        "target": "mapex_lab/pilots/mx071_followup/evidence/native_source_readiness.json"
+      }
+    }
+  ],
+  "option_forecasts": {
+    "FULL_7": {
+      "120": {
+        "seconds": 2170640,
+        "days": 25.123148148148147
+      },
+      "300": {
+        "seconds": 4509200,
+        "days": 52.18981481481482
+      },
+      "600": {
+        "seconds": 8406800,
+        "days": 97.30092592592592
+      }
+    },
+    "STAGED_CORE": {
+      "120": {
+        "seconds": 999856,
+        "days": 11.572407407407407
+      },
+      "300": {
+        "seconds": 2048176,
+        "days": 23.70574074074074
+      },
+      "600": {
+        "seconds": 3795376,
+        "days": 43.927962962962965
+      }
+    }
+  },
+  "proposed_artifact_sha256": {
+    "mapex_lab/STATUS.md": "adeec79ec106a406841e806a80285bed68aa8afa7d7cc21e6b89a18b389d234c",
+    "mapex_lab/EXPERIMENT_PROTOCOL.md": "4736a940c90a48a06f9e91ac0999880cce5016f9ae40138fa46e143d385e8213",
+    "mapex_lab/docs/experiment_notes.md": "b2aca9c9cd276d02e4c4b2dd649abb238c2ddb6d0b4146c7a0796146bb064857",
+    "mapex_lab/pilots/mx071_followup/METHOD_CONTRACT_R2.json": "bedbcecf23763a31152a065300fcc6f9b94a33fed978871b3447313e84ff26c5",
+    "mapex_lab/pilots/mx071_followup/USER_CAN_ANSWER_R2.md": "3d7532d6c0bff3f7dc9f4671a7d381d0dbd1b3f0ddc329890e2d15ed28dfd864",
+    "mapex_lab/pilots/mx071_followup/QUESTION_CONTRACTS_R2.md": "85563ac322e480f38da8a30b9d89c7e1fdd447bef8c91063516545a284e84f06",
+    "mapex_lab/pilots/mx071_followup/PLAN_R2.md": "01229c3fe11c9acbecc833b3028c96279dfb6279f118f8f8231bb47aca17e5a3",
+    "mapex_lab/pilots/mx071_followup/RESOURCE_AND_PREFLIGHT_R2.md": "7dd6e8a236040157036972fa771dd15c37ae056db91d130dd9f239e61f1fbd2a",
+    "mapex_lab/pilots/mx071_followup/README.md": "3790163800421706fad18548b7856052ca1c6d878dd9cadab850315a10c00f42"
+  },
+  "protected_existing_blobs": {
+    "mapex_lab/pilots/mx071_followup/.gitattributes": "31a84203a83db5e5179746147bdeea6c8a79b3a3",
+    "mapex_lab/pilots/mx071_followup/.gitignore": "7a60b85e148f80966a550e5ab6a762a907c69ca6",
+    "mapex_lab/pilots/mx071_followup/PIPE_AUDIT_R0.md": "63b2f9bd8fc1eb9d1d9afb3a3af5658584eefa8e",
+    "mapex_lab/pilots/mx071_followup/PIPE_AUDIT_R1.md": "aeaa6210547809c350bfefdf3197df67a6d4ddac",
+    "mapex_lab/pilots/mx071_followup/PLAN_R0.md": "f6c606b6df85adb0cd12439ad699564f3e33a61e",
+    "mapex_lab/pilots/mx071_followup/PLAN_R1.md": "e3effb0a3d36e57bf73328f39f45a1161ac93db2",
+    "mapex_lab/pilots/mx071_followup/REVIEW_RESPONSE_R1.md": "248827641ca4be67497f4fce4b03cf94dd77aceb",
+    "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/artifact_index.json": "75a30a97fedc1c293b44a1f92c170ae9beb33086",
+    "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/branch_outcomes.jsonl": "a27a202486f74d86f15c769d1aa7d84655237f51",
+    "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/h7_tested_action_summary.json": "0160a9e2dfde0b61484d5c6550cdc79c27f0ffdc",
+    "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/h8_interpretation_qualification.json": "ab59c9c7c9adf137aa48ba1196f68a2792f89b07",
+    "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/map_start_summary.csv": "b19e4ed8f3a3277a45110ce03b377cf318d93567",
+    "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/screening_summary.json": "697f78561a2758abf6d648863352e7b775b0991e",
+    "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/snapshots.jsonl": "9e520c767215a2cc08e4748a6102bb513213430c",
+    "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/source_outcomes.jsonl": "cdbbb24d654d8bb3563fb8e3855cbbc92b914f2d",
+    "mapex_lab/pilots/mx071_followup/evidence/native_source_readiness.json": "e189a0c198f89af690da38f0bde594dc62ef6dde",
+    "mapex_lab/pilots/mx071_followup/evidence/r1_document_verification.json": "90102ececb1caf9f5b24d8999456970ecf7d3e6b",
+    "mapex_lab/pilots/mx071_followup/readiness_audit.py": "60895378a3e1eb6f653f3747601f999163224683",
+    "mapex_lab/pilots/mx071_followup/reference_fixture.py": "d40f7dd7a4a4625ef11ac4d538dda1f122ca3dbe"
+  },
+  "post_publication_requirement": "Compare exact GitHub uploaded bytes and protected blob IDs to candidate head before requesting IR1 review.",
+  "limits": "No real-model, state-replay, RSS, timing, controller or renderer parity is certified by these document checks."
+}

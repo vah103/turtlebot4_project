@@ -1,0 +1,16 @@
+{
+  "kind": "POST_COLLECTION_INTERPRETATION_QUALIFICATION",
+  "raw_summary_preserved": true,
+  "eligible_points": 14,
+  "unique_prefix_winner_points": 4,
+  "positive_tested_prefix_regret_points": 6,
+  "positive_regret_with_tied_prefix_winner": 6,
+  "strict_unique_prefix_reversal_points": 0,
+  "claim": "Tied 10m realized gains can lead to different remaining-budget Q; no strict rank reversal under a unique prefix winner was observed in the four unique-winner points.",
+  "not_claimed": [
+    "native PIPE weakness",
+    "deployable lookahead benefit",
+    "global optimality",
+    "inferential significance"
+  ]
+}
