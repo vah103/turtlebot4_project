@@ -1,5 +1,13 @@
 # mapex_lab status
 
+## MX072 R5 — COM1 native decision-audit implementation / technical preflight (2026-10-10)
+
+- DONE (bounded engineering): private New Room native adapter, immutable recorder, source-fixture comparison, native replay and offline fresh sensor-grid/P2 oracles; full-size G/G1/G2/G3 probe and final two-step real-model smoke completed on COM1.
+- LATEST RESULT: **IMPLEMENTATION_BLOCKED**. Final attempt03 maker gates P1-P11/P13-P14 report PASS at their documented fixture scope; P12 FAIL. Five mandatory maps alone project 260.543 GiB at the cap against 64 GiB. Combined kernel peak RSS 4.589 GiB exceeds the 4.5 GiB target; no sustained live-sample violation/abort occurred.
+- IN PROGRESS: independent technical review of the exact draft implementation, evidence, gate scope and resource blockers. Method-only R5 ACCEPT is preserved and does not accept runtime.
+- NEXT ACTION: review exact candidate and define a bounded lossless-storage/memory revision or a separately reviewed resource-contract amendment. Do not issue READY/START, merge, or run a scientific trajectory from the present report.
+- Read first: [single_run_decision_audit/README.md](pilots/single_run_decision_audit/README.md); compact evidence [evidence/20261010](pilots/single_run_decision_audit/evidence/20261010). This is source MapEx 2D audit support, independent of the ROS/D1/other acquisition programs below; their state is preserved.
+
 ## D1 retrospective oracle STOP — W032 / H080 / H083
 
 - REVIEWED / CANONICAL: same-checker W029 ACCEPT on exact PR #33 head `4f674a81add0c14eb15cc0ab95754130c5923ead`; the oracle lineage is now included in canonical technical main through MX008.

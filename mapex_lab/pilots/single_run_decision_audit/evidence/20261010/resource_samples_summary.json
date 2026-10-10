@@ -1,0 +1,13 @@
+{
+  "sample_count": 252,
+  "wall_elapsed_s": 127.21093806599856,
+  "max_live_sample_rss_bytes": 4530933760,
+  "reported_peak_rss_bytes": 4927135744,
+  "rss_ceiling_bytes": 4831838208,
+  "rss_live_samples_above_target": 0,
+  "longest_contiguous_sampled_above_target_s": 0,
+  "memory_min_bytes": 1621528576,
+  "work_free_min_bytes": 112005455872,
+  "abort_file_exists": false,
+  "limitation": "0.5s sampling does not prove absence of shorter excursions; kernel VmHWM preserves transient peaks."
+}

@@ -1,0 +1,12 @@
+{
+  "action_stratum_rows": 1,
+  "control_steps": 2,
+  "corner_opportunities": "NOT_COMPUTED_EXPLORATORY",
+  "limits": "ONE_RUN_DESCRIPTIVE_NO_ALTERNATE_ACTION_REALIZED_GAIN",
+  "native_replay": {
+    "count": 1,
+    "na_epochs_retained": [],
+    "provenance": "NATIVE_REPLAY",
+    "status": "PASS"
+  }
+}

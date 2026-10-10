@@ -1,0 +1,354 @@
+{
+  "minimum_mem_available_bytes": 1621528576,
+  "phases": [
+    {
+      "phase": "bindings_and_hashes",
+      "seconds": 3.8371622970007593
+    },
+    {
+      "phase": "P2_lattice_and_frame",
+      "seconds": 3.2047999411588535e-05
+    },
+    {
+      "phase": "P3_ABI_fixture",
+      "seconds": 0.00014225599989003967
+    },
+    {
+      "phase": "P5_sensor_planning_collision",
+      "seconds": 0.9542620590000297
+    },
+    {
+      "phase": "P6_source_score_parity",
+      "seconds": 3.373177419000058
+    },
+    {
+      "phase": "sensor",
+      "seconds": 0.011936369999602903
+    },
+    {
+      "phase": "planning_inflation",
+      "seconds": 0.022336988000461133
+    },
+    {
+      "phase": "frontier_generation",
+      "seconds": 0.050366049999865936
+    },
+    {
+      "phase": "native_scoring",
+      "seconds": 0.9062758030013356
+    },
+    {
+      "phase": "local_astar",
+      "seconds": 0.0017785189993446693
+    },
+    {
+      "phase": "control_and_collision",
+      "seconds": 5.830500049341936e-05
+    },
+    {
+      "phase": "sensor",
+      "seconds": 0.01147264700011874
+    },
+    {
+      "phase": "planning_inflation",
+      "seconds": 0.02251478899961512
+    },
+    {
+      "phase": "local_astar",
+      "seconds": 0.0012973290013178485
+    },
+    {
+      "phase": "control_and_collision",
+      "seconds": 6.861099973320961e-05
+    },
+    {
+      "phase": "sensor",
+      "seconds": 0.011375027999747545
+    },
+    {
+      "phase": "planning_inflation",
+      "seconds": 0.022697866999806138
+    },
+    {
+      "phase": "local_astar",
+      "seconds": 0.0016639610003039706
+    },
+    {
+      "phase": "control_and_collision",
+      "seconds": 6.098300036683213e-05
+    },
+    {
+      "phase": "sensor",
+      "seconds": 0.011819155000921455
+    },
+    {
+      "phase": "planning_inflation",
+      "seconds": 0.022360182001648354
+    },
+    {
+      "phase": "local_astar",
+      "seconds": 0.0012100790008844342
+    },
+    {
+      "phase": "control_and_collision",
+      "seconds": 6.38189994788263e-05
+    },
+    {
+      "phase": "sensor",
+      "seconds": 0.011342366999087972
+    },
+    {
+      "phase": "sensor",
+      "seconds": 0.014173618001223076
+    },
+    {
+      "phase": "planning_inflation",
+      "seconds": 0.022806044000390102
+    },
+    {
+      "phase": "frontier_generation",
+      "seconds": 0.0477420080005686
+    },
+    {
+      "phase": "native_scoring",
+      "seconds": 2.077094764999856
+    },
+    {
+      "phase": "local_astar",
+      "seconds": 0.0015639429984730668
+    },
+    {
+      "phase": "control_and_collision",
+      "seconds": 6.557300002896227e-05
+    },
+    {
+      "phase": "sensor",
+      "seconds": 0.01142734800123435
+    },
+    {
+      "phase": "planning_inflation",
+      "seconds": 0.02213232100075402
+    },
+    {
+      "phase": "local_astar",
+      "seconds": 0.0013425659999484196
+    },
+    {
+      "phase": "control_and_collision",
+      "seconds": 6.270700032473542e-05
+    },
+    {
+      "phase": "sensor",
+      "seconds": 0.011260487999606994
+    },
+    {
+      "phase": "planning_inflation",
+      "seconds": 0.022632842999882996
+    },
+    {
+      "phase": "local_astar",
+      "seconds": 0.0013271059997350676
+    },
+    {
+      "phase": "control_and_collision",
+      "seconds": 6.721499994455371e-05
+    },
+    {
+      "phase": "sensor",
+      "seconds": 0.011551255998710985
+    },
+    {
+      "phase": "planning_inflation",
+      "seconds": 0.02215613000043959
+    },
+    {
+      "phase": "local_astar",
+      "seconds": 0.0011783569989347598
+    },
+    {
+      "phase": "control_and_collision",
+      "seconds": 7.342400022025686e-05
+    },
+    {
+      "phase": "sensor",
+      "seconds": 0.01143881300049543
+    },
+    {
+      "phase": "P7_source_controller_reference",
+      "seconds": 8.311665645000176
+    },
+    {
+      "phase": "P8_immutable_sampling_fixture",
+      "seconds": 0.04069755499949679
+    },
+    {
+      "phase": "P9_native_replay_and_hashes",
+      "seconds": 1.8010296529992047
+    },
+    {
+      "phase": "P10_matched_oracles",
+      "seconds": 2.4961008350001066
+    },
+    {
+      "phase": "P11_budget_boundary_fixture",
+      "seconds": 0.00345641700005217
+    },
+    {
+      "phase": "sensor",
+      "seconds": 0.011907555999641772
+    },
+    {
+      "phase": "planning_inflation",
+      "seconds": 0.022240504998990218
+    },
+    {
+      "phase": "preprocessing",
+      "seconds": 0.05837979200077825
+    },
+    {
+      "phase": "load_G",
+      "seconds": 1.3119513950005057
+    },
+    {
+      "phase": "inference_G",
+      "seconds": 9.673389675999715
+    },
+    {
+      "phase": "load_G1",
+      "seconds": 1.3137488690008468
+    },
+    {
+      "phase": "inference_G1",
+      "seconds": 10.356443487999059
+    },
+    {
+      "phase": "load_G2",
+      "seconds": 1.3635124590000487
+    },
+    {
+      "phase": "inference_G2",
+      "seconds": 9.949460874000579
+    },
+    {
+      "phase": "load_G3",
+      "seconds": 1.3327806430006603
+    },
+    {
+      "phase": "inference_G3",
+      "seconds": 9.632716897000137
+    },
+    {
+      "phase": "aggregation",
+      "seconds": 0.13441041899932316
+    },
+    {
+      "phase": "frontier_generation",
+      "seconds": 0.06857700100044894
+    },
+    {
+      "phase": "native_scoring",
+      "seconds": 1.9070153400007257
+    },
+    {
+      "phase": "local_astar",
+      "seconds": 0.023956055998496595
+    },
+    {
+      "phase": "control_and_collision",
+      "seconds": 0.0005800580001960043
+    },
+    {
+      "phase": "sensor",
+      "seconds": 0.01613245499902405
+    },
+    {
+      "phase": "planning_inflation",
+      "seconds": 0.024349278999579838
+    },
+    {
+      "phase": "local_astar",
+      "seconds": 0.001477567999245366
+    },
+    {
+      "phase": "control_and_collision",
+      "seconds": 6.728500011377037e-05
+    },
+    {
+      "phase": "sensor",
+      "seconds": 0.012388267001369968
+    },
+    {
+      "phase": "P13_terminal_audit",
+      "seconds": 2.0477672460001486
+    },
+    {
+      "phase": "preprocessing",
+      "seconds": 0.03733064300104161
+    },
+    {
+      "phase": "load_G",
+      "seconds": 1.1554846089984494
+    },
+    {
+      "phase": "inference_G",
+      "seconds": 9.679857335999259
+    },
+    {
+      "phase": "load_G1",
+      "seconds": 1.2015089500000613
+    },
+    {
+      "phase": "inference_G1",
+      "seconds": 9.967879433001144
+    },
+    {
+      "phase": "load_G2",
+      "seconds": 1.2512981130003027
+    },
+    {
+      "phase": "inference_G2",
+      "seconds": 10.05775037300009
+    },
+    {
+      "phase": "load_G3",
+      "seconds": 1.2786639440000727
+    },
+    {
+      "phase": "inference_G3",
+      "seconds": 10.002204921000157
+    },
+    {
+      "phase": "aggregation",
+      "seconds": 0.10728756900061853
+    },
+    {
+      "phase": "shadow_frontier_generation",
+      "seconds": 0.05318290399918624
+    },
+    {
+      "phase": "shadow_oracle_full_renderers",
+      "seconds": 5.729061743999409
+    },
+    {
+      "phase": "shadow_endpoint_sensor_diagnostic",
+      "seconds": 0.37749487800101633
+    },
+    {
+      "phase": "shadow_locked_goal_reference",
+      "seconds": 0.40669329699994705
+    },
+    {
+      "phase": "shadow_audit_io",
+      "seconds": 0.074169964000248
+    },
+    {
+      "phase": "P12_resource_projection",
+      "seconds": 0.0052827580002485774
+    },
+    {
+      "phase": "P14_adaptation_manifest",
+      "seconds": 0.0032151530012924923
+    }
+  ],
+  "rss_peak_bytes": 4927135744
+}

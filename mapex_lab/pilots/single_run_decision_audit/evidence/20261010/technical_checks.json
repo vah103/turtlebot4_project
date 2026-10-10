@@ -1,0 +1,155 @@
+{
+  "adaptations": [
+    "PINNED_NEW_ROOM_DIRECT_SDF_LOADER",
+    "CPU_FLOAT32_ONE_MODEL_RESIDENT",
+    "HEADLESS_NO_INCIDENTAL_SOURCE_PLOTS",
+    "IMMUTABLE_RECORDER_AND_OFFLINE_SHADOW",
+    "SOURCE_SENSOR_PLANNING_RAY_BUG_GOAL_CONTROLLER_TERMINALS_RETAINED"
+  ],
+  "boundary": {
+    "action_crosses_boundary": true,
+    "dense_counts_are_not_control_budget": true,
+    "no_double_count": true,
+    "parts": {
+      "EXTENDED_BUDGET_TAIL": {
+        "compute_s": 2.0,
+        "distance_m": 0.6,
+        "gain_m2": 0.04,
+        "steps": 2
+      },
+      "NATIVE_BUDGET_PREFIX": {
+        "compute_s": 2.0,
+        "distance_m": 0.6,
+        "gain_m2": 0.04,
+        "steps": 2
+      }
+    },
+    "score_origin_k": 999
+  },
+  "frame": {
+    "domain": 52461,
+    "effective_source_ray_raw": [
+      125,
+      131
+    ],
+    "intended_pose_raw": [
+      131,
+      131
+    ],
+    "mapper": [
+      1203,
+      1263
+    ],
+    "mismatch": 2994,
+    "model": [
+      1216,
+      1264
+    ],
+    "padding": [
+      6,
+      7,
+      0,
+      1
+    ],
+    "primary_reference": "SENSOR_GEOMETRY_P1",
+    "raw": [
+      203,
+      263
+    ]
+  },
+  "oracles": {
+    "P2_role": "STRUCTURAL_P2_SENSITIVITY",
+    "common_write_cells": 45057,
+    "known_outside_padding_unchanged": true,
+    "native_sensor_p2_complete_candidate_counts": {
+      "V_GT_PREDONLY250": 13,
+      "V_GT_SENSORGRID_PREDONLY250": 13,
+      "V_PRED_NATIVE250": 13
+    },
+    "primary_role": "PRIMARY_PREDICTOR_EFFECT_SENSORGRID",
+    "same_variance_distance_pool_renderer": true,
+    "single_cell_occlusion_nonlocal_changed_cells": 2,
+    "support_sha256": "5a9f8d8e16f1e66269fc8b735e880478ad7fd270415c6b2c12d838c9c80c4af5"
+  },
+  "replay": {
+    "count": 1,
+    "na_epochs_retained": [],
+    "provenance": "NATIVE_REPLAY",
+    "scan_history_reconstructed": true,
+    "state_hashes_validated": true,
+    "status": "PASS"
+  },
+  "resource_projection": {
+    "acquisition_wall_guard_s": 43200,
+    "block_reason": "Even five mandatory float32 maps per maximum distinct state exceed the 64GiB contract; no hidden thinning/crop/quantization/omission.",
+    "candidate_pool_measured": 13,
+    "five_mandatory_maps_only_projection_bytes": 279756192822,
+    "limitation": "Initial-state compression is a measured projection basis, not a proven worst-case bound.",
+    "maximum_dense_states": 6001,
+    "maximum_unique_prediction_inputs": 10001,
+    "measured_complete_shadow_unit_bytes": 47268944,
+    "measured_prediction_bytes": 44738814,
+    "memory_model_probe_rss_peak_bytes": 3357257728,
+    "native_model_compute_upper_s": 437730.1960400109,
+    "native_shadow_input_overlap_dedup_accounted": true,
+    "output_quota_bytes": 68719476736,
+    "phase_timeout_seal_s": 300,
+    "projected_prediction_bytes": 447432878814,
+    "projection_kind": "CAP_TIMES_MEASURED_COMPRESSED_BYTES_NOT_ACTUAL_SCIENTIFIC_USAGE",
+    "required_artifact_omissions": false,
+    "scientific_execution_allowed": false,
+    "shadow_model_compute_upper_s": 262681.89064361056,
+    "status": "FAIL_STORAGE_PROJECTION"
+  },
+  "sampling": {
+    "interval_is_still_preregistered_m": 0.5,
+    "no_motion_event_retained": true,
+    "overshoot_multi_threshold_shared_state": true,
+    "same_trace_interval_counts": {
+      "0.25": 4,
+      "0.5": 2,
+      "1.0": 1
+    }
+  },
+  "scoring": {
+    "all_zero_ties_preserve_argmin_first_candidate": true,
+    "candidate_count": 13,
+    "costs_bit_identical": true,
+    "empty_offline_pool_retains_NA_status_without_source_repair": true,
+    "recorded_all_candidates": true,
+    "source_selected_index": 10
+  },
+  "sensor": {
+    "collision": "SOURCE_CENTER_CELL_AFTER_CUR_POSE_ASSIGN_BEFORE_APPEND_SCAN",
+    "effective": false,
+    "inflation": "ONE_SOURCE_3X3_DILATION_FROM_RAW_OBS",
+    "initial_obs_sha256": "ef7286b0a14cbfc434c42d3e9899408c421caaffdc8351d0b36aae5df41f81c9",
+    "physical_geometry_sha256": "5f3dbc12bac5041bb2d85e9ce790997b46e6d99e4a516009904c1350759a4daf",
+    "unknown_as_occ_requested": true
+  },
+  "smoke_terminal": {
+    "control_steps": 2,
+    "distance_m": 0.447213595499958,
+    "full_exploration_claim": false,
+    "last_pose": [
+      633,
+      627
+    ],
+    "last_scan_step": 2,
+    "native_score_epochs": 1,
+    "scientific_execution": false,
+    "source_budget_completed": true,
+    "source_fail_reason": "",
+    "source_pose_list_distance_m": 0.447213595499958,
+    "status": "TECHNICAL_SMOKE_BUDGET"
+  },
+  "source_loop_parity": {
+    "model_kind": "OBSERVATION_ONLY_FIXTURE_NOT_SCIENCE",
+    "poses_maps_goals_pools_costs_terminals_equal": true,
+    "recorder_off_control_steps": 4,
+    "recorder_on_control_steps": 4,
+    "reference_control_steps": 4
+  },
+  "technical_control_steps_total": 14,
+  "unverified_universal_equivalence": true
+}

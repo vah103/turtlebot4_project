@@ -1,0 +1,21 @@
+{
+  "committed_objects_bytes": 45762185,
+  "control_steps": 2,
+  "distance_m": 0.447213595499958,
+  "final_snapshot_id": "snapshot_000004",
+  "full_exploration_claim": false,
+  "last_pose": [
+    633,
+    627
+  ],
+  "last_scan_chain": "5ff5bd68c88b850bd0f4b8f18e11f88690a7cc38310d997b68b777a70b797328",
+  "last_scan_step": 2,
+  "native_score_epochs": 1,
+  "purpose": "TECHNICAL_SMOKE",
+  "recorder_io_s": 0.16738330099724408,
+  "scientific_execution": false,
+  "source_budget_completed": true,
+  "source_fail_reason": "",
+  "source_pose_list_distance_m": 0.447213595499958,
+  "status": "TECHNICAL_SMOKE_BUDGET"
+}
