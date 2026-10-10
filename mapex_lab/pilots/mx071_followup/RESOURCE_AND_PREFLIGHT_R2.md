@@ -1,6 +1,8 @@
 # Resources, lossless state and preflight — MX071 follow-up R2
 
-Part of PLAN_R2.md. These are **new proposed R2 bounds**, not inherited MX071/MX072 acceptance. All probes/tests below await full R2 review and explicit technical authorization. No probe was run to write this file.
+Part of PLAN_R2.md. These are **new proposed R2 bounds**, not inherited MX071/MX072 acceptance. All probes/tests below await R2 methodology ACCEPT and explicit technical authorization. No probe was run to write or correct this file.
+
+Bounded correction after review0038e276: #3 exposure matching is charged inside the existing diagnostic/RSS/archive limits; #8 is claim-only. No requests, model-forward groups, quota, forecast clock or technical fixture allowances are increased. Focused closure remains pending; resource/runtime remains uncertified.
 
 ## 1. Read-only DELL facts and feasibility status
 
@@ -66,7 +68,7 @@ A finite fixture maximum is not a proof of all future latency. Treat it as the a
 
 Also require:
 - Non-model control/scan/planning/recipe verification bound c_plus<=2.00s/control record, from full-size source fixtures. This is an admission estimate with runtime deadline, not a theoretical promise.
-- Extra nominated-diagnostic work outside the groups d_plus<=600s/unique slot, max64 slots. Time all #1/#3/#4/#6 renderer and proposal work, including expanded pools; no stand-in resource substitution.
+- Extra nominated-diagnostic work outside the groups d_plus<=600s/unique slot, max64 slots. Time all #1/#3/#4/#6 renderer and proposal work, including expanded pools and the full #3 baseline exposure trace, exact-key/dose/M_j matching and audit. #3 permits at most one additional baseline render/candidate, <=256/S, <=8192 across32 S slots; these are diagnostic renderer calls, not new model groups or scientific branches. Reuse exact baseline intermediates when available. If the existing600s/RSS bound fails, return technical/support censoring rather than expanding the budget or dropping exposure fields; no stand-in resource substitution.
 - Analysis/final lossless audit reservation48h full,24h staged. Model decoders counted in groups cannot be hidden in this reservation.
 - One group in flight and at most two bounded bundles for encoded/decoded byte comparison. No model+decoder workers overlapping to evade RSS.
 - Actual elapsed/resume totals recorded even for failed work; no reset of the quota after process restart.
@@ -127,7 +129,7 @@ Byte-bound buckets for FULL_7:
 - Shared weights/config/source/GT/env roots6GiB.
 - Control/event ledger <=200x1001x16KiB <3.06GiB.
 - Candidate epoch blocks <=200x64x256x1KiB =3.125GiB, plus <=128MiB all extra nominated proposals/controls. Repeated cached pools are references, not discarded candidates.
-- Additional state graphs, diagnostics, failures, timers and analysis <=4GiB.
+- Additional state graphs, diagnostics, failures, timers and analysis <=4GiB, **including** #3 baseline exposure records <=2GiB. At most32 S states x64MiB; ROI<=64x441=28,224 cells, nativeF<=256. The per-candidate (free/first-blocker/hit count, visible/origin bits) vector uses three uint16 counts plus flags/reserved byte=8bytes:28,224x256x8=57,802,752bytes before bounded ROI/key/match headers, below64MiB. Keep variance/input refs rather than duplicate full arrays. Fixed binary vector keys with byte comparison after hash lookup prevent an unbounded text/object expansion. Stream one native candidate mask/ray list and obey the existing worker/decoder/coordinator RSS caps. The whole4GiB bucket remains binding; exceeding it is technical abort, not increased quota or omitted records.
 - Working byte-comparison/spool/staging <=4GiB.
 - Audit output, checksum/manifest reserve<=4GiB.
 - Remaining quota margin >11GiB.
@@ -164,14 +166,14 @@ Each result is PASS/FAIL/NA with exact runner/source/weights/env/fixture IDs. St
 | P05 | Complete serializer liveness inventory and alias-graph/ordered hit reconstruction; every controlling source read covered; no unexplained field |
 | P06 | Lossless model/input/map/mask/path/render object encoding and independent byte decode on full-size real states, including repeated cache inputs and mutations; fail stops archive/replay |
 | P07 | Fresh runner plus decoder kernel RSS<=5120MiB, coordinator<=512MiB, availability/headroom; no process accumulation excuse without exact fresh-process evidence |
-| P08 | Actual verified-group/control/diagnostic time and per-member load limit; all option forecasts include decoder, #6 expansion and I/O; any bound failure blocks admission |
+| P08 | Actual verified-group/control/diagnostic time and per-member load limit; all option forecasts include decoder, #6 expansion, #3 exposure tap/matching/audit and I/O within existing600s slot allowance; any bound failure blocks admission |
 | P09 | Collision before append/scan, attempted endpoint trace, no-frontier/exhausted pool, invalid/nonfinite/zero path, source1000-step terminal; source behavior retained |
 | P10 | Exact-at100 scan, before100 state, crossing endpoint and overshoot, duplicate-distance/zero-move scan, same Q/10m hold in both arms; no invented100m state |
 | P11 | Locked/reached/invalid/unreachable goal, source retry ordering; post-scan O capture before next control; no eligibility-induced source mutation |
 | P12 | #1 all-identical mask native mass parity; fractional masks/zero variance; #2 common U/clamping before-after and older-native-cache distinction |
-| P13 | #3 port/P2/raster/dose/no-control/seed rules; #4 GT changes unknown-valid mean only, preserves U/V/known and native renderer gap labels |
+| P13 | #3 port/P2/raster/dose/no-control/seed rules plus immutable pre-treatment exact native-pool exposure: tapped/untapped renderer outputs equal, ordered free/first-blocker/hit counts and full-mask/origin flags, exact full-key histogram matching, per-candidate M_j zero/5% bounds and one-pass neutral/random construction. Exercise an equally distant but occluded control, candidate-exposure mismatch, no-key/no-V/no-render support, insufficient match and no-redraw/no-alternate-patch dispositions; first-blocker/behind-ray/early-return/padding quirks preserved. #4 GT changes unknown-valid mean only, preserves U/V/known and native renderer gap labels |
 | P14 | #5 KEEP==SHAM behavioral bytes; same-winner/full-cache identity, safe no-valid retarget KEEP; one intervention and native commitment release |
-| P15 | #6 proposal order/near rejection/duplicate/no-refill/known-route and fixed-cluster versus expanded-pool contract; #8 exact action alias and unique/tied/native-alignment labels |
+| P15 | #6 proposal order/near rejection/duplicate/no-refill/known-route and fixed-cluster versus expanded-pool contract; #8 exact action alias, unique/tied/descriptive alignment and tested-regret/disagreement labels. Even A0=unique G10 winner must never yield causal native short-horizon mechanism or online-recovery attribution |
 | P16 | Fixed registry/192 ceiling, no alias N inflation, no split short/full rolls, all invalid/NA/technical cases, total cost after abort/resume |
 | P17 | Censoring interval propagation, native absorbing versus technical missing, correct map/start macro and threshold/negative outcomes; no zero imputation |
 | P18 | Total bytes including raw nominated data/working copies/failures/model roots; every object decoded and all candidate/failed records retained; future freeze/authority manifest |
