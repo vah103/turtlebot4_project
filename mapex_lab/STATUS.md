@@ -1,5 +1,14 @@
 # mapex_lab status
 
+## 2026-10-10 — R2 seven-question causal method candidate
+
+- DONE: under USER direct drafting instruction, specified all seven MapEx contracts (1–6,8), isolated controls, executable first decisions/common native continuation, full-state replay, endpoint-held100m Q, failure/NA/ties/censoring, prospective materiality/cost criteria and both resource options. R1 proposal ACCEPT at5f9a60339ebd4e96ffcf115e8f9ad520ab66f405 is retained; four R0 findings closed.
+- LATEST RESULT: document/source/arithmetic verification only. No fresh inference/fixture/source/paired simulation. Original completed MX071 PIPE_ALIGNED8/8 and75/75 evidence unchanged. DELL read-only metadata shows about6.6GiB free; resource feasibility is uncertified and proposed disk gates fail.
+- IN PROGRESS: independent **full R2 methodology review** by IR1; implementation, full-size resource/model/source parity, lossless codec and full native KEEP suffix replay are later gates.
+- NEXT ACTION: review exact PR42 R2 head using [PLAN_R2](pilots/mx071_followup/PLAN_R2.md), [contracts](pilots/mx071_followup/QUESTION_CONTRACTS_R2.md), [resources](pilots/mx071_followup/RESOURCE_AND_PREFLIGHT_R2.md), [machine contract](pilots/mx071_followup/METHOD_CONTRACT_R2.json) and [answer matrix](pilots/mx071_followup/USER_CAN_ANSWER_R2.md).
+- SCOPE:176 scientific requests+16 KEEP seals before dedup/NA; FULL_7 design only. No batch, probe, READY/START or merge. PIPE remains separate with0 requests; #7 dropped; MX072/COM1 unchanged. Prior checkpoints below are retained as history.
+
+
 ## 2026-10-10 — Bounded R1 corrections after IR1 R0 REVISE
 
 - DONE: corrected the four R0 findings in `pilots/mx071_followup/PLAN_R1.md`, `PIPE_AUDIT_R1.md` and `REVIEW_RESPONSE_R1.md`: policy-relevant ensemble state for #2, distinct active-lock post-scan nominees for #2/#5, last-complete-observation 100m/Q convention, separate effective native PIPE step limit and distance-prefix adaptation. R0 documents/raw evidence/Python are unchanged.
