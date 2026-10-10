@@ -1,7 +1,7 @@
 {
   "schema": "MX071_FOLLOWUP_R2_METHOD_CANDIDATE_V1",
   "date": "2026-10-10",
-  "status": "DESIGN_CANDIDATE_PENDING_FULL_IR1_REVIEW",
+  "status": "R2_BOUNDED_CORRECTION_PENDING_IR1_FOCUSED_CLOSURE",
   "authority": {
     "author": "original Agent1/Codex maker support; USER direct bounded drafting instruction 2026-10-10 13:44 +07",
     "formal_role_self_bind": false,
@@ -480,7 +480,46 @@
       "oracle_chooser": true,
       "hindsight_long_winner": false,
       "common_contract": "PLAN_R2.md",
-      "specific_contract": "QUESTION_CONTRACTS_R2.md"
+      "specific_contract": "QUESTION_CONTRACTS_R2.md",
+      "exposure_match": {
+        "state": "PRE_TREATMENT_IMMUTABLE_NATIVE_S_INPUT",
+        "candidate_set": "ENTIRE_ORIGINAL_ORDERED_NATIVE_SCORING_POOL",
+        "renderer": "PINNED_250RAY_200CELL_0P8_PER_CELL_RESET_FULL_POLYGON_FLOOD_FILL_UNSHIFTED_ORIGINS",
+        "signature_per_candidate": [
+          "FREE_POINTS_MULTIPLICITY",
+          "ACTUAL_HIT_POINTS_FIRST_BLOCKER_MULTIPLICITY",
+          "HIT_POINTS_POLYGON_ENDPOINT_MULTIPLICITY",
+          "NATIVE_VISIBLE_UNKNOWN_BIT",
+          "NATIVE_ORIGIN_MEMBERSHIP_BIT"
+        ],
+        "count_bins": "EXACT_SINGLETON_INTEGERS_0_TO_250",
+        "bit_bins": [
+          0,
+          1
+        ],
+        "signature_tolerance": 0,
+        "key_order": [
+          "CORRECTION_DIRECTION",
+          "FLOOR_ABSOLUTE_ERROR_DIV_0P1",
+          "FLOOR_DISTANCE_TO_NATIVE_WINNER_M_DIV_1",
+          "FULL_ORDERED_EXPOSURE_VECTOR",
+          "FLOOR_FROZEN_VARIANCE_DIV_0P01"
+        ],
+        "variance_bin_width": 0.01,
+        "variance_requires_finite_nonnegative": true,
+        "original_dose_tolerance_per_cell": 0.05,
+        "weighted_opportunity": "ORDERED_FLOAT64_SUM_V_TIMES_NATIVE_VISIBLE_UNKNOWN_DIV_NATIVE_POSITIVE_FINITE_DISTANCE_PER_CANDIDATE",
+        "weighted_opportunity_zero": "EXACT_ZERO_REQUIRED",
+        "weighted_opportunity_positive_relative_tolerance": 0.05,
+        "post_treatment_or_branch_q_used": false,
+        "one_pass_construction": true,
+        "random_draws_per_full_key": 1,
+        "redraw_or_backtracking": false,
+        "alternate_patch_or_bin_widening": false,
+        "no_match": "CONTROL_SUPPORT_NA_TOPOLOGY_SPECIFICITY_INCONCLUSIVE",
+        "missing_renderer_provenance": "EXPOSURE_CONTRACT_NA",
+        "topology_specific_gate_requires_both_neutral_controls": true
+      }
     },
     {
       "id": 4,
@@ -537,7 +576,15 @@
       "oracle_chooser": false,
       "hindsight_long_winner": true,
       "common_contract": "PLAN_R2.md",
-      "specific_contract": "QUESTION_CONTRACTS_R2.md"
+      "specific_contract": "QUESTION_CONTRACTS_R2.md",
+      "allowed_strongest_conclusions": [
+        "NATIVE_ACTION_HAS_TESTED_LONG_HORIZON_REGRET",
+        "TESTED_HORIZON_DISAGREEMENT_INVOLVING_NATIVE_ACTION"
+      ],
+      "native_unique_g10_alignment": "DESCRIPTIVE_ONLY_NOT_SCORER_MECHANISM_ATTRIBUTION",
+      "native_short_horizon_mechanism_attribution": false,
+      "hindsight_online_recovery_claim": false,
+      "source_mechanism_attribution_requires": "SEPARATELY_REVIEWED_FIXED_INPUT_HORIZON_VALUE_SCORER_INTERVENTION_NOT_IN_R2"
     }
   ],
   "budget": {
@@ -567,8 +614,8 @@
     "research_overhead_separate": true
   },
   "thresholds": {
-    "prediction_epsilon": 0.000001,
-    "score_epsilon_relative": 0.000001,
+    "prediction_epsilon": 1e-06,
+    "score_epsilon_relative": 1e-06,
     "q_epsilon": "max(1e-6,0.5/N)",
     "g10_tie_epsilon": "0.5/N+1e-12",
     "material_macro_delta_q": 0.01,
@@ -614,7 +661,16 @@
     "candidate_record_bytes": 1024,
     "archive_method": "LOSSLESS_CAS_WITH_PER_OBJECT_EXACT_DECODE_VERIFICATION",
     "probe_performed": false,
-    "feasibility": "UNCERTIFIED_CURRENT_DISK_GATE_FAIL"
+    "feasibility": "UNCERTIFIED_CURRENT_DISK_GATE_FAIL",
+    "exposure_max_roi_cells": 28224,
+    "exposure_signature_bytes_per_cell_candidate": 8,
+    "exposure_record_cap_mib_per_state": 64,
+    "exposure_max_s_states": 32,
+    "exposure_total_archive_gib_inside_existing_diagnostic_bucket": 2,
+    "exposure_extra_baseline_renders_per_s": 256,
+    "exposure_extra_baseline_renders_total": 8192,
+    "exposure_charged_to_existing_diagnostic_slot_s": 600,
+    "exposure_quota_or_clock_increase": false
   },
   "options": [
     {
@@ -684,6 +740,18 @@
     "a2": "SEPARATE_ACQUISITION_AUTHORITY_EIGHT_NATIVE_SOURCES_AND_SCREEN",
     "b": "P19_FULL_KEEP_SUFFIX_SEAL_EXACT_REGISTRY_AND_SEPARATE_B_AUTHORITY",
     "c": "CLOSED_SEPARATELY_REVIEWED_PROSPECTIVE_ONLINE_VALIDATION"
+  },
+  "bounded_revision": {
+    "parent_reviewed_head": "36027f2f27eb0639126ac7ea244dea9d9b5c7466",
+    "ir1_review_commit": "0038e276abc8fe89a7b76c5eb58ff95a88e860f2",
+    "findings": [
+      "MX071-R2-1",
+      "MX071-R2-2"
+    ],
+    "scope": "QUESTION3_EXPOSURE_MATCH_AND_QUESTION8_CLAIM_CORRECTION_ONLY",
+    "independent_closure": false,
+    "new_scientific_requests": 0,
+    "new_model_groups": 0,
+    "response": "REVIEW_RESPONSE_R2.md"
   }
 }
-
