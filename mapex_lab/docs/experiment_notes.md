@@ -1,5 +1,19 @@
 # Experiment Notes
 
+## 2026-10-10 — MX072 R5 bounded COM1 implementation / negative resource preflight
+
+USER explicitly authorized implementation after COM1 returned online. Agent1/Codex supplied bounded engineering support; no Engineer-seat takeover, scientific START, live-robot motion, ROS baseline change, merge or independent verdict occurred.
+
+The isolated checkout is `/work/com1/mapex_single_audit/implementation_r5_20261010`, based on technical main `88fb673b7a19d2973cfb1c78b4d0a083fdf66b50`. The older `/home/com1/turtlebot4_project` has a corrupt Git object and older GT; it was left untouched. Private pinned MapEx/LaMa, environment and all weights were preserved. The accepted design is hub PR #53 `67ca9f74e6ff99c93d5548d4ecf7e6c82eb5459b`, IR1 methodology ACCEPT `0d4b43bde06ad5582d43f6827e53bad2e73cfd8d`.
+
+Implemented native control/decision/dispatch ledgers, immutable 0.5 m/event/boundary states and raw scan chain, all-candidate source masks/scores, native replay, full fresh offline sensor-grid predictor-only and separate P2 structural sensitivity arms, physical hypothetical endpoint audit, and normal terminal integrity. Fixture comparison calls the actual pinned explore.py and checks recorder-on/off invariance. Four real CPU models ran at full 1216x1264 size, with bit-identical repeats.
+
+Attempt01 stopped before motion on an import-generated cache in our private source checkout; only that generated cache was removed, and bytecode writes are now disabled. Attempt02 completed bounded smoke/replay/shadow but report output failed ASCII encoding; UTF-8 reporting was fixed. Attempt03 completed the technical sequence: 12 observation-only fixture/source-comparison steps plus 2 real-model native control steps, one fresh offline shadow unit and committed-unit resume validation. These are technical smoke artifacts, not scientific trajectory observations.
+
+Final status remains **IMPLEMENTATION_BLOCKED**: P12 FAIL. Five mandatory maps measured 27,972,822 compressed bytes per initial input; cap x measured compression projects 279,756,192,822 bytes (260.543 GiB), before required rays/states/ledgers, against unchanged 64 GiB. Complete bundle projection is 416.704 GiB. This is a conservative planning calculation, not actual scientific consumption or a certified worst-case entropy bound; cross-store dedup is credited optimistically in projection but not yet implemented globally. Complete candidate ceilings and acquisition/offline time fit remain uncertified. Final combined kernel peak RSS 4.589 GiB exceeds the 4.5 GiB target; live 0.5 s samples stay below target, so no sustained five-second abort fired. The transient peak is retained as a resource review issue.
+
+No cap/quota/sampling/model/channel/candidate reduction or silent data omission was used. Known-map errors, source ray-origin quirks, variance mass versus area, hypothetical versus realized gain, common-support conditioning, native-prefix/extended-tail strata and exploratory-only corner status remain explicit. Current gate PASS labels are maker fixture results; universal source equivalence, failure/abort branches, exact recorder-I/O attribution and complete downstream scientific reporting remain scoped review items. Lossless deltas/global dedup may be explored within R5; changing the resource/method contract requires review. Compact evidence and original COM1 artifact index are under `pilots/single_run_decision_audit/evidence/20261010`.
+
 ## 2026-09-22 — TU goal-domain differs from original MapEx
 
 - Original MapEx TU samples 100 goal cells directly from `valid_space == 1` for each map/start condition, stores those coordinates, and reuses the same goal set across methods/timesteps.

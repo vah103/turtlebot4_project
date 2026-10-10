@@ -1,5 +1,18 @@
 # Experiment Protocol
 
+## MX072 R5 native 2D New Room audit supplement — methodology accepted, runtime blocked
+
+The independent source-MapEx 2D audit is documented at
+[pilots/single_run_decision_audit/README.md](pilots/single_run_decision_audit/README.md).
+Its accepted method is hub PR #53 at `67ca9f74e6ff99c93d5548d4ecf7e6c82eb5459b`,
+IR1 method-only ACCEPT `0d4b43bde06ad5582d43f6827e53bad2e73cfd8d`.
+It is a separate protocol from ROS Hospital/paper500/D1 work below. The direct
+P1 physical sensor grid and P2 structural reference, center-cell collision,
+source controller/raycast quirks, primary sensor-grid predictor-only oracle,
+0.5 m no-feedback snapshots and native-prefix/extended-tail accounting remain
+frozen. The present COM1 engineering/preflight candidate is **IMPLEMENTATION_BLOCKED**
+on resource gate P12. It authorizes no scientific trajectory or READY/START.
+
 ## New Room R003 paper500 supplement — USER-approved 2026-09-23
 
 The current New Room `new_room_mapex_paper500_v1` protocol is defined in

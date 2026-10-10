@@ -1,0 +1,22 @@
+{
+  "bindings_sha256": "7d4ecc36d37a82a0256445936b583a1ee164c2b179da96f51f4dcaeb79569d95",
+  "gates": {
+    "P10_SENSORGRID_AND_P2_ORACLES": "PASS",
+    "P11_PREFIX_TAIL": "PASS",
+    "P12_RAM_DISK_TIME_QUOTA": "FAIL",
+    "P13_FINAL_STATE_TERMINAL": "PASS",
+    "P14_SOURCE_ADAPTATION_FIXTURE_PARITY": "PASS",
+    "P1_P2_P3_BINDINGS": "PASS",
+    "P4_FULL_SIZE_MODELS": "PASS",
+    "P5_SENSOR_PLANNING_COLLISION": "PASS",
+    "P6_SCORER_PARITY": "PASS",
+    "P7_CONTROLLER_AND_RECORDER_INVARIANCE": "PASS",
+    "P8_DENSE_SNAPSHOTS": "PASS",
+    "P9_REPLAY_NO_GT_FEEDBACK": "PASS"
+  },
+  "ready": false,
+  "scientific_execution_authorized": false,
+  "sealed_phase_timeout_s": 300,
+  "stage": "full",
+  "status": "IMPLEMENTATION_BLOCKED"
+}

@@ -1,0 +1,195 @@
+{
+  "adapter_files": {
+    "__init__.py": "e67a99a266d6e1f0e4c5f87cd3d3ea3b3a3c169d40723d498629bb14b936e351",
+    "audit.py": "bedef52c7372ae9c7b5bff7ed22823e550654f690fd49516e0255f08c3c745c3",
+    "checks.py": "97cbaeca878878efb30f3e834e7feff2ec48e2c8795b5452f2cfbafd655a08df",
+    "contract.py": "498ff43d9606eae2668739764d33a09ddd48c509e90b862353d46f4869f2bac8",
+    "geometry.py": "ca51fd102046026f52acf5e075ac1eea6b4cd8072fdaa078d5455bc5054a2ca3",
+    "native_adapter.py": "adef47ba6022ae8e907892c875eba3f96c54124cb95f809d036a43e3299cc0d5",
+    "prediction.py": "1ea400dc73382f791bb613e25202b282ef68b881713affab4a36a7d986edb51f",
+    "preflight.py": "e704d31392ac5936e8df2112c515fdede16bee16258bcae6d328da5886a66559",
+    "recorder.py": "533462d2661fab034ad8726ca99738bab8abf5036ee338a2ba6b951f6c2c65f4",
+    "render_report.py": "294e5d06bba8c94de47e5fdc1450fa710ba47a789c009d649be8f13fe3b48cb8",
+    "resources.py": "86f8432658fc2c0abfd4c6a024177dc7c8e5e13133bc430e627df4e96496ac47",
+    "run_one.py": "d77162638cb675e5500f9b5dc7364172e1c43fffe82e1506ebd06711d09d67ae",
+    "scoring.py": "c0cebfdb55ae3308c145bf3c17f861c1da8ce9db1eb787f7295b1d1f9acd901f",
+    "shadow.py": "b56b75fff9f3c40d693de76e8d4b767d1f845e2bc4b1a568c06fc3410cff0892",
+    "source_reference.py": "a13db78caff975f544d45ffca2836f44523295f01f1c0f62c7f5e0b3a73bcf28"
+  },
+  "config": {
+    "acquisition_wall_guard_s": 43200,
+    "controller_path_index": 3,
+    "corner_diagnostic": "NOT_COMPUTED_EXPLORATORY",
+    "disk_free_min_bytes": 10737418240,
+    "dt_floor_val": 10,
+    "extended_cap": 10000,
+    "goal_tolerance_cells_strict": 10,
+    "heartbeat_s": 5,
+    "id": "MX072_R5_NEW_ROOM_CENTER_CELL_V1",
+    "interop": 1,
+    "lama_pad": [
+      6,
+      7,
+      0,
+      1
+    ],
+    "lidar": {
+      "dilate_diam_for_planning": 3,
+      "laser_range_m": 20,
+      "num_laser": 2500,
+      "pixel_per_meter": 10
+    },
+    "mem_available_min_bytes": 805306368,
+    "mode": "visvarprob",
+    "native_budget": 1000,
+    "native_padding": 500,
+    "origin_raw": [
+      -13.15,
+      -13.15
+    ],
+    "output_quota_bytes": 68719476736,
+    "pred_visibility": {
+      "laser_range_m": 20,
+      "num_laser": 250,
+      "pixel_per_meter": 10
+    },
+    "resolution_m": 0.1,
+    "resource_violation_s": 5,
+    "rss_ceiling_bytes": 4831838208,
+    "scientific_execution_authorized": false,
+    "shape_mapper": [
+      1203,
+      1263
+    ],
+    "shape_model": [
+      1216,
+      1264
+    ],
+    "shape_raw": [
+      203,
+      263
+    ],
+    "simulation_time": "NA_SIM_TIME_UNDEFINED",
+    "smoke_step_max": 20,
+    "snapshot_distance_m": 0.5,
+    "start_mapper": [
+      631,
+      631
+    ],
+    "threads": 4,
+    "unknown_as_occ_effective": false,
+    "unknown_as_occ_requested": true,
+    "use_distance_transform_for_planning": true
+  },
+  "design_commit": "67ca9f74e6ff99c93d5548d4ecf7e6c82eb5459b",
+  "design_sha256": "1cc5e58bb3e12433c5820c9448d9125c772ccf428b31d067002d5959d80dda5a",
+  "device": "com1",
+  "env": "/work/conda-envs/mapex-single-audit-com1",
+  "geometry": {
+    "array_sha256": {
+      "mapper_gt": "5f3dbc12bac5041bb2d85e9ce790997b46e6d99e4a516009904c1350759a4daf",
+      "p2_anyocc": "244558b2fcd92113b0f4a4977bb50c1256b73ad14fc21960f09a03553846468c",
+      "p2_data": "dfac3d7beaaf25282ca0a24a4b4be8bb6ea6ded7683ffc5d9dbfc5abe7c5e151",
+      "p2_roi": "efa60ae98340e267da08655dc564c8fd988c1f2477b92815d26b427f841bfd59",
+      "raster_mismatch": "91ee4b1b3958f651ba9fccc48a7bd9bbf377197a6ad37d008b3c7b9108269d0a",
+      "roi_weights": "030e0a48a7a330b1da7a7f7b23865c4c50956092e2f48082f5a96dbda34062d5",
+      "sensor_raw": "814bd5797f6806f716d1b3bab52cef0e09b2a061302ab8f8bc77728b74723afa",
+      "support": "ec324c9b1da6971219ccd0c660c583ef3735fc5de65fcfd2c26deabed2ded56c"
+    },
+    "bounds_slam": [
+      -13.09,
+      13.09,
+      -13.09,
+      7.09
+    ],
+    "contract": "MX072_R4_NEW_ROOM_CENTER_CELL_V1",
+    "counts_boxes_evaluation_occupied_free_roi": [
+      66,
+      211696,
+      23990,
+      187706,
+      187690
+    ],
+    "frozen_files_sha256": {
+      "new_room_connected_free_v2.npy": "32e503359d1ecb94379f2c85e87398304b71cad60882cef68d4ce537e375c4c0",
+      "new_room_structural_gt_v2.npz": "89954e9e4d52f5277e786a0ff43075ba714c4aadc804b50a58520d9182ae1ad4"
+    },
+    "full_support_cells": 52461,
+    "generator_sha256": "c7ab9d22add4c6d2b614c7aebf26f74501acb2c925e78dae6d205347d0d32cb2",
+    "geometry_file_sha256": "e77dcf028e1deaa3094b132422dddeafa382135356a80b363057ca6e9a06af98",
+    "p2_seed": [
+      1202,
+      512
+    ],
+    "raster_mismatch_cells": 2994,
+    "roi_area_m2": 469.225,
+    "source_sdf_sha256": "678c60172328183b42d2b26c15a8ed5a6faa8467a5b6e54f2564e2f7d974a735"
+  },
+  "lama_pin": "b61dcb33e063fe9586b50e2dc7b70f97d5046c1d",
+  "models": {
+    "G": {
+      "checkpoint_sha256": "58c1841c10d4d97bc1f894ec8fe5b015b165277ddb2b9bb29eb688b21d4363b5",
+      "config_sha256": "bc1208d4ffe133ffe8d5783f108304a48a3a14a4eaea461d1ee72bcae573e411",
+      "root": "/work/com1/mapex_weights/weights/big_lama"
+    },
+    "G1": {
+      "checkpoint_sha256": "b37bfef69138806708d6e087b8db89836021f06db987cb3ef3db21fbf28422ca",
+      "config_sha256": "58743088778222c4a71c1038bace0ab6a8ebad5494c6f6abff553c15003bad48",
+      "root": "/work/com1/mapex_weights/weights/lama_ensemble/train_1"
+    },
+    "G2": {
+      "checkpoint_sha256": "7880d164ccd88da58ddb0e6875f358bea02a232c452eff86b5e226957a489c26",
+      "config_sha256": "23e4b6c3850a8bef02daf58ae630b96693d44b97488adef050261d308b44ceb3",
+      "root": "/work/com1/mapex_weights/weights/lama_ensemble/train_2"
+    },
+    "G3": {
+      "checkpoint_sha256": "fcb43d1102d48ab6b14f5bfded859077d6da0c7efbfbda10d4acbb754c3d3bc1",
+      "config_sha256": "1dc07c6b4a244a335aa0a3499fce3b6178140cea16ee2b9cc5d5e497cfa73810",
+      "root": "/work/com1/mapex_weights/weights/lama_ensemble/train_3"
+    }
+  },
+  "modules": {
+    "albumentations": {
+      "origin": "/work/conda-envs/mapex-single-audit-com1/lib/python3.6/site-packages/albumentations/__init__.py",
+      "version": "0.5.2"
+    },
+    "numpy": {
+      "origin": "/work/conda-envs/mapex-single-audit-com1/lib/python3.6/site-packages/numpy/__init__.py",
+      "version": "1.19.5"
+    },
+    "pyastar2d": {
+      "origin": "/work/conda-envs/mapex-single-audit-com1/lib/python3.6/site-packages/pyastar2d/__init__.py",
+      "version": "UNDECLARED"
+    },
+    "range_libc": {
+      "origin": "/work/conda-envs/mapex-single-audit-com1/lib/python3.6/site-packages/range_libc.cpython-36m-x86_64-linux-gnu.so",
+      "version": "UNDECLARED"
+    },
+    "saicinpainting": {
+      "origin": "/work/com1/mapex_single_audit/source/MapEx/lama/saicinpainting/__init__.py",
+      "version": "UNDECLARED"
+    },
+    "torch": {
+      "origin": "/work/conda-envs/mapex-single-audit-com1/lib/python3.6/site-packages/torch/__init__.py",
+      "version": "1.10.2"
+    }
+  },
+  "python": "3.6.13",
+  "resources_at_start": {
+    "mem_available_bytes": 5923999744,
+    "rss_bytes": 399368192,
+    "rss_peak_bytes": 403685376,
+    "work_free_bytes": 112147603456
+  },
+  "review_commit": "0d4b43bde06ad5582d43f6827e53bad2e73cfd8d",
+  "source": "/work/com1/mapex_single_audit/source/MapEx",
+  "source_files": {
+    "configs/base.yaml": "e8d3d5cff43a5144c5ac1e19cea352eab450d59413310a320ecd6db073a379ea",
+    "lama/saicinpainting/training/data/datasets.py": "6fb6a1c13093be0d877a967229268b9c7be8bfc695bdcd6ee9d861049d8f0dc1",
+    "scripts/explore.py": "2dc4c572141fbe56c335953a126d001d5637fd06a38c2adc66c41bc1028f7fbc",
+    "scripts/lama_pred_utils.py": "0e93d4b6628b327d7b4601efeb391c29669c46154282aed259396e558ceb01e2",
+    "scripts/sim_utils.py": "2737844d243754b18ff3dba50356ec38323e1acc8da654459c9911b378488cd3",
+    "scripts/simple_mask_utils.py": "eb7df53cb9daed91c2f910f9b9b66e04fb531b5a2d12a3df2093f788f09bdd63"
+  },
+  "source_pin": "53636bd1c79153acc3c74a532837d78c926bae5e"
+}

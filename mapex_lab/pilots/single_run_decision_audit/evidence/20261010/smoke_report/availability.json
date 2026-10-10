@@ -1,0 +1,42 @@
+[
+  {
+    "output": "native epoch/predictions/all candidates",
+    "path": "native_decisions.csv + all_candidates_native.csv + objects/",
+    "status": "AVAILABLE"
+  },
+  {
+    "output": "dispatch/control/actual sensor",
+    "path": "native_dispatch.csv + native_steps.csv + raw_scans.csv",
+    "status": "AVAILABLE"
+  },
+  {
+    "output": "dense immutable states",
+    "path": "snapshots.csv + snapshots/ + objects/",
+    "status": "AVAILABLE"
+  },
+  {
+    "output": "Layer0 + prediction/uncertainty/visibility/IG/ranking",
+    "path": "shadow/*/shadow.json",
+    "status": "AVAILABLE"
+  },
+  {
+    "output": "primary sensor oracle / P2 structural sensitivity",
+    "path": "shadow/*/shadow.json:paired,candidates",
+    "status": "AVAILABLE"
+  },
+  {
+    "output": "realized gain / prefix-tail / replay",
+    "path": "audit/executed_gain.csv + coverage_steps.csv + audit_summary.json",
+    "status": "AVAILABLE"
+  },
+  {
+    "output": "optional corner opportunities",
+    "path": "NOT_COMPUTED_EXPLORATORY",
+    "status": "AVAILABLE"
+  },
+  {
+    "output": "alternate action realized gain",
+    "path": "OUT_OF_SCOPE_REQUIRES_BRANCH_AUTHORITY",
+    "status": "GAP_OR_OUT_OF_SCOPE"
+  }
+]

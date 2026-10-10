@@ -1,0 +1,22 @@
+{
+  "acquisition_wall_guard_s": 43200,
+  "block_reason": "Even five mandatory float32 maps per maximum distinct state exceed the 64GiB contract; no hidden thinning/crop/quantization/omission.",
+  "candidate_pool_measured": 13,
+  "five_mandatory_maps_only_projection_bytes": 279756192822,
+  "limitation": "Initial-state compression is a measured projection basis, not a proven worst-case bound.",
+  "maximum_dense_states": 6001,
+  "maximum_unique_prediction_inputs": 10001,
+  "measured_complete_shadow_unit_bytes": 47268944,
+  "measured_prediction_bytes": 44738814,
+  "memory_model_probe_rss_peak_bytes": 3357257728,
+  "native_model_compute_upper_s": 437730.1960400109,
+  "native_shadow_input_overlap_dedup_accounted": true,
+  "output_quota_bytes": 68719476736,
+  "phase_timeout_seal_s": 300,
+  "projected_prediction_bytes": 447432878814,
+  "projection_kind": "CAP_TIMES_MEASURED_COMPRESSED_BYTES_NOT_ACTUAL_SCIENTIFIC_USAGE",
+  "required_artifact_omissions": false,
+  "scientific_execution_allowed": false,
+  "shadow_model_compute_upper_s": 262681.89064361056,
+  "status": "FAIL_STORAGE_PROJECTION"
+}
