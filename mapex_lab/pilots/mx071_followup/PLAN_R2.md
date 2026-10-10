@@ -1,6 +1,8 @@
 # MX071 follow-up R2 — seven-question causal execution method
 
-Date: 2026-10-10. Status: **DESIGN CANDIDATE FOR FULL IR1 REVIEW; NO EXECUTION AUTHORITY**.
+Date: 2026-10-10. Status: **BOUNDED R2 CORRECTION PENDING IR1 FOCUSED CLOSURE; NO EXECUTION AUTHORITY**.
+
+Bounded R2 correction after IR1 full-method **REVISE** at36027f2f27eb0639126ac7ea244dea9d9b5c7466, durable review0038e276abc8fe89a7b76c5eb58ff95a88e860f2. Only MX071-R2-1 (#3 pre-treatment native-renderer/scorer exposure matching) and MX071-R2-2 (#8 claim correction) are changed. All passed acquisition/replay/continuation/budget/request/threshold/resource architecture remains. Current review gate is **focused closure/regression pending**, not self-issued ACCEPT. See REVIEW_RESPONSE_R2.md and evidence/r2_focused_revision_verification.json; the original r2_design_verification.json remains historical at the reviewed predecessor.
 
 ## 0. Authority, lineage and reading order
 
@@ -14,7 +16,9 @@ Binding requirements:
 
 R1 and all R0/readiness/old MX071 files remain byte-identical. R2 extends their accepted definitions; it does not retrospectively declare R1 executable. The older accepted MX071 R2 and its 75/80 request counts are a different experiment. The original completed evidence is PIPE_ALIGNED, not native MapEx.
 
-Read this file, QUESTION_CONTRACTS_R2.md, RESOURCE_AND_PREFLIGHT_R2.md, METHOD_CONTRACT_R2.json, then USER_CAN_ANSWER_R2.md. The JSON is a method specification, not a runnable collection entry point. The requested review is **full affected-scope executable-method QA**, not four-finding R1 closure.
+Read this file, QUESTION_CONTRACTS_R2.md, RESOURCE_AND_PREFLIGHT_R2.md, METHOD_CONTRACT_R2.json, then USER_CAN_ANSWER_R2.md. The JSON is a method specification, not a runnable collection entry point. Original R2 requested **full affected-scope executable-method QA**, not four-finding R1 closure.
+
+The full R2 review has now passed the large architecture and requires only the two corrections above; resubmission is to the same IR1 successor04 for their focused closure and affected regression. The prior R1 ACCEPT and R2 REVISE are preserved in history.
 
 ## 1. Scientific objective and frozen scope
 
@@ -200,7 +204,7 @@ Numeric precision: prediction epsilon=1e-6; diagnostic score epsilon=1e-6*max(1,
 | --- | --- |
 | SUPPORTED_MECHANISM | At least one valid nominated mechanism difference above its precision tolerance; report finite frequency and support, no task-benefit implication |
 | SUPPORTED_ACTION_MISMATCH | At least one valid change of the tested executable first-decision/commitment contract, with unchanged action/cost cases retained; goal/rank alone insufficient |
-| SUPPORTED_CAUSAL_TASK_HARM | Valid single-factor/control-specific contrast; four map means present; >=6 complete non-equivalent map/start contrasts across >=3 maps; macro deltaQ>=0.01, >=3 positive map means; no behavioral-failure increase; no map mean final-coverage loss >0.005. #3 adds its specificity contrasts. This is same-distance task harm/headroom at nominated states |
+| SUPPORTED_CAUSAL_TASK_HARM | Valid single-factor/control-specific contrast; four map means present; >=6 complete non-equivalent map/start contrasts across >=3 maps; macro deltaQ>=0.01, >=3 positive map means; no behavioral-failure increase; no map mean final-coverage loss >0.005. #3 additionally requires dose-and-native-exposure-matched neutral controls and specificity contrasts. This is same-distance task harm/headroom for the isolated factor; #8 does not isolate a source horizon/value mechanism and uses the separate tested-action labels below |
 | SUPPORTED_ONLINE_RECOVERY | Previous criterion plus no oracle/future information in detector/chooser; measured selector cost; valid virtual-time support in >=6 runs across >=3 maps; macro paired T_eff reduction>=5%, or >=5% matched-target arc saving with T_eff nonworsening; safety conditions remain. One-off feasibility is not a repeated-policy/prospective win |
 | NOT_SUPPORTED | >=6 eligible complete run contrasts and all four maps; the preregistered material-utility gate fails with no unresolved technical missingness that could change it. Means not promoted on this cohort, **not population proof of no effect** |
 | NO_EXECUTABLE_EFFECT_ON_TESTED_SUPPORT | Exact full behavioral equality on every eligible nominated contract, including zeros and cost; conditional source-support statement only |
@@ -208,6 +212,8 @@ Numeric precision: prediction epsilon=1e-6; diagnostic score epsilon=1e-6*max(1,
 | MECHANISM_PRESENT_BUT_NON_ACTIONABLE | Mechanism supported, but correction depends on GT/future utility or no feasible online detector; may coexist with measured oracle headroom |
 
 Supported mechanism/action and NOT_SUPPORTED utility can coexist. A harmful correction is reported as WORSENS_TESTED_TASK with its negative effects, never retuned into a winner. A required unsupported threshold or unsealed field makes METHOD_NOT_READY; do not tune thresholds after Stage A/B outcomes.
+
+Question8 inherits replay/validity/support/materiality/tie/censoring thresholds but its strongest conclusions are **NATIVE_ACTION_HAS_TESTED_LONG_HORIZON_REGRET** and **TESTED_HORIZON_DISAGREEMENT_INVOLVING_NATIVE_ACTION**. NATIVE_IS_UNIQUE_G10_WINNER is descriptive only. Realized G10 is not MapEx's source objective; an aligned action is not evidence that short-horizon source optimization caused loss. Do not output a native short-horizon SUPPORTED_MECHANISM / SUPPORTED_CAUSAL_TASK_HARM or an online recovery verdict from these four hindsight-evaluated choices. Mechanism-specific scorer intervention and prospective online selection remain separately reviewed future work, not current R2 branches.
 
 These gates do not guarantee absence of a rare weakness. Strong thesis promotion also needs a separately reviewed literature comparison and prospective validation on verified independent data.
 
@@ -225,7 +231,7 @@ Full-scope and staged-core options are costed separately. The current USER reque
 
 ## 10. Current implementation and review status
 
-R2 is a concrete design candidate. No new real-model probe, fixture, source trajectory, alternative simulation or scientific branch has run during drafting. Current DELL metadata exposes inadequate free disk for either proposed execution option; resource feasibility is **uncertified**, not a PASS.
+R2 is a concrete design candidate with two bounded corrections submitted after the independent full-method REVISE. No new real-model probe, fixture, source trajectory, alternative simulation or scientific branch has run during drafting or correction. Current DELL metadata exposes inadequate free disk for either proposed execution option; resource feasibility is **uncertified**, not a PASS.
 
-Return exact PR #42 head + document/blob hashes to IR1 successor04 for independent full-scope review. Preserve R1 ACCEPT; no self-issued ACCEPT, READY, START, merge or execution decision. The accepted R1 semantics, old MX071 data and separate MX072 chain remain intact.
+Return exact PR #42 head + document/blob hashes to IR1 successor04 for **focused MX071-R2-1 / MX071-R2-2 closure and affected regression**. Preserve R1 ACCEPT and original R2 review; no self-issued ACCEPT, READY, START, merge or execution decision. The accepted R1 semantics, old MX071 data and separate MX072 chain remain intact.
 
