@@ -1,6 +1,15 @@
 # mapex_lab status
 
-## 2026-10-10 — MapEx follow-up and separate PIPE verification
+## 2026-10-10 — Bounded R1 corrections after IR1 R0 REVISE
+
+- DONE: corrected the four R0 findings in `pilots/mx071_followup/PLAN_R1.md`, `PIPE_AUDIT_R1.md` and `REVIEW_RESPONSE_R1.md`: policy-relevant ensemble state for #2, distinct active-lock post-scan nominees for #2/#5, last-complete-observation 100m/Q convention, separate effective native PIPE step limit and distance-prefix adaptation. R0 documents/raw evidence/Python are unchanged.
+- LATEST RESULT: document/source verification only; R0 independent verdict is REVISE and bounded R1 awaits independent closure. Original stand-in evidence is not a test of the proposed recorder/boundary changes. No fresh inference/fixture or new scientific sources/branches.
+- IN PROGRESS: per-question interventions/controls and complete native MapEx execution contracts remain unsealed. #7 stays dropped; MX072/COM1 remains separate.
+- NEXT ACTION: exact bounded R1 to IR1 for R0-1..4 focused closure/regression; then the indicated Methodologist/Engineer/PM work for replay, failure/reuse, branch ceiling and resource/storage/time gates before any collection.
+- Existing completed MX071 PIPE_ALIGNED sources 8/8 and logical requests 75/75 remain unchanged; its accepted R2 method does not transfer to the follow-up.
+
+
+## 2026-10-10 — R0 preparation (historical; bounded R1 above is current)
 
 - DONE: USER selected all seven remaining open journal questions (#1–#6, #8); #7 remains dropped. Scope matrix and PIPE source/paper audit are in `pilots/mx071_followup/`. Used MapEx source bytes and four model identities match their pins on DELL. Two four-step direct-source fixture repeats are identical in pose/map/pool/score/goal.
 - IN PROGRESS: full MapEx intervention/continuation design for seven questions; dedicated native replay and resource contracts. MX072 on COM1 is not modified or adopted.

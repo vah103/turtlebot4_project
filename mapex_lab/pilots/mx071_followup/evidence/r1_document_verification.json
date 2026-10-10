@@ -1,0 +1,111 @@
+{
+  "checks": {
+    "all_local_markdown_links_resolve": true,
+    "explicit_primary_and_crossing_Q_boundary": true,
+    "git_diff_check": true,
+    "original_R0_documents_unchanged": true,
+    "original_python_unchanged": true,
+    "original_readiness_and_completed_evidence_unchanged": true,
+    "question2_ensemble_and_fixed_weight_scope": true,
+    "separate_PIPE_budget_domains_and_effective_limit": true,
+    "separate_score_and_active_lock_observation_strata": true
+  },
+  "fixture_rerun": false,
+  "local_links": [
+    {
+      "source": "mapex_lab/pilots/mx071_followup/README.md",
+      "target": "PLAN_R1.md"
+    },
+    {
+      "source": "mapex_lab/pilots/mx071_followup/README.md",
+      "target": "PIPE_AUDIT_R1.md"
+    },
+    {
+      "source": "mapex_lab/pilots/mx071_followup/README.md",
+      "target": "REVIEW_RESPONSE_R1.md"
+    },
+    {
+      "source": "mapex_lab/pilots/mx071_followup/README.md",
+      "target": "PLAN_R0.md"
+    },
+    {
+      "source": "mapex_lab/pilots/mx071_followup/README.md",
+      "target": "PIPE_AUDIT_R0.md"
+    },
+    {
+      "source": "mapex_lab/pilots/mx071_followup/README.md",
+      "target": "evidence/native_source_readiness.json"
+    },
+    {
+      "source": "mapex_lab/pilots/mx071_followup/REVIEW_RESPONSE_R1.md",
+      "target": "PLAN_R1.md"
+    },
+    {
+      "source": "mapex_lab/pilots/mx071_followup/REVIEW_RESPONSE_R1.md",
+      "target": "PIPE_AUDIT_R1.md"
+    }
+  ],
+  "predecessor_head": "a3e08eef57d4871c56370e67b0c96a6a42995100",
+  "protected_files": [
+    {
+      "path": "mapex_lab/pilots/mx071_followup/PIPE_AUDIT_R0.md",
+      "sha256": "2320f3dfb34ec404c2ad93148a32a572967effaade9f8719cd3f751aa8fe7f71"
+    },
+    {
+      "path": "mapex_lab/pilots/mx071_followup/PLAN_R0.md",
+      "sha256": "a054888e956d5b77b049aafa4c2d9a88de445b2ddd7715a789ee22b7870e7087"
+    },
+    {
+      "path": "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/artifact_index.json",
+      "sha256": "2ab69fe9740746ca195f75a8674e68193c60971fb199d0925ca0c2e0321660b6"
+    },
+    {
+      "path": "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/branch_outcomes.jsonl",
+      "sha256": "62dcded7248224de8fb6a1210b29f874358bc2bf0d0bbb2c5cf214a91defc715"
+    },
+    {
+      "path": "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/h7_tested_action_summary.json",
+      "sha256": "2dd4ce6c91a52f6db2041df126f7c2a5c461ede4087a6454d4ad7c3f9eead56e"
+    },
+    {
+      "path": "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/h8_interpretation_qualification.json",
+      "sha256": "bdf6582f3bc2dbc93fbdc2d9cc14c99e28c4efefaaf2e27482dfe46aeb1b592c"
+    },
+    {
+      "path": "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/map_start_summary.csv",
+      "sha256": "973d92f8054174997d33e72a332e6b7acacfeccccea284539d340bf68c238a5c"
+    },
+    {
+      "path": "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/screening_summary.json",
+      "sha256": "65df91141fb803bdaaa1f2147476e337c685824ded0c711d8f571693b1389c32"
+    },
+    {
+      "path": "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/snapshots.jsonl",
+      "sha256": "b6916165e5c7390b25f69bcb6dc5c0f28d29339183f268e8ab6bafb585ecfd56"
+    },
+    {
+      "path": "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/source_outcomes.jsonl",
+      "sha256": "681d65936bc2d43d4ca43297413d89cc6b2a92c449889acd93adabf7ddb313de"
+    },
+    {
+      "path": "mapex_lab/pilots/mx071_followup/evidence/native_source_readiness.json",
+      "sha256": "ec2495dc0cd94fefda8d0a99b405883b29525e8f0e84b574c8adaf5167c32a10"
+    },
+    {
+      "path": "mapex_lab/pilots/mx071_followup/readiness_audit.py",
+      "sha256": "229ca0e0849663a0b1259d0e8fb1dc87deec10a3e3ca3beb1eefd59b85a89729"
+    },
+    {
+      "path": "mapex_lab/pilots/mx071_followup/reference_fixture.py",
+      "sha256": "a6b2dd62b5a2d24777821c1d6a0c69e7bb9b3ca94e397e70a329dc7d9b8a2069"
+    }
+  ],
+  "real_inference_run": false,
+  "return_commit": "46758a76ae0c827afec5a962ddf116aea0cbb629",
+  "review_commit": "63cd2ce00166284ad298d6b9fafd4b33c058a3c3",
+  "scientific_branches_started": 0,
+  "scientific_ready": false,
+  "scientific_sources_started": 0,
+  "scope": "R1 documents and byte preservation only; no implementation/runtime certificate",
+  "status": "DOCUMENT_SOURCE_SCOPE_CHECKS_PASS"
+}
