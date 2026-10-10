@@ -344,3 +344,16 @@ IR1 review 63cd2ce00166284ad298d6b9fafd4b33c058a3c3 / return 46758a76ae0c827afec
 Current PLAN_R1.md and PIPE_AUDIT_R1.md fix those proposal semantics, including native-versus-shadow labels, two nomination strata, actual last post-scan pose/map at budget and common endpoint-held Q, and separate configured/effective PIPE limits. Exact PIPE explore.py uses category/log_iou-derived time_step as its loop bound; mission_time alone is not the effective-limit certificate. REVIEW_RESPONSE_R1.md maps the finite closure request and preserves PASS dimensions.
 
 This is a document correction, not an executable seven-question seal. R0 files, Python and both original readiness/completed-science evidence are retained unchanged; no fixture/model rerun, new source/branch, COM1 change or teacher-facing scientific result. Request IR1 focused R0-1..4 closure/regression; full interventions/replay/ceiling/resource/storage/time gates remain open.
+
+
+## 2026-10-10 — USER direct R2 drafting; full seven-question causal package
+
+IR1 independently ACCEPTED bounded R1 semantics at5f9a60339ebd4e96ffcf115e8f9ad520ab66f405, review5477923365. USER then published all-seven causal requirements and directly instructed this maker session to complete design and send it back to IR. This authoring authorization overrides waiting for PM pickup for the bounded draft only; no role self-bind, runtime, staff transfer or merge.
+
+R2 defines one shared native acquisition, complete-state replay/common continuation, paired actual action contracts for1–6/8, costed outcomes and positive/negative/insufficient-support gates. #5 includes KEEP/FRESH_ONCE/computation sham; #6 separates within-cluster views, expanded pool and cheap geometry. #8 separates unique G10 reversal, tied-prefix ambiguity and whether native actually chose the short winner. Topology/visibility/future-best oracles remain non-online.
+
+New request ceiling176 scientific+16 KEEP=192 before dedup, eight sources additional. Fresh-model/resource preflight and full P19 native suffix replay remain unperformed. A lossless CAS/verified decoder is specified; no quantization/crop/snapshot thinning/candidate or failed-run omission. Full48GiB/staged32GiB storage options are proposed, not selected. Read-only DELL facts: i3-7100U/8GB class, about6.6GiB free; current disk gates fail and time/RSS feasibility is uncertified. Scenario bounds are not measured ETA.
+
+Read pinned git objects, not a model/simulator import. Newly explicit source facts: configs/base.yaml has mission_time1000 and distance_transform=True; helper ignores requested unknownAsOcc and passesFalse. get_free_points resets accum_hit_prob at each cell, so retain source per-cell0.8 behavior rather than replacing it with a paper-derived accumulation rule. Capture G auxiliary before later batch-dict mutation and preserve its actual RGB/BGR extraction. These are fidelity facts, not demonstrated weaknesses or new PIPE hypotheses.
+
+PLAN_R1/PIPE_AUDIT_R1/R0/Python/readiness/old completed evidence are preserved. Only design documents/JSON and status/reference metadata change. No new source, branch, fixture, inference, teacher-facing result, MX072/COM1 change, independent ACCEPT, READY or START.
