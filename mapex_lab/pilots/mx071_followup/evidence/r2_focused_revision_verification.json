@@ -1,0 +1,425 @@
+{
+  "schema": "MX071_R2_BOUNDED_FOCUSED_REVISION_STATIC_VERIFICATION_V1",
+  "generated_at_utc": "2026-10-10T13:29:17.433507+00:00",
+  "parent_reviewed_head": "36027f2f27eb0639126ac7ea244dea9d9b5c7466",
+  "ir1_review_commit": "0038e276abc8fe89a7b76c5eb58ff95a88e860f2",
+  "findings": [
+    "MX071-R2-1",
+    "MX071-R2-2"
+  ],
+  "status": "PASS_STATIC_ONLY_PENDING_INDEPENDENT_CLOSURE",
+  "independent_method_acceptance_or_finding_closure": false,
+  "runtime_or_renderer_exposure_matching_certified": false,
+  "new_model_calls_executed": 0,
+  "new_source_or_scientific_requests_executed": 0,
+  "new_recorder_fixture_or_simulation_executed": 0,
+  "checks": [
+    {
+      "id": "EXACT_TWO_FINDING_SCOPE",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "parent_reviewed_head": "36027f2f27eb0639126ac7ea244dea9d9b5c7466",
+        "ir1_review_commit": "0038e276abc8fe89a7b76c5eb58ff95a88e860f2",
+        "findings": [
+          "MX071-R2-1",
+          "MX071-R2-2"
+        ],
+        "scope": "QUESTION3_EXPOSURE_MATCH_AND_QUESTION8_CLAIM_CORRECTION_ONLY",
+        "independent_closure": false,
+        "new_scientific_requests": 0,
+        "new_model_groups": 0,
+        "response": "REVIEW_RESPONSE_R2.md"
+      }
+    },
+    {
+      "id": "PRESERVED_AUTHORITY",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "semantic_equality": true
+      }
+    },
+    {
+      "id": "PRESERVED_REQUIREMENTS",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "semantic_equality": true
+      }
+    },
+    {
+      "id": "PRESERVED_LINEAGE",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "semantic_equality": true
+      }
+    },
+    {
+      "id": "PRESERVED_SOURCES",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "semantic_equality": true
+      }
+    },
+    {
+      "id": "PRESERVED_NATIVE_CONFIG",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "semantic_equality": true
+      }
+    },
+    {
+      "id": "PRESERVED_MODELS",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "semantic_equality": true
+      }
+    },
+    {
+      "id": "PRESERVED_COHORT",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "semantic_equality": true
+      }
+    },
+    {
+      "id": "PRESERVED_NOMINATION",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "semantic_equality": true
+      }
+    },
+    {
+      "id": "PRESERVED_BUDGET",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "semantic_equality": true
+      }
+    },
+    {
+      "id": "PRESERVED_METRICS",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "semantic_equality": true
+      }
+    },
+    {
+      "id": "PRESERVED_THRESHOLDS",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "semantic_equality": true
+      }
+    },
+    {
+      "id": "PRESERVED_OPTIONS",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "semantic_equality": true
+      }
+    },
+    {
+      "id": "PRESERVED_TOPOLOGY_CONTROL_RNG",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "semantic_equality": true
+      }
+    },
+    {
+      "id": "PRESERVED_STAGES",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "semantic_equality": true
+      }
+    },
+    {
+      "id": "PRESERVED_QUESTION_1",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "id": 1,
+        "arms": [
+          "NATIVE",
+          "MEMBER_VIS_MEAN"
+        ],
+        "request_ceiling": 16
+      }
+    },
+    {
+      "id": "PRESERVED_QUESTION_2",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "id": 2,
+        "arms": [
+          "PRE_UPDATE_DECISION",
+          "POST_UPDATE_DECISION"
+        ],
+        "request_ceiling": 16
+      }
+    },
+    {
+      "id": "PRESERVED_QUESTION_3",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "id": 3,
+        "arms": [
+          "NATIVE",
+          "TOPO_REPAIR",
+          "NONTOPO_REPAIR",
+          "RANDOM_NEUTRAL_REPAIR",
+          "ROUTE_DENOMINATOR"
+        ],
+        "request_ceiling": 40
+      }
+    },
+    {
+      "id": "PRESERVED_QUESTION_4",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "id": 4,
+        "arms": [
+          "NATIVE",
+          "UNKNOWN_GT_VIS"
+        ],
+        "request_ceiling": 16
+      }
+    },
+    {
+      "id": "PRESERVED_QUESTION_5",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "id": 5,
+        "arms": [
+          "KEEP",
+          "FRESH_ONCE",
+          "FRESH_SHAM_KEEP"
+        ],
+        "request_ceiling": 24
+      }
+    },
+    {
+      "id": "PRESERVED_QUESTION_6",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "id": 6,
+        "arms": [
+          "NATIVE",
+          "IN_CLUSTER_BEST",
+          "EXPANDED_POOL_BEST",
+          "CHEAP_IN_CLUSTER"
+        ],
+        "request_ceiling": 32
+      }
+    },
+    {
+      "id": "PRESERVED_QUESTION_8",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "id": 8,
+        "arms": [
+          "A0_NATIVE",
+          "A1_NEAREST",
+          "A2_MAX_MASS",
+          "A3_FARTHEST"
+        ],
+        "request_ceiling": 32
+      }
+    },
+    {
+      "id": "PRESERVED_ORIGINAL_RESOURCE_LIMITS",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "additional_exposure_work_inside_existing_bounds": true
+      }
+    },
+    {
+      "id": "REQUESTS_AND_TRACES_UNCHANGED",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "scientific": 176,
+        "KEEP": 16,
+        "replay": 192,
+        "sources": 8
+      }
+    },
+    {
+      "id": "PRE_TREATMENT_EXACT_NATIVE_EXPOSURE",
+      "status": "PASS_STATIC_ONLY",
+      "details": [
+        "FREE_POINTS_MULTIPLICITY",
+        "ACTUAL_HIT_POINTS_FIRST_BLOCKER_MULTIPLICITY",
+        "HIT_POINTS_POLYGON_ENDPOINT_MULTIPLICITY",
+        "NATIVE_VISIBLE_UNKNOWN_BIT",
+        "NATIVE_ORIGIN_MEMBERSHIP_BIT"
+      ]
+    },
+    {
+      "id": "NO_CONTROL_RESCUE_AND_HONEST_NA",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "no_match": "CONTROL_SUPPORT_NA_TOPOLOGY_SPECIFICITY_INCONCLUSIVE"
+      }
+    },
+    {
+      "id": "SCORER_WEIGHT_OPPORTUNITY_DECLARED",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "diagnostic_only": true,
+        "original_matching_keys_preserved": true
+      }
+    },
+    {
+      "id": "HORIZON_CLAIM_DEMOTED_WITHOUT_BRANCHES",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "alignment": "DESCRIPTIVE_ONLY_NOT_SCORER_MECHANISM_ATTRIBUTION"
+      }
+    },
+    {
+      "id": "EXPOSURE_PAYLOAD_AND_DIAGNOSTIC_QUOTA",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "vector_bytes": 57802752,
+        "record_cap_mib_per_state": 64,
+        "total_gib_inside_original_4gib_bucket": 2
+      }
+    },
+    {
+      "id": "EXPOSURE_RENDER_CALL_CEILING",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "extra_diagnostic_render_calls": 8192,
+        "extra_model_groups": 0
+      }
+    },
+    {
+      "id": "NO_PRIOR_OVERCLAIM_REMAINS",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "descriptive_alignment_not_mechanism_causality": true
+      }
+    },
+    {
+      "id": "CROSS_DOCUMENT_HORIZON_LABELS",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "specific_labels_not_source_mechanism_claim": true
+      }
+    },
+    {
+      "id": "PREFLIGHT_SCOPE_PRESERVED_AND_EXTENDED",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "P08_P13_P15_updated": true,
+        "executed": false
+      }
+    },
+    {
+      "id": "SOURCE_RETURNED_TRACE_ARRAYS_READ_ONLY",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "AST_only_no_source_import_or_execution": true
+      }
+    },
+    {
+      "id": "HISTORICAL_R2_VERIFICATION_UNCHANGED_LOCALLY",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "git_blob": "cb040bb1bb2633eb2e05e32d841dc2f19d9c01a0"
+      }
+    },
+    {
+      "id": "NO_PROTECTED_FILE_OR_CODE_IN_UPLOAD_SCOPE",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "protected_blob_baseline_count": 20,
+        "runner_changes": 0
+      }
+    },
+    {
+      "id": "TEN_METHOD_METADATA_RESPONSE_UPLOADS",
+      "status": "PASS_STATIC_ONLY",
+      "details": {
+        "plus_this_verification_file": 11
+      }
+    },
+    {
+      "id": "BALANCED_FENCES_EXPERIMENT_PROTOCOL.md",
+      "status": "PASS_STATIC_ONLY",
+      "details": {}
+    },
+    {
+      "id": "BALANCED_FENCES_STATUS.md",
+      "status": "PASS_STATIC_ONLY",
+      "details": {}
+    },
+    {
+      "id": "BALANCED_FENCES_experiment_notes.md",
+      "status": "PASS_STATIC_ONLY",
+      "details": {}
+    },
+    {
+      "id": "BALANCED_FENCES_REVIEW_RESPONSE_R2.md",
+      "status": "PASS_STATIC_ONLY",
+      "details": {}
+    },
+    {
+      "id": "BALANCED_FENCES_RESOURCE_AND_PREFLIGHT_R2.md",
+      "status": "PASS_STATIC_ONLY",
+      "details": {}
+    },
+    {
+      "id": "BALANCED_FENCES_QUESTION_CONTRACTS_R2.md",
+      "status": "PASS_STATIC_ONLY",
+      "details": {}
+    },
+    {
+      "id": "BALANCED_FENCES_README.md",
+      "status": "PASS_STATIC_ONLY",
+      "details": {}
+    },
+    {
+      "id": "BALANCED_FENCES_USER_CAN_ANSWER_R2.md",
+      "status": "PASS_STATIC_ONLY",
+      "details": {}
+    },
+    {
+      "id": "BALANCED_FENCES_PLAN_R2.md",
+      "status": "PASS_STATIC_ONLY",
+      "details": {}
+    }
+  ],
+  "proposed_artifact_sha256": {
+    "mapex_lab/EXPERIMENT_PROTOCOL.md": "152d5c35b0b58ae14911b793885a8d3d782036de44354cae602f9148f5ed703b",
+    "mapex_lab/STATUS.md": "41f25df0086ba6a1b62b746a4dcd6a314a6cea9a4d3f518f6e5579a313e73376",
+    "mapex_lab/docs/experiment_notes.md": "5150cc84ee4e292cab8c30b3bd82e4bbf0023b9469faa0064a7e57545d55bcb0",
+    "mapex_lab/pilots/mx071_followup/REVIEW_RESPONSE_R2.md": "e93879910304a8c4aa3b6cf07501c8843ce001eb54281b8ed2976504243ef776",
+    "mapex_lab/pilots/mx071_followup/RESOURCE_AND_PREFLIGHT_R2.md": "918684961866cc8684912ddfb21c14f0b95321e8c996e6dd2b440916e0b046de",
+    "mapex_lab/pilots/mx071_followup/QUESTION_CONTRACTS_R2.md": "0b64117b4951ec3421e99ca1d44590b0464343b0a2654b3d04f014fad0b64105",
+    "mapex_lab/pilots/mx071_followup/METHOD_CONTRACT_R2.json": "9e4a3e2988b50c28b1af74b6b78ff601686b85e29ea99f567077e889d436e930",
+    "mapex_lab/pilots/mx071_followup/README.md": "aeb6e16aa844158a57e5aeea7a44faa2b89a8a3f60dcd832a8a47ba3c481c741",
+    "mapex_lab/pilots/mx071_followup/USER_CAN_ANSWER_R2.md": "cb1cb31068061285bc79f6fe31627698539372bcbc4c9e4021b192f75b32b956",
+    "mapex_lab/pilots/mx071_followup/PLAN_R2.md": "0c2127747723e0ffa093055ca83e678203fdb39177dc4c82c3d3666c1041f859"
+  },
+  "protected_existing_blobs_to_verify_after_publication": {
+    "mapex_lab/pilots/mx071_followup/.gitattributes": "31a84203a83db5e5179746147bdeea6c8a79b3a3",
+    "mapex_lab/pilots/mx071_followup/.gitignore": "7a60b85e148f80966a550e5ab6a762a907c69ca6",
+    "mapex_lab/pilots/mx071_followup/PIPE_AUDIT_R0.md": "63b2f9bd8fc1eb9d1d9afb3a3af5658584eefa8e",
+    "mapex_lab/pilots/mx071_followup/PIPE_AUDIT_R1.md": "aeaa6210547809c350bfefdf3197df67a6d4ddac",
+    "mapex_lab/pilots/mx071_followup/PLAN_R0.md": "f6c606b6df85adb0cd12439ad699564f3e33a61e",
+    "mapex_lab/pilots/mx071_followup/PLAN_R1.md": "e3effb0a3d36e57bf73328f39f45a1161ac93db2",
+    "mapex_lab/pilots/mx071_followup/REVIEW_RESPONSE_R1.md": "248827641ca4be67497f4fce4b03cf94dd77aceb",
+    "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/artifact_index.json": "75a30a97fedc1c293b44a1f92c170ae9beb33086",
+    "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/branch_outcomes.jsonl": "a27a202486f74d86f15c769d1aa7d84655237f51",
+    "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/h7_tested_action_summary.json": "0160a9e2dfde0b61484d5c6550cdc79c27f0ffdc",
+    "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/h8_interpretation_qualification.json": "ab59c9c7c9adf137aa48ba1196f68a2792f89b07",
+    "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/map_start_summary.csv": "b19e4ed8f3a3277a45110ce03b377cf318d93567",
+    "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/screening_summary.json": "697f78561a2758abf6d648863352e7b775b0991e",
+    "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/snapshots.jsonl": "9e520c767215a2cc08e4748a6102bb513213430c",
+    "mapex_lab/pilots/mx071_followup/evidence/mx071_completed/source_outcomes.jsonl": "cdbbb24d654d8bb3563fb8e3855cbbc92b914f2d",
+    "mapex_lab/pilots/mx071_followup/evidence/native_source_readiness.json": "e189a0c198f89af690da38f0bde594dc62ef6dde",
+    "mapex_lab/pilots/mx071_followup/evidence/r1_document_verification.json": "90102ececb1caf9f5b24d8999456970ecf7d3e6b",
+    "mapex_lab/pilots/mx071_followup/readiness_audit.py": "60895378a3e1eb6f653f3747601f999163224683",
+    "mapex_lab/pilots/mx071_followup/reference_fixture.py": "d40f7dd7a4a4625ef11ac4d538dda1f122ca3dbe",
+    "mapex_lab/pilots/mx071_followup/evidence/r2_design_verification.json": "cb040bb1bb2633eb2e05e32d841dc2f19d9c01a0"
+  },
+  "source_pins_resource_support_and_request_semantics": "UNCHANGED_EXCEPT_DECLARED_PRE_TREATMENT_EXPOSURE_ADDITION_AND_HORIZON_CLAIM_RESTRICTION",
+  "limitations": "Integer/vector/format/count and document checks only; no recorder, native renderer, neutral-control construction, model, full-state replay, RSS, wall or real science test. Proposed constraints may yield CONTROL_SUPPORT_NA/technical censoring; no outcome-driven rescue permitted.",
+  "post_publication_gate": "Read back all11 changed candidate files at the final head, compare original R1/R0/PIPE/readiness/code/evidence20 protected blobs, then request sole IR1 focused closure."
+}
