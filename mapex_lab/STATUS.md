@@ -1,5 +1,13 @@
 # mapex_lab status
 
+## Work Agent 2 — G1 đã ACK, inventory A đang làm (2026-10-14)
+
+- **DONE:** USER chỉ định phiên Work2 mới; đã đọc handoff/G1 R1/RAE V1/G0/ALL22/lab/journal và [ACK thực tế PR #53](https://github.com/vah103/chat-gpt/pull/53#issuecomment-6150835589). ALL22 đã hoàn tất và frozen; không làm lại.
+- **LATEST RESULT:** [checkpoint A1 `58d974b3`](https://github.com/vah103/chat-gpt/blob/58d974b3bf32e20f3dcb847b20d6b28df7422906/company/projects/mapex/rae_g1_work_agent2_20261013/README.md):22/22observed map/pose/goal/first native plan/binary prediction khớp nguồn; exact source53636bd, event order/padding kiểm. Có1195observed-map container,23cacheheaders(22scored+1unscored); chỉ23/1195post-scan temporal events kiểm,1172 còn chờ. Mean/var contents và sensor/wall-age chưa kiểm.
+- **IN PROGRESS:** G1-A data contract / whitelist adapter / cache validation; chưa G1-A PASS, chưa detectorB1–B4/component/shadow hoặc independent QA.
+- **NEXT ACTION:** validate source-aligned mean/variance, hoàn thiện time-t adapter và support intermediate trước B/shadow. Không backfill cache READY sau scan; không dùng manual windows/late-free/GT/future cho detector.
+- **BOUNDARY:** Python stdlib offline one process,0native/model/raycast/planner/robot/simulation/newscience; không raw/source/ALL22 sửa, cleanup/host switch/Work1 interference. MX072 giữ INCOMPLETE/mission_complete=false/frozen; Work1 Guided/R5 authority riêng.
+
 ## Work Agent 1 — runtime riêng R5 đã dựng (2026-10-14)
 
 - **DONE:** theo USER “hoàn thiện runtime riêng”, đã dựng prefix Python3.6.13 riêng trên DELL và khóa phụ thuộc; [gói exact `13c282bd`](https://github.com/vah103/chat-gpt/blob/13c282bde4aa37e0a2eb0ecf83d77f7e3517c426/company/projects/mapex/mx072_guided_fixed22_isolated_runtime_r5_20261013_work1/README.md). 2.433 file paths,297 ELF,≈990,21MiB allocated;689 dependency edges không thiếu,284 C++ symbol/version pairs có trong static table.
