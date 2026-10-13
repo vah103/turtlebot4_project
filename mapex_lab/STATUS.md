@@ -1,5 +1,15 @@
 # mapex_lab status
 
+## Guided R5R3 — USER đã cho phép ONE technical, launcher còn bị chặn (2026-10-14)
+
+- **DONE:** [IR1 successor06 ACCEPT exact R5R3 `14c3b021`](https://github.com/vah103/chat-gpt/blob/334a45b62306c384eb259a14a458a2927bfabf8a/company/reviews/IR1S06_MX072_GUIDED_R5R3_14C3B021_PRENATIVE_RUNTIME_QA_ACCEPT_20261014.md); independent stdlib 116/116, seal 27/27 PASS tại thời điểm IR1 kiểm. USER đã cho phép đúng ONE native technical trên DELL: tối đa 3 moves,0,9m,4 scans,180s,no retry. Không cần cấp lại quyền.
+- **LATEST RESULT:** Work1 kiểm trực tiếp template/dossier/listings DELL: NOT_ADMITTED, launcher inert, chưa admission/claim/output technical hoặc science. Phiên này không start_process, không native và không chạy lại tests/rehash.
+- **IN PROGRESS:** [platform block trước admission](https://github.com/vah103/chat-gpt/blob/main/company/operations/INC-20261014-MX072-R5R3-REMOTE-DESKTOP-COMMANDER-PLATFORM-BLOCK.md) và [trusted launcher release gate](https://github.com/vah103/chat-gpt/blob/main/company/operations/HO-20261014-MX072-R5R3-TRUSTED-LAUNCHER-GATE-R1-CHAT-TO-IR1-AND-SYSTEMS.md) chưa giải quyết. Chat Agent technical giữ đầu mối R5R3; Work1 không sửa song song hoặc dùng alternate route vượt denial.
+- **NEXT ACTION:** official platform authorization path và independent launcher release acceptance → fresh live admission → ONE qualifier → independent result QA. Technical consent mới chưa tiêu thụ; standing science ONE còn conditional/unspent, chưa kích hoạt.
+
+Các mục R5R1/tiếp nhận phía dưới là lịch sử; G1 Work2 và MX072 frozen INCOMPLETE giữ nguyên.
+
+
 ## Work Agent 2 — G1 đã ACK, inventory A đang làm (2026-10-14)
 
 - **DONE:** USER chỉ định phiên Work2 mới; đã đọc handoff/G1 R1/RAE V1/G0/ALL22/lab/journal và [ACK thực tế PR #53](https://github.com/vah103/chat-gpt/pull/53#issuecomment-6150835589). ALL22 đã hoàn tất và frozen; không làm lại.
