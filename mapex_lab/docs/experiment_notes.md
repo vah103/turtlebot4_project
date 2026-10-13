@@ -1,5 +1,14 @@
 # Experiment Notes
 
+## 2026-10-14 — Guided native 2D R5R1: bounded pre-execution correction
+
+- What changed: following IR1 successor06 REVISE at R5 `13c282bd`, Work1 corrected the current reviewer role and exact guard parent binding to the real private-interpreter `runtime_entry.py guard` kernel argv. [Immutable R5R1 `9da8aaa5`](https://github.com/vah103/chat-gpt/blob/9da8aaa5622de3ee61beadd9b90ea4d40ccefed6/company/projects/mapex/mx072_guided_fixed22_r5_bounded_repair_r1_20261014_work1/README.md), [return to IR1](https://github.com/vah103/chat-gpt/pull/53#issuecomment-6151640885).
+- Why: predecessor05's R4 approval cannot approve a new R5 head; runpy changes Python sys.argv but does not insert guided_guard.py into Linux /proc/PID/cmdline.
+- Validation: 58/58 stdlib tests, 21 syntax files; actual parent/child fixtures test the production predicate. NOT_ADMITTED remains blocked. Runtime/R4/source hashes and consumed R3 claim/reserve preserved.
+- Affected runs: none executed; native qualification/science not started. This is native MapEx 2D support, separate from ROS2 Hospital protocol and RAE G1.
+- Baseline rerun: none authorized or needed for this bounded code correction. Independent exact-head review is pending; new native qualifier needs its own specific USER consent, existing ONE science consent stays conditional/unspent.
+
+
 ## 2026-09-22 — TU goal-domain differs from original MapEx
 
 - Original MapEx TU samples 100 goal cells directly from `valid_space == 1` for each map/start condition, stores those coordinates, and reuses the same goal set across methods/timesteps.
