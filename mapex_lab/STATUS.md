@@ -8,14 +8,14 @@
 - **NEXT ACTION:** validate source-aligned mean/variance, hoàn thiện time-t adapter và support intermediate trước B/shadow. Không backfill cache READY sau scan; không dùng manual windows/late-free/GT/future cho detector.
 - **BOUNDARY:** Python stdlib offline one process,0native/model/raycast/planner/robot/simulation/newscience; không raw/source/ALL22 sửa, cleanup/host switch/Work1 interference. MX072 giữ INCOMPLETE/mission_complete=false/frozen; Work1 Guided/R5 authority riêng.
 
-## Work Agent 1 — runtime riêng R5 đã dựng (2026-10-14)
+## Work Agent 1 — bounded R5R1 đã trả IR1 successor06 (2026-10-14)
 
-- **DONE:** theo USER “hoàn thiện runtime riêng”, đã dựng prefix Python3.6.13 riêng trên DELL và khóa phụ thuộc; [gói exact `13c282bd`](https://github.com/vah103/chat-gpt/blob/13c282bde4aa37e0a2eb0ecf83d77f7e3517c426/company/projects/mapex/mx072_guided_fixed22_isolated_runtime_r5_20261013_work1/README.md). 2.433 file paths,297 ELF,≈990,21MiB allocated;689 dependency edges không thiếu,284 C++ symbol/version pairs có trong static table.
-- **LATEST RESULT:** private-interpreter stdlib probe PASS;23/23 fault tests và20 Python syntax PASS;0 target native imports/Mapper/scans/moves/models. Release free14.518.296.576B đạt ngưỡngscience14.310.965.248B, là snapshot chưa reservation.
-- **IN PROGRESS:** chờ kiểm tra độc lập R5; [bàn giao IR1](https://github.com/vah103/chat-gpt/blob/main/company/operations/HO-20261014-MX072-GUIDED-R5-ISOLATED-RUNTIME-WORK1-TO-IR1-REVIEW.md). Attester/provider/loader/native numerical compatibility chưa qualification; NOT_ADMITTED, science chưa chạy.
-- **NEXT ACTION:** genuine exact-head review → technical scope/USER authority riêng → một native qualifier mới nếu đủ gate; sau PASS được chấp nhận và fresh live admission mới dùng standing ONE science consent. Không tái dùng claim R3 đã tiêu thụ.
+- **DONE:** đọc genuine IR1 R5 REVISE/HR04 PASS, ACK #6151253500; sửa đúng reviewer identity successor06 và worker parent qua actual runtime_entry.py guard. [Gói exact `9da8aaa5`](https://github.com/vah103/chat-gpt/blob/9da8aaa5622de3ee61beadd9b90ea4d40ccefed6/company/projects/mapex/mx072_guided_fixed22_r5_bounded_repair_r1_20261014_work1/README.md); giữ exact-head/auth/scope/consent/owned PID/exe/argv/claim trước Recorder/native.
+- **LATEST RESULT:** 58/58 stdlib tests PASS (23 retained + 35 mới), 21 syntax; 17 actual parent/child fixtures kiểm production predicate, mock review/NOT_ADMITTED gate kiểm. 41 new Git entries khớp DELL/readback, 45 R5 entries retained. Prefix 2.433 runtime files nguyên; R4/old native/R3 claim+reserve giữ nguyên. Final free 15325847552 B so science threshold 14310965248 B, chỉ snapshot. Không native/Mapper/qualifier/scans/moves/models/science.
+- **IN PROGRESS:** [trả review thực tế #6151640885](https://github.com/vah103/chat-gpt/pull/53#issuecomment-6151640885) và [handoff exact R5R1](https://github.com/vah103/chat-gpt/blob/main/company/operations/HO-20261014-MX072-GUIDED-R5R1-BOUNDED-REPAIR-WORK1-TO-IR1S06.md); chờ IR1 successor06 kiểm độc lập hai closures/affected integration. Maker không self-ACCEPT; NOT_ADMITTED, actual ABI chưa qualified.
+- **NEXT ACTION:** IR1 exact-head review → specific USER approval riêng nếu mở native qualifier mới → qualification và result review; sau các gate/live checks mới dùng standing ONE science consent. R3 technical attempt đã consumed; science consent còn conditional/unspent.
 
-R4 và native originals/failure reserve giữ nguyên; source MX072 vẫn frozen INCOMPLETE. RAE G0/G1/Work2 tách biệt. Mốc tiếp nhận và snapshot cũ phía dưới giữ làm lịch sử, được mục mới này bổ sung.
+R5 cũ/R4/native originals/failure reserve giữ nguyên; source MX072 frozen INCOMPLETE. RAE G1/Work2 riêng. Các mục phía dưới là lịch sử, mục này cập nhật trạng thái hiện hành.
 
 ## Work Agent 1 — tiếp nhận hiện tại (2026-10-13)
 
