@@ -1,5 +1,14 @@
 # mapex_lab status
 
+## Work Agent 1 — runtime riêng R5 đã dựng (2026-10-14)
+
+- **DONE:** theo USER “hoàn thiện runtime riêng”, đã dựng prefix Python3.6.13 riêng trên DELL và khóa phụ thuộc; [gói exact `13c282bd`](https://github.com/vah103/chat-gpt/blob/13c282bde4aa37e0a2eb0ecf83d77f7e3517c426/company/projects/mapex/mx072_guided_fixed22_isolated_runtime_r5_20261013_work1/README.md). 2.433 file paths,297 ELF,≈990,21MiB allocated;689 dependency edges không thiếu,284 C++ symbol/version pairs có trong static table.
+- **LATEST RESULT:** private-interpreter stdlib probe PASS;23/23 fault tests và20 Python syntax PASS;0 target native imports/Mapper/scans/moves/models. Release free14.518.296.576B đạt ngưỡngscience14.310.965.248B, là snapshot chưa reservation.
+- **IN PROGRESS:** chờ kiểm tra độc lập R5; [bàn giao IR1](https://github.com/vah103/chat-gpt/blob/main/company/operations/HO-20261014-MX072-GUIDED-R5-ISOLATED-RUNTIME-WORK1-TO-IR1-REVIEW.md). Attester/provider/loader/native numerical compatibility chưa qualification; NOT_ADMITTED, science chưa chạy.
+- **NEXT ACTION:** genuine exact-head review → technical scope/USER authority riêng → một native qualifier mới nếu đủ gate; sau PASS được chấp nhận và fresh live admission mới dùng standing ONE science consent. Không tái dùng claim R3 đã tiêu thụ.
+
+R4 và native originals/failure reserve giữ nguyên; source MX072 vẫn frozen INCOMPLETE. RAE G0/G1/Work2 tách biệt. Mốc tiếp nhận và snapshot cũ phía dưới giữ làm lịch sử, được mục mới này bổ sung.
+
 ## Work Agent 1 — tiếp nhận hiện tại (2026-10-13)
 
 Mục này bổ sung điểm bàn giao mới, giữ nguyên các kết quả và lịch sử phía dưới. Bối cảnh mới nhất của Work1 là [nhật ký MX068 §26.37](https://github.com/vah103/chat-gpt/blob/14784ff8199b0e36fbf3c2b767b5bdc5bea06aaa/company/projects/mapex/MX068_AGENT1_RESEARCH_JOURNEY_20261009.md#2637-work-agent-1-mới-tiếp-nhận-theo-chỉ-định-trực-tiếp-của-user-2026-10-13), [RAE V1](https://github.com/vah103/chat-gpt/blob/main/company/projects/mapex/MAPEX_RAE_BACKBONE_V1_20261013.md) và [IR1 R4 review](https://github.com/vah103/chat-gpt/blob/main/company/reviews/IR1S05_MX072_GUIDED_R4_5479DBDB_HWM_RUNTIME_FOCUSED_QA_20261013.md).
