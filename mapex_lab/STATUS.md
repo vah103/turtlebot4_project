@@ -1,5 +1,18 @@
 # mapex_lab status
 
+## Work Agent 1 — tiếp nhận hiện tại (2026-10-13)
+
+Mục này bổ sung điểm bàn giao mới, giữ nguyên các kết quả và lịch sử phía dưới. Bối cảnh mới nhất của Work1 là [nhật ký MX068 §26.37](https://github.com/vah103/chat-gpt/blob/14784ff8199b0e36fbf3c2b767b5bdc5bea06aaa/company/projects/mapex/MX068_AGENT1_RESEARCH_JOURNEY_20261009.md#2637-work-agent-1-mới-tiếp-nhận-theo-chỉ-định-trực-tiếp-của-user-2026-10-13), [RAE V1](https://github.com/vah103/chat-gpt/blob/main/company/projects/mapex/MAPEX_RAE_BACKBONE_V1_20261013.md) và [IR1 R4 review](https://github.com/vah103/chat-gpt/blob/main/company/reviews/IR1S05_MX072_GUIDED_R4_5479DBDB_HWM_RUNTIME_FOCUSED_QA_20261013.md).
+
+- **DONE:** USER chỉ định phiên mới là Work Agent 1; đã đọc tài liệu nền lab, nhật ký/bàn giao và review mới nhất trên PR #53.
+- **IN PROGRESS:** tiếp quản Guided fixed22 trên DELL; bước hiện tại là chuẩn bị thiết kế tĩnh cho runtime Python3.6/native riêng và dự toán dung lượng, theo [handoff IR1 #6149828989](https://github.com/vah103/chat-gpt/pull/53#issuecomment-6149828989).
+- **LATEST RESULT:** executable R4 `5479dbdbe38f1846ba4655ed2ee541c82f1bb5f8`: NQ2 đo RAM đỉnh được IR1 ACCEPT ở phạm vi code; NQ1 ABI/runtime chưa qualified; NQ3 lần đo trước thiếu khoảng 287,45 MiB so với ngưỡng science. Chưa đo live host trong phiên này; science chưa chạy.
+- **NEXT ACTION:** chuẩn bị manifest/hash phụ thuộc, phương pháp attestation provider trong cùng worker tương lai, footprint/rollback và gói thiết kế cụ thể cho QA riêng; không tái dùng technical claim đã tiêu thụ.
+
+Hướng nghiên cứu USER đã chốt là MapEx + RAE (khám phá chủ động theo phòng), giảm đường đi/thời gian tới cùng chất lượng. G0 source audit do Chat Agent thực hiện; Work2 phụ trách room/viewpoints ALL22. Guided fixed22 là thử nghiệm thủ công riêng. Phân biệt native MapEx 2D `castacks/MapEx@53636bd` với biến thể ROS2/Nav2 `scripts/mapex.py`.
+
+MX072 gốc giữ frozen: 22 scored decisions, 1.195 scans, `SOURCE_EXCEPTION_INCOMPLETE`, `mission_complete=false`. Việc tiếp nhận chỉ đọc/ghi trạng thái, chưa kết nối máy hay chạy native/model/qualification/science; không thay kết quả, runtime, dữ liệu hoặc quyền chạy.
+
 ## D1 retrospective oracle STOP — W032 / H080 / H083
 
 - REVIEWED / CANONICAL: same-checker W029 ACCEPT on exact PR #33 head `4f674a81add0c14eb15cc0ab95754130c5923ead`; the oracle lineage is now included in canonical technical main through MX008.
