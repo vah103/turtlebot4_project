@@ -1,5 +1,15 @@
 # Experiment Notes
 
+## 2026-10-14 — RAE G1 automatic offline hypotheses: complete R1, scientific inconclusive
+
+- What changed: Work Agent 2 completed native-2D G1 A–D from existing MX072 data, separate from ROS2 Hospital loop. [Exact 946f56d1d28cf6889ddc6a4f02f363404f1ac0d7](https://github.com/vah103/chat-gpt/blob/946f56d1d28cf6889ddc6a4f02f363404f1ac0d7/company/projects/mapex/rae_g1_work_agent2_20261013/complete_r1_20261014/README.md); B1–B4, strict time-t boundary, full-scene geometry proposals, causal IDs and complete22 gallery. No manual-window proposals or future/GT policy input.
+- Why: RAE needs a reviewable room-hypothesis component before route/viewpoint stages; retrospective hand windows are not an automatic detector or room truth.
+- Evidence: maker44 component tests PASS before first real shadow; method/input/output freezes; full19,969-event metadata and1,195-scan cache-age inventory. Actual22 policy caches same-source age0. Shadow575 correlated candidate-time records: B2=7 plausible, B3/B4=23, no-variance=72; all six highlighted reference cases remain ambiguous. No independent labels or semantic accuracy/savings claim.
+- Decision: retain negative results and frozen thresholds. Scientific status EXPLORATORY_ONE_RUN / INCONCLUSIVE, independent QA pending. [Handoff](https://github.com/vah103/chat-gpt/blob/4f1ae458cf471401c37253a29a48f08dc1146125/company/operations/HO-20261014-RAE-G1-OFFLINE-R1-WORK2-TO-CHAT-RM-IR-REVIEW.md) requests actual Chat Agent + RM/IR pickup; heldout gates/operating point must be approved before independent data are opened.
+- Affected runs / baseline rerun: none newly executed; original root950a656e… remains SOURCE_EXCEPTION_INCOMPLETE / mission_complete=false. No new native/model/planner/raycast/robot, host switch or source/raw/ALL22 edits; Work1 authority separate.
+- Reporting: this is an exploratory maker package, not an independently verified research verdict; no teacher-facing Google Docs update. Failure/resource ledger retains first synthetic failure and repaired local ZIP integrity failure.
+
+
 ## 2026-10-14 — Guided native 2D R5R1: bounded pre-execution correction
 
 - What changed: following IR1 successor06 REVISE at R5 `13c282bd`, Work1 corrected the current reviewer role and exact guard parent binding to the real private-interpreter `runtime_entry.py guard` kernel argv. [Immutable R5R1 `9da8aaa5`](https://github.com/vah103/chat-gpt/blob/9da8aaa5622de3ee61beadd9b90ea4d40ccefed6/company/projects/mapex/mx072_guided_fixed22_r5_bounded_repair_r1_20261014_work1/README.md), [return to IR1](https://github.com/vah103/chat-gpt/pull/53#issuecomment-6151640885).
