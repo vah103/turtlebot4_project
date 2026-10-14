@@ -1,5 +1,13 @@
 # mapex_lab status
 
+## RAE Backbone V2 — current student-project direction (2026-10-14)
+
+- **CURRENT STRATEGY (USER):** [RAE Backbone V2](https://github.com/vah103/chat-gpt/blob/main/company/projects/mapex/MAPEX_RAE_BACKBONE_V2_20261014.md) hiện là tài liệu định hướng chính; V1 lưu lịch sử. Mục tiêu MapEx toàn cục + room-aware opportunistic exploration, an toàn và giảm **distance/time tới cùng coverage + quality**, không đặt nặng novelty cho đồ án sinh viên.
+- **CHANGE ONLY G1/M1:** [G1 R2 geometry-inspired-by-Luperto + cached LaMa design](https://github.com/vah103/chat-gpt/blob/main/company/projects/mapex/MAPEX_RAE_G1_GEOMETRY_LUPERTO_LAMA_DESIGN_R2_20261014.md) đề xuất trích đoạn tường quan sát, representative lines, phân vùng faces và giả thuyết ranh giới phòng; LaMa alltrain/ensemble mean/variance chỉ bổ sung bằng chứng prediction. R2 **DESIGN ONLY**, chưa triển khai, chưa QA, chưa có quyền chạy.
+- **G1 R1 thực trạng đã cập nhật:** [Work Agent 2 complete offline R1](https://github.com/vah103/chat-gpt/blob/946f56d1d28cf6889ddc6a4f02f363404f1ac0d7/company/projects/mapex/rae_g1_work_agent2_20261013/complete_r1_20261014/README.md): 44/44 component tests, 22 true-time-t decisions, 575 candidate-time records; cả sáu ca review vẫn AMBIGUOUS_DEFER, scientific INCONCLUSIVE, independent QA PENDING. Khối “G1 inventory A” cũ phía dưới là lịch sử, không còn là latest.
+- **PRESERVE:** G0 static-only; G2/G3/G4 giữ nguyên xương sống. Original MX072 1.195 scans / 22 scored decisions frozen SOURCE_EXCEPTION_INCOMPLETE; không sửa original, không GT/future policy, không native/robot science từ tài liệu này. Guided R5R4 track tách riêng (đã có IR1 pre-native static QA nhưng NOT_ADMITTED, dynamic ABI chưa qualified).
+- **NEXT:** independent review G1 R1 + bounded G1 R2 method; nếu được giao implementation, bắt đầu R2-lite offline và so R1 frozen với negative/corridor cases. Không tự kích hoạt Work Agent hay thí nghiệm.
+
 ## Guided R5R3 — ONE technical đã được phép, launcher chưa có admission (2026-10-14)
 
 - **DONE:** [IR1 successor06 ACCEPT exact R5R3 `14c3b021`](https://github.com/vah103/chat-gpt/blob/334a45b62306c384eb259a14a458a2927bfabf8a/company/reviews/IR1S06_MX072_GUIDED_R5R3_14C3B021_PRENATIVE_RUNTIME_QA_ACCEPT_20261014.md); independent stdlib116/116,seal27/27 PASS tại thời điểm IR1 kiểm. USER cho đúng ONE native technical DELL, max3moves/0,9m/4scans/180s,no retry; quyền chưa tiêu thụ.
