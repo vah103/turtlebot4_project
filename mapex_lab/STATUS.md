@@ -9,13 +9,13 @@
 
 Các mục R5R1/tiếp nhận phía dưới là lịch sử; G1 Work2 và MX072 frozen INCOMPLETE giữ nguyên.
 
-## Work Agent 2 — G1 đã ACK, inventory A đang làm (2026-10-14)
+## Work Agent 2 — G1 offline R1 complete, independent review pending (2026-10-14)
 
-- **DONE:** USER chỉ định phiên Work2 mới; đã đọc handoff/G1 R1/RAE V1/G0/ALL22/lab/journal và [ACK thực tế PR #53](https://github.com/vah103/chat-gpt/pull/53#issuecomment-6150835589). ALL22 đã hoàn tất và frozen; không làm lại.
-- **LATEST RESULT:** [checkpoint A1 `58d974b3`](https://github.com/vah103/chat-gpt/blob/58d974b3bf32e20f3dcb847b20d6b28df7422906/company/projects/mapex/rae_g1_work_agent2_20261013/README.md):22/22observed map/pose/goal/first native plan/binary prediction khớp nguồn; exact source53636bd, event order/padding kiểm. Có1195observed-map container,23cacheheaders(22scored+1unscored); chỉ23/1195post-scan temporal events kiểm,1172 còn chờ. Mean/var contents và sensor/wall-age chưa kiểm.
-- **IN PROGRESS:** G1-A data contract / whitelist adapter / cache validation; chưa G1-A PASS, chưa detectorB1–B4/component/shadow hoặc independent QA.
-- **NEXT ACTION:** validate source-aligned mean/variance, hoàn thiện time-t adapter và support intermediate trước B/shadow. Không backfill cache READY sau scan; không dùng manual windows/late-free/GT/future cho detector.
-- **BOUNDARY:** Python stdlib offline one process,0native/model/raycast/planner/robot/simulation/newscience; không raw/source/ALL22 sửa, cleanup/host switch/Work1 interference. MX072 giữ INCOMPLETE/mission_complete=false/frozen; Work1 Guided/R5 authority riêng.
+- **DONE:** USER yêu cầu hoàn thiện G1; [gói immutable 946f56d1](https://github.com/vah103/chat-gpt/blob/946f56d1d28cf6889ddc6a4f02f363404f1ac0d7/company/projects/mapex/rae_g1_work_agent2_20261013/complete_r1_20261014/README.md) có adapter/schema, detector B1–B4, 44 component tests PASS trước first shadow, 22-decision gallery và toàn bộ negative/defer/ablation/repro/resource evidence. ACK thật [#6150835589](https://github.com/vah103/chat-gpt/pull/53#issuecomment-6150835589); A1 là lịch sử.
+- **LATEST RESULT:** 19.969 event metadata links + 1.195 scan headers kiểm đủ; post-scan 1 absent / 1.194 older / 0 same-scan fresh cache. 22 scored snapshots cùng source cache age 0 và actual mean/variance P1 values/hashes hợp lệ. Shadow tự sinh 575 candidate-time records, B2 plausible 7, B3/B4 23; bỏ variance 72. Cả 6 ca trọng điểm vẫn AMBIGUOUS_DEFER. 87/87 Git path/blob SHA readback khớp; ALL22 subtree unchanged.
+- **IN PROGRESS:** scientific usefulness INCONCLUSIVE / EXPLORATORY_ONE_RUN; [Chat Agent + Research Methodologist/IR review](https://github.com/vah103/chat-gpt/blob/4f1ae458cf471401c37253a29a48f08dc1146125/company/operations/HO-20261014-RAE-G1-OFFLINE-R1-WORK2-TO-CHAT-RM-IR-REVIEW.md) chờ pickup và verdict thật. Maker không self-ACCEPT; không có independent blind labels, precision/recall, matched false-trigger benefit, savings hoặc generalization.
+- **NEXT ACTION:** independent exact-commit review, đánh giá hạn chế proposal/predicted fragments/tracker churn; RM+QA định support minimum/operating point/gates trước independent world/run/room-family holdout. G2 schema/trace chỉ có thể review offline; chưa native/robot GO.
+- **BOUNDARY:** existing-data offline only, 0 native/model/planner/raycast/robot/simulation/new science. Anchor observed-knownfree geometry, physical_safety NOT_CERTIFIED, action null. Không raw/source/ALL22 sửa, host switch/cleanup/dependency install/Work1 interference. MX072 vẫn SOURCE_EXCEPTION_INCOMPLETE / mission_complete=false.
 
 ## Work Agent 1 — bounded R5R1 đã trả IR1 successor06 (2026-10-14)
 
