@@ -1,14 +1,13 @@
 # mapex_lab status
 
-## Guided R5R3 — USER đã cho phép ONE technical, launcher còn bị chặn (2026-10-14)
+## Guided R5R3 — ONE technical đã được phép, launcher chưa có admission (2026-10-14)
 
-- **DONE:** [IR1 successor06 ACCEPT exact R5R3 `14c3b021`](https://github.com/vah103/chat-gpt/blob/334a45b62306c384eb259a14a458a2927bfabf8a/company/reviews/IR1S06_MX072_GUIDED_R5R3_14C3B021_PRENATIVE_RUNTIME_QA_ACCEPT_20261014.md); independent stdlib 116/116, seal 27/27 PASS tại thời điểm IR1 kiểm. USER đã cho phép đúng ONE native technical trên DELL: tối đa 3 moves,0,9m,4 scans,180s,no retry. Không cần cấp lại quyền.
-- **LATEST RESULT:** Work1 kiểm trực tiếp template/dossier/listings DELL: NOT_ADMITTED, launcher inert, chưa admission/claim/output technical hoặc science. Phiên này không start_process, không native và không chạy lại tests/rehash.
-- **IN PROGRESS:** [platform block trước admission](https://github.com/vah103/chat-gpt/blob/main/company/operations/INC-20261014-MX072-R5R3-REMOTE-DESKTOP-COMMANDER-PLATFORM-BLOCK.md) và [trusted launcher release gate](https://github.com/vah103/chat-gpt/blob/main/company/operations/HO-20261014-MX072-R5R3-TRUSTED-LAUNCHER-GATE-R1-CHAT-TO-IR1-AND-SYSTEMS.md) chưa giải quyết. Chat Agent technical giữ đầu mối R5R3; Work1 không sửa song song hoặc dùng alternate route vượt denial.
-- **NEXT ACTION:** official platform authorization path và independent launcher release acceptance → fresh live admission → ONE qualifier → independent result QA. Technical consent mới chưa tiêu thụ; standing science ONE còn conditional/unspent, chưa kích hoạt.
+- **DONE:** [IR1 successor06 ACCEPT exact R5R3 `14c3b021`](https://github.com/vah103/chat-gpt/blob/334a45b62306c384eb259a14a458a2927bfabf8a/company/reviews/IR1S06_MX072_GUIDED_R5R3_14C3B021_PRENATIVE_RUNTIME_QA_ACCEPT_20261014.md); independent stdlib116/116,seal27/27 PASS tại thời điểm IR1 kiểm. USER cho đúng ONE native technical DELL, max3moves/0,9m/4scans/180s,no retry; quyền chưa tiêu thụ.
+- **LATEST RESULT:** theo USER “thử lại”, ONE diagnostic gọi script inert `--dry-run` đến DELL PID515301, exit1/0,07s: `R5R3_NATIVE_LAUNCH_BLOCKED_NO_TRUSTED_ADMISSION`. Không platform deny cho chính lệnh inert này; live-launch action chưa thử. Không admission/claim/output mới, không native/science hoặc rerun tests/rehash.
+- **IN PROGRESS:** [trusted launcher release gate](https://github.com/vah103/chat-gpt/blob/main/company/operations/HO-20261014-MX072-R5R3-TRUSTED-LAUNCHER-GATE-R1-CHAT-TO-IR1-AND-SYSTEMS.md) chưa được giải quyết. [Incident đã bổ sung kết quả mới](https://github.com/vah103/chat-gpt/blob/main/company/operations/INC-20261014-MX072-R5R3-REMOTE-DESKTOP-COMMANDER-PLATFORM-BLOCK.md). Chat Agent technical giữ đầu mối; source/script không sửa và không dùng alternate route.
+- **NEXT ACTION:** independently accepted working launcher/admission → fresh live gate → ONE qualifier → independent result QA. Không xin lại quyền USER, không self-authenticate; science ONE vẫn conditional/unspent.
 
 Các mục R5R1/tiếp nhận phía dưới là lịch sử; G1 Work2 và MX072 frozen INCOMPLETE giữ nguyên.
-
 
 ## Work Agent 2 — G1 đã ACK, inventory A đang làm (2026-10-14)
 
