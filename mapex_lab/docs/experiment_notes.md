@@ -1,5 +1,13 @@
 # Experiment Notes
 
+## 2026-10-14 — G1 R2-lite code/tests; pending method gate before actual shadow
+
+- [Work2 exact dd96e5c9def444c8f943bb8e13a444b266e977ec](https://github.com/vah103/chat-gpt/blob/dd96e5c9def444c8f943bb8e13a444b266e977ec/company/projects/mapex/rae_g1_r2_lite_workagent2_20261014/README.md): R2-L0 orthogonal observed wall lines/bounded faces, L1 cached LaMa fragments/binary-mean conflict, L2 unknown-wall variance defer. R1/ALL22 immutable.
+- Maker45/45 synthetic PASS; final0.878587s/SELF48,193,536B;28/28 Git SHA readback. Read-only44 input hashes checked1,692,280B/0.023s; numeric actual snapshots not loaded, no1195scanre-extract/R1shadowrerun. Initial failures and synthetic-parameter sensitivity retained.
+- [RM checklist](https://github.com/vah103/chat-gpt/blob/dd96e5c9def444c8f943bb8e13a444b266e977ec/company/projects/mapex/rae_g1_r2_lite_workagent2_20261014/METHOD_REVIEW_CHECKLIST.md); [actual request #6160489054](https://github.com/vah103/chat-gpt/pull/53#issuecomment-6160489054). **METHOD_REVIEW_PENDING / NO_ACTUAL_SHADOW / SCIENTIFIC_UTILITY_NOT_ASSESSED**. Stop before one proposed E01–E22 shadow; no fake RM ACK/ACCEPT or dummy22 overlays.
+- action=null, physical_safety=NOT_CERTIFIED, tracking/extended/G2 not implemented. No native/model/raycast/planner/robot/simulation/science/newdata/source edits/cleanup/host switch or Work1 interference. Original MX072 SOURCE_EXCEPTION_INCOMPLETE/mission_complete=false/frozen retained.
+
+
 ## 2026-10-14 — RAE G1 automatic offline hypotheses: complete R1, scientific inconclusive
 
 - What changed: Work Agent 2 completed native-2D G1 A–D from existing MX072 data, separate from ROS2 Hospital loop. [Exact 946f56d1d28cf6889ddc6a4f02f363404f1ac0d7](https://github.com/vah103/chat-gpt/blob/946f56d1d28cf6889ddc6a4f02f363404f1ac0d7/company/projects/mapex/rae_g1_work_agent2_20261013/complete_r1_20261014/README.md); B1–B4, strict time-t boundary, full-scene geometry proposals, causal IDs and complete22 gallery. No manual-window proposals or future/GT policy input.
