@@ -1,0 +1,50 @@
+{
+  "source": "GT-only retrospective, never supplied to G2-R3.1/LaMa/R4.1",
+  "D18_original_room_cells": 4039,
+  "original_unknown": 833,
+  "initial_unknown_real_free": 760,
+  "initial_unknown_real_wall": 73,
+  "remaining_unknown": 60,
+  "remaining_unknown_real_free": 0,
+  "remaining_unknown_real_wall": 60,
+  "previously_unknown_real_free_observed": 760,
+  "observed_unknown_fraction": 0.927971,
+  "real_free_unknown_recall": 1.0,
+  "room_free_space_complete_GT_ONLY": true,
+  "termination": "DEFER_STALLED_WITH_UNRESOLVED_MISSION",
+  "remaining_unknown_clusters": [
+    {
+      "pixels": 26,
+      "bbox_rc": [
+        44,
+        12,
+        48,
+        17
+      ],
+      "true_free_GT_only": 0,
+      "true_wall_GT_only": 26
+    },
+    {
+      "pixels": 23,
+      "bbox_rc": [
+        69,
+        35,
+        74,
+        39
+      ],
+      "true_free_GT_only": 0,
+      "true_wall_GT_only": 23
+    },
+    {
+      "pixels": 11,
+      "bbox_rc": [
+        27,
+        34,
+        27,
+        44
+      ],
+      "true_free_GT_only": 0,
+      "true_wall_GT_only": 11
+    }
+  ]
+}

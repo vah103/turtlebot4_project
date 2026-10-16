@@ -1,0 +1,8 @@
+{
+  "status": "DEFER_STALLED_WITH_UNRESOLVED_MISSION",
+  "goal_sequence": [],
+  "decision": "DEFER",
+  "replanning_called": false,
+  "reason": "Two consecutive observation-free legs; not ROOM_COMPLETE",
+  "mission_unknown": 67
+}

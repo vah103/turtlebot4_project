@@ -1,0 +1,21 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D18 G2-R3.1 causal exploration</title>
+<style>body{font-family:system-ui,sans-serif;max-width:1160px;margin:0 auto;padding:15px;background:#f5f7fa;color:#254059}section{margin:16px 0;background:#fff;padding:15px;border-radius:12px;border:1px solid #d1dee8}h1{font-size:25px}h2{font-size:19px}img{width:100%;height:auto;max-width:1100px}p{line-height:1.5;color:#536b7f}table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid #dde5eb;text-align:left;padding:8px}</style></head><body>
+<h1>G2-R3.1 — Room4 tại Decision 18, Run04</h1>
+<p>Thuật toán khóa nguyên phiên bản từ D02. Sử dụng observed + LaMa + Room Node D18; robot đi theo chuỗi có cam kết, quét LiDAR mỗi 0,5m, chạy lại LaMa/R4.1 và chỉ tính lại goal khi chuỗi hết hiệu lực. GT chỉ dùng trong cảm biến ẩn và đánh giá sau cùng.</p>
+<p><b>End status:</b> DEFER_STALLED_WITH_UNRESOLVED_MISSION · <b>Goals:</b> 5 · <b>Distance:</b> 34.4 m · <b>Scans:</b> 71 · <b>Room unknown:</b> 60.</p>
+<section><h2>Goal decisions</h2><table><tr><th>#</th><th>Actual goal xy</th><th>Distance</th><th>Observed room unknown</th><th>Decision following scan</th></tr>
+<tr><td>1</td><td>[4.8, 2.5]</td><td>3.6 m</td><td>151</td><td>COMMITMENT_CONTINUED</td></tr>
+<tr><td>2</td><td>[0.4, 6.5]</td><td>12.0 m</td><td>95</td><td>NEW_COMMITMENT</td></tr>
+<tr><td>3</td><td>[1.2, 2.1]</td><td>17.2 m</td><td>60</td><td>NEW_COMMITMENT</td></tr>
+<tr><td>4</td><td>[3.6, 8.5]</td><td>26.0 m</td><td>60</td><td>COMMITMENT_CONTINUED</td></tr>
+<tr><td>5</td><td>[4.8, 1.3]</td><td>34.4 m</td><td>60</td><td>DEFER_STALLED_WITH_UNRESOLVED_MISSION</td></tr>
+</table></section>
+<section><h2>D18_00_INPUT.png</h2><img loading="lazy" src="D18_00_INPUT.png" alt="D18_00_INPUT.png"></section>
+<section><h2>D18_01_GOAL_01.png</h2><img loading="lazy" src="D18_01_GOAL_01.png" alt="D18_01_GOAL_01.png"></section>
+<section><h2>D18_02_GOAL_02.png</h2><img loading="lazy" src="D18_02_GOAL_02.png" alt="D18_02_GOAL_02.png"></section>
+<section><h2>D18_03_GOAL_03.png</h2><img loading="lazy" src="D18_03_GOAL_03.png" alt="D18_03_GOAL_03.png"></section>
+<section><h2>D18_04_GOAL_04.png</h2><img loading="lazy" src="D18_04_GOAL_04.png" alt="D18_04_GOAL_04.png"></section>
+<section><h2>D18_05_GOAL_05.png</h2><img loading="lazy" src="D18_05_GOAL_05.png" alt="D18_05_GOAL_05.png"></section>
+<section><h2>D18_FINAL_GT_ONLY.png</h2><img loading="lazy" src="D18_FINAL_GT_ONLY.png" alt="D18_FINAL_GT_ONLY.png"></section>
+<p>GT-only panel is retrospective evaluation; never an input to G2/LaMa/Room Node. Synthetic visibility not identical to MapEx native LiDAR. No claim of globally shortest exploration or on-robot safety.</p></body></html>
