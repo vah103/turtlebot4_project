@@ -1,0 +1,209 @@
+{
+  "qa_type": "GT-only retrospective feasibility diagnostic; not a goal plan",
+  "vantage_source": "currently knownfree reachable R2 sampled candidates",
+  "vantages_evaluated": 240,
+  "remaining_original_unknown": 389,
+  "remaining_actual_free": 101,
+  "remaining_actual_wall": 288,
+  "max_sensed_union_all_vantage_positions": 133,
+  "remaining_after_union": 256,
+  "remaining_actual_free_after_union": 0,
+  "top_vantage_by_true_scan": [
+    {
+      "rc": [
+        159,
+        204
+      ],
+      "xy_m": [
+        20.400000000000002,
+        15.9
+      ],
+      "route_m": 9.3,
+      "new_unknown": 91,
+      "new_actual_free": 75
+    },
+    {
+      "rc": [
+        162,
+        207
+      ],
+      "xy_m": [
+        20.700000000000003,
+        16.2
+      ],
+      "route_m": 9.3,
+      "new_unknown": 91,
+      "new_actual_free": 75
+    },
+    {
+      "rc": [
+        156,
+        204
+      ],
+      "xy_m": [
+        20.400000000000002,
+        15.600000000000001
+      ],
+      "route_m": 9.600000000000001,
+      "new_unknown": 91,
+      "new_actual_free": 75
+    },
+    {
+      "rc": [
+        153,
+        207
+      ],
+      "xy_m": [
+        20.700000000000003,
+        15.3
+      ],
+      "route_m": 10.200000000000001,
+      "new_unknown": 91,
+      "new_actual_free": 75
+    },
+    {
+      "rc": [
+        165,
+        207
+      ],
+      "xy_m": [
+        20.700000000000003,
+        16.5
+      ],
+      "route_m": 9.0,
+      "new_unknown": 90,
+      "new_actual_free": 75
+    },
+    {
+      "rc": [
+        150,
+        204
+      ],
+      "xy_m": [
+        20.400000000000002,
+        15.0
+      ],
+      "route_m": 10.200000000000001,
+      "new_unknown": 89,
+      "new_actual_free": 75
+    },
+    {
+      "rc": [
+        147,
+        204
+      ],
+      "xy_m": [
+        20.400000000000002,
+        14.700000000000001
+      ],
+      "route_m": 10.5,
+      "new_unknown": 89,
+      "new_actual_free": 75
+    },
+    {
+      "rc": [
+        177,
+        204
+      ],
+      "xy_m": [
+        20.400000000000002,
+        17.7
+      ],
+      "route_m": 7.5,
+      "new_unknown": 87,
+      "new_actual_free": 75
+    },
+    {
+      "rc": [
+        174,
+        207
+      ],
+      "xy_m": [
+        20.700000000000003,
+        17.400000000000002
+      ],
+      "route_m": 8.1,
+      "new_unknown": 87,
+      "new_actual_free": 75
+    },
+    {
+      "rc": [
+        171,
+        207
+      ],
+      "xy_m": [
+        20.700000000000003,
+        17.1
+      ],
+      "route_m": 8.4,
+      "new_unknown": 87,
+      "new_actual_free": 75
+    },
+    {
+      "rc": [
+        162,
+        201
+      ],
+      "xy_m": [
+        20.1,
+        16.2
+      ],
+      "route_m": 8.700000000000001,
+      "new_unknown": 84,
+      "new_actual_free": 75
+    },
+    {
+      "rc": [
+        153,
+        201
+      ],
+      "xy_m": [
+        20.1,
+        15.3
+      ],
+      "route_m": 9.600000000000001,
+      "new_unknown": 84,
+      "new_actual_free": 75
+    },
+    {
+      "rc": [
+        147,
+        198
+      ],
+      "xy_m": [
+        19.8,
+        14.700000000000001
+      ],
+      "route_m": 9.9,
+      "new_unknown": 84,
+      "new_actual_free": 75
+    },
+    {
+      "rc": [
+        156,
+        198
+      ],
+      "xy_m": [
+        19.8,
+        15.600000000000001
+      ],
+      "route_m": 9.0,
+      "new_unknown": 83,
+      "new_actual_free": 74
+    },
+    {
+      "rc": [
+        165,
+        198
+      ],
+      "xy_m": [
+        19.8,
+        16.5
+      ],
+      "route_m": 8.1,
+      "new_unknown": 81,
+      "new_actual_free": 72
+    }
+  ],
+  "elapsed_s": 16.25
+}
