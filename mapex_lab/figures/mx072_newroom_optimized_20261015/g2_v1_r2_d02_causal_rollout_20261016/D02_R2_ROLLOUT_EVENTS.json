@@ -1,0 +1,95 @@
+[
+  {
+    "stage": 1,
+    "from_rc": [
+      147,
+      111
+    ],
+    "goal_rc": [
+      180,
+      150
+    ],
+    "reached_rc": [
+      180,
+      150
+    ],
+    "reached_goal": true,
+    "planned_goals_current": [
+      [
+        180,
+        150
+      ]
+    ],
+    "executed_leg_m": 7.2,
+    "total_distance_m": 7.2,
+    "sensor_pose_count": 15,
+    "total_sensor_pose_count": 15,
+    "newly_observed_global": 4527,
+    "new_free_global": 4293,
+    "new_walls_global": 234,
+    "new_in_original_room": 3408,
+    "new_free_in_original_room": 3322,
+    "new_wall_in_original_room": 86,
+    "unknown_original_room_remaining": 481,
+    "initial_room_unknown": 3889,
+    "current_room_accepted": true,
+    "current_room_area": 6346,
+    "current_room_unknown": 207,
+    "current_room_unknown_in_original_room": 199,
+    "original_room_unknown_outside_new_room": 282,
+    "next_status": "CONTINUE",
+    "next_goals": [
+      [
+        198,
+        150
+      ]
+    ],
+    "next_route_m": 1.8,
+    "next_planning_runtime_s": 4.72,
+    "next_objective_s_equivalent": 26.9985
+  },
+  {
+    "stage": 2,
+    "from_rc": [
+      180,
+      150
+    ],
+    "goal_rc": [
+      198,
+      150
+    ],
+    "reached_rc": [
+      198,
+      150
+    ],
+    "reached_goal": true,
+    "planned_goals_current": [
+      [
+        198,
+        150
+      ]
+    ],
+    "executed_leg_m": 1.8,
+    "total_distance_m": 9.0,
+    "sensor_pose_count": 4,
+    "total_sensor_pose_count": 19,
+    "newly_observed_global": 105,
+    "new_free_global": 92,
+    "new_walls_global": 13,
+    "new_in_original_room": 92,
+    "new_free_in_original_room": 84,
+    "new_wall_in_original_room": 8,
+    "unknown_original_room_remaining": 389,
+    "initial_room_unknown": 3889,
+    "current_room_accepted": true,
+    "current_room_area": 6348,
+    "current_room_unknown": 125,
+    "current_room_unknown_in_original_room": 117,
+    "original_room_unknown_outside_new_room": 272,
+    "next_status": "DEFER_NO_POSITIVE_SAFE_CHAIN",
+    "next_goals": [],
+    "next_route_m": 0.0,
+    "next_planning_runtime_s": 2.166,
+    "next_objective_s_equivalent": 20.0526
+  }
+]
