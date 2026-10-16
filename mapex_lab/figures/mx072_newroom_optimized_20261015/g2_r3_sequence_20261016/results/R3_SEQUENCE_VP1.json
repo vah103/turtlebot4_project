@@ -1,0 +1,1550 @@
+{
+  "version": "G2_R3_STRUCTURE_SEQUENCE_V1",
+  "status": "CONDITIONAL_VIEWPOINT_SEQUENCE",
+  "decision_id": "VP1",
+  "snapshot_sha256": "314a5e473bead5259825c9569d860ee8a901941be85e6051149582a2d88b88a0",
+  "input_used_gt": false,
+  "future_observation_used": false,
+  "goal_sequence": [
+    [
+      192,
+      115
+    ],
+    [
+      196,
+      195
+    ],
+    [
+      156,
+      207
+    ]
+  ],
+  "goal_sequence_xy_m": [
+    [
+      11.5,
+      19.2
+    ],
+    [
+      19.5,
+      19.6
+    ],
+    [
+      20.7,
+      15.6
+    ]
+  ],
+  "goal_count": 3,
+  "total_route_m": 31.8,
+  "selected": {
+    "points_rc": [
+      [
+        192,
+        115
+      ],
+      [
+        196,
+        195
+      ],
+      [
+        156,
+        207
+      ]
+    ],
+    "goal_count": 3,
+    "distance_m": 31.8,
+    "quality_score": 13.38397,
+    "shortfall_score": 5.88898,
+    "objective_score": 6.30997,
+    "structural_regions_nominal_met": 2,
+    "structural_quality_bucket": 45,
+    "projected_unseen_major_region_cells_nominal": 321,
+    "stages": [
+      {
+        "goal_rc": [
+          192,
+          115
+        ],
+        "goal_xy_m": [
+          11.5,
+          19.2
+        ],
+        "distance_leg_m": 4.4,
+        "path_rc": [
+          [
+            168,
+            135
+          ],
+          [
+            169,
+            135
+          ],
+          [
+            170,
+            135
+          ],
+          [
+            171,
+            135
+          ],
+          [
+            172,
+            135
+          ],
+          [
+            173,
+            135
+          ],
+          [
+            173,
+            134
+          ],
+          [
+            173,
+            133
+          ],
+          [
+            173,
+            132
+          ],
+          [
+            173,
+            131
+          ],
+          [
+            173,
+            130
+          ],
+          [
+            173,
+            129
+          ],
+          [
+            173,
+            128
+          ],
+          [
+            174,
+            128
+          ],
+          [
+            175,
+            128
+          ],
+          [
+            176,
+            128
+          ],
+          [
+            177,
+            128
+          ],
+          [
+            178,
+            128
+          ],
+          [
+            179,
+            128
+          ],
+          [
+            180,
+            128
+          ],
+          [
+            181,
+            128
+          ],
+          [
+            182,
+            128
+          ],
+          [
+            183,
+            128
+          ],
+          [
+            184,
+            128
+          ],
+          [
+            185,
+            128
+          ],
+          [
+            186,
+            128
+          ],
+          [
+            187,
+            128
+          ],
+          [
+            188,
+            128
+          ],
+          [
+            189,
+            128
+          ],
+          [
+            190,
+            128
+          ],
+          [
+            191,
+            128
+          ],
+          [
+            192,
+            128
+          ],
+          [
+            192,
+            127
+          ],
+          [
+            192,
+            126
+          ],
+          [
+            192,
+            125
+          ],
+          [
+            192,
+            124
+          ],
+          [
+            192,
+            123
+          ],
+          [
+            192,
+            122
+          ],
+          [
+            192,
+            121
+          ],
+          [
+            192,
+            120
+          ],
+          [
+            192,
+            119
+          ],
+          [
+            192,
+            118
+          ],
+          [
+            192,
+            117
+          ],
+          [
+            192,
+            116
+          ],
+          [
+            192,
+            115
+          ]
+        ],
+        "newly_visible_unknown_nominal": 253,
+        "newly_visible_unknown_stress": 139,
+        "cumulative_quality_score": 7.7516,
+        "objective": 6.5096
+      },
+      {
+        "goal_rc": [
+          196,
+          195
+        ],
+        "goal_xy_m": [
+          19.5,
+          19.6
+        ],
+        "distance_leg_m": 12.2,
+        "path_rc": [
+          [
+            192,
+            115
+          ],
+          [
+            191,
+            115
+          ],
+          [
+            190,
+            115
+          ],
+          [
+            189,
+            115
+          ],
+          [
+            188,
+            115
+          ],
+          [
+            187,
+            115
+          ],
+          [
+            186,
+            115
+          ],
+          [
+            185,
+            115
+          ],
+          [
+            185,
+            116
+          ],
+          [
+            184,
+            116
+          ],
+          [
+            184,
+            117
+          ],
+          [
+            184,
+            118
+          ],
+          [
+            183,
+            118
+          ],
+          [
+            183,
+            119
+          ],
+          [
+            182,
+            119
+          ],
+          [
+            182,
+            120
+          ],
+          [
+            182,
+            121
+          ],
+          [
+            181,
+            121
+          ],
+          [
+            180,
+            121
+          ],
+          [
+            179,
+            121
+          ],
+          [
+            178,
+            121
+          ],
+          [
+            177,
+            121
+          ],
+          [
+            176,
+            121
+          ],
+          [
+            175,
+            121
+          ],
+          [
+            174,
+            121
+          ],
+          [
+            173,
+            121
+          ],
+          [
+            173,
+            122
+          ],
+          [
+            173,
+            123
+          ],
+          [
+            173,
+            124
+          ],
+          [
+            173,
+            125
+          ],
+          [
+            173,
+            126
+          ],
+          [
+            173,
+            127
+          ],
+          [
+            173,
+            128
+          ],
+          [
+            173,
+            129
+          ],
+          [
+            173,
+            130
+          ],
+          [
+            173,
+            131
+          ],
+          [
+            173,
+            132
+          ],
+          [
+            173,
+            133
+          ],
+          [
+            173,
+            134
+          ],
+          [
+            174,
+            134
+          ],
+          [
+            175,
+            134
+          ],
+          [
+            176,
+            134
+          ],
+          [
+            177,
+            134
+          ],
+          [
+            178,
+            134
+          ],
+          [
+            179,
+            134
+          ],
+          [
+            180,
+            134
+          ],
+          [
+            181,
+            134
+          ],
+          [
+            182,
+            134
+          ],
+          [
+            183,
+            134
+          ],
+          [
+            184,
+            134
+          ],
+          [
+            185,
+            134
+          ],
+          [
+            186,
+            134
+          ],
+          [
+            187,
+            134
+          ],
+          [
+            188,
+            134
+          ],
+          [
+            189,
+            134
+          ],
+          [
+            190,
+            134
+          ],
+          [
+            191,
+            134
+          ],
+          [
+            192,
+            134
+          ],
+          [
+            193,
+            134
+          ],
+          [
+            194,
+            134
+          ],
+          [
+            195,
+            134
+          ],
+          [
+            196,
+            134
+          ],
+          [
+            196,
+            135
+          ],
+          [
+            196,
+            136
+          ],
+          [
+            196,
+            137
+          ],
+          [
+            196,
+            138
+          ],
+          [
+            196,
+            139
+          ],
+          [
+            196,
+            140
+          ],
+          [
+            196,
+            141
+          ],
+          [
+            196,
+            142
+          ],
+          [
+            196,
+            143
+          ],
+          [
+            196,
+            144
+          ],
+          [
+            196,
+            145
+          ],
+          [
+            196,
+            146
+          ],
+          [
+            196,
+            147
+          ],
+          [
+            196,
+            148
+          ],
+          [
+            196,
+            149
+          ],
+          [
+            196,
+            150
+          ],
+          [
+            196,
+            151
+          ],
+          [
+            196,
+            152
+          ],
+          [
+            196,
+            153
+          ],
+          [
+            196,
+            154
+          ],
+          [
+            196,
+            155
+          ],
+          [
+            196,
+            156
+          ],
+          [
+            196,
+            157
+          ],
+          [
+            196,
+            158
+          ],
+          [
+            196,
+            159
+          ],
+          [
+            196,
+            160
+          ],
+          [
+            196,
+            161
+          ],
+          [
+            196,
+            162
+          ],
+          [
+            196,
+            163
+          ],
+          [
+            196,
+            164
+          ],
+          [
+            196,
+            165
+          ],
+          [
+            196,
+            166
+          ],
+          [
+            196,
+            167
+          ],
+          [
+            196,
+            168
+          ],
+          [
+            196,
+            169
+          ],
+          [
+            196,
+            170
+          ],
+          [
+            196,
+            171
+          ],
+          [
+            196,
+            172
+          ],
+          [
+            196,
+            173
+          ],
+          [
+            196,
+            174
+          ],
+          [
+            196,
+            175
+          ],
+          [
+            196,
+            176
+          ],
+          [
+            196,
+            177
+          ],
+          [
+            196,
+            178
+          ],
+          [
+            196,
+            179
+          ],
+          [
+            196,
+            180
+          ],
+          [
+            196,
+            181
+          ],
+          [
+            196,
+            182
+          ],
+          [
+            196,
+            183
+          ],
+          [
+            196,
+            184
+          ],
+          [
+            196,
+            185
+          ],
+          [
+            196,
+            186
+          ],
+          [
+            196,
+            187
+          ],
+          [
+            196,
+            188
+          ],
+          [
+            196,
+            189
+          ],
+          [
+            196,
+            190
+          ],
+          [
+            196,
+            191
+          ],
+          [
+            196,
+            192
+          ],
+          [
+            196,
+            193
+          ],
+          [
+            196,
+            194
+          ],
+          [
+            196,
+            195
+          ]
+        ],
+        "newly_visible_unknown_nominal": 332,
+        "newly_visible_unknown_stress": 251,
+        "cumulative_quality_score": 12.1707,
+        "objective": 8.2827
+      },
+      {
+        "goal_rc": [
+          156,
+          207
+        ],
+        "goal_xy_m": [
+          20.7,
+          15.6
+        ],
+        "distance_leg_m": 15.2,
+        "path_rc": [
+          [
+            196,
+            195
+          ],
+          [
+            195,
+            195
+          ],
+          [
+            194,
+            195
+          ],
+          [
+            194,
+            194
+          ],
+          [
+            194,
+            193
+          ],
+          [
+            193,
+            193
+          ],
+          [
+            193,
+            192
+          ],
+          [
+            193,
+            191
+          ],
+          [
+            193,
+            190
+          ],
+          [
+            192,
+            190
+          ],
+          [
+            191,
+            190
+          ],
+          [
+            190,
+            190
+          ],
+          [
+            189,
+            190
+          ],
+          [
+            188,
+            190
+          ],
+          [
+            187,
+            190
+          ],
+          [
+            187,
+            189
+          ],
+          [
+            187,
+            188
+          ],
+          [
+            187,
+            187
+          ],
+          [
+            186,
+            187
+          ],
+          [
+            186,
+            186
+          ],
+          [
+            186,
+            185
+          ],
+          [
+            186,
+            184
+          ],
+          [
+            186,
+            183
+          ],
+          [
+            185,
+            183
+          ],
+          [
+            185,
+            182
+          ],
+          [
+            185,
+            181
+          ],
+          [
+            185,
+            180
+          ],
+          [
+            185,
+            179
+          ],
+          [
+            184,
+            179
+          ],
+          [
+            184,
+            178
+          ],
+          [
+            184,
+            177
+          ],
+          [
+            184,
+            176
+          ],
+          [
+            184,
+            175
+          ],
+          [
+            184,
+            174
+          ],
+          [
+            183,
+            174
+          ],
+          [
+            183,
+            173
+          ],
+          [
+            183,
+            172
+          ],
+          [
+            183,
+            171
+          ],
+          [
+            183,
+            170
+          ],
+          [
+            182,
+            170
+          ],
+          [
+            182,
+            169
+          ],
+          [
+            182,
+            168
+          ],
+          [
+            182,
+            167
+          ],
+          [
+            182,
+            166
+          ],
+          [
+            181,
+            166
+          ],
+          [
+            181,
+            165
+          ],
+          [
+            181,
+            164
+          ],
+          [
+            181,
+            163
+          ],
+          [
+            181,
+            162
+          ],
+          [
+            180,
+            162
+          ],
+          [
+            180,
+            161
+          ],
+          [
+            180,
+            160
+          ],
+          [
+            180,
+            159
+          ],
+          [
+            180,
+            158
+          ],
+          [
+            179,
+            158
+          ],
+          [
+            179,
+            157
+          ],
+          [
+            179,
+            156
+          ],
+          [
+            179,
+            155
+          ],
+          [
+            179,
+            154
+          ],
+          [
+            178,
+            154
+          ],
+          [
+            178,
+            153
+          ],
+          [
+            178,
+            152
+          ],
+          [
+            178,
+            151
+          ],
+          [
+            178,
+            150
+          ],
+          [
+            178,
+            149
+          ],
+          [
+            177,
+            149
+          ],
+          [
+            177,
+            148
+          ],
+          [
+            177,
+            147
+          ],
+          [
+            177,
+            146
+          ],
+          [
+            177,
+            145
+          ],
+          [
+            176,
+            145
+          ],
+          [
+            175,
+            145
+          ],
+          [
+            174,
+            145
+          ],
+          [
+            173,
+            145
+          ],
+          [
+            172,
+            145
+          ],
+          [
+            171,
+            145
+          ],
+          [
+            170,
+            145
+          ],
+          [
+            169,
+            145
+          ],
+          [
+            168,
+            145
+          ],
+          [
+            167,
+            145
+          ],
+          [
+            166,
+            145
+          ],
+          [
+            165,
+            145
+          ],
+          [
+            164,
+            145
+          ],
+          [
+            163,
+            145
+          ],
+          [
+            162,
+            145
+          ],
+          [
+            161,
+            145
+          ],
+          [
+            160,
+            145
+          ],
+          [
+            159,
+            145
+          ],
+          [
+            158,
+            145
+          ],
+          [
+            157,
+            145
+          ],
+          [
+            156,
+            145
+          ],
+          [
+            156,
+            146
+          ],
+          [
+            156,
+            147
+          ],
+          [
+            156,
+            148
+          ],
+          [
+            156,
+            149
+          ],
+          [
+            156,
+            150
+          ],
+          [
+            156,
+            151
+          ],
+          [
+            156,
+            152
+          ],
+          [
+            156,
+            153
+          ],
+          [
+            156,
+            154
+          ],
+          [
+            156,
+            155
+          ],
+          [
+            156,
+            156
+          ],
+          [
+            156,
+            157
+          ],
+          [
+            156,
+            158
+          ],
+          [
+            156,
+            159
+          ],
+          [
+            156,
+            160
+          ],
+          [
+            156,
+            161
+          ],
+          [
+            156,
+            162
+          ],
+          [
+            156,
+            163
+          ],
+          [
+            156,
+            164
+          ],
+          [
+            156,
+            165
+          ],
+          [
+            156,
+            166
+          ],
+          [
+            156,
+            167
+          ],
+          [
+            156,
+            168
+          ],
+          [
+            156,
+            169
+          ],
+          [
+            156,
+            170
+          ],
+          [
+            156,
+            171
+          ],
+          [
+            156,
+            172
+          ],
+          [
+            156,
+            173
+          ],
+          [
+            156,
+            174
+          ],
+          [
+            156,
+            175
+          ],
+          [
+            156,
+            176
+          ],
+          [
+            156,
+            177
+          ],
+          [
+            156,
+            178
+          ],
+          [
+            156,
+            179
+          ],
+          [
+            156,
+            180
+          ],
+          [
+            156,
+            181
+          ],
+          [
+            156,
+            182
+          ],
+          [
+            156,
+            183
+          ],
+          [
+            156,
+            184
+          ],
+          [
+            156,
+            185
+          ],
+          [
+            156,
+            186
+          ],
+          [
+            156,
+            187
+          ],
+          [
+            156,
+            188
+          ],
+          [
+            156,
+            189
+          ],
+          [
+            156,
+            190
+          ],
+          [
+            156,
+            191
+          ],
+          [
+            156,
+            192
+          ],
+          [
+            156,
+            193
+          ],
+          [
+            156,
+            194
+          ],
+          [
+            156,
+            195
+          ],
+          [
+            156,
+            196
+          ],
+          [
+            156,
+            197
+          ],
+          [
+            156,
+            198
+          ],
+          [
+            156,
+            199
+          ],
+          [
+            156,
+            200
+          ],
+          [
+            156,
+            201
+          ],
+          [
+            156,
+            202
+          ],
+          [
+            156,
+            203
+          ],
+          [
+            156,
+            204
+          ],
+          [
+            156,
+            205
+          ],
+          [
+            156,
+            206
+          ],
+          [
+            156,
+            207
+          ]
+        ],
+        "newly_visible_unknown_nominal": 78,
+        "newly_visible_unknown_stress": 74,
+        "cumulative_quality_score": 13.384,
+        "objective": 6.31
+      }
+    ],
+    "scenario": 2500,
+    "heuristic_satisfaction_not_real_coverage": true
+  },
+  "regions": [
+    {
+      "region_id": 1,
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 666,
+      "expected_open_mass_proxy": 595.884,
+      "satisfaction_cap_cells": 600,
+      "predicted_visible_nominal": 471,
+      "predicted_visible_stress": 350,
+      "nominal_target_met": false,
+      "stress_target_met": false,
+      "historically_outside_current_room_cells": 0
+    },
+    {
+      "region_id": 2,
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 53,
+      "expected_open_mass_proxy": 50.541,
+      "satisfaction_cap_cells": 48,
+      "predicted_visible_nominal": 48,
+      "predicted_visible_stress": 47,
+      "nominal_target_met": true,
+      "stress_target_met": false,
+      "historically_outside_current_room_cells": 0
+    },
+    {
+      "region_id": 11,
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 130,
+      "expected_open_mass_proxy": 23.146,
+      "satisfaction_cap_cells": 117,
+      "predicted_visible_nominal": 49,
+      "predicted_visible_stress": 36,
+      "nominal_target_met": false,
+      "stress_target_met": false,
+      "historically_outside_current_room_cells": 124
+    },
+    {
+      "region_id": 6,
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 23,
+      "expected_open_mass_proxy": 19.544,
+      "satisfaction_cap_cells": 21,
+      "predicted_visible_nominal": 23,
+      "predicted_visible_stress": 3,
+      "nominal_target_met": true,
+      "stress_target_met": false,
+      "historically_outside_current_room_cells": 0
+    },
+    {
+      "region_id": 12,
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 90,
+      "expected_open_mass_proxy": 14.366,
+      "satisfaction_cap_cells": 81,
+      "predicted_visible_nominal": 50,
+      "predicted_visible_stress": 18,
+      "nominal_target_met": false,
+      "stress_target_met": false,
+      "historically_outside_current_room_cells": 82
+    }
+  ],
+  "mission_unknown": 1028,
+  "major_regions": 5,
+  "unresolved_minor_regions": [
+    {
+      "region_id": 13,
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 50,
+      "historically_outside_current_room": 47
+    },
+    {
+      "region_id": 14,
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 8,
+      "historically_outside_current_room": 8
+    },
+    {
+      "region_id": 15,
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 3,
+      "historically_outside_current_room": 3
+    },
+    {
+      "region_id": 16,
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 3,
+      "historically_outside_current_room": 3
+    },
+    {
+      "region_id": 17,
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 2,
+      "historically_outside_current_room": 2
+    }
+  ],
+  "current_room_unknown": 759,
+  "historical_unknown_outside_current": 269,
+  "search": {
+    "initial_goal_proposals": 177,
+    "chosen_goal_candidate_pool": 48,
+    "beam_width": 6,
+    "depth_bound": 7,
+    "primary_objective": "lexicographic open-region satisfaction then nominal 2%-bucketed coverage, then travel/number of goals",
+    "unverified_wall_regions_not_automatically_cleared": true,
+    "coarse_full_sequence_candidates": 42,
+    "dense_rechecked_full_sequences": 67,
+    "coarse_rays": 250,
+    "dense_rays": 2500,
+    "coarse_cached_scan_poses": 1101,
+    "fine_cached_scan_poses": 305,
+    "wall_time_s": 43.099,
+    "stopping_notes": []
+  },
+  "config": {
+    "resolution_m": 0.1,
+    "range_m": 20.0,
+    "coarse_beams": 250,
+    "dense_beams": 2500,
+    "coarse_ray_step_cells": 0.5,
+    "dense_ray_step_cells": 0.25,
+    "scan_every_cells": 5,
+    "grid_stride_cells": 4,
+    "clearance_cells": 2,
+    "max_initial_viewpoint_proposals": 175,
+    "max_search_candidates": 48,
+    "min_major_expected_open_mass": 12.0,
+    "min_major_region_cells": 18,
+    "region_satisfaction_fraction": 0.9,
+    "max_search_depth": 7,
+    "beam_width": 6,
+    "shortlisted_final_sequences": 10,
+    "coverage_value_scale": 1.0,
+    "route_cost_per_m": 0.18,
+    "stop_cost_per_goal": 0.45,
+    "pessimistic_sigma": 1.0,
+    "nominal_scenario_fraction": 0.7,
+    "structural_quality_bins": 50,
+    "decision_id": "VP1"
+  },
+  "cautions": [
+    "All goals are conditional and lie in currently observed-free connected region, not model-predicted unknown",
+    "Selection covers meaningful unresolved room regions, NOT a proof every free cell has been explored",
+    "LaMa mean+variance generate two occupancy stress proxies, NOT calibrated ensemble probabilities",
+    "An observed-free grid path is not a certified physical robot path",
+    "Mission unknown outside current R4.1 room persists and must be adjudicated",
+    "Search and candidate subsets are budgeted approximations; no global-optimality claim",
+    "Run LaMa and R4.1 again after materially new observed evidence; do not follow frozen goals blindly"
+  ]
+}

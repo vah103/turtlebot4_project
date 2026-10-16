@@ -1,0 +1,66 @@
+{
+  "scope": "R3 final snapshot at VP1; goals frozen prior to retrospective GT sensor replay",
+  "future_or_GT_in_goal_choice": false,
+  "sensor_rays": 2500,
+  "sensor_max_range_m": 20.0,
+  "scan_spacing_m": 0.5,
+  "initial_unknown_original_room_after_VP1": 1021,
+  "original_room_unknown_initial_D02": 3889,
+  "outcome": "SEQUENCE_COMPLETED",
+  "stages": [
+    {
+      "stage": 1,
+      "goal_xy_m": [
+        11.5,
+        19.2
+      ],
+      "distance_leg_m": 4.4,
+      "cumulative_distance_m": 4.4,
+      "scan_count": 9,
+      "new_original_room_observed": 288,
+      "new_original_room_free": 268,
+      "new_original_room_wall": 20,
+      "remaining_original_room_unknown": 733,
+      "remaining_GT_free_unknown_EVAL_ONLY": 417,
+      "remaining_GT_wall_unknown_EVAL_ONLY": 316
+    },
+    {
+      "stage": 2,
+      "goal_xy_m": [
+        19.5,
+        19.6
+      ],
+      "distance_leg_m": 12.2,
+      "cumulative_distance_m": 16.6,
+      "scan_count": 25,
+      "new_original_room_observed": 427,
+      "new_original_room_free": 383,
+      "new_original_room_wall": 44,
+      "remaining_original_room_unknown": 306,
+      "remaining_GT_free_unknown_EVAL_ONLY": 34,
+      "remaining_GT_wall_unknown_EVAL_ONLY": 272
+    },
+    {
+      "stage": 3,
+      "goal_xy_m": [
+        20.7,
+        15.6
+      ],
+      "distance_leg_m": 15.2,
+      "cumulative_distance_m": 31.8,
+      "scan_count": 31,
+      "new_original_room_observed": 40,
+      "new_original_room_free": 30,
+      "new_original_room_wall": 10,
+      "remaining_original_room_unknown": 266,
+      "remaining_GT_free_unknown_EVAL_ONLY": 4,
+      "remaining_GT_wall_unknown_EVAL_ONLY": 262
+    }
+  ],
+  "total_distance_m": 31.8,
+  "total_scans": 65,
+  "original_room_unknown_end": 266,
+  "original_room_GT_free_unknown_end_EVAL_ONLY": 4,
+  "not_native": true,
+  "not_event_triggered_replan": true
+}

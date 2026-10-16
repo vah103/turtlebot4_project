@@ -1,0 +1,392 @@
+{
+  "version": "G2_R3_STRUCTURE_SEQUENCE_V1",
+  "status": "CONDITIONAL_VIEWPOINT_SEQUENCE",
+  "decision_id": "D02",
+  "snapshot_sha256": "de96490d2c94ca0b10ff7f359b2b8fe3b4bc9a8d5656194b9ceec8c13c539b23",
+  "input_used_gt": false,
+  "future_observation_used": false,
+  "goal_sequence": [
+    [
+      171,
+      135
+    ]
+  ],
+  "goal_sequence_xy_m": [
+    [
+      13.5,
+      17.1
+    ]
+  ],
+  "goal_count": 1,
+  "total_route_m": 4.8,
+  "selected": {
+    "points_rc": [
+      [
+        171,
+        135
+      ]
+    ],
+    "goal_count": 1,
+    "distance_m": 4.8,
+    "quality_score": 17.79675,
+    "shortfall_score": 0.74108,
+    "objective_score": 16.48275,
+    "structural_regions_nominal_met": 3,
+    "structural_quality_bucket": 50,
+    "projected_unseen_major_region_cells_nominal": 9,
+    "stages": [
+      {
+        "goal_rc": [
+          171,
+          135
+        ],
+        "goal_xy_m": [
+          13.5,
+          17.1
+        ],
+        "distance_leg_m": 4.8,
+        "path_rc": [
+          [
+            147,
+            111
+          ],
+          [
+            148,
+            111
+          ],
+          [
+            149,
+            111
+          ],
+          [
+            150,
+            111
+          ],
+          [
+            151,
+            111
+          ],
+          [
+            152,
+            111
+          ],
+          [
+            153,
+            111
+          ],
+          [
+            154,
+            111
+          ],
+          [
+            155,
+            111
+          ],
+          [
+            156,
+            111
+          ],
+          [
+            157,
+            111
+          ],
+          [
+            158,
+            111
+          ],
+          [
+            159,
+            111
+          ],
+          [
+            160,
+            111
+          ],
+          [
+            161,
+            111
+          ],
+          [
+            162,
+            111
+          ],
+          [
+            163,
+            111
+          ],
+          [
+            164,
+            111
+          ],
+          [
+            165,
+            111
+          ],
+          [
+            166,
+            111
+          ],
+          [
+            166,
+            112
+          ],
+          [
+            166,
+            113
+          ],
+          [
+            166,
+            114
+          ],
+          [
+            166,
+            115
+          ],
+          [
+            166,
+            116
+          ],
+          [
+            166,
+            117
+          ],
+          [
+            166,
+            118
+          ],
+          [
+            166,
+            119
+          ],
+          [
+            166,
+            120
+          ],
+          [
+            166,
+            121
+          ],
+          [
+            167,
+            121
+          ],
+          [
+            168,
+            121
+          ],
+          [
+            169,
+            121
+          ],
+          [
+            170,
+            121
+          ],
+          [
+            171,
+            121
+          ],
+          [
+            171,
+            122
+          ],
+          [
+            171,
+            123
+          ],
+          [
+            171,
+            124
+          ],
+          [
+            171,
+            125
+          ],
+          [
+            171,
+            126
+          ],
+          [
+            171,
+            127
+          ],
+          [
+            171,
+            128
+          ],
+          [
+            171,
+            129
+          ],
+          [
+            171,
+            130
+          ],
+          [
+            171,
+            131
+          ],
+          [
+            171,
+            132
+          ],
+          [
+            171,
+            133
+          ],
+          [
+            171,
+            134
+          ],
+          [
+            171,
+            135
+          ]
+        ],
+        "newly_visible_unknown_nominal": 3873,
+        "newly_visible_unknown_stress": 2807,
+        "cumulative_quality_score": 17.7967,
+        "objective": 16.4827
+      }
+    ],
+    "scenario": 2500,
+    "heuristic_satisfaction_not_real_coverage": true
+  },
+  "regions": [
+    {
+      "region_id": 1,
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 3381,
+      "expected_open_mass_proxy": 3309.367,
+      "satisfaction_cap_cells": 3043,
+      "predicted_visible_nominal": 3377,
+      "predicted_visible_stress": 2397,
+      "nominal_target_met": true,
+      "stress_target_met": false,
+      "historically_outside_current_room_cells": 0
+    },
+    {
+      "region_id": 2,
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 405,
+      "expected_open_mass_proxy": 382.274,
+      "satisfaction_cap_cells": 365,
+      "predicted_visible_nominal": 400,
+      "predicted_visible_stress": 319,
+      "nominal_target_met": true,
+      "stress_target_met": false,
+      "historically_outside_current_room_cells": 0
+    },
+    {
+      "region_id": 3,
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 90,
+      "expected_open_mass_proxy": 87.612,
+      "satisfaction_cap_cells": 81,
+      "predicted_visible_nominal": 90,
+      "predicted_visible_stress": 88,
+      "nominal_target_met": true,
+      "stress_target_met": true,
+      "historically_outside_current_room_cells": 0
+    }
+  ],
+  "mission_unknown": 3889,
+  "major_regions": 3,
+  "unresolved_minor_regions": [
+    {
+      "region_id": 4,
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 3,
+      "historically_outside_current_room": 0
+    },
+    {
+      "region_id": 5,
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 3,
+      "historically_outside_current_room": 0
+    },
+    {
+      "region_id": 6,
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 2,
+      "historically_outside_current_room": 0
+    },
+    {
+      "region_id": 7,
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 2,
+      "historically_outside_current_room": 0
+    },
+    {
+      "region_id": 8,
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 1,
+      "historically_outside_current_room": 0
+    },
+    {
+      "region_id": 9,
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 1,
+      "historically_outside_current_room": 0
+    },
+    {
+      "region_id": 10,
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 1,
+      "historically_outside_current_room": 0
+    }
+  ],
+  "current_room_unknown": 3889,
+  "historical_unknown_outside_current": 0,
+  "search": {
+    "initial_goal_proposals": 112,
+    "chosen_goal_candidate_pool": 47,
+    "beam_width": 6,
+    "depth_bound": 7,
+    "primary_objective": "lexicographic open-region satisfaction then nominal 2%-bucketed coverage, then travel/number of goals",
+    "unverified_wall_regions_not_automatically_cleared": true,
+    "coarse_full_sequence_candidates": 42,
+    "dense_rechecked_full_sequences": 42,
+    "coarse_rays": 250,
+    "dense_rays": 2500,
+    "coarse_cached_scan_poses": 572,
+    "fine_cached_scan_poses": 119,
+    "wall_time_s": 17.112,
+    "stopping_notes": []
+  },
+  "config": {
+    "resolution_m": 0.1,
+    "range_m": 20.0,
+    "coarse_beams": 250,
+    "dense_beams": 2500,
+    "coarse_ray_step_cells": 0.5,
+    "dense_ray_step_cells": 0.25,
+    "scan_every_cells": 5,
+    "grid_stride_cells": 4,
+    "clearance_cells": 2,
+    "max_initial_viewpoint_proposals": 175,
+    "max_search_candidates": 48,
+    "min_major_expected_open_mass": 12.0,
+    "min_major_region_cells": 18,
+    "region_satisfaction_fraction": 0.9,
+    "max_search_depth": 7,
+    "beam_width": 6,
+    "shortlisted_final_sequences": 10,
+    "coverage_value_scale": 1.0,
+    "route_cost_per_m": 0.18,
+    "stop_cost_per_goal": 0.45,
+    "pessimistic_sigma": 1.0,
+    "nominal_scenario_fraction": 0.7,
+    "structural_quality_bins": 50,
+    "decision_id": "D02"
+  },
+  "cautions": [
+    "All goals are conditional and lie in currently observed-free connected region, not model-predicted unknown",
+    "Selection covers meaningful unresolved room regions, NOT a proof every free cell has been explored",
+    "LaMa mean+variance generate two occupancy stress proxies, NOT calibrated ensemble probabilities",
+    "An observed-free grid path is not a certified physical robot path",
+    "Mission unknown outside current R4.1 room persists and must be adjudicated",
+    "Search and candidate subsets are budgeted approximations; no global-optimality claim",
+    "Run LaMa and R4.1 again after materially new observed evidence; do not follow frozen goals blindly"
+  ]
+}
