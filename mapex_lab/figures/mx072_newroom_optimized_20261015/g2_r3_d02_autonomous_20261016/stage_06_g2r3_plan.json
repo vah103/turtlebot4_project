@@ -1,0 +1,285 @@
+{
+  "version": "G2_R3_STRUCTURE_SEQUENCE_V1",
+  "status": "CONDITIONAL_VIEWPOINT_SEQUENCE",
+  "decision_id": "R3_D02_CAUSAL_STAGE_06",
+  "snapshot_sha256": "adac483495b55991583fa3ce80c87e182e42188f134ef666e540a06e8ab38dcf",
+  "input_used_gt": false,
+  "future_observation_used": false,
+  "goal_sequence": [
+    [
+      167,
+      123
+    ],
+    [
+      171,
+      123
+    ]
+  ],
+  "goal_sequence_xy_m": [
+    [
+      12.3,
+      16.7
+    ],
+    [
+      12.3,
+      17.1
+    ]
+  ],
+  "goal_count": 2,
+  "total_route_m": 1.6,
+  "selected": {
+    "points_rc": [
+      [
+        167,
+        123
+      ],
+      [
+        171,
+        123
+      ]
+    ],
+    "goal_count": 2,
+    "distance_m": 1.6,
+    "quality_score": 3.35483,
+    "shortfall_score": 8.07963,
+    "objective_score": 2.16683,
+    "structural_regions_nominal_met": 1,
+    "structural_quality_bucket": 17,
+    "projected_unseen_major_region_cells_nominal": 111,
+    "stages": [
+      {
+        "goal_rc": [
+          167,
+          123
+        ],
+        "goal_xy_m": [
+          12.3,
+          16.7
+        ],
+        "distance_leg_m": 1.2,
+        "path_rc": [
+          [
+            159,
+            127
+          ],
+          [
+            160,
+            127
+          ],
+          [
+            161,
+            127
+          ],
+          [
+            162,
+            127
+          ],
+          [
+            163,
+            127
+          ],
+          [
+            164,
+            127
+          ],
+          [
+            165,
+            127
+          ],
+          [
+            166,
+            127
+          ],
+          [
+            167,
+            127
+          ],
+          [
+            167,
+            126
+          ],
+          [
+            167,
+            125
+          ],
+          [
+            167,
+            124
+          ],
+          [
+            167,
+            123
+          ]
+        ],
+        "newly_visible_unknown_nominal": 47,
+        "newly_visible_unknown_stress": 17,
+        "cumulative_quality_score": 2.5263,
+        "objective": 1.8603
+      },
+      {
+        "goal_rc": [
+          171,
+          123
+        ],
+        "goal_xy_m": [
+          12.3,
+          17.1
+        ],
+        "distance_leg_m": 0.4,
+        "path_rc": [
+          [
+            167,
+            123
+          ],
+          [
+            168,
+            123
+          ],
+          [
+            169,
+            123
+          ],
+          [
+            170,
+            123
+          ],
+          [
+            171,
+            123
+          ]
+        ],
+        "newly_visible_unknown_nominal": 10,
+        "newly_visible_unknown_stress": 15,
+        "cumulative_quality_score": 3.3548,
+        "objective": 2.1668
+      }
+    ],
+    "scenario": 2500,
+    "heuristic_satisfaction_not_real_coverage": true
+  },
+  "regions": [
+    {
+      "region_id": 18,
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 81,
+      "expected_open_mass_proxy": 78.99,
+      "satisfaction_cap_cells": 73,
+      "predicted_visible_nominal": 0,
+      "predicted_visible_stress": 0,
+      "nominal_target_met": false,
+      "stress_target_met": false,
+      "historically_outside_current_room_cells": 81
+    },
+    {
+      "region_id": 6,
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 52,
+      "expected_open_mass_proxy": 44.506,
+      "satisfaction_cap_cells": 47,
+      "predicted_visible_nominal": 47,
+      "predicted_visible_stress": 28,
+      "nominal_target_met": true,
+      "stress_target_met": false,
+      "historically_outside_current_room_cells": 0
+    },
+    {
+      "region_id": 16,
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 25,
+      "expected_open_mass_proxy": 24.399,
+      "satisfaction_cap_cells": 23,
+      "predicted_visible_nominal": 0,
+      "predicted_visible_stress": 0,
+      "nominal_target_met": false,
+      "stress_target_met": false,
+      "historically_outside_current_room_cells": 25
+    }
+  ],
+  "mission_unknown": 288,
+  "major_regions": 3,
+  "unresolved_minor_regions": [
+    {
+      "region_id": 2,
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 24,
+      "historically_outside_current_room": 24
+    },
+    {
+      "region_id": 11,
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 7,
+      "historically_outside_current_room": 0
+    },
+    {
+      "region_id": 12,
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 64,
+      "historically_outside_current_room": 64
+    },
+    {
+      "region_id": 13,
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 31,
+      "historically_outside_current_room": 31
+    },
+    {
+      "region_id": 14,
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 4,
+      "historically_outside_current_room": 0
+    }
+  ],
+  "current_room_unknown": 63,
+  "historical_unknown_outside_current": 225,
+  "search": {
+    "initial_goal_proposals": 176,
+    "chosen_goal_candidate_pool": 48,
+    "beam_width": 6,
+    "depth_bound": 7,
+    "primary_objective": "lexicographic open-region satisfaction then nominal 2%-bucketed coverage, then travel/number of goals",
+    "unverified_wall_regions_not_automatically_cleared": true,
+    "coarse_full_sequence_candidates": 42,
+    "dense_rechecked_full_sequences": 43,
+    "coarse_rays": 250,
+    "dense_rays": 2500,
+    "coarse_cached_scan_poses": 956,
+    "fine_cached_scan_poses": 59,
+    "wall_time_s": 14.493,
+    "stopping_notes": []
+  },
+  "config": {
+    "resolution_m": 0.1,
+    "range_m": 20.0,
+    "coarse_beams": 250,
+    "dense_beams": 2500,
+    "coarse_ray_step_cells": 0.5,
+    "dense_ray_step_cells": 0.25,
+    "scan_every_cells": 5,
+    "grid_stride_cells": 4,
+    "clearance_cells": 2,
+    "max_initial_viewpoint_proposals": 175,
+    "max_search_candidates": 48,
+    "min_major_expected_open_mass": 12.0,
+    "min_major_region_cells": 18,
+    "region_satisfaction_fraction": 0.9,
+    "max_search_depth": 7,
+    "beam_width": 6,
+    "shortlisted_final_sequences": 10,
+    "coverage_value_scale": 1.0,
+    "route_cost_per_m": 0.18,
+    "stop_cost_per_goal": 0.45,
+    "pessimistic_sigma": 1.0,
+    "nominal_scenario_fraction": 0.7,
+    "structural_quality_bins": 50,
+    "decision_id": "R3_D02_CAUSAL_STAGE_06"
+  },
+  "cautions": [
+    "All goals are conditional and lie in currently observed-free connected region, not model-predicted unknown",
+    "Selection covers meaningful unresolved room regions, NOT a proof every free cell has been explored",
+    "LaMa mean+variance generate two occupancy stress proxies, NOT calibrated ensemble probabilities",
+    "An observed-free grid path is not a certified physical robot path",
+    "Mission unknown outside current R4.1 room persists and must be adjudicated",
+    "Search and candidate subsets are budgeted approximations; no global-optimality claim",
+    "Run LaMa and R4.1 again after materially new observed evidence; do not follow frozen goals blindly"
+  ]
+}

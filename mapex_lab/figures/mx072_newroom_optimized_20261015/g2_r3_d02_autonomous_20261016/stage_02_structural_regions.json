@@ -1,0 +1,703 @@
+{
+  "version": "G2_R3_STRUCTURAL_MEMORY_V1",
+  "decision_id": "R3_D02_CAUSAL_STAGE_02",
+  "robot_core_rc": [
+    187,
+    115
+  ],
+  "snapshot_sha256": "96e0caf0cd819372d01e0864666c527535c3850b34334cf1891ffbfe6eb8484b",
+  "observed_sha256": "96e0caf0cd819372d01e0864666c527535c3850b34334cf1891ffbfe6eb8484b",
+  "mean_sha256": "4bd13a22ccd063f974e6e1d64a239532349d8580434c49b1255e6d3cc815c14d",
+  "variance_sha256": "766634a9f5f0efe2966cbf5c25396e6b761155e78998f356248994d7040d7116",
+  "semantic_sha256": "716db0e7bd5700e804df4a7333e56f5cd246fece51de0dbfef779faaf3f622bd",
+  "input_used_gt": false,
+  "planning_is_current_snapshot_only": true,
+  "original_room_cells": 6564,
+  "mission_envelope_cells": 6714,
+  "new_mission_cells_since_last_snapshot": 1,
+  "mission_unknown": 626,
+  "original_room_unknown": 618,
+  "current_room_cells": 6447,
+  "current_room_unknown": 424,
+  "unknown_outside_current_room": 202,
+  "predicted_free_like_unknown": 414,
+  "unverified_predicted_wall_unknown": 212,
+  "currently_safe_viewpoint_candidates": 180,
+  "status": "STRUCTURE_READY_FOR_G2",
+  "regions": [
+    {
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 175,
+      "bbox_rc": [
+        169,
+        179,
+        175,
+        210
+      ],
+      "center_xy_m": [
+        19.25,
+        17.22
+      ],
+      "expected_open_cell_mass_proxy": 153.456,
+      "mean_entropy_proxy": 0.3566,
+      "mean_variance": 0.1097,
+      "currently_accepted_cells": 175,
+      "historically_retained_outside_current": 0,
+      "lifecycle": "UNOBSERVED_UNRESOLVED",
+      "region_id": 1,
+      "current_robot_nominal_line_of_sight_cells": 0,
+      "occluded_by_predicted_structure_proxy_cells": 0,
+      "occluded_by_observed_structure_or_geometry_proxy_cells": 175,
+      "candidate_vantage_count": 110,
+      "top_conditional_viewpoints": [
+        {
+          "core_rc": [
+            159,
+            203
+          ],
+          "xy_m": [
+            20.3,
+            15.9
+          ],
+          "route_distance_m": 11.6,
+          "predicted_visible_region_cells_along_route": 172,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            167,
+            207
+          ],
+          "xy_m": [
+            20.7,
+            16.7
+          ],
+          "route_distance_m": 11.6,
+          "predicted_visible_region_cells_along_route": 172,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            147,
+            207
+          ],
+          "xy_m": [
+            20.7,
+            14.7
+          ],
+          "route_distance_m": 13.2,
+          "predicted_visible_region_cells_along_route": 172,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        }
+      ],
+      "attention": "POTENTIAL_FREE_SPACE_TO_CHECK",
+      "planning_evidence": "NO_FUTURE_OR_GT: approximate raycast on current mean; goals are candidate witnesses only"
+    },
+    {
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 24,
+      "bbox_rc": [
+        173,
+        108,
+        178,
+        117
+      ],
+      "center_xy_m": [
+        11.16,
+        17.63
+      ],
+      "expected_open_cell_mass_proxy": 1.35,
+      "mean_entropy_proxy": 0.1914,
+      "mean_variance": 0.0406,
+      "currently_accepted_cells": 0,
+      "historically_retained_outside_current": 24,
+      "lifecycle": "UNOBSERVED_UNRESOLVED",
+      "region_id": 2,
+      "current_robot_nominal_line_of_sight_cells": 0,
+      "occluded_by_predicted_structure_proxy_cells": 0,
+      "occluded_by_observed_structure_or_geometry_proxy_cells": 24,
+      "candidate_vantage_count": 162,
+      "top_conditional_viewpoints": [
+        {
+          "core_rc": [
+            167,
+            127
+          ],
+          "xy_m": [
+            12.7,
+            16.7
+          ],
+          "route_distance_m": 3.2,
+          "predicted_visible_region_cells_along_route": 11,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            167,
+            131
+          ],
+          "xy_m": [
+            13.1,
+            16.7
+          ],
+          "route_distance_m": 3.6,
+          "predicted_visible_region_cells_along_route": 11,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            155,
+            127
+          ],
+          "xy_m": [
+            12.7,
+            15.5
+          ],
+          "route_distance_m": 4.4,
+          "predicted_visible_region_cells_along_route": 11,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        }
+      ],
+      "attention": "RETAINED_AFTER_ROOM_RECLASSIFICATION",
+      "planning_evidence": "NO_FUTURE_OR_GT: approximate raycast on current mean; goals are candidate witnesses only"
+    },
+    {
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 52,
+      "bbox_rc": [
+        171,
+        110,
+        177,
+        117
+      ],
+      "center_xy_m": [
+        11.32,
+        17.39
+      ],
+      "expected_open_cell_mass_proxy": 44.25,
+      "mean_entropy_proxy": 0.4871,
+      "mean_variance": 0.08849,
+      "currently_accepted_cells": 52,
+      "historically_retained_outside_current": 0,
+      "lifecycle": "UNOBSERVED_UNRESOLVED",
+      "region_id": 6,
+      "current_robot_nominal_line_of_sight_cells": 0,
+      "occluded_by_predicted_structure_proxy_cells": 0,
+      "occluded_by_observed_structure_or_geometry_proxy_cells": 52,
+      "candidate_vantage_count": 142,
+      "top_conditional_viewpoints": [
+        {
+          "core_rc": [
+            163,
+            119
+          ],
+          "xy_m": [
+            11.9,
+            16.3
+          ],
+          "route_distance_m": 3.2,
+          "predicted_visible_region_cells_along_route": 49,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            167,
+            127
+          ],
+          "xy_m": [
+            12.7,
+            16.7
+          ],
+          "route_distance_m": 3.2,
+          "predicted_visible_region_cells_along_route": 49,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            159,
+            123
+          ],
+          "xy_m": [
+            12.3,
+            15.9
+          ],
+          "route_distance_m": 3.6,
+          "predicted_visible_region_cells_along_route": 49,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        }
+      ],
+      "attention": "POTENTIAL_FREE_SPACE_TO_CHECK",
+      "planning_evidence": "NO_FUTURE_OR_GT: approximate raycast on current mean; goals are candidate witnesses only"
+    },
+    {
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 78,
+      "bbox_rc": [
+        183,
+        196,
+        194,
+        210
+      ],
+      "center_xy_m": [
+        20.56,
+        18.91
+      ],
+      "expected_open_cell_mass_proxy": 74.581,
+      "mean_entropy_proxy": 0.1279,
+      "mean_variance": 0.03355,
+      "currently_accepted_cells": 78,
+      "historically_retained_outside_current": 0,
+      "lifecycle": "UNOBSERVED_UNRESOLVED",
+      "region_id": 11,
+      "current_robot_nominal_line_of_sight_cells": 0,
+      "occluded_by_predicted_structure_proxy_cells": 0,
+      "occluded_by_observed_structure_or_geometry_proxy_cells": 78,
+      "candidate_vantage_count": 135,
+      "top_conditional_viewpoints": [
+        {
+          "core_rc": [
+            195,
+            179
+          ],
+          "xy_m": [
+            17.9,
+            19.5
+          ],
+          "route_distance_m": 10.0,
+          "predicted_visible_region_cells_along_route": 49,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            195,
+            183
+          ],
+          "xy_m": [
+            18.3,
+            19.5
+          ],
+          "route_distance_m": 10.4,
+          "predicted_visible_region_cells_along_route": 49,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            195,
+            191
+          ],
+          "xy_m": [
+            19.1,
+            19.5
+          ],
+          "route_distance_m": 11.2,
+          "predicted_visible_region_cells_along_route": 49,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        }
+      ],
+      "attention": "POTENTIAL_FREE_SPACE_TO_CHECK",
+      "planning_evidence": "NO_FUTURE_OR_GT: approximate raycast on current mean; goals are candidate witnesses only"
+    },
+    {
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 95,
+      "bbox_rc": [
+        168,
+        149,
+        174,
+        178
+      ],
+      "center_xy_m": [
+        16.31,
+        17.09
+      ],
+      "expected_open_cell_mass_proxy": 14.009,
+      "mean_entropy_proxy": 0.4012,
+      "mean_variance": 0.09952,
+      "currently_accepted_cells": 18,
+      "historically_retained_outside_current": 77,
+      "lifecycle": "UNOBSERVED_UNRESOLVED",
+      "region_id": 12,
+      "current_robot_nominal_line_of_sight_cells": 0,
+      "occluded_by_predicted_structure_proxy_cells": 0,
+      "occluded_by_observed_structure_or_geometry_proxy_cells": 95,
+      "candidate_vantage_count": 129,
+      "top_conditional_viewpoints": [
+        {
+          "core_rc": [
+            179,
+            191
+          ],
+          "xy_m": [
+            19.1,
+            17.9
+          ],
+          "route_distance_m": 9.6,
+          "predicted_visible_region_cells_along_route": 55,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            179,
+            203
+          ],
+          "xy_m": [
+            20.3,
+            17.9
+          ],
+          "route_distance_m": 10.8,
+          "predicted_visible_region_cells_along_route": 55,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            179,
+            195
+          ],
+          "xy_m": [
+            19.5,
+            17.9
+          ],
+          "route_distance_m": 10.0,
+          "predicted_visible_region_cells_along_route": 54,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        }
+      ],
+      "attention": "RETAINED_AFTER_ROOM_RECLASSIFICATION",
+      "planning_evidence": "NO_FUTURE_OR_GT: approximate raycast on current mean; goals are candidate witnesses only"
+    },
+    {
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 74,
+      "bbox_rc": [
+        182,
+        194,
+        190,
+        208
+      ],
+      "center_xy_m": [
+        20.06,
+        18.62
+      ],
+      "expected_open_cell_mass_proxy": 12.242,
+      "mean_entropy_proxy": 0.4583,
+      "mean_variance": 0.13662,
+      "currently_accepted_cells": 5,
+      "historically_retained_outside_current": 69,
+      "lifecycle": "UNOBSERVED_UNRESOLVED",
+      "region_id": 13,
+      "current_robot_nominal_line_of_sight_cells": 0,
+      "occluded_by_predicted_structure_proxy_cells": 0,
+      "occluded_by_observed_structure_or_geometry_proxy_cells": 74,
+      "candidate_vantage_count": 62,
+      "top_conditional_viewpoints": [
+        {
+          "core_rc": [
+            195,
+            199
+          ],
+          "xy_m": [
+            19.9,
+            19.5
+          ],
+          "route_distance_m": 12.0,
+          "predicted_visible_region_cells_along_route": 15,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            195,
+            191
+          ],
+          "xy_m": [
+            19.1,
+            19.5
+          ],
+          "route_distance_m": 11.2,
+          "predicted_visible_region_cells_along_route": 14,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            195,
+            183
+          ],
+          "xy_m": [
+            18.3,
+            19.5
+          ],
+          "route_distance_m": 10.4,
+          "predicted_visible_region_cells_along_route": 9,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        }
+      ],
+      "attention": "RETAINED_AFTER_ROOM_RECLASSIFICATION",
+      "planning_evidence": "NO_FUTURE_OR_GT: approximate raycast on current mean; goals are candidate witnesses only"
+    },
+    {
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 4,
+      "bbox_rc": [
+        174,
+        107,
+        177,
+        107
+      ],
+      "center_xy_m": [
+        10.7,
+        17.55
+      ],
+      "expected_open_cell_mass_proxy": 4.0,
+      "mean_entropy_proxy": 0.0,
+      "mean_variance": 0.0,
+      "currently_accepted_cells": 4,
+      "historically_retained_outside_current": 0,
+      "lifecycle": "UNOBSERVED_UNRESOLVED",
+      "region_id": 14,
+      "current_robot_nominal_line_of_sight_cells": 0,
+      "occluded_by_predicted_structure_proxy_cells": 0,
+      "occluded_by_observed_structure_or_geometry_proxy_cells": 4,
+      "candidate_vantage_count": 31,
+      "top_conditional_viewpoints": [
+        {
+          "core_rc": [
+            183,
+            107
+          ],
+          "xy_m": [
+            10.7,
+            18.3
+          ],
+          "route_distance_m": 1.2,
+          "predicted_visible_region_cells_along_route": 4,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            187,
+            103
+          ],
+          "xy_m": [
+            10.3,
+            18.7
+          ],
+          "route_distance_m": 1.2,
+          "predicted_visible_region_cells_along_route": 4,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            191,
+            107
+          ],
+          "xy_m": [
+            10.7,
+            19.1
+          ],
+          "route_distance_m": 1.2,
+          "predicted_visible_region_cells_along_route": 4,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        }
+      ],
+      "attention": "POTENTIAL_FREE_SPACE_TO_CHECK",
+      "planning_evidence": "NO_FUTURE_OR_GT: approximate raycast on current mean; goals are candidate witnesses only"
+    },
+    {
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 16,
+      "bbox_rc": [
+        184,
+        195,
+        188,
+        199
+      ],
+      "center_xy_m": [
+        19.68,
+        18.57
+      ],
+      "expected_open_cell_mass_proxy": 10.222,
+      "mean_entropy_proxy": 0.8828,
+      "mean_variance": 0.18002,
+      "currently_accepted_cells": 0,
+      "historically_retained_outside_current": 16,
+      "lifecycle": "UNOBSERVED_UNRESOLVED",
+      "region_id": 16,
+      "current_robot_nominal_line_of_sight_cells": 0,
+      "occluded_by_predicted_structure_proxy_cells": 0,
+      "occluded_by_observed_structure_or_geometry_proxy_cells": 16,
+      "candidate_vantage_count": 0,
+      "top_conditional_viewpoints": [],
+      "attention": "RETAINED_AFTER_ROOM_RECLASSIFICATION",
+      "planning_evidence": "NO_FUTURE_OR_GT: approximate raycast on current mean; goals are candidate witnesses only"
+    },
+    {
+      "kind": "POSSIBLE_OPEN_SPACE",
+      "cells": 89,
+      "bbox_rc": [
+        170,
+        150,
+        174,
+        176
+      ],
+      "center_xy_m": [
+        16.42,
+        17.2
+      ],
+      "expected_open_cell_mass_proxy": 63.328,
+      "mean_entropy_proxy": 0.8007,
+      "mean_variance": 0.20631,
+      "currently_accepted_cells": 89,
+      "historically_retained_outside_current": 0,
+      "lifecycle": "UNOBSERVED_UNRESOLVED",
+      "region_id": 18,
+      "current_robot_nominal_line_of_sight_cells": 0,
+      "occluded_by_predicted_structure_proxy_cells": 0,
+      "occluded_by_observed_structure_or_geometry_proxy_cells": 89,
+      "candidate_vantage_count": 52,
+      "top_conditional_viewpoints": [
+        {
+          "core_rc": [
+            179,
+            203
+          ],
+          "xy_m": [
+            20.3,
+            17.9
+          ],
+          "route_distance_m": 10.8,
+          "predicted_visible_region_cells_along_route": 84,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            179,
+            195
+          ],
+          "xy_m": [
+            19.5,
+            17.9
+          ],
+          "route_distance_m": 10.0,
+          "predicted_visible_region_cells_along_route": 82,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            179,
+            191
+          ],
+          "xy_m": [
+            19.1,
+            17.9
+          ],
+          "route_distance_m": 9.6,
+          "predicted_visible_region_cells_along_route": 80,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        }
+      ],
+      "attention": "POTENTIAL_FREE_SPACE_TO_CHECK",
+      "planning_evidence": "NO_FUTURE_OR_GT: approximate raycast on current mean; goals are candidate witnesses only"
+    },
+    {
+      "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+      "cells": 19,
+      "bbox_rc": [
+        172,
+        202,
+        174,
+        208
+      ],
+      "center_xy_m": [
+        20.5,
+        17.3
+      ],
+      "expected_open_cell_mass_proxy": 6.487,
+      "mean_entropy_proxy": 0.9251,
+      "mean_variance": 0.32649,
+      "currently_accepted_cells": 3,
+      "historically_retained_outside_current": 16,
+      "lifecycle": "UNOBSERVED_UNRESOLVED",
+      "region_id": 19,
+      "current_robot_nominal_line_of_sight_cells": 0,
+      "occluded_by_predicted_structure_proxy_cells": 0,
+      "occluded_by_observed_structure_or_geometry_proxy_cells": 19,
+      "candidate_vantage_count": 109,
+      "top_conditional_viewpoints": [
+        {
+          "core_rc": [
+            187,
+            171
+          ],
+          "xy_m": [
+            17.1,
+            18.7
+          ],
+          "route_distance_m": 8.4,
+          "predicted_visible_region_cells_along_route": 9,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            179,
+            183
+          ],
+          "xy_m": [
+            18.3,
+            17.9
+          ],
+          "route_distance_m": 8.8,
+          "predicted_visible_region_cells_along_route": 9,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        },
+        {
+          "core_rc": [
+            183,
+            179
+          ],
+          "xy_m": [
+            17.9,
+            18.3
+          ],
+          "route_distance_m": 8.8,
+          "predicted_visible_region_cells_along_route": 9,
+          "is_valid_goal": true,
+          "not_a_final_G2_route_selection": true
+        }
+      ],
+      "attention": "RETAINED_AFTER_ROOM_RECLASSIFICATION",
+      "planning_evidence": "NO_FUTURE_OR_GT: approximate raycast on current mean; goals are candidate witnesses only"
+    }
+  ],
+  "cautions": [
+    "This is structural evidence; NOT a replacement sequence optimizer",
+    "LaMa occupancy mean is not a calibrated probability of physical free space",
+    "Do not convert predicted walls or former Room Node cells into observed evidence",
+    "Candidate viewpoint rays are approximate and do not certify robot collision safety",
+    "Historical mission regions remain unresolved until actually observed or independently adjudicated without GT"
+  ]
+}
