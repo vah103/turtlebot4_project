@@ -1,0 +1,78 @@
+{
+  "D02_VP1_POST_REPLAN": true,
+  "GOAL_SELECTION_NO_GT": true,
+  "goals": [
+    {
+      "goal": 1,
+      "rc_core": [
+        180,
+        102
+      ],
+      "native_rc": [
+        680,
+        602
+      ],
+      "xy_m": [
+        10.200000000000001,
+        18
+      ],
+      "leg_m": 4.9,
+      "scans_on_leg": 10,
+      "new_pred_free_unknown": 98,
+      "cumulative_new": 98,
+      "remaining_pred_free_unknown": 644,
+      "remaining_total_unknown_inside_updated_room": 661
+    },
+    {
+      "goal": 2,
+      "rc_core": [
+        192,
+        174
+      ],
+      "native_rc": [
+        692,
+        674
+      ],
+      "xy_m": [
+        17.400000000000002,
+        19.200000000000003
+      ],
+      "leg_m": 11.2,
+      "scans_on_leg": 23,
+      "new_pred_free_unknown": 389,
+      "cumulative_new": 487,
+      "remaining_pred_free_unknown": 255,
+      "remaining_total_unknown_inside_updated_room": 272
+    },
+    {
+      "goal": 3,
+      "rc_core": [
+        147,
+        207
+      ],
+      "native_rc": [
+        647,
+        707
+      ],
+      "xy_m": [
+        20.700000000000003,
+        14.700000000000001
+      ],
+      "leg_m": 13.6,
+      "scans_on_leg": 28,
+      "new_pred_free_unknown": 62,
+      "cumulative_new": 549,
+      "remaining_pred_free_unknown": 193,
+      "remaining_total_unknown_inside_updated_room": 210
+    }
+  ],
+  "total_distance_m": 29.7,
+  "covered_predfree_unknown": 549,
+  "predfree_unknown": 742,
+  "remaining_predfree_unknown": 193,
+  "observable_reference": 551,
+  "n_dense_rays": 2500,
+  "sample_step_cell": 0.25,
+  "scan_frequency_m": 0.5,
+  "coverage_fraction_stationary_upper_bound": 0.9963702359346642
+}

@@ -1,0 +1,48 @@
+{
+  "n_candidates": 491,
+  "n_predfree": 742,
+  "observable_from_all_candidates": 551,
+  "unobservable_from_all_candidates": 191,
+  "greedy_stationary_set_cover": [
+    {
+      "rc": [
+        192,
+        183
+      ],
+      "gain": 409,
+      "remaining": 142
+    },
+    {
+      "rc": [
+        150,
+        207
+      ],
+      "gain": 79,
+      "remaining": 63
+    },
+    {
+      "rc": [
+        180,
+        96
+      ],
+      "gain": 53,
+      "remaining": 10
+    },
+    {
+      "rc": [
+        186,
+        186
+      ],
+      "gain": 8,
+      "remaining": 2
+    },
+    {
+      "rc": [
+        147,
+        207
+      ],
+      "gain": 2,
+      "remaining": 0
+    }
+  ]
+}

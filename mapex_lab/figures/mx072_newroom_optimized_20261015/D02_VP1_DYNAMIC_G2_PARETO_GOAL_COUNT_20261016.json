@@ -1,0 +1,241 @@
+{
+  "candidate_count": 23,
+  "achievable_stationary_union": 551,
+  "target_objective": "min visited goals then shortest travel given attainable coverage; pathwise 720 rays every 0.5m",
+  "result": {
+    "1": {
+      "evaluated": 23,
+      "max_gain": 460,
+      "best": {
+        ".95": null,
+        ".98": null,
+        ".99": null,
+        ".995": null,
+        "nearfull": null
+      }
+    },
+    "2": {
+      "evaluated": 506,
+      "max_gain": 522,
+      "best": {
+        ".95": null,
+        ".98": null,
+        ".99": null,
+        ".995": null,
+        "nearfull": null
+      }
+    },
+    "3": {
+      "evaluated": 10626,
+      "max_gain": 552,
+      "best": {
+        ".95": {
+          "total_m": 22.3,
+          "gain": 524,
+          "sequence_rc": [
+            [
+              186,
+              186
+            ],
+            [
+              192,
+              168
+            ],
+            [
+              147,
+              207
+            ]
+          ]
+        },
+        ".98": {
+          "total_m": 27.9,
+          "gain": 540,
+          "sequence_rc": [
+            [
+              180,
+              102
+            ],
+            [
+              192,
+              168
+            ],
+            [
+              153,
+              207
+            ]
+          ]
+        },
+        ".99": {
+          "total_m": 29.7,
+          "gain": 546,
+          "sequence_rc": [
+            [
+              180,
+              102
+            ],
+            [
+              192,
+              174
+            ],
+            [
+              147,
+              207
+            ]
+          ]
+        },
+        ".995": {
+          "total_m": 31.5,
+          "gain": 549,
+          "sequence_rc": [
+            [
+              180,
+              102
+            ],
+            [
+              192,
+              183
+            ],
+            [
+              147,
+              207
+            ]
+          ]
+        },
+        "nearfull": {
+          "total_m": 33.9,
+          "gain": 552,
+          "sequence_rc": [
+            [
+              180,
+              102
+            ],
+            [
+              195,
+              192
+            ],
+            [
+              147,
+              207
+            ]
+          ]
+        }
+      }
+    },
+    "4": {
+      "evaluated": 212520,
+      "max_gain": 553,
+      "best": {
+        ".95": {
+          "total_m": 22.3,
+          "gain": 525,
+          "sequence_rc": [
+            [
+              186,
+              186
+            ],
+            [
+              192,
+              168
+            ],
+            [
+              153,
+              207
+            ],
+            [
+              147,
+              207
+            ]
+          ]
+        },
+        ".98": {
+          "total_m": 27.9,
+          "gain": 540,
+          "sequence_rc": [
+            [
+              180,
+              102
+            ],
+            [
+              192,
+              168
+            ],
+            [
+              156,
+              204
+            ],
+            [
+              153,
+              207
+            ]
+          ]
+        },
+        ".99": {
+          "total_m": 29.7,
+          "gain": 547,
+          "sequence_rc": [
+            [
+              180,
+              102
+            ],
+            [
+              192,
+              174
+            ],
+            [
+              153,
+              207
+            ],
+            [
+              147,
+              207
+            ]
+          ]
+        },
+        ".995": {
+          "total_m": 30.9,
+          "gain": 549,
+          "sequence_rc": [
+            [
+              180,
+              102
+            ],
+            [
+              192,
+              180
+            ],
+            [
+              153,
+              207
+            ],
+            [
+              147,
+              207
+            ]
+          ]
+        },
+        "nearfull": {
+          "total_m": 32.1,
+          "gain": 551,
+          "sequence_rc": [
+            [
+              180,
+              102
+            ],
+            [
+              192,
+              168
+            ],
+            [
+              186,
+              186
+            ],
+            [
+              147,
+              207
+            ]
+          ]
+        }
+      }
+    }
+  }
+}
