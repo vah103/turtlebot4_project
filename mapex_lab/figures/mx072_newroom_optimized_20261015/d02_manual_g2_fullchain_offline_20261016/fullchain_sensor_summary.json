@@ -1,0 +1,133 @@
+{
+  "source": "D02 originally frozen VP1, subsequent 3 goals frozen at VP1 with causal LaMa & R41",
+  "ground_truth_only_sensor": true,
+  "GT_read_footprint_never_goal_choice": true,
+  "scans_every_m": 0.5,
+  "rays": 2500,
+  "range_m": 20,
+  "scan_step_cell": 0.25,
+  "original_room_cells": 6564,
+  "original_unknown": 3889,
+  "total_distance_m": 34.2,
+  "total_scans": 70,
+  "unknown_after_all": 256,
+  "observed_fraction_original_unknown": 0.934173,
+  "stages": [
+    {
+      "stage": 1,
+      "leg": "D02_TO_VP1",
+      "start_rc": [
+        147,
+        111
+      ],
+      "goal_rc": [
+        168,
+        135
+      ],
+      "goal_xy_m": [
+        13.5,
+        16.8
+      ],
+      "length_m": 4.5,
+      "cumulative_length_m": 4.5,
+      "scans": 9,
+      "cumulative_scans": 9,
+      "new_total_free": 3676,
+      "new_total_occ": 165,
+      "new_in_initial_room": 2868,
+      "new_free_in_initial_room": 2822,
+      "new_wall_in_initial_room": 46,
+      "unknown_in_initial_room_remaining": 1021,
+      "remaining_true_free_eval_only": 685,
+      "remaining_true_wall_eval_only": 336,
+      "realized_original_room_unknown_fraction": 0.737465
+    },
+    {
+      "stage": 2,
+      "leg": "VP1_TO_G1",
+      "start_rc": [
+        168,
+        135
+      ],
+      "goal_rc": [
+        180,
+        102
+      ],
+      "goal_xy_m": [
+        10.2,
+        18.0
+      ],
+      "length_m": 4.9,
+      "cumulative_length_m": 9.4,
+      "scans": 10,
+      "cumulative_scans": 19,
+      "new_total_free": 91,
+      "new_total_occ": 23,
+      "new_in_initial_room": 98,
+      "new_free_in_initial_room": 80,
+      "new_wall_in_initial_room": 18,
+      "unknown_in_initial_room_remaining": 923,
+      "remaining_true_free_eval_only": 605,
+      "remaining_true_wall_eval_only": 318,
+      "realized_original_room_unknown_fraction": 0.762664
+    },
+    {
+      "stage": 3,
+      "leg": "G1_TO_G2",
+      "start_rc": [
+        180,
+        102
+      ],
+      "goal_rc": [
+        192,
+        174
+      ],
+      "goal_xy_m": [
+        17.4,
+        19.2
+      ],
+      "length_m": 11.2,
+      "cumulative_length_m": 20.6,
+      "scans": 23,
+      "cumulative_scans": 42,
+      "new_total_free": 891,
+      "new_total_occ": 105,
+      "new_in_initial_room": 589,
+      "new_free_in_initial_room": 540,
+      "new_wall_in_initial_room": 49,
+      "unknown_in_initial_room_remaining": 334,
+      "remaining_true_free_eval_only": 65,
+      "remaining_true_wall_eval_only": 269,
+      "realized_original_room_unknown_fraction": 0.914117
+    },
+    {
+      "stage": 4,
+      "leg": "G2_TO_G3",
+      "start_rc": [
+        192,
+        174
+      ],
+      "goal_rc": [
+        147,
+        207
+      ],
+      "goal_xy_m": [
+        20.7,
+        14.7
+      ],
+      "length_m": 13.6,
+      "cumulative_length_m": 34.2,
+      "scans": 28,
+      "cumulative_scans": 70,
+      "new_total_free": 2264,
+      "new_total_occ": 126,
+      "new_in_initial_room": 78,
+      "new_free_in_initial_room": 65,
+      "new_wall_in_initial_room": 13,
+      "unknown_in_initial_room_remaining": 256,
+      "remaining_true_free_eval_only": 0,
+      "remaining_true_wall_eval_only": 256,
+      "realized_original_room_unknown_fraction": 0.934173
+    }
+  ]
+}
