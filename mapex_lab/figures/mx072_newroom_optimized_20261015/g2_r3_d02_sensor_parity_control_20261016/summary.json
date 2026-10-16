@@ -1,0 +1,410 @@
+{
+  "experiment": "G2-R3 standalone fully causal D02 offline forward rollout",
+  "source_planner_sha256": "ae9de4983086000a94237ef4b511cfc937a3e42de7b87b0434ae496f10d3bab3",
+  "goal_selection_used_gt": false,
+  "future_observations_used_for_planning": false,
+  "uses_manually_frozen_vp1_or_goal_coordinates": false,
+  "only_first_step_original_R3_frozen_D02_plan": true,
+  "sensor_isolated_hidden_gt": true,
+  "sensor_model": "2500 rays 20m, .25cell ray-step; scans every .5m along known-free route",
+  "engine": "3-member LaMa native default_map_eval + original stateful V4-R4.1 + G2-R3 R3 StageA/B",
+  "replan_policy": "after each attained goal, not after every individual scan",
+  "termination": "STALLED_NO_NEW_EVIDENCE",
+  "completed_goals": 7,
+  "route_distance_m": 31.8,
+  "sensor_scan_count": 66,
+  "original_room_cells": 6564,
+  "original_room_unknown_initial": 3889,
+  "original_room_unknown_left": 267,
+  "original_room_known_fraction": 0.931345,
+  "final_robot_core_rc": [
+    163,
+    127
+  ],
+  "final_mission_memory_path": "/home/dell/mx072_g2_r3_sequence_optimizer_20261016/D02_CONTROL_COMPAT_SENSOR_20261016/stage_06_mission_memory.npz",
+  "last_semantic_path": "/home/dell/mx072_g2_r3_sequence_optimizer_20261016/D02_CONTROL_COMPAT_SENSOR_20261016/room_stage_08.npz",
+  "compute_time_s": {
+    "lama_s": 108.47,
+    "r41_s": 3.06,
+    "structure_s": 16.26,
+    "planner_s": 135.24
+  },
+  "events": [
+    {
+      "stage": 1,
+      "robot_from_core_rc": [
+        147,
+        111
+      ],
+      "robot_goal_core_rc": [
+        171,
+        135
+      ],
+      "goal_xy_m": [
+        13.5,
+        17.1
+      ],
+      "original_planned_sequence_before_stage": [
+        [
+          13.5,
+          17.1
+        ]
+      ],
+      "performed_leg_m": 4.8,
+      "distance_cumulative_m": 4.8,
+      "scans_this_leg": 10,
+      "scans_cumulative": 10,
+      "newly_scanned_original_room": 2998,
+      "newly_scanned_original_room_free": 2945,
+      "newly_scanned_original_room_wall": 53,
+      "newly_scanned_global_free": 3847,
+      "newly_scanned_global_wall": 180,
+      "post_scan_original_room_unknown": 891,
+      "sensor_data_source": "hidden occupancy GT first-hit LiDAR subprocess only",
+      "source_r3_planner_sha256": "ae9de4983086000a94237ef4b511cfc937a3e42de7b87b0434ae496f10d3bab3",
+      "current_room_accepted": true,
+      "current_room_area": 6449,
+      "current_room_unknown": 687,
+      "original_room_unknown": 891,
+      "original_room_observed_fraction": 0.770892,
+      "original_remaining_outside_current": 212,
+      "post_replan_status": "CONDITIONAL_VIEWPOINT_SEQUENCE",
+      "post_replan_goals": [
+        [
+          12.3,
+          18.3
+        ],
+        [
+          17.9,
+          19.5
+        ]
+      ],
+      "post_replan_mission_unknown": 899,
+      "structural_region_count": 12
+    },
+    {
+      "stage": 2,
+      "robot_from_core_rc": [
+        171,
+        135
+      ],
+      "robot_goal_core_rc": [
+        183,
+        123
+      ],
+      "goal_xy_m": [
+        12.3,
+        18.3
+      ],
+      "original_planned_sequence_before_stage": [
+        [
+          12.3,
+          18.3
+        ],
+        [
+          17.9,
+          19.5
+        ]
+      ],
+      "performed_leg_m": 2.4,
+      "distance_cumulative_m": 7.2,
+      "scans_this_leg": 5,
+      "scans_cumulative": 15,
+      "newly_scanned_original_room": 272,
+      "newly_scanned_original_room_free": 258,
+      "newly_scanned_original_room_wall": 14,
+      "newly_scanned_global_free": 265,
+      "newly_scanned_global_wall": 23,
+      "post_scan_original_room_unknown": 619,
+      "sensor_data_source": "hidden occupancy GT first-hit LiDAR subprocess only",
+      "source_r3_planner_sha256": "ae9de4983086000a94237ef4b511cfc937a3e42de7b87b0434ae496f10d3bab3",
+      "current_room_accepted": true,
+      "current_room_area": 6439,
+      "current_room_unknown": 419,
+      "original_room_unknown": 619,
+      "original_room_observed_fraction": 0.840833,
+      "original_remaining_outside_current": 208,
+      "post_replan_status": "CONDITIONAL_VIEWPOINT_SEQUENCE",
+      "post_replan_goals": [
+        [
+          19.1,
+          19.5
+        ],
+        [
+          12.3,
+          15.9
+        ],
+        [
+          15.1,
+          14.7
+        ]
+      ],
+      "post_replan_mission_unknown": 627,
+      "structural_region_count": 9
+    },
+    {
+      "stage": 3,
+      "robot_from_core_rc": [
+        183,
+        123
+      ],
+      "robot_goal_core_rc": [
+        195,
+        191
+      ],
+      "goal_xy_m": [
+        19.1,
+        19.5
+      ],
+      "original_planned_sequence_before_stage": [
+        [
+          19.1,
+          19.5
+        ],
+        [
+          12.3,
+          15.9
+        ],
+        [
+          15.1,
+          14.7
+        ]
+      ],
+      "performed_leg_m": 10.0,
+      "distance_cumulative_m": 17.2,
+      "scans_this_leg": 20,
+      "scans_cumulative": 35,
+      "newly_scanned_original_room": 295,
+      "newly_scanned_original_room_free": 252,
+      "newly_scanned_original_room_wall": 43,
+      "newly_scanned_global_free": 1471,
+      "newly_scanned_global_wall": 113,
+      "post_scan_original_room_unknown": 324,
+      "sensor_data_source": "hidden occupancy GT first-hit LiDAR subprocess only",
+      "source_r3_planner_sha256": "ae9de4983086000a94237ef4b511cfc937a3e42de7b87b0434ae496f10d3bab3",
+      "current_room_accepted": true,
+      "current_room_area": 6374,
+      "current_room_unknown": 102,
+      "original_room_unknown": 324,
+      "original_room_observed_fraction": 0.916688,
+      "original_remaining_outside_current": 230,
+      "post_replan_status": "CONDITIONAL_VIEWPOINT_SEQUENCE",
+      "post_replan_goals": [
+        [
+          20.7,
+          17.9
+        ],
+        [
+          12.3,
+          16.3
+        ]
+      ],
+      "post_replan_mission_unknown": 332,
+      "structural_region_count": 9
+    },
+    {
+      "stage": 4,
+      "robot_from_core_rc": [
+        195,
+        191
+      ],
+      "robot_goal_core_rc": [
+        179,
+        207
+      ],
+      "goal_xy_m": [
+        20.7,
+        17.9
+      ],
+      "original_planned_sequence_before_stage": [
+        [
+          20.7,
+          17.9
+        ],
+        [
+          12.3,
+          16.3
+        ]
+      ],
+      "performed_leg_m": 3.4,
+      "distance_cumulative_m": 20.6,
+      "scans_this_leg": 7,
+      "scans_cumulative": 42,
+      "newly_scanned_original_room": 54,
+      "newly_scanned_original_room_free": 47,
+      "newly_scanned_original_room_wall": 7,
+      "newly_scanned_global_free": 2074,
+      "newly_scanned_global_wall": 68,
+      "post_scan_original_room_unknown": 270,
+      "sensor_data_source": "hidden occupancy GT first-hit LiDAR subprocess only",
+      "source_r3_planner_sha256": "ae9de4983086000a94237ef4b511cfc937a3e42de7b87b0434ae496f10d3bab3",
+      "current_room_accepted": true,
+      "current_room_area": 6377,
+      "current_room_unknown": 58,
+      "original_room_unknown": 270,
+      "original_room_observed_fraction": 0.930573,
+      "original_remaining_outside_current": 220,
+      "post_replan_status": "CONDITIONAL_VIEWPOINT_SEQUENCE",
+      "post_replan_goals": [
+        [
+          12.7,
+          16.3
+        ]
+      ],
+      "post_replan_mission_unknown": 278,
+      "structural_region_count": 7
+    },
+    {
+      "stage": 5,
+      "robot_from_core_rc": [
+        179,
+        207
+      ],
+      "robot_goal_core_rc": [
+        163,
+        127
+      ],
+      "goal_xy_m": [
+        12.7,
+        16.3
+      ],
+      "original_planned_sequence_before_stage": [
+        [
+          12.7,
+          16.3
+        ]
+      ],
+      "performed_leg_m": 9.6,
+      "distance_cumulative_m": 30.2,
+      "scans_this_leg": 20,
+      "scans_cumulative": 62,
+      "newly_scanned_original_room": 3,
+      "newly_scanned_original_room_free": 0,
+      "newly_scanned_original_room_wall": 3,
+      "newly_scanned_global_free": 502,
+      "newly_scanned_global_wall": 45,
+      "post_scan_original_room_unknown": 267,
+      "sensor_data_source": "hidden occupancy GT first-hit LiDAR subprocess only",
+      "source_r3_planner_sha256": "ae9de4983086000a94237ef4b511cfc937a3e42de7b87b0434ae496f10d3bab3",
+      "current_room_accepted": true,
+      "current_room_area": 6376,
+      "current_room_unknown": 57,
+      "original_room_unknown": 267,
+      "original_room_observed_fraction": 0.931345,
+      "original_remaining_outside_current": 218,
+      "post_replan_status": "CONDITIONAL_VIEWPOINT_SEQUENCE",
+      "post_replan_goals": [
+        [
+          12.3,
+          16.7
+        ],
+        [
+          12.3,
+          17.1
+        ]
+      ],
+      "post_replan_mission_unknown": 275,
+      "structural_region_count": 7
+    },
+    {
+      "stage": 6,
+      "robot_from_core_rc": [
+        163,
+        127
+      ],
+      "robot_goal_core_rc": [
+        167,
+        123
+      ],
+      "goal_xy_m": [
+        12.3,
+        16.7
+      ],
+      "original_planned_sequence_before_stage": [
+        [
+          12.3,
+          16.7
+        ],
+        [
+          12.3,
+          17.1
+        ]
+      ],
+      "performed_leg_m": 0.8,
+      "distance_cumulative_m": 31.0,
+      "scans_this_leg": 2,
+      "scans_cumulative": 64,
+      "newly_scanned_original_room": 0,
+      "newly_scanned_original_room_free": 0,
+      "newly_scanned_original_room_wall": 0,
+      "newly_scanned_global_free": 0,
+      "newly_scanned_global_wall": 0,
+      "post_scan_original_room_unknown": 267,
+      "sensor_data_source": "hidden occupancy GT first-hit LiDAR subprocess only",
+      "source_r3_planner_sha256": "ae9de4983086000a94237ef4b511cfc937a3e42de7b87b0434ae496f10d3bab3",
+      "current_room_accepted": true,
+      "current_room_area": 6376,
+      "current_room_unknown": 57,
+      "original_room_unknown": 267,
+      "original_room_observed_fraction": 0.931345,
+      "original_remaining_outside_current": 218,
+      "post_replan_status": "CONDITIONAL_VIEWPOINT_SEQUENCE",
+      "post_replan_goals": [
+        [
+          12.7,
+          16.3
+        ],
+        [
+          12.7,
+          17.1
+        ]
+      ],
+      "post_replan_mission_unknown": 275,
+      "structural_region_count": 7
+    },
+    {
+      "stage": 7,
+      "robot_from_core_rc": [
+        167,
+        123
+      ],
+      "robot_goal_core_rc": [
+        163,
+        127
+      ],
+      "goal_xy_m": [
+        12.7,
+        16.3
+      ],
+      "original_planned_sequence_before_stage": [
+        [
+          12.7,
+          16.3
+        ],
+        [
+          12.7,
+          17.1
+        ]
+      ],
+      "performed_leg_m": 0.8,
+      "distance_cumulative_m": 31.8,
+      "scans_this_leg": 2,
+      "scans_cumulative": 66,
+      "newly_scanned_original_room": 0,
+      "newly_scanned_original_room_free": 0,
+      "newly_scanned_original_room_wall": 0,
+      "newly_scanned_global_free": 0,
+      "newly_scanned_global_wall": 0,
+      "post_scan_original_room_unknown": 267,
+      "sensor_data_source": "hidden occupancy GT first-hit LiDAR subprocess only",
+      "source_r3_planner_sha256": "ae9de4983086000a94237ef4b511cfc937a3e42de7b87b0434ae496f10d3bab3",
+      "after_replan_status": "REPEATED_NO_FRESH_OBSERVATION"
+    }
+  ],
+  "cautions": [
+    "GT not used to select goal; separate retrospective evaluator required for true-free residual",
+    "Observed-free raster planning only, not native MapEx range_libc lidar or real robot motion",
+    "No mid-leg event-based replanning; only one planning cycle after reaching each goal",
+    "R3 structural region coverage is a heuristic predicted utility, not a room-complete certificate"
+  ]
+}
