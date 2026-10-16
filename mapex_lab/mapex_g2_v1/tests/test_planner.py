@@ -41,11 +41,19 @@ class G2Tests(unittest.TestCase):
         self.assertEqual(p['goal_sequence'],second['goal_sequence'])
 
     def test_two_goals_can_beat_one_when_geometry_requires_it(self):
-        observed=np.ones((24,40),np.uint8)
-        observed[10:16,4:33]=0
+        # Two distant unknown wings, robot between them. The sequence must
+        # inspect both; a single 2m LiDAR trip cannot visit both sides.
+        observed=np.ones((36,90),np.uint8)*2
+        observed[11:31,5:85]=1
+        observed[18:25,5:85]=0
+        observed[15:18,5:18]=1
+        observed[15:18,72:85]=1
         mean=np.zeros(observed.shape,np.float32)
-        snap=G2Snapshot(observed,mean,mean,np.ones_like(observed),(12,6))
-        cfg=G2Config(lidar_range_m=4,planning_beams=64,clearance_m=0)
+        sem=np.ones_like(observed)
+        snap=G2Snapshot(observed,mean,mean,sem,(21,45))
+        cfg=replace(self.cfg,lidar_range_m=1.5,planning_beams=96,
+                    unknown_penalty_s_per_cell=3.,robot_speed_mps=.5,
+                    goal_stop_time_s=.1,clearance_m=.1)
         p=plan(snap,cfg)
         self.assertGreaterEqual(p['goal_count'],2)
         self.assertEqual(len(p['route_segments']),p['goal_count'])

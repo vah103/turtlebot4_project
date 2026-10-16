@@ -10,22 +10,20 @@ from .planner import G2Snapshot, G2Config, ProbabilisticVisibility, _room
 
 def make_coverage(snapshot:G2Snapshot, plan_result:dict, config:G2Config):
     room=_room(snapshot)
-    vis=ProbabilisticVisibility(snapshot,room,config)
-    nom=np.zeros(len(vis.weights),np.float32)
-    pess=np.zeros_like(nom)
+    vis=ProbabilisticVisibility(snapshot,room,config,beams=config.final_beams,ray_step_cells=config.final_ray_step_cells)
+    existing=vis.zero.copy()
     stages=[]
     for leg in plan_result['route_segments']:
         path=[tuple(p) for p in leg['path_rc']]
-        a,b,_=vis.project_leg(path)
-        inc_nom=np.maximum(nom,a)-nom
-        inc_pess=np.maximum(pess,b)-pess
-        nom=np.maximum(nom,a);pess=np.maximum(pess,b)
-        blend=(1-config.scenario_pessimistic_fraction)*inc_nom+config.scenario_pessimistic_fraction*inc_pess
+        cov,_=vis.project_leg(path)
+        delta=cov & ~existing
+        existing |= cov
+        blend=np.dot(vis.scenario_prob,delta.astype(np.float32))
         raster=np.zeros(snapshot.observed.shape,np.float32)
         raster[vis.target]=blend
         stages.append(raster)
     total=np.zeros(snapshot.observed.shape,np.float32)
-    total[vis.target]=(1-config.scenario_pessimistic_fraction)*nom+config.scenario_pessimistic_fraction*pess
+    total[vis.target]=np.dot(vis.scenario_prob,existing.astype(np.float32))
     return room,total,stages
 
 
