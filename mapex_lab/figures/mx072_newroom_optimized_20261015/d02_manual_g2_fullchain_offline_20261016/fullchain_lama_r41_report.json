@@ -1,0 +1,59 @@
+[
+  {
+    "stage": 1,
+    "robot_core_rc": [
+      168,
+      135
+    ],
+    "current_robot_semantic": 1,
+    "current_room_cells": 6398,
+    "current_room_unknown": 759,
+    "original_room_unknown": 1021,
+    "original_remaining_outside_current_room": 269,
+    "accepted_hypotheses_count": 0,
+    "inference_source": "original LaMa G1/G2/G3 + stateful V4-R4.1",
+    "VP1_R41_previous_semantic_mismatch": 0
+  },
+  {
+    "stage": 2,
+    "robot_core_rc": [
+      180,
+      102
+    ],
+    "current_robot_semantic": 1,
+    "current_room_cells": 6445,
+    "current_room_unknown": 726,
+    "original_room_unknown": 923,
+    "original_remaining_outside_current_room": 205,
+    "accepted_hypotheses_count": 0,
+    "inference_source": "original LaMa G1/G2/G3 + stateful V4-R4.1"
+  },
+  {
+    "stage": 3,
+    "robot_core_rc": [
+      192,
+      174
+    ],
+    "current_robot_semantic": 1,
+    "current_room_cells": 6371,
+    "current_room_unknown": 112,
+    "original_room_unknown": 334,
+    "original_remaining_outside_current_room": 230,
+    "accepted_hypotheses_count": 0,
+    "inference_source": "original LaMa G1/G2/G3 + stateful V4-R4.1"
+  },
+  {
+    "stage": 4,
+    "robot_core_rc": [
+      147,
+      207
+    ],
+    "current_robot_semantic": 1,
+    "current_room_cells": 6375,
+    "current_room_unknown": 51,
+    "original_room_unknown": 256,
+    "original_remaining_outside_current_room": 213,
+    "accepted_hypotheses_count": 1,
+    "inference_source": "original LaMa G1/G2/G3 + stateful V4-R4.1"
+  }
+]
