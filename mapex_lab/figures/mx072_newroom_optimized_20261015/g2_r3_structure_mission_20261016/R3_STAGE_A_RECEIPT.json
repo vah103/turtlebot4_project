@@ -1,0 +1,63 @@
+{
+  "stage": "G2-R3 stage A Structural Reasoning + Room Mission Memory",
+  "source": "D02 first then previously acquired causal snapshots at VP1 G1 G2 G3; no GT used by this module",
+  "qa": "17/17 synthetic unittest PASS",
+  "revision": "first-stage groundwork, no multi-goal optimizer",
+  "frames": [
+    {
+      "decision_id": "D02",
+      "mission_unknown": 3889,
+      "current_room_unknown": 3889,
+      "unknown_outside_current_room": 0,
+      "predicted_free_like_unknown": 3876,
+      "unverified_predicted_wall_unknown": 13,
+      "new_mission_cells_since_last_snapshot": 0,
+      "status": "STRUCTURE_READY_FOR_G2",
+      "regions": 10
+    },
+    {
+      "decision_id": "VP1",
+      "mission_unknown": 1028,
+      "current_room_unknown": 759,
+      "unknown_outside_current_room": 269,
+      "predicted_free_like_unknown": 756,
+      "unverified_predicted_wall_unknown": 272,
+      "new_mission_cells_since_last_snapshot": 149,
+      "status": "STRUCTURE_READY_FOR_G2",
+      "regions": 10
+    },
+    {
+      "decision_id": "G1",
+      "mission_unknown": 931,
+      "current_room_unknown": 726,
+      "unknown_outside_current_room": 205,
+      "predicted_free_like_unknown": 704,
+      "unverified_predicted_wall_unknown": 227,
+      "new_mission_cells_since_last_snapshot": 1,
+      "status": "STRUCTURE_READY_FOR_G2",
+      "regions": 6
+    },
+    {
+      "decision_id": "G2",
+      "mission_unknown": 342,
+      "current_room_unknown": 112,
+      "unknown_outside_current_room": 230,
+      "predicted_free_like_unknown": 214,
+      "unverified_predicted_wall_unknown": 128,
+      "new_mission_cells_since_last_snapshot": 0,
+      "status": "STRUCTURE_READY_FOR_G2",
+      "regions": 9
+    },
+    {
+      "decision_id": "G3",
+      "mission_unknown": 264,
+      "current_room_unknown": 51,
+      "unknown_outside_current_room": 213,
+      "predicted_free_like_unknown": 157,
+      "unverified_predicted_wall_unknown": 107,
+      "new_mission_cells_since_last_snapshot": 0,
+      "status": "STRUCTURE_READY_FOR_G2",
+      "regions": 6
+    }
+  ]
+}

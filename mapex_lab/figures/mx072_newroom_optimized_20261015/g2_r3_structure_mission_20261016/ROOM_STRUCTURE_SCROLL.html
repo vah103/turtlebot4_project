@@ -1,0 +1,44 @@
+<!doctype html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>G2 R3: Room Mission Structural Reasoning</title><style>body{font-family:system-ui,Segoe UI,sans-serif;background:#f5f7fa;color:#24394b;margin:0 auto;padding:16px;max-width:1250px}h1{font-size:26px}h2{font-size:21px;margin:0 0 12px}section{background:#fff;border:1px solid #d4dde6;border-radius:12px;margin:20px 0;padding:16px}img{display:block;max-width:100%;width:100%;height:auto}table{border-collapse:collapse;width:100%;margin-bottom:12px;font-size:14px}td,th{border-bottom:1px solid #e0e5ea;padding:7px;text-align:left}p{line-height:1.55}.note{color:#5e6b7a}.metric{font-weight:700}a{color:#235784}</style></head><body>
+<h1>G2-R3: Structural Reasoning + Room Mission Memory</h1>
+<p class="note">D02 → VP1 → G1 → G2 → G3; observations are taken only from the previously frozen offline simulated path. No GT or future scans are fed to the R3 reasoning algorithm. Figures are diagnostics, not newly selected robot routes.</p>
+<section><h2>D02: 3889 unknown in mission; 3889 in current room</h2>
+<p><b>Historical unknown outside current Room Node:</b> 0 · <b>Possible free:</b> 3876 · <b>Unverified predicted wall:</b> 13. These are current-map predictions, not GT.</p>
+<img alt="Map and unresolved regions at D02" loading="lazy" src="D02_structure.png">
+<h3>Possible open-space obligations</h3><table><tr><th>Region ID</th><th>Unknown cells</th><th>Outside current room</th><th>Candidate viewpoints</th><th>Best witness viewpoint*</th></tr>
+<tr><td>#1</td><td>3381</td><td>0</td><td>108</td><td>(15.1, 18.3) m; 7.6 m</td></tr>
+<tr><td>#2</td><td>405</td><td>0</td><td>103</td><td>(10.3, 17.5) m; 3.6 m</td></tr>
+<tr><td>#3</td><td>90</td><td>0</td><td>38</td><td>(13.5, 17.1) m; 4.8 m</td></tr>
+</table><p class="note">* Witness means potentially informative observation from an already-known-free route, not an optimized or committed G2 goal. Small regions and predicted-wall unknown remain in <a href="regions_D02.json">the full JSON report</a>.</p></section>
+<section><h2>VP1: 1028 unknown in mission; 759 in current room</h2>
+<p><b>Historical unknown outside current Room Node:</b> 269 · <b>Possible free:</b> 756 · <b>Unverified predicted wall:</b> 272. These are current-map predictions, not GT.</p>
+<img alt="Map and unresolved regions at VP1" loading="lazy" src="VP1_structure.png">
+<h3>Possible open-space obligations</h3><table><tr><th>Region ID</th><th>Unknown cells</th><th>Outside current room</th><th>Candidate viewpoints</th><th>Best witness viewpoint*</th></tr>
+<tr><td>#1</td><td>666</td><td>0</td><td>146</td><td>(18.7, 19.6) m; 8.0 m</td></tr>
+<tr><td>#2</td><td>53</td><td>0</td><td>140</td><td>(9.9, 18.0) m; 5.2 m</td></tr>
+<tr><td>#6</td><td>23</td><td>0</td><td>180</td><td>(13.5, 17.2) m; 0.4 m</td></tr>
+</table><p class="note">* Witness means potentially informative observation from an already-known-free route, not an optimized or committed G2 goal. Small regions and predicted-wall unknown remain in <a href="regions_VP1.json">the full JSON report</a>.</p></section>
+<section><h2>G1: 931 unknown in mission; 726 in current room</h2>
+<p><b>Historical unknown outside current Room Node:</b> 205 · <b>Possible free:</b> 704 · <b>Unverified predicted wall:</b> 227. These are current-map predictions, not GT.</p>
+<img alt="Map and unresolved regions at G1" loading="lazy" src="G1_structure.png">
+<h3>Possible open-space obligations</h3><table><tr><th>Region ID</th><th>Unknown cells</th><th>Outside current room</th><th>Candidate viewpoints</th><th>Best witness viewpoint*</th></tr>
+<tr><td>#1</td><td>654</td><td>0</td><td>116</td><td>(19.0, 19.2) m; 11.8 m</td></tr>
+<tr><td>#6</td><td>50</td><td>0</td><td>120</td><td>(14.2, 16.8) m; 5.6 m</td></tr>
+</table><p class="note">* Witness means potentially informative observation from an already-known-free route, not an optimized or committed G2 goal. Small regions and predicted-wall unknown remain in <a href="regions_G1.json">the full JSON report</a>.</p></section>
+<section><h2>G2: 342 unknown in mission; 112 in current room</h2>
+<p><b>Historical unknown outside current Room Node:</b> 230 · <b>Possible free:</b> 214 · <b>Unverified predicted wall:</b> 128. These are current-map predictions, not GT.</p>
+<img alt="Map and unresolved regions at G2" loading="lazy" src="G2_structure.png">
+<h3>Possible open-space obligations</h3><table><tr><th>Region ID</th><th>Unknown cells</th><th>Outside current room</th><th>Candidate viewpoints</th><th>Best witness viewpoint*</th></tr>
+<tr><td>#1</td><td>81</td><td>81</td><td>0</td><td>No currently knownfree viewpoint in sample</td></tr>
+<tr><td>#11</td><td>55</td><td>0</td><td>147</td><td>(20.6, 19.2) m; 3.4 m</td></tr>
+<tr><td>#6</td><td>51</td><td>0</td><td>158</td><td>(12.2, 15.6) m; 8.8 m</td></tr>
+<tr><td>#20</td><td>25</td><td>25</td><td>0</td><td>No currently knownfree viewpoint in sample</td></tr>
+</table><p class="note">* Witness means potentially informative observation from an already-known-free route, not an optimized or committed G2 goal. Small regions and predicted-wall unknown remain in <a href="regions_G2.json">the full JSON report</a>.</p></section>
+<section><h2>G3: 264 unknown in mission; 51 in current room</h2>
+<p><b>Historical unknown outside current Room Node:</b> 213 · <b>Possible free:</b> 157 · <b>Unverified predicted wall:</b> 107. These are current-map predictions, not GT.</p>
+<img alt="Map and unresolved regions at G3" loading="lazy" src="G3_structure.png">
+<h3>Possible open-space obligations</h3><table><tr><th>Region ID</th><th>Unknown cells</th><th>Outside current room</th><th>Candidate viewpoints</th><th>Best witness viewpoint*</th></tr>
+<tr><td>#1</td><td>81</td><td>81</td><td>0</td><td>No currently knownfree viewpoint in sample</td></tr>
+<tr><td>#6</td><td>51</td><td>0</td><td>180</td><td>(12.7, 15.9) m; 10.4 m</td></tr>
+<tr><td>#20</td><td>25</td><td>25</td><td>0</td><td>No currently knownfree viewpoint in sample</td></tr>
+</table><p class="note">* Witness means potentially informative observation from an already-known-free route, not an optimized or committed G2 goal. Small regions and predicted-wall unknown remain in <a href="regions_G3.json">the full JSON report</a>.</p></section>
+<p>Final note: Structural diagnostics PASS does not establish end-to-end exploration or optimize the length of a viewpoint sequence. Unknown cells are never cleared by predictions alone.</p></body></html>
