@@ -1,0 +1,208 @@
+{
+  "frozen_source": "D02",
+  "beams": 2500,
+  "results": [
+    {
+      "leg": 1,
+      "gain_weight": 3315.92,
+      "cells_with_delta_gt_0_01": 3886,
+      "new_cells_from_lt005_to_gt05": 2933,
+      "gain_boosting_previously_visible_cells": 0,
+      "gain_nominal": 3473.88,
+      "gain_pessimistic": 2947.34,
+      "by_region": {
+        "left": 358.01,
+        "right": 2957.91,
+        "right_top": 1582.99,
+        "right_bottom": 1374.92
+      },
+      "top10_rc": [
+        [
+          182,
+          133,
+          1
+        ],
+        [
+          181,
+          133,
+          1
+        ],
+        [
+          146,
+          177,
+          1
+        ],
+        [
+          195,
+          185,
+          1
+        ],
+        [
+          162,
+          135,
+          1
+        ],
+        [
+          162,
+          136,
+          1
+        ],
+        [
+          161,
+          200,
+          1
+        ],
+        [
+          197,
+          185,
+          1
+        ],
+        [
+          162,
+          200,
+          1
+        ],
+        [
+          162,
+          137,
+          1
+        ]
+      ]
+    },
+    {
+      "leg": 2,
+      "gain_weight": 135.03,
+      "cells_with_delta_gt_0_01": 342,
+      "new_cells_from_lt005_to_gt05": 4,
+      "gain_boosting_previously_visible_cells": 128.09,
+      "gain_nominal": 118.59,
+      "gain_pessimistic": 173.38,
+      "by_region": {
+        "left": 9.3,
+        "right": 125.73,
+        "right_top": 125.73,
+        "right_bottom": 0
+      },
+      "top10_rc": [
+        [
+          172,
+          110,
+          0.937
+        ],
+        [
+          172,
+          111,
+          0.93
+        ],
+        [
+          172,
+          112,
+          0.918
+        ],
+        [
+          172,
+          113,
+          0.9
+        ],
+        [
+          172,
+          114,
+          0.872
+        ],
+        [
+          172,
+          115,
+          0.824
+        ],
+        [
+          146,
+          156,
+          0.72
+        ],
+        [
+          146,
+          157,
+          0.715
+        ],
+        [
+          146,
+          151,
+          0.71
+        ],
+        [
+          172,
+          116,
+          0.697
+        ]
+      ]
+    },
+    {
+      "leg": 3,
+      "gain_weight": 15.17,
+      "cells_with_delta_gt_0_01": 48,
+      "new_cells_from_lt005_to_gt05": 0,
+      "gain_boosting_previously_visible_cells": 15.14,
+      "gain_nominal": 13.46,
+      "gain_pessimistic": 19.16,
+      "by_region": {
+        "left": 0,
+        "right": 15.17,
+        "right_top": 15.17,
+        "right_bottom": 0
+      },
+      "top10_rc": [
+        [
+          146,
+          146,
+          0.685
+        ],
+        [
+          146,
+          147,
+          0.507
+        ],
+        [
+          148,
+          147,
+          0.687
+        ],
+        [
+          148,
+          146,
+          0.686
+        ],
+        [
+          149,
+          146,
+          0.686
+        ],
+        [
+          153,
+          147,
+          0.686
+        ],
+        [
+          150,
+          147,
+          0.686
+        ],
+        [
+          154,
+          147,
+          0.686
+        ],
+        [
+          151,
+          147,
+          0.686
+        ],
+        [
+          152,
+          147,
+          0.686
+        ]
+      ]
+    }
+  ],
+  "no_GT": true
+}

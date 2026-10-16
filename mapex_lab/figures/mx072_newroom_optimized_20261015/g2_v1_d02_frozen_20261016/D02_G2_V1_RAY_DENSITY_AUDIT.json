@@ -1,0 +1,187 @@
+{
+  "128": {
+    "beams": 128,
+    "elapsed_s": 0.05,
+    "legs": [
+      {
+        "goal_idx": 1,
+        "num_scans": 11,
+        "gain_weight": 3063.67,
+        "remaining_weight": 983.26,
+        "objective": 175.27,
+        "threshold95_visible_cells": 2497,
+        "threshold5_visible_cells": 3689
+      },
+      {
+        "goal_idx": 2,
+        "num_scans": 5,
+        "gain_weight": 3365.05,
+        "remaining_weight": 681.88,
+        "objective": 141.16,
+        "threshold95_visible_cells": 2811,
+        "threshold5_visible_cells": 3862
+      },
+      {
+        "goal_idx": 3,
+        "num_scans": 2,
+        "gain_weight": 3397.3,
+        "remaining_weight": 649.63,
+        "objective": 139.68,
+        "threshold95_visible_cells": 2850,
+        "threshold5_visible_cells": 3874
+      }
+    ],
+    "marginal_gain": [
+      3063.67,
+      301.38,
+      32.25
+    ],
+    "marginal_objective_reduction": [
+      34.11,
+      1.48
+    ],
+    "total_cells_blend_at_least95": 2850
+  },
+  "250": {
+    "beams": 250,
+    "elapsed_s": 0.09,
+    "legs": [
+      {
+        "goal_idx": 1,
+        "num_scans": 11,
+        "gain_weight": 3270.73,
+        "remaining_weight": 776.2,
+        "objective": 146.06,
+        "threshold95_visible_cells": 2711,
+        "threshold5_visible_cells": 3858
+      },
+      {
+        "goal_idx": 2,
+        "num_scans": 5,
+        "gain_weight": 3417.03,
+        "remaining_weight": 629.89,
+        "objective": 133.55,
+        "threshold95_visible_cells": 2886,
+        "threshold5_visible_cells": 3879
+      },
+      {
+        "goal_idx": 3,
+        "num_scans": 2,
+        "gain_weight": 3435.47,
+        "remaining_weight": 611.45,
+        "objective": 134.14,
+        "threshold95_visible_cells": 2908,
+        "threshold5_visible_cells": 3881
+      }
+    ],
+    "marginal_gain": [
+      3270.73,
+      146.3,
+      18.44
+    ],
+    "marginal_objective_reduction": [
+      12.51,
+      -0.59
+    ],
+    "total_cells_blend_at_least95": 2908
+  },
+  "720": {
+    "beams": 720,
+    "elapsed_s": 0.31,
+    "legs": [
+      {
+        "goal_idx": 1,
+        "num_scans": 11,
+        "gain_weight": 3304.33,
+        "remaining_weight": 742.6,
+        "objective": 141.28,
+        "threshold95_visible_cells": 2755,
+        "threshold5_visible_cells": 3871
+      },
+      {
+        "goal_idx": 2,
+        "num_scans": 5,
+        "gain_weight": 3440.63,
+        "remaining_weight": 606.3,
+        "objective": 130.03,
+        "threshold95_visible_cells": 2920,
+        "threshold5_visible_cells": 3883
+      },
+      {
+        "goal_idx": 3,
+        "num_scans": 2,
+        "gain_weight": 3455.93,
+        "remaining_weight": 590.99,
+        "objective": 131.05,
+        "threshold95_visible_cells": 2940,
+        "threshold5_visible_cells": 3884
+      }
+    ],
+    "marginal_gain": [
+      3304.33,
+      136.3,
+      15.3
+    ],
+    "marginal_objective_reduction": [
+      11.25,
+      -1.02
+    ],
+    "total_cells_blend_at_least95": 2940
+  },
+  "2500": {
+    "beams": 2500,
+    "elapsed_s": 1.17,
+    "legs": [
+      {
+        "goal_idx": 1,
+        "num_scans": 11,
+        "gain_weight": 3315.91,
+        "remaining_weight": 731.02,
+        "objective": 139.54,
+        "threshold95_visible_cells": 2772,
+        "threshold5_visible_cells": 3872
+      },
+      {
+        "goal_idx": 2,
+        "num_scans": 5,
+        "gain_weight": 3450.94,
+        "remaining_weight": 595.99,
+        "objective": 128.39,
+        "threshold95_visible_cells": 2936,
+        "threshold5_visible_cells": 3885
+      },
+      {
+        "goal_idx": 3,
+        "num_scans": 2,
+        "gain_weight": 3466.11,
+        "remaining_weight": 580.82,
+        "objective": 129.5,
+        "threshold95_visible_cells": 2954,
+        "threshold5_visible_cells": 3885
+      }
+    ],
+    "marginal_gain": [
+      3315.91,
+      135.03,
+      15.17
+    ],
+    "marginal_objective_reduction": [
+      11.15,
+      -1.11
+    ],
+    "total_cells_blend_at_least95": 2954
+  },
+  "hard_threshold_2500": {
+    "cumulative": [
+      3868,
+      3873,
+      3875
+    ],
+    "marginal": [
+      3868,
+      5,
+      2
+    ],
+    "predfree_unknown": 3876
+  }
+}
