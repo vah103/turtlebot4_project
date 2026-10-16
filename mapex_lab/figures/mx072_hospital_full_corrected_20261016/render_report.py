@@ -31,7 +31,16 @@ assert len(room_od)==report["runA"]["ticks"]
 assert len(plain_od)==report["runB"]["ticks"]
 plt.rcParams.update({"font.family":"DejaVu Sans","font.size":9,"axes.titlesize":11,
                      "axes.labelsize":8,"axes.edgecolor":"#8494A8","text.color":"#223247"})
-ROOM_PALETTE=np.array([[255,227,234],[252,223,151],[246,248,252],[201,63,84],[65,79,98]],dtype=np.uint8)
+# Verified against v4r41.py ROOM,CORRIDOR,WALL,OBSTACLE = 1,2,4,3
+# Native controller RoomRun._room_containing_pose uses sem == 1.
+SEM_OTHER,SEM_ROOM,SEM_CORRIDOR,SEM_OBSTACLE,SEM_WALL=0,1,2,3,4
+ROOM_PALETTE=np.array([
+    [240,244,249], # 0 = other/non-floor
+    [255,220,231], # 1 = ROOM (pink)
+    [252,225,159], # 2 = CORRIDOR (yellow)
+    [65,79,98],    # 3 = OBSTACLE (dark gray)
+    [201,63,84],   # 4 = WALL (red)
+],dtype=np.uint8)
 def jsonread(p):return json.loads(p.read_text(encoding="utf-8"))
 def at(i,root,folder):
     p=root/"decisions"/f"decision_{i:06d}.json"
@@ -62,7 +71,7 @@ def render_img(arr, fdata, native, future, typ, title, tick, d):
         baseline=arr["baseline"] if isinstance(arr,dict) else None
         rgb=ROOM_PALETTE[np.asarray(sem,dtype=np.uint8)].copy()
         if obs is not None and baseline is not None:
-            tentative=(obs==1)&(sem==0)&(baseline!=0)
+            tentative=(obs==1)&(sem==SEM_ROOM)&(baseline==SEM_CORRIDOR)
             rgb[tentative]=np.array([251,174,197],dtype=np.uint8)
     else:
         rgb=np.full((h,w,3),[255,255,255],dtype=np.uint8)
@@ -148,6 +157,13 @@ for i in range(1,42):
     observed=roomin["observed"]
     sem=roomsem["semantic"];baseline=roomsem["baseline"]
     assert observed.shape==sem.shape==baseline.shape==(267,577)
+    assert np.isin(sem,[0,1,2,3,4]).all()
+    assert np.array_equal(ROOM_PALETTE[SEM_ROOM], [255,220,231])
+    assert np.array_equal(ROOM_PALETTE[SEM_CORRIDOR], [252,225,159])
+    # The true native controller checks semantic == 1 (ROOM), not semantic == 2.
+    if x["mode"] == "LOCAL":
+        rr,cc=np.asarray(x["robot_rc"])-500
+        assert sem[rr,cc] == SEM_ROOM, f"LOCAL robot must be in ROOM on D{i}"
     # Semantic predictions are visualization only: no future data, GT or policy mutation.
     img_sem=render_img({"semantic":sem,"observed":observed,"baseline":baseline},
                        [],None,None,"semantic",f"ROOM NODE V4-R4.1 · D{i:02d}",x["native_tick"],x)
