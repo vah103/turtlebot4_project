@@ -1,0 +1,169 @@
+{
+  "run": "native_opt_r41_lama3small_run04",
+  "strict_decisions": [
+    2,
+    8,
+    14,
+    18,
+    21
+  ],
+  "sampling_rule": "current and prior only; no future GT/odom/scans/results",
+  "source_html_sha256": "e633d678646cf914056a9d38c7cc448997f3c33fab0021d235e3f3840ece8e27",
+  "all_points_observed_free": true,
+  "all_points_semantic_room": true,
+  "all_points_current_free_reachable": true,
+  "points": [
+    {
+      "decision": 2,
+      "native_tick": 12,
+      "room_id": 1,
+      "robot_native_rc": [
+        647,
+        611
+      ],
+      "g2a_native_rc": [
+        662,
+        610
+      ],
+      "g2a_raw_rc": [
+        162,
+        110
+      ],
+      "g2a_raw_xy_m": [
+        11.0,
+        16.2
+      ],
+      "observed_at_point": "FREE",
+      "room_semantic_at_point": "ROOM",
+      "mean_pred_occ_at_point": 0.0,
+      "variance_at_point": 0.0,
+      "observed_free_Astar_distance_m": 1.54,
+      "euclid_distance_m": 1.5,
+      "roomnode_panel_source_sha256": "2960a1ff052219837035336af259d9fd3adeb8baf30d938ada6d835c4758d41e",
+      "annotated_image": "D02_ROOMNODE_G2A.png",
+      "qualitative_reason": "Phòng nhỏ phía dưới hành lang; vào sâu vừa đủ để thấy các cạnh phòng, tránh vách dự đoán ở phía dưới."
+    },
+    {
+      "decision": 8,
+      "native_tick": 157,
+      "room_id": 2,
+      "robot_native_rc": [
+        546,
+        673
+      ],
+      "g2a_native_rc": [
+        528,
+        678
+      ],
+      "g2a_raw_rc": [
+        28,
+        178
+      ],
+      "g2a_raw_xy_m": [
+        17.8,
+        2.8
+      ],
+      "observed_at_point": "FREE",
+      "room_semantic_at_point": "ROOM",
+      "mean_pred_occ_at_point": 0.0,
+      "variance_at_point": 0.0,
+      "observed_free_Astar_distance_m": 2.01,
+      "euclid_distance_m": 1.87,
+      "roomnode_panel_source_sha256": "9343ab85a4a59ac186f75e1ae702215423c07219d8f9f3209bf5d3ab0a88a04e",
+      "annotated_image": "D08_ROOMNODE_G2A.png",
+      "qualitative_reason": "Vùng gần trung tâm phòng phía trên bên phải; nhìn khá thoáng tới các cạnh và không sát vật cản."
+    },
+    {
+      "decision": 14,
+      "native_tick": 340,
+      "room_id": 3,
+      "robot_native_rc": [
+        559,
+        611
+      ],
+      "g2a_native_rc": [
+        530,
+        609
+      ],
+      "g2a_raw_rc": [
+        30,
+        109
+      ],
+      "g2a_raw_xy_m": [
+        10.9,
+        3.0
+      ],
+      "observed_at_point": "FREE",
+      "room_semantic_at_point": "ROOM",
+      "mean_pred_occ_at_point": 0.0,
+      "variance_at_point": 0.0,
+      "observed_free_Astar_distance_m": 2.98,
+      "euclid_distance_m": 2.91,
+      "roomnode_panel_source_sha256": "834966bf7f055021b3ea119ba8df9d78cf9ecab38146db1761a0d4e1d533c906",
+      "annotated_image": "D14_ROOMNODE_G2A.png",
+      "qualitative_reason": "Vào vùng giữa phòng phía trên; đủ xa cửa để nhìn cấu trúc hai phía, không sát tường."
+    },
+    {
+      "decision": 18,
+      "native_tick": 437,
+      "room_id": 4,
+      "robot_native_rc": [
+        553,
+        540
+      ],
+      "g2a_native_rc": [
+        536,
+        525
+      ],
+      "g2a_raw_rc": [
+        36,
+        25
+      ],
+      "g2a_raw_xy_m": [
+        2.5,
+        3.6
+      ],
+      "observed_at_point": "FREE",
+      "room_semantic_at_point": "ROOM",
+      "mean_pred_occ_at_point": 0.0,
+      "variance_at_point": 0.0,
+      "observed_free_Astar_distance_m": 2.32,
+      "euclid_distance_m": 2.27,
+      "roomnode_panel_source_sha256": "11f523525e38b4e3f725c3a36c938bed7fb64db1668f96aa9850b632b28cfe69",
+      "annotated_image": "D18_ROOMNODE_G2A.png",
+      "qualitative_reason": "Phần trong phòng phía trên bên trái, tránh các vật cản nhỏ sát tường và hạn chế đi quá sâu."
+    },
+    {
+      "decision": 21,
+      "native_tick": 544,
+      "room_id": 5,
+      "robot_native_rc": [
+        655,
+        541
+      ],
+      "g2a_native_rc": [
+        683,
+        535
+      ],
+      "g2a_raw_rc": [
+        183,
+        35
+      ],
+      "g2a_raw_xy_m": [
+        3.5,
+        18.3
+      ],
+      "observed_at_point": "FREE",
+      "room_semantic_at_point": "ROOM",
+      "mean_pred_occ_at_point": 0.0,
+      "variance_at_point": 0.0,
+      "observed_free_Astar_distance_m": 3.05,
+      "euclid_distance_m": 2.86,
+      "roomnode_panel_source_sha256": "6916fbe44e4fd7567fe315e9f25c02cc5e39c44ff9afd31c604d6a4002059ad3",
+      "annotated_image": "D21_ROOMNODE_G2A.png",
+      "qualitative_reason": "Lệch nhẹ về bên phải của phòng phía dưới bên trái, tránh phần trung tâm dự đoán không đi được."
+    }
+  ],
+  "html_sha256": "1b37254faa296af741a8ae09c8042e1b702604a18449c59954e64aa1708baa8d",
+  "contact_sha256": "e93d9046a481dee0132f6c1219029efd493cdac0a99610572bcaccf12252963d"
+}
