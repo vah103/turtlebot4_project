@@ -1,0 +1,1264 @@
+{
+  "data_cutoff": "D02, never later sensor data or ground truth",
+  "source": "Run04 D02",
+  "room_knownfree": 2675,
+  "room_unknown": 3889,
+  "unknown_mean_lt_0_5": 3876,
+  "n_candidates": 200,
+  "stationary_nominal_union": 3876,
+  "top_stationary_20": [
+    {
+      "rc": [
+        168,
+        135
+      ],
+      "xy_m": [
+        13.5,
+        16.8
+      ],
+      "gain_stationary": 3843,
+      "route_m": 4.5
+    },
+    {
+      "rc": [
+        171,
+        132
+      ],
+      "xy_m": [
+        13.200000000000001,
+        17.1
+      ],
+      "gain_stationary": 3817,
+      "route_m": 4.5
+    },
+    {
+      "rc": [
+        168,
+        132
+      ],
+      "xy_m": [
+        13.200000000000001,
+        16.8
+      ],
+      "gain_stationary": 3786,
+      "route_m": 4.2
+    },
+    {
+      "rc": [
+        171,
+        135
+      ],
+      "xy_m": [
+        13.5,
+        17.1
+      ],
+      "gain_stationary": 3774,
+      "route_m": 4.8
+    },
+    {
+      "rc": [
+        171,
+        129
+      ],
+      "xy_m": [
+        12.9,
+        17.1
+      ],
+      "gain_stationary": 3688,
+      "route_m": 4.2
+    },
+    {
+      "rc": [
+        168,
+        129
+      ],
+      "xy_m": [
+        12.9,
+        16.8
+      ],
+      "gain_stationary": 3662,
+      "route_m": 3.9
+    },
+    {
+      "rc": [
+        171,
+        138
+      ],
+      "xy_m": [
+        13.8,
+        17.1
+      ],
+      "gain_stationary": 3657,
+      "route_m": 5.1
+    },
+    {
+      "rc": [
+        171,
+        126
+      ],
+      "xy_m": [
+        12.600000000000001,
+        17.1
+      ],
+      "gain_stationary": 3620,
+      "route_m": 3.9
+    },
+    {
+      "rc": [
+        174,
+        135
+      ],
+      "xy_m": [
+        13.5,
+        17.400000000000002
+      ],
+      "gain_stationary": 3589,
+      "route_m": 5.1
+    },
+    {
+      "rc": [
+        171,
+        123
+      ],
+      "xy_m": [
+        12.3,
+        17.1
+      ],
+      "gain_stationary": 3567,
+      "route_m": 3.6
+    },
+    {
+      "rc": [
+        174,
+        138
+      ],
+      "xy_m": [
+        13.8,
+        17.400000000000002
+      ],
+      "gain_stationary": 3554,
+      "route_m": 5.4
+    },
+    {
+      "rc": [
+        174,
+        141
+      ],
+      "xy_m": [
+        14.100000000000001,
+        17.400000000000002
+      ],
+      "gain_stationary": 3540,
+      "route_m": 5.7
+    },
+    {
+      "rc": [
+        168,
+        126
+      ],
+      "xy_m": [
+        12.600000000000001,
+        16.8
+      ],
+      "gain_stationary": 3522,
+      "route_m": 3.6
+    },
+    {
+      "rc": [
+        177,
+        144
+      ],
+      "xy_m": [
+        14.4,
+        17.7
+      ],
+      "gain_stationary": 3485,
+      "route_m": 6.3
+    },
+    {
+      "rc": [
+        177,
+        141
+      ],
+      "xy_m": [
+        14.100000000000001,
+        17.7
+      ],
+      "gain_stationary": 3478,
+      "route_m": 6
+    },
+    {
+      "rc": [
+        165,
+        129
+      ],
+      "xy_m": [
+        12.9,
+        16.5
+      ],
+      "gain_stationary": 3475,
+      "route_m": 3.6
+    },
+    {
+      "rc": [
+        192,
+        159
+      ],
+      "xy_m": [
+        15.9,
+        19.200000000000003
+      ],
+      "gain_stationary": 3471,
+      "route_m": 9.3
+    },
+    {
+      "rc": [
+        195,
+        165
+      ],
+      "xy_m": [
+        16.5,
+        19.5
+      ],
+      "gain_stationary": 3471,
+      "route_m": 10.2
+    },
+    {
+      "rc": [
+        198,
+        162
+      ],
+      "xy_m": [
+        16.2,
+        19.8
+      ],
+      "gain_stationary": 3471,
+      "route_m": 10.2
+    },
+    {
+      "rc": [
+        195,
+        168
+      ],
+      "xy_m": [
+        16.8,
+        19.5
+      ],
+      "gain_stationary": 3471,
+      "route_m": 10.5
+    }
+  ],
+  "top_pathwise_20": [
+    {
+      "rc": [
+        192,
+        159
+      ],
+      "xy_m": [
+        15.9,
+        19.2
+      ],
+      "distance_m": 9.3,
+      "gain_pathwise": 3876,
+      "gain_stationary": 3471,
+      "remaining_predfree": 0,
+      "scans": 19
+    },
+    {
+      "rc": [
+        195,
+        165
+      ],
+      "xy_m": [
+        16.5,
+        19.5
+      ],
+      "distance_m": 10.2,
+      "gain_pathwise": 3876,
+      "gain_stationary": 3471,
+      "remaining_predfree": 0,
+      "scans": 21
+    },
+    {
+      "rc": [
+        198,
+        162
+      ],
+      "xy_m": [
+        16.2,
+        19.8
+      ],
+      "distance_m": 10.2,
+      "gain_pathwise": 3876,
+      "gain_stationary": 3471,
+      "remaining_predfree": 0,
+      "scans": 21
+    },
+    {
+      "rc": [
+        195,
+        168
+      ],
+      "xy_m": [
+        16.8,
+        19.5
+      ],
+      "distance_m": 10.5,
+      "gain_pathwise": 3876,
+      "gain_stationary": 3471,
+      "remaining_predfree": 0,
+      "scans": 21
+    },
+    {
+      "rc": [
+        198,
+        171
+      ],
+      "xy_m": [
+        17.1,
+        19.8
+      ],
+      "distance_m": 11.1,
+      "gain_pathwise": 3876,
+      "gain_stationary": 3471,
+      "remaining_predfree": 0,
+      "scans": 23
+    },
+    {
+      "rc": [
+        186,
+        150
+      ],
+      "xy_m": [
+        15,
+        18.6
+      ],
+      "distance_m": 7.8,
+      "gain_pathwise": 3875,
+      "gain_stationary": 3470,
+      "remaining_predfree": 1,
+      "scans": 16
+    },
+    {
+      "rc": [
+        186,
+        153
+      ],
+      "xy_m": [
+        15.3,
+        18.6
+      ],
+      "distance_m": 8.1,
+      "gain_pathwise": 3875,
+      "gain_stationary": 3470,
+      "remaining_predfree": 1,
+      "scans": 17
+    },
+    {
+      "rc": [
+        189,
+        153
+      ],
+      "xy_m": [
+        15.3,
+        18.9
+      ],
+      "distance_m": 8.4,
+      "gain_pathwise": 3875,
+      "gain_stationary": 3470,
+      "remaining_predfree": 1,
+      "scans": 17
+    },
+    {
+      "rc": [
+        189,
+        156
+      ],
+      "xy_m": [
+        15.6,
+        18.9
+      ],
+      "distance_m": 8.7,
+      "gain_pathwise": 3875,
+      "gain_stationary": 3469,
+      "remaining_predfree": 1,
+      "scans": 18
+    },
+    {
+      "rc": [
+        192,
+        153
+      ],
+      "xy_m": [
+        15.3,
+        19.2
+      ],
+      "distance_m": 8.7,
+      "gain_pathwise": 3875,
+      "gain_stationary": 3470,
+      "remaining_predfree": 1,
+      "scans": 18
+    },
+    {
+      "rc": [
+        189,
+        159
+      ],
+      "xy_m": [
+        15.9,
+        18.9
+      ],
+      "distance_m": 9,
+      "gain_pathwise": 3875,
+      "gain_stationary": 3470,
+      "remaining_predfree": 1,
+      "scans": 18
+    },
+    {
+      "rc": [
+        192,
+        156
+      ],
+      "xy_m": [
+        15.6,
+        19.2
+      ],
+      "distance_m": 9,
+      "gain_pathwise": 3875,
+      "gain_stationary": 3470,
+      "remaining_predfree": 1,
+      "scans": 18
+    },
+    {
+      "rc": [
+        192,
+        162
+      ],
+      "xy_m": [
+        16.2,
+        19.2
+      ],
+      "distance_m": 9.6,
+      "gain_pathwise": 3875,
+      "gain_stationary": 3470,
+      "remaining_predfree": 1,
+      "scans": 20
+    },
+    {
+      "rc": [
+        195,
+        159
+      ],
+      "xy_m": [
+        15.9,
+        19.5
+      ],
+      "distance_m": 9.6,
+      "gain_pathwise": 3875,
+      "gain_stationary": 3469,
+      "remaining_predfree": 1,
+      "scans": 20
+    },
+    {
+      "rc": [
+        198,
+        156
+      ],
+      "xy_m": [
+        15.6,
+        19.8
+      ],
+      "distance_m": 9.6,
+      "gain_pathwise": 3875,
+      "gain_stationary": 3470,
+      "remaining_predfree": 1,
+      "scans": 20
+    },
+    {
+      "rc": [
+        192,
+        165
+      ],
+      "xy_m": [
+        16.5,
+        19.2
+      ],
+      "distance_m": 9.9,
+      "gain_pathwise": 3875,
+      "gain_stationary": 3470,
+      "remaining_predfree": 1,
+      "scans": 20
+    },
+    {
+      "rc": [
+        195,
+        162
+      ],
+      "xy_m": [
+        16.2,
+        19.5
+      ],
+      "distance_m": 9.9,
+      "gain_pathwise": 3875,
+      "gain_stationary": 3470,
+      "remaining_predfree": 1,
+      "scans": 20
+    },
+    {
+      "rc": [
+        198,
+        159
+      ],
+      "xy_m": [
+        15.9,
+        19.8
+      ],
+      "distance_m": 9.9,
+      "gain_pathwise": 3875,
+      "gain_stationary": 3470,
+      "remaining_predfree": 1,
+      "scans": 20
+    },
+    {
+      "rc": [
+        198,
+        165
+      ],
+      "xy_m": [
+        16.5,
+        19.8
+      ],
+      "distance_m": 10.5,
+      "gain_pathwise": 3875,
+      "gain_stationary": 3470,
+      "remaining_predfree": 1,
+      "scans": 21
+    },
+    {
+      "rc": [
+        198,
+        168
+      ],
+      "xy_m": [
+        16.8,
+        19.8
+      ],
+      "distance_m": 10.8,
+      "gain_pathwise": 3875,
+      "gain_stationary": 3470,
+      "remaining_predfree": 1,
+      "scans": 22
+    }
+  ],
+  "search_thresholds_one_two": {
+    "95%": {
+      "threshold_cells": 3683,
+      "best_one_goal": {
+        "goals": [
+          [
+            168,
+            132
+          ]
+        ],
+        "length_m": 4.2,
+        "gain": 3787
+      },
+      "best_two_goals": {
+        "goals": [
+          [
+            147,
+            123
+          ],
+          [
+            174,
+            123
+          ]
+        ],
+        "length_m": 3.9,
+        "gain": 3697,
+        "new_at_first": 201,
+        "new_at_second": 3496,
+        "scans_second": 6,
+        "leg_lengths_m": [
+          1.2,
+          2.7
+        ]
+      }
+    },
+    "98%": {
+      "threshold_cells": 3799,
+      "best_one_goal": {
+        "goals": [
+          [
+            168,
+            135
+          ]
+        ],
+        "length_m": 4.5,
+        "gain": 3858
+      },
+      "best_two_goals": {
+        "goals": [
+          [
+            147,
+            111
+          ],
+          [
+            168,
+            135
+          ]
+        ],
+        "length_m": 4.5,
+        "gain": 3859,
+        "new_at_first": 1,
+        "new_at_second": 3858,
+        "scans_second": 9,
+        "leg_lengths_m": [
+          0,
+          4.5
+        ]
+      }
+    },
+    "99%": {
+      "threshold_cells": 3838,
+      "best_one_goal": {
+        "goals": [
+          [
+            168,
+            135
+          ]
+        ],
+        "length_m": 4.5,
+        "gain": 3858
+      },
+      "best_two_goals": {
+        "goals": [
+          [
+            147,
+            111
+          ],
+          [
+            168,
+            135
+          ]
+        ],
+        "length_m": 4.5,
+        "gain": 3859,
+        "new_at_first": 1,
+        "new_at_second": 3858,
+        "scans_second": 9,
+        "leg_lengths_m": [
+          0,
+          4.5
+        ]
+      }
+    },
+    "99.5%": {
+      "threshold_cells": 3857,
+      "best_one_goal": {
+        "goals": [
+          [
+            168,
+            135
+          ]
+        ],
+        "length_m": 4.5,
+        "gain": 3858
+      },
+      "best_two_goals": {
+        "goals": [
+          [
+            147,
+            111
+          ],
+          [
+            168,
+            135
+          ]
+        ],
+        "length_m": 4.5,
+        "gain": 3859,
+        "new_at_first": 1,
+        "new_at_second": 3858,
+        "scans_second": 9,
+        "leg_lengths_m": [
+          0,
+          4.5
+        ]
+      }
+    },
+    "99.9%": {
+      "threshold_cells": 3873,
+      "best_one_goal": {
+        "goals": [
+          [
+            177,
+            141
+          ]
+        ],
+        "length_m": 6,
+        "gain": 3873
+      },
+      "best_two_goals": {
+        "goals": [
+          [
+            171,
+            135
+          ],
+          [
+            174,
+            138
+          ]
+        ],
+        "length_m": 5.4,
+        "gain": 3873,
+        "new_at_first": 3867,
+        "new_at_second": 6,
+        "scans_second": 2,
+        "leg_lengths_m": [
+          4.8,
+          0.6
+        ]
+      }
+    },
+    "100%": {
+      "threshold_cells": 3876,
+      "best_one_goal": {
+        "goals": [
+          [
+            192,
+            159
+          ]
+        ],
+        "length_m": 9.3,
+        "gain": 3876
+      },
+      "best_two_goals": {
+        "goals": [
+          [
+            186,
+            150
+          ],
+          [
+            192,
+            159
+          ]
+        ],
+        "length_m": 9.3,
+        "gain": 3876,
+        "new_at_first": 3875,
+        "new_at_second": 1,
+        "scans_second": 3,
+        "leg_lengths_m": [
+          7.8,
+          1.5
+        ]
+      }
+    }
+  },
+  "search_three_count": {
+    "candidate_count": 199,
+    "n_triplets_tested": 1815614,
+    "results_1_2_3": {
+      "99%": {
+        "sequence": [
+          [
+            168,
+            129
+          ],
+          [
+            168,
+            132
+          ],
+          [
+            168,
+            135
+          ]
+        ],
+        "steps": 45,
+        "coverage": 3858
+      },
+      "99.5%": {
+        "sequence": [
+          [
+            168,
+            129
+          ],
+          [
+            168,
+            132
+          ],
+          [
+            168,
+            135
+          ]
+        ],
+        "steps": 45,
+        "coverage": 3858
+      },
+      "99.9%": {
+        "sequence": [
+          [
+            168,
+            135
+          ],
+          [
+            171,
+            135
+          ],
+          [
+            174,
+            138
+          ]
+        ],
+        "steps": 54,
+        "coverage": 3873
+      },
+      "100%": {
+        "sequence": [
+          [
+            186,
+            150
+          ],
+          [
+            186,
+            153
+          ],
+          [
+            192,
+            159
+          ]
+        ],
+        "steps": 93,
+        "coverage": 3876
+      }
+    }
+  },
+  "dense_validated": {
+    "baseline_D02_VP1_1goal": {
+      "goals": 1,
+      "distance_m": 4.5,
+      "predicted_free_unknown_in_room": 3876,
+      "predicted_visible": 3858,
+      "predicted_remaining": 18,
+      "coverage_pct": 99.5356,
+      "steps": [
+        {
+          "stage": 1,
+          "goal_core_rc": [
+            168,
+            135
+          ],
+          "native_rc": [
+            668,
+            635
+          ],
+          "distance_leg_m": 4.5,
+          "raycast_poses": 9,
+          "new_predicted_free_unknown": 3858,
+          "cumulative_new": 3858,
+          "unknown_predicted_free_remaining": 18
+        }
+      ]
+    },
+    "coverage95_shorter_1goal": {
+      "goals": 1,
+      "distance_m": 4.2,
+      "predicted_free_unknown_in_room": 3876,
+      "predicted_visible": 3792,
+      "predicted_remaining": 84,
+      "coverage_pct": 97.8328,
+      "steps": [
+        {
+          "stage": 1,
+          "goal_core_rc": [
+            168,
+            132
+          ],
+          "native_rc": [
+            668,
+            632
+          ],
+          "distance_leg_m": 4.2,
+          "raycast_poses": 9,
+          "new_predicted_free_unknown": 3792,
+          "cumulative_new": 3792,
+          "unknown_predicted_free_remaining": 84
+        }
+      ]
+    },
+    "coverage999_best_1goal": {
+      "goals": 1,
+      "distance_m": 6,
+      "predicted_free_unknown_in_room": 3876,
+      "predicted_visible": 3873,
+      "predicted_remaining": 3,
+      "coverage_pct": 99.9226,
+      "steps": [
+        {
+          "stage": 1,
+          "goal_core_rc": [
+            177,
+            141
+          ],
+          "native_rc": [
+            677,
+            641
+          ],
+          "distance_leg_m": 6,
+          "raycast_poses": 12,
+          "new_predicted_free_unknown": 3873,
+          "cumulative_new": 3873,
+          "unknown_predicted_free_remaining": 3
+        }
+      ]
+    },
+    "coverage999_2goal": {
+      "goals": 2,
+      "distance_m": 5.4,
+      "predicted_free_unknown_in_room": 3876,
+      "predicted_visible": 3873,
+      "predicted_remaining": 3,
+      "coverage_pct": 99.9226,
+      "steps": [
+        {
+          "stage": 1,
+          "goal_core_rc": [
+            171,
+            135
+          ],
+          "native_rc": [
+            671,
+            635
+          ],
+          "distance_leg_m": 4.8,
+          "raycast_poses": 10,
+          "new_predicted_free_unknown": 3867,
+          "cumulative_new": 3867,
+          "unknown_predicted_free_remaining": 9
+        },
+        {
+          "stage": 2,
+          "goal_core_rc": [
+            174,
+            138
+          ],
+          "native_rc": [
+            674,
+            638
+          ],
+          "distance_leg_m": 0.6,
+          "raycast_poses": 2,
+          "new_predicted_free_unknown": 6,
+          "cumulative_new": 3873,
+          "unknown_predicted_free_remaining": 3
+        }
+      ]
+    },
+    "orig_VP1_then_174138": {
+      "goals": 2,
+      "distance_m": 5.4,
+      "predicted_free_unknown_in_room": 3876,
+      "predicted_visible": 3873,
+      "predicted_remaining": 3,
+      "coverage_pct": 99.9226,
+      "steps": [
+        {
+          "stage": 1,
+          "goal_core_rc": [
+            168,
+            135
+          ],
+          "native_rc": [
+            668,
+            635
+          ],
+          "distance_leg_m": 4.5,
+          "raycast_poses": 9,
+          "new_predicted_free_unknown": 3858,
+          "cumulative_new": 3858,
+          "unknown_predicted_free_remaining": 18
+        },
+        {
+          "stage": 2,
+          "goal_core_rc": [
+            174,
+            138
+          ],
+          "native_rc": [
+            674,
+            638
+          ],
+          "distance_leg_m": 0.9,
+          "raycast_poses": 2,
+          "new_predicted_free_unknown": 15,
+          "cumulative_new": 3873,
+          "unknown_predicted_free_remaining": 3
+        }
+      ]
+    },
+    "orig_VP1_then_171135": {
+      "goals": 2,
+      "distance_m": 4.8,
+      "predicted_free_unknown_in_room": 3876,
+      "predicted_visible": 3867,
+      "predicted_remaining": 9,
+      "coverage_pct": 99.7678,
+      "steps": [
+        {
+          "stage": 1,
+          "goal_core_rc": [
+            168,
+            135
+          ],
+          "native_rc": [
+            668,
+            635
+          ],
+          "distance_leg_m": 4.5,
+          "raycast_poses": 9,
+          "new_predicted_free_unknown": 3858,
+          "cumulative_new": 3858,
+          "unknown_predicted_free_remaining": 18
+        },
+        {
+          "stage": 2,
+          "goal_core_rc": [
+            171,
+            135
+          ],
+          "native_rc": [
+            671,
+            635
+          ],
+          "distance_leg_m": 0.3,
+          "raycast_poses": 1,
+          "new_predicted_free_unknown": 9,
+          "cumulative_new": 3867,
+          "unknown_predicted_free_remaining": 9
+        }
+      ]
+    },
+    "orig_VP1_then_177141": {
+      "goals": 2,
+      "distance_m": 6,
+      "predicted_free_unknown_in_room": 3876,
+      "predicted_visible": 3873,
+      "predicted_remaining": 3,
+      "coverage_pct": 99.9226,
+      "steps": [
+        {
+          "stage": 1,
+          "goal_core_rc": [
+            168,
+            135
+          ],
+          "native_rc": [
+            668,
+            635
+          ],
+          "distance_leg_m": 4.5,
+          "raycast_poses": 9,
+          "new_predicted_free_unknown": 3858,
+          "cumulative_new": 3858,
+          "unknown_predicted_free_remaining": 18
+        },
+        {
+          "stage": 2,
+          "goal_core_rc": [
+            177,
+            141
+          ],
+          "native_rc": [
+            677,
+            641
+          ],
+          "distance_leg_m": 1.5,
+          "raycast_poses": 3,
+          "new_predicted_free_unknown": 15,
+          "cumulative_new": 3873,
+          "unknown_predicted_free_remaining": 3
+        }
+      ]
+    },
+    "full_goal_195165": {
+      "goals": 1,
+      "distance_m": 10.2,
+      "predicted_free_unknown_in_room": 3876,
+      "predicted_visible": 3876,
+      "predicted_remaining": 0,
+      "coverage_pct": 100,
+      "steps": [
+        {
+          "stage": 1,
+          "goal_core_rc": [
+            195,
+            165
+          ],
+          "native_rc": [
+            695,
+            665
+          ],
+          "distance_leg_m": 10.2,
+          "raycast_poses": 21,
+          "new_predicted_free_unknown": 3876,
+          "cumulative_new": 3876,
+          "unknown_predicted_free_remaining": 0
+        }
+      ]
+    },
+    "full_goal_198162": {
+      "goals": 1,
+      "distance_m": 10.2,
+      "predicted_free_unknown_in_room": 3876,
+      "predicted_visible": 3876,
+      "predicted_remaining": 0,
+      "coverage_pct": 100,
+      "steps": [
+        {
+          "stage": 1,
+          "goal_core_rc": [
+            198,
+            162
+          ],
+          "native_rc": [
+            698,
+            662
+          ],
+          "distance_leg_m": 10.2,
+          "raycast_poses": 21,
+          "new_predicted_free_unknown": 3876,
+          "cumulative_new": 3876,
+          "unknown_predicted_free_remaining": 0
+        }
+      ]
+    },
+    "coverage100_1goal": {
+      "goals": 1,
+      "distance_m": 9.3,
+      "predicted_free_unknown_in_room": 3876,
+      "predicted_visible": 3875,
+      "predicted_remaining": 1,
+      "coverage_pct": 99.9742,
+      "steps": [
+        {
+          "stage": 1,
+          "goal_core_rc": [
+            192,
+            159
+          ],
+          "native_rc": [
+            692,
+            659
+          ],
+          "distance_leg_m": 9.3,
+          "raycast_poses": 19,
+          "new_predicted_free_unknown": 3875,
+          "cumulative_new": 3875,
+          "unknown_predicted_free_remaining": 1
+        }
+      ]
+    },
+    "coverage100_2goal": {
+      "goals": 2,
+      "distance_m": 9.3,
+      "predicted_free_unknown_in_room": 3876,
+      "predicted_visible": 3875,
+      "predicted_remaining": 1,
+      "coverage_pct": 99.9742,
+      "steps": [
+        {
+          "stage": 1,
+          "goal_core_rc": [
+            186,
+            150
+          ],
+          "native_rc": [
+            686,
+            650
+          ],
+          "distance_leg_m": 7.8,
+          "raycast_poses": 16,
+          "new_predicted_free_unknown": 3875,
+          "cumulative_new": 3875,
+          "unknown_predicted_free_remaining": 1
+        },
+        {
+          "stage": 2,
+          "goal_core_rc": [
+            192,
+            159
+          ],
+          "native_rc": [
+            692,
+            659
+          ],
+          "distance_leg_m": 1.5,
+          "raycast_poses": 3,
+          "new_predicted_free_unknown": 0,
+          "cumulative_new": 3875,
+          "unknown_predicted_free_remaining": 1
+        }
+      ]
+    },
+    "coverage100_3goal": {
+      "goals": 3,
+      "distance_m": 9.3,
+      "predicted_free_unknown_in_room": 3876,
+      "predicted_visible": 3875,
+      "predicted_remaining": 1,
+      "coverage_pct": 99.9742,
+      "steps": [
+        {
+          "stage": 1,
+          "goal_core_rc": [
+            186,
+            150
+          ],
+          "native_rc": [
+            686,
+            650
+          ],
+          "distance_leg_m": 7.8,
+          "raycast_poses": 16,
+          "new_predicted_free_unknown": 3875,
+          "cumulative_new": 3875,
+          "unknown_predicted_free_remaining": 1
+        },
+        {
+          "stage": 2,
+          "goal_core_rc": [
+            186,
+            153
+          ],
+          "native_rc": [
+            686,
+            653
+          ],
+          "distance_leg_m": 0.3,
+          "raycast_poses": 1,
+          "new_predicted_free_unknown": 0,
+          "cumulative_new": 3875,
+          "unknown_predicted_free_remaining": 1
+        },
+        {
+          "stage": 3,
+          "goal_core_rc": [
+            192,
+            159
+          ],
+          "native_rc": [
+            692,
+            659
+          ],
+          "distance_leg_m": 1.2,
+          "raycast_poses": 3,
+          "new_predicted_free_unknown": 0,
+          "cumulative_new": 3875,
+          "unknown_predicted_free_remaining": 1
+        }
+      ]
+    }
+  },
+  "no_actual_sensor_or_execution": true
+}
