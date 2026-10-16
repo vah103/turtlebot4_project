@@ -1,0 +1,73 @@
+{
+  "version": "D02_VP1_DYNAMIC_CAUSAL_R41_G2_R1",
+  "original_run": "RUN04_D02_NATIVE_TICK12",
+  "evaluation_type": "counterfactual simulation at VP1, future data inaccessible",
+  "input_replay_checks": {
+    "D02_mean_max_abs": 4.3213367462158203e-7,
+    "D02_variance_max_abs": 5.140900611877441e-7,
+    "D01_R41_semantic_different_pixels": 0,
+    "D02_R41_semantic_different_pixels": 0,
+    "new_observed_sha256": "314a5e473bead5259825c9569d860ee8a901941be85e6051149582a2d88b88a0"
+  },
+  "VP1_observation": {
+    "pose_native_rc": [
+      668,
+      635
+    ],
+    "D02_unknown_room": 3889,
+    "newly_sensed_room": 2868,
+    "newly_sensed_free_room": 2822,
+    "newly_sensed_occupied_room": 46,
+    "remaining_D02_room_unknown": 1021
+  },
+  "new_R41": {
+    "robot_core_rc": [
+      168,
+      135
+    ],
+    "semantic_room_cells": 6398,
+    "knownfree_cells": 5639,
+    "unknown_cells": 759,
+    "new_hypotheses": 0,
+    "unknown_mean_difference_gt_0_1": 287,
+    "mean_threshold_0_5_unknown_predicted_wall": 17
+  },
+  "G2_new": {
+    "candidate_count": 486,
+    "cutoff": "post-VP1 simulated observation, recalculated LaMa3 and R4.1",
+    "method": "2500 beams × 0.25 gridcell projected predicted visibility at 0.5m route sampling; map=mean threshold and observed walls",
+    "new_viewpoint_native_rc": [
+      692,
+      671
+    ],
+    "new_viewpoint_xy_m": [
+      17.1,
+      19.2
+    ],
+    "old_viewpoint_native_rc": [
+      671,
+      632
+    ],
+    "new_room_unknown": 759,
+    "predfree_unknown": 742,
+    "projected_route_scan_gain": 451,
+    "projected_residual_predfree": 291,
+    "projected_stationary_gain": 404,
+    "old_previous_VP2_projected_stationary_gain": 46,
+    "route_m": 6,
+    "route_scan_count": 12,
+    "goal_knownfree": true,
+    "route_all_observedfree": true,
+    "not_safety_certified": true,
+    "GT_not_used_in_selection": true
+  },
+  "G2_alternatives": {
+    "absolute_max_pathwise": 460,
+    "absolute_max_path_m": 8.4,
+    "preferred_within98pct_at": 6,
+    "oldVP2_reuse_estimate_standing": 46,
+    "second_preplanned_leg": "NOT_COMMITTED; rescans required"
+  },
+  "no_GT_in_reinfer_R41_or_new_viewpoint": true,
+  "not_native_motion_or_scan": true
+}
