@@ -1,0 +1,251 @@
+{
+  "source": "/home/dell/mx072_native2d_pair_20261015/OPTIMIZED_FULL_PAIR_20261015/COM1_VERIFIED/native_opt_r41_lama3small_run04/R41_OPT_LAMA3_SMALLROI_RUN04_visvarprob",
+  "gt_map_png_sha256": "0512c906529477f0aa180d65d1ab0560b430a1335d5beeb3848b7a156c7a1e74",
+  "calibration_d01": {
+    "expected_known": 7404,
+    "simulated_known": 7404,
+    "overlap": 7272
+  },
+  "sensor": "2500 rays, 20m, 360deg, 0.1m P1",
+  "simulation": "Bresenham rays and filled endpoint visibility polygon, approximate MapEx LiDAR",
+  "method": "one scan only at each fixed pose, no movement during scanning, no replanning",
+  "GT_use": "post hoc only; 5 G2A choices remain precommitted and unchanged",
+  "room_scope": "8-connected semantic==1 (ROOM) component containing robot; one-cell dilated region for near-room walls",
+  "results": [
+    {
+      "decision": 2,
+      "room_id": 1,
+      "native_tick": 12,
+      "robot_native_rc": [
+        647,
+        611
+      ],
+      "g2a_native_rc": [
+        662,
+        610
+      ],
+      "native_goal_rc": [
+        685,
+        620
+      ],
+      "g2a_path_cost_m": 1.54,
+      "native_goal_astar_m": 5.5,
+      "current_known_cells": 12601,
+      "currently_unknown_room_cells": 3889,
+      "semantic_room_component_cells": 6564,
+      "gt_known_disagreement_cells": 18,
+      "robot_scan": {
+        "new_free_cells": 117,
+        "new_wall_cells": 1,
+        "new_total_cells": 118,
+        "new_room_free_cells": 4,
+        "new_room_edge_wall_cells": 0,
+        "known_after_cells": 12719
+      },
+      "g2a_scan": {
+        "new_free_cells": 991,
+        "new_wall_cells": 56,
+        "new_total_cells": 1047,
+        "new_room_free_cells": 989,
+        "new_room_edge_wall_cells": 56,
+        "known_after_cells": 13648
+      },
+      "native_goal_scan": {
+        "new_free_cells": 775,
+        "new_wall_cells": 33,
+        "new_total_cells": 808,
+        "new_room_free_cells": 733,
+        "new_room_edge_wall_cells": 33,
+        "known_after_cells": 13409
+      }
+    },
+    {
+      "decision": 8,
+      "room_id": 2,
+      "native_tick": 157,
+      "robot_native_rc": [
+        546,
+        673
+      ],
+      "g2a_native_rc": [
+        528,
+        678
+      ],
+      "native_goal_rc": [
+        513,
+        722
+      ],
+      "g2a_path_cost_m": 2.01,
+      "native_goal_astar_m": 9.200000000000001,
+      "current_known_cells": 30540,
+      "currently_unknown_room_cells": 4941,
+      "semantic_room_component_cells": 8479,
+      "gt_known_disagreement_cells": 31,
+      "robot_scan": {
+        "new_free_cells": 15,
+        "new_wall_cells": 0,
+        "new_total_cells": 15,
+        "new_room_free_cells": 15,
+        "new_room_edge_wall_cells": 0,
+        "known_after_cells": 30555
+      },
+      "g2a_scan": {
+        "new_free_cells": 165,
+        "new_wall_cells": 25,
+        "new_total_cells": 190,
+        "new_room_free_cells": 162,
+        "new_room_edge_wall_cells": 25,
+        "known_after_cells": 30730
+      },
+      "native_goal_scan": {
+        "new_free_cells": 2075,
+        "new_wall_cells": 158,
+        "new_total_cells": 2233,
+        "new_room_free_cells": 1932,
+        "new_room_edge_wall_cells": 157,
+        "known_after_cells": 32773
+      }
+    },
+    {
+      "decision": 14,
+      "room_id": 3,
+      "native_tick": 340,
+      "robot_native_rc": [
+        559,
+        611
+      ],
+      "g2a_native_rc": [
+        530,
+        609
+      ],
+      "native_goal_rc": [
+        511,
+        610
+      ],
+      "g2a_path_cost_m": 2.98,
+      "native_goal_astar_m": 6.9,
+      "current_known_cells": 38200,
+      "currently_unknown_room_cells": 3344,
+      "semantic_room_component_cells": 6930,
+      "gt_known_disagreement_cells": 21,
+      "robot_scan": {
+        "new_free_cells": 22,
+        "new_wall_cells": 0,
+        "new_total_cells": 22,
+        "new_room_free_cells": 13,
+        "new_room_edge_wall_cells": 0,
+        "known_after_cells": 38222
+      },
+      "g2a_scan": {
+        "new_free_cells": 431,
+        "new_wall_cells": 31,
+        "new_total_cells": 462,
+        "new_room_free_cells": 417,
+        "new_room_edge_wall_cells": 31,
+        "known_after_cells": 38662
+      },
+      "native_goal_scan": {
+        "new_free_cells": 356,
+        "new_wall_cells": 30,
+        "new_total_cells": 386,
+        "new_room_free_cells": 317,
+        "new_room_edge_wall_cells": 27,
+        "known_after_cells": 38586
+      }
+    },
+    {
+      "decision": 18,
+      "room_id": 4,
+      "native_tick": 437,
+      "robot_native_rc": [
+        553,
+        540
+      ],
+      "g2a_native_rc": [
+        536,
+        525
+      ],
+      "native_goal_rc": [
+        513,
+        544
+      ],
+      "g2a_path_cost_m": 2.32,
+      "native_goal_astar_m": 5.0,
+      "current_known_cells": 44257,
+      "currently_unknown_room_cells": 833,
+      "semantic_room_component_cells": 4039,
+      "gt_known_disagreement_cells": 19,
+      "robot_scan": {
+        "new_free_cells": 22,
+        "new_wall_cells": 0,
+        "new_total_cells": 22,
+        "new_room_free_cells": 12,
+        "new_room_edge_wall_cells": 0,
+        "known_after_cells": 44279
+      },
+      "g2a_scan": {
+        "new_free_cells": 282,
+        "new_wall_cells": 40,
+        "new_total_cells": 322,
+        "new_room_free_cells": 267,
+        "new_room_edge_wall_cells": 38,
+        "known_after_cells": 44579
+      },
+      "native_goal_scan": {
+        "new_free_cells": 657,
+        "new_wall_cells": 59,
+        "new_total_cells": 716,
+        "new_room_free_cells": 657,
+        "new_room_edge_wall_cells": 59,
+        "known_after_cells": 44973
+      }
+    },
+    {
+      "decision": 21,
+      "room_id": 5,
+      "native_tick": 544,
+      "robot_native_rc": [
+        655,
+        541
+      ],
+      "g2a_native_rc": [
+        683,
+        535
+      ],
+      "native_goal_rc": [
+        628,
+        530
+      ],
+      "g2a_path_cost_m": 3.05,
+      "native_goal_astar_m": 3.8000000000000003,
+      "current_known_cells": 47808,
+      "currently_unknown_room_cells": 1233,
+      "semantic_room_component_cells": 6215,
+      "gt_known_disagreement_cells": 14,
+      "robot_scan": {
+        "new_free_cells": 19,
+        "new_wall_cells": 0,
+        "new_total_cells": 19,
+        "new_room_free_cells": 17,
+        "new_room_edge_wall_cells": 0,
+        "known_after_cells": 47827
+      },
+      "g2a_scan": {
+        "new_free_cells": 483,
+        "new_wall_cells": 45,
+        "new_total_cells": 528,
+        "new_room_free_cells": 428,
+        "new_room_edge_wall_cells": 15,
+        "known_after_cells": 48336
+      },
+      "native_goal_scan": {
+        "new_free_cells": 635,
+        "new_wall_cells": 29,
+        "new_total_cells": 664,
+        "new_room_free_cells": 572,
+        "new_room_edge_wall_cells": 26,
+        "known_after_cells": 48472
+      }
+    }
+  ]
+}
