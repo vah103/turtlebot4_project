@@ -1,0 +1,81 @@
+{
+  "method": "Counterfactual LiDAR scans at 0.5m along 2-cell-dilated D02 knownfree grid paths, not executed route",
+  "native_viewpoint_ids": {
+    "R": [
+      647,
+      611
+    ],
+    "VP1": [
+      668,
+      635
+    ],
+    "VP2": [
+      671,
+      632
+    ]
+  },
+  "path_m_R_to_VP1": 4.5,
+  "path_m_VP1_to_VP2": 0.6000000000000001,
+  "poses": [
+    [
+      152,
+      111
+    ],
+    [
+      157,
+      111
+    ],
+    [
+      162,
+      111
+    ],
+    [
+      166,
+      112
+    ],
+    [
+      166,
+      117
+    ],
+    [
+      167,
+      121
+    ],
+    [
+      168,
+      125
+    ],
+    [
+      168,
+      130
+    ],
+    [
+      168,
+      135
+    ],
+    [
+      171,
+      133
+    ],
+    [
+      171,
+      132
+    ]
+  ],
+  "stage_metrics": [
+    {
+      "stage": "R->VP1 sampled every 0.5 m, VP1 included",
+      "scan_poses": 9,
+      "room_new": 2868,
+      "whole_new": 3841,
+      "room_unknown_left": 1021
+    },
+    {
+      "stage": "VP1->VP2 sampled every 0.5 m, VP2 included",
+      "scan_poses": 2,
+      "room_new": 28,
+      "whole_new": 89,
+      "room_unknown_left": 993
+    }
+  ]
+}

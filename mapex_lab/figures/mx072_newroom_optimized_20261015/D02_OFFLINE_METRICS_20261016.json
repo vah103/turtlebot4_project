@@ -1,0 +1,78 @@
+{
+  "source": "Run04 D02 frozen viewpoints, GT evaluation only",
+  "sensor": "20m full 360-degree 2500 beams; sample interval in grid cells",
+  "room1_unknown_D02": 3889,
+  "gt_truefree_unknown_D02": 3507,
+  "gt_truewall_unknown_D02": 382,
+  "GT_mismatch_knownfree_fullcore": 18,
+  "positions_native_rc": {
+    "R": [
+      647,
+      611
+    ],
+    "VP1": [
+      668,
+      635
+    ],
+    "VP2": [
+      671,
+      632
+    ]
+  },
+  "results_by_sampling_step": {
+    "1.0": {
+      "VP1": {
+        "new_room": 2317,
+        "new_room_free": 2304,
+        "new_room_wall": 13,
+        "new_global": 2771,
+        "new_outside_room": 454,
+        "remaining_room_unknown": 1572
+      },
+      "VP2": {
+        "new_room": 429,
+        "new_room_free": 423,
+        "new_room_wall": 6,
+        "new_global": 504,
+        "new_outside_room": 75,
+        "remaining_room_unknown": 1143
+      }
+    },
+    "0.5": {
+      "VP1": {
+        "new_room": 2325,
+        "new_room_free": 2312,
+        "new_room_wall": 13,
+        "new_global": 2785,
+        "new_outside_room": 460,
+        "remaining_room_unknown": 1564
+      },
+      "VP2": {
+        "new_room": 425,
+        "new_room_free": 419,
+        "new_room_wall": 6,
+        "new_global": 500,
+        "new_outside_room": 75,
+        "remaining_room_unknown": 1139
+      }
+    },
+    "0.25": {
+      "VP1": {
+        "new_room": 2311,
+        "new_room_free": 2298,
+        "new_room_wall": 13,
+        "new_global": 2762,
+        "new_outside_room": 451,
+        "remaining_room_unknown": 1578
+      },
+      "VP2": {
+        "new_room": 443,
+        "new_room_free": 437,
+        "new_room_wall": 6,
+        "new_global": 520,
+        "new_outside_room": 77,
+        "remaining_room_unknown": 1135
+      }
+    }
+  }
+}
