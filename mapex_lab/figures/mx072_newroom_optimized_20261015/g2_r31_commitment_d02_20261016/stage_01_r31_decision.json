@@ -1,0 +1,838 @@
+{
+  "status": "NEW_COMMITMENT",
+  "goal_sequence": [
+    [
+      183,
+      123
+    ],
+    [
+      195,
+      179
+    ]
+  ],
+  "decision": "REPLAN",
+  "replanning_called": true,
+  "reason": "Previous chain completed or invalidated; new structural regions evaluated",
+  "selected_next_leg": {
+    "goal_rc": [
+      183,
+      123
+    ],
+    "path_rc": [
+      [
+        171,
+        135
+      ],
+      [
+        172,
+        135
+      ],
+      [
+        173,
+        135
+      ],
+      [
+        173,
+        134
+      ],
+      [
+        173,
+        133
+      ],
+      [
+        173,
+        132
+      ],
+      [
+        173,
+        131
+      ],
+      [
+        173,
+        130
+      ],
+      [
+        173,
+        129
+      ],
+      [
+        173,
+        128
+      ],
+      [
+        174,
+        128
+      ],
+      [
+        175,
+        128
+      ],
+      [
+        176,
+        128
+      ],
+      [
+        177,
+        128
+      ],
+      [
+        178,
+        128
+      ],
+      [
+        179,
+        128
+      ],
+      [
+        180,
+        128
+      ],
+      [
+        181,
+        128
+      ],
+      [
+        182,
+        128
+      ],
+      [
+        183,
+        128
+      ],
+      [
+        183,
+        127
+      ],
+      [
+        183,
+        126
+      ],
+      [
+        183,
+        125
+      ],
+      [
+        183,
+        124
+      ],
+      [
+        183,
+        123
+      ]
+    ],
+    "route_distance_m": 2.4,
+    "expected_unknown_nominal": 238,
+    "expected_unknown_stress": 81
+  },
+  "planner_report": {
+    "version": "G2_R3_STRUCTURE_SEQUENCE_V1",
+    "status": "CONDITIONAL_VIEWPOINT_SEQUENCE",
+    "decision_id": "R3_D02_CAUSAL_STAGE_01",
+    "snapshot_sha256": "4569beac4c127dae365b8d0ec6a6901ea4ba1deb16827f8205695061bff9f728",
+    "input_used_gt": false,
+    "future_observation_used": false,
+    "goal_sequence": [
+      [
+        183,
+        123
+      ],
+      [
+        195,
+        179
+      ]
+    ],
+    "goal_sequence_xy_m": [
+      [
+        12.3,
+        18.3
+      ],
+      [
+        17.9,
+        19.5
+      ]
+    ],
+    "goal_count": 2,
+    "total_route_m": 11.2,
+    "selected": {
+      "points_rc": [
+        [
+          183,
+          123
+        ],
+        [
+          195,
+          179
+        ]
+      ],
+      "goal_count": 2,
+      "distance_m": 11.2,
+      "quality_score": 15.90201,
+      "shortfall_score": 6.79252,
+      "objective_score": 12.98601,
+      "structural_regions_nominal_met": 3,
+      "structural_quality_bucket": 44,
+      "projected_unseen_major_region_cells_nominal": 210,
+      "stages": [
+        {
+          "goal_rc": [
+            183,
+            123
+          ],
+          "goal_xy_m": [
+            12.3,
+            18.3
+          ],
+          "distance_leg_m": 2.4,
+          "path_rc": [
+            [
+              171,
+              135
+            ],
+            [
+              172,
+              135
+            ],
+            [
+              173,
+              135
+            ],
+            [
+              173,
+              134
+            ],
+            [
+              173,
+              133
+            ],
+            [
+              173,
+              132
+            ],
+            [
+              173,
+              131
+            ],
+            [
+              173,
+              130
+            ],
+            [
+              173,
+              129
+            ],
+            [
+              173,
+              128
+            ],
+            [
+              174,
+              128
+            ],
+            [
+              175,
+              128
+            ],
+            [
+              176,
+              128
+            ],
+            [
+              177,
+              128
+            ],
+            [
+              178,
+              128
+            ],
+            [
+              179,
+              128
+            ],
+            [
+              180,
+              128
+            ],
+            [
+              181,
+              128
+            ],
+            [
+              182,
+              128
+            ],
+            [
+              183,
+              128
+            ],
+            [
+              183,
+              127
+            ],
+            [
+              183,
+              126
+            ],
+            [
+              183,
+              125
+            ],
+            [
+              183,
+              124
+            ],
+            [
+              183,
+              123
+            ]
+          ],
+          "newly_visible_unknown_nominal": 238,
+          "newly_visible_unknown_stress": 81,
+          "cumulative_quality_score": 7.8172,
+          "objective": 6.9352
+        },
+        {
+          "goal_rc": [
+            195,
+            179
+          ],
+          "goal_xy_m": [
+            17.9,
+            19.5
+          ],
+          "distance_leg_m": 8.8,
+          "path_rc": [
+            [
+              183,
+              123
+            ],
+            [
+              182,
+              123
+            ],
+            [
+              181,
+              123
+            ],
+            [
+              180,
+              123
+            ],
+            [
+              179,
+              123
+            ],
+            [
+              178,
+              123
+            ],
+            [
+              177,
+              123
+            ],
+            [
+              176,
+              123
+            ],
+            [
+              175,
+              123
+            ],
+            [
+              174,
+              123
+            ],
+            [
+              173,
+              123
+            ],
+            [
+              173,
+              124
+            ],
+            [
+              173,
+              125
+            ],
+            [
+              173,
+              126
+            ],
+            [
+              173,
+              127
+            ],
+            [
+              173,
+              128
+            ],
+            [
+              173,
+              129
+            ],
+            [
+              173,
+              130
+            ],
+            [
+              173,
+              131
+            ],
+            [
+              173,
+              132
+            ],
+            [
+              173,
+              133
+            ],
+            [
+              173,
+              134
+            ],
+            [
+              174,
+              134
+            ],
+            [
+              175,
+              134
+            ],
+            [
+              176,
+              134
+            ],
+            [
+              177,
+              134
+            ],
+            [
+              178,
+              134
+            ],
+            [
+              179,
+              134
+            ],
+            [
+              180,
+              134
+            ],
+            [
+              181,
+              134
+            ],
+            [
+              182,
+              134
+            ],
+            [
+              183,
+              134
+            ],
+            [
+              184,
+              134
+            ],
+            [
+              185,
+              134
+            ],
+            [
+              186,
+              134
+            ],
+            [
+              187,
+              134
+            ],
+            [
+              188,
+              134
+            ],
+            [
+              189,
+              134
+            ],
+            [
+              190,
+              134
+            ],
+            [
+              191,
+              134
+            ],
+            [
+              192,
+              134
+            ],
+            [
+              193,
+              134
+            ],
+            [
+              194,
+              134
+            ],
+            [
+              195,
+              134
+            ],
+            [
+              195,
+              135
+            ],
+            [
+              195,
+              136
+            ],
+            [
+              195,
+              137
+            ],
+            [
+              195,
+              138
+            ],
+            [
+              195,
+              139
+            ],
+            [
+              195,
+              140
+            ],
+            [
+              195,
+              141
+            ],
+            [
+              195,
+              142
+            ],
+            [
+              195,
+              143
+            ],
+            [
+              195,
+              144
+            ],
+            [
+              195,
+              145
+            ],
+            [
+              195,
+              146
+            ],
+            [
+              195,
+              147
+            ],
+            [
+              195,
+              148
+            ],
+            [
+              195,
+              149
+            ],
+            [
+              195,
+              150
+            ],
+            [
+              195,
+              151
+            ],
+            [
+              195,
+              152
+            ],
+            [
+              195,
+              153
+            ],
+            [
+              195,
+              154
+            ],
+            [
+              195,
+              155
+            ],
+            [
+              195,
+              156
+            ],
+            [
+              195,
+              157
+            ],
+            [
+              195,
+              158
+            ],
+            [
+              195,
+              159
+            ],
+            [
+              195,
+              160
+            ],
+            [
+              195,
+              161
+            ],
+            [
+              195,
+              162
+            ],
+            [
+              195,
+              163
+            ],
+            [
+              195,
+              164
+            ],
+            [
+              195,
+              165
+            ],
+            [
+              195,
+              166
+            ],
+            [
+              195,
+              167
+            ],
+            [
+              195,
+              168
+            ],
+            [
+              195,
+              169
+            ],
+            [
+              195,
+              170
+            ],
+            [
+              195,
+              171
+            ],
+            [
+              195,
+              172
+            ],
+            [
+              195,
+              173
+            ],
+            [
+              195,
+              174
+            ],
+            [
+              195,
+              175
+            ],
+            [
+              195,
+              176
+            ],
+            [
+              195,
+              177
+            ],
+            [
+              195,
+              178
+            ],
+            [
+              195,
+              179
+            ]
+          ],
+          "newly_visible_unknown_nominal": 399,
+          "newly_visible_unknown_stress": 426,
+          "cumulative_quality_score": 15.902,
+          "objective": 12.986
+        }
+      ],
+      "scenario": 2500,
+      "heuristic_satisfaction_not_real_coverage": true
+    },
+    "regions": [
+      {
+        "region_id": 1,
+        "kind": "POSSIBLE_OPEN_SPACE",
+        "cells": 481,
+        "expected_open_mass_proxy": 439.23,
+        "satisfaction_cap_cells": 433,
+        "predicted_visible_nominal": 442,
+        "predicted_visible_stress": 381,
+        "nominal_target_met": true,
+        "stress_target_met": false,
+        "historically_outside_current_room_cells": 0
+      },
+      {
+        "region_id": 11,
+        "kind": "POSSIBLE_OPEN_SPACE",
+        "cells": 110,
+        "expected_open_mass_proxy": 105.318,
+        "satisfaction_cap_cells": 99,
+        "predicted_visible_nominal": 53,
+        "predicted_visible_stress": 53,
+        "nominal_target_met": false,
+        "stress_target_met": false,
+        "historically_outside_current_room_cells": 0
+      },
+      {
+        "region_id": 14,
+        "kind": "POSSIBLE_OPEN_SPACE",
+        "cells": 34,
+        "expected_open_mass_proxy": 32.331,
+        "satisfaction_cap_cells": 31,
+        "predicted_visible_nominal": 34,
+        "predicted_visible_stress": 34,
+        "nominal_target_met": true,
+        "stress_target_met": true,
+        "historically_outside_current_room_cells": 0
+      },
+      {
+        "region_id": 6,
+        "kind": "POSSIBLE_OPEN_SPACE",
+        "cells": 23,
+        "expected_open_mass_proxy": 19.541,
+        "satisfaction_cap_cells": 21,
+        "predicted_visible_nominal": 23,
+        "predicted_visible_stress": 3,
+        "nominal_target_met": true,
+        "stress_target_met": false,
+        "historically_outside_current_room_cells": 0
+      },
+      {
+        "region_id": 12,
+        "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+        "cells": 100,
+        "expected_open_mass_proxy": 14.512,
+        "satisfaction_cap_cells": 90,
+        "predicted_visible_nominal": 40,
+        "predicted_visible_stress": 13,
+        "nominal_target_met": false,
+        "stress_target_met": false,
+        "historically_outside_current_room_cells": 88
+      },
+      {
+        "region_id": 13,
+        "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+        "cells": 78,
+        "expected_open_mass_proxy": 13.444,
+        "satisfaction_cap_cells": 71,
+        "predicted_visible_nominal": 24,
+        "predicted_visible_stress": 16,
+        "nominal_target_met": false,
+        "stress_target_met": false,
+        "historically_outside_current_room_cells": 64
+      }
+    ],
+    "mission_unknown": 899,
+    "major_regions": 6,
+    "unresolved_minor_regions": [
+      {
+        "region_id": 2,
+        "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+        "cells": 53,
+        "historically_outside_current_room": 50
+      },
+      {
+        "region_id": 15,
+        "kind": "POSSIBLE_OPEN_SPACE",
+        "cells": 7,
+        "historically_outside_current_room": 7
+      },
+      {
+        "region_id": 16,
+        "kind": "POSSIBLE_OPEN_SPACE",
+        "cells": 5,
+        "historically_outside_current_room": 0
+      },
+      {
+        "region_id": 17,
+        "kind": "POSSIBLE_OPEN_SPACE",
+        "cells": 4,
+        "historically_outside_current_room": 0
+      },
+      {
+        "region_id": 18,
+        "kind": "POSSIBLE_OPEN_SPACE",
+        "cells": 3,
+        "historically_outside_current_room": 3
+      },
+      {
+        "region_id": 19,
+        "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+        "cells": 1,
+        "historically_outside_current_room": 0
+      }
+    ],
+    "current_room_unknown": 687,
+    "historical_unknown_outside_current": 212,
+    "search": {
+      "initial_goal_proposals": 180,
+      "chosen_goal_candidate_pool": 48,
+      "beam_width": 6,
+      "depth_bound": 7,
+      "primary_objective": "lexicographic open-region satisfaction then nominal 2%-bucketed coverage, then travel/number of goals",
+      "unverified_wall_regions_not_automatically_cleared": true,
+      "coarse_full_sequence_candidates": 42,
+      "dense_rechecked_full_sequences": 36,
+      "coarse_rays": 250,
+      "dense_rays": 2500,
+      "coarse_cached_scan_poses": 961,
+      "fine_cached_scan_poses": 122,
+      "wall_time_s": 21.532,
+      "stopping_notes": []
+    },
+    "config": {
+      "resolution_m": 0.1,
+      "range_m": 20.0,
+      "coarse_beams": 250,
+      "dense_beams": 2500,
+      "coarse_ray_step_cells": 0.5,
+      "dense_ray_step_cells": 0.25,
+      "scan_every_cells": 5,
+      "grid_stride_cells": 4,
+      "clearance_cells": 2,
+      "max_initial_viewpoint_proposals": 175,
+      "max_search_candidates": 48,
+      "min_major_expected_open_mass": 12.0,
+      "min_major_region_cells": 18,
+      "region_satisfaction_fraction": 0.9,
+      "max_search_depth": 7,
+      "beam_width": 6,
+      "shortlisted_final_sequences": 10,
+      "coverage_value_scale": 1.0,
+      "route_cost_per_m": 0.18,
+      "stop_cost_per_goal": 0.45,
+      "pessimistic_sigma": 1.0,
+      "nominal_scenario_fraction": 0.7,
+      "structural_quality_bins": 50,
+      "decision_id": "R3_D02_CAUSAL_STAGE_01"
+    },
+    "cautions": [
+      "All goals are conditional and lie in currently observed-free connected region, not model-predicted unknown",
+      "Selection covers meaningful unresolved room regions, NOT a proof every free cell has been explored",
+      "LaMa mean+variance generate two occupancy stress proxies, NOT calibrated ensemble probabilities",
+      "An observed-free grid path is not a certified physical robot path",
+      "Mission unknown outside current R4.1 room persists and must be adjudicated",
+      "Search and candidate subsets are budgeted approximations; no global-optimality claim",
+      "Run LaMa and R4.1 again after materially new observed evidence; do not follow frozen goals blindly"
+    ]
+  }
+}

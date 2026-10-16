@@ -1,0 +1,19 @@
+<!doctype html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>G2-R3.1: D02 fully causal offline commitment exploration</title>
+<style>body{font-family:system-ui,-apple-system,sans-serif;margin:0 auto;max-width:1130px;padding:14px;color:#253f53;background:#f5f7fa}h1{font-size:25px}h2{font-size:19px}section{background:white;border:1px solid #d4dee6;border-radius:12px;margin:16px 0;padding:14px}img{max-width:100%;width:100%;height:auto}p{line-height:1.55;color:#5a7180}table{border-collapse:collapse;width:100%}th,td{border-bottom:1px solid #dbe3ea;text-align:left;padding:8px}</style></head><body>
+<h1>G2-R3.1 — Khám phá theo chuỗi cam kết từ D02 (offline, không dùng goal thủ công)</h1>
+<p>Robot sử dụng goal D02 do G2-R3 tự chọn, quét LiDAR tương thích mẫu gốc từ môi trường GT ẩn, sau mỗi goal tính lại LaMa ba mô hình, Room Node V4-R4.1 và lập lại chuỗi mới. Không dùng GT để chọn goal. Bản đồ GT trong phần đánh giá cuối chỉ xuất hiện sau khi quá trình chạy kết thúc.</p>
+<p><b>Stopped:</b> DEFER_NO_POSITIVE_STRUCTURAL_CHAIN · <b>4 goal(s)</b> · 18.8 m · 39 scans · original room unknown left 270.</p>
+<section><h2>Chuỗi goal đã thực sự đi qua</h2><table><tr><th>#</th><th>Goal (x,y)m</th><th>Đường tích lũy</th><th>Unknown trong Room1 cũ</th><th>Next G2 plan</th></tr>
+<tr><td>1</td><td>[13.5, 17.1]</td><td>4.8 m</td><td>891</td><td>[[12.3, 18.3], [17.9, 19.5]]</td></tr>
+<tr><td>2</td><td>[12.3, 18.3]</td><td>7.2 m</td><td>619</td><td>[[17.9, 19.5]]</td></tr>
+<tr><td>3</td><td>[17.9, 19.5]</td><td>16.0 m</td><td>339</td><td>[[20.7, 19.5]]</td></tr>
+<tr><td>4</td><td>[20.7, 19.5]</td><td>18.8 m</td><td>270</td><td>[]</td></tr>
+</table></section>
+<section><h2>D02 ORIGINAL</h2><img loading="lazy" src="D02_ORIGINAL.png" alt="D02_ORIGINAL"></section>
+<section><h2>AFTER GOAL 01</h2><img loading="lazy" src="AFTER_GOAL_01.png" alt="AFTER_GOAL_01"></section>
+<section><h2>AFTER GOAL 02</h2><img loading="lazy" src="AFTER_GOAL_02.png" alt="AFTER_GOAL_02"></section>
+<section><h2>AFTER GOAL 03</h2><img loading="lazy" src="AFTER_GOAL_03.png" alt="AFTER_GOAL_03"></section>
+<section><h2>AFTER GOAL 04</h2><img loading="lazy" src="AFTER_GOAL_04.png" alt="AFTER_GOAL_04"></section>
+<section><h2>FINAL HINDSIGHT GT ONLY</h2><img loading="lazy" src="FINAL_HINDSIGHT_GT_ONLY.png" alt="FINAL_HINDSIGHT_GT_ONLY"></section>
+<p>Giới hạn: raycast 2D trên GT raster, không phải LiDAR MapEx source-native; replanning sau mỗi goal chứ không phải mỗi scan; chưa chứng minh an toàn vật lý hay toàn cục tối ưu.</p></body></html>

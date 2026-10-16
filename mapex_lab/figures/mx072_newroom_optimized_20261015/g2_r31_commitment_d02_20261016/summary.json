@@ -1,0 +1,861 @@
+{
+  "experiment": "G2-R3.1 Structure-Commitment causal D02 offline forward rollout",
+  "source_planner_sha256": "ae9de4983086000a94237ef4b511cfc937a3e42de7b87b0434ae496f10d3bab3",
+  "source_commitment_sha256": "290a03ec536a12b95ed525d496037f7042240fffd38c77d5e7e1c4b12174f370",
+  "goal_selection_used_gt": false,
+  "future_observations_used_for_planning": false,
+  "uses_manually_frozen_vp1_or_goal_coordinates": false,
+  "only_first_step_original_R3_frozen_D02_plan": true,
+  "sensor_isolated_hidden_gt": true,
+  "sensor_model": "2500 rays 20m, .25cell ray-step; scans every .5m along known-free route",
+  "engine": "3-member LaMa native default_map_eval + original stateful V4-R4.1 + G2-R3 R3 StageA/B",
+  "replan_policy": "Validate and retain existing structural chain after each goal; replan only when exhausted/invalid; no mid-leg event controller",
+  "termination": "DEFER_NO_POSITIVE_STRUCTURAL_CHAIN",
+  "completed_goals": 4,
+  "route_distance_m": 18.8,
+  "sensor_scan_count": 39,
+  "original_room_cells": 6564,
+  "original_room_unknown_initial": 3889,
+  "original_room_unknown_left": 270,
+  "original_room_known_fraction": 0.930573,
+  "final_robot_core_rc": [
+    195,
+    207
+  ],
+  "final_mission_memory_path": "/home/dell/mx072_g2_r31_structure_commitment_20261016/D02_R31_FULL_CAUSAL_20261016/stage_04_mission_memory.npz",
+  "last_semantic_path": "/home/dell/mx072_g2_r31_structure_commitment_20261016/D02_R31_FULL_CAUSAL_20261016/room_stage_06.npz",
+  "compute_time_s": {
+    "lama_s": 70.55,
+    "r41_s": 1.94,
+    "structure_s": 11.13,
+    "planner_s": 0.0,
+    "commitment_s": 38.98
+  },
+  "events": [
+    {
+      "stage": 1,
+      "robot_from_core_rc": [
+        147,
+        111
+      ],
+      "robot_goal_core_rc": [
+        171,
+        135
+      ],
+      "goal_xy_m": [
+        13.5,
+        17.1
+      ],
+      "original_planned_sequence_before_stage": [
+        [
+          13.5,
+          17.1
+        ]
+      ],
+      "performed_leg_m": 4.8,
+      "distance_cumulative_m": 4.8,
+      "scans_this_leg": 10,
+      "scans_cumulative": 10,
+      "newly_scanned_original_room": 2998,
+      "newly_scanned_original_room_free": 2945,
+      "newly_scanned_original_room_wall": 53,
+      "newly_scanned_global_free": 3847,
+      "newly_scanned_global_wall": 180,
+      "post_scan_original_room_unknown": 891,
+      "sensor_data_source": "hidden occupancy GT first-hit LiDAR subprocess only",
+      "source_r3_planner_sha256": "ae9de4983086000a94237ef4b511cfc937a3e42de7b87b0434ae496f10d3bab3",
+      "source_commitment_sha256": "290a03ec536a12b95ed525d496037f7042240fffd38c77d5e7e1c4b12174f370",
+      "mission_progress": {
+        "1": {
+          "expected": 3371,
+          "realized": 2608
+        },
+        "2": {
+          "expected": 400,
+          "realized": 290
+        },
+        "3": {
+          "expected": 90,
+          "realized": 90
+        },
+        "5": {
+          "expected": 1,
+          "realized": 3
+        },
+        "6": {
+          "expected": 1,
+          "realized": 0
+        },
+        "7": {
+          "expected": 1,
+          "realized": 2
+        },
+        "10": {
+          "expected": 1,
+          "realized": 1
+        }
+      },
+      "realized_global_cells": 4027,
+      "retained_sequence_after_arrival": [],
+      "deferred_regions_after_failure": [],
+      "current_room_accepted": true,
+      "current_room_area": 6449,
+      "current_room_unknown": 687,
+      "original_room_unknown": 891,
+      "original_room_observed_fraction": 0.770892,
+      "original_remaining_outside_current": 212,
+      "post_replan_status": "NEW_COMMITMENT",
+      "decision_type": "REPLAN",
+      "replanning_called": true,
+      "post_replan_goals": [
+        [
+          12.3,
+          18.3
+        ],
+        [
+          17.9,
+          19.5
+        ]
+      ],
+      "post_replan_mission_unknown": 899,
+      "structural_region_count": 12
+    },
+    {
+      "stage": 2,
+      "robot_from_core_rc": [
+        171,
+        135
+      ],
+      "robot_goal_core_rc": [
+        183,
+        123
+      ],
+      "goal_xy_m": [
+        12.3,
+        18.3
+      ],
+      "original_planned_sequence_before_stage": [
+        [
+          12.3,
+          18.3
+        ],
+        [
+          17.900000000000002,
+          19.5
+        ]
+      ],
+      "performed_leg_m": 2.4,
+      "distance_cumulative_m": 7.2,
+      "scans_this_leg": 5,
+      "scans_cumulative": 15,
+      "newly_scanned_original_room": 272,
+      "newly_scanned_original_room_free": 258,
+      "newly_scanned_original_room_wall": 14,
+      "newly_scanned_global_free": 265,
+      "newly_scanned_global_wall": 23,
+      "post_scan_original_room_unknown": 619,
+      "sensor_data_source": "hidden occupancy GT first-hit LiDAR subprocess only",
+      "source_r3_planner_sha256": "ae9de4983086000a94237ef4b511cfc937a3e42de7b87b0434ae496f10d3bab3",
+      "source_commitment_sha256": "290a03ec536a12b95ed525d496037f7042240fffd38c77d5e7e1c4b12174f370",
+      "mission_progress": {
+        "1": {
+          "expected": 94,
+          "realized": 200
+        },
+        "2": {
+          "expected": 10,
+          "realized": 11
+        },
+        "6": {
+          "expected": 23,
+          "realized": 0
+        },
+        "12": {
+          "expected": 1,
+          "realized": 3
+        },
+        "13": {
+          "expected": 1,
+          "realized": 21
+        },
+        "14": {
+          "expected": 34,
+          "realized": 34
+        },
+        "19": {
+          "expected": 1,
+          "realized": 0
+        }
+      },
+      "realized_global_cells": 288,
+      "retained_sequence_after_arrival": [
+        [
+          195,
+          179
+        ]
+      ],
+      "deferred_regions_after_failure": [],
+      "current_room_accepted": true,
+      "current_room_area": 6439,
+      "current_room_unknown": 419,
+      "original_room_unknown": 619,
+      "original_room_observed_fraction": 0.840833,
+      "original_remaining_outside_current": 208,
+      "post_replan_status": "COMMITMENT_CONTINUED",
+      "decision_type": "KEEP",
+      "replanning_called": false,
+      "post_replan_goals": [
+        [
+          17.9,
+          19.5
+        ]
+      ],
+      "post_replan_mission_unknown": 627,
+      "structural_region_count": 9
+    },
+    {
+      "stage": 3,
+      "robot_from_core_rc": [
+        183,
+        123
+      ],
+      "robot_goal_core_rc": [
+        195,
+        179
+      ],
+      "goal_xy_m": [
+        17.9,
+        19.5
+      ],
+      "original_planned_sequence_before_stage": [
+        [
+          17.900000000000002,
+          19.5
+        ]
+      ],
+      "performed_leg_m": 8.8,
+      "distance_cumulative_m": 16.0,
+      "scans_this_leg": 18,
+      "scans_cumulative": 33,
+      "newly_scanned_original_room": 280,
+      "newly_scanned_original_room_free": 241,
+      "newly_scanned_original_room_wall": 39,
+      "newly_scanned_global_free": 649,
+      "newly_scanned_global_wall": 89,
+      "post_scan_original_room_unknown": 339,
+      "sensor_data_source": "hidden occupancy GT first-hit LiDAR subprocess only",
+      "source_r3_planner_sha256": "ae9de4983086000a94237ef4b511cfc937a3e42de7b87b0434ae496f10d3bab3",
+      "source_commitment_sha256": "290a03ec536a12b95ed525d496037f7042240fffd38c77d5e7e1c4b12174f370",
+      "mission_progress": {
+        "1": {
+          "expected": 218,
+          "realized": 179
+        },
+        "2": {
+          "expected": 3,
+          "realized": 0
+        },
+        "6": {
+          "expected": 30,
+          "realized": 0
+        },
+        "11": {
+          "expected": 48,
+          "realized": 49
+        },
+        "12": {
+          "expected": 43,
+          "realized": 26
+        },
+        "13": {
+          "expected": 9,
+          "realized": 5
+        },
+        "20": {
+          "expected": 9,
+          "realized": 21
+        }
+      },
+      "realized_global_cells": 738,
+      "retained_sequence_after_arrival": [],
+      "deferred_regions_after_failure": [
+        6
+      ],
+      "current_room_accepted": true,
+      "current_room_area": 6374,
+      "current_room_unknown": 113,
+      "original_room_unknown": 339,
+      "original_room_observed_fraction": 0.912831,
+      "original_remaining_outside_current": 234,
+      "post_replan_status": "NEW_COMMITMENT",
+      "decision_type": "REPLAN",
+      "replanning_called": true,
+      "post_replan_goals": [
+        [
+          20.7,
+          19.5
+        ]
+      ],
+      "post_replan_mission_unknown": 347,
+      "structural_region_count": 8
+    },
+    {
+      "stage": 4,
+      "robot_from_core_rc": [
+        195,
+        179
+      ],
+      "robot_goal_core_rc": [
+        195,
+        207
+      ],
+      "goal_xy_m": [
+        20.7,
+        19.5
+      ],
+      "original_planned_sequence_before_stage": [
+        [
+          20.700000000000003,
+          19.5
+        ]
+      ],
+      "performed_leg_m": 2.8,
+      "distance_cumulative_m": 18.8,
+      "scans_this_leg": 6,
+      "scans_cumulative": 39,
+      "newly_scanned_original_room": 69,
+      "newly_scanned_original_room_free": 58,
+      "newly_scanned_original_room_wall": 11,
+      "newly_scanned_global_free": 1375,
+      "newly_scanned_global_wall": 54,
+      "post_scan_original_room_unknown": 270,
+      "sensor_data_source": "hidden occupancy GT first-hit LiDAR subprocess only",
+      "source_r3_planner_sha256": "ae9de4983086000a94237ef4b511cfc937a3e42de7b87b0434ae496f10d3bab3",
+      "source_commitment_sha256": "290a03ec536a12b95ed525d496037f7042240fffd38c77d5e7e1c4b12174f370",
+      "mission_progress": {
+        "6": {
+          "expected": 5,
+          "realized": 0
+        },
+        "11": {
+          "expected": 56,
+          "realized": 56
+        },
+        "12": {
+          "expected": 4,
+          "realized": 4
+        },
+        "13": {
+          "expected": 8,
+          "realized": 9
+        }
+      },
+      "realized_global_cells": 1429,
+      "retained_sequence_after_arrival": [],
+      "deferred_regions_after_failure": [
+        6
+      ],
+      "current_room_accepted": true,
+      "current_room_area": 6376,
+      "current_room_unknown": 57,
+      "original_room_unknown": 270,
+      "original_room_observed_fraction": 0.930573,
+      "original_remaining_outside_current": 221,
+      "post_replan_status": "DEFER_NO_POSITIVE_STRUCTURAL_CHAIN",
+      "decision_type": "DEFER",
+      "replanning_called": true,
+      "post_replan_goals": [],
+      "post_replan_mission_unknown": 278,
+      "structural_region_count": 7
+    }
+  ],
+  "final_commitment_state": {
+    "schema": "G2_R31_COMMITMENT_V1",
+    "pending_goals": [],
+    "pending_source_decision": "R3_D02_CAUSAL_STAGE_03",
+    "visits": [
+      {
+        "goal_rc": [
+          171,
+          135
+        ],
+        "start_rc": [
+          147,
+          111
+        ],
+        "realized_global_cells": 4027,
+        "by_region": {
+          "1": {
+            "expected": 3371,
+            "realized": 2608
+          },
+          "2": {
+            "expected": 400,
+            "realized": 290
+          },
+          "3": {
+            "expected": 90,
+            "realized": 90
+          },
+          "5": {
+            "expected": 1,
+            "realized": 3
+          },
+          "6": {
+            "expected": 1,
+            "realized": 0
+          },
+          "7": {
+            "expected": 1,
+            "realized": 2
+          },
+          "10": {
+            "expected": 1,
+            "realized": 1
+          }
+        }
+      },
+      {
+        "goal_rc": [
+          183,
+          123
+        ],
+        "start_rc": [
+          171,
+          135
+        ],
+        "realized_global_cells": 288,
+        "by_region": {
+          "1": {
+            "expected": 94,
+            "realized": 200
+          },
+          "2": {
+            "expected": 10,
+            "realized": 11
+          },
+          "6": {
+            "expected": 23,
+            "realized": 0
+          },
+          "12": {
+            "expected": 1,
+            "realized": 3
+          },
+          "13": {
+            "expected": 1,
+            "realized": 21
+          },
+          "14": {
+            "expected": 34,
+            "realized": 34
+          },
+          "19": {
+            "expected": 1,
+            "realized": 0
+          }
+        }
+      },
+      {
+        "goal_rc": [
+          195,
+          179
+        ],
+        "start_rc": [
+          183,
+          123
+        ],
+        "realized_global_cells": 738,
+        "by_region": {
+          "1": {
+            "expected": 218,
+            "realized": 179
+          },
+          "2": {
+            "expected": 3,
+            "realized": 0
+          },
+          "6": {
+            "expected": 30,
+            "realized": 0
+          },
+          "11": {
+            "expected": 48,
+            "realized": 49
+          },
+          "12": {
+            "expected": 43,
+            "realized": 26
+          },
+          "13": {
+            "expected": 9,
+            "realized": 5
+          },
+          "20": {
+            "expected": 9,
+            "realized": 21
+          }
+        }
+      },
+      {
+        "goal_rc": [
+          195,
+          207
+        ],
+        "start_rc": [
+          195,
+          179
+        ],
+        "realized_global_cells": 1429,
+        "by_region": {
+          "6": {
+            "expected": 5,
+            "realized": 0
+          },
+          "11": {
+            "expected": 56,
+            "realized": 56
+          },
+          "12": {
+            "expected": 4,
+            "realized": 4
+          },
+          "13": {
+            "expected": 8,
+            "realized": 9
+          }
+        }
+      }
+    ],
+    "region_failures": {
+      "6": [
+        {
+          "rc": [
+            183,
+            123
+          ],
+          "expected": 23,
+          "realized": 0
+        },
+        {
+          "rc": [
+            195,
+            179
+          ],
+          "expected": 30,
+          "realized": 0
+        }
+      ]
+    },
+    "deferred_regions": [
+      6
+    ],
+    "stagnant_legs": 0,
+    "audit": [
+      {
+        "event": "INITIAL_COMMIT",
+        "goals": [
+          [
+            171,
+            135
+          ]
+        ]
+      },
+      {
+        "event": "OBSERVATION_UPDATE",
+        "executed_goal_rc": [
+          171,
+          135
+        ],
+        "realized_global_cells": 4027,
+        "regions": {
+          "1": {
+            "expected": 3371,
+            "realized": 2608
+          },
+          "2": {
+            "expected": 400,
+            "realized": 290
+          },
+          "3": {
+            "expected": 90,
+            "realized": 90
+          },
+          "5": {
+            "expected": 1,
+            "realized": 3
+          },
+          "6": {
+            "expected": 1,
+            "realized": 0
+          },
+          "7": {
+            "expected": 1,
+            "realized": 2
+          },
+          "10": {
+            "expected": 1,
+            "realized": 1
+          }
+        },
+        "deferred_after_independent_failures": [],
+        "remaining_goals_before_safety_validation": []
+      },
+      {
+        "event": "NEW_COMMITMENT",
+        "goals": [
+          [
+            183,
+            123
+          ],
+          [
+            195,
+            179
+          ]
+        ],
+        "regions": [
+          {
+            "region_id": 1,
+            "kind": "POSSIBLE_OPEN_SPACE",
+            "cells": 481,
+            "expected_open_mass_proxy": 439.23,
+            "satisfaction_cap_cells": 433,
+            "predicted_visible_nominal": 442,
+            "predicted_visible_stress": 381,
+            "nominal_target_met": true,
+            "stress_target_met": false,
+            "historically_outside_current_room_cells": 0
+          },
+          {
+            "region_id": 11,
+            "kind": "POSSIBLE_OPEN_SPACE",
+            "cells": 110,
+            "expected_open_mass_proxy": 105.318,
+            "satisfaction_cap_cells": 99,
+            "predicted_visible_nominal": 53,
+            "predicted_visible_stress": 53,
+            "nominal_target_met": false,
+            "stress_target_met": false,
+            "historically_outside_current_room_cells": 0
+          },
+          {
+            "region_id": 14,
+            "kind": "POSSIBLE_OPEN_SPACE",
+            "cells": 34,
+            "expected_open_mass_proxy": 32.331,
+            "satisfaction_cap_cells": 31,
+            "predicted_visible_nominal": 34,
+            "predicted_visible_stress": 34,
+            "nominal_target_met": true,
+            "stress_target_met": true,
+            "historically_outside_current_room_cells": 0
+          },
+          {
+            "region_id": 6,
+            "kind": "POSSIBLE_OPEN_SPACE",
+            "cells": 23,
+            "expected_open_mass_proxy": 19.541,
+            "satisfaction_cap_cells": 21,
+            "predicted_visible_nominal": 23,
+            "predicted_visible_stress": 3,
+            "nominal_target_met": true,
+            "stress_target_met": false,
+            "historically_outside_current_room_cells": 0
+          },
+          {
+            "region_id": 12,
+            "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+            "cells": 100,
+            "expected_open_mass_proxy": 14.512,
+            "satisfaction_cap_cells": 90,
+            "predicted_visible_nominal": 40,
+            "predicted_visible_stress": 13,
+            "nominal_target_met": false,
+            "stress_target_met": false,
+            "historically_outside_current_room_cells": 88
+          },
+          {
+            "region_id": 13,
+            "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+            "cells": 78,
+            "expected_open_mass_proxy": 13.444,
+            "satisfaction_cap_cells": 71,
+            "predicted_visible_nominal": 24,
+            "predicted_visible_stress": 16,
+            "nominal_target_met": false,
+            "stress_target_met": false,
+            "historically_outside_current_room_cells": 64
+          }
+        ]
+      },
+      {
+        "event": "OBSERVATION_UPDATE",
+        "executed_goal_rc": [
+          183,
+          123
+        ],
+        "realized_global_cells": 288,
+        "regions": {
+          "1": {
+            "expected": 94,
+            "realized": 200
+          },
+          "2": {
+            "expected": 10,
+            "realized": 11
+          },
+          "6": {
+            "expected": 23,
+            "realized": 0
+          },
+          "12": {
+            "expected": 1,
+            "realized": 3
+          },
+          "13": {
+            "expected": 1,
+            "realized": 21
+          },
+          "14": {
+            "expected": 34,
+            "realized": 34
+          },
+          "19": {
+            "expected": 1,
+            "realized": 0
+          }
+        },
+        "deferred_after_independent_failures": [],
+        "remaining_goals_before_safety_validation": [
+          [
+            195,
+            179
+          ]
+        ]
+      },
+      {
+        "event": "OBSERVATION_UPDATE",
+        "executed_goal_rc": [
+          195,
+          179
+        ],
+        "realized_global_cells": 738,
+        "regions": {
+          "1": {
+            "expected": 218,
+            "realized": 179
+          },
+          "2": {
+            "expected": 3,
+            "realized": 0
+          },
+          "6": {
+            "expected": 30,
+            "realized": 0
+          },
+          "11": {
+            "expected": 48,
+            "realized": 49
+          },
+          "12": {
+            "expected": 43,
+            "realized": 26
+          },
+          "13": {
+            "expected": 9,
+            "realized": 5
+          },
+          "20": {
+            "expected": 9,
+            "realized": 21
+          }
+        },
+        "deferred_after_independent_failures": [
+          6
+        ],
+        "remaining_goals_before_safety_validation": []
+      },
+      {
+        "event": "NEW_COMMITMENT",
+        "goals": [
+          [
+            195,
+            207
+          ]
+        ],
+        "regions": [
+          {
+            "region_id": 1,
+            "kind": "POSSIBLE_OPEN_SPACE",
+            "cells": 81,
+            "expected_open_mass_proxy": 79.01,
+            "satisfaction_cap_cells": 73,
+            "predicted_visible_nominal": 0,
+            "predicted_visible_stress": 0,
+            "nominal_target_met": false,
+            "stress_target_met": false,
+            "historically_outside_current_room_cells": 81
+          },
+          {
+            "region_id": 11,
+            "kind": "POSSIBLE_OPEN_SPACE",
+            "cells": 56,
+            "expected_open_mass_proxy": 52.17,
+            "satisfaction_cap_cells": 51,
+            "predicted_visible_nominal": 56,
+            "predicted_visible_stress": 52,
+            "nominal_target_met": true,
+            "stress_target_met": true,
+            "historically_outside_current_room_cells": 0
+          },
+          {
+            "region_id": 17,
+            "kind": "POSSIBLE_OPEN_SPACE",
+            "cells": 25,
+            "expected_open_mass_proxy": 24.451,
+            "satisfaction_cap_cells": 23,
+            "predicted_visible_nominal": 0,
+            "predicted_visible_stress": 0,
+            "nominal_target_met": false,
+            "stress_target_met": false,
+            "historically_outside_current_room_cells": 25
+          }
+        ]
+      },
+      {
+        "event": "OBSERVATION_UPDATE",
+        "executed_goal_rc": [
+          195,
+          207
+        ],
+        "realized_global_cells": 1429,
+        "regions": {
+          "6": {
+            "expected": 5,
+            "realized": 0
+          },
+          "11": {
+            "expected": 56,
+            "realized": 56
+          },
+          "12": {
+            "expected": 4,
+            "realized": 4
+          },
+          "13": {
+            "expected": 8,
+            "realized": 9
+          }
+        },
+        "deferred_after_independent_failures": [],
+        "remaining_goals_before_safety_validation": []
+      }
+    ]
+  },
+  "cautions": [
+    "GT not used to select goal; separate retrospective evaluator required for true-free residual",
+    "Observed-free raster planning only, not native MapEx range_libc lidar or real robot motion",
+    "No mid-leg event-based replanning; only one planning cycle after reaching each goal",
+    "R3 structural region coverage is a heuristic predicted utility, not a room-complete certificate"
+  ]
+}

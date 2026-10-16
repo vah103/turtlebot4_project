@@ -1,0 +1,16 @@
+{
+  "status": "DEFER_NO_POSITIVE_STRUCTURAL_CHAIN",
+  "goal_sequence": [],
+  "decision": "DEFER",
+  "replanning_called": true,
+  "reason": "No usable structural chain in safe candidate/search budget; unresolved obligations retained",
+  "mission_unknown": 278,
+  "planner_report": {
+    "status": "DEFER_NO_POSITIVE_STRUCTURAL_CHAIN",
+    "goal_sequence": [],
+    "mission_unknown": 278,
+    "candidate_count": 43,
+    "major_regions": 2,
+    "top_rejected_score": -0.522
+  }
+}

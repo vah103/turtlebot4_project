@@ -1,0 +1,50 @@
+{
+  "evaluation_scope": "GT retrospective only; GT inaccessible to structural/G2/R4/LaMa path chooser",
+  "source": "native Run04 gt_map.png core crop, raster wall==255",
+  "original_room_initial_unknown": 3889,
+  "original_unknown_true_free_initial_GT_ONLY": 3507,
+  "original_unknown_true_wall_initial_GT_ONLY": 382,
+  "original_room_unknown_left": 270,
+  "original_room_true_free_unknown_left_GT_ONLY": 5,
+  "original_room_true_wall_unknown_left_GT_ONLY": 265,
+  "original_room_newly_observed_true_free_GT_ONLY": 3502,
+  "true_free_unknown_recall_GT_ONLY": 0.998574,
+  "full_original_room_free_exploration_GT_ONLY": false,
+  "observation_all_initial_room_cells": false,
+  "rollout_terminal_reason": "DEFER_NO_POSITIVE_STRUCTURAL_CHAIN",
+  "original_room_unknown_clusters": [
+    {
+      "cells": 148,
+      "bbox_core_rc": [
+        168,
+        149,
+        173,
+        177
+      ],
+      "true_free_evaluation_only": 0,
+      "true_wall_evaluation_only": 148
+    },
+    {
+      "cells": 73,
+      "bbox_core_rc": [
+        172,
+        107,
+        178,
+        117
+      ],
+      "true_free_evaluation_only": 5,
+      "true_wall_evaluation_only": 68
+    },
+    {
+      "cells": 49,
+      "bbox_core_rc": [
+        183,
+        194,
+        189,
+        200
+      ],
+      "true_free_evaluation_only": 0,
+      "true_wall_evaluation_only": 49
+    }
+  ]
+}

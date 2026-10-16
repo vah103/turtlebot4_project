@@ -1,0 +1,198 @@
+{
+  "schema": "G2_R31_COMMITMENT_V1",
+  "pending_goals": [
+    [
+      183,
+      123
+    ],
+    [
+      195,
+      179
+    ]
+  ],
+  "pending_source_decision": "R3_D02_CAUSAL_STAGE_01",
+  "visits": [
+    {
+      "goal_rc": [
+        171,
+        135
+      ],
+      "start_rc": [
+        147,
+        111
+      ],
+      "realized_global_cells": 4027,
+      "by_region": {
+        "1": {
+          "expected": 3371,
+          "realized": 2608
+        },
+        "2": {
+          "expected": 400,
+          "realized": 290
+        },
+        "3": {
+          "expected": 90,
+          "realized": 90
+        },
+        "5": {
+          "expected": 1,
+          "realized": 3
+        },
+        "6": {
+          "expected": 1,
+          "realized": 0
+        },
+        "7": {
+          "expected": 1,
+          "realized": 2
+        },
+        "10": {
+          "expected": 1,
+          "realized": 1
+        }
+      }
+    }
+  ],
+  "region_failures": {},
+  "deferred_regions": [],
+  "stagnant_legs": 0,
+  "audit": [
+    {
+      "event": "INITIAL_COMMIT",
+      "goals": [
+        [
+          171,
+          135
+        ]
+      ]
+    },
+    {
+      "event": "OBSERVATION_UPDATE",
+      "executed_goal_rc": [
+        171,
+        135
+      ],
+      "realized_global_cells": 4027,
+      "regions": {
+        "1": {
+          "expected": 3371,
+          "realized": 2608
+        },
+        "2": {
+          "expected": 400,
+          "realized": 290
+        },
+        "3": {
+          "expected": 90,
+          "realized": 90
+        },
+        "5": {
+          "expected": 1,
+          "realized": 3
+        },
+        "6": {
+          "expected": 1,
+          "realized": 0
+        },
+        "7": {
+          "expected": 1,
+          "realized": 2
+        },
+        "10": {
+          "expected": 1,
+          "realized": 1
+        }
+      },
+      "deferred_after_independent_failures": [],
+      "remaining_goals_before_safety_validation": []
+    },
+    {
+      "event": "NEW_COMMITMENT",
+      "goals": [
+        [
+          183,
+          123
+        ],
+        [
+          195,
+          179
+        ]
+      ],
+      "regions": [
+        {
+          "region_id": 1,
+          "kind": "POSSIBLE_OPEN_SPACE",
+          "cells": 481,
+          "expected_open_mass_proxy": 439.23,
+          "satisfaction_cap_cells": 433,
+          "predicted_visible_nominal": 442,
+          "predicted_visible_stress": 381,
+          "nominal_target_met": true,
+          "stress_target_met": false,
+          "historically_outside_current_room_cells": 0
+        },
+        {
+          "region_id": 11,
+          "kind": "POSSIBLE_OPEN_SPACE",
+          "cells": 110,
+          "expected_open_mass_proxy": 105.318,
+          "satisfaction_cap_cells": 99,
+          "predicted_visible_nominal": 53,
+          "predicted_visible_stress": 53,
+          "nominal_target_met": false,
+          "stress_target_met": false,
+          "historically_outside_current_room_cells": 0
+        },
+        {
+          "region_id": 14,
+          "kind": "POSSIBLE_OPEN_SPACE",
+          "cells": 34,
+          "expected_open_mass_proxy": 32.331,
+          "satisfaction_cap_cells": 31,
+          "predicted_visible_nominal": 34,
+          "predicted_visible_stress": 34,
+          "nominal_target_met": true,
+          "stress_target_met": true,
+          "historically_outside_current_room_cells": 0
+        },
+        {
+          "region_id": 6,
+          "kind": "POSSIBLE_OPEN_SPACE",
+          "cells": 23,
+          "expected_open_mass_proxy": 19.541,
+          "satisfaction_cap_cells": 21,
+          "predicted_visible_nominal": 23,
+          "predicted_visible_stress": 3,
+          "nominal_target_met": true,
+          "stress_target_met": false,
+          "historically_outside_current_room_cells": 0
+        },
+        {
+          "region_id": 12,
+          "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+          "cells": 100,
+          "expected_open_mass_proxy": 14.512,
+          "satisfaction_cap_cells": 90,
+          "predicted_visible_nominal": 40,
+          "predicted_visible_stress": 13,
+          "nominal_target_met": false,
+          "stress_target_met": false,
+          "historically_outside_current_room_cells": 88
+        },
+        {
+          "region_id": 13,
+          "kind": "UNVERIFIED_PREDICTED_OBSTACLE",
+          "cells": 78,
+          "expected_open_mass_proxy": 13.444,
+          "satisfaction_cap_cells": 71,
+          "predicted_visible_nominal": 24,
+          "predicted_visible_stress": 16,
+          "nominal_target_met": false,
+          "stress_target_met": false,
+          "historically_outside_current_room_cells": 64
+        }
+      ]
+    }
+  ]
+}
