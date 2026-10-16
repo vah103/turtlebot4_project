@@ -1,0 +1,206 @@
+{
+  "status": "CONTINUE",
+  "robot_rc": [
+    180,
+    150
+  ],
+  "room_cells": 6346,
+  "observed_room_unknown_cells": 207,
+  "expected_total_unknown_weight": 231.9912,
+  "goal_sequence": [
+    [
+      198,
+      150
+    ]
+  ],
+  "goal_count": 1,
+  "route_segments": [
+    {
+      "index": 1,
+      "goal_rc": [
+        198,
+        150
+      ],
+      "distance_m": 1.8,
+      "scan_samples": 4,
+      "path_rc": [
+        [
+          180,
+          150
+        ],
+        [
+          181,
+          150
+        ],
+        [
+          182,
+          150
+        ],
+        [
+          183,
+          150
+        ],
+        [
+          184,
+          150
+        ],
+        [
+          185,
+          150
+        ],
+        [
+          186,
+          150
+        ],
+        [
+          187,
+          150
+        ],
+        [
+          188,
+          150
+        ],
+        [
+          189,
+          150
+        ],
+        [
+          190,
+          150
+        ],
+        [
+          191,
+          150
+        ],
+        [
+          192,
+          150
+        ],
+        [
+          193,
+          150
+        ],
+        [
+          194,
+          150
+        ],
+        [
+          195,
+          150
+        ],
+        [
+          196,
+          150
+        ],
+        [
+          197,
+          150
+        ],
+        [
+          198,
+          150
+        ]
+      ],
+      "marginal_expected_new_weight": 98.0374,
+      "cumulative_expected_new_weight": 98.0374,
+      "predicted_remaining_weight": 133.9538,
+      "step_cost_s_equivalent": 26.9985,
+      "goal_is_observed_free": true,
+      "route_is_observed_free": true,
+      "conditional_replan_before_next_leg": true
+    }
+  ],
+  "route_distance_m": 1.8,
+  "cost": {
+    "objective_s_equivalent": 26.9985,
+    "travel_time_s": 7.2,
+    "goal_stop_time_s": 1.0,
+    "unobserved_weight": 133.9538,
+    "expected_observed_weight": 98.0374,
+    "uncertainty_gap_weight": 1.5,
+    "uncertainty_penalty_s": 0.045
+  },
+  "baseline_cost": {
+    "objective_s_equivalent": 32.4788,
+    "travel_time_s": 0.0,
+    "goal_stop_time_s": 0.0,
+    "unobserved_weight": 231.9912,
+    "expected_observed_weight": 0.0,
+    "uncertainty_gap_weight": 0.0,
+    "uncertainty_penalty_s": 0.0
+  },
+  "search": {
+    "candidate_goals": 240,
+    "examined_route_expansions": 13,
+    "beam_width": 6,
+    "branch_width": 12,
+    "goal_count_frontier": [
+      {
+        "goal_count": 1,
+        "best_objective_s_equivalent": 29.338,
+        "length_m": 1.8,
+        "expected_observed_weight": 81.0059
+      }
+    ],
+    "dense_shortlist_evaluated": 5,
+    "dense_goal_deletions": 0,
+    "coarse_beams": 250,
+    "final_beams": 2500,
+    "no_fixed_goal_count": true,
+    "stopped_when_no_positive_new_goal": true
+  },
+  "planning_runtime_s": 4.72,
+  "config": {
+    "resolution_m": 0.1,
+    "lidar_range_m": 20.0,
+    "planning_beams": 250,
+    "ray_step_cells": 0.5,
+    "final_beams": 2500,
+    "final_ray_step_cells": 0.25,
+    "fine_shortlist_per_depth": 5,
+    "scan_every_m": 0.5,
+    "candidate_spacing_m": 0.3,
+    "clearance_m": 0.2,
+    "max_candidates": 240,
+    "beam_width": 6,
+    "branch_width": 12,
+    "robot_speed_mps": 0.25,
+    "goal_stop_time_s": 1.0,
+    "unknown_penalty_s_per_cell": 0.14,
+    "risk_penalty_s_per_cell": 0.03,
+    "uncertainty_weight": 0.5,
+    "pessimistic_sigma": 1.0,
+    "scenario_pessimistic_fraction": 0.3,
+    "min_net_improvement_s": 0.5,
+    "min_new_weighted_cells": 1.0,
+    "replan_new_occupied_cells": 1,
+    "replan_new_observed_cells": 10,
+    "replan_mean_change": 0.15,
+    "replan_room_change_cells": 1
+  },
+  "provenance": {
+    "decision_id": "D02_CAUSAL_R2_01",
+    "observed_sha256": "275e44a08fce1b28ea50dad0a8d8163f178e33111c4701d915928cc0812e5cf8",
+    "mean_sha256": "0554ce25f779990075ea26790ee618a18ae329815367d6cfe3fd6e066ac81e4c",
+    "variance_sha256": "27b5ae07c320c09465ec2e71d6f707e4cc7fcee2dba9ab18aa0f37df93cf78d4",
+    "semantic_sha256": "c71f5db829735ecd52b14653b5725de36b26286f82cba15d5b30f2dc551632a7",
+    "input_includes_ground_truth": false,
+    "input_is_current_decision_only": true,
+    "ensemble_members": null,
+    "algorithm": "G2-V1-R2 coarse pathwise diverse beam then dense scenario-union verification and goal deletion",
+    "scenario_method": "MEAN_VARIANCE_TWO_PROXY_MAPS_NOT_CALIBRATED",
+    "scenario_proxy_is_not_calibrated": true,
+    "no_global_optimum_claim": true,
+    "configuration_is_not_calibrated": true,
+    "prediction_must_be_refreshed_after_replan_trigger": true
+  },
+  "cautions": [
+    "No GT or future data; all results from current snapshot.",
+    "Multiple goals are a conditional plan; replan after meaningful scans.",
+    "Ensemble scenarios are binary map hypotheses, not calibrated posterior.",
+    "Without ensemble, mean/variance proxy scenarios are heuristic.",
+    "Free-grid route and raycast are approximate, not native collision proof.",
+    "Search is budgeted/approximate; weights and time costs uncalibrated.",
+    "COMPLETE only from observed map; prediction cannot certify completion."
+  ]
+}
