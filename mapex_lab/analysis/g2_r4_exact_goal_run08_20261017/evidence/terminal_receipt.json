@@ -1,0 +1,65 @@
+{
+  "completed_tick_records": 1099,
+  "elapsed_s": 222.82,
+  "finished_local": "2026-10-17 16:33:36",
+  "independent_QA": false,
+  "last_decision": {
+    "GT_used_as_input": false,
+    "cumulative_distance_m_before_decision": 288.2943722062232,
+    "decision": 24,
+    "elapsed_lama_prediction_s": 0.810662031173706,
+    "elapsed_room_plus_score_s": 0.7027852535247803,
+    "elapsed_score_s": 0.32216835021972656,
+    "frontiers": [
+      {
+        "col": 569,
+        "cost": -0.0028617377392947674,
+        "index": 0,
+        "origin": "MAPEX_GLOBAL_WFD",
+        "row": 519
+      }
+    ],
+    "global_candidate_count": 1,
+    "initial_native_map_unchanged": true,
+    "input_sha256": [
+      "19be4c6cb76ad5d60f6d9ca01bd67d523cc667b64fde9169164d851cab3c8c85",
+      "49e3ee7ba2f02b0054aa30fcd941c980b1ec15d312609947e98df5e582ed613b",
+      "5350e4f47fbf0868e8a32f6089cafb8055f3ac804e45547670078d2b9632ad08"
+    ],
+    "local_candidate_count": 0,
+    "mode": "GLOBAL",
+    "model_used": "MapEx LaMa original",
+    "native_tick": 1023,
+    "original_global_frontier_rc": [
+      [
+        519,
+        569
+      ]
+    ],
+    "previous_mode": "GLOBAL",
+    "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+    "robot_rc": [
+      550,
+      640
+    ],
+    "room_id": 9,
+    "room_node_input": "/work/com1/mx072_g2_r4_goal_exact_run08_20261017/native_g2_r4_goal_exact_run08/G2_R4_EXACT_GOAL_RUN08_visvarprob/room_r41/inference/decision_000024_input.npz",
+    "room_node_report": "/work/com1/mx072_g2_r4_goal_exact_run08_20261017/native_g2_r4_goal_exact_run08/G2_R4_EXACT_GOAL_RUN08_visvarprob/room_r41/inference/decision_000024_report.json",
+    "room_node_semantic": "/work/com1/mx072_g2_r4_goal_exact_run08_20261017/native_g2_r4_goal_exact_run08/G2_R4_EXACT_GOAL_RUN08_visvarprob/room_r41/inference/decision_000024_semantic.npz",
+    "scoring_scope": "GLOBAL",
+    "seen_room_free": 8221
+  },
+  "mission_status": {
+    "cur_step": 1099,
+    "fail_reason": "MAPEX_NO_SELECTABLE_FRONTIER_NOT_GT",
+    "last_exp_time_s": 212.61356043815613,
+    "mission_complete": true,
+    "start_time": 1792229399.2466276
+  },
+  "outcome": "SOURCE_TERMINAL",
+  "returncode": 0,
+  "run": "native_g2_r4_goal_exact_run08",
+  "semantic_accuracy_proven": false,
+  "stop_reason": null,
+  "worker_pid": 16103
+}
