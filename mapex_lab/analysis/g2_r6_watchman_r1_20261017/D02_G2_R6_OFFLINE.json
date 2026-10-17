@@ -1,0 +1,127 @@
+{
+  "version": "G2_R6_WATCHMAN_R1",
+  "status": "CONDITIONAL_SAFE_ROUTE",
+  "goal_sequence_core_rc": [
+    [
+      189,
+      120
+    ],
+    [
+      171,
+      143
+    ],
+    [
+      186,
+      162
+    ],
+    [
+      181,
+      156
+    ],
+    [
+      173,
+      146
+    ]
+  ],
+  "legs": [
+    {
+      "goal_rc": [
+        189,
+        120
+      ],
+      "distance_leg_m": 5.1
+    },
+    {
+      "goal_rc": [
+        171,
+        143
+      ],
+      "distance_leg_m": 4.1
+    },
+    {
+      "goal_rc": [
+        186,
+        162
+      ],
+      "distance_leg_m": 3.4
+    },
+    {
+      "goal_rc": [
+        181,
+        156
+      ],
+      "distance_leg_m": 1.1
+    },
+    {
+      "goal_rc": [
+        173,
+        146
+      ],
+      "distance_leg_m": 1.8
+    }
+  ],
+  "projected_unique_unknown_nominal": 3687,
+  "projected_unique_unknown_stress": 3111,
+  "projected_weighted_gain": 3391.56,
+  "initial_greedy_trace": [
+    {
+      "goal_rc": [
+        173,
+        146
+      ],
+      "new_value": 2196.35,
+      "value_per_meter_regularized": 318.31,
+      "leg_m": 6.1
+    },
+    {
+      "goal_rc": [
+        181,
+        156
+      ],
+      "new_value": 502.55,
+      "value_per_meter_regularized": 193.29,
+      "leg_m": 1.8
+    },
+    {
+      "goal_rc": [
+        186,
+        162
+      ],
+      "new_value": 262.83,
+      "value_per_meter_regularized": 138.33,
+      "leg_m": 1.1
+    },
+    {
+      "goal_rc": [
+        171,
+        143
+      ],
+      "new_value": 305.33,
+      "value_per_meter_regularized": 72.7,
+      "leg_m": 3.4
+    },
+    {
+      "goal_rc": [
+        189,
+        120
+      ],
+      "new_value": 156.19,
+      "value_per_meter_regularized": 31.88,
+      "leg_m": 4.1
+    }
+  ],
+  "order_improvements": 1,
+  "distance_before_order_improvements_m": 16.5,
+  "predicted_route_distance_m": 15.5,
+  "mission_unknown": 3889,
+  "candidate_count": 17,
+  "extra_G2_planning_wall_s": 0.368,
+  "input_observed_sha256": "de96490d2c94ca0b10ff7f359b2b8fe3b4bc9a8d5656194b9ceec8c13c539b23",
+  "LaMa_mean_sha256": "13bcb244d448f09fc7a76b7eaaefd6a61add1447de1e77256cc37bbd944deb04",
+  "used_gt": false,
+  "used_future_observations": false,
+  "goals_only_native_known_free": true,
+  "no_predicted_unknown_travel": true,
+  "is_actual_coverage_certified": false,
+  "route_points_count": 156
+}
