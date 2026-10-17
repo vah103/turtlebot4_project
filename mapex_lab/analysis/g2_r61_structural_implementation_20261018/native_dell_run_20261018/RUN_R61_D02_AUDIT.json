@@ -1,0 +1,252 @@
+{
+  "run_id": "NR-G2R61-03",
+  "date_local": "2026-10-18",
+  "reference_baseline": "NR-RN-04 DELL_VS_COM1_FULL_PARITY.json",
+  "D01D02_parity_pre_goal": "D01_D02_NUMERIC_PARITY_PASS",
+  "source_policy": "G2-R6.1 R1, DELL Python3.6 compatibility port",
+  "outcome": "FAILED",
+  "returncode": 1,
+  "elapsed_wall_s": 98.062,
+  "peak_pss_MiB": 2229.1,
+  "terminal_native_tick": 44,
+  "fatal_error": "LOCAL_VIEWPOINT_UNAVAILABLE_WITH_REACHABLE_WFD",
+  "room_node_local_wfd_at_last": 3,
+  "last_g2_goal_decision": "DEFER",
+  "last_g2_goal_core_rc": null,
+  "last_g2_projected_gain": 0.0,
+  "frozen_D02_room_size_cells": 6564,
+  "frozen_D02_initial_unknown": 3889,
+  "last_frozen_D02_unknown": 403,
+  "distance_after_D02_m": 8.906888,
+  "equal_coverage_unknown_threshold": 270,
+  "reached_equal_coverage": false,
+  "scientific_comparison_to_NR_RN04": "NOT_ACHIEVED",
+  "decisions": [
+    {
+      "decision": 2,
+      "native_tick": 12,
+      "room_mode": "LOCAL",
+      "room_wfd_reachable_frontiers": 5,
+      "observed_unknown_frozen_initial_D02": 3889,
+      "cumulative_native_distance_m": 3.3708203932499368,
+      "distance_after_D02_m": 0.0
+    },
+    {
+      "decision": 3,
+      "native_tick": 17,
+      "room_mode": "LOCAL",
+      "room_wfd_reachable_frontiers": 6,
+      "observed_unknown_frozen_initial_D02": 3640,
+      "cumulative_native_distance_m": 4.641640786499874,
+      "distance_after_D02_m": 1.27082
+    },
+    {
+      "decision": 4,
+      "native_tick": 20,
+      "room_mode": "LOCAL",
+      "room_wfd_reachable_frontiers": 6,
+      "observed_unknown_frozen_initial_D02": 3490,
+      "cumulative_native_distance_m": 5.312461179749811,
+      "distance_after_D02_m": 1.941641
+    },
+    {
+      "decision": 5,
+      "native_tick": 23,
+      "room_mode": "LOCAL",
+      "room_wfd_reachable_frontiers": 7,
+      "observed_unknown_frozen_initial_D02": 1448,
+      "cumulative_native_distance_m": 6.0596747752497695,
+      "distance_after_D02_m": 2.688854
+    },
+    {
+      "decision": 6,
+      "native_tick": 25,
+      "room_mode": "LOCAL",
+      "room_wfd_reachable_frontiers": 6,
+      "observed_unknown_frozen_initial_D02": 877,
+      "cumulative_native_distance_m": 6.659674775249769,
+      "distance_after_D02_m": 3.288854
+    },
+    {
+      "decision": 7,
+      "native_tick": 28,
+      "room_mode": "LOCAL",
+      "room_wfd_reachable_frontiers": 6,
+      "observed_unknown_frozen_initial_D02": 785,
+      "cumulative_native_distance_m": 7.406888370749727,
+      "distance_after_D02_m": 4.036068
+    },
+    {
+      "decision": 8,
+      "native_tick": 30,
+      "room_mode": "LOCAL",
+      "room_wfd_reachable_frontiers": 4,
+      "observed_unknown_frozen_initial_D02": 699,
+      "cumulative_native_distance_m": 8.006888370749728,
+      "distance_after_D02_m": 4.636068
+    },
+    {
+      "decision": 9,
+      "native_tick": 33,
+      "room_mode": "LOCAL",
+      "room_wfd_reachable_frontiers": 4,
+      "observed_unknown_frozen_initial_D02": 656,
+      "cumulative_native_distance_m": 8.830495168499708,
+      "distance_after_D02_m": 5.459675
+    },
+    {
+      "decision": 10,
+      "native_tick": 35,
+      "room_mode": "LOCAL",
+      "room_wfd_reachable_frontiers": 3,
+      "observed_unknown_frozen_initial_D02": 483,
+      "cumulative_native_distance_m": 9.354101966249686,
+      "distance_after_D02_m": 5.983282
+    },
+    {
+      "decision": 11,
+      "native_tick": 45,
+      "room_mode": "LOCAL",
+      "room_wfd_reachable_frontiers": 3,
+      "observed_unknown_frozen_initial_D02": 403,
+      "cumulative_native_distance_m": 12.277708763999671,
+      "distance_after_D02_m": 8.906888
+    }
+  ],
+  "structural_event_counts": {
+    "S2_LIGHT_REPLAN": 1,
+    "S3_STRUCTURAL_REBUILD": 3,
+    "S0_SAFETY_HOLD": 6,
+    "S1_KEEP": 4
+  },
+  "events": [
+    {
+      "scan_tick": 14,
+      "event": "S2_LIGHT_REPLAN",
+      "reason": "NEW_FREE_BRANCH_WITH_FRONTIER",
+      "new_free": 621,
+      "new_wall": 33,
+      "outside_old_room_new_free": 387
+    },
+    {
+      "scan_tick": 17,
+      "event": "S3_STRUCTURAL_REBUILD",
+      "reason": "OBSERVED_EXPANSION_OUTSIDE_ACCEPTED_ROOM",
+      "new_free": 40,
+      "new_wall": 2,
+      "outside_old_room_new_free": 30
+    },
+    {
+      "scan_tick": 20,
+      "event": "S0_SAFETY_HOLD",
+      "reason": "NATIVE_PATH_UNSAFE",
+      "new_free": 158,
+      "new_wall": 20,
+      "outside_old_room_new_free": 17
+    },
+    {
+      "scan_tick": 23,
+      "event": "S3_STRUCTURAL_REBUILD",
+      "reason": "OBSERVED_EXPANSION_OUTSIDE_ACCEPTED_ROOM",
+      "new_free": 2189,
+      "new_wall": 85,
+      "outside_old_room_new_free": 259
+    },
+    {
+      "scan_tick": 25,
+      "event": "S0_SAFETY_HOLD",
+      "reason": "NATIVE_PATH_UNSAFE",
+      "new_free": 760,
+      "new_wall": 36,
+      "outside_old_room_new_free": 206
+    },
+    {
+      "scan_tick": 28,
+      "event": "S0_SAFETY_HOLD",
+      "reason": "NATIVE_PATH_UNSAFE",
+      "new_free": 108,
+      "new_wall": 4,
+      "outside_old_room_new_free": 10
+    },
+    {
+      "scan_tick": 30,
+      "event": "S0_SAFETY_HOLD",
+      "reason": "NATIVE_PATH_UNSAFE",
+      "new_free": 178,
+      "new_wall": 9,
+      "outside_old_room_new_free": 71
+    },
+    {
+      "scan_tick": 33,
+      "event": "S0_SAFETY_HOLD",
+      "reason": "NATIVE_PATH_UNSAFE",
+      "new_free": 179,
+      "new_wall": 11,
+      "outside_old_room_new_free": 136
+    },
+    {
+      "scan_tick": 35,
+      "event": "S0_SAFETY_HOLD",
+      "reason": "NATIVE_PATH_UNSAFE",
+      "new_free": 151,
+      "new_wall": 28,
+      "outside_old_room_new_free": 14
+    },
+    {
+      "scan_tick": 37,
+      "event": "S1_KEEP",
+      "reason": "EXPECTED_OBSERVATION_PROGRESS",
+      "new_free": 56,
+      "new_wall": 2,
+      "outside_old_room_new_free": 0
+    },
+    {
+      "scan_tick": 39,
+      "event": "S1_KEEP",
+      "reason": "EXPECTED_OBSERVATION_PROGRESS",
+      "new_free": 8,
+      "new_wall": 0,
+      "outside_old_room_new_free": 0
+    },
+    {
+      "scan_tick": 41,
+      "event": "S1_KEEP",
+      "reason": "EXPECTED_OBSERVATION_PROGRESS",
+      "new_free": 4,
+      "new_wall": 0,
+      "outside_old_room_new_free": 0
+    },
+    {
+      "scan_tick": 43,
+      "event": "S1_KEEP",
+      "reason": "EXPECTED_OBSERVATION_PROGRESS",
+      "new_free": 4,
+      "new_wall": 0,
+      "outside_old_room_new_free": 0
+    },
+    {
+      "scan_tick": 45,
+      "event": "S3_STRUCTURAL_REBUILD",
+      "reason": "OBSERVED_EXPANSION_OUTSIDE_ACCEPTED_ROOM",
+      "new_free": 8,
+      "new_wall": 0,
+      "outside_old_room_new_free": 1
+    }
+  ],
+  "staged_sha256": {
+    "dell_worker.py": "abefadb295f6c824cedcb5e7bf0695fcb83f30a0bd608cd152830208d14ae46b",
+    "g2_r61_native_integration.py": "ac98b7c62b83c29e4b9f4cfa33aaec31a88883e5d121c2b6bf108e17c0cabbad",
+    "g2_r61_sidecar.py": "d08bfa8b3fe21f76456e67806482f496d9bb9bab6fd36fc39335e61045e0abdf",
+    "g2_r6_watchman.py": "e61b952201423e8f47164065eeeb82eced401d8190f479532003efc4b8d9d03c",
+    "r61_structural_events.py": "b15faed9c6297790f195b3efe78a58cdfe1a02202b3d289be8bd0051342173dc",
+    "r61_plan_manager.py": "bf13371e3468a779876cdd992e896ceddf7ede67e46433e1d625c5a8ecb06e86",
+    "explore_g2_r61_lama3_smallroi.py": "86d77b784b4874da69ed23da1fee8c014cfab4ffba38ee54186d3e15e5795f41"
+  },
+  "facts": [
+    "LaMa/RoomNode D01/D02 pre-choice numeric parity with NR-RN-04 passed",
+    "At D11 20 safe viewpoints existed; fixed value-per-m threshold 12 blocked all",
+    "Initial-room ROI still had 403 UNKNOWN; initial observed unknown 3889",
+    "Do not interpret observed mission status fail_reason empty as success; worker exception and guard FAILED verified",
+    "No code change or GT leakage into the executed G2-R61 run"
+  ]
+}
