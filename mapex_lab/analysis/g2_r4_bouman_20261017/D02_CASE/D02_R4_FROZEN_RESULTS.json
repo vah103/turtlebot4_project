@@ -1,0 +1,449 @@
+{
+  "schema": "G2_R4_D02_FROZEN_20261017",
+  "evaluator": "R4_plan_episode fixed-config",
+  "truth_source": "observed-only; no hidden-GT or future LiDAR",
+  "config": {
+    "resolution_m": 0.1,
+    "speed_mps": 0.3,
+    "viewpoint_dwell_s": 0.0,
+    "nominal_weight": 0.7,
+    "cost_per_second": 0.6,
+    "max_execution_m": 0.5,
+    "minimum_replan_scans": 3,
+    "major_new_cells_event": 100,
+    "mismatch_min_expected": 12,
+    "mismatch_fraction": 0.08,
+    "minimum_region_reliability": 0.15,
+    "keep_hysteresis": 0.05,
+    "conservative_gate": true
+  },
+  "constraints": [
+    "not a new closed-loop trajectory",
+    "no native MapEx rejoin; current robot pose proxy",
+    "only saved waypoint arrival snapshots; no intermediate scan maps",
+    "R3 old proposal prefixes only; no expensive fresh R3 beam search",
+    "unverified knownfree grid safety and uncalibrated costs"
+  ],
+  "actual_r31_reference": {
+    "distance_m": 18.8,
+    "scan_count": 39,
+    "goals": 4,
+    "original_room_unknown_left": 270
+  },
+  "stages": [
+    {
+      "stage": 0,
+      "robot_rc": [
+        147,
+        111
+      ],
+      "pending_goals": [
+        [
+          171,
+          135
+        ]
+      ],
+      "mission_unknown": 3889,
+      "original_room_unknown": 3889,
+      "r31_cumulative_m": 4.8,
+      "decision": {
+        "decision": "KEEP",
+        "selected_label": "PENDING:1",
+        "policy_action": null,
+        "reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+        "requires_native_safety_certificate": true,
+        "selected_goals_rc": [
+          [
+            171,
+            135
+          ]
+        ],
+        "nominal_source": "cached_LaMa_R3_visibility_scenarios",
+        "fresh_proposal_source": "SUPPLIED_FROZEN",
+        "candidate_invalid": {},
+        "snapshot_sha256": "de96490d2c94ca0b10ff7f359b2b8fe3b4bc9a8d5656194b9ceec8c13c539b23",
+        "robot_command": null,
+        "is_physical_route_certified": false,
+        "ground_truth_used": false,
+        "future_observation_used": false,
+        "no_global_stop": true,
+        "unresolved_unknown_kept": true
+      },
+      "comparison": [
+        {
+          "label": "PENDING:1",
+          "feasible": true,
+          "status": "HEURISTIC_NOT_CALIBRATED",
+          "objective": 4095.2874,
+          "conservative_objective": 3209.9208,
+          "distance_m": 9.6,
+          "estimated_time_s": 32.0,
+          "nominal_unique_cells": 3867,
+          "conservative_unique_cells": 2768,
+          "structural_nominal": 4493.9302,
+          "structural_conservative": 3229.1208,
+          "legs": [
+            {
+              "goal_rc": [
+                171,
+                135
+              ],
+              "kind": "view",
+              "distance_m": 4.8,
+              "delta_time_s": 16.0,
+              "unique_nominal_cells": 3865,
+              "unique_conservative_cells": 2746,
+              "structural_proxy_gain": 4105.3254,
+              "net_step_proxy": 4095.7254
+            },
+            {
+              "goal_rc": [
+                147,
+                111
+              ],
+              "kind": "exit",
+              "distance_m": 4.8,
+              "delta_time_s": 16.0,
+              "unique_nominal_cells": 2,
+              "unique_conservative_cells": 22,
+              "structural_proxy_gain": 9.162,
+              "net_step_proxy": -0.438
+            }
+          ],
+          "source_hash": "de96490d2c94ca0b10ff7f359b2b8fe3b4bc9a8d5656194b9ceec8c13c539b23"
+        }
+      ]
+    },
+    {
+      "stage": 1,
+      "robot_rc": [
+        171,
+        135
+      ],
+      "pending_goals": [
+        [
+          183,
+          123
+        ],
+        [
+          195,
+          179
+        ]
+      ],
+      "mission_unknown": 899,
+      "original_room_unknown": 891,
+      "r31_cumulative_m": 4.8,
+      "decision": {
+        "decision": "KEEP",
+        "selected_label": "PENDING:2",
+        "policy_action": null,
+        "reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+        "requires_native_safety_certificate": true,
+        "selected_goals_rc": [
+          [
+            183,
+            123
+          ],
+          [
+            195,
+            179
+          ]
+        ],
+        "nominal_source": "cached_LaMa_R3_visibility_scenarios",
+        "fresh_proposal_source": "SUPPLIED_FROZEN",
+        "candidate_invalid": {},
+        "snapshot_sha256": "4569beac4c127dae365b8d0ec6a6901ea4ba1deb16827f8205695061bff9f728",
+        "robot_command": null,
+        "is_physical_route_certified": false,
+        "ground_truth_used": false,
+        "future_observation_used": false,
+        "no_global_stop": true,
+        "unresolved_unknown_kept": true
+      },
+      "comparison": [
+        {
+          "label": "PENDING:2",
+          "feasible": true,
+          "status": "HEURISTIC_NOT_CALIBRATED",
+          "objective": 559.6075,
+          "conservative_objective": 488.9195,
+          "distance_m": 18.0,
+          "estimated_time_s": 60.0,
+          "nominal_unique_cells": 633,
+          "conservative_unique_cells": 508,
+          "structural_nominal": 625.9023,
+          "structural_conservative": 524.9195,
+          "legs": [
+            {
+              "goal_rc": [
+                183,
+                123
+              ],
+              "kind": "view",
+              "distance_m": 2.4,
+              "delta_time_s": 8.0,
+              "unique_nominal_cells": 164,
+              "unique_conservative_cells": 54,
+              "structural_proxy_gain": 141.6791,
+              "net_step_proxy": 136.8791
+            },
+            {
+              "goal_rc": [
+                195,
+                179
+              ],
+              "kind": "view",
+              "distance_m": 8.8,
+              "delta_time_s": 29.333,
+              "unique_nominal_cells": 447,
+              "unique_conservative_cells": 433,
+              "structural_proxy_gain": 438.2034,
+              "net_step_proxy": 420.6034
+            },
+            {
+              "goal_rc": [
+                171,
+                135
+              ],
+              "kind": "exit",
+              "distance_m": 6.8,
+              "delta_time_s": 22.667,
+              "unique_nominal_cells": 22,
+              "unique_conservative_cells": 21,
+              "structural_proxy_gain": 15.725,
+              "net_step_proxy": 2.125
+            }
+          ],
+          "source_hash": "4569beac4c127dae365b8d0ec6a6901ea4ba1deb16827f8205695061bff9f728"
+        },
+        {
+          "label": "PENDING:1",
+          "feasible": true,
+          "status": "HEURISTIC_NOT_CALIBRATED",
+          "objective": 144.3598,
+          "conservative_objective": 61.3337,
+          "distance_m": 4.8,
+          "estimated_time_s": 16.0,
+          "nominal_unique_cells": 188,
+          "conservative_unique_cells": 58,
+          "structural_nominal": 189.5424,
+          "structural_conservative": 70.9337,
+          "legs": [
+            {
+              "goal_rc": [
+                183,
+                123
+              ],
+              "kind": "view",
+              "distance_m": 2.4,
+              "delta_time_s": 8.0,
+              "unique_nominal_cells": 164,
+              "unique_conservative_cells": 54,
+              "structural_proxy_gain": 141.6791,
+              "net_step_proxy": 136.8791
+            },
+            {
+              "goal_rc": [
+                171,
+                135
+              ],
+              "kind": "exit",
+              "distance_m": 2.4,
+              "delta_time_s": 8.0,
+              "unique_nominal_cells": 24,
+              "unique_conservative_cells": 4,
+              "structural_proxy_gain": 12.2807,
+              "net_step_proxy": 7.4807
+            }
+          ],
+          "source_hash": "4569beac4c127dae365b8d0ec6a6901ea4ba1deb16827f8205695061bff9f728"
+        }
+      ]
+    },
+    {
+      "stage": 2,
+      "robot_rc": [
+        183,
+        123
+      ],
+      "pending_goals": [
+        [
+          195,
+          179
+        ]
+      ],
+      "mission_unknown": 627,
+      "original_room_unknown": 619,
+      "r31_cumulative_m": 7.2,
+      "decision": {
+        "decision": "KEEP",
+        "selected_label": "PENDING:1",
+        "policy_action": null,
+        "reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+        "requires_native_safety_certificate": true,
+        "selected_goals_rc": [
+          [
+            195,
+            179
+          ]
+        ],
+        "nominal_source": "cached_LaMa_R3_visibility_scenarios",
+        "fresh_proposal_source": "SUPPLIED_FROZEN",
+        "candidate_invalid": {},
+        "snapshot_sha256": "e6940a279f80ba5a5b77ad60ba3189d2aa7e0fc0d184277225c356bcae60f2ea",
+        "robot_command": null,
+        "is_physical_route_certified": false,
+        "ground_truth_used": false,
+        "future_observation_used": false,
+        "no_global_stop": true,
+        "unresolved_unknown_kept": true
+      },
+      "comparison": [
+        {
+          "label": "PENDING:1",
+          "feasible": true,
+          "status": "HEURISTIC_NOT_CALIBRATED",
+          "objective": 278.0805,
+          "conservative_objective": 163.0381,
+          "distance_m": 17.6,
+          "estimated_time_s": 58.667,
+          "nominal_unique_cells": 393,
+          "conservative_unique_cells": 186,
+          "structural_nominal": 362.5844,
+          "structural_conservative": 198.2381,
+          "legs": [
+            {
+              "goal_rc": [
+                195,
+                179
+              ],
+              "kind": "view",
+              "distance_m": 8.8,
+              "delta_time_s": 29.333,
+              "unique_nominal_cells": 360,
+              "unique_conservative_cells": 185,
+              "structural_proxy_gain": 292.2892,
+              "net_step_proxy": 274.6892
+            },
+            {
+              "goal_rc": [
+                183,
+                123
+              ],
+              "kind": "exit",
+              "distance_m": 8.8,
+              "delta_time_s": 29.333,
+              "unique_nominal_cells": 33,
+              "unique_conservative_cells": 1,
+              "structural_proxy_gain": 20.9913,
+              "net_step_proxy": 3.3913
+            }
+          ],
+          "source_hash": "e6940a279f80ba5a5b77ad60ba3189d2aa7e0fc0d184277225c356bcae60f2ea"
+        }
+      ]
+    },
+    {
+      "stage": 3,
+      "robot_rc": [
+        195,
+        179
+      ],
+      "pending_goals": [
+        [
+          195,
+          207
+        ]
+      ],
+      "mission_unknown": 347,
+      "original_room_unknown": 339,
+      "r31_cumulative_m": 16.0,
+      "decision": {
+        "decision": "KEEP",
+        "selected_label": "PENDING:1",
+        "policy_action": null,
+        "reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+        "requires_native_safety_certificate": true,
+        "selected_goals_rc": [
+          [
+            195,
+            207
+          ]
+        ],
+        "nominal_source": "cached_LaMa_R3_visibility_scenarios",
+        "fresh_proposal_source": "SUPPLIED_FROZEN",
+        "candidate_invalid": {},
+        "snapshot_sha256": "0a7a10c41cf9f7683362cbf6ddb274e5471e935f23b9a71f673dd670ec44ecc3",
+        "robot_command": null,
+        "is_physical_route_certified": false,
+        "ground_truth_used": false,
+        "future_observation_used": false,
+        "no_global_stop": true,
+        "unresolved_unknown_kept": true
+      },
+      "comparison": [
+        {
+          "label": "PENDING:1",
+          "feasible": true,
+          "status": "HEURISTIC_NOT_CALIBRATED",
+          "objective": 73.639,
+          "conservative_objective": 68.8701,
+          "distance_m": 5.6,
+          "estimated_time_s": 18.667,
+          "nominal_unique_cells": 73,
+          "conservative_unique_cells": 63,
+          "structural_nominal": 86.8828,
+          "structural_conservative": 80.0701,
+          "legs": [
+            {
+              "goal_rc": [
+                195,
+                207
+              ],
+              "kind": "view",
+              "distance_m": 2.8,
+              "delta_time_s": 9.333,
+              "unique_nominal_cells": 73,
+              "unique_conservative_cells": 63,
+              "structural_proxy_gain": 84.839,
+              "net_step_proxy": 79.239
+            },
+            {
+              "goal_rc": [
+                195,
+                179
+              ],
+              "kind": "exit",
+              "distance_m": 2.8,
+              "delta_time_s": 9.333,
+              "unique_nominal_cells": 0,
+              "unique_conservative_cells": 0,
+              "structural_proxy_gain": 0.0,
+              "net_step_proxy": -5.6
+            }
+          ],
+          "source_hash": "0a7a10c41cf9f7683362cbf6ddb274e5471e935f23b9a71f673dd670ec44ecc3"
+        }
+      ]
+    },
+    {
+      "stage": 4,
+      "robot_rc": [
+        195,
+        207
+      ],
+      "pending_goals": [],
+      "mission_unknown": 278,
+      "original_room_unknown": 270,
+      "r31_cumulative_m": 18.8,
+      "decision": {
+        "decision": "DEFER_ROOM",
+        "reason": "NO_PROPOSAL",
+        "policy_action": null,
+        "robot_command": null,
+        "unresolved_unknown_kept": true
+      },
+      "comparison": []
+    }
+  ]
+}
