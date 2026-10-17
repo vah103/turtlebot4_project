@@ -1,0 +1,1558 @@
+{
+  "run": "RUN09",
+  "schema": "G2_PREDICTED_CAUSAL_DECISIONS",
+  "count": 18,
+  "no_future_or_gt_used": true,
+  "decisions": [
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "REPLAN",
+      "R4_candidate_scores": [
+        {
+          "conservative_score": 3209.9208,
+          "distance_m": 9.6,
+          "label": "R3_FRESH:1",
+          "score": 4095.2874
+        }
+      ],
+      "R4_decision": "REPLAN",
+      "R4_knownfree_baseline_goal_core_rc": [
+        171,
+        135
+      ],
+      "R4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+      "analysis_time_s": 7.2398,
+      "decision": "GOAL",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": false,
+      "future_observations_used": false,
+      "goal_core_rc": [
+        171,
+        143
+      ],
+      "knownfree_R4_original_sequence_rc": [
+        [
+          171,
+          135
+        ]
+      ],
+      "mission_unknown": 3889,
+      "native_adaptor_time_s": 7.242,
+      "native_goal_global_rc": [
+        671,
+        643
+      ],
+      "native_goal_validation": "knownfree_room_ASTAR",
+      "native_observation_free_to_wall_corrections": [],
+      "native_tick": 12,
+      "observed_sha256": "de96490d2c94ca0b10ff7f359b2b8fe3b4bc9a8d5656194b9ceec8c13c539b23",
+      "original_room_unknown": 3889,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": {
+        "goal_confirmed_free": false,
+        "hypothetical_unknown_steps": 24,
+        "predicted_mean_occupied": 1.148331511260578e-13,
+        "predicted_target_rc": [
+          171,
+          167
+        ],
+        "predicted_variance": 3.9547057803999145e-26,
+        "safe_waypoint_rc": [
+          171,
+          143
+        ],
+        "status": "NEW_PREDICTED_TARGET",
+        "weighted_baseline_newview": 1725.7,
+        "weighted_expected_newview": 2406.7,
+        "weighted_view_delta": 681.0
+      },
+      "predicted_target_core_rc": [
+        171,
+        167
+      ],
+      "prior_observation_event": "NO_PRIOR_GOAL",
+      "robot_core_rc": [
+        147,
+        111
+      ],
+      "room_id": 1,
+      "selected_sequence_rc": [
+        [
+          171,
+          143
+        ]
+      ],
+      "semantic_sha256": "88102787d952af738e7b8f55d80ca5e8a0d5c9309890eaec01976570b2b93f55",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 2
+    },
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "REPLAN",
+      "R4_candidate_scores": [
+        {
+          "conservative_score": 196.6776,
+          "distance_m": 12.0,
+          "label": "R3_FRESH:1",
+          "score": 247.3778
+        },
+        {
+          "conservative_score": 459.4176,
+          "distance_m": 27.6,
+          "label": "R3_FRESH:2",
+          "score": 721.7043
+        }
+      ],
+      "R4_decision": "REPLAN",
+      "R4_knownfree_baseline_goal_core_rc": [
+        183,
+        99
+      ],
+      "R4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+      "analysis_time_s": 11.3966,
+      "decision": "GOAL",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": false,
+      "future_observations_used": false,
+      "goal_core_rc": [
+        169,
+        186
+      ],
+      "knownfree_R4_original_sequence_rc": [
+        [
+          183,
+          99
+        ],
+        [
+          195,
+          199
+        ]
+      ],
+      "mission_unknown": 938,
+      "native_adaptor_time_s": 11.399,
+      "native_goal_global_rc": [
+        669,
+        686
+      ],
+      "native_goal_validation": "knownfree_room_ASTAR",
+      "native_observation_free_to_wall_corrections": [
+        [
+          170,
+          118
+        ],
+        [
+          171,
+          118
+        ],
+        [
+          172,
+          118
+        ],
+        [
+          173,
+          118
+        ]
+      ],
+      "native_tick": 31,
+      "observed_sha256": "041af568585d92e57127602986c26beae4108a88a438001a879e0796a47b6703",
+      "original_room_unknown": 932,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": {
+        "goal_confirmed_free": false,
+        "hypothetical_unknown_steps": 7,
+        "predicted_mean_occupied": 4.7068228356756184e-14,
+        "predicted_target_rc": [
+          175,
+          187
+        ],
+        "predicted_variance": 6.646254815588088e-27,
+        "safe_waypoint_rc": [
+          169,
+          186
+        ],
+        "status": "NEW_PREDICTED_TARGET",
+        "weighted_baseline_newview": 59.1,
+        "weighted_expected_newview": 290.4,
+        "weighted_view_delta": 231.3
+      },
+      "predicted_target_core_rc": [
+        175,
+        187
+      ],
+      "prior_observation_event": "COMPLETED_GOAL_OBS_4153",
+      "robot_core_rc": [
+        171,
+        143
+      ],
+      "room_id": 1,
+      "selected_sequence_rc": [
+        [
+          169,
+          186
+        ]
+      ],
+      "semantic_sha256": "2628096f0180035739abb9b6cdc7efadb77ce2192f37f4bc5fc3a77e486c20fe",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 3
+    },
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "REPLAN",
+      "R4_candidate_scores": [
+        {
+          "conservative_score": 195.7618,
+          "distance_m": 9.6,
+          "label": "R3_FRESH:1",
+          "score": 221.2319
+        },
+        {
+          "conservative_score": 202.9286,
+          "distance_m": 29.6,
+          "label": "R3_FRESH:2",
+          "score": 280.6886
+        }
+      ],
+      "R4_decision": "REPLAN",
+      "R4_knownfree_baseline_goal_core_rc": [
+        197,
+        206
+      ],
+      "R4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+      "analysis_time_s": 12.85,
+      "decision": "GOAL",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": false,
+      "future_observations_used": false,
+      "goal_core_rc": [
+        175,
+        187
+      ],
+      "knownfree_R4_original_sequence_rc": [
+        [
+          197,
+          206
+        ],
+        [
+          185,
+          102
+        ]
+      ],
+      "mission_unknown": 413,
+      "native_adaptor_time_s": 12.852,
+      "native_goal_global_rc": [
+        675,
+        687
+      ],
+      "native_goal_validation": "knownfree_room_ASTAR",
+      "native_observation_free_to_wall_corrections": [
+        [
+          90,
+          221
+        ],
+        [
+          90,
+          222
+        ],
+        [
+          113,
+          233
+        ],
+        [
+          132,
+          190
+        ]
+      ],
+      "native_tick": 56,
+      "observed_sha256": "40ceae258e55be791483ed7d6f3cb9dabee318df031bb3fec40f8e403b628b0b",
+      "original_room_unknown": 406,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": {
+        "goal_confirmed_free": true,
+        "hypothetical_unknown_steps": 0,
+        "predicted_target_rc": [
+          175,
+          187
+        ],
+        "safe_waypoint_rc": [
+          175,
+          187
+        ],
+        "status": "CONTINUE_COMMITTED"
+      },
+      "predicted_target_core_rc": [
+        175,
+        187
+      ],
+      "prior_observation_event": "COMPLETED_GOAL_OBS_1330",
+      "robot_core_rc": [
+        169,
+        186
+      ],
+      "room_id": 1,
+      "selected_sequence_rc": [
+        [
+          175,
+          187
+        ]
+      ],
+      "semantic_sha256": "de5b809a8b1b0e9e079ef5e8046e57c3cb4e6b8921b2b9076b8c64402a87e576",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 4
+    },
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "REPLAN",
+      "R4_candidate_scores": [
+        {
+          "conservative_score": 73.9687,
+          "distance_m": 6.4,
+          "label": "R3_FRESH:1",
+          "score": 87.5426
+        },
+        {
+          "conservative_score": 73.2269,
+          "distance_m": 27.6,
+          "label": "R3_FRESH:2",
+          "score": 147.1217
+        },
+        {
+          "conservative_score": 70.8269,
+          "distance_m": 28.8,
+          "label": "R3_FRESH:3",
+          "score": 144.7217
+        }
+      ],
+      "R4_decision": "REPLAN",
+      "R4_knownfree_baseline_goal_core_rc": [
+        195,
+        199
+      ],
+      "R4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+      "analysis_time_s": 9.1937,
+      "decision": "GOAL",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": false,
+      "future_observations_used": false,
+      "goal_core_rc": [
+        195,
+        199
+      ],
+      "knownfree_R4_original_sequence_rc": [
+        [
+          195,
+          199
+        ],
+        [
+          179,
+          103
+        ]
+      ],
+      "mission_unknown": 343,
+      "native_adaptor_time_s": 9.196,
+      "native_goal_global_rc": [
+        695,
+        699
+      ],
+      "native_goal_validation": "knownfree_room_ASTAR",
+      "native_observation_free_to_wall_corrections": [
+        [
+          174,
+          149
+        ],
+        [
+          174,
+          177
+        ]
+      ],
+      "native_tick": 59,
+      "observed_sha256": "62a6b0ab991ae3a6900f437633ed315fa3683116feaa03f044e15e8c4984f5b8",
+      "original_room_unknown": 336,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": null,
+      "predicted_target_core_rc": null,
+      "prior_observation_event": "COMPLETED_GOAL_OBS_794",
+      "robot_core_rc": [
+        175,
+        187
+      ],
+      "room_id": 1,
+      "selected_sequence_rc": [
+        [
+          195,
+          199
+        ],
+        [
+          179,
+          103
+        ]
+      ],
+      "semantic_sha256": "06d04f355635f751a2237056cf0b570e5ece435cc4cf1674bc5b22819b8ca02f",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 5
+    },
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "KEEP",
+      "R4_candidate_scores": [
+        {
+          "conservative_score": -11.51,
+          "distance_m": 27.2,
+          "label": "PENDING:1",
+          "score": 37.148
+        },
+        {
+          "conservative_score": -11.51,
+          "distance_m": 27.2,
+          "label": "R3_FRESH:1",
+          "score": 37.148
+        }
+      ],
+      "R4_decision": "DEFER_ROOM",
+      "R4_knownfree_baseline_goal_core_rc": null,
+      "R4_reason": "NO_POSITIVE_ROBUST_ROOM_CHAIN",
+      "analysis_time_s": 0.2413,
+      "decision": "DEFER",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": true,
+      "future_observations_used": false,
+      "goal_core_rc": null,
+      "knownfree_R4_original_sequence_rc": [],
+      "mission_unknown": 302,
+      "native_adaptor_time_s": 0.242,
+      "native_goal_global_rc": null,
+      "native_goal_validation": "fallback_global",
+      "native_observation_free_to_wall_corrections": [
+        [
+          174,
+          150
+        ],
+        [
+          174,
+          151
+        ],
+        [
+          174,
+          152
+        ],
+        [
+          174,
+          153
+        ],
+        [
+          174,
+          154
+        ],
+        [
+          174,
+          156
+        ],
+        [
+          174,
+          157
+        ],
+        [
+          174,
+          158
+        ],
+        [
+          174,
+          160
+        ],
+        [
+          174,
+          161
+        ],
+        [
+          174,
+          163
+        ],
+        [
+          174,
+          164
+        ],
+        [
+          174,
+          166
+        ],
+        [
+          174,
+          168
+        ],
+        [
+          174,
+          172
+        ],
+        [
+          190,
+          194
+        ],
+        [
+          190,
+          195
+        ]
+      ],
+      "native_tick": 73,
+      "observed_sha256": "49ff28cc6985a572cbb5607a3ccc19e1ad7074f5e834d498afe11c289dd138ac",
+      "original_room_unknown": 295,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": null,
+      "predicted_target_core_rc": null,
+      "prior_observation_event": "COMPLETED_GOAL_OBS_601",
+      "robot_core_rc": [
+        195,
+        199
+      ],
+      "room_id": 1,
+      "selected_sequence_rc": [],
+      "semantic_sha256": "c1e31a246b4a4f6a0b31b11cb985a93080239df96517ffc631cf977a58dacbfd",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 6
+    },
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "REPLAN",
+      "R4_candidate_scores": [
+        {
+          "conservative_score": 1356.3512,
+          "distance_m": 10.4,
+          "label": "R3_FRESH:1",
+          "score": 1934.9582
+        },
+        {
+          "conservative_score": 2091.985,
+          "distance_m": 19.6,
+          "label": "R3_FRESH:2",
+          "score": 2332.9994
+        },
+        {
+          "conservative_score": 2096.9141,
+          "distance_m": 33.4,
+          "label": "R3_FRESH:3",
+          "score": 2328.1742
+        }
+      ],
+      "R4_decision": "REPLAN",
+      "R4_knownfree_baseline_goal_core_rc": [
+        5,
+        184
+      ],
+      "R4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+      "analysis_time_s": 10.2414,
+      "decision": "GOAL",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": false,
+      "future_observations_used": false,
+      "goal_core_rc": [
+        17,
+        218
+      ],
+      "knownfree_R4_original_sequence_rc": [
+        [
+          5,
+          184
+        ],
+        [
+          25,
+          208
+        ]
+      ],
+      "mission_unknown": 4943,
+      "native_adaptor_time_s": 10.244,
+      "native_goal_global_rc": [
+        517,
+        718
+      ],
+      "native_goal_validation": "knownfree_room_ASTAR",
+      "native_observation_free_to_wall_corrections": [],
+      "native_tick": 138,
+      "observed_sha256": "feee853fc3584f2c3dac5ce8f97de732cbd17e374f7be9a1888a25c1761bcff2",
+      "original_room_unknown": 4943,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": {
+        "goal_confirmed_free": false,
+        "hypothetical_unknown_steps": 22,
+        "predicted_mean_occupied": 1.0297762731189294e-18,
+        "predicted_target_rc": [
+          17,
+          240
+        ],
+        "predicted_variance": 3.1685011137948754e-36,
+        "safe_waypoint_rc": [
+          17,
+          218
+        ],
+        "status": "NEW_PREDICTED_TARGET",
+        "weighted_baseline_newview": 752.5,
+        "weighted_expected_newview": 1973.4,
+        "weighted_view_delta": 1220.9
+      },
+      "predicted_target_core_rc": [
+        17,
+        240
+      ],
+      "prior_observation_event": "NO_PRIOR_GOAL",
+      "robot_core_rc": [
+        49,
+        176
+      ],
+      "room_id": 2,
+      "selected_sequence_rc": [
+        [
+          17,
+          218
+        ]
+      ],
+      "semantic_sha256": "5e526f0e0f4dae9bc8b2241913a25fa093a91ffed84f15051401a6551fef9c1e",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 8
+    },
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "REPLAN",
+      "R4_candidate_scores": [
+        {
+          "conservative_score": 1392.9381,
+          "distance_m": 8.0,
+          "label": "R3_FRESH:1",
+          "score": 1476.1623
+        },
+        {
+          "conservative_score": 1553.4057,
+          "distance_m": 26.4,
+          "label": "R3_FRESH:2",
+          "score": 1677.4116
+        },
+        {
+          "conservative_score": 1760.5805,
+          "distance_m": 33.6,
+          "label": "R3_FRESH:3",
+          "score": 1993.4624
+        },
+        {
+          "conservative_score": 1758.9805,
+          "distance_m": 34.4,
+          "label": "R3_FRESH:4",
+          "score": 1999.9574
+        }
+      ],
+      "R4_decision": "REPLAN",
+      "R4_knownfree_baseline_goal_core_rc": [
+        21,
+        254
+      ],
+      "R4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+      "analysis_time_s": 15.6384,
+      "decision": "GOAL",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": false,
+      "future_observations_used": false,
+      "goal_core_rc": [
+        17,
+        240
+      ],
+      "knownfree_R4_original_sequence_rc": [
+        [
+          21,
+          254
+        ],
+        [
+          5,
+          138
+        ],
+        [
+          53,
+          218
+        ],
+        [
+          45,
+          214
+        ]
+      ],
+      "mission_unknown": 2407,
+      "native_adaptor_time_s": 15.64,
+      "native_goal_global_rc": [
+        517,
+        740
+      ],
+      "native_goal_validation": "knownfree_room_ASTAR",
+      "native_observation_free_to_wall_corrections": [
+        [
+          1,
+          222
+        ],
+        [
+          42,
+          192
+        ],
+        [
+          112,
+          19
+        ]
+      ],
+      "native_tick": 164,
+      "observed_sha256": "c2faa31437e37e2d275f017d75aa4458356c89c6a7e2232717b6c928131da412",
+      "original_room_unknown": 2356,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": {
+        "goal_confirmed_free": true,
+        "hypothetical_unknown_steps": 0,
+        "predicted_target_rc": [
+          17,
+          240
+        ],
+        "safe_waypoint_rc": [
+          17,
+          240
+        ],
+        "status": "CONTINUE_COMMITTED"
+      },
+      "predicted_target_core_rc": [
+        17,
+        240
+      ],
+      "prior_observation_event": "COMPLETED_GOAL_OBS_2842",
+      "robot_core_rc": [
+        17,
+        218
+      ],
+      "room_id": 2,
+      "selected_sequence_rc": [
+        [
+          17,
+          240
+        ]
+      ],
+      "semantic_sha256": "9dfb99f504a5cb4ab05b1f3ca2a3efec3d27164036ca7e85c14ea6ffda2f48e0",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 9
+    },
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "REPLAN",
+      "R4_candidate_scores": [
+        {
+          "conservative_score": 1049.0847,
+          "distance_m": 11.2,
+          "label": "R3_FRESH:1",
+          "score": 1089.565
+        },
+        {
+          "conservative_score": 1149.443,
+          "distance_m": 31.2,
+          "label": "R3_FRESH:2",
+          "score": 1230.7605
+        }
+      ],
+      "R4_decision": "REPLAN",
+      "R4_knownfree_baseline_goal_core_rc": [
+        61,
+        228
+      ],
+      "R4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+      "analysis_time_s": 16.9608,
+      "decision": "GOAL",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": false,
+      "future_observations_used": false,
+      "goal_core_rc": [
+        61,
+        228
+      ],
+      "knownfree_R4_original_sequence_rc": [
+        [
+          61,
+          228
+        ],
+        [
+          5,
+          140
+        ]
+      ],
+      "mission_unknown": 1345,
+      "native_adaptor_time_s": 16.963,
+      "native_goal_global_rc": [
+        561,
+        728
+      ],
+      "native_goal_validation": "knownfree_room_ASTAR",
+      "native_observation_free_to_wall_corrections": [],
+      "native_tick": 174,
+      "observed_sha256": "451c632e3e83187b9cff2e712296f8dc759c71e3172eda197d9da427970ea966",
+      "original_room_unknown": 1285,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": null,
+      "predicted_target_core_rc": null,
+      "prior_observation_event": "COMPLETED_GOAL_OBS_1087",
+      "robot_core_rc": [
+        17,
+        240
+      ],
+      "room_id": 2,
+      "selected_sequence_rc": [
+        [
+          61,
+          228
+        ],
+        [
+          5,
+          140
+        ]
+      ],
+      "semantic_sha256": "00768c3203bac3f9ccb45c385ba43e9d49bf13028f6cd55eecf6641bd72c8da5",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 10
+    },
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "KEEP",
+      "R4_candidate_scores": [
+        {
+          "conservative_score": 78.1238,
+          "distance_m": 28.8,
+          "label": "PENDING:1",
+          "score": 119.9222
+        },
+        {
+          "conservative_score": 78.1238,
+          "distance_m": 28.8,
+          "label": "R3_FRESH:1",
+          "score": 119.9222
+        }
+      ],
+      "R4_decision": "KEEP",
+      "R4_knownfree_baseline_goal_core_rc": [
+        5,
+        140
+      ],
+      "R4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+      "analysis_time_s": 0.3859,
+      "decision": "GOAL",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": false,
+      "future_observations_used": false,
+      "goal_core_rc": [
+        5,
+        140
+      ],
+      "knownfree_R4_original_sequence_rc": [
+        [
+          5,
+          140
+        ]
+      ],
+      "mission_unknown": 383,
+      "native_adaptor_time_s": 0.388,
+      "native_goal_global_rc": [
+        505,
+        640
+      ],
+      "native_goal_validation": "knownfree_room_ASTAR",
+      "native_observation_free_to_wall_corrections": [
+        [
+          32,
+          226
+        ]
+      ],
+      "native_tick": 200,
+      "observed_sha256": "3e38f79b49f5fdf00fae4483622c921d64d0b21f2e4ca9f06e0515009874b271",
+      "original_room_unknown": 325,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": null,
+      "predicted_target_core_rc": null,
+      "prior_observation_event": "COMPLETED_GOAL_OBS_1026",
+      "robot_core_rc": [
+        61,
+        228
+      ],
+      "room_id": 2,
+      "selected_sequence_rc": [
+        [
+          5,
+          140
+        ]
+      ],
+      "semantic_sha256": "d003fc13443d26caeb5898ee8c4cf49b7a29c408a6c0718da0509e3fadd0bf71",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 11
+    },
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "REPLAN",
+      "R4_candidate_scores": [
+        {
+          "conservative_score": 896.6803,
+          "distance_m": 8.4,
+          "label": "R3_FRESH:1",
+          "score": 926.5476
+        },
+        {
+          "conservative_score": 1338.9551,
+          "distance_m": 19.4,
+          "label": "R3_FRESH:2",
+          "score": 1376.664
+        }
+      ],
+      "R4_decision": "REPLAN",
+      "R4_knownfree_baseline_goal_core_rc": [
+        150,
+        7
+      ],
+      "R4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+      "analysis_time_s": 7.0555,
+      "decision": "GOAL",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": false,
+      "future_observations_used": false,
+      "goal_core_rc": [
+        138,
+        34
+      ],
+      "knownfree_R4_original_sequence_rc": [
+        [
+          150,
+          7
+        ],
+        [
+          190,
+          19
+        ]
+      ],
+      "mission_unknown": 1299,
+      "native_adaptor_time_s": 7.058,
+      "native_goal_global_rc": [
+        638,
+        534
+      ],
+      "native_goal_validation": "knownfree_room_ASTAR",
+      "native_observation_free_to_wall_corrections": [],
+      "native_tick": 384,
+      "observed_sha256": "03bf3ff397a993720611fbe40a1f4ab279ff1693059970c06da404bd912ea7a5",
+      "original_room_unknown": 1299,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": {
+        "goal_confirmed_free": false,
+        "hypothetical_unknown_steps": 9,
+        "predicted_mean_occupied": 5.4318563796367e-24,
+        "predicted_target_rc": [
+          134,
+          39
+        ],
+        "predicted_variance": 0.0,
+        "safe_waypoint_rc": [
+          138,
+          34
+        ],
+        "status": "NEW_PREDICTED_TARGET",
+        "weighted_baseline_newview": 240.5,
+        "weighted_expected_newview": 550.7,
+        "weighted_view_delta": 310.2
+      },
+      "predicted_target_core_rc": [
+        134,
+        39
+      ],
+      "prior_observation_event": "NO_PRIOR_GOAL",
+      "robot_core_rc": [
+        154,
+        43
+      ],
+      "room_id": 3,
+      "selected_sequence_rc": [
+        [
+          138,
+          34
+        ]
+      ],
+      "semantic_sha256": "ecdca76986eaf29e35a4764b99078a0f3dea9b6c3e2c1711fcf3a40af6eb18c4",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 15
+    },
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "REPLAN",
+      "R4_candidate_scores": [
+        {
+          "conservative_score": 177.9281,
+          "distance_m": 9.6,
+          "label": "R3_FRESH:1",
+          "score": 202.5523
+        },
+        {
+          "conservative_score": 506.6199,
+          "distance_m": 18.6,
+          "label": "R3_FRESH:2",
+          "score": 564.2517
+        }
+      ],
+      "R4_decision": "REPLAN",
+      "R4_knownfree_baseline_goal_core_rc": [
+        158,
+        6
+      ],
+      "R4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+      "analysis_time_s": 6.8545,
+      "decision": "GOAL",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": false,
+      "future_observations_used": false,
+      "goal_core_rc": [
+        134,
+        39
+      ],
+      "knownfree_R4_original_sequence_rc": [
+        [
+          158,
+          6
+        ],
+        [
+          182,
+          30
+        ]
+      ],
+      "mission_unknown": 541,
+      "native_adaptor_time_s": 6.856,
+      "native_goal_global_rc": [
+        634,
+        539
+      ],
+      "native_goal_validation": "knownfree_room_ASTAR",
+      "native_observation_free_to_wall_corrections": [
+        [
+          199,
+          1
+        ]
+      ],
+      "native_tick": 393,
+      "observed_sha256": "ff5c392303f774c0fc4e113eec7ed1eb3f13d5469be87dca6a121242c0992463",
+      "original_room_unknown": 487,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": {
+        "goal_confirmed_free": true,
+        "hypothetical_unknown_steps": 0,
+        "predicted_target_rc": [
+          134,
+          39
+        ],
+        "safe_waypoint_rc": [
+          134,
+          39
+        ],
+        "status": "CONTINUE_COMMITTED"
+      },
+      "predicted_target_core_rc": [
+        134,
+        39
+      ],
+      "prior_observation_event": "COMPLETED_GOAL_OBS_949",
+      "robot_core_rc": [
+        138,
+        34
+      ],
+      "room_id": 3,
+      "selected_sequence_rc": [
+        [
+          134,
+          39
+        ]
+      ],
+      "semantic_sha256": "208b6077da61842b259b58a150ca3549dda655739d2be8e70bcae9fbc5f08ee9",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 16
+    },
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "REPLAN",
+      "R4_candidate_scores": [
+        {
+          "conservative_score": 374.0947,
+          "distance_m": 13.6,
+          "label": "R3_FRESH:1",
+          "score": 415.6061
+        },
+        {
+          "conservative_score": 440.4325,
+          "distance_m": 16.6,
+          "label": "R3_FRESH:2",
+          "score": 512.9229
+        }
+      ],
+      "R4_decision": "REPLAN",
+      "R4_knownfree_baseline_goal_core_rc": [
+        186,
+        31
+      ],
+      "R4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+      "analysis_time_s": 6.8525,
+      "decision": "GOAL",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": false,
+      "future_observations_used": false,
+      "goal_core_rc": [
+        182,
+        25
+      ],
+      "knownfree_R4_original_sequence_rc": [
+        [
+          186,
+          31
+        ],
+        [
+          146,
+          19
+        ]
+      ],
+      "mission_unknown": 516,
+      "native_adaptor_time_s": 6.855,
+      "native_goal_global_rc": [
+        682,
+        525
+      ],
+      "native_goal_validation": "knownfree_room_ASTAR",
+      "native_observation_free_to_wall_corrections": [],
+      "native_tick": 397,
+      "observed_sha256": "27e56da8b4cc3cd2cb889d0c57c8e5b5832e17a3cf9dfd67c1477bfda1c2f0ec",
+      "original_room_unknown": 453,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": {
+        "goal_confirmed_free": false,
+        "hypothetical_unknown_steps": 6,
+        "predicted_mean_occupied": 5.44967120475609e-13,
+        "predicted_target_rc": [
+          182,
+          19
+        ],
+        "predicted_variance": 8.90967412311133e-25,
+        "safe_waypoint_rc": [
+          182,
+          25
+        ],
+        "status": "NEW_PREDICTED_TARGET",
+        "weighted_baseline_newview": 289.5,
+        "weighted_expected_newview": 347.1,
+        "weighted_view_delta": 57.6
+      },
+      "predicted_target_core_rc": [
+        182,
+        19
+      ],
+      "prior_observation_event": "COMPLETED_GOAL_OBS_42",
+      "robot_core_rc": [
+        134,
+        39
+      ],
+      "room_id": 3,
+      "selected_sequence_rc": [
+        [
+          182,
+          25
+        ]
+      ],
+      "semantic_sha256": "ed7b6a622d72fa7a000bd852e8b2d02f00c738f219dae75ebc901f2e85435497",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 17
+    },
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "REPLAN",
+      "R4_candidate_scores": [
+        {
+          "conservative_score": 6.3821,
+          "distance_m": 1.6,
+          "label": "R3_FRESH:1",
+          "score": 27.6224
+        }
+      ],
+      "R4_decision": "REPLAN",
+      "R4_knownfree_baseline_goal_core_rc": [
+        182,
+        17
+      ],
+      "R4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+      "analysis_time_s": 3.8538,
+      "decision": "GOAL",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": false,
+      "future_observations_used": false,
+      "goal_core_rc": [
+        182,
+        19
+      ],
+      "knownfree_R4_original_sequence_rc": [
+        [
+          182,
+          17
+        ]
+      ],
+      "mission_unknown": 93,
+      "native_adaptor_time_s": 3.856,
+      "native_goal_global_rc": [
+        682,
+        519
+      ],
+      "native_goal_validation": "knownfree_room_ASTAR",
+      "native_observation_free_to_wall_corrections": [
+        [
+          176,
+          34
+        ]
+      ],
+      "native_tick": 432,
+      "observed_sha256": "150148161f95a11496b107c71b1b9f9b164bbd920c33789425bc1dde2628ffa4",
+      "original_room_unknown": 68,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": {
+        "goal_confirmed_free": true,
+        "hypothetical_unknown_steps": 0,
+        "predicted_target_rc": [
+          182,
+          19
+        ],
+        "safe_waypoint_rc": [
+          182,
+          19
+        ],
+        "status": "CONTINUE_COMMITTED"
+      },
+      "predicted_target_core_rc": [
+        182,
+        19
+      ],
+      "prior_observation_event": "COMPLETED_GOAL_OBS_471",
+      "robot_core_rc": [
+        182,
+        25
+      ],
+      "room_id": 3,
+      "selected_sequence_rc": [
+        [
+          182,
+          19
+        ]
+      ],
+      "semantic_sha256": "ae5b0c3cdc4b49a3e60467c2975b0f911ac9367cdda36ad3e5f4bb8d1dbe14ed",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 18
+    },
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "REPLAN",
+      "R4_candidate_scores": [
+        {
+          "conservative_score": 586.6183,
+          "distance_m": 10.8,
+          "label": "R3_FRESH:1",
+          "score": 601.8083
+        },
+        {
+          "conservative_score": 599.4253,
+          "distance_m": 14.6,
+          "label": "R3_FRESH:2",
+          "score": 615.6357
+        }
+      ],
+      "R4_decision": "REPLAN",
+      "R4_knownfree_baseline_goal_core_rc": [
+        21,
+        23
+      ],
+      "R4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+      "analysis_time_s": 5.485,
+      "decision": "GOAL",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": false,
+      "future_observations_used": false,
+      "goal_core_rc": [
+        21,
+        23
+      ],
+      "knownfree_R4_original_sequence_rc": [
+        [
+          21,
+          23
+        ],
+        [
+          49,
+          7
+        ]
+      ],
+      "mission_unknown": 533,
+      "native_adaptor_time_s": 5.487,
+      "native_goal_global_rc": [
+        521,
+        523
+      ],
+      "native_goal_validation": "knownfree_room_ASTAR",
+      "native_observation_free_to_wall_corrections": [],
+      "native_tick": 514,
+      "observed_sha256": "8db80ccc1bf12322b30a2311afed3fa8e7e3643dd741598be7ba908b2d755d5e",
+      "original_room_unknown": 533,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": null,
+      "predicted_target_core_rc": null,
+      "prior_observation_event": "NO_PRIOR_GOAL",
+      "robot_core_rc": [
+        73,
+        23
+      ],
+      "room_id": 4,
+      "selected_sequence_rc": [
+        [
+          21,
+          23
+        ],
+        [
+          49,
+          7
+        ]
+      ],
+      "semantic_sha256": "2aa10158f14187963bbed2c420ac5ae2ec9ee8d18855c103a5a3092732f58f06",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 20
+    },
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "REPLAN",
+      "R4_candidate_scores": [
+        {
+          "conservative_score": 60.7655,
+          "distance_m": 4.0,
+          "label": "R3_FRESH:1",
+          "score": 60.7655
+        }
+      ],
+      "R4_decision": "REPLAN",
+      "R4_knownfree_baseline_goal_core_rc": [
+        179,
+        247
+      ],
+      "R4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+      "analysis_time_s": 1.5112,
+      "decision": "GOAL",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": false,
+      "future_observations_used": false,
+      "goal_core_rc": [
+        179,
+        247
+      ],
+      "knownfree_R4_original_sequence_rc": [
+        [
+          179,
+          247
+        ]
+      ],
+      "mission_unknown": 47,
+      "native_adaptor_time_s": 1.513,
+      "native_goal_global_rc": [
+        679,
+        747
+      ],
+      "native_goal_validation": "knownfree_room_ASTAR",
+      "native_observation_free_to_wall_corrections": [],
+      "native_tick": 665,
+      "observed_sha256": "d6b089587a96d0a31ace03404c224a1e6fc7f255efada373ce49f286d0b06707",
+      "original_room_unknown": 47,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": null,
+      "predicted_target_core_rc": null,
+      "prior_observation_event": "NO_PRIOR_GOAL",
+      "robot_core_rc": [
+        159,
+        247
+      ],
+      "room_id": 5,
+      "selected_sequence_rc": [
+        [
+          179,
+          247
+        ]
+      ],
+      "semantic_sha256": "427e9e13ac4fe9f70c19e86c84afcaf23c8aff05f12a6ebb2550db1815d50164",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 22
+    },
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "REPLAN",
+      "R4_candidate_scores": [
+        {
+          "conservative_score": -13.0491,
+          "distance_m": 9.6,
+          "label": "R3_FRESH:1",
+          "score": 34.3132
+        },
+        {
+          "conservative_score": -13.0491,
+          "distance_m": 9.6,
+          "label": "R3_FRESH:2",
+          "score": 35.3896
+        }
+      ],
+      "R4_decision": "DEFER_ROOM",
+      "R4_knownfree_baseline_goal_core_rc": null,
+      "R4_reason": "NO_POSITIVE_ROBUST_ROOM_CHAIN",
+      "analysis_time_s": 4.2152,
+      "decision": "DEFER",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": true,
+      "future_observations_used": false,
+      "goal_core_rc": null,
+      "knownfree_R4_original_sequence_rc": [],
+      "mission_unknown": 61,
+      "native_adaptor_time_s": 4.216,
+      "native_goal_global_rc": null,
+      "native_goal_validation": "fallback_global",
+      "native_observation_free_to_wall_corrections": [],
+      "native_tick": 761,
+      "observed_sha256": "c23236964edc3f4bdc45f013d36a9de98c110b1dd2eaa6d126f8791f3396d00b",
+      "original_room_unknown": 61,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": null,
+      "predicted_target_core_rc": null,
+      "prior_observation_event": "NO_PRIOR_GOAL",
+      "robot_core_rc": [
+        173,
+        100
+      ],
+      "room_id": 6,
+      "selected_sequence_rc": [],
+      "semantic_sha256": "f699d6ff539711f6bd68a0488f7455a6c6548a7435db7631cff25cd9f8451e8a",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 24
+    },
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "REPLAN",
+      "R4_candidate_scores": [
+        {
+          "conservative_score": 43.4754,
+          "distance_m": 19.2,
+          "label": "R3_FRESH:1",
+          "score": 92.9563
+        }
+      ],
+      "R4_decision": "REPLAN",
+      "R4_knownfree_baseline_goal_core_rc": [
+        31,
+        61
+      ],
+      "R4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+      "analysis_time_s": 3.7844,
+      "decision": "GOAL",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": false,
+      "future_observations_used": false,
+      "goal_core_rc": [
+        31,
+        61
+      ],
+      "knownfree_R4_original_sequence_rc": [
+        [
+          31,
+          61
+        ]
+      ],
+      "mission_unknown": 113,
+      "native_adaptor_time_s": 3.787,
+      "native_goal_global_rc": [
+        531,
+        561
+      ],
+      "native_goal_validation": "knownfree_room_ASTAR",
+      "native_observation_free_to_wall_corrections": [],
+      "native_tick": 850,
+      "observed_sha256": "2f4ade558245dae2b9f182e73f6c5f4d390a5e5a25203729bd4a23d9a1b09bb4",
+      "original_room_unknown": 113,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": null,
+      "predicted_target_core_rc": null,
+      "prior_observation_event": "NO_PRIOR_GOAL",
+      "robot_core_rc": [
+        11,
+        105
+      ],
+      "room_id": 7,
+      "selected_sequence_rc": [
+        [
+          31,
+          61
+        ]
+      ],
+      "semantic_sha256": "b033620cb4f60a3204486dfefb84e262bf11ca41cf3efa9af988b00a4e912bb7",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 26
+    },
+    {
+      "GT_used_for_prediction": false,
+      "GT_used_for_selection": false,
+      "R31_decision": "DEFER",
+      "R4_candidate_scores": [],
+      "R4_decision": "DEFER_ROOM",
+      "R4_knownfree_baseline_goal_core_rc": null,
+      "R4_reason": "No usable structural chain in safe candidate/search budget; unresolved obligations retained",
+      "analysis_time_s": 1.8461,
+      "decision": "DEFER",
+      "event": "RESULT",
+      "executed_goal_is_observed_free": true,
+      "fallback_is_global_mapex": true,
+      "future_observations_used": false,
+      "goal_core_rc": null,
+      "knownfree_R4_original_sequence_rc": [],
+      "mission_unknown": 70,
+      "native_adaptor_time_s": 1.846,
+      "native_goal_global_rc": null,
+      "native_goal_validation": "fallback_global",
+      "native_observation_free_to_wall_corrections": [],
+      "native_tick": 894,
+      "observed_sha256": "db31a7f23fc2471fec318815a30639cde7a098238c17ddfbbce24eaace600443",
+      "original_room_unknown": 68,
+      "physical_safety_certified": false,
+      "predicted_goal_decision": null,
+      "predicted_target_core_rc": null,
+      "prior_observation_event": "COMPLETED_GOAL_OBS_61",
+      "robot_core_rc": [
+        31,
+        61
+      ],
+      "room_id": 7,
+      "selected_sequence_rc": [],
+      "semantic_sha256": "a4a2b1ead251253af23f613791bab5995bfbe5e18c278c85a00367a3576a2c63",
+      "was_RoomRun_LOCAL": true,
+      "decision_index": 27
+    }
+  ]
+}

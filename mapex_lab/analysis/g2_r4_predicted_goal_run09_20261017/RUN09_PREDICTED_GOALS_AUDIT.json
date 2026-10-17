@@ -1,0 +1,205 @@
+{
+  "schema": "R09_SOURCE_SAFETY_AND_TARGET_AUDIT_V1",
+  "goal_count": 15,
+  "goal_observed_free_at_command_count": 15,
+  "goal_exact_visited_ever": 15,
+  "predicted_decision_count": 9,
+  "unique_predicted_targets": 5,
+  "unique_predicted_targets_eventually_visited": 4,
+  "errors": [],
+  "predicted_choices": [
+    {
+      "decision": 2,
+      "tick": 12,
+      "room_id": 1,
+      "status": "NEW_PREDICTED_TARGET",
+      "predicted_target_core_rc": [
+        171,
+        167
+      ],
+      "safe_executable_goal_core_rc": [
+        171,
+        143
+      ],
+      "predicted_target_current_observed_code": 1,
+      "safe_goal_observed_code": 0
+    },
+    {
+      "decision": 3,
+      "tick": 31,
+      "room_id": 1,
+      "status": "NEW_PREDICTED_TARGET",
+      "predicted_target_core_rc": [
+        175,
+        187
+      ],
+      "safe_executable_goal_core_rc": [
+        169,
+        186
+      ],
+      "predicted_target_current_observed_code": 1,
+      "safe_goal_observed_code": 0
+    },
+    {
+      "decision": 4,
+      "tick": 56,
+      "room_id": 1,
+      "status": "CONTINUE_COMMITTED",
+      "predicted_target_core_rc": [
+        175,
+        187
+      ],
+      "safe_executable_goal_core_rc": [
+        175,
+        187
+      ],
+      "predicted_target_current_observed_code": 0,
+      "safe_goal_observed_code": 0
+    },
+    {
+      "decision": 8,
+      "tick": 138,
+      "room_id": 2,
+      "status": "NEW_PREDICTED_TARGET",
+      "predicted_target_core_rc": [
+        17,
+        240
+      ],
+      "safe_executable_goal_core_rc": [
+        17,
+        218
+      ],
+      "predicted_target_current_observed_code": 1,
+      "safe_goal_observed_code": 0
+    },
+    {
+      "decision": 9,
+      "tick": 164,
+      "room_id": 2,
+      "status": "CONTINUE_COMMITTED",
+      "predicted_target_core_rc": [
+        17,
+        240
+      ],
+      "safe_executable_goal_core_rc": [
+        17,
+        240
+      ],
+      "predicted_target_current_observed_code": 0,
+      "safe_goal_observed_code": 0
+    },
+    {
+      "decision": 15,
+      "tick": 384,
+      "room_id": 3,
+      "status": "NEW_PREDICTED_TARGET",
+      "predicted_target_core_rc": [
+        134,
+        39
+      ],
+      "safe_executable_goal_core_rc": [
+        138,
+        34
+      ],
+      "predicted_target_current_observed_code": 1,
+      "safe_goal_observed_code": 0
+    },
+    {
+      "decision": 16,
+      "tick": 393,
+      "room_id": 3,
+      "status": "CONTINUE_COMMITTED",
+      "predicted_target_core_rc": [
+        134,
+        39
+      ],
+      "safe_executable_goal_core_rc": [
+        134,
+        39
+      ],
+      "predicted_target_current_observed_code": 0,
+      "safe_goal_observed_code": 0
+    },
+    {
+      "decision": 17,
+      "tick": 397,
+      "room_id": 3,
+      "status": "NEW_PREDICTED_TARGET",
+      "predicted_target_core_rc": [
+        182,
+        19
+      ],
+      "safe_executable_goal_core_rc": [
+        182,
+        25
+      ],
+      "predicted_target_current_observed_code": 1,
+      "safe_goal_observed_code": 0
+    },
+    {
+      "decision": 18,
+      "tick": 432,
+      "room_id": 3,
+      "status": "CONTINUE_COMMITTED",
+      "predicted_target_core_rc": [
+        182,
+        19
+      ],
+      "safe_executable_goal_core_rc": [
+        182,
+        19
+      ],
+      "predicted_target_current_observed_code": 0,
+      "safe_goal_observed_code": 0
+    }
+  ],
+  "unique_targets": [
+    {
+      "room_id": 1,
+      "core_rc": [
+        171,
+        167
+      ],
+      "first_tick": 12,
+      "eventual_exact_visit": false
+    },
+    {
+      "room_id": 1,
+      "core_rc": [
+        175,
+        187
+      ],
+      "first_tick": 31,
+      "eventual_exact_visit": true
+    },
+    {
+      "room_id": 2,
+      "core_rc": [
+        17,
+        240
+      ],
+      "first_tick": 138,
+      "eventual_exact_visit": true
+    },
+    {
+      "room_id": 3,
+      "core_rc": [
+        134,
+        39
+      ],
+      "first_tick": 384,
+      "eventual_exact_visit": true
+    },
+    {
+      "room_id": 3,
+      "core_rc": [
+        182,
+        19
+      ],
+      "first_tick": 397,
+      "eventual_exact_visit": true
+    }
+  ],
+  "causal_source": "/home/dell/mx072_g2_r4_predicted_goal_run09_20261017/native_g2_r4_predicted_run09/G2_R4_PREDICTED_GOAL_RUN09_visvarprob",
+  "GT_used_in_planner": false
+}

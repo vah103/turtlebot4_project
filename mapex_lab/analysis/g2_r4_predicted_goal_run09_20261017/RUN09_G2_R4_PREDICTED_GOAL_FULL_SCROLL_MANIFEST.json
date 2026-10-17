@@ -1,0 +1,576 @@
+{
+  "count": 28,
+  "categories": {
+    "LOCAL_G2": 15,
+    "G2_DEFER": 3,
+    "GLOBAL_MAPEX": 10
+  },
+  "decisions": [
+    {
+      "decision": 1,
+      "native_tick": 0,
+      "mode": "GLOBAL",
+      "category": "GLOBAL_MAPEX",
+      "robot_global_rc": [
+        631,
+        631
+      ],
+      "goal_global_rc": [
+        653,
+        604
+      ],
+      "source_obs_sha256": "8cae66becea9498df0af310f568c2647f4b321880a852fa1b872fe75dd185116",
+      "source_same_epoch_verified": true,
+      "room_id": null,
+      "g2_decision": null,
+      "predicted_target_global": null
+    },
+    {
+      "decision": 2,
+      "native_tick": 12,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        647,
+        611
+      ],
+      "goal_global_rc": [
+        671,
+        643
+      ],
+      "source_obs_sha256": "de96490d2c94ca0b10ff7f359b2b8fe3b4bc9a8d5656194b9ceec8c13c539b23",
+      "source_same_epoch_verified": true,
+      "room_id": 1,
+      "g2_decision": "GOAL",
+      "predicted_target_global": [
+        671,
+        667
+      ]
+    },
+    {
+      "decision": 3,
+      "native_tick": 31,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        671,
+        643
+      ],
+      "goal_global_rc": [
+        669,
+        686
+      ],
+      "source_obs_sha256": "041af568585d92e57127602986c26beae4108a88a438001a879e0796a47b6703",
+      "source_same_epoch_verified": true,
+      "room_id": 1,
+      "g2_decision": "GOAL",
+      "predicted_target_global": [
+        675,
+        687
+      ]
+    },
+    {
+      "decision": 4,
+      "native_tick": 56,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        669,
+        686
+      ],
+      "goal_global_rc": [
+        675,
+        687
+      ],
+      "source_obs_sha256": "40ceae258e55be791483ed7d6f3cb9dabee318df031bb3fec40f8e403b628b0b",
+      "source_same_epoch_verified": true,
+      "room_id": 1,
+      "g2_decision": "GOAL",
+      "predicted_target_global": [
+        675,
+        687
+      ]
+    },
+    {
+      "decision": 5,
+      "native_tick": 59,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        675,
+        687
+      ],
+      "goal_global_rc": [
+        695,
+        699
+      ],
+      "source_obs_sha256": "62a6b0ab991ae3a6900f437633ed315fa3683116feaa03f044e15e8c4984f5b8",
+      "source_same_epoch_verified": true,
+      "room_id": 1,
+      "g2_decision": "GOAL",
+      "predicted_target_global": null
+    },
+    {
+      "decision": 6,
+      "native_tick": 73,
+      "mode": "GLOBAL",
+      "category": "G2_DEFER",
+      "robot_global_rc": [
+        695,
+        699
+      ],
+      "goal_global_rc": [
+        585,
+        684
+      ],
+      "source_obs_sha256": "49ff28cc6985a572cbb5607a3ccc19e1ad7074f5e834d498afe11c289dd138ac",
+      "source_same_epoch_verified": true,
+      "room_id": 1,
+      "g2_decision": "DEFER",
+      "predicted_target_global": null
+    },
+    {
+      "decision": 7,
+      "native_tick": 121,
+      "mode": "GLOBAL",
+      "category": "GLOBAL_MAPEX",
+      "robot_global_rc": [
+        592,
+        678
+      ],
+      "goal_global_rc": [
+        549,
+        684
+      ],
+      "source_obs_sha256": "7b54075941125f9368a2d5f12a54fbca89399b846cd201803014ccb84be54f90",
+      "source_same_epoch_verified": true,
+      "room_id": null,
+      "g2_decision": null,
+      "predicted_target_global": null
+    },
+    {
+      "decision": 8,
+      "native_tick": 138,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        549,
+        676
+      ],
+      "goal_global_rc": [
+        517,
+        718
+      ],
+      "source_obs_sha256": "feee853fc3584f2c3dac5ce8f97de732cbd17e374f7be9a1888a25c1761bcff2",
+      "source_same_epoch_verified": true,
+      "room_id": 2,
+      "g2_decision": "GOAL",
+      "predicted_target_global": [
+        517,
+        740
+      ]
+    },
+    {
+      "decision": 9,
+      "native_tick": 164,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        517,
+        718
+      ],
+      "goal_global_rc": [
+        517,
+        740
+      ],
+      "source_obs_sha256": "c2faa31437e37e2d275f017d75aa4458356c89c6a7e2232717b6c928131da412",
+      "source_same_epoch_verified": true,
+      "room_id": 2,
+      "g2_decision": "GOAL",
+      "predicted_target_global": [
+        517,
+        740
+      ]
+    },
+    {
+      "decision": 10,
+      "native_tick": 174,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        517,
+        740
+      ],
+      "goal_global_rc": [
+        561,
+        728
+      ],
+      "source_obs_sha256": "451c632e3e83187b9cff2e712296f8dc759c71e3172eda197d9da427970ea966",
+      "source_same_epoch_verified": true,
+      "room_id": 2,
+      "g2_decision": "GOAL",
+      "predicted_target_global": null
+    },
+    {
+      "decision": 11,
+      "native_tick": 200,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        561,
+        728
+      ],
+      "goal_global_rc": [
+        505,
+        640
+      ],
+      "source_obs_sha256": "3e38f79b49f5fdf00fae4483622c921d64d0b21f2e4ca9f06e0515009874b271",
+      "source_same_epoch_verified": true,
+      "room_id": 2,
+      "g2_decision": "GOAL",
+      "predicted_target_global": null
+    },
+    {
+      "decision": 12,
+      "native_tick": 276,
+      "mode": "GLOBAL",
+      "category": "GLOBAL_MAPEX",
+      "robot_global_rc": [
+        505,
+        640
+      ],
+      "goal_global_rc": [
+        553,
+        604
+      ],
+      "source_obs_sha256": "cfd648c7e8a448982eab4a5fb29f7a21cec02bbbe73e6f19714fc7c9dd67c3d0",
+      "source_same_epoch_verified": true,
+      "room_id": 2,
+      "g2_decision": null,
+      "predicted_target_global": null
+    },
+    {
+      "decision": 13,
+      "native_tick": 330,
+      "mode": "GLOBAL",
+      "category": "GLOBAL_MAPEX",
+      "robot_global_rc": [
+        560,
+        611
+      ],
+      "goal_global_rc": [
+        602,
+        589
+      ],
+      "source_obs_sha256": "35bb06d5610cd9577c57ad2fa316e2314403cc0e7d1e61d6dbfbc0b12ce2170e",
+      "source_same_epoch_verified": true,
+      "room_id": null,
+      "g2_decision": null,
+      "predicted_target_global": null
+    },
+    {
+      "decision": 14,
+      "native_tick": 350,
+      "mode": "GLOBAL",
+      "category": "GLOBAL_MAPEX",
+      "robot_global_rc": [
+        595,
+        586
+      ],
+      "goal_global_rc": [
+        658,
+        534
+      ],
+      "source_obs_sha256": "e8f6be4a6342574beceda11bc2367eea36a159b4efccf3dc28d3a86a627a0b59",
+      "source_same_epoch_verified": true,
+      "room_id": null,
+      "g2_decision": null,
+      "predicted_target_global": null
+    },
+    {
+      "decision": 15,
+      "native_tick": 384,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        654,
+        543
+      ],
+      "goal_global_rc": [
+        638,
+        534
+      ],
+      "source_obs_sha256": "03bf3ff397a993720611fbe40a1f4ab279ff1693059970c06da404bd912ea7a5",
+      "source_same_epoch_verified": true,
+      "room_id": 3,
+      "g2_decision": "GOAL",
+      "predicted_target_global": [
+        634,
+        539
+      ]
+    },
+    {
+      "decision": 16,
+      "native_tick": 393,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        638,
+        534
+      ],
+      "goal_global_rc": [
+        634,
+        539
+      ],
+      "source_obs_sha256": "ff5c392303f774c0fc4e113eec7ed1eb3f13d5469be87dca6a121242c0992463",
+      "source_same_epoch_verified": true,
+      "room_id": 3,
+      "g2_decision": "GOAL",
+      "predicted_target_global": [
+        634,
+        539
+      ]
+    },
+    {
+      "decision": 17,
+      "native_tick": 397,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        634,
+        539
+      ],
+      "goal_global_rc": [
+        682,
+        525
+      ],
+      "source_obs_sha256": "27e56da8b4cc3cd2cb889d0c57c8e5b5832e17a3cf9dfd67c1477bfda1c2f0ec",
+      "source_same_epoch_verified": true,
+      "room_id": 3,
+      "g2_decision": "GOAL",
+      "predicted_target_global": [
+        682,
+        519
+      ]
+    },
+    {
+      "decision": 18,
+      "native_tick": 432,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        682,
+        525
+      ],
+      "goal_global_rc": [
+        682,
+        519
+      ],
+      "source_obs_sha256": "150148161f95a11496b107c71b1b9f9b164bbd920c33789425bc1dde2628ffa4",
+      "source_same_epoch_verified": true,
+      "room_id": 3,
+      "g2_decision": "GOAL",
+      "predicted_target_global": [
+        682,
+        519
+      ]
+    },
+    {
+      "decision": 19,
+      "native_tick": 437,
+      "mode": "GLOBAL",
+      "category": "GLOBAL_MAPEX",
+      "robot_global_rc": [
+        682,
+        519
+      ],
+      "goal_global_rc": [
+        570,
+        515
+      ],
+      "source_obs_sha256": "9d5c0079e65be4ad27f2f83f97673c3259a11716ada21198afe64d3f1dbcaa7e",
+      "source_same_epoch_verified": true,
+      "room_id": 3,
+      "g2_decision": null,
+      "predicted_target_global": null
+    },
+    {
+      "decision": 20,
+      "native_tick": 514,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        573,
+        523
+      ],
+      "goal_global_rc": [
+        521,
+        523
+      ],
+      "source_obs_sha256": "8db80ccc1bf12322b30a2311afed3fa8e7e3643dd741598be7ba908b2d755d5e",
+      "source_same_epoch_verified": true,
+      "room_id": 4,
+      "g2_decision": "GOAL",
+      "predicted_target_global": null
+    },
+    {
+      "decision": 21,
+      "native_tick": 539,
+      "mode": "GLOBAL",
+      "category": "GLOBAL_MAPEX",
+      "robot_global_rc": [
+        521,
+        523
+      ],
+      "goal_global_rc": [
+        667,
+        742
+      ],
+      "source_obs_sha256": "83f6f5a274760cf78c3fa34523179ad0a1bdf26b81068841f5f5107390fd73d4",
+      "source_same_epoch_verified": true,
+      "room_id": 4,
+      "g2_decision": null,
+      "predicted_target_global": null
+    },
+    {
+      "decision": 22,
+      "native_tick": 665,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        659,
+        747
+      ],
+      "goal_global_rc": [
+        679,
+        747
+      ],
+      "source_obs_sha256": "d6b089587a96d0a31ace03404c224a1e6fc7f255efada373ce49f286d0b06707",
+      "source_same_epoch_verified": true,
+      "room_id": 5,
+      "g2_decision": "GOAL",
+      "predicted_target_global": null
+    },
+    {
+      "decision": 23,
+      "native_tick": 672,
+      "mode": "GLOBAL",
+      "category": "GLOBAL_MAPEX",
+      "robot_global_rc": [
+        679,
+        747
+      ],
+      "goal_global_rc": [
+        679,
+        606
+      ],
+      "source_obs_sha256": "89444686967801a9e58237af1aae3b378aa825d1a6dfb46d9e7a020d1f1a0b41",
+      "source_same_epoch_verified": true,
+      "room_id": 5,
+      "g2_decision": null,
+      "predicted_target_global": null
+    },
+    {
+      "decision": 24,
+      "native_tick": 761,
+      "mode": "GLOBAL",
+      "category": "G2_DEFER",
+      "robot_global_rc": [
+        673,
+        600
+      ],
+      "goal_global_rc": [
+        680,
+        613
+      ],
+      "source_obs_sha256": "c23236964edc3f4bdc45f013d36a9de98c110b1dd2eaa6d126f8791f3396d00b",
+      "source_same_epoch_verified": true,
+      "room_id": 6,
+      "g2_decision": "DEFER",
+      "predicted_target_global": null
+    },
+    {
+      "decision": 25,
+      "native_tick": 764,
+      "mode": "GLOBAL",
+      "category": "GLOBAL_MAPEX",
+      "robot_global_rc": [
+        682,
+        600
+      ],
+      "goal_global_rc": [
+        511,
+        597
+      ],
+      "source_obs_sha256": "4f5fc7d57e0a0006e9fa66c24d69e1c9aa37fcb7563c0bf45851ecee69bd47db",
+      "source_same_epoch_verified": true,
+      "room_id": 6,
+      "g2_decision": null,
+      "predicted_target_global": null
+    },
+    {
+      "decision": 26,
+      "native_tick": 850,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        511,
+        605
+      ],
+      "goal_global_rc": [
+        531,
+        561
+      ],
+      "source_obs_sha256": "2f4ade558245dae2b9f182e73f6c5f4d390a5e5a25203729bd4a23d9a1b09bb4",
+      "source_same_epoch_verified": true,
+      "room_id": 7,
+      "g2_decision": "GOAL",
+      "predicted_target_global": null
+    },
+    {
+      "decision": 27,
+      "native_tick": 894,
+      "mode": "GLOBAL",
+      "category": "G2_DEFER",
+      "robot_global_rc": [
+        531,
+        561
+      ],
+      "goal_global_rc": [
+        546,
+        509
+      ],
+      "source_obs_sha256": "db31a7f23fc2471fec318815a30639cde7a098238c17ddfbbce24eaace600443",
+      "source_same_epoch_verified": true,
+      "room_id": 7,
+      "g2_decision": "DEFER",
+      "predicted_target_global": null
+    },
+    {
+      "decision": 28,
+      "native_tick": 946,
+      "mode": "GLOBAL",
+      "category": "GLOBAL_MAPEX",
+      "robot_global_rc": [
+        553,
+        509
+      ],
+      "goal_global_rc": [
+        519,
+        570
+      ],
+      "source_obs_sha256": "0b0712c370d4b0808e81fa3256175a46abaa7e4e253177cb78b26c5315606cc2",
+      "source_same_epoch_verified": true,
+      "room_id": 8,
+      "g2_decision": null,
+      "predicted_target_global": null
+    }
+  ],
+  "terminal": {
+    "start_time": 1792231467.5599601,
+    "cur_step": 1006,
+    "mission_complete": true,
+    "fail_reason": "MAPEX_NO_SELECTABLE_FRONTIER_NOT_GT",
+    "last_exp_time_s": 255.13617753982544
+  }
+}
