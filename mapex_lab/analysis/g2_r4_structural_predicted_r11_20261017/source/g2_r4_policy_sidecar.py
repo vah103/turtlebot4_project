@@ -10,7 +10,7 @@ import numpy as np
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT/'g2src'))
 from mapex_g2_r3.structural import MissionMemory,analyze,sha,StructuralConfig
-from mapex_g2_r3.sequence import SequenceConfig
+from mapex_g2_r3.sequence import SequenceConfig,StructuralRoutePlanner
 from mapex_g2_r3.commitment import CommitmentController,CommitmentState,expected_first_leg_per_region
 from r4_episode import plan_episode
 from r4_adaptive import EvidenceLedger,R4Config
@@ -118,12 +118,16 @@ class Service:
         R4_unmodified_goal=list(selected_goal) if selected_goal is not None else None
         original_R4_defer=selected_goal is None
         local_backstop=None
+        structural_planner=None
         if original_R4_defer:
+            structural_planner=StructuralRoutePlanner(
+                obs,mean,var,semantic,robot,a['memory'],report,
+                cfg=SequenceConfig(decision_id=report['decision_id']))
             # R11: R3 structural witnesses are the first fallback, not a
             # distance-to-unknown heuristic and NEVER the WFD frontier center.
             local_backstop=choose_structural_backstop(
                 obs,mean,var,semantic,robot,a['memory'],report,native_walkable,
-                recent_goals=a['backstop_recent'])
+                recent_goals=a['backstop_recent'],planner=structural_planner)
             if local_backstop is None:
                 # Last-resort evidence-gathering reposition only. This is
                 # explicitly NOT represented as a valuable R4 viewpoint.
@@ -163,10 +167,15 @@ class Service:
                 native_walkable=native_walkable,
                 return_candidates=True,candidate_limit=8)
             accepted=[]
+            if predicted_candidates and structural_planner is None:
+                structural_planner=StructuralRoutePlanner(
+                    obs,mean,var,semantic,robot,a['memory'],report,
+                    cfg=SequenceConfig(decision_id=report['decision_id']))
             for candidate in predicted_candidates:
                 verdict=arbitrate(
                     obs,mean,var,semantic,robot,a['memory'],report,
-                    native_walkable,selected_goal,candidate)
+                    native_walkable,selected_goal,candidate,
+                    planner=structural_planner)
                 R11_candidate_diagnostics.append({
                     'predicted_target_rc':candidate['predicted_target_rc'],
                     'safe_waypoint_rc':candidate['safe_waypoint_rc'],
