@@ -153,33 +153,51 @@ class Service:
         predicted_proposal=None
         structural_arbitration=None
         knownfree_baseline_goal=list(selected_goal) if selected_goal is not None else None
+        R11_candidate_diagnostics=[]
         if selected_goal is not None:
-            predicted_proposal=find_predicted(
+            # The old predicted-proposal proxy only SHORTLISTS candidates.
+            # Actual selection is G2-R3 pathwise structural arbitration.
+            predicted_candidates=find_predicted(
                 obs,mean,var,semantic,robot,a['memory'].mission,
                 baseline=selected_goal,previous=a.get('predicted_target'),
-                native_walkable=native_walkable)
-            if predicted_proposal is not None:
-                structural_arbitration=arbitrate(
+                native_walkable=native_walkable,
+                return_candidates=True,candidate_limit=4)
+            accepted=[]
+            for candidate in predicted_candidates:
+                verdict=arbitrate(
                     obs,mean,var,semantic,robot,a['memory'],report,
-                    native_walkable,selected_goal,predicted_proposal)
-                if structural_arbitration['decision']=='USE_PREDICTED_GOAL':
-                    # The *executed* knownfree waypoint, not the hypothetical
-                    # target, passed R3 pathwise structure and R4 baseline.
-                    predicted=predicted_proposal
-                    subgoal=tuple(int(x) for x in predicted['safe_waypoint_rc'])
-                    target=tuple(int(x) for x in predicted['predicted_target_rc'])
-                    if obs[subgoal]!=0 or not native_walkable[subgoal]:
-                        raise ValueError('R11 selected non-certified subgoal')
-                    selected_goal=subgoal
-                    a['predicted_target']=target
-                    a['controller'].state.pending_goals=[list(subgoal)]
-                    a['last_goal']=subgoal
-                    a['last_expected']={} # never credit unvisited target
-                else:
-                    # Reject weaker actual viewport; restore original R4.
-                    a['predicted_target']=None
+                    native_walkable,selected_goal,candidate)
+                R11_candidate_diagnostics.append({
+                    'predicted_target_rc':candidate['predicted_target_rc'],
+                    'safe_waypoint_rc':candidate['safe_waypoint_rc'],
+                    'arbitration':verdict})
+                if verdict['decision']=='USE_PREDICTED_GOAL':
+                    prefix=verdict['executed_subgoal_structural']
+                    rank=(prefix['open_regions_satisfied'],
+                          prefix['structural_quality_bin'],
+                          prefix['quality'],
+                          verdict.get('future_target_discounted_gain',0.0),
+                          prefix['objective'])
+                    accepted.append((rank,candidate,verdict))
+            if accepted:
+                accepted.sort(key=lambda x:x[0],reverse=True)
+                _,predicted,structural_arbitration=accepted[0]
+                subgoal=tuple(int(x) for x in predicted['safe_waypoint_rc'])
+                target=tuple(int(x) for x in predicted['predicted_target_rc'])
+                if obs[subgoal]!=0 or not native_walkable[subgoal]:
+                    raise ValueError('R11 selected non-certified subgoal')
+                selected_goal=subgoal
+                a['predicted_target']=target
+                a['controller'].state.pending_goals=[list(subgoal)]
+                a['last_goal']=subgoal
+                a['last_expected']={} # never credit unvisited target
             else:
+                # R4 wins against all speculative alternatives.
                 a['predicted_target']=None
+                structural_arbitration={'decision':'KEEP_R4_GOAL',
+                    'reason':'NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION',
+                    'evaluated_candidate_count':len(predicted_candidates)}
+                predicted_proposal=predicted_candidates[0] if predicted_candidates else None
         else:
             a['predicted_target']=None
         self.episode+=1
@@ -197,6 +215,7 @@ class Service:
                 'run10_local_backstop':local_backstop,
                 'R11_original_R4_knownfree_goal_core_rc':R4_unmodified_goal,
                 'R11_structural_arbitration':structural_arbitration,
+                'R11_candidate_diagnostics':R11_candidate_diagnostics,
                 'R11_predicted_candidate_unexecuted':predicted_proposal if predicted is None else None,
                 'R11_reposition_only':bool(local_backstop and local_backstop.get('reposition_only')),
                 'R11_WFD_only_exit_gate':True,
