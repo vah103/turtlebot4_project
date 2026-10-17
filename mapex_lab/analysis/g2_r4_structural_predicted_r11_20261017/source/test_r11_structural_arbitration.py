@@ -11,12 +11,13 @@ from g2_structural_arbitration import arbitrate,choose_structural_backstop
 
 
 class FakePlanner:
-    def __init__(self,mask_by_goal,candidates=None,ray=0b111):
+    def __init__(self,mask_by_goal,candidates=None,ray=0b111,endpoint_by_goal=None):
         self.robot=(2,2)
         self.cfg=types.SimpleNamespace(resolution_m=.1)
         self.masks=mask_by_goal
         self.choices=candidates or []
-        self.coarse=types.SimpleNamespace(sight=lambda p:(ray,ray))
+        self.endpoint=endpoint_by_goal or {}
+        self.coarse=types.SimpleNamespace(sight=lambda p:(self.endpoint.get(tuple(p),ray),self.endpoint.get(tuple(p),ray)))
         self.major=['region']
     def _leg(self,src,dst,ray):
         x=self.masks.get(tuple(dst))
@@ -51,6 +52,13 @@ class R11ArbitrationTests(unittest.TestCase):
     def test_allow_good_subgoal_with_meaningful_extra_structural_gain(self):
         out=arbitrate(**self.kw,planner=FakePlanner({self.base:0b111,self.sub:0b111},ray=0b11111111))
         self.assertEqual(out['decision'],'USE_PREDICTED_GOAL')
+    def test_bad_endpoint_viewpoint_is_rejected_even_if_pathwise_good(self):
+        p=FakePlanner({self.base:0b111111,self.sub:0b111111},
+            ray=0b111111111111,
+            endpoint_by_goal={self.base:0b111111,self.sub:0b1})
+        out=arbitrate(**self.kw,planner=p)
+        self.assertEqual(out['decision'],'KEEP_R4_GOAL')
+        self.assertEqual(out['reason'],'SAFE_WAYPOINT_ARRIVAL_VIEW_QUALITY_TOO_LOW')
     def test_reject_illusory_future_gain(self):
         out=arbitrate(**self.kw,planner=FakePlanner({self.base:0b111,self.sub:0b111},ray=0b111))
         self.assertEqual(out['reason'],'NO_MEANINGFUL_DISCOUNTED_FUTURE_STRUCTURAL_GAIN')
