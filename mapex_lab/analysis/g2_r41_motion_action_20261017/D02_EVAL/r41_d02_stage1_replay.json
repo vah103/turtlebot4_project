@@ -1,0 +1,845 @@
+{
+  "version": "G2_R41_MOTION_SEARCH_V1",
+  "status": "CONDITIONAL_MOTION_ROUTE",
+  "decision": "EXECUTE_SHORT_PREFIX_ADVISORY",
+  "observed_snapshot_sha256": "4569beac4c127dae365b8d0ec6a6901ea4ba1deb16827f8205695061bff9f728",
+  "robot_rc": [
+    171,
+    135
+  ],
+  "rejoin_anchor_rc": [
+    171,
+    135
+  ],
+  "action_sequence": [
+    {
+      "step": 1,
+      "direction": 1,
+      "from_rc": [
+        171,
+        135
+      ],
+      "to_rc": [
+        171,
+        140
+      ],
+      "distance_m": 0.5,
+      "turn_quarters": 0,
+      "new_nominal_cells_at_time_t": 31,
+      "new_conservative_cells_at_time_t": 8
+    },
+    {
+      "step": 2,
+      "direction": 0,
+      "from_rc": [
+        171,
+        140
+      ],
+      "to_rc": [
+        186,
+        140
+      ],
+      "distance_m": 1.5,
+      "turn_quarters": 1,
+      "new_nominal_cells_at_time_t": 349,
+      "new_conservative_cells_at_time_t": 174
+    },
+    {
+      "step": 3,
+      "direction": 1,
+      "from_rc": [
+        186,
+        140
+      ],
+      "to_rc": [
+        186,
+        155
+      ],
+      "distance_m": 1.5,
+      "turn_quarters": 1,
+      "new_nominal_cells_at_time_t": 85,
+      "new_conservative_cells_at_time_t": 78
+    },
+    {
+      "step": 4,
+      "direction": 0,
+      "from_rc": [
+        186,
+        155
+      ],
+      "to_rc": [
+        196,
+        155
+      ],
+      "distance_m": 1.0,
+      "turn_quarters": 1,
+      "new_nominal_cells_at_time_t": 49,
+      "new_conservative_cells_at_time_t": 119
+    },
+    {
+      "step": 5,
+      "direction": 1,
+      "from_rc": [
+        196,
+        155
+      ],
+      "to_rc": [
+        196,
+        165
+      ],
+      "distance_m": 1.0,
+      "turn_quarters": 1,
+      "new_nominal_cells_at_time_t": 27,
+      "new_conservative_cells_at_time_t": 46
+    },
+    {
+      "step": 6,
+      "direction": 1,
+      "from_rc": [
+        196,
+        165
+      ],
+      "to_rc": [
+        196,
+        180
+      ],
+      "distance_m": 1.5,
+      "turn_quarters": 0,
+      "new_nominal_cells_at_time_t": 31,
+      "new_conservative_cells_at_time_t": 32
+    },
+    {
+      "step": 7,
+      "direction": 2,
+      "from_rc": [
+        196,
+        180
+      ],
+      "to_rc": [
+        181,
+        180
+      ],
+      "distance_m": 1.5,
+      "turn_quarters": 1,
+      "new_nominal_cells_at_time_t": 16,
+      "new_conservative_cells_at_time_t": 5
+    },
+    {
+      "step": 8,
+      "direction": 3,
+      "from_rc": [
+        181,
+        180
+      ],
+      "to_rc": [
+        181,
+        175
+      ],
+      "distance_m": 0.5,
+      "turn_quarters": 1,
+      "new_nominal_cells_at_time_t": 1,
+      "new_conservative_cells_at_time_t": 0
+    },
+    {
+      "step": 9,
+      "direction": 3,
+      "from_rc": [
+        181,
+        175
+      ],
+      "to_rc": [
+        181,
+        160
+      ],
+      "distance_m": 1.5,
+      "turn_quarters": 0,
+      "new_nominal_cells_at_time_t": 1,
+      "new_conservative_cells_at_time_t": 2
+    }
+  ],
+  "route_rc": [
+    [
+      171,
+      135
+    ],
+    [
+      171,
+      136
+    ],
+    [
+      171,
+      137
+    ],
+    [
+      171,
+      138
+    ],
+    [
+      171,
+      139
+    ],
+    [
+      171,
+      140
+    ],
+    [
+      172,
+      140
+    ],
+    [
+      173,
+      140
+    ],
+    [
+      174,
+      140
+    ],
+    [
+      175,
+      140
+    ],
+    [
+      176,
+      140
+    ],
+    [
+      177,
+      140
+    ],
+    [
+      178,
+      140
+    ],
+    [
+      179,
+      140
+    ],
+    [
+      180,
+      140
+    ],
+    [
+      181,
+      140
+    ],
+    [
+      182,
+      140
+    ],
+    [
+      183,
+      140
+    ],
+    [
+      184,
+      140
+    ],
+    [
+      185,
+      140
+    ],
+    [
+      186,
+      140
+    ],
+    [
+      186,
+      141
+    ],
+    [
+      186,
+      142
+    ],
+    [
+      186,
+      143
+    ],
+    [
+      186,
+      144
+    ],
+    [
+      186,
+      145
+    ],
+    [
+      186,
+      146
+    ],
+    [
+      186,
+      147
+    ],
+    [
+      186,
+      148
+    ],
+    [
+      186,
+      149
+    ],
+    [
+      186,
+      150
+    ],
+    [
+      186,
+      151
+    ],
+    [
+      186,
+      152
+    ],
+    [
+      186,
+      153
+    ],
+    [
+      186,
+      154
+    ],
+    [
+      186,
+      155
+    ],
+    [
+      187,
+      155
+    ],
+    [
+      188,
+      155
+    ],
+    [
+      189,
+      155
+    ],
+    [
+      190,
+      155
+    ],
+    [
+      191,
+      155
+    ],
+    [
+      192,
+      155
+    ],
+    [
+      193,
+      155
+    ],
+    [
+      194,
+      155
+    ],
+    [
+      195,
+      155
+    ],
+    [
+      196,
+      155
+    ],
+    [
+      196,
+      156
+    ],
+    [
+      196,
+      157
+    ],
+    [
+      196,
+      158
+    ],
+    [
+      196,
+      159
+    ],
+    [
+      196,
+      160
+    ],
+    [
+      196,
+      161
+    ],
+    [
+      196,
+      162
+    ],
+    [
+      196,
+      163
+    ],
+    [
+      196,
+      164
+    ],
+    [
+      196,
+      165
+    ],
+    [
+      196,
+      166
+    ],
+    [
+      196,
+      167
+    ],
+    [
+      196,
+      168
+    ],
+    [
+      196,
+      169
+    ],
+    [
+      196,
+      170
+    ],
+    [
+      196,
+      171
+    ],
+    [
+      196,
+      172
+    ],
+    [
+      196,
+      173
+    ],
+    [
+      196,
+      174
+    ],
+    [
+      196,
+      175
+    ],
+    [
+      196,
+      176
+    ],
+    [
+      196,
+      177
+    ],
+    [
+      196,
+      178
+    ],
+    [
+      196,
+      179
+    ],
+    [
+      196,
+      180
+    ],
+    [
+      195,
+      180
+    ],
+    [
+      194,
+      180
+    ],
+    [
+      193,
+      180
+    ],
+    [
+      192,
+      180
+    ],
+    [
+      191,
+      180
+    ],
+    [
+      190,
+      180
+    ],
+    [
+      189,
+      180
+    ],
+    [
+      188,
+      180
+    ],
+    [
+      187,
+      180
+    ],
+    [
+      186,
+      180
+    ],
+    [
+      185,
+      180
+    ],
+    [
+      184,
+      180
+    ],
+    [
+      183,
+      180
+    ],
+    [
+      182,
+      180
+    ],
+    [
+      181,
+      180
+    ],
+    [
+      181,
+      179
+    ],
+    [
+      181,
+      178
+    ],
+    [
+      181,
+      177
+    ],
+    [
+      181,
+      176
+    ],
+    [
+      181,
+      175
+    ],
+    [
+      181,
+      174
+    ],
+    [
+      181,
+      173
+    ],
+    [
+      181,
+      172
+    ],
+    [
+      181,
+      171
+    ],
+    [
+      181,
+      170
+    ],
+    [
+      181,
+      169
+    ],
+    [
+      181,
+      168
+    ],
+    [
+      181,
+      167
+    ],
+    [
+      181,
+      166
+    ],
+    [
+      181,
+      165
+    ],
+    [
+      181,
+      164
+    ],
+    [
+      181,
+      163
+    ],
+    [
+      181,
+      162
+    ],
+    [
+      181,
+      161
+    ],
+    [
+      181,
+      160
+    ]
+  ],
+  "execution_prefix_rc": [
+    [
+      171,
+      135
+    ],
+    [
+      171,
+      136
+    ],
+    [
+      171,
+      137
+    ],
+    [
+      171,
+      138
+    ],
+    [
+      171,
+      139
+    ],
+    [
+      171,
+      140
+    ]
+  ],
+  "return_route_rc": [
+    [
+      181,
+      160
+    ],
+    [
+      181,
+      159
+    ],
+    [
+      181,
+      158
+    ],
+    [
+      181,
+      157
+    ],
+    [
+      181,
+      156
+    ],
+    [
+      181,
+      155
+    ],
+    [
+      181,
+      154
+    ],
+    [
+      181,
+      153
+    ],
+    [
+      181,
+      152
+    ],
+    [
+      181,
+      151
+    ],
+    [
+      181,
+      150
+    ],
+    [
+      181,
+      149
+    ],
+    [
+      181,
+      148
+    ],
+    [
+      181,
+      147
+    ],
+    [
+      181,
+      146
+    ],
+    [
+      181,
+      145
+    ],
+    [
+      181,
+      144
+    ],
+    [
+      181,
+      143
+    ],
+    [
+      181,
+      142
+    ],
+    [
+      181,
+      141
+    ],
+    [
+      181,
+      140
+    ],
+    [
+      181,
+      139
+    ],
+    [
+      181,
+      138
+    ],
+    [
+      181,
+      137
+    ],
+    [
+      181,
+      136
+    ],
+    [
+      181,
+      135
+    ],
+    [
+      180,
+      135
+    ],
+    [
+      179,
+      135
+    ],
+    [
+      178,
+      135
+    ],
+    [
+      177,
+      135
+    ],
+    [
+      176,
+      135
+    ],
+    [
+      175,
+      135
+    ],
+    [
+      174,
+      135
+    ],
+    [
+      173,
+      135
+    ],
+    [
+      172,
+      135
+    ],
+    [
+      171,
+      135
+    ]
+  ],
+  "distance_outbound_m": 10.5,
+  "distance_return_m": 3.5,
+  "nominal_unknown_union_cells": 609,
+  "conservative_unknown_union_cells": 479,
+  "weighted_structural_value": 693.0109,
+  "objective": 660.2109,
+  "conservative_objective": 565.601,
+  "search": {
+    "depths": [
+      {
+        "depth": 1,
+        "survivors": 10,
+        "best_score": 348.402,
+        "best_conservative_score": 165.738
+      },
+      {
+        "depth": 2,
+        "survivors": 12,
+        "best_score": 484.489,
+        "best_conservative_score": 331.446
+      },
+      {
+        "depth": 3,
+        "survivors": 12,
+        "best_score": 550.846,
+        "best_conservative_score": 428.437
+      },
+      {
+        "depth": 4,
+        "survivors": 12,
+        "best_score": 596.223,
+        "best_conservative_score": 512.288
+      },
+      {
+        "depth": 5,
+        "survivors": 12,
+        "best_score": 629.067,
+        "best_conservative_score": 530.62
+      },
+      {
+        "depth": 6,
+        "survivors": 12,
+        "best_score": 641.468,
+        "best_conservative_score": 543.873
+      },
+      {
+        "depth": 7,
+        "survivors": 12,
+        "best_score": 649.626,
+        "best_conservative_score": 552.571
+      },
+      {
+        "depth": 8,
+        "survivors": 12,
+        "best_score": 649.354,
+        "best_conservative_score": 554.474
+      },
+      {
+        "depth": 9,
+        "survivors": 12,
+        "best_score": 650.887,
+        "best_conservative_score": 559.585
+      }
+    ],
+    "expansions": 665,
+    "coarse_scan_poses": 78,
+    "dense_scan_poses": 39,
+    "shortlisted_dense": 10,
+    "end_reason": "MAX_SEARCH_DEPTH",
+    "elapsed_s": 2.092
+  },
+  "model_calls_increment": 0,
+  "ground_truth_used": false,
+  "future_observation_used": false,
+  "source_r3_goals_used": false,
+  "fixed_goal_count": false,
+  "robot_command": null,
+  "policy_action": null,
+  "physical_safety_certified": false,
+  "native_mapex_rejoin_verified": false,
+  "cautions": [
+    "Movement always stays in observed free (inflation proxy), not predicted-free",
+    "Remaining modeled route is conditional; only execution prefix is a proposal",
+    "Return path anchor must be externally supplied to establish real MapEx handoff",
+    "Scores and LaMa scenarios are uncalibrated proxies",
+    "No intermediate observations simulated by this R4.1 planner"
+  ]
+}
