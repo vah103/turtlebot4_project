@@ -161,7 +161,7 @@ class Service:
                 obs,mean,var,semantic,robot,a['memory'].mission,
                 baseline=selected_goal,previous=a.get('predicted_target'),
                 native_walkable=native_walkable,
-                return_candidates=True,candidate_limit=4)
+                return_candidates=True,candidate_limit=8)
             accepted=[]
             for candidate in predicted_candidates:
                 verdict=arbitrate(
