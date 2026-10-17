@@ -1,0 +1,2521 @@
+{
+  "schema": "R11_STRUCTURAL_PREDICTED_NATIVE_COMPARE_V1",
+  "eval_roi": "frozen D02 initial RoomNode mask",
+  "initial_unknown": 3889,
+  "room_cells": 6564,
+  "tick0": 12,
+  "resolution_m": 0.1,
+  "source_obs_sha256": "de96490d2c94ca0b10ff7f359b2b8fe3b4bc9a8d5656194b9ceec8c13c539b23",
+  "goal_exact_cell_tolerance": "0 cell, executable waypoint ONLY; speculative goal never commands native unknown motion",
+  "arms": {
+    "Run11_G2_R4_structural_predicted": {
+      "source_dir": "/home/dell/mx072_g2_r4_structural_predicted_run11_20261017/native_g2_r4_structural_predicted_run11/G2_R4_STRUCTURAL_PREDICTED_RUN11_visvarprob",
+      "native_final_tick": 1016,
+      "native_odom_length": 1017,
+      "total_distance_from_start_m": 285.471,
+      "total_distance_after_D02_m": 282.1,
+      "initial_D02_observed_map_mismatch_cells": 0,
+      "last_remaining_D02_unknown": 258,
+      "milestones": {
+        "2000": {
+          "tick": 23,
+          "remaining_unknown": 1448,
+          "ticks_from_D02": 11,
+          "meters_from_D02": 2.6889,
+          "nominal_travel_seconds_at_0_3mps": 8.963
+        },
+        "1000": {
+          "tick": 26,
+          "remaining_unknown": 964,
+          "ticks_from_D02": 14,
+          "meters_from_D02": 3.5125,
+          "nominal_travel_seconds_at_0_3mps": 11.708
+        },
+        "900": {
+          "tick": 58,
+          "remaining_unknown": 883,
+          "ticks_from_D02": 46,
+          "meters_from_D02": 12.2249,
+          "nominal_travel_seconds_at_0_3mps": 40.75
+        },
+        "600": {
+          "tick": 78,
+          "remaining_unknown": 505,
+          "ticks_from_D02": 66,
+          "meters_from_D02": 17.9957,
+          "nominal_travel_seconds_at_0_3mps": 59.986
+        },
+        "400": {
+          "tick": 81,
+          "remaining_unknown": 394,
+          "ticks_from_D02": 69,
+          "meters_from_D02": 18.8193,
+          "nominal_travel_seconds_at_0_3mps": 62.731
+        },
+        "342": {
+          "tick": 93,
+          "remaining_unknown": 341,
+          "ticks_from_D02": 81,
+          "meters_from_D02": 21.8846,
+          "nominal_travel_seconds_at_0_3mps": 72.949
+        },
+        "320": {
+          "tick": 100,
+          "remaining_unknown": 316,
+          "ticks_from_D02": 88,
+          "meters_from_D02": 23.7554,
+          "nominal_travel_seconds_at_0_3mps": 79.185
+        },
+        "270": {
+          "tick": 105,
+          "remaining_unknown": 269,
+          "ticks_from_D02": 93,
+          "meters_from_D02": 25.079,
+          "nominal_travel_seconds_at_0_3mps": 83.597
+        }
+      },
+      "trace_every50": [
+        {
+          "tick": 50,
+          "remaining_unknown": 904,
+          "meters_from_D02": 10.101
+        },
+        {
+          "tick": 100,
+          "remaining_unknown": 316,
+          "meters_from_D02": 23.755
+        },
+        {
+          "tick": 150,
+          "remaining_unknown": 261,
+          "meters_from_D02": 37.739
+        },
+        {
+          "tick": 200,
+          "remaining_unknown": 261,
+          "meters_from_D02": 52.433
+        },
+        {
+          "tick": 250,
+          "remaining_unknown": 261,
+          "meters_from_D02": 65.734
+        },
+        {
+          "tick": 300,
+          "remaining_unknown": 261,
+          "meters_from_D02": 80.123
+        },
+        {
+          "tick": 350,
+          "remaining_unknown": 261,
+          "meters_from_D02": 93.895
+        },
+        {
+          "tick": 400,
+          "remaining_unknown": 261,
+          "meters_from_D02": 108.337
+        },
+        {
+          "tick": 450,
+          "remaining_unknown": 261,
+          "meters_from_D02": 122.373
+        },
+        {
+          "tick": 500,
+          "remaining_unknown": 261,
+          "meters_from_D02": 135.921
+        },
+        {
+          "tick": 550,
+          "remaining_unknown": 261,
+          "meters_from_D02": 149.499
+        },
+        {
+          "tick": 600,
+          "remaining_unknown": 261,
+          "meters_from_D02": 163.353
+        },
+        {
+          "tick": 650,
+          "remaining_unknown": 261,
+          "meters_from_D02": 177.237
+        },
+        {
+          "tick": 700,
+          "remaining_unknown": 261,
+          "meters_from_D02": 191.755
+        },
+        {
+          "tick": 750,
+          "remaining_unknown": 261,
+          "meters_from_D02": 206.525
+        },
+        {
+          "tick": 800,
+          "remaining_unknown": 261,
+          "meters_from_D02": 220.661
+        },
+        {
+          "tick": 850,
+          "remaining_unknown": 259,
+          "meters_from_D02": 234.974
+        },
+        {
+          "tick": 900,
+          "remaining_unknown": 258,
+          "meters_from_D02": 249.516
+        },
+        {
+          "tick": 950,
+          "remaining_unknown": 258,
+          "meters_from_D02": 263.828
+        },
+        {
+          "tick": 1000,
+          "remaining_unknown": 258,
+          "meters_from_D02": 277.529
+        }
+      ],
+      "goal_decisions": [
+        {
+          "decision": 2,
+          "tick": 12,
+          "room_id": 1,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 3889,
+          "goal_rc_global": [
+            671,
+            635
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 7.1632,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 28,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 3,
+          "tick": 28,
+          "room_id": 1,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 944,
+          "goal_rc_global": [
+            679,
+            603
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 12.542,
+          "goal_receipt": "COMPLETED_GOAL_OBS_4054",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 52,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 4,
+          "tick": 52,
+          "room_id": 1,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 901,
+          "goal_rc_global": [
+            695,
+            699
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 0.39,
+          "goal_receipt": "COMPLETED_GOAL_OBS_46",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 185,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 17.0012
+        },
+        {
+          "decision": 7,
+          "tick": 185,
+          "room_id": 2,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 3125,
+          "goal_rc_global": [
+            509,
+            693
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 10.2894,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 193,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 8,
+          "tick": 193,
+          "room_id": 2,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 2745,
+          "goal_rc_global": [
+            525,
+            757
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 9.3065,
+          "goal_receipt": "COMPLETED_GOAL_OBS_563",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 223,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 9,
+          "tick": 223,
+          "room_id": 2,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 605,
+          "goal_rc_global": [
+            573,
+            729
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 6.4327,
+          "goal_receipt": "COMPLETED_GOAL_OBS_2337",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 249,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 10,
+          "tick": 249,
+          "room_id": 2,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 59,
+          "goal_rc_global": [
+            505,
+            645
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 5.6501,
+          "goal_receipt": "COMPLETED_GOAL_OBS_600",
+          "r4_reason": "NO_POSITIVE_ROBUST_ROOM_CHAIN",
+          "next_G2_tick": 372,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 6.3812
+        },
+        {
+          "decision": 12,
+          "tick": 372,
+          "room_id": 3,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 3379,
+          "goal_rc_global": [
+            527,
+            587
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 5.7075,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 391,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 13,
+          "tick": 391,
+          "room_id": 3,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 2162,
+          "goal_rc_global": [
+            507,
+            615
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 0.1992,
+          "goal_receipt": "COMPLETED_GOAL_OBS_1779",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 415,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 14,
+          "tick": 415,
+          "room_id": 3,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 2070,
+          "goal_rc_global": [
+            539,
+            559
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 5.7121,
+          "goal_receipt": "COMPLETED_GOAL_OBS_146",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 483,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 2.5495
+        },
+        {
+          "decision": 16,
+          "tick": 483,
+          "room_id": 4,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 859,
+          "goal_rc_global": [
+            524,
+            516
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 7.6972,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 502,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 17,
+          "tick": 502,
+          "room_id": 4,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 72,
+          "goal_rc_global": [
+            580,
+            532
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 2.5489,
+          "goal_receipt": "COMPLETED_GOAL_OBS_881",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 583,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 7.5802
+        },
+        {
+          "decision": 19,
+          "tick": 583,
+          "room_id": 5,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 1281,
+          "goal_rc_global": [
+            647,
+            515
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 8.4213,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 595,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 20,
+          "tick": 595,
+          "room_id": 5,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 92,
+          "goal_rc_global": [
+            683,
+            535
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 0.2142,
+          "goal_receipt": "COMPLETED_GOAL_OBS_1406",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 623,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 21,
+          "tick": 623,
+          "room_id": 5,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 55,
+          "goal_rc_global": [
+            639,
+            511
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 3.1667,
+          "goal_receipt": "COMPLETED_GOAL_OBS_37",
+          "r4_reason": "No usable structural chain in safe candidate/search budget; unresolved obligations retained",
+          "next_G2_tick": 774,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 23.6846
+        },
+        {
+          "decision": 23,
+          "tick": 774,
+          "room_id": 6,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 47,
+          "goal_rc_global": [
+            679,
+            747
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 1.5142,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 1016,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 23.9719
+        }
+      ],
+      "primary_decisions": 26,
+      "G2_exact_visited": 16,
+      "G2_goal_count": 16,
+      "G2_completion_receipts": 10,
+      "G2_invalidated_receipts": 0,
+      "time_components_until_270": {
+        "prediction_s": 2.627,
+        "room_native_scoring_s": 1.696,
+        "G2_policy_s": 20.095,
+        "travel_plus_recorded_compute_s_proxy": 108.015
+      }
+    },
+    "Run04_RoomNode_MapEx": {
+      "source_dir": "/home/dell/mx072_native2d_pair_20261015/OPTIMIZED_FULL_PAIR_20261015/COM1_VERIFIED/native_opt_r41_lama3small_run04/R41_OPT_LAMA3_SMALLROI_RUN04_visvarprob",
+      "native_final_tick": 708,
+      "native_odom_length": 709,
+      "total_distance_from_start_m": 199.108,
+      "total_distance_after_D02_m": 195.737,
+      "initial_D02_observed_map_mismatch_cells": 0,
+      "last_remaining_D02_unknown": 260,
+      "milestones": {
+        "2000": {
+          "tick": 23,
+          "remaining_unknown": 1448,
+          "ticks_from_D02": 11,
+          "meters_from_D02": 2.6889,
+          "nominal_travel_seconds_at_0_3mps": 8.963
+        },
+        "1000": {
+          "tick": 25,
+          "remaining_unknown": 877,
+          "ticks_from_D02": 13,
+          "meters_from_D02": 3.2889,
+          "nominal_travel_seconds_at_0_3mps": 10.963
+        },
+        "900": {
+          "tick": 25,
+          "remaining_unknown": 877,
+          "ticks_from_D02": 13,
+          "meters_from_D02": 3.2889,
+          "nominal_travel_seconds_at_0_3mps": 10.963
+        },
+        "600": {
+          "tick": 34,
+          "remaining_unknown": 595,
+          "ticks_from_D02": 22,
+          "meters_from_D02": 5.7597,
+          "nominal_travel_seconds_at_0_3mps": 19.199
+        },
+        "400": {
+          "tick": 78,
+          "remaining_unknown": 400,
+          "ticks_from_D02": 66,
+          "meters_from_D02": 17.9666,
+          "nominal_travel_seconds_at_0_3mps": 59.889
+        },
+        "342": {
+          "tick": 89,
+          "remaining_unknown": 334,
+          "ticks_from_D02": 77,
+          "meters_from_D02": 21.1902,
+          "nominal_travel_seconds_at_0_3mps": 70.634
+        },
+        "320": {
+          "tick": 92,
+          "remaining_unknown": 310,
+          "ticks_from_D02": 80,
+          "meters_from_D02": 22.0902,
+          "nominal_travel_seconds_at_0_3mps": 73.634
+        },
+        "270": {
+          "tick": 102,
+          "remaining_unknown": 269,
+          "ticks_from_D02": 90,
+          "meters_from_D02": 24.861,
+          "nominal_travel_seconds_at_0_3mps": 82.87
+        }
+      },
+      "trace_every50": [
+        {
+          "tick": 50,
+          "remaining_unknown": 426,
+          "meters_from_D02": 10.407
+        },
+        {
+          "tick": 100,
+          "remaining_unknown": 275,
+          "meters_from_D02": 24.414
+        },
+        {
+          "tick": 150,
+          "remaining_unknown": 269,
+          "meters_from_D02": 38.497
+        },
+        {
+          "tick": 200,
+          "remaining_unknown": 269,
+          "meters_from_D02": 51.511
+        },
+        {
+          "tick": 250,
+          "remaining_unknown": 269,
+          "meters_from_D02": 66.129
+        },
+        {
+          "tick": 300,
+          "remaining_unknown": 269,
+          "meters_from_D02": 80.136
+        },
+        {
+          "tick": 350,
+          "remaining_unknown": 269,
+          "meters_from_D02": 94.83
+        },
+        {
+          "tick": 400,
+          "remaining_unknown": 269,
+          "meters_from_D02": 108.913
+        },
+        {
+          "tick": 450,
+          "remaining_unknown": 269,
+          "meters_from_D02": 122.844
+        },
+        {
+          "tick": 500,
+          "remaining_unknown": 269,
+          "meters_from_D02": 136.011
+        },
+        {
+          "tick": 550,
+          "remaining_unknown": 269,
+          "meters_from_D02": 150.323
+        },
+        {
+          "tick": 600,
+          "remaining_unknown": 269,
+          "meters_from_D02": 164.33
+        },
+        {
+          "tick": 650,
+          "remaining_unknown": 260,
+          "meters_from_D02": 179.177
+        },
+        {
+          "tick": 700,
+          "remaining_unknown": 260,
+          "meters_from_D02": 193.337
+        }
+      ],
+      "goal_decisions": [],
+      "primary_decisions": 25,
+      "G2_exact_visited": 0,
+      "G2_goal_count": 0,
+      "G2_completion_receipts": 0,
+      "G2_invalidated_receipts": 0,
+      "time_components_until_270": {
+        "prediction_s": 4.098,
+        "room_native_scoring_s": 2.701,
+        "G2_policy_s": 0,
+        "travel_plus_recorded_compute_s_proxy": 89.669
+      }
+    },
+    "Run05_plain_MapEx": {
+      "source_dir": "/home/dell/mx072_native2d_pair_20261015/OPTIMIZED_FULL_PAIR_20261015/COM1_VERIFIED/native_plain_lama3small_run05/MAPEX_PLAIN_LAMA3SMALL_RUN05_visvarprob",
+      "native_final_tick": 1297,
+      "native_odom_length": 1298,
+      "total_distance_from_start_m": 369.696,
+      "total_distance_after_D02_m": 366.325,
+      "initial_D02_observed_map_mismatch_cells": 0,
+      "last_remaining_D02_unknown": 260,
+      "milestones": {
+        "2000": {
+          "tick": 281,
+          "remaining_unknown": 1978,
+          "ticks_from_D02": 269,
+          "meters_from_D02": 76.6512,
+          "nominal_travel_seconds_at_0_3mps": 255.504
+        },
+        "1000": {
+          "tick": 310,
+          "remaining_unknown": 918,
+          "ticks_from_D02": 298,
+          "meters_from_D02": 84.2817,
+          "nominal_travel_seconds_at_0_3mps": 280.939
+        },
+        "900": {
+          "tick": 317,
+          "remaining_unknown": 900,
+          "ticks_from_D02": 305,
+          "meters_from_D02": 86.3053,
+          "nominal_travel_seconds_at_0_3mps": 287.684
+        },
+        "600": {
+          "tick": 335,
+          "remaining_unknown": 569,
+          "ticks_from_D02": 323,
+          "meters_from_D02": 91.3233,
+          "nominal_travel_seconds_at_0_3mps": 304.411
+        },
+        "400": {
+          "tick": 337,
+          "remaining_unknown": 301,
+          "ticks_from_D02": 325,
+          "meters_from_D02": 91.9233,
+          "nominal_travel_seconds_at_0_3mps": 306.411
+        },
+        "342": {
+          "tick": 337,
+          "remaining_unknown": 301,
+          "ticks_from_D02": 325,
+          "meters_from_D02": 91.9233,
+          "nominal_travel_seconds_at_0_3mps": 306.411
+        },
+        "320": {
+          "tick": 337,
+          "remaining_unknown": 301,
+          "ticks_from_D02": 325,
+          "meters_from_D02": 91.9233,
+          "nominal_travel_seconds_at_0_3mps": 306.411
+        },
+        "270": {
+          "tick": 767,
+          "remaining_unknown": 268,
+          "ticks_from_D02": 755,
+          "meters_from_D02": 213.5132,
+          "nominal_travel_seconds_at_0_3mps": 711.711
+        }
+      },
+      "trace_every50": [
+        {
+          "tick": 50,
+          "remaining_unknown": 3773,
+          "meters_from_D02": 11.247
+        },
+        {
+          "tick": 100,
+          "remaining_unknown": 3245,
+          "meters_from_D02": 25.407
+        },
+        {
+          "tick": 150,
+          "remaining_unknown": 3001,
+          "meters_from_D02": 39.796
+        },
+        {
+          "tick": 200,
+          "remaining_unknown": 3001,
+          "meters_from_D02": 53.726
+        },
+        {
+          "tick": 250,
+          "remaining_unknown": 2966,
+          "meters_from_D02": 67.886
+        },
+        {
+          "tick": 300,
+          "remaining_unknown": 1644,
+          "meters_from_D02": 81.664
+        },
+        {
+          "tick": 350,
+          "remaining_unknown": 277,
+          "meters_from_D02": 95.594
+        },
+        {
+          "tick": 400,
+          "remaining_unknown": 277,
+          "meters_from_D02": 109.525
+        },
+        {
+          "tick": 450,
+          "remaining_unknown": 277,
+          "meters_from_D02": 123.99
+        },
+        {
+          "tick": 500,
+          "remaining_unknown": 277,
+          "meters_from_D02": 138.073
+        },
+        {
+          "tick": 550,
+          "remaining_unknown": 277,
+          "meters_from_D02": 151.698
+        },
+        {
+          "tick": 600,
+          "remaining_unknown": 277,
+          "meters_from_D02": 166.163
+        },
+        {
+          "tick": 650,
+          "remaining_unknown": 277,
+          "meters_from_D02": 180.247
+        },
+        {
+          "tick": 700,
+          "remaining_unknown": 277,
+          "meters_from_D02": 194.635
+        },
+        {
+          "tick": 750,
+          "remaining_unknown": 272,
+          "meters_from_D02": 208.49
+        },
+        {
+          "tick": 800,
+          "remaining_unknown": 260,
+          "meters_from_D02": 222.726
+        },
+        {
+          "tick": 850,
+          "remaining_unknown": 260,
+          "meters_from_D02": 237.267
+        },
+        {
+          "tick": 900,
+          "remaining_unknown": 260,
+          "meters_from_D02": 251.656
+        },
+        {
+          "tick": 950,
+          "remaining_unknown": 260,
+          "meters_from_D02": 265.587
+        },
+        {
+          "tick": 1000,
+          "remaining_unknown": 260,
+          "meters_from_D02": 279.67
+        },
+        {
+          "tick": 1050,
+          "remaining_unknown": 260,
+          "meters_from_D02": 294.517
+        },
+        {
+          "tick": 1100,
+          "remaining_unknown": 260,
+          "meters_from_D02": 309.288
+        },
+        {
+          "tick": 1150,
+          "remaining_unknown": 260,
+          "meters_from_D02": 323.677
+        },
+        {
+          "tick": 1200,
+          "remaining_unknown": 260,
+          "meters_from_D02": 338.218
+        },
+        {
+          "tick": 1250,
+          "remaining_unknown": 260,
+          "meters_from_D02": 352.454
+        }
+      ],
+      "goal_decisions": [],
+      "primary_decisions": 0,
+      "G2_exact_visited": 0,
+      "G2_goal_count": 0,
+      "G2_completion_receipts": 0,
+      "G2_invalidated_receipts": 0,
+      "time_components_until_270": {
+        "prediction_s": 32.194,
+        "room_native_scoring_s": 0,
+        "G2_policy_s": 0,
+        "travel_plus_recorded_compute_s_proxy": 743.905
+      }
+    },
+    "Run07_G2_R4_1m": {
+      "source_dir": "/home/dell/mx072_g2_r4_native_com1_run07_20261017/native_g2_r4_full_run07/G2_R4_GOALCHAIN_RUN07_visvarprob",
+      "native_final_tick": 1192,
+      "native_odom_length": 1193,
+      "total_distance_from_start_m": 340.182,
+      "total_distance_after_D02_m": 336.812,
+      "initial_D02_observed_map_mismatch_cells": 0,
+      "last_remaining_D02_unknown": 259,
+      "milestones": {
+        "2000": {
+          "tick": 23,
+          "remaining_unknown": 1448,
+          "ticks_from_D02": 11,
+          "meters_from_D02": 2.6889,
+          "nominal_travel_seconds_at_0_3mps": 8.963
+        },
+        "1000": {
+          "tick": 26,
+          "remaining_unknown": 964,
+          "ticks_from_D02": 14,
+          "meters_from_D02": 3.5125,
+          "nominal_travel_seconds_at_0_3mps": 11.708
+        },
+        "900": {
+          "tick": 30,
+          "remaining_unknown": 870,
+          "ticks_from_D02": 18,
+          "meters_from_D02": 4.6361,
+          "nominal_travel_seconds_at_0_3mps": 15.454
+        },
+        "600": {
+          "tick": 31,
+          "remaining_unknown": 537,
+          "ticks_from_D02": 19,
+          "meters_from_D02": 4.8597,
+          "nominal_travel_seconds_at_0_3mps": 16.199
+        },
+        "400": {
+          "tick": 41,
+          "remaining_unknown": 392,
+          "ticks_from_D02": 29,
+          "meters_from_D02": 7.3249,
+          "nominal_travel_seconds_at_0_3mps": 24.416
+        },
+        "342": {
+          "tick": 54,
+          "remaining_unknown": 342,
+          "ticks_from_D02": 42,
+          "meters_from_D02": 10.6902,
+          "nominal_travel_seconds_at_0_3mps": 35.634
+        },
+        "320": {
+          "tick": 91,
+          "remaining_unknown": 320,
+          "ticks_from_D02": 79,
+          "meters_from_D02": 21.1026,
+          "nominal_travel_seconds_at_0_3mps": 70.342
+        },
+        "270": {
+          "tick": 625,
+          "remaining_unknown": 259,
+          "ticks_from_D02": 613,
+          "meters_from_D02": 173.205,
+          "nominal_travel_seconds_at_0_3mps": 577.35
+        }
+      },
+      "trace_every50": [
+        {
+          "tick": 50,
+          "remaining_unknown": 358,
+          "meters_from_D02": 9.719
+        },
+        {
+          "tick": 100,
+          "remaining_unknown": 310,
+          "meters_from_D02": 23.497
+        },
+        {
+          "tick": 150,
+          "remaining_unknown": 310,
+          "meters_from_D02": 38.191
+        },
+        {
+          "tick": 200,
+          "remaining_unknown": 310,
+          "meters_from_D02": 52.046
+        },
+        {
+          "tick": 250,
+          "remaining_unknown": 310,
+          "meters_from_D02": 66.052
+        },
+        {
+          "tick": 300,
+          "remaining_unknown": 284,
+          "meters_from_D02": 80.9
+        },
+        {
+          "tick": 350,
+          "remaining_unknown": 284,
+          "meters_from_D02": 95.212
+        },
+        {
+          "tick": 400,
+          "remaining_unknown": 284,
+          "meters_from_D02": 109.372
+        },
+        {
+          "tick": 450,
+          "remaining_unknown": 284,
+          "meters_from_D02": 123.226
+        },
+        {
+          "tick": 500,
+          "remaining_unknown": 284,
+          "meters_from_D02": 137.768
+        },
+        {
+          "tick": 550,
+          "remaining_unknown": 280,
+          "meters_from_D02": 151.698
+        },
+        {
+          "tick": 600,
+          "remaining_unknown": 280,
+          "meters_from_D02": 166.163
+        },
+        {
+          "tick": 650,
+          "remaining_unknown": 259,
+          "meters_from_D02": 180.629
+        },
+        {
+          "tick": 700,
+          "remaining_unknown": 259,
+          "meters_from_D02": 194.483
+        },
+        {
+          "tick": 750,
+          "remaining_unknown": 259,
+          "meters_from_D02": 208.872
+        },
+        {
+          "tick": 800,
+          "remaining_unknown": 259,
+          "meters_from_D02": 223.642
+        },
+        {
+          "tick": 850,
+          "remaining_unknown": 259,
+          "meters_from_D02": 238.108
+        },
+        {
+          "tick": 900,
+          "remaining_unknown": 259,
+          "meters_from_D02": 252.496
+        },
+        {
+          "tick": 950,
+          "remaining_unknown": 259,
+          "meters_from_D02": 266.656
+        },
+        {
+          "tick": 1000,
+          "remaining_unknown": 259,
+          "meters_from_D02": 281.121
+        },
+        {
+          "tick": 1050,
+          "remaining_unknown": 259,
+          "meters_from_D02": 295.816
+        },
+        {
+          "tick": 1100,
+          "remaining_unknown": 259,
+          "meters_from_D02": 310.281
+        },
+        {
+          "tick": 1150,
+          "remaining_unknown": 259,
+          "meters_from_D02": 324.746
+        }
+      ],
+      "goal_decisions": [
+        {
+          "decision": 2,
+          "tick": 12,
+          "room_id": 1,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 3889,
+          "goal_rc_global": [
+            671,
+            635
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 7.1098,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 25,
+          "min_residual_m_before_next_G2": 0.728,
+          "reached_exact_pixel_before_next_G2": false,
+          "distance_at_next_G2_m": 0.728
+        },
+        {
+          "decision": 3,
+          "tick": 25,
+          "room_id": 1,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 1103,
+          "goal_rc_global": [
+            697,
+            696
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 10.9455,
+          "goal_receipt": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 54,
+          "min_residual_m_before_next_G2": 0.728,
+          "reached_exact_pixel_before_next_G2": false,
+          "distance_at_next_G2_m": 0.728
+        },
+        {
+          "decision": 4,
+          "tick": 54,
+          "room_id": 1,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 342,
+          "goal_rc_global": [
+            691,
+            605
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 10.4103,
+          "goal_receipt": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 95,
+          "min_residual_m_before_next_G2": 0.9,
+          "reached_exact_pixel_before_next_G2": false,
+          "distance_at_next_G2_m": 0.9
+        },
+        {
+          "decision": 5,
+          "tick": 95,
+          "room_id": 1,
+          "g2_decision": "DEFER",
+          "original_room_unknown": 320,
+          "goal_rc_global": null,
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 8.1345,
+          "goal_receipt": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT",
+          "r4_reason": "NO_POSITIVE_ROBUST_ROOM_CHAIN"
+        },
+        {
+          "decision": 7,
+          "tick": 182,
+          "room_id": 2,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 619,
+          "goal_rc_global": [
+            532,
+            504
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 3.5788,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 190,
+          "min_residual_m_before_next_G2": 0.8,
+          "reached_exact_pixel_before_next_G2": false,
+          "distance_at_next_G2_m": 0.8
+        },
+        {
+          "decision": 8,
+          "tick": 190,
+          "room_id": 2,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 121,
+          "goal_rc_global": [
+            524,
+            512
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 1.8312,
+          "goal_receipt": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 191,
+          "min_residual_m_before_next_G2": 0.5,
+          "reached_exact_pixel_before_next_G2": false,
+          "distance_at_next_G2_m": 0.5
+        },
+        {
+          "decision": 9,
+          "tick": 191,
+          "room_id": 2,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 83,
+          "goal_rc_global": [
+            517,
+            512
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 1.9809,
+          "goal_receipt": "COMPLETED_GOAL_OBS_38",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 192,
+          "min_residual_m_before_next_G2": 0.9,
+          "reached_exact_pixel_before_next_G2": false,
+          "distance_at_next_G2_m": 0.9
+        },
+        {
+          "decision": 10,
+          "tick": 192,
+          "room_id": 2,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 43,
+          "goal_rc_global": [
+            518,
+            512
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 1.8352,
+          "goal_receipt": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 303,
+          "min_residual_m_before_next_G2": 0.5,
+          "reached_exact_pixel_before_next_G2": false,
+          "distance_at_next_G2_m": 20.3
+        },
+        {
+          "decision": 13,
+          "tick": 303,
+          "room_id": 3,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 1176,
+          "goal_rc_global": [
+            514,
+            751
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 12.663,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 314,
+          "min_residual_m_before_next_G2": 0.7,
+          "reached_exact_pixel_before_next_G2": false,
+          "distance_at_next_G2_m": 0.7
+        },
+        {
+          "decision": 14,
+          "tick": 314,
+          "room_id": 3,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 240,
+          "goal_rc_global": [
+            562,
+            732
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 15.9721,
+          "goal_receipt": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 334,
+          "min_residual_m_before_next_G2": 0.7071,
+          "reached_exact_pixel_before_next_G2": false,
+          "distance_at_next_G2_m": 0.7071
+        },
+        {
+          "decision": 15,
+          "tick": 334,
+          "room_id": 3,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 193,
+          "goal_rc_global": [
+            563,
+            735
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 9.3102,
+          "goal_receipt": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 335,
+          "min_residual_m_before_next_G2": 0.6403,
+          "reached_exact_pixel_before_next_G2": false,
+          "distance_at_next_G2_m": 0.6403
+        },
+        {
+          "decision": 16,
+          "tick": 335,
+          "room_id": 3,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 193,
+          "goal_rc_global": [
+            506,
+            643
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 13.7471,
+          "goal_receipt": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 394,
+          "min_residual_m_before_next_G2": 0.7,
+          "reached_exact_pixel_before_next_G2": false,
+          "distance_at_next_G2_m": 0.7
+        },
+        {
+          "decision": 17,
+          "tick": 394,
+          "room_id": 3,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 101,
+          "goal_rc_global": [
+            562,
+            730
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 4.5156,
+          "goal_receipt": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 452,
+          "min_residual_m_before_next_G2": 0.7071,
+          "reached_exact_pixel_before_next_G2": false,
+          "distance_at_next_G2_m": 0.7071
+        },
+        {
+          "decision": 18,
+          "tick": 452,
+          "room_id": 3,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 101,
+          "goal_rc_global": [
+            563,
+            727
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 2.8724,
+          "goal_receipt": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 453,
+          "min_residual_m_before_next_G2": 0.6403,
+          "reached_exact_pixel_before_next_G2": false,
+          "distance_at_next_G2_m": 0.6403
+        },
+        {
+          "decision": 19,
+          "tick": 453,
+          "room_id": 3,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 101,
+          "goal_rc_global": [
+            562,
+            727
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 2.5804,
+          "goal_receipt": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 454,
+          "min_residual_m_before_next_G2": 0.4123,
+          "reached_exact_pixel_before_next_G2": false,
+          "distance_at_next_G2_m": 0.4123
+        },
+        {
+          "decision": 20,
+          "tick": 454,
+          "room_id": 3,
+          "g2_decision": "DEFER",
+          "original_room_unknown": 101,
+          "goal_rc_global": null,
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 3.2276,
+          "goal_receipt": "COMPLETED_GOAL_OBS_73",
+          "r4_reason": "No usable structural chain in safe candidate/search budget; unresolved obligations retained"
+        },
+        {
+          "decision": 21,
+          "tick": 574,
+          "room_id": 4,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 109,
+          "goal_rc_global": [
+            681,
+            743
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 2.9751,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 583,
+          "min_residual_m_before_next_G2": 0.9849,
+          "reached_exact_pixel_before_next_G2": false,
+          "distance_at_next_G2_m": 0.9849
+        },
+        {
+          "decision": 22,
+          "tick": 583,
+          "room_id": 4,
+          "g2_decision": "DEFER",
+          "original_room_unknown": 11,
+          "goal_rc_global": null,
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 0.0486,
+          "goal_receipt": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT",
+          "r4_reason": "No usable structural chain in safe candidate/search budget; unresolved obligations retained"
+        },
+        {
+          "decision": 23,
+          "tick": 691,
+          "room_id": 5,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 779,
+          "goal_rc_global": [
+            648,
+            507
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 8.2675,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 712,
+          "min_residual_m_before_next_G2": 0.9,
+          "reached_exact_pixel_before_next_G2": false,
+          "distance_at_next_G2_m": 0.9
+        },
+        {
+          "decision": 24,
+          "tick": 712,
+          "room_id": 5,
+          "g2_decision": "DEFER",
+          "original_room_unknown": 73,
+          "goal_rc_global": null,
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 2.7313,
+          "goal_receipt": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT",
+          "r4_reason": "No usable structural chain in safe candidate/search budget; unresolved obligations retained"
+        },
+        {
+          "decision": 25,
+          "tick": 780,
+          "room_id": 6,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 215,
+          "goal_rc_global": [
+            517,
+            617
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 5.4031,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 806,
+          "min_residual_m_before_next_G2": 0.8944,
+          "reached_exact_pixel_before_next_G2": false,
+          "distance_at_next_G2_m": 0.8944
+        },
+        {
+          "decision": 26,
+          "tick": 806,
+          "room_id": 6,
+          "g2_decision": "DEFER",
+          "original_room_unknown": 72,
+          "goal_rc_global": null,
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 3.6679,
+          "goal_receipt": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT",
+          "r4_reason": "NO_POSITIVE_ROBUST_ROOM_CHAIN"
+        },
+        {
+          "decision": 30,
+          "tick": 1159,
+          "room_id": 10,
+          "g2_decision": "DEFER",
+          "original_room_unknown": 64,
+          "goal_rc_global": null,
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 3.3797,
+          "goal_receipt": "NO_PRIOR_GOAL;G2_SELECTED_GOAL_INVALID_NO_LONGER_USEFUL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON"
+        }
+      ],
+      "primary_decisions": 30,
+      "G2_exact_visited": 0,
+      "G2_goal_count": 17,
+      "G2_completion_receipts": 2,
+      "G2_invalidated_receipts": 14,
+      "time_components_until_270": {
+        "prediction_s": 17.535,
+        "room_native_scoring_s": 14.921,
+        "G2_policy_s": 113.738,
+        "travel_plus_recorded_compute_s_proxy": 723.544
+      }
+    },
+    "Run08_G2_R4_exact": {
+      "source_dir": "/home/dell/mx072_g2_r4_exact_run08_com1_20261017/native_g2_r4_goal_exact_run08/G2_R4_EXACT_GOAL_RUN08_visvarprob",
+      "native_final_tick": 1098,
+      "native_odom_length": 1099,
+      "total_distance_from_start_m": 310.183,
+      "total_distance_after_D02_m": 306.812,
+      "initial_D02_observed_map_mismatch_cells": 0,
+      "last_remaining_D02_unknown": 258,
+      "milestones": {
+        "2000": {
+          "tick": 23,
+          "remaining_unknown": 1448,
+          "ticks_from_D02": 11,
+          "meters_from_D02": 2.6889,
+          "nominal_travel_seconds_at_0_3mps": 8.963
+        },
+        "1000": {
+          "tick": 26,
+          "remaining_unknown": 964,
+          "ticks_from_D02": 14,
+          "meters_from_D02": 3.5125,
+          "nominal_travel_seconds_at_0_3mps": 11.708
+        },
+        "900": {
+          "tick": 58,
+          "remaining_unknown": 883,
+          "ticks_from_D02": 46,
+          "meters_from_D02": 12.2249,
+          "nominal_travel_seconds_at_0_3mps": 40.75
+        },
+        "600": {
+          "tick": 78,
+          "remaining_unknown": 505,
+          "ticks_from_D02": 66,
+          "meters_from_D02": 17.9957,
+          "nominal_travel_seconds_at_0_3mps": 59.986
+        },
+        "400": {
+          "tick": 81,
+          "remaining_unknown": 394,
+          "ticks_from_D02": 69,
+          "meters_from_D02": 18.8193,
+          "nominal_travel_seconds_at_0_3mps": 62.731
+        },
+        "342": {
+          "tick": 93,
+          "remaining_unknown": 341,
+          "ticks_from_D02": 81,
+          "meters_from_D02": 21.8846,
+          "nominal_travel_seconds_at_0_3mps": 72.949
+        },
+        "320": {
+          "tick": 100,
+          "remaining_unknown": 316,
+          "ticks_from_D02": 88,
+          "meters_from_D02": 23.7554,
+          "nominal_travel_seconds_at_0_3mps": 79.185
+        },
+        "270": {
+          "tick": 105,
+          "remaining_unknown": 269,
+          "ticks_from_D02": 93,
+          "meters_from_D02": 25.079,
+          "nominal_travel_seconds_at_0_3mps": 83.597
+        }
+      },
+      "trace_every50": [
+        {
+          "tick": 50,
+          "remaining_unknown": 904,
+          "meters_from_D02": 10.101
+        },
+        {
+          "tick": 100,
+          "remaining_unknown": 316,
+          "meters_from_D02": 23.755
+        },
+        {
+          "tick": 150,
+          "remaining_unknown": 261,
+          "meters_from_D02": 37.739
+        },
+        {
+          "tick": 200,
+          "remaining_unknown": 261,
+          "meters_from_D02": 52.433
+        },
+        {
+          "tick": 250,
+          "remaining_unknown": 261,
+          "meters_from_D02": 65.658
+        },
+        {
+          "tick": 300,
+          "remaining_unknown": 261,
+          "meters_from_D02": 79.971
+        },
+        {
+          "tick": 350,
+          "remaining_unknown": 261,
+          "meters_from_D02": 94.512
+        },
+        {
+          "tick": 400,
+          "remaining_unknown": 261,
+          "meters_from_D02": 109.054
+        },
+        {
+          "tick": 450,
+          "remaining_unknown": 261,
+          "meters_from_D02": 122.673
+        },
+        {
+          "tick": 500,
+          "remaining_unknown": 261,
+          "meters_from_D02": 136.833
+        },
+        {
+          "tick": 550,
+          "remaining_unknown": 261,
+          "meters_from_D02": 149.594
+        },
+        {
+          "tick": 600,
+          "remaining_unknown": 261,
+          "meters_from_D02": 163.324
+        },
+        {
+          "tick": 650,
+          "remaining_unknown": 261,
+          "meters_from_D02": 177.713
+        },
+        {
+          "tick": 700,
+          "remaining_unknown": 261,
+          "meters_from_D02": 192.096
+        },
+        {
+          "tick": 750,
+          "remaining_unknown": 259,
+          "meters_from_D02": 206.103
+        },
+        {
+          "tick": 800,
+          "remaining_unknown": 259,
+          "meters_from_D02": 220.163
+        },
+        {
+          "tick": 850,
+          "remaining_unknown": 259,
+          "meters_from_D02": 234.628
+        },
+        {
+          "tick": 900,
+          "remaining_unknown": 258,
+          "meters_from_D02": 249.399
+        },
+        {
+          "tick": 950,
+          "remaining_unknown": 258,
+          "meters_from_D02": 264.246
+        },
+        {
+          "tick": 1000,
+          "remaining_unknown": 258,
+          "meters_from_D02": 278.406
+        },
+        {
+          "tick": 1050,
+          "remaining_unknown": 258,
+          "meters_from_D02": 292.642
+        }
+      ],
+      "goal_decisions": [
+        {
+          "decision": 2,
+          "tick": 12,
+          "room_id": 1,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 3889,
+          "goal_rc_global": [
+            671,
+            635
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 7.1053,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 28,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 3,
+          "tick": 28,
+          "room_id": 1,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 944,
+          "goal_rc_global": [
+            679,
+            603
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 12.6569,
+          "goal_receipt": "COMPLETED_GOAL_OBS_4054",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 52,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 4,
+          "tick": 52,
+          "room_id": 1,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 901,
+          "goal_rc_global": [
+            695,
+            699
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 0.3066,
+          "goal_receipt": "COMPLETED_GOAL_OBS_46",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 185,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 17.0012
+        },
+        {
+          "decision": 7,
+          "tick": 185,
+          "room_id": 2,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 3125,
+          "goal_rc_global": [
+            509,
+            693
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 10.6348,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 193,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 8,
+          "tick": 193,
+          "room_id": 2,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 2745,
+          "goal_rc_global": [
+            525,
+            757
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 9.2148,
+          "goal_receipt": "COMPLETED_GOAL_OBS_563",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 223,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 9,
+          "tick": 223,
+          "room_id": 2,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 605,
+          "goal_rc_global": [
+            573,
+            729
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 6.4742,
+          "goal_receipt": "COMPLETED_GOAL_OBS_2337",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 249,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 10,
+          "tick": 249,
+          "room_id": 2,
+          "g2_decision": "DEFER",
+          "original_room_unknown": 59,
+          "goal_rc_global": null,
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 4.7576,
+          "goal_receipt": "COMPLETED_GOAL_OBS_600",
+          "r4_reason": "NO_POSITIVE_ROBUST_ROOM_CHAIN"
+        },
+        {
+          "decision": 11,
+          "tick": 392,
+          "room_id": 3,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 1751,
+          "goal_rc_global": [
+            647,
+            512
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 6.0324,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 411,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 12,
+          "tick": 411,
+          "room_id": 3,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 99,
+          "goal_rc_global": [
+            679,
+            536
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 0.1894,
+          "goal_receipt": "COMPLETED_GOAL_OBS_2083",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 439,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 13,
+          "tick": 439,
+          "room_id": 3,
+          "g2_decision": "DEFER",
+          "original_room_unknown": 62,
+          "goal_rc_global": null,
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 3.1632,
+          "goal_receipt": "COMPLETED_GOAL_OBS_37",
+          "r4_reason": "No usable structural chain in safe candidate/search budget; unresolved obligations retained"
+        },
+        {
+          "decision": 14,
+          "tick": 498,
+          "room_id": 4,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 2421,
+          "goal_rc_global": [
+            522,
+            512
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 6.5885,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 577,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 5.9093
+        },
+        {
+          "decision": 16,
+          "tick": 577,
+          "room_id": 5,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 951,
+          "goal_rc_global": [
+            526,
+            610
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 6.5431,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 599,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 17,
+          "tick": 599,
+          "room_id": 5,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 201,
+          "goal_rc_global": [
+            542,
+            562
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 0.1705,
+          "goal_receipt": "COMPLETED_GOAL_OBS_851",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 623,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 18,
+          "tick": 623,
+          "room_id": 5,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 157,
+          "goal_rc_global": [
+            514,
+            618
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 3.1868,
+          "goal_receipt": "COMPLETED_GOAL_OBS_46",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 656,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 19,
+          "tick": 656,
+          "room_id": 5,
+          "g2_decision": "DEFER",
+          "original_room_unknown": 84,
+          "goal_rc_global": null,
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 2.1359,
+          "goal_receipt": "COMPLETED_GOAL_OBS_106",
+          "r4_reason": "No usable structural chain in safe candidate/search budget; unresolved obligations retained"
+        },
+        {
+          "decision": 20,
+          "tick": 754,
+          "room_id": 6,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 47,
+          "goal_rc_global": [
+            679,
+            747
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 1.474,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 1098,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 23.9719
+        }
+      ],
+      "primary_decisions": 24,
+      "G2_exact_visited": 13,
+      "G2_goal_count": 13,
+      "G2_completion_receipts": 10,
+      "G2_invalidated_receipts": 0,
+      "time_components_until_270": {
+        "prediction_s": 2.492,
+        "room_native_scoring_s": 1.704,
+        "G2_policy_s": 20.069,
+        "travel_plus_recorded_compute_s_proxy": 107.862
+      }
+    },
+    "Run09_G2_R4_predicted": {
+      "source_dir": "/home/dell/mx072_g2_r4_predicted_goal_run09_20261017/native_g2_r4_predicted_run09/G2_R4_PREDICTED_GOAL_RUN09_visvarprob",
+      "native_final_tick": 1005,
+      "native_odom_length": 1006,
+      "total_distance_from_start_m": 282.224,
+      "total_distance_after_D02_m": 278.853,
+      "initial_D02_observed_map_mismatch_cells": 0,
+      "last_remaining_D02_unknown": 258,
+      "milestones": {
+        "2000": {
+          "tick": 23,
+          "remaining_unknown": 1448,
+          "ticks_from_D02": 11,
+          "meters_from_D02": 2.6889,
+          "nominal_travel_seconds_at_0_3mps": 8.963
+        },
+        "1000": {
+          "tick": 26,
+          "remaining_unknown": 964,
+          "ticks_from_D02": 14,
+          "meters_from_D02": 3.5125,
+          "nominal_travel_seconds_at_0_3mps": 11.708
+        },
+        "900": {
+          "tick": 36,
+          "remaining_unknown": 864,
+          "ticks_from_D02": 24,
+          "meters_from_D02": 6.2597,
+          "nominal_travel_seconds_at_0_3mps": 20.866
+        },
+        "600": {
+          "tick": 46,
+          "remaining_unknown": 568,
+          "ticks_from_D02": 34,
+          "meters_from_D02": 9.1833,
+          "nominal_travel_seconds_at_0_3mps": 30.611
+        },
+        "400": {
+          "tick": 57,
+          "remaining_unknown": 396,
+          "ticks_from_D02": 45,
+          "meters_from_D02": 12.1305,
+          "nominal_travel_seconds_at_0_3mps": 40.435
+        },
+        "342": {
+          "tick": 59,
+          "remaining_unknown": 336,
+          "ticks_from_D02": 47,
+          "meters_from_D02": 12.6541,
+          "nominal_travel_seconds_at_0_3mps": 42.18
+        },
+        "320": {
+          "tick": 65,
+          "remaining_unknown": 318,
+          "ticks_from_D02": 53,
+          "meters_from_D02": 14.1485,
+          "nominal_travel_seconds_at_0_3mps": 47.162
+        },
+        "270": {
+          "tick": 756,
+          "remaining_unknown": 269,
+          "ticks_from_D02": 744,
+          "meters_from_D02": 208.1726,
+          "nominal_travel_seconds_at_0_3mps": 693.909
+        }
+      },
+      "trace_every50": [
+        {
+          "tick": 50,
+          "remaining_unknown": 445,
+          "meters_from_D02": 10.383
+        },
+        {
+          "tick": 100,
+          "remaining_unknown": 292,
+          "meters_from_D02": 23.685
+        },
+        {
+          "tick": 150,
+          "remaining_unknown": 292,
+          "meters_from_D02": 37.768
+        },
+        {
+          "tick": 200,
+          "remaining_unknown": 292,
+          "meters_from_D02": 50.916
+        },
+        {
+          "tick": 250,
+          "remaining_unknown": 292,
+          "meters_from_D02": 65.382
+        },
+        {
+          "tick": 300,
+          "remaining_unknown": 292,
+          "meters_from_D02": 79.541
+        },
+        {
+          "tick": 350,
+          "remaining_unknown": 292,
+          "meters_from_D02": 94.159
+        },
+        {
+          "tick": 400,
+          "remaining_unknown": 292,
+          "meters_from_D02": 107.96
+        },
+        {
+          "tick": 450,
+          "remaining_unknown": 292,
+          "meters_from_D02": 121.767
+        },
+        {
+          "tick": 500,
+          "remaining_unknown": 292,
+          "meters_from_D02": 136.309
+        },
+        {
+          "tick": 550,
+          "remaining_unknown": 292,
+          "meters_from_D02": 149.91
+        },
+        {
+          "tick": 600,
+          "remaining_unknown": 292,
+          "meters_from_D02": 163.917
+        },
+        {
+          "tick": 650,
+          "remaining_unknown": 290,
+          "meters_from_D02": 178.23
+        },
+        {
+          "tick": 700,
+          "remaining_unknown": 290,
+          "meters_from_D02": 192.289
+        },
+        {
+          "tick": 750,
+          "remaining_unknown": 287,
+          "meters_from_D02": 206.678
+        },
+        {
+          "tick": 800,
+          "remaining_unknown": 258,
+          "meters_from_D02": 221.067
+        },
+        {
+          "tick": 850,
+          "remaining_unknown": 258,
+          "meters_from_D02": 235.609
+        },
+        {
+          "tick": 900,
+          "remaining_unknown": 258,
+          "meters_from_D02": 249.568
+        },
+        {
+          "tick": 950,
+          "remaining_unknown": 258,
+          "meters_from_D02": 263.499
+        },
+        {
+          "tick": 1000,
+          "remaining_unknown": 258,
+          "meters_from_D02": 277.429
+        }
+      ],
+      "goal_decisions": [
+        {
+          "decision": 2,
+          "tick": 12,
+          "room_id": 1,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 3889,
+          "goal_rc_global": [
+            671,
+            643
+          ],
+          "predicted_target_core_rc": [
+            171,
+            167
+          ],
+          "predicted_mode": "NEW_PREDICTED_TARGET",
+          "compute_s": 7.2398,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 31,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 3,
+          "tick": 31,
+          "room_id": 1,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 932,
+          "goal_rc_global": [
+            669,
+            686
+          ],
+          "predicted_target_core_rc": [
+            175,
+            187
+          ],
+          "predicted_mode": "NEW_PREDICTED_TARGET",
+          "compute_s": 11.3966,
+          "goal_receipt": "COMPLETED_GOAL_OBS_4153",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 56,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 4,
+          "tick": 56,
+          "room_id": 1,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 406,
+          "goal_rc_global": [
+            675,
+            687
+          ],
+          "predicted_target_core_rc": [
+            175,
+            187
+          ],
+          "predicted_mode": "CONTINUE_COMMITTED",
+          "compute_s": 12.85,
+          "goal_receipt": "COMPLETED_GOAL_OBS_1330",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 59,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 5,
+          "tick": 59,
+          "room_id": 1,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 336,
+          "goal_rc_global": [
+            695,
+            699
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 9.1937,
+          "goal_receipt": "COMPLETED_GOAL_OBS_794",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 73,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 6,
+          "tick": 73,
+          "room_id": 1,
+          "g2_decision": "DEFER",
+          "original_room_unknown": 295,
+          "goal_rc_global": null,
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 0.2413,
+          "goal_receipt": "COMPLETED_GOAL_OBS_601",
+          "r4_reason": "NO_POSITIVE_ROBUST_ROOM_CHAIN"
+        },
+        {
+          "decision": 8,
+          "tick": 138,
+          "room_id": 2,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 4943,
+          "goal_rc_global": [
+            517,
+            718
+          ],
+          "predicted_target_core_rc": [
+            17,
+            240
+          ],
+          "predicted_mode": "NEW_PREDICTED_TARGET",
+          "compute_s": 10.2414,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 164,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 9,
+          "tick": 164,
+          "room_id": 2,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 2356,
+          "goal_rc_global": [
+            517,
+            740
+          ],
+          "predicted_target_core_rc": [
+            17,
+            240
+          ],
+          "predicted_mode": "CONTINUE_COMMITTED",
+          "compute_s": 15.6384,
+          "goal_receipt": "COMPLETED_GOAL_OBS_2842",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 174,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 10,
+          "tick": 174,
+          "room_id": 2,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 1285,
+          "goal_rc_global": [
+            561,
+            728
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 16.9608,
+          "goal_receipt": "COMPLETED_GOAL_OBS_1087",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 200,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 11,
+          "tick": 200,
+          "room_id": 2,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 325,
+          "goal_rc_global": [
+            505,
+            640
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 0.3859,
+          "goal_receipt": "COMPLETED_GOAL_OBS_1026",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 384,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 17.7792
+        },
+        {
+          "decision": 15,
+          "tick": 384,
+          "room_id": 3,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 1299,
+          "goal_rc_global": [
+            638,
+            534
+          ],
+          "predicted_target_core_rc": [
+            134,
+            39
+          ],
+          "predicted_mode": "NEW_PREDICTED_TARGET",
+          "compute_s": 7.0555,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 393,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 16,
+          "tick": 393,
+          "room_id": 3,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 487,
+          "goal_rc_global": [
+            634,
+            539
+          ],
+          "predicted_target_core_rc": [
+            134,
+            39
+          ],
+          "predicted_mode": "CONTINUE_COMMITTED",
+          "compute_s": 6.8545,
+          "goal_receipt": "COMPLETED_GOAL_OBS_949",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 397,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 17,
+          "tick": 397,
+          "room_id": 3,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 453,
+          "goal_rc_global": [
+            682,
+            525
+          ],
+          "predicted_target_core_rc": [
+            182,
+            19
+          ],
+          "predicted_mode": "NEW_PREDICTED_TARGET",
+          "compute_s": 6.8525,
+          "goal_receipt": "COMPLETED_GOAL_OBS_42",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 432,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 18,
+          "tick": 432,
+          "room_id": 3,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 68,
+          "goal_rc_global": [
+            682,
+            519
+          ],
+          "predicted_target_core_rc": [
+            182,
+            19
+          ],
+          "predicted_mode": "CONTINUE_COMMITTED",
+          "compute_s": 3.8538,
+          "goal_receipt": "COMPLETED_GOAL_OBS_471",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 514,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 10.9073
+        },
+        {
+          "decision": 20,
+          "tick": 514,
+          "room_id": 4,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 533,
+          "goal_rc_global": [
+            521,
+            523
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 5.485,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 665,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 26.3097
+        },
+        {
+          "decision": 22,
+          "tick": 665,
+          "room_id": 5,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 47,
+          "goal_rc_global": [
+            679,
+            747
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 1.5112,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 761,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 14.7122
+        },
+        {
+          "decision": 24,
+          "tick": 761,
+          "room_id": 6,
+          "g2_decision": "DEFER",
+          "original_room_unknown": 61,
+          "goal_rc_global": null,
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 4.2152,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "NO_POSITIVE_ROBUST_ROOM_CHAIN"
+        },
+        {
+          "decision": 26,
+          "tick": 850,
+          "room_id": 7,
+          "g2_decision": "GOAL",
+          "original_room_unknown": 113,
+          "goal_rc_global": [
+            531,
+            561
+          ],
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 3.7844,
+          "goal_receipt": "NO_PRIOR_GOAL",
+          "r4_reason": "ROBUST_WHOLE_CHAIN_COMPARISON",
+          "next_G2_tick": 894,
+          "min_residual_m_before_next_G2": 0.0,
+          "reached_exact_pixel_before_next_G2": true,
+          "distance_at_next_G2_m": 0.0
+        },
+        {
+          "decision": 27,
+          "tick": 894,
+          "room_id": 7,
+          "g2_decision": "DEFER",
+          "original_room_unknown": 68,
+          "goal_rc_global": null,
+          "predicted_target_core_rc": null,
+          "predicted_mode": null,
+          "compute_s": 1.8461,
+          "goal_receipt": "COMPLETED_GOAL_OBS_61",
+          "r4_reason": "No usable structural chain in safe candidate/search budget; unresolved obligations retained"
+        }
+      ],
+      "primary_decisions": 28,
+      "G2_exact_visited": 15,
+      "G2_goal_count": 15,
+      "G2_completion_receipts": 11,
+      "G2_invalidated_receipts": 0,
+      "time_components_until_270": {
+        "prediction_s": 18.853,
+        "room_native_scoring_s": 16.632,
+        "G2_policy_s": 115.76,
+        "travel_plus_recorded_compute_s_proxy": 845.154
+      }
+    }
+  },
+  "baseline_archive_source": "RUN09_PREDICTED_COMPARISON_VERIFIED.json; same fixed D02 mask and initial snapshot checksum"
+}

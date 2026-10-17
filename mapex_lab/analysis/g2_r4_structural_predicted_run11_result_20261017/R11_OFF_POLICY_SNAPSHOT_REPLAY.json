@@ -1,0 +1,3578 @@
+{
+  "schema": "R11_SNAPSHOT_REPLAY_OFF_POLICY_V1",
+  "source_frozen_run10r2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017",
+  "has_ground_truth_or_future_state_in_input": false,
+  "native_run_executed": false,
+  "closed_loop_claim": false,
+  "same_snapshot_wfd_only_exit_gate": true,
+  "selected_decisions": "ALL_LOCAL",
+  "local_decisions": 24,
+  "R11_predicted_choices": 0,
+  "R11_kept_original_R4": 24,
+  "R11_reposition_only": 3,
+  "WFD_goal_violation": 0,
+  "results": [
+    {
+      "decision": 2,
+      "native_tick": 12,
+      "room_id": 1,
+      "RoomNode_LOCAL_frontiers": 5,
+      "old_Run10_R4_goal": [
+        171,
+        135
+      ],
+      "old_Run10_executed_goal": [
+        171,
+        143
+      ],
+      "new_R11_original_R4_goal": [
+        171,
+        135
+      ],
+      "new_R11_final_executable_goal": [
+        171,
+        135
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 8
+      },
+      "evaluated_candidates": [
+        {
+          "predicted_target_rc": [
+            171,
+            167
+          ],
+          "safe_waypoint_rc": [
+            171,
+            143
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              171,
+              135
+            ],
+            "predicted_target_rc": [
+              171,
+              167
+            ],
+            "safe_subgoal_rc": [
+              171,
+              143
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                171,
+                135
+              ],
+              "quality": 17.712791695199936,
+              "objective": 16.398791695199936,
+              "shortfall": 0.8250400698786564,
+              "open_regions_satisfied": 3,
+              "structural_quality_bin": 50,
+              "knownfree_distance_m": 4.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            175,
+            171
+          ],
+          "safe_waypoint_rc": [
+            175,
+            148
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              171,
+              135
+            ],
+            "predicted_target_rc": [
+              175,
+              171
+            ],
+            "safe_subgoal_rc": [
+              175,
+              148
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                171,
+                135
+              ],
+              "quality": 17.712791695199936,
+              "objective": 16.398791695199936,
+              "shortfall": 0.8250400698786564,
+              "open_regions_satisfied": 3,
+              "structural_quality_bin": 50,
+              "knownfree_distance_m": 4.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            167,
+            163
+          ],
+          "safe_waypoint_rc": [
+            168,
+            140
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              171,
+              135
+            ],
+            "predicted_target_rc": [
+              167,
+              163
+            ],
+            "safe_subgoal_rc": [
+              168,
+              140
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                171,
+                135
+              ],
+              "quality": 17.712791695199936,
+              "objective": 16.398791695199936,
+              "shortfall": 0.8250400698786564,
+              "open_regions_satisfied": 3,
+              "structural_quality_bin": 50,
+              "knownfree_distance_m": 4.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            183,
+            179
+          ],
+          "safe_waypoint_rc": [
+            183,
+            158
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              171,
+              135
+            ],
+            "predicted_target_rc": [
+              183,
+              179
+            ],
+            "safe_subgoal_rc": [
+              183,
+              158
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                171,
+                135
+              ],
+              "quality": 17.712791695199936,
+              "objective": 16.398791695199936,
+              "shortfall": 0.8250400698786564,
+              "open_regions_satisfied": 3,
+              "structural_quality_bin": 50,
+              "knownfree_distance_m": 4.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            171,
+            155
+          ],
+          "safe_waypoint_rc": [
+            171,
+            143
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              171,
+              135
+            ],
+            "predicted_target_rc": [
+              171,
+              155
+            ],
+            "safe_subgoal_rc": [
+              171,
+              143
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                171,
+                135
+              ],
+              "quality": 17.712791695199936,
+              "objective": 16.398791695199936,
+              "shortfall": 0.8250400698786564,
+              "open_regions_satisfied": 3,
+              "structural_quality_bin": 50,
+              "knownfree_distance_m": 4.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            183,
+            167
+          ],
+          "safe_waypoint_rc": [
+            183,
+            158
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              171,
+              135
+            ],
+            "predicted_target_rc": [
+              183,
+              167
+            ],
+            "safe_subgoal_rc": [
+              183,
+              158
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                171,
+                135
+              ],
+              "quality": 17.712791695199936,
+              "objective": 16.398791695199936,
+              "shortfall": 0.8250400698786564,
+              "open_regions_satisfied": 3,
+              "structural_quality_bin": 50,
+              "knownfree_distance_m": 4.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            159,
+            151
+          ],
+          "safe_waypoint_rc": [
+            165,
+            136
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              171,
+              135
+            ],
+            "predicted_target_rc": [
+              159,
+              151
+            ],
+            "safe_subgoal_rc": [
+              165,
+              136
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                171,
+                135
+              ],
+              "quality": 17.712791695199936,
+              "objective": 16.398791695199936,
+              "shortfall": 0.8250400698786564,
+              "open_regions_satisfied": 3,
+              "structural_quality_bin": 50,
+              "knownfree_distance_m": 4.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            195,
+            179
+          ],
+          "safe_waypoint_rc": [
+            195,
+            173
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              171,
+              135
+            ],
+            "predicted_target_rc": [
+              195,
+              179
+            ],
+            "safe_subgoal_rc": [
+              195,
+              173
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                171,
+                135
+              ],
+              "quality": 17.712791695199936,
+              "objective": 16.398791695199936,
+              "shortfall": 0.8250400698786564,
+              "open_regions_satisfied": 3,
+              "structural_quality_bin": 50,
+              "knownfree_distance_m": 4.8
+            },
+            "executed_subgoal_structural": null
+          }
+        }
+      ],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000002.json"
+    },
+    {
+      "decision": 3,
+      "native_tick": 31,
+      "room_id": 1,
+      "RoomNode_LOCAL_frontiers": 4,
+      "old_Run10_R4_goal": [
+        183,
+        99
+      ],
+      "old_Run10_executed_goal": [
+        169,
+        186
+      ],
+      "new_R11_original_R4_goal": [
+        183,
+        99
+      ],
+      "new_R11_final_executable_goal": [
+        183,
+        99
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 1
+      },
+      "evaluated_candidates": [
+        {
+          "predicted_target_rc": [
+            175,
+            187
+          ],
+          "safe_waypoint_rc": [
+            169,
+            186
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              183,
+              99
+            ],
+            "predicted_target_rc": [
+              175,
+              187
+            ],
+            "safe_subgoal_rc": [
+              169,
+              186
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                183,
+                99
+              ],
+              "quality": 4.7462184492384605,
+              "objective": 3.2162184492384602,
+              "shortfall": 9.038548491557057,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 26,
+              "knownfree_distance_m": 6.0
+            },
+            "executed_subgoal_structural": null
+          }
+        }
+      ],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000003.json"
+    },
+    {
+      "decision": 4,
+      "native_tick": 56,
+      "room_id": 1,
+      "RoomNode_LOCAL_frontiers": 3,
+      "old_Run10_R4_goal": [
+        197,
+        206
+      ],
+      "old_Run10_executed_goal": [
+        175,
+        187
+      ],
+      "new_R11_original_R4_goal": [
+        197,
+        206
+      ],
+      "new_R11_final_executable_goal": [
+        197,
+        206
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 0
+      },
+      "evaluated_candidates": [],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000004.json"
+    },
+    {
+      "decision": 5,
+      "native_tick": 59,
+      "room_id": 1,
+      "RoomNode_LOCAL_frontiers": 2,
+      "old_Run10_R4_goal": [
+        195,
+        199
+      ],
+      "old_Run10_executed_goal": [
+        195,
+        199
+      ],
+      "new_R11_original_R4_goal": [
+        195,
+        199
+      ],
+      "new_R11_final_executable_goal": [
+        195,
+        199
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 0
+      },
+      "evaluated_candidates": [],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000005.json"
+    },
+    {
+      "decision": 6,
+      "native_tick": 73,
+      "room_id": 1,
+      "RoomNode_LOCAL_frontiers": 2,
+      "old_Run10_R4_goal": [
+        183,
+        95
+      ],
+      "old_Run10_executed_goal": [
+        183,
+        95
+      ],
+      "new_R11_original_R4_goal": null,
+      "new_R11_final_executable_goal": [
+        183,
+        103
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 0
+      },
+      "evaluated_candidates": [],
+      "backstop": {
+        "goal_core_rc": [
+          183,
+          103
+        ],
+        "generator": "G2_R3_STRUCTURAL_WITNESS_BACKSTOP",
+        "structural_view": {
+          "goal_core_rc": [
+            183,
+            103
+          ],
+          "quality": 3.446390235070574,
+          "objective": 0.6203902350705743,
+          "shortfall": 8.241469564663078,
+          "open_regions_satisfied": 1,
+          "structural_quality_bin": 18,
+          "knownfree_distance_m": 13.2
+        },
+        "used_WFD_for_goal_generation": false,
+        "reposition_only": false
+      },
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000006.json"
+    },
+    {
+      "decision": 7,
+      "native_tick": 128,
+      "room_id": 1,
+      "RoomNode_LOCAL_frontiers": 1,
+      "old_Run10_R4_goal": [
+        184,
+        202
+      ],
+      "old_Run10_executed_goal": [
+        184,
+        202
+      ],
+      "new_R11_original_R4_goal": null,
+      "new_R11_final_executable_goal": [
+        184,
+        202
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 0
+      },
+      "evaluated_candidates": [],
+      "backstop": {
+        "goal_core_rc": [
+          184,
+          202
+        ],
+        "generator": "G2_UNCERTAINTY_REPOSITION_NO_FRONTIER_GOALS",
+        "predicted_visible_unknown_weighted": 0.0,
+        "predicted_visible_unknown_nominal": 0,
+        "predicted_visible_unknown_stress": 0,
+        "native_knownfree_route_steps": 128,
+        "score": -14.03,
+        "reachable_native_knownfree": true,
+        "used_WFD_for_goal_generation": false,
+        "no_raycast_gain_fallback": true,
+        "reposition_only": true
+      },
+      "reposition_only": true,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000007.json"
+    },
+    {
+      "decision": 9,
+      "native_tick": 222,
+      "room_id": 2,
+      "RoomNode_LOCAL_frontiers": 3,
+      "old_Run10_R4_goal": [
+        154,
+        252
+      ],
+      "old_Run10_executed_goal": [
+        154,
+        252
+      ],
+      "new_R11_original_R4_goal": [
+        154,
+        252
+      ],
+      "new_R11_final_executable_goal": [
+        154,
+        252
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 3
+      },
+      "evaluated_candidates": [
+        {
+          "predicted_target_rc": [
+            194,
+            236
+          ],
+          "safe_waypoint_rc": [
+            194,
+            242
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              154,
+              252
+            ],
+            "predicted_target_rc": [
+              194,
+              236
+            ],
+            "safe_subgoal_rc": [
+              194,
+              242
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                154,
+                252
+              ],
+              "quality": 13.973376950678409,
+              "objective": 12.73137695067841,
+              "shortfall": 0.2702410347106382,
+              "open_regions_satisfied": 3,
+              "structural_quality_bin": 50,
+              "knownfree_distance_m": 4.4
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            190,
+            236
+          ],
+          "safe_waypoint_rc": [
+            190,
+            241
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              154,
+              252
+            ],
+            "predicted_target_rc": [
+              190,
+              236
+            ],
+            "safe_subgoal_rc": [
+              190,
+              241
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                154,
+                252
+              ],
+              "quality": 13.973376950678409,
+              "objective": 12.73137695067841,
+              "shortfall": 0.2702410347106382,
+              "open_regions_satisfied": 3,
+              "structural_quality_bin": 50,
+              "knownfree_distance_m": 4.4
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            150,
+            216
+          ],
+          "safe_waypoint_rc": [
+            150,
+            221
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              154,
+              252
+            ],
+            "predicted_target_rc": [
+              150,
+              216
+            ],
+            "safe_subgoal_rc": [
+              150,
+              221
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                154,
+                252
+              ],
+              "quality": 13.973376950678409,
+              "objective": 12.73137695067841,
+              "shortfall": 0.2702410347106382,
+              "open_regions_satisfied": 3,
+              "structural_quality_bin": 50,
+              "knownfree_distance_m": 4.4
+            },
+            "executed_subgoal_structural": null
+          }
+        }
+      ],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000009.json"
+    },
+    {
+      "decision": 10,
+      "native_tick": 240,
+      "room_id": 2,
+      "RoomNode_LOCAL_frontiers": 1,
+      "old_Run10_R4_goal": [
+        178,
+        252
+      ],
+      "old_Run10_executed_goal": [
+        178,
+        252
+      ],
+      "new_R11_original_R4_goal": [
+        178,
+        252
+      ],
+      "new_R11_final_executable_goal": [
+        178,
+        252
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 0
+      },
+      "evaluated_candidates": [],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000010.json"
+    },
+    {
+      "decision": 12,
+      "native_tick": 345,
+      "room_id": 3,
+      "RoomNode_LOCAL_frontiers": 8,
+      "old_Run10_R4_goal": [
+        35,
+        61
+      ],
+      "old_Run10_executed_goal": [
+        59,
+        35
+      ],
+      "new_R11_original_R4_goal": [
+        35,
+        61
+      ],
+      "new_R11_final_executable_goal": [
+        35,
+        61
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 8
+      },
+      "evaluated_candidates": [
+        {
+          "predicted_target_rc": [
+            59,
+            17
+          ],
+          "safe_waypoint_rc": [
+            59,
+            35
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              35,
+              61
+            ],
+            "predicted_target_rc": [
+              59,
+              17
+            ],
+            "safe_subgoal_rc": [
+              59,
+              35
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                35,
+                61
+              ],
+              "quality": 25.475656412102,
+              "objective": 23.549656412102003,
+              "shortfall": 19.113173065433553,
+              "open_regions_satisfied": 5,
+              "structural_quality_bin": 29,
+              "knownfree_distance_m": 8.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            63,
+            17
+          ],
+          "safe_waypoint_rc": [
+            63,
+            38
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              35,
+              61
+            ],
+            "predicted_target_rc": [
+              63,
+              17
+            ],
+            "safe_subgoal_rc": [
+              63,
+              38
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                35,
+                61
+              ],
+              "quality": 25.475656412102,
+              "objective": 23.549656412102003,
+              "shortfall": 19.113173065433553,
+              "open_regions_satisfied": 5,
+              "structural_quality_bin": 29,
+              "knownfree_distance_m": 8.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            55,
+            9
+          ],
+          "safe_waypoint_rc": [
+            55,
+            32
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              35,
+              61
+            ],
+            "predicted_target_rc": [
+              55,
+              9
+            ],
+            "safe_subgoal_rc": [
+              55,
+              32
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                35,
+                61
+              ],
+              "quality": 25.475656412102,
+              "objective": 23.549656412102003,
+              "shortfall": 19.113173065433553,
+              "open_regions_satisfied": 5,
+              "structural_quality_bin": 29,
+              "knownfree_distance_m": 8.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            47,
+            17
+          ],
+          "safe_waypoint_rc": [
+            47,
+            26
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              35,
+              61
+            ],
+            "predicted_target_rc": [
+              47,
+              17
+            ],
+            "safe_subgoal_rc": [
+              47,
+              26
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                35,
+                61
+              ],
+              "quality": 25.475656412102,
+              "objective": 23.549656412102003,
+              "shortfall": 19.113173065433553,
+              "open_regions_satisfied": 5,
+              "structural_quality_bin": 29,
+              "knownfree_distance_m": 8.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            35,
+            13
+          ],
+          "safe_waypoint_rc": [
+            35,
+            18
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              35,
+              61
+            ],
+            "predicted_target_rc": [
+              35,
+              13
+            ],
+            "safe_subgoal_rc": [
+              35,
+              18
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                35,
+                61
+              ],
+              "quality": 25.475656412102,
+              "objective": 23.549656412102003,
+              "shortfall": 19.113173065433553,
+              "open_regions_satisfied": 5,
+              "structural_quality_bin": 29,
+              "knownfree_distance_m": 8.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            43,
+            5
+          ],
+          "safe_waypoint_rc": [
+            43,
+            24
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              35,
+              61
+            ],
+            "predicted_target_rc": [
+              43,
+              5
+            ],
+            "safe_subgoal_rc": [
+              43,
+              24
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                35,
+                61
+              ],
+              "quality": 25.475656412102,
+              "objective": 23.549656412102003,
+              "shortfall": 19.113173065433553,
+              "open_regions_satisfied": 5,
+              "structural_quality_bin": 29,
+              "knownfree_distance_m": 8.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            35,
+            5
+          ],
+          "safe_waypoint_rc": [
+            35,
+            18
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              35,
+              61
+            ],
+            "predicted_target_rc": [
+              35,
+              5
+            ],
+            "safe_subgoal_rc": [
+              35,
+              18
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                35,
+                61
+              ],
+              "quality": 25.475656412102,
+              "objective": 23.549656412102003,
+              "shortfall": 19.113173065433553,
+              "open_regions_satisfied": 5,
+              "structural_quality_bin": 29,
+              "knownfree_distance_m": 8.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            59,
+            25
+          ],
+          "safe_waypoint_rc": [
+            59,
+            35
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              35,
+              61
+            ],
+            "predicted_target_rc": [
+              59,
+              25
+            ],
+            "safe_subgoal_rc": [
+              59,
+              35
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                35,
+                61
+              ],
+              "quality": 25.475656412102,
+              "objective": 23.549656412102003,
+              "shortfall": 19.113173065433553,
+              "open_regions_satisfied": 5,
+              "structural_quality_bin": 29,
+              "knownfree_distance_m": 8.2
+            },
+            "executed_subgoal_structural": null
+          }
+        }
+      ],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000012.json"
+    },
+    {
+      "decision": 13,
+      "native_tick": 369,
+      "room_id": 3,
+      "RoomNode_LOCAL_frontiers": 5,
+      "old_Run10_R4_goal": [
+        27,
+        19
+      ],
+      "old_Run10_executed_goal": [
+        59,
+        17
+      ],
+      "new_R11_original_R4_goal": [
+        27,
+        19
+      ],
+      "new_R11_final_executable_goal": [
+        27,
+        19
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 6
+      },
+      "evaluated_candidates": [
+        {
+          "predicted_target_rc": [
+            15,
+            31
+          ],
+          "safe_waypoint_rc": [
+            16,
+            20
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              27,
+              19
+            ],
+            "predicted_target_rc": [
+              15,
+              31
+            ],
+            "safe_subgoal_rc": [
+              16,
+              20
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                27,
+                19
+              ],
+              "quality": 11.076997418365242,
+              "objective": 9.762997418365241,
+              "shortfall": 20.764509199416192,
+              "open_regions_satisfied": 2,
+              "structural_quality_bin": 17,
+              "knownfree_distance_m": 4.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            7,
+            31
+          ],
+          "safe_waypoint_rc": [
+            7,
+            45
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              27,
+              19
+            ],
+            "predicted_target_rc": [
+              7,
+              31
+            ],
+            "safe_subgoal_rc": [
+              7,
+              45
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                27,
+                19
+              ],
+              "quality": 11.076997418365242,
+              "objective": 9.762997418365241,
+              "shortfall": 20.764509199416192,
+              "open_regions_satisfied": 2,
+              "structural_quality_bin": 17,
+              "knownfree_distance_m": 4.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            7,
+            23
+          ],
+          "safe_waypoint_rc": [
+            8,
+            17
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              27,
+              19
+            ],
+            "predicted_target_rc": [
+              7,
+              23
+            ],
+            "safe_subgoal_rc": [
+              8,
+              17
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                27,
+                19
+              ],
+              "quality": 11.076997418365242,
+              "objective": 9.762997418365241,
+              "shortfall": 20.764509199416192,
+              "open_regions_satisfied": 2,
+              "structural_quality_bin": 17,
+              "knownfree_distance_m": 4.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            11,
+            39
+          ],
+          "safe_waypoint_rc": [
+            11,
+            45
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              27,
+              19
+            ],
+            "predicted_target_rc": [
+              11,
+              39
+            ],
+            "safe_subgoal_rc": [
+              11,
+              45
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                27,
+                19
+              ],
+              "quality": 11.076997418365242,
+              "objective": 9.762997418365241,
+              "shortfall": 20.764509199416192,
+              "open_regions_satisfied": 2,
+              "structural_quality_bin": 17,
+              "knownfree_distance_m": 4.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            15,
+            39
+          ],
+          "safe_waypoint_rc": [
+            15,
+            45
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              27,
+              19
+            ],
+            "predicted_target_rc": [
+              15,
+              39
+            ],
+            "safe_subgoal_rc": [
+              15,
+              45
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                27,
+                19
+              ],
+              "quality": 11.076997418365242,
+              "objective": 9.762997418365241,
+              "shortfall": 20.764509199416192,
+              "open_regions_satisfied": 2,
+              "structural_quality_bin": 17,
+              "knownfree_distance_m": 4.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            39,
+            7
+          ],
+          "safe_waypoint_rc": [
+            39,
+            15
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              27,
+              19
+            ],
+            "predicted_target_rc": [
+              39,
+              7
+            ],
+            "safe_subgoal_rc": [
+              39,
+              15
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                27,
+                19
+              ],
+              "quality": 11.076997418365242,
+              "objective": 9.762997418365241,
+              "shortfall": 20.764509199416192,
+              "open_regions_satisfied": 2,
+              "structural_quality_bin": 17,
+              "knownfree_distance_m": 4.8
+            },
+            "executed_subgoal_structural": null
+          }
+        }
+      ],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000013.json"
+    },
+    {
+      "decision": 14,
+      "native_tick": 377,
+      "room_id": 3,
+      "RoomNode_LOCAL_frontiers": 4,
+      "old_Run10_R4_goal": [
+        23,
+        21
+      ],
+      "old_Run10_executed_goal": [
+        23,
+        21
+      ],
+      "new_R11_original_R4_goal": [
+        23,
+        21
+      ],
+      "new_R11_final_executable_goal": [
+        23,
+        21
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 6
+      },
+      "evaluated_candidates": [
+        {
+          "predicted_target_rc": [
+            11,
+            33
+          ],
+          "safe_waypoint_rc": [
+            11,
+            26
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              23,
+              21
+            ],
+            "predicted_target_rc": [
+              11,
+              33
+            ],
+            "safe_subgoal_rc": [
+              11,
+              26
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                23,
+                21
+              ],
+              "quality": 10.147687989790928,
+              "objective": 8.941687989790928,
+              "shortfall": 17.739265300988034,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 18,
+              "knownfree_distance_m": 4.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            15,
+            33
+          ],
+          "safe_waypoint_rc": [
+            15,
+            26
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              23,
+              21
+            ],
+            "predicted_target_rc": [
+              15,
+              33
+            ],
+            "safe_subgoal_rc": [
+              15,
+              26
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                23,
+                21
+              ],
+              "quality": 10.147687989790928,
+              "objective": 8.941687989790928,
+              "shortfall": 17.739265300988034,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 18,
+              "knownfree_distance_m": 4.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            11,
+            37
+          ],
+          "safe_waypoint_rc": [
+            11,
+            26
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              23,
+              21
+            ],
+            "predicted_target_rc": [
+              11,
+              37
+            ],
+            "safe_subgoal_rc": [
+              11,
+              26
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                23,
+                21
+              ],
+              "quality": 10.147687989790928,
+              "objective": 8.941687989790928,
+              "shortfall": 17.739265300988034,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 18,
+              "knownfree_distance_m": 4.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            15,
+            37
+          ],
+          "safe_waypoint_rc": [
+            15,
+            26
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              23,
+              21
+            ],
+            "predicted_target_rc": [
+              15,
+              37
+            ],
+            "safe_subgoal_rc": [
+              15,
+              26
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                23,
+                21
+              ],
+              "quality": 10.147687989790928,
+              "objective": 8.941687989790928,
+              "shortfall": 17.739265300988034,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 18,
+              "knownfree_distance_m": 4.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            35,
+            5
+          ],
+          "safe_waypoint_rc": [
+            35,
+            10
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              23,
+              21
+            ],
+            "predicted_target_rc": [
+              35,
+              5
+            ],
+            "safe_subgoal_rc": [
+              35,
+              10
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                23,
+                21
+              ],
+              "quality": 10.147687989790928,
+              "objective": 8.941687989790928,
+              "shortfall": 17.739265300988034,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 18,
+              "knownfree_distance_m": 4.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            39,
+            5
+          ],
+          "safe_waypoint_rc": [
+            39,
+            15
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              23,
+              21
+            ],
+            "predicted_target_rc": [
+              39,
+              5
+            ],
+            "safe_subgoal_rc": [
+              39,
+              15
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                23,
+                21
+              ],
+              "quality": 10.147687989790928,
+              "objective": 8.941687989790928,
+              "shortfall": 17.739265300988034,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 18,
+              "knownfree_distance_m": 4.2
+            },
+            "executed_subgoal_structural": null
+          }
+        }
+      ],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000014.json"
+    },
+    {
+      "decision": 15,
+      "native_tick": 397,
+      "room_id": 3,
+      "RoomNode_LOCAL_frontiers": 1,
+      "old_Run10_R4_goal": [
+        43,
+        9
+      ],
+      "old_Run10_executed_goal": [
+        43,
+        9
+      ],
+      "new_R11_original_R4_goal": null,
+      "new_R11_final_executable_goal": [
+        43,
+        9
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 0
+      },
+      "evaluated_candidates": [],
+      "backstop": {
+        "goal_core_rc": [
+          43,
+          9
+        ],
+        "generator": "G2_VISIBILITY_BACKSTOP_NO_FRONTIER_GOALS",
+        "predicted_visible_unknown_weighted": 14.0,
+        "predicted_visible_unknown_nominal": 14,
+        "predicted_visible_unknown_stress": 14,
+        "native_knownfree_route_steps": 32,
+        "score": 6.64,
+        "reachable_native_knownfree": true,
+        "used_WFD_for_goal_generation": false,
+        "no_raycast_gain_fallback": false,
+        "reposition_only": true
+      },
+      "reposition_only": true,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000015.json"
+    },
+    {
+      "decision": 17,
+      "native_tick": 496,
+      "room_id": 4,
+      "RoomNode_LOCAL_frontiers": 3,
+      "old_Run10_R4_goal": [
+        136,
+        32
+      ],
+      "old_Run10_executed_goal": [
+        136,
+        32
+      ],
+      "new_R11_original_R4_goal": [
+        136,
+        32
+      ],
+      "new_R11_final_executable_goal": [
+        136,
+        32
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 1
+      },
+      "evaluated_candidates": [
+        {
+          "predicted_target_rc": [
+            124,
+            40
+          ],
+          "safe_waypoint_rc": [
+            124,
+            35
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              136,
+              32
+            ],
+            "predicted_target_rc": [
+              124,
+              40
+            ],
+            "safe_subgoal_rc": [
+              124,
+              35
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                136,
+                32
+              ],
+              "quality": 7.423534233594181,
+              "objective": 5.749534233594181,
+              "shortfall": 2.5015441279583768,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 39,
+              "knownfree_distance_m": 6.8
+            },
+            "executed_subgoal_structural": null
+          }
+        }
+      ],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000017.json"
+    },
+    {
+      "decision": 18,
+      "native_tick": 524,
+      "room_id": 4,
+      "RoomNode_LOCAL_frontiers": 1,
+      "old_Run10_R4_goal": [
+        148,
+        16
+      ],
+      "old_Run10_executed_goal": [
+        148,
+        16
+      ],
+      "new_R11_original_R4_goal": [
+        148,
+        16
+      ],
+      "new_R11_final_executable_goal": [
+        148,
+        16
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 0
+      },
+      "evaluated_candidates": [],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000018.json"
+    },
+    {
+      "decision": 20,
+      "native_tick": 607,
+      "room_id": 5,
+      "RoomNode_LOCAL_frontiers": 4,
+      "old_Run10_R4_goal": [
+        13,
+        114
+      ],
+      "old_Run10_executed_goal": [
+        13,
+        114
+      ],
+      "new_R11_original_R4_goal": [
+        13,
+        114
+      ],
+      "new_R11_final_executable_goal": [
+        13,
+        114
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 1
+      },
+      "evaluated_candidates": [
+        {
+          "predicted_target_rc": [
+            13,
+            102
+          ],
+          "safe_waypoint_rc": [
+            13,
+            109
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              13,
+              114
+            ],
+            "predicted_target_rc": [
+              13,
+              102
+            ],
+            "safe_subgoal_rc": [
+              13,
+              109
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                13,
+                114
+              ],
+              "quality": 9.075295234747351,
+              "objective": 8.193295234747351,
+              "shortfall": 4.233795557360361,
+              "open_regions_satisfied": 2,
+              "structural_quality_bin": 34,
+              "knownfree_distance_m": 2.4
+            },
+            "executed_subgoal_structural": null
+          }
+        }
+      ],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000020.json"
+    },
+    {
+      "decision": 21,
+      "native_tick": 620,
+      "room_id": 5,
+      "RoomNode_LOCAL_frontiers": 2,
+      "old_Run10_R4_goal": [
+        33,
+        62
+      ],
+      "old_Run10_executed_goal": [
+        33,
+        62
+      ],
+      "new_R11_original_R4_goal": [
+        33,
+        62
+      ],
+      "new_R11_final_executable_goal": [
+        33,
+        62
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 0
+      },
+      "evaluated_candidates": [],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000021.json"
+    },
+    {
+      "decision": 22,
+      "native_tick": 658,
+      "room_id": 5,
+      "RoomNode_LOCAL_frontiers": 1,
+      "old_Run10_R4_goal": [
+        17,
+        62
+      ],
+      "old_Run10_executed_goal": [
+        17,
+        62
+      ],
+      "new_R11_original_R4_goal": null,
+      "new_R11_final_executable_goal": [
+        17,
+        62
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 0
+      },
+      "evaluated_candidates": [],
+      "backstop": {
+        "goal_core_rc": [
+          17,
+          62
+        ],
+        "generator": "G2_VISIBILITY_BACKSTOP_NO_FRONTIER_GOALS",
+        "predicted_visible_unknown_weighted": 11.4,
+        "predicted_visible_unknown_nominal": 12,
+        "predicted_visible_unknown_stress": 10,
+        "native_knownfree_route_steps": 16,
+        "score": 7.72,
+        "reachable_native_knownfree": true,
+        "used_WFD_for_goal_generation": false,
+        "no_raycast_gain_fallback": false,
+        "reposition_only": true
+      },
+      "reposition_only": true,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000022.json"
+    },
+    {
+      "decision": 24,
+      "native_tick": 742,
+      "room_id": 6,
+      "RoomNode_LOCAL_frontiers": 5,
+      "old_Run10_R4_goal": [
+        6,
+        137
+      ],
+      "old_Run10_executed_goal": [
+        32,
+        201
+      ],
+      "new_R11_original_R4_goal": [
+        6,
+        137
+      ],
+      "new_R11_final_executable_goal": [
+        6,
+        137
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 4
+      },
+      "evaluated_candidates": [
+        {
+          "predicted_target_rc": [
+            26,
+            201
+          ],
+          "safe_waypoint_rc": [
+            32,
+            201
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              6,
+              137
+            ],
+            "predicted_target_rc": [
+              26,
+              201
+            ],
+            "safe_subgoal_rc": [
+              32,
+              201
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                6,
+                137
+              ],
+              "quality": 5.243549835917402,
+              "objective": 4.217549835917402,
+              "shortfall": 18.931632764505515,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 13,
+              "knownfree_distance_m": 3.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            22,
+            205
+          ],
+          "safe_waypoint_rc": [
+            28,
+            205
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              6,
+              137
+            ],
+            "predicted_target_rc": [
+              22,
+              205
+            ],
+            "safe_subgoal_rc": [
+              28,
+              205
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                6,
+                137
+              ],
+              "quality": 5.243549835917402,
+              "objective": 4.217549835917402,
+              "shortfall": 18.931632764505515,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 13,
+              "knownfree_distance_m": 3.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            22,
+            201
+          ],
+          "safe_waypoint_rc": [
+            32,
+            201
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              6,
+              137
+            ],
+            "predicted_target_rc": [
+              22,
+              201
+            ],
+            "safe_subgoal_rc": [
+              32,
+              201
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                6,
+                137
+              ],
+              "quality": 5.243549835917402,
+              "objective": 4.217549835917402,
+              "shortfall": 18.931632764505515,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 13,
+              "knownfree_distance_m": 3.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            6,
+            153
+          ],
+          "safe_waypoint_rc": [
+            6,
+            159
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              6,
+              137
+            ],
+            "predicted_target_rc": [
+              6,
+              153
+            ],
+            "safe_subgoal_rc": [
+              6,
+              159
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                6,
+                137
+              ],
+              "quality": 5.243549835917402,
+              "objective": 4.217549835917402,
+              "shortfall": 18.931632764505515,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 13,
+              "knownfree_distance_m": 3.2
+            },
+            "executed_subgoal_structural": null
+          }
+        }
+      ],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000024.json"
+    },
+    {
+      "decision": 25,
+      "native_tick": 774,
+      "room_id": 6,
+      "RoomNode_LOCAL_frontiers": 4,
+      "old_Run10_R4_goal": [
+        16,
+        217
+      ],
+      "old_Run10_executed_goal": [
+        26,
+        201
+      ],
+      "new_R11_original_R4_goal": [
+        16,
+        217
+      ],
+      "new_R11_final_executable_goal": [
+        16,
+        217
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 8
+      },
+      "evaluated_candidates": [
+        {
+          "predicted_target_rc": [
+            32,
+            229
+          ],
+          "safe_waypoint_rc": [
+            22,
+            215
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              16,
+              217
+            ],
+            "predicted_target_rc": [
+              32,
+              229
+            ],
+            "safe_subgoal_rc": [
+              22,
+              215
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                16,
+                217
+              ],
+              "quality": 11.782636691669913,
+              "objective": 10.756636691669913,
+              "shortfall": 7.5792161939576514,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 33,
+              "knownfree_distance_m": 3.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            36,
+            225
+          ],
+          "safe_waypoint_rc": [
+            22,
+            215
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              16,
+              217
+            ],
+            "predicted_target_rc": [
+              36,
+              225
+            ],
+            "safe_subgoal_rc": [
+              22,
+              215
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                16,
+                217
+              ],
+              "quality": 11.782636691669913,
+              "objective": 10.756636691669913,
+              "shortfall": 7.5792161939576514,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 33,
+              "knownfree_distance_m": 3.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            32,
+            225
+          ],
+          "safe_waypoint_rc": [
+            22,
+            215
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              16,
+              217
+            ],
+            "predicted_target_rc": [
+              32,
+              225
+            ],
+            "safe_subgoal_rc": [
+              22,
+              215
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                16,
+                217
+              ],
+              "quality": 11.782636691669913,
+              "objective": 10.756636691669913,
+              "shortfall": 7.5792161939576514,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 33,
+              "knownfree_distance_m": 3.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            20,
+            241
+          ],
+          "safe_waypoint_rc": [
+            20,
+            217
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              16,
+              217
+            ],
+            "predicted_target_rc": [
+              20,
+              241
+            ],
+            "safe_subgoal_rc": [
+              20,
+              217
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                16,
+                217
+              ],
+              "quality": 11.782636691669913,
+              "objective": 10.756636691669913,
+              "shortfall": 7.5792161939576514,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 33,
+              "knownfree_distance_m": 3.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            20,
+            237
+          ],
+          "safe_waypoint_rc": [
+            20,
+            217
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              16,
+              217
+            ],
+            "predicted_target_rc": [
+              20,
+              237
+            ],
+            "safe_subgoal_rc": [
+              20,
+              217
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                16,
+                217
+              ],
+              "quality": 11.782636691669913,
+              "objective": 10.756636691669913,
+              "shortfall": 7.5792161939576514,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 33,
+              "knownfree_distance_m": 3.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            20,
+            225
+          ],
+          "safe_waypoint_rc": [
+            20,
+            217
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              16,
+              217
+            ],
+            "predicted_target_rc": [
+              20,
+              225
+            ],
+            "safe_subgoal_rc": [
+              20,
+              217
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                16,
+                217
+              ],
+              "quality": 11.782636691669913,
+              "objective": 10.756636691669913,
+              "shortfall": 7.5792161939576514,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 33,
+              "knownfree_distance_m": 3.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            8,
+            237
+          ],
+          "safe_waypoint_rc": [
+            8,
+            232
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              16,
+              217
+            ],
+            "predicted_target_rc": [
+              8,
+              237
+            ],
+            "safe_subgoal_rc": [
+              8,
+              232
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                16,
+                217
+              ],
+              "quality": 11.782636691669913,
+              "objective": 10.756636691669913,
+              "shortfall": 7.5792161939576514,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 33,
+              "knownfree_distance_m": 3.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            4,
+            249
+          ],
+          "safe_waypoint_rc": [
+            4,
+            237
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              16,
+              217
+            ],
+            "predicted_target_rc": [
+              4,
+              249
+            ],
+            "safe_subgoal_rc": [
+              4,
+              237
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                16,
+                217
+              ],
+              "quality": 11.782636691669913,
+              "objective": 10.756636691669913,
+              "shortfall": 7.5792161939576514,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 33,
+              "knownfree_distance_m": 3.2
+            },
+            "executed_subgoal_structural": null
+          }
+        }
+      ],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000025.json"
+    },
+    {
+      "decision": 26,
+      "native_tick": 776,
+      "room_id": 6,
+      "RoomNode_LOCAL_frontiers": 4,
+      "old_Run10_R4_goal": [
+        14,
+        217
+      ],
+      "old_Run10_executed_goal": [
+        19,
+        241
+      ],
+      "new_R11_original_R4_goal": [
+        14,
+        217
+      ],
+      "new_R11_final_executable_goal": [
+        14,
+        217
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 8
+      },
+      "evaluated_candidates": [
+        {
+          "predicted_target_rc": [
+            38,
+            241
+          ],
+          "safe_waypoint_rc": [
+            19,
+            241
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              14,
+              217
+            ],
+            "predicted_target_rc": [
+              38,
+              241
+            ],
+            "safe_subgoal_rc": [
+              19,
+              241
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                14,
+                217
+              ],
+              "quality": 12.908889185108276,
+              "objective": 11.954889185108277,
+              "shortfall": 9.298837589302131,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 33,
+              "knownfree_distance_m": 2.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            38,
+            229
+          ],
+          "safe_waypoint_rc": [
+            21,
+            229
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              14,
+              217
+            ],
+            "predicted_target_rc": [
+              38,
+              229
+            ],
+            "safe_subgoal_rc": [
+              21,
+              229
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                14,
+                217
+              ],
+              "quality": 12.908889185108276,
+              "objective": 11.954889185108277,
+              "shortfall": 9.298837589302131,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 33,
+              "knownfree_distance_m": 2.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            42,
+            225
+          ],
+          "safe_waypoint_rc": [
+            22,
+            225
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              14,
+              217
+            ],
+            "predicted_target_rc": [
+              42,
+              225
+            ],
+            "safe_subgoal_rc": [
+              22,
+              225
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                14,
+                217
+              ],
+              "quality": 12.908889185108276,
+              "objective": 11.954889185108277,
+              "shortfall": 9.298837589302131,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 33,
+              "knownfree_distance_m": 2.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            34,
+            237
+          ],
+          "safe_waypoint_rc": [
+            20,
+            237
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              14,
+              217
+            ],
+            "predicted_target_rc": [
+              34,
+              237
+            ],
+            "safe_subgoal_rc": [
+              20,
+              237
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                14,
+                217
+              ],
+              "quality": 12.908889185108276,
+              "objective": 11.954889185108277,
+              "shortfall": 9.298837589302131,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 33,
+              "knownfree_distance_m": 2.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            34,
+            249
+          ],
+          "safe_waypoint_rc": [
+            18,
+            249
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              14,
+              217
+            ],
+            "predicted_target_rc": [
+              34,
+              249
+            ],
+            "safe_subgoal_rc": [
+              18,
+              249
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                14,
+                217
+              ],
+              "quality": 12.908889185108276,
+              "objective": 11.954889185108277,
+              "shortfall": 9.298837589302131,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 33,
+              "knownfree_distance_m": 2.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            34,
+            225
+          ],
+          "safe_waypoint_rc": [
+            22,
+            225
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              14,
+              217
+            ],
+            "predicted_target_rc": [
+              34,
+              225
+            ],
+            "safe_subgoal_rc": [
+              22,
+              225
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                14,
+                217
+              ],
+              "quality": 12.908889185108276,
+              "objective": 11.954889185108277,
+              "shortfall": 9.298837589302131,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 33,
+              "knownfree_distance_m": 2.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            38,
+            253
+          ],
+          "safe_waypoint_rc": [
+            17,
+            253
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              14,
+              217
+            ],
+            "predicted_target_rc": [
+              38,
+              253
+            ],
+            "safe_subgoal_rc": [
+              17,
+              253
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                14,
+                217
+              ],
+              "quality": 12.908889185108276,
+              "objective": 11.954889185108277,
+              "shortfall": 9.298837589302131,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 33,
+              "knownfree_distance_m": 2.8
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            34,
+            253
+          ],
+          "safe_waypoint_rc": [
+            17,
+            253
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              14,
+              217
+            ],
+            "predicted_target_rc": [
+              34,
+              253
+            ],
+            "safe_subgoal_rc": [
+              17,
+              253
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                14,
+                217
+              ],
+              "quality": 12.908889185108276,
+              "objective": 11.954889185108277,
+              "shortfall": 9.298837589302131,
+              "open_regions_satisfied": 1,
+              "structural_quality_bin": 33,
+              "knownfree_distance_m": 2.8
+            },
+            "executed_subgoal_structural": null
+          }
+        }
+      ],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000026.json"
+    },
+    {
+      "decision": 27,
+      "native_tick": 797,
+      "room_id": 6,
+      "RoomNode_LOCAL_frontiers": 6,
+      "old_Run10_R4_goal": [
+        63,
+        229
+      ],
+      "old_Run10_executed_goal": [
+        38,
+        241
+      ],
+      "new_R11_original_R4_goal": [
+        63,
+        229
+      ],
+      "new_R11_final_executable_goal": [
+        63,
+        229
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 5
+      },
+      "evaluated_candidates": [
+        {
+          "predicted_target_rc": [
+            75,
+            249
+          ],
+          "safe_waypoint_rc": [
+            75,
+            244
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              63,
+              229
+            ],
+            "predicted_target_rc": [
+              75,
+              249
+            ],
+            "safe_subgoal_rc": [
+              75,
+              244
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                63,
+                229
+              ],
+              "quality": 15.69695633607851,
+              "objective": 14.238956336078509,
+              "shortfall": 13.31471307273609,
+              "open_regions_satisfied": 3,
+              "structural_quality_bin": 29,
+              "knownfree_distance_m": 5.6
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            71,
+            249
+          ],
+          "safe_waypoint_rc": [
+            71,
+            242
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              63,
+              229
+            ],
+            "predicted_target_rc": [
+              71,
+              249
+            ],
+            "safe_subgoal_rc": [
+              71,
+              242
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                63,
+                229
+              ],
+              "quality": 15.69695633607851,
+              "objective": 14.238956336078509,
+              "shortfall": 13.31471307273609,
+              "open_regions_satisfied": 3,
+              "structural_quality_bin": 29,
+              "knownfree_distance_m": 5.6
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            71,
+            253
+          ],
+          "safe_waypoint_rc": [
+            71,
+            242
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              63,
+              229
+            ],
+            "predicted_target_rc": [
+              71,
+              253
+            ],
+            "safe_subgoal_rc": [
+              71,
+              242
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                63,
+                229
+              ],
+              "quality": 15.69695633607851,
+              "objective": 14.238956336078509,
+              "shortfall": 13.31471307273609,
+              "open_regions_satisfied": 3,
+              "structural_quality_bin": 29,
+              "knownfree_distance_m": 5.6
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            75,
+            253
+          ],
+          "safe_waypoint_rc": [
+            75,
+            244
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              63,
+              229
+            ],
+            "predicted_target_rc": [
+              75,
+              253
+            ],
+            "safe_subgoal_rc": [
+              75,
+              244
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                63,
+                229
+              ],
+              "quality": 15.69695633607851,
+              "objective": 14.238956336078509,
+              "shortfall": 13.31471307273609,
+              "open_regions_satisfied": 3,
+              "structural_quality_bin": 29,
+              "knownfree_distance_m": 5.6
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            71,
+            221
+          ],
+          "safe_waypoint_rc": [
+            71,
+            226
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              63,
+              229
+            ],
+            "predicted_target_rc": [
+              71,
+              221
+            ],
+            "safe_subgoal_rc": [
+              71,
+              226
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                63,
+                229
+              ],
+              "quality": 15.69695633607851,
+              "objective": 14.238956336078509,
+              "shortfall": 13.31471307273609,
+              "open_regions_satisfied": 3,
+              "structural_quality_bin": 29,
+              "knownfree_distance_m": 5.6
+            },
+            "executed_subgoal_structural": null
+          }
+        }
+      ],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000027.json"
+    },
+    {
+      "decision": 28,
+      "native_tick": 808,
+      "room_id": 6,
+      "RoomNode_LOCAL_frontiers": 5,
+      "old_Run10_R4_goal": [
+        62,
+        233
+      ],
+      "old_Run10_executed_goal": [
+        70,
+        242
+      ],
+      "new_R11_original_R4_goal": [
+        62,
+        233
+      ],
+      "new_R11_final_executable_goal": [
+        62,
+        233
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 4
+      },
+      "evaluated_candidates": [
+        {
+          "predicted_target_rc": [
+            70,
+            249
+          ],
+          "safe_waypoint_rc": [
+            70,
+            242
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              62,
+              233
+            ],
+            "predicted_target_rc": [
+              70,
+              249
+            ],
+            "safe_subgoal_rc": [
+              70,
+              242
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                62,
+                233
+              ],
+              "quality": 9.984299860508273,
+              "objective": 8.958299860508273,
+              "shortfall": 13.78628044062294,
+              "open_regions_satisfied": 2,
+              "structural_quality_bin": 23,
+              "knownfree_distance_m": 3.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            74,
+            249
+          ],
+          "safe_waypoint_rc": [
+            74,
+            243
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              62,
+              233
+            ],
+            "predicted_target_rc": [
+              74,
+              249
+            ],
+            "safe_subgoal_rc": [
+              74,
+              243
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                62,
+                233
+              ],
+              "quality": 9.984299860508273,
+              "objective": 8.958299860508273,
+              "shortfall": 13.78628044062294,
+              "open_regions_satisfied": 2,
+              "structural_quality_bin": 23,
+              "knownfree_distance_m": 3.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            70,
+            253
+          ],
+          "safe_waypoint_rc": [
+            70,
+            242
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              62,
+              233
+            ],
+            "predicted_target_rc": [
+              70,
+              253
+            ],
+            "safe_subgoal_rc": [
+              70,
+              242
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                62,
+                233
+              ],
+              "quality": 9.984299860508273,
+              "objective": 8.958299860508273,
+              "shortfall": 13.78628044062294,
+              "open_regions_satisfied": 2,
+              "structural_quality_bin": 23,
+              "knownfree_distance_m": 3.2
+            },
+            "executed_subgoal_structural": null
+          }
+        },
+        {
+          "predicted_target_rc": [
+            74,
+            253
+          ],
+          "safe_waypoint_rc": [
+            74,
+            243
+          ],
+          "arbitration": {
+            "decision": "KEEP_R4_GOAL",
+            "reason": "BASELINE_OR_SUBGOAL_ROUTE_NOT_STRUCTURALLY_REACHABLE",
+            "baseline_goal_rc": [
+              62,
+              233
+            ],
+            "predicted_target_rc": [
+              74,
+              253
+            ],
+            "safe_subgoal_rc": [
+              74,
+              243
+            ],
+            "used_frontier_as_goal": false,
+            "structural_comparison": true,
+            "score_scale": "G2_R3_structural_pathwise_quality",
+            "R4_knownfree_structural": {
+              "goal_core_rc": [
+                62,
+                233
+              ],
+              "quality": 9.984299860508273,
+              "objective": 8.958299860508273,
+              "shortfall": 13.78628044062294,
+              "open_regions_satisfied": 2,
+              "structural_quality_bin": 23,
+              "knownfree_distance_m": 3.2
+            },
+            "executed_subgoal_structural": null
+          }
+        }
+      ],
+      "backstop": null,
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000028.json"
+    },
+    {
+      "decision": 29,
+      "native_tick": 826,
+      "room_id": 6,
+      "RoomNode_LOCAL_frontiers": 2,
+      "old_Run10_R4_goal": [
+        6,
+        146
+      ],
+      "old_Run10_executed_goal": [
+        70,
+        249
+      ],
+      "new_R11_original_R4_goal": null,
+      "new_R11_final_executable_goal": [
+        6,
+        150
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 0
+      },
+      "evaluated_candidates": [],
+      "backstop": {
+        "goal_core_rc": [
+          6,
+          150
+        ],
+        "generator": "G2_R3_STRUCTURAL_WITNESS_BACKSTOP",
+        "structural_view": {
+          "goal_core_rc": [
+            6,
+            150
+          ],
+          "quality": 3.536899261337213,
+          "objective": 0.2788992613372134,
+          "shortfall": 7.809582168080498,
+          "open_regions_satisfied": 1,
+          "structural_quality_bin": 18,
+          "knownfree_distance_m": 15.6
+        },
+        "used_WFD_for_goal_generation": false,
+        "reposition_only": false
+      },
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000029.json"
+    },
+    {
+      "decision": 30,
+      "native_tick": 829,
+      "room_id": 6,
+      "RoomNode_LOCAL_frontiers": 2,
+      "old_Run10_R4_goal": [
+        10,
+        157
+      ],
+      "old_Run10_executed_goal": [
+        10,
+        157
+      ],
+      "new_R11_original_R4_goal": null,
+      "new_R11_final_executable_goal": [
+        6,
+        161
+      ],
+      "new_R11_predicted_target": null,
+      "arbitration": {
+        "decision": "KEEP_R4_GOAL",
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION",
+        "evaluated_candidate_count": 0
+      },
+      "evaluated_candidates": [],
+      "backstop": {
+        "goal_core_rc": [
+          6,
+          161
+        ],
+        "generator": "G2_R3_STRUCTURAL_WITNESS_BACKSTOP",
+        "structural_view": {
+          "goal_core_rc": [
+            6,
+            161
+          ],
+          "quality": 3.3845014475632578,
+          "objective": 0.19850144756325755,
+          "shortfall": 7.961979981854453,
+          "open_regions_satisfied": 1,
+          "structural_quality_bin": 18,
+          "knownfree_distance_m": 15.2
+        },
+        "used_WFD_for_goal_generation": false,
+        "reposition_only": false
+      },
+      "reposition_only": false,
+      "no_wfd_used_as_goal": true,
+      "snapshots_from_other_policy": true,
+      "source_log_g2": "/work/com1/mx072_g2_r4_frontier_exit_run10r2_20261017/native_g2_r4_frontier_exit_run10r2/G2_R4_FRONTIER_EXIT_RUN10R2_visvarprob/g2_r4/decisions/decision_000030.json"
+    }
+  ]
+}

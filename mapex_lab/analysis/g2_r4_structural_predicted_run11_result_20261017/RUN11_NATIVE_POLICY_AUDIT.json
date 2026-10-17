@@ -1,0 +1,702 @@
+{
+  "schema": "R11_COM1_NATIVE_SOURCE_AUDIT",
+  "run": "Run11",
+  "terminal": "SOURCE_TERMINAL",
+  "native_steps": 1017,
+  "trajectory_distance_m": 285.471,
+  "primary_decisions": 26,
+  "local_g2_goals": 16,
+  "native_free_local_goals_exactly_visited": 16,
+  "global_decisions": 10,
+  "g2_predicted_goal_selected": 0,
+  "predicted_candidates_scored": 35,
+  "G2_backstops": 2,
+  "all_exits_wfd_exhausted": true,
+  "local_to_global_exits": [
+    {
+      "decision": 5,
+      "tick": 105,
+      "mode": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "frontiers": 0,
+      "native_goal": [
+        560,
+        681
+      ],
+      "g2": null,
+      "r4": null,
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": null
+    },
+    {
+      "decision": 11,
+      "tick": 316,
+      "mode": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "frontiers": 0,
+      "native_goal": [
+        553,
+        604
+      ],
+      "g2": null,
+      "r4": null,
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": null
+    },
+    {
+      "decision": 15,
+      "tick": 453,
+      "mode": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "frontiers": 0,
+      "native_goal": [
+        547,
+        540
+      ],
+      "g2": null,
+      "r4": null,
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": null
+    },
+    {
+      "decision": 18,
+      "tick": 531,
+      "mode": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "frontiers": 0,
+      "native_goal": [
+        658,
+        534
+      ],
+      "g2": null,
+      "r4": null,
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": null
+    },
+    {
+      "decision": 22,
+      "tick": 660,
+      "mode": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "frontiers": 0,
+      "native_goal": [
+        667,
+        743
+      ],
+      "g2": null,
+      "r4": null,
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": null
+    },
+    {
+      "decision": 24,
+      "tick": 781,
+      "mode": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "frontiers": 0,
+      "native_goal": [
+        679,
+        613
+      ],
+      "g2": null,
+      "r4": null,
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": null
+    }
+  ],
+  "decisions": [
+    {
+      "decision": 1,
+      "tick": 0,
+      "mode": "GLOBAL",
+      "reason": "ROBOT_NOT_IN_CONFIRMED_ROOM",
+      "frontiers": 0,
+      "native_goal": [
+        653,
+        604
+      ],
+      "g2": null,
+      "r4": null,
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": null
+    },
+    {
+      "decision": 2,
+      "tick": 12,
+      "mode": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "frontiers": 5,
+      "native_goal": [
+        671,
+        635
+      ],
+      "g2": "GOAL",
+      "r4": "REPLAN",
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 8,
+      "R4_baseline": [
+        171,
+        135
+      ],
+      "R11_arb": {
+        "decision": "KEEP_R4_GOAL",
+        "evaluated_candidate_count": 8,
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION"
+      }
+    },
+    {
+      "decision": 3,
+      "tick": 28,
+      "mode": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "frontiers": 4,
+      "native_goal": [
+        679,
+        603
+      ],
+      "g2": "GOAL",
+      "r4": "REPLAN",
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 1,
+      "R4_baseline": [
+        179,
+        103
+      ],
+      "R11_arb": {
+        "decision": "KEEP_R4_GOAL",
+        "evaluated_candidate_count": 1,
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION"
+      }
+    },
+    {
+      "decision": 4,
+      "tick": 52,
+      "mode": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "frontiers": 3,
+      "native_goal": [
+        695,
+        699
+      ],
+      "g2": "GOAL",
+      "r4": "KEEP",
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 1,
+      "R4_baseline": [
+        195,
+        199
+      ],
+      "R11_arb": {
+        "decision": "KEEP_R4_GOAL",
+        "evaluated_candidate_count": 1,
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION"
+      }
+    },
+    {
+      "decision": 5,
+      "tick": 105,
+      "mode": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "frontiers": 0,
+      "native_goal": [
+        560,
+        681
+      ],
+      "g2": null,
+      "r4": null,
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": null
+    },
+    {
+      "decision": 6,
+      "tick": 163,
+      "mode": "GLOBAL",
+      "reason": "ROBOT_NOT_IN_CONFIRMED_ROOM",
+      "frontiers": 0,
+      "native_goal": [
+        518,
+        708
+      ],
+      "g2": null,
+      "r4": null,
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": null
+    },
+    {
+      "decision": 7,
+      "tick": 185,
+      "mode": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "frontiers": 6,
+      "native_goal": [
+        509,
+        693
+      ],
+      "g2": "GOAL",
+      "r4": "REPLAN",
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": [
+        9,
+        193
+      ],
+      "R11_arb": {
+        "decision": "KEEP_R4_GOAL",
+        "evaluated_candidate_count": 0,
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION"
+      }
+    },
+    {
+      "decision": 8,
+      "tick": 193,
+      "mode": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "frontiers": 3,
+      "native_goal": [
+        525,
+        757
+      ],
+      "g2": "GOAL",
+      "r4": "REPLAN",
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 7,
+      "R4_baseline": [
+        25,
+        257
+      ],
+      "R11_arb": {
+        "decision": "KEEP_R4_GOAL",
+        "evaluated_candidate_count": 7,
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION"
+      }
+    },
+    {
+      "decision": 9,
+      "tick": 223,
+      "mode": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "frontiers": 5,
+      "native_goal": [
+        573,
+        729
+      ],
+      "g2": "GOAL",
+      "r4": "REPLAN",
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 4,
+      "R4_baseline": [
+        73,
+        229
+      ],
+      "R11_arb": {
+        "decision": "KEEP_R4_GOAL",
+        "evaluated_candidate_count": 4,
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION"
+      }
+    },
+    {
+      "decision": 10,
+      "tick": 249,
+      "mode": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "frontiers": 1,
+      "native_goal": [
+        505,
+        645
+      ],
+      "g2": "GOAL",
+      "r4": "DEFER_ROOM",
+      "backstop": true,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": {
+        "decision": "KEEP_R4_GOAL",
+        "evaluated_candidate_count": 0,
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION"
+      }
+    },
+    {
+      "decision": 11,
+      "tick": 316,
+      "mode": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "frontiers": 0,
+      "native_goal": [
+        553,
+        604
+      ],
+      "g2": null,
+      "r4": null,
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": null
+    },
+    {
+      "decision": 12,
+      "tick": 372,
+      "mode": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "frontiers": 5,
+      "native_goal": [
+        527,
+        587
+      ],
+      "g2": "GOAL",
+      "r4": "REPLAN",
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": [
+        27,
+        87
+      ],
+      "R11_arb": {
+        "decision": "KEEP_R4_GOAL",
+        "evaluated_candidate_count": 0,
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION"
+      }
+    },
+    {
+      "decision": 13,
+      "tick": 391,
+      "mode": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "frontiers": 2,
+      "native_goal": [
+        507,
+        615
+      ],
+      "g2": "GOAL",
+      "r4": "KEEP",
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 1,
+      "R4_baseline": [
+        7,
+        115
+      ],
+      "R11_arb": {
+        "decision": "KEEP_R4_GOAL",
+        "evaluated_candidate_count": 1,
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION"
+      }
+    },
+    {
+      "decision": 14,
+      "tick": 415,
+      "mode": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "frontiers": 1,
+      "native_goal": [
+        539,
+        559
+      ],
+      "g2": "GOAL",
+      "r4": "REPLAN",
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": [
+        39,
+        59
+      ],
+      "R11_arb": {
+        "decision": "KEEP_R4_GOAL",
+        "evaluated_candidate_count": 0,
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION"
+      }
+    },
+    {
+      "decision": 15,
+      "tick": 453,
+      "mode": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "frontiers": 0,
+      "native_goal": [
+        547,
+        540
+      ],
+      "g2": null,
+      "r4": null,
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": null
+    },
+    {
+      "decision": 16,
+      "tick": 483,
+      "mode": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "frontiers": 5,
+      "native_goal": [
+        524,
+        516
+      ],
+      "g2": "GOAL",
+      "r4": "REPLAN",
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 5,
+      "R4_baseline": [
+        24,
+        16
+      ],
+      "R11_arb": {
+        "decision": "KEEP_R4_GOAL",
+        "evaluated_candidate_count": 5,
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION"
+      }
+    },
+    {
+      "decision": 17,
+      "tick": 502,
+      "mode": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "frontiers": 1,
+      "native_goal": [
+        580,
+        532
+      ],
+      "g2": "GOAL",
+      "r4": "REPLAN",
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": [
+        80,
+        32
+      ],
+      "R11_arb": {
+        "decision": "KEEP_R4_GOAL",
+        "evaluated_candidate_count": 0,
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION"
+      }
+    },
+    {
+      "decision": 18,
+      "tick": 531,
+      "mode": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "frontiers": 0,
+      "native_goal": [
+        658,
+        534
+      ],
+      "g2": null,
+      "r4": null,
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": null
+    },
+    {
+      "decision": 19,
+      "tick": 583,
+      "mode": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "frontiers": 4,
+      "native_goal": [
+        647,
+        515
+      ],
+      "g2": "GOAL",
+      "r4": "REPLAN",
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 8,
+      "R4_baseline": [
+        147,
+        15
+      ],
+      "R11_arb": {
+        "decision": "KEEP_R4_GOAL",
+        "evaluated_candidate_count": 8,
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION"
+      }
+    },
+    {
+      "decision": 20,
+      "tick": 595,
+      "mode": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "frontiers": 2,
+      "native_goal": [
+        683,
+        535
+      ],
+      "g2": "GOAL",
+      "r4": "KEEP",
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": [
+        183,
+        35
+      ],
+      "R11_arb": {
+        "decision": "KEEP_R4_GOAL",
+        "evaluated_candidate_count": 0,
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION"
+      }
+    },
+    {
+      "decision": 21,
+      "tick": 623,
+      "mode": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "frontiers": 1,
+      "native_goal": [
+        639,
+        511
+      ],
+      "g2": "GOAL",
+      "r4": "DEFER_ROOM",
+      "backstop": true,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": {
+        "decision": "KEEP_R4_GOAL",
+        "evaluated_candidate_count": 0,
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION"
+      }
+    },
+    {
+      "decision": 22,
+      "tick": 660,
+      "mode": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "frontiers": 0,
+      "native_goal": [
+        667,
+        743
+      ],
+      "g2": null,
+      "r4": null,
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": null
+    },
+    {
+      "decision": 23,
+      "tick": 774,
+      "mode": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "frontiers": 1,
+      "native_goal": [
+        679,
+        747
+      ],
+      "g2": "GOAL",
+      "r4": "REPLAN",
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": [
+        179,
+        247
+      ],
+      "R11_arb": {
+        "decision": "KEEP_R4_GOAL",
+        "evaluated_candidate_count": 0,
+        "reason": "NO_PREDICTED_CANDIDATE_PASSED_STRUCTURAL_ARBITRATION"
+      }
+    },
+    {
+      "decision": 24,
+      "tick": 781,
+      "mode": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "frontiers": 0,
+      "native_goal": [
+        679,
+        613
+      ],
+      "g2": null,
+      "r4": null,
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": null
+    },
+    {
+      "decision": 25,
+      "tick": 873,
+      "mode": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "frontiers": 0,
+      "native_goal": [
+        546,
+        509
+      ],
+      "g2": null,
+      "r4": null,
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": null
+    },
+    {
+      "decision": 26,
+      "tick": 957,
+      "mode": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "frontiers": 0,
+      "native_goal": [
+        519,
+        570
+      ],
+      "g2": null,
+      "r4": null,
+      "backstop": false,
+      "R11_pred_selected": false,
+      "proposals": 0,
+      "R4_baseline": null,
+      "R11_arb": null
+    }
+  ],
+  "maker_audit_only": true
+}
