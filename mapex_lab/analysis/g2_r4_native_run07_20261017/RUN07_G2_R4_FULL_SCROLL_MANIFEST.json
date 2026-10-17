@@ -1,0 +1,557 @@
+{
+  "count": 30,
+  "categories": {
+    "LOCAL_G2": 17,
+    "G2_DEFER": 6,
+    "GLOBAL_MAPEX": 7
+  },
+  "decisions": [
+    {
+      "decision": 1,
+      "native_tick": 0,
+      "mode": "GLOBAL",
+      "category": "GLOBAL_MAPEX",
+      "robot_global_rc": [
+        631,
+        631
+      ],
+      "goal_global_rc": [
+        653,
+        604
+      ],
+      "source_obs_sha256": "8cae66becea9498df0af310f568c2647f4b321880a852fa1b872fe75dd185116",
+      "source_same_epoch_verified": true,
+      "room_id": null,
+      "g2_decision": null
+    },
+    {
+      "decision": 2,
+      "native_tick": 12,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        647,
+        611
+      ],
+      "goal_global_rc": [
+        671,
+        635
+      ],
+      "source_obs_sha256": "de96490d2c94ca0b10ff7f359b2b8fe3b4bc9a8d5656194b9ceec8c13c539b23",
+      "source_same_epoch_verified": true,
+      "room_id": 1,
+      "g2_decision": "GOAL"
+    },
+    {
+      "decision": 3,
+      "native_tick": 25,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        669,
+        628
+      ],
+      "goal_global_rc": [
+        697,
+        696
+      ],
+      "source_obs_sha256": "e42073876ccd4af586028b9c465c1e8b6e0a27a166e82db697b8637e6c79a3ae",
+      "source_same_epoch_verified": true,
+      "room_id": 1,
+      "g2_decision": "GOAL"
+    },
+    {
+      "decision": 4,
+      "native_tick": 54,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        695,
+        689
+      ],
+      "goal_global_rc": [
+        691,
+        605
+      ],
+      "source_obs_sha256": "2b837eeacd08e57e28099662eeaab67696df78154c811c06c26ca6be315f305d",
+      "source_same_epoch_verified": true,
+      "room_id": 1,
+      "g2_decision": "GOAL"
+    },
+    {
+      "decision": 5,
+      "native_tick": 95,
+      "mode": "GLOBAL",
+      "category": "G2_DEFER",
+      "robot_global_rc": [
+        691,
+        614
+      ],
+      "goal_global_rc": [
+        594,
+        560
+      ],
+      "source_obs_sha256": "064c5f85009f16fb3c4045055b3e1bc89fdc834c2c0622c4fd7c752627e2da59",
+      "source_same_epoch_verified": true,
+      "room_id": 1,
+      "g2_decision": "DEFER"
+    },
+    {
+      "decision": 6,
+      "native_tick": 150,
+      "mode": "GLOBAL",
+      "category": "GLOBAL_MAPEX",
+      "robot_global_rc": [
+        601,
+        561
+      ],
+      "goal_global_rc": [
+        540,
+        521
+      ],
+      "source_obs_sha256": "468e3a0acafd7d3500191479ac5e1ecf6747e1ca5fdc0188f2fa614761c646af",
+      "source_same_epoch_verified": true,
+      "room_id": null,
+      "g2_decision": null
+    },
+    {
+      "decision": 7,
+      "native_tick": 182,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        540,
+        528
+      ],
+      "goal_global_rc": [
+        532,
+        504
+      ],
+      "source_obs_sha256": "f80535ded715f7fae5637156c71a0f9cd4e2f9b8df8a9831301d2f5742023ee0",
+      "source_same_epoch_verified": true,
+      "room_id": 2,
+      "g2_decision": "GOAL"
+    },
+    {
+      "decision": 8,
+      "native_tick": 190,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        532,
+        512
+      ],
+      "goal_global_rc": [
+        524,
+        512
+      ],
+      "source_obs_sha256": "3dd541fe478b407c91afa18c2c4d643f993a8364a9d462be8f29f3f005054eea",
+      "source_same_epoch_verified": true,
+      "room_id": 2,
+      "g2_decision": "GOAL"
+    },
+    {
+      "decision": 9,
+      "native_tick": 191,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        529,
+        512
+      ],
+      "goal_global_rc": [
+        517,
+        512
+      ],
+      "source_obs_sha256": "0c8e6109d6404a5efe3fb112eea50c6259fc695e49624ca3da908fb3c95fa310",
+      "source_same_epoch_verified": true,
+      "room_id": 2,
+      "g2_decision": "GOAL"
+    },
+    {
+      "decision": 10,
+      "native_tick": 192,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        526,
+        512
+      ],
+      "goal_global_rc": [
+        518,
+        512
+      ],
+      "source_obs_sha256": "cd8d11c0fbd911761a42c4997d130b981521771419d093f4e5d8cc5d89c6f78e",
+      "source_same_epoch_verified": true,
+      "room_id": 2,
+      "g2_decision": "GOAL"
+    },
+    {
+      "decision": 11,
+      "native_tick": 193,
+      "mode": "GLOBAL",
+      "category": "GLOBAL_MAPEX",
+      "robot_global_rc": [
+        523,
+        512
+      ],
+      "goal_global_rc": [
+        586,
+        669
+      ],
+      "source_obs_sha256": "ad4b937396c31159c6c4c95884a4f6a5db950f5392827e2093fe86ca7850dc47",
+      "source_same_epoch_verified": true,
+      "room_id": 2,
+      "g2_decision": null
+    },
+    {
+      "decision": 12,
+      "native_tick": 267,
+      "mode": "GLOBAL",
+      "category": "GLOBAL_MAPEX",
+      "robot_global_rc": [
+        581,
+        676
+      ],
+      "goal_global_rc": [
+        513,
+        721
+      ],
+      "source_obs_sha256": "5d9c5dc42bc05d19282fb9b3ef281ac7d638ca78ab5671aa8f9971ca71c83fb5",
+      "source_same_epoch_verified": true,
+      "room_id": null,
+      "g2_decision": null
+    },
+    {
+      "decision": 13,
+      "native_tick": 303,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        518,
+        715
+      ],
+      "goal_global_rc": [
+        514,
+        751
+      ],
+      "source_obs_sha256": "a1b4b3da46a844ab67e8257ca5e2793f3f7990d51a37a73e6861bd0fb479663d",
+      "source_same_epoch_verified": true,
+      "room_id": 3,
+      "g2_decision": "GOAL"
+    },
+    {
+      "decision": 14,
+      "native_tick": 314,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        514,
+        744
+      ],
+      "goal_global_rc": [
+        562,
+        732
+      ],
+      "source_obs_sha256": "f00aacc6bb0941e59621a70d630b42ded8cc71b8f31e153b16a2f4e8050af68f",
+      "source_same_epoch_verified": true,
+      "room_id": 3,
+      "g2_decision": "GOAL"
+    },
+    {
+      "decision": 15,
+      "native_tick": 334,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        555,
+        731
+      ],
+      "goal_global_rc": [
+        563,
+        735
+      ],
+      "source_obs_sha256": "78dfac88db3a893580e6d90e07d5e9a7d001baa4401c3db2edfeda924658d2c1",
+      "source_same_epoch_verified": true,
+      "room_id": 3,
+      "g2_decision": "GOAL"
+    },
+    {
+      "decision": 16,
+      "native_tick": 335,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        558,
+        731
+      ],
+      "goal_global_rc": [
+        506,
+        643
+      ],
+      "source_obs_sha256": "f2132871a9e8208b7bed06a564d09f0cbe4de7bcf2e5ceacd64f216e4d343319",
+      "source_same_epoch_verified": true,
+      "room_id": 3,
+      "g2_decision": "GOAL"
+    },
+    {
+      "decision": 17,
+      "native_tick": 394,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        506,
+        650
+      ],
+      "goal_global_rc": [
+        562,
+        730
+      ],
+      "source_obs_sha256": "17c04a82f1aec79f9ecfb73eaaaf6ad61f82b6f6f44283c40095065cfa561783",
+      "source_same_epoch_verified": true,
+      "room_id": 3,
+      "g2_decision": "GOAL"
+    },
+    {
+      "decision": 18,
+      "native_tick": 452,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        555,
+        731
+      ],
+      "goal_global_rc": [
+        563,
+        727
+      ],
+      "source_obs_sha256": "17c04a82f1aec79f9ecfb73eaaaf6ad61f82b6f6f44283c40095065cfa561783",
+      "source_same_epoch_verified": true,
+      "room_id": 3,
+      "g2_decision": "GOAL"
+    },
+    {
+      "decision": 19,
+      "native_tick": 453,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        558,
+        731
+      ],
+      "goal_global_rc": [
+        562,
+        727
+      ],
+      "source_obs_sha256": "17c04a82f1aec79f9ecfb73eaaaf6ad61f82b6f6f44283c40095065cfa561783",
+      "source_same_epoch_verified": true,
+      "room_id": 3,
+      "g2_decision": "GOAL"
+    },
+    {
+      "decision": 20,
+      "native_tick": 454,
+      "mode": "GLOBAL",
+      "category": "G2_DEFER",
+      "robot_global_rc": [
+        561,
+        731
+      ],
+      "goal_global_rc": [
+        652,
+        746
+      ],
+      "source_obs_sha256": "93502ef62d93182bb0d18c7ada1985a8931555b06200ca0e1ee8640b9c54b23c",
+      "source_same_epoch_verified": true,
+      "room_id": 3,
+      "g2_decision": "DEFER"
+    },
+    {
+      "decision": 21,
+      "native_tick": 574,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        653,
+        739
+      ],
+      "goal_global_rc": [
+        681,
+        743
+      ],
+      "source_obs_sha256": "2c83b18753d66da70f10caafe5fe637427c699cc5784e74957dfa530ec1262fd",
+      "source_same_epoch_verified": true,
+      "room_id": 4,
+      "g2_decision": "GOAL"
+    },
+    {
+      "decision": 22,
+      "native_tick": 583,
+      "mode": "GLOBAL",
+      "category": "G2_DEFER",
+      "robot_global_rc": [
+        672,
+        747
+      ],
+      "goal_global_rc": [
+        689,
+        543
+      ],
+      "source_obs_sha256": "5bc2921558f6d1d0ab4a195d80a6e6039fb6a59f926a4f727f6d248d88e7a387",
+      "source_same_epoch_verified": true,
+      "room_id": 4,
+      "g2_decision": "DEFER"
+    },
+    {
+      "decision": 23,
+      "native_tick": 691,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        680,
+        543
+      ],
+      "goal_global_rc": [
+        648,
+        507
+      ],
+      "source_obs_sha256": "1382bc65e0d6acee3a70aa126289f003aa07ad41486a5e9b5aea5b78b8935559",
+      "source_same_epoch_verified": true,
+      "room_id": 5,
+      "g2_decision": "GOAL"
+    },
+    {
+      "decision": 24,
+      "native_tick": 712,
+      "mode": "GLOBAL",
+      "category": "G2_DEFER",
+      "robot_global_rc": [
+        648,
+        516
+      ],
+      "goal_global_rc": [
+        520,
+        565
+      ],
+      "source_obs_sha256": "8ac39827b399e00d5a43d6e5d9e82739958fd031a2dbdb312bc579ab73a3a806",
+      "source_same_epoch_verified": true,
+      "room_id": 5,
+      "g2_decision": "DEFER"
+    },
+    {
+      "decision": 25,
+      "native_tick": 780,
+      "mode": "LOCAL",
+      "category": "LOCAL_G2",
+      "robot_global_rc": [
+        545,
+        565
+      ],
+      "goal_global_rc": [
+        517,
+        617
+      ],
+      "source_obs_sha256": "0d950d37a4fff808b44bb3c70dc3f776dff320c8bb25c2dd5e1617a1c6cc2e58",
+      "source_same_epoch_verified": true,
+      "room_id": 6,
+      "g2_decision": "GOAL"
+    },
+    {
+      "decision": 26,
+      "native_tick": 806,
+      "mode": "GLOBAL",
+      "category": "G2_DEFER",
+      "robot_global_rc": [
+        525,
+        621
+      ],
+      "goal_global_rc": [
+        539,
+        640
+      ],
+      "source_obs_sha256": "f61ebb6448caa2ad2a5171c41dc524b6b49ae21190fc7f40ac2430cc07204a8b",
+      "source_same_epoch_verified": true,
+      "room_id": 6,
+      "g2_decision": "DEFER"
+    },
+    {
+      "decision": 27,
+      "native_tick": 868,
+      "mode": "GLOBAL",
+      "category": "GLOBAL_MAPEX",
+      "robot_global_rc": [
+        530,
+        640
+      ],
+      "goal_global_rc": [
+        682,
+        732
+      ],
+      "source_obs_sha256": "24d9a88359bef09ede15b10c189ea36829ff1f58247d63f104ebff2ad5b5886f",
+      "source_same_epoch_verified": true,
+      "room_id": 7,
+      "g2_decision": null
+    },
+    {
+      "decision": 28,
+      "native_tick": 962,
+      "mode": "GLOBAL",
+      "category": "GLOBAL_MAPEX",
+      "robot_global_rc": [
+        689,
+        737
+      ],
+      "goal_global_rc": [
+        640,
+        545
+      ],
+      "source_obs_sha256": "580eea7fa0cdaedbd13bd82955d09efa4e451c5b41f1c39a4038dc72988d592a",
+      "source_same_epoch_verified": true,
+      "room_id": 8,
+      "g2_decision": null
+    },
+    {
+      "decision": 29,
+      "native_tick": 1078,
+      "mode": "GLOBAL",
+      "category": "GLOBAL_MAPEX",
+      "robot_global_rc": [
+        640,
+        538
+      ],
+      "goal_global_rc": [
+        519,
+        569
+      ],
+      "source_obs_sha256": "7399aba21baec1e1157454fb26812fd5ad3cecdacdf02f667323dcae51f015b3",
+      "source_same_epoch_verified": true,
+      "room_id": 9,
+      "g2_decision": null
+    },
+    {
+      "decision": 30,
+      "native_tick": 1159,
+      "mode": "GLOBAL",
+      "category": "G2_DEFER",
+      "robot_global_rc": [
+        511,
+        574
+      ],
+      "goal_global_rc": [
+        519,
+        602
+      ],
+      "source_obs_sha256": "c3c0be7f203a3daee03b2fa2c22de299d504c577073712519fef663b703054fc",
+      "source_same_epoch_verified": true,
+      "room_id": 10,
+      "g2_decision": "DEFER"
+    }
+  ],
+  "terminal": {
+    "start_time": 1792223990.6247222,
+    "cur_step": 1193,
+    "mission_complete": true,
+    "fail_reason": "MAPEX_NO_SELECTABLE_FRONTIER_NOT_GT",
+    "last_exp_time_s": 284.19897627830505
+  }
+}
