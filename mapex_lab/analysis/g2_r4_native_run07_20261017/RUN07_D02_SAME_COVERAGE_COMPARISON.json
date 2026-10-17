@@ -1,0 +1,718 @@
+{
+  "schema": "G2R4_RUN07_NATIVE_MATCHED_D02_V1",
+  "method": "Fixed original D02 RoomNode mask from frozen observation-only memory",
+  "initial_room_cells": 6564,
+  "initial_room_unknown": 3889,
+  "initial_tick": 12,
+  "threshold_270_equivalent": "(3889-270)/3889=93.057% of initially unknown observed, not 93.1% of all room area",
+  "source_D02_hash": "de96490d2c94ca0b10ff7f359b2b8fe3b4bc9a8d5656194b9ceec8c13c539b23",
+  "native_arms": {
+    "Run04_MapEx_RoomNode": {
+      "source_path": "/work/com1/mx072_room_r41_native_r1/native_opt_r41_lama3small_run04/R41_OPT_LAMA3_SMALLROI_RUN04_visvarprob",
+      "last_saved_tick": 708,
+      "last_unknown": 260,
+      "initial_observed_mismatched_cells": 0,
+      "total_distance_since_D02_m": 195.737,
+      "milestones": {
+        "2000": {
+          "tick": 23,
+          "native_ticks_since_D02": 11,
+          "unknown": 1448,
+          "distance_m_since_D02": 2.6889,
+          "distance_m_since_run_start": 6.0597,
+          "compute_components_s": {
+            "replans": 1,
+            "model_s": 0.813,
+            "room_and_mapex_score_s": 0.581,
+            "G2_R4_s": 0
+          },
+          "native_logged_step_wall_s": 2.023,
+          "native_step_wall_coverage": 11,
+          "virtual_travel_at_0p3mps_s": 8.963,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 10.357
+        },
+        "1000": {
+          "tick": 25,
+          "native_ticks_since_D02": 13,
+          "unknown": 877,
+          "distance_m_since_D02": 3.2889,
+          "distance_m_since_run_start": 6.6597,
+          "compute_components_s": {
+            "replans": 1,
+            "model_s": 0.813,
+            "room_and_mapex_score_s": 0.581,
+            "G2_R4_s": 0
+          },
+          "native_logged_step_wall_s": 2.137,
+          "native_step_wall_coverage": 13,
+          "virtual_travel_at_0p3mps_s": 10.963,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 12.357
+        },
+        "600": {
+          "tick": 34,
+          "native_ticks_since_D02": 22,
+          "unknown": 595,
+          "distance_m_since_D02": 5.7597,
+          "distance_m_since_run_start": 9.1305,
+          "compute_components_s": {
+            "replans": 2,
+            "model_s": 1.638,
+            "room_and_mapex_score_s": 1.194,
+            "G2_R4_s": 0
+          },
+          "native_logged_step_wall_s": 4.078,
+          "native_step_wall_coverage": 22,
+          "virtual_travel_at_0p3mps_s": 19.199,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 22.031
+        },
+        "400": {
+          "tick": 78,
+          "native_ticks_since_D02": 66,
+          "unknown": 400,
+          "distance_m_since_D02": 17.9666,
+          "distance_m_since_run_start": 21.3374,
+          "compute_components_s": {
+            "replans": 4,
+            "model_s": 3.28,
+            "room_and_mapex_score_s": 2.214,
+            "G2_R4_s": 0
+          },
+          "native_logged_step_wall_s": 9.202,
+          "native_step_wall_coverage": 66,
+          "virtual_travel_at_0p3mps_s": 59.889,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 65.383
+        },
+        "342": {
+          "tick": 89,
+          "native_ticks_since_D02": 77,
+          "unknown": 334,
+          "distance_m_since_D02": 21.1902,
+          "distance_m_since_run_start": 24.561,
+          "compute_components_s": {
+            "replans": 4,
+            "model_s": 3.28,
+            "room_and_mapex_score_s": 2.214,
+            "G2_R4_s": 0
+          },
+          "native_logged_step_wall_s": 9.811,
+          "native_step_wall_coverage": 77,
+          "virtual_travel_at_0p3mps_s": 70.634,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 76.128
+        },
+        "320": {
+          "tick": 92,
+          "native_ticks_since_D02": 80,
+          "unknown": 310,
+          "distance_m_since_D02": 22.0902,
+          "distance_m_since_run_start": 25.461,
+          "compute_components_s": {
+            "replans": 4,
+            "model_s": 3.28,
+            "room_and_mapex_score_s": 2.214,
+            "G2_R4_s": 0
+          },
+          "native_logged_step_wall_s": 9.977,
+          "native_step_wall_coverage": 80,
+          "virtual_travel_at_0p3mps_s": 73.634,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 79.128
+        },
+        "300": {
+          "tick": 94,
+          "native_ticks_since_D02": 82,
+          "unknown": 297,
+          "distance_m_since_D02": 22.6902,
+          "distance_m_since_run_start": 26.061,
+          "compute_components_s": {
+            "replans": 4,
+            "model_s": 3.28,
+            "room_and_mapex_score_s": 2.214,
+            "G2_R4_s": 0
+          },
+          "native_logged_step_wall_s": 10.088,
+          "native_step_wall_coverage": 82,
+          "virtual_travel_at_0p3mps_s": 75.634,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 81.128
+        },
+        "270": {
+          "tick": 102,
+          "native_ticks_since_D02": 90,
+          "unknown": 269,
+          "distance_m_since_D02": 24.861,
+          "distance_m_since_run_start": 28.2318,
+          "compute_components_s": {
+            "replans": 5,
+            "model_s": 4.098,
+            "room_and_mapex_score_s": 2.701,
+            "G2_R4_s": 0
+          },
+          "native_logged_step_wall_s": 11.844,
+          "native_step_wall_coverage": 90,
+          "virtual_travel_at_0p3mps_s": 82.87,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 89.669
+        }
+      },
+      "g2_decisions": [],
+      "decision_count_total": 25
+    },
+    "Run05_plain_MapEx": {
+      "source_path": "/work/com1/mx072_room_r41_native_r1/native_plain_lama3small_run05/MAPEX_PLAIN_LAMA3SMALL_RUN05_visvarprob",
+      "last_saved_tick": 1297,
+      "last_unknown": 260,
+      "initial_observed_mismatched_cells": 0,
+      "total_distance_since_D02_m": 366.325,
+      "milestones": {
+        "2000": {
+          "tick": 281,
+          "native_ticks_since_D02": 269,
+          "unknown": 1978,
+          "distance_m_since_D02": 76.6512,
+          "distance_m_since_run_start": 80.022,
+          "compute_components_s": {
+            "replans": 8,
+            "model_s": 15.959,
+            "room_and_mapex_score_s": 0.0,
+            "G2_R4_s": 0
+          },
+          "virtual_travel_at_0p3mps_s": 255.504,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 271.463
+        },
+        "1000": {
+          "tick": 310,
+          "native_ticks_since_D02": 298,
+          "unknown": 918,
+          "distance_m_since_D02": 84.2817,
+          "distance_m_since_run_start": 87.6525,
+          "compute_components_s": {
+            "replans": 9,
+            "model_s": 17.887,
+            "room_and_mapex_score_s": 0.0,
+            "G2_R4_s": 0
+          },
+          "virtual_travel_at_0p3mps_s": 280.939,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 298.826
+        },
+        "600": {
+          "tick": 335,
+          "native_ticks_since_D02": 323,
+          "unknown": 569,
+          "distance_m_since_D02": 91.3233,
+          "distance_m_since_run_start": 94.6941,
+          "compute_components_s": {
+            "replans": 9,
+            "model_s": 17.887,
+            "room_and_mapex_score_s": 0.0,
+            "G2_R4_s": 0
+          },
+          "virtual_travel_at_0p3mps_s": 304.411,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 322.298
+        },
+        "400": {
+          "tick": 337,
+          "native_ticks_since_D02": 325,
+          "unknown": 301,
+          "distance_m_since_D02": 91.9233,
+          "distance_m_since_run_start": 95.2941,
+          "compute_components_s": {
+            "replans": 9,
+            "model_s": 17.887,
+            "room_and_mapex_score_s": 0.0,
+            "G2_R4_s": 0
+          },
+          "virtual_travel_at_0p3mps_s": 306.411,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 324.298
+        },
+        "342": {
+          "tick": 337,
+          "native_ticks_since_D02": 325,
+          "unknown": 301,
+          "distance_m_since_D02": 91.9233,
+          "distance_m_since_run_start": 95.2941,
+          "compute_components_s": {
+            "replans": 9,
+            "model_s": 17.887,
+            "room_and_mapex_score_s": 0.0,
+            "G2_R4_s": 0
+          },
+          "virtual_travel_at_0p3mps_s": 306.411,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 324.298
+        },
+        "320": {
+          "tick": 337,
+          "native_ticks_since_D02": 325,
+          "unknown": 301,
+          "distance_m_since_D02": 91.9233,
+          "distance_m_since_run_start": 95.2941,
+          "compute_components_s": {
+            "replans": 9,
+            "model_s": 17.887,
+            "room_and_mapex_score_s": 0.0,
+            "G2_R4_s": 0
+          },
+          "virtual_travel_at_0p3mps_s": 306.411,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 324.298
+        },
+        "300": {
+          "tick": 338,
+          "native_ticks_since_D02": 326,
+          "unknown": 300,
+          "distance_m_since_D02": 92.2233,
+          "distance_m_since_run_start": 95.5941,
+          "compute_components_s": {
+            "replans": 9,
+            "model_s": 17.887,
+            "room_and_mapex_score_s": 0.0,
+            "G2_R4_s": 0
+          },
+          "virtual_travel_at_0p3mps_s": 307.411,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 325.298
+        },
+        "270": {
+          "tick": 767,
+          "native_ticks_since_D02": 755,
+          "unknown": 268,
+          "distance_m_since_D02": 213.5132,
+          "distance_m_since_run_start": 216.884,
+          "compute_components_s": {
+            "replans": 18,
+            "model_s": 32.194,
+            "room_and_mapex_score_s": 0.0,
+            "G2_R4_s": 0
+          },
+          "virtual_travel_at_0p3mps_s": 711.711,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 743.905
+        }
+      },
+      "g2_decisions": [],
+      "decision_count_total": 25
+    },
+    "Run07_G2_R4_goal_chain": {
+      "source_path": "/work/com1/mx072_g2_r4_native_20261017/native_g2_r4_full_run07/G2_R4_GOALCHAIN_RUN07_visvarprob",
+      "last_saved_tick": 1192,
+      "last_unknown": 259,
+      "initial_observed_mismatched_cells": 0,
+      "total_distance_since_D02_m": 336.812,
+      "milestones": {
+        "2000": {
+          "tick": 23,
+          "native_ticks_since_D02": 11,
+          "unknown": 1448,
+          "distance_m_since_D02": 2.6889,
+          "distance_m_since_run_start": 6.0597,
+          "compute_components_s": {
+            "replans": 1,
+            "model_s": 0.811,
+            "room_and_mapex_score_s": 0.571,
+            "G2_R4_s": 7.11
+          },
+          "native_logged_step_wall_s": 9.121,
+          "native_step_wall_coverage": 11,
+          "virtual_travel_at_0p3mps_s": 8.963,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 17.455
+        },
+        "1000": {
+          "tick": 26,
+          "native_ticks_since_D02": 14,
+          "unknown": 964,
+          "distance_m_since_D02": 3.5125,
+          "distance_m_since_run_start": 6.8833,
+          "compute_components_s": {
+            "replans": 2,
+            "model_s": 1.644,
+            "room_and_mapex_score_s": 1.2,
+            "G2_R4_s": 18.055
+          },
+          "native_logged_step_wall_s": 21.706,
+          "native_step_wall_coverage": 14,
+          "virtual_travel_at_0p3mps_s": 11.708,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 32.607
+        },
+        "600": {
+          "tick": 31,
+          "native_ticks_since_D02": 19,
+          "unknown": 537,
+          "distance_m_since_D02": 4.8597,
+          "distance_m_since_run_start": 8.2305,
+          "compute_components_s": {
+            "replans": 2,
+            "model_s": 1.644,
+            "room_and_mapex_score_s": 1.2,
+            "G2_R4_s": 18.055
+          },
+          "native_logged_step_wall_s": 21.994,
+          "native_step_wall_coverage": 19,
+          "virtual_travel_at_0p3mps_s": 16.199,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 37.098
+        },
+        "400": {
+          "tick": 41,
+          "native_ticks_since_D02": 29,
+          "unknown": 392,
+          "distance_m_since_D02": 7.3249,
+          "distance_m_since_run_start": 10.6957,
+          "compute_components_s": {
+            "replans": 2,
+            "model_s": 1.644,
+            "room_and_mapex_score_s": 1.2,
+            "G2_R4_s": 18.055
+          },
+          "native_logged_step_wall_s": 22.562,
+          "native_step_wall_coverage": 29,
+          "virtual_travel_at_0p3mps_s": 24.416,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 45.315
+        },
+        "342": {
+          "tick": 54,
+          "native_ticks_since_D02": 42,
+          "unknown": 342,
+          "distance_m_since_D02": 10.6902,
+          "distance_m_since_run_start": 14.061,
+          "compute_components_s": {
+            "replans": 2,
+            "model_s": 1.644,
+            "room_and_mapex_score_s": 1.2,
+            "G2_R4_s": 18.055
+          },
+          "native_logged_step_wall_s": 23.296,
+          "native_step_wall_coverage": 42,
+          "virtual_travel_at_0p3mps_s": 35.634,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 56.533
+        },
+        "320": {
+          "tick": 91,
+          "native_ticks_since_D02": 79,
+          "unknown": 320,
+          "distance_m_since_D02": 21.1026,
+          "distance_m_since_run_start": 24.4735,
+          "compute_components_s": {
+            "replans": 3,
+            "model_s": 2.47,
+            "room_and_mapex_score_s": 1.709,
+            "G2_R4_s": 28.466
+          },
+          "native_logged_step_wall_s": 37.171,
+          "native_step_wall_coverage": 79,
+          "virtual_travel_at_0p3mps_s": 70.342,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 102.987
+        },
+        "300": {
+          "tick": 261,
+          "native_ticks_since_D02": 249,
+          "unknown": 284,
+          "distance_m_since_D02": 69.3525,
+          "distance_m_since_run_start": 72.7233,
+          "compute_components_s": {
+            "replans": 10,
+            "model_s": 8.366,
+            "room_and_mapex_score_s": 6.852,
+            "G2_R4_s": 45.826
+          },
+          "native_logged_step_wall_s": 76.164,
+          "native_step_wall_coverage": 249,
+          "virtual_travel_at_0p3mps_s": 231.175,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 292.219
+        },
+        "270": {
+          "tick": 625,
+          "native_ticks_since_D02": 613,
+          "unknown": 259,
+          "distance_m_since_D02": 173.205,
+          "distance_m_since_run_start": 176.5758,
+          "compute_components_s": {
+            "replans": 21,
+            "model_s": 17.535,
+            "room_and_mapex_score_s": 14.921,
+            "G2_R4_s": 113.738
+          },
+          "native_logged_step_wall_s": 184.108,
+          "native_step_wall_coverage": 613,
+          "virtual_travel_at_0p3mps_s": 577.35,
+          "travel_plus_logged_model_G2_room_s_excludes_scan_io": 723.544
+        }
+      },
+      "g2_decisions": [
+        {
+          "native_tick": 12,
+          "room_id": 1,
+          "decision": "GOAL",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": [
+            671,
+            635
+          ],
+          "G2_compute_s": 7.1098,
+          "free_to_wall_corrections": 0,
+          "observation_event": "NO_PRIOR_GOAL"
+        },
+        {
+          "native_tick": 25,
+          "room_id": 1,
+          "decision": "GOAL",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": [
+            697,
+            696
+          ],
+          "G2_compute_s": 10.9455,
+          "free_to_wall_corrections": 4,
+          "observation_event": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT"
+        },
+        {
+          "native_tick": 54,
+          "room_id": 1,
+          "decision": "GOAL",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": [
+            691,
+            605
+          ],
+          "G2_compute_s": 10.4103,
+          "free_to_wall_corrections": 8,
+          "observation_event": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT"
+        },
+        {
+          "native_tick": 95,
+          "room_id": 1,
+          "decision": "DEFER",
+          "R4_decision": "DEFER_ROOM",
+          "goal_global_rc": null,
+          "G2_compute_s": 8.1345,
+          "free_to_wall_corrections": 3,
+          "observation_event": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT"
+        },
+        {
+          "native_tick": 182,
+          "room_id": 2,
+          "decision": "GOAL",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": [
+            532,
+            504
+          ],
+          "G2_compute_s": 3.5788,
+          "free_to_wall_corrections": 0,
+          "observation_event": "NO_PRIOR_GOAL"
+        },
+        {
+          "native_tick": 190,
+          "room_id": 2,
+          "decision": "GOAL",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": [
+            524,
+            512
+          ],
+          "G2_compute_s": 1.8312,
+          "free_to_wall_corrections": 0,
+          "observation_event": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT"
+        },
+        {
+          "native_tick": 191,
+          "room_id": 2,
+          "decision": "GOAL",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": [
+            517,
+            512
+          ],
+          "G2_compute_s": 1.9809,
+          "free_to_wall_corrections": 0,
+          "observation_event": "COMPLETED_GOAL_OBS_38"
+        },
+        {
+          "native_tick": 192,
+          "room_id": 2,
+          "decision": "GOAL",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": [
+            518,
+            512
+          ],
+          "G2_compute_s": 1.8352,
+          "free_to_wall_corrections": 0,
+          "observation_event": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT"
+        },
+        {
+          "native_tick": 303,
+          "room_id": 3,
+          "decision": "GOAL",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": [
+            514,
+            751
+          ],
+          "G2_compute_s": 12.663,
+          "free_to_wall_corrections": 0,
+          "observation_event": "NO_PRIOR_GOAL"
+        },
+        {
+          "native_tick": 314,
+          "room_id": 3,
+          "decision": "GOAL",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": [
+            562,
+            732
+          ],
+          "G2_compute_s": 15.9721,
+          "free_to_wall_corrections": 0,
+          "observation_event": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT"
+        },
+        {
+          "native_tick": 334,
+          "room_id": 3,
+          "decision": "GOAL",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": [
+            563,
+            735
+          ],
+          "G2_compute_s": 9.3102,
+          "free_to_wall_corrections": 1,
+          "observation_event": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT"
+        },
+        {
+          "native_tick": 335,
+          "room_id": 3,
+          "decision": "GOAL",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": [
+            506,
+            643
+          ],
+          "G2_compute_s": 13.7471,
+          "free_to_wall_corrections": 0,
+          "observation_event": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT"
+        },
+        {
+          "native_tick": 394,
+          "room_id": 3,
+          "decision": "GOAL",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": [
+            562,
+            730
+          ],
+          "G2_compute_s": 4.5156,
+          "free_to_wall_corrections": 0,
+          "observation_event": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT"
+        },
+        {
+          "native_tick": 452,
+          "room_id": 3,
+          "decision": "GOAL",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": [
+            563,
+            727
+          ],
+          "G2_compute_s": 2.8724,
+          "free_to_wall_corrections": 0,
+          "observation_event": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT"
+        },
+        {
+          "native_tick": 453,
+          "room_id": 3,
+          "decision": "GOAL",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": [
+            562,
+            727
+          ],
+          "G2_compute_s": 2.5804,
+          "free_to_wall_corrections": 0,
+          "observation_event": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT"
+        },
+        {
+          "native_tick": 454,
+          "room_id": 3,
+          "decision": "DEFER",
+          "R4_decision": "DEFER_ROOM",
+          "goal_global_rc": null,
+          "G2_compute_s": 3.2276,
+          "free_to_wall_corrections": 0,
+          "observation_event": "COMPLETED_GOAL_OBS_73"
+        },
+        {
+          "native_tick": 574,
+          "room_id": 4,
+          "decision": "GOAL",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": [
+            681,
+            743
+          ],
+          "G2_compute_s": 2.9751,
+          "free_to_wall_corrections": 0,
+          "observation_event": "NO_PRIOR_GOAL"
+        },
+        {
+          "native_tick": 583,
+          "room_id": 4,
+          "decision": "DEFER",
+          "R4_decision": "DEFER_ROOM",
+          "goal_global_rc": null,
+          "G2_compute_s": 0.0486,
+          "free_to_wall_corrections": 0,
+          "observation_event": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT"
+        },
+        {
+          "native_tick": 691,
+          "room_id": 5,
+          "decision": "GOAL",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": [
+            648,
+            507
+          ],
+          "G2_compute_s": 8.2675,
+          "free_to_wall_corrections": 0,
+          "observation_event": "NO_PRIOR_GOAL"
+        },
+        {
+          "native_tick": 712,
+          "room_id": 5,
+          "decision": "DEFER",
+          "R4_decision": "DEFER_ROOM",
+          "goal_global_rc": null,
+          "G2_compute_s": 2.7313,
+          "free_to_wall_corrections": 0,
+          "observation_event": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT"
+        },
+        {
+          "native_tick": 780,
+          "room_id": 6,
+          "decision": "GOAL",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": [
+            517,
+            617
+          ],
+          "G2_compute_s": 5.4031,
+          "free_to_wall_corrections": 0,
+          "observation_event": "NO_PRIOR_GOAL"
+        },
+        {
+          "native_tick": 806,
+          "room_id": 6,
+          "decision": "DEFER",
+          "R4_decision": "DEFER_ROOM",
+          "goal_global_rc": null,
+          "G2_compute_s": 3.6679,
+          "free_to_wall_corrections": 1,
+          "observation_event": "INVALIDATED_EARLY_NO_FALSE_GOAL_RECEIPT"
+        },
+        {
+          "native_tick": 1159,
+          "room_id": 10,
+          "decision": "DEFER",
+          "R4_decision": "REPLAN",
+          "goal_global_rc": null,
+          "G2_compute_s": 3.3797,
+          "free_to_wall_corrections": 0,
+          "observation_event": "NO_PRIOR_GOAL;G2_SELECTED_GOAL_INVALID_NO_LONGER_USEFUL"
+        }
+      ],
+      "decision_count_total": 30
+    }
+  }
+}
