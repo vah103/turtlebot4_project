@@ -1,5 +1,12 @@
 # mapex_lab status
 
+## 2026-10-17 — native2D run naming registry (documentation-only)
+
+- **DONE:** [RUN_REGISTRY.md](RUN_REGISTRY.md) và [RUN_REGISTRY.csv](RUN_REGISTRY.csv) khai báo **13 ID duy nhất**: 10 `SOURCE_TERMINAL`, 2 pilot `FAILED`, 1 `INCOMPLETE`. Tên hiển thị chính thức phân biệt New Room (`NR`) với Hospital (`HP`), G2-R4 với G2-R5, và WFD-exit với MCTS/STRUCT. Ví dụ Run04 New Room = `NR-RN-01`; Run05 = `NR-MX-01`.
+- **LATEST RESULT:** chỉ cập nhật **metadata/alias**, không sửa mã, raw logs, run folders, numerical outcome, frozen branch, source experimental receipts hoặc luận điểm QA. Native `SOURCE_TERMINAL` không đồng nghĩa GT hoàn tất; G2-R5 Run13 (`NR-G2R5-WFD-01`) vẫn `INCOMPLETE`.
+- **IN PROGRESS:** không có thí nghiệm nào được khởi chạy từ tác vụ đổi tên.
+- **NEXT ACTION:** các báo cáo và run mới ghi `run_id` chuẩn song song `legacy_label`; gia tăng suffix nếu lặp cùng cấu hình; đính source_ref/receipt trước khi thêm registry. Không phá đường dẫn artifact cũ.
+
 ## COM1 native MapEx 2D — ONE technical prefix được IR1 ACCEPT có giới hạn (2026-10-14)
 
 - **DONE / USER GO:** USER “cứ chạy cho tôi bỏ qua ram” lúc16:43:23 ICT; [GO trước chạy](https://github.com/vah103/chat-gpt/blob/1ceef03be143966e1401bcedcf720b25309ad9fa/company/operations/GO-20261014-MX072-COM1-USER-ONE-TECHNICAL-STARTUP-RAM-WAIVER.md). Work1 đã chạy **đúng một lượt native technical**, giới hạn3ticks/4scans/inferred<=0.9m/180s/no retry, bỏ **riêng** ngưỡng RAM trước khởi chạy. Gói R1 `7421e016` giữ nguyên; executed variant12/14 code inherited,2 files đổi GO reference + startup waiver. [Exact code + result `87f6c99a`](https://github.com/vah103/chat-gpt/blob/87f6c99ac49aa71a30131b3a08b3948d9204c844/company/projects/mapex/mx072_com1_user_startup_ram_go_20261014/README.md); [formal IR1 handoff](https://github.com/vah103/chat-gpt/blob/dfa0df3a7071c727054a7d33dafbe27306c5a2dc/company/operations/HO-20261014-MX072-COM1-ONE-NATIVE-PREFIX-USER-RAM-WAIVER-RESULT-TO-IR1.md); [post-run review #6166042036](https://github.com/vah103/chat-gpt/pull/53#issuecomment-6166042036). Final IR1 ACCEPT chưa có lúc USER yêu cầu chạy ngay; không giả verdict hoặc gọi variant này là R1 được IR1 chấp thuận.
