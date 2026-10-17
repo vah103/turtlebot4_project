@@ -5,13 +5,14 @@ Khi được yêu cầu làm việc trong `mapex_lab/`, hãy coi folder này là
 ## Đọc trước khi làm
 
 1. `STATUS.md`
-2. `ROADMAP.md`
-3. `references/README.md`
-4. `references/MAPEX_PAPER.md`
-5. `EXPERIMENT_PROTOCOL.md`
-6. `README.md`
-7. `docs/DATA_SCHEMA.md` nếu công việc liên quan dữ liệu/experiment.
-8. `docs/TEACHER_REPORT.md` nếu công việc tạo ra hoặc diễn giải kết quả nghiên cứu.
+2. `RUN_REGISTRY.md` — tra tên chuẩn ↔ tên cũ của các native 2D run, không đổi artifact đã freeze.
+3. `ROADMAP.md`
+4. `references/README.md`
+5. `references/MAPEX_PAPER.md`
+6. `EXPERIMENT_PROTOCOL.md`
+7. `README.md`
+8. `docs/DATA_SCHEMA.md` nếu công việc liên quan dữ liệu/experiment.
+9. `docs/TEACHER_REPORT.md` nếu công việc tạo ra hoặc diễn giải kết quả nghiên cứu.
 
 Nếu cần đối chiếu phương pháp gốc MapEx, ưu tiên paper gốc được dẫn trong `references/MAPEX_PAPER.md` thay vì suy từ ghi chú cũ.
 
