@@ -1,0 +1,667 @@
+{
+  "run": "Run10-R2",
+  "decisions": 32,
+  "LOCAL_G2_goals": 24,
+  "GLOBAL_MapEx_goals": 8,
+  "R4_defer_overridden_G2_goal": 6,
+  "LOCAL_to_GLOBAL_count": 6,
+  "LOCAL_to_GLOBAL_all_wfd_exhausted": true,
+  "G2_defer_causing_GLOBAL": 0,
+  "native_knownfree_goal_source_check": "PASS 24/24",
+  "native_exact_goal_arrival": "PASS 24/24",
+  "native_steps": 988,
+  "total_distance_m": 277.293,
+  "terminal_unknown_core": 2083,
+  "transitions": [
+    {
+      "decision": 8,
+      "tick": 186,
+      "room_id": 1,
+      "scope": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "local_wfd_count": 0,
+      "executed_goal": [
+        636,
+        737
+      ],
+      "g2_decision": null,
+      "R4_decision": null,
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": null
+    },
+    {
+      "decision": 11,
+      "tick": 249,
+      "room_id": 2,
+      "scope": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "local_wfd_count": 0,
+      "executed_goal": [
+        594,
+        560
+      ],
+      "g2_decision": null,
+      "R4_decision": null,
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": null
+    },
+    {
+      "decision": 16,
+      "tick": 408,
+      "room_id": 3,
+      "scope": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "local_wfd_count": 0,
+      "executed_goal": [
+        688,
+        520
+      ],
+      "g2_decision": null,
+      "R4_decision": null,
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": null
+    },
+    {
+      "decision": 19,
+      "tick": 534,
+      "room_id": 4,
+      "scope": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "local_wfd_count": 0,
+      "executed_goal": [
+        530,
+        617
+      ],
+      "g2_decision": null,
+      "R4_decision": null,
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": null
+    },
+    {
+      "decision": 23,
+      "tick": 666,
+      "room_id": 5,
+      "scope": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "local_wfd_count": 0,
+      "executed_goal": [
+        521,
+        642
+      ],
+      "g2_decision": null,
+      "R4_decision": null,
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": null
+    },
+    {
+      "decision": 31,
+      "tick": 895,
+      "room_id": 6,
+      "scope": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "local_wfd_count": 0,
+      "executed_goal": [
+        594,
+        641
+      ],
+      "g2_decision": null,
+      "R4_decision": null,
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": null
+    }
+  ],
+  "decisions_detail": [
+    {
+      "decision": 1,
+      "tick": 0,
+      "room_id": null,
+      "scope": "GLOBAL",
+      "reason": "ROBOT_NOT_IN_CONFIRMED_ROOM",
+      "local_wfd_count": 0,
+      "executed_goal": [
+        653,
+        604
+      ],
+      "g2_decision": null,
+      "R4_decision": null,
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": null
+    },
+    {
+      "decision": 2,
+      "tick": 12,
+      "room_id": 1,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 5,
+      "executed_goal": [
+        671,
+        643
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "REPLAN",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 3,
+      "tick": 31,
+      "room_id": 1,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 4,
+      "executed_goal": [
+        669,
+        686
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "REPLAN",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 4,
+      "tick": 56,
+      "room_id": 1,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 3,
+      "executed_goal": [
+        675,
+        687
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "REPLAN",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 5,
+      "tick": 59,
+      "room_id": 1,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 2,
+      "executed_goal": [
+        695,
+        699
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "REPLAN",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 6,
+      "tick": 73,
+      "room_id": 1,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 2,
+      "executed_goal": [
+        683,
+        595
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "DEFER_ROOM",
+      "R4_defer_backstop": true,
+      "backstop_kind": "G2_VISIBILITY_BACKSTOP_NO_FRONTIER_GOALS",
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 7,
+      "tick": 128,
+      "room_id": 1,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 1,
+      "executed_goal": [
+        684,
+        702
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "DEFER_ROOM",
+      "R4_defer_backstop": true,
+      "backstop_kind": "G2_UNCERTAINTY_REPOSITION_NO_FRONTIER_GOALS",
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 8,
+      "tick": 186,
+      "room_id": 1,
+      "scope": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "local_wfd_count": 0,
+      "executed_goal": [
+        636,
+        737
+      ],
+      "g2_decision": null,
+      "R4_decision": null,
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": null
+    },
+    {
+      "decision": 9,
+      "tick": 222,
+      "room_id": 2,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 3,
+      "executed_goal": [
+        654,
+        752
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "REPLAN",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 10,
+      "tick": 240,
+      "room_id": 2,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 1,
+      "executed_goal": [
+        678,
+        752
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "REPLAN",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 11,
+      "tick": 249,
+      "room_id": 2,
+      "scope": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "local_wfd_count": 0,
+      "executed_goal": [
+        594,
+        560
+      ],
+      "g2_decision": null,
+      "R4_decision": null,
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": null
+    },
+    {
+      "decision": 12,
+      "tick": 345,
+      "room_id": 3,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 8,
+      "executed_goal": [
+        559,
+        535
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "REPLAN",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 13,
+      "tick": 369,
+      "room_id": 3,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 5,
+      "executed_goal": [
+        559,
+        517
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "REPLAN",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 14,
+      "tick": 377,
+      "room_id": 3,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 4,
+      "executed_goal": [
+        523,
+        521
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "REPLAN",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 15,
+      "tick": 397,
+      "room_id": 3,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 1,
+      "executed_goal": [
+        543,
+        509
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "DEFER_ROOM",
+      "R4_defer_backstop": true,
+      "backstop_kind": "G2_VISIBILITY_BACKSTOP_NO_FRONTIER_GOALS",
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 16,
+      "tick": 408,
+      "room_id": 3,
+      "scope": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "local_wfd_count": 0,
+      "executed_goal": [
+        688,
+        520
+      ],
+      "g2_decision": null,
+      "R4_decision": null,
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": null
+    },
+    {
+      "decision": 17,
+      "tick": 496,
+      "room_id": 4,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 3,
+      "executed_goal": [
+        636,
+        532
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "REPLAN",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 18,
+      "tick": 524,
+      "room_id": 4,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 1,
+      "executed_goal": [
+        648,
+        516
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "KEEP",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 19,
+      "tick": 534,
+      "room_id": 4,
+      "scope": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "local_wfd_count": 0,
+      "executed_goal": [
+        530,
+        617
+      ],
+      "g2_decision": null,
+      "R4_decision": null,
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": null
+    },
+    {
+      "decision": 20,
+      "tick": 607,
+      "room_id": 5,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 4,
+      "executed_goal": [
+        513,
+        614
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "REPLAN",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 21,
+      "tick": 620,
+      "room_id": 5,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 2,
+      "executed_goal": [
+        533,
+        562
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "KEEP",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 22,
+      "tick": 658,
+      "room_id": 5,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 1,
+      "executed_goal": [
+        517,
+        562
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "DEFER_ROOM",
+      "R4_defer_backstop": true,
+      "backstop_kind": "G2_VISIBILITY_BACKSTOP_NO_FRONTIER_GOALS",
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 23,
+      "tick": 666,
+      "room_id": 5,
+      "scope": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "local_wfd_count": 0,
+      "executed_goal": [
+        521,
+        642
+      ],
+      "g2_decision": null,
+      "R4_decision": null,
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": null
+    },
+    {
+      "decision": 24,
+      "tick": 742,
+      "room_id": 6,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 5,
+      "executed_goal": [
+        532,
+        701
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "REPLAN",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 25,
+      "tick": 774,
+      "room_id": 6,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 4,
+      "executed_goal": [
+        526,
+        701
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "REPLAN",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 26,
+      "tick": 776,
+      "room_id": 6,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 4,
+      "executed_goal": [
+        519,
+        741
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "REPLAN",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 27,
+      "tick": 797,
+      "room_id": 6,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 6,
+      "executed_goal": [
+        538,
+        741
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "REPLAN",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 28,
+      "tick": 808,
+      "room_id": 6,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 5,
+      "executed_goal": [
+        570,
+        742
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "REPLAN",
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 29,
+      "tick": 826,
+      "room_id": 6,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 2,
+      "executed_goal": [
+        570,
+        749
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "DEFER_ROOM",
+      "R4_defer_backstop": true,
+      "backstop_kind": "G2_VISIBILITY_BACKSTOP_NO_FRONTIER_GOALS",
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 30,
+      "tick": 829,
+      "room_id": 6,
+      "scope": "LOCAL",
+      "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+      "local_wfd_count": 2,
+      "executed_goal": [
+        510,
+        657
+      ],
+      "g2_decision": "GOAL",
+      "R4_decision": "DEFER_ROOM",
+      "R4_defer_backstop": true,
+      "backstop_kind": "G2_VISIBILITY_BACKSTOP_NO_FRONTIER_GOALS",
+      "frontier_used_as_goal": false
+    },
+    {
+      "decision": 31,
+      "tick": 895,
+      "room_id": 6,
+      "scope": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "local_wfd_count": 0,
+      "executed_goal": [
+        594,
+        641
+      ],
+      "g2_decision": null,
+      "R4_decision": null,
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": null
+    },
+    {
+      "decision": 32,
+      "tick": 941,
+      "room_id": 7,
+      "scope": "GLOBAL",
+      "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+      "local_wfd_count": 0,
+      "executed_goal": [
+        540,
+        640
+      ],
+      "g2_decision": null,
+      "R4_decision": null,
+      "R4_defer_backstop": false,
+      "backstop_kind": null,
+      "frontier_used_as_goal": null
+    }
+  ],
+  "GT_used_for_online_policy": false,
+  "independent_IR_QA": false
+}
