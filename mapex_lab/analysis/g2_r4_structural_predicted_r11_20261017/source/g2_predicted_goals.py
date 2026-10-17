@@ -5,7 +5,7 @@ import numpy as np
 from mapex_g2_r3.structural import accepted_component
 from mapex_g2_r3.sequence import _Visibility,SequenceConfig
 
-def find_predicted(obs,mean,var,sem,robot,mission,baseline=None,previous=None,native_walkable=None,return_candidates=False,candidate_limit=4):
+def find_predicted(obs,mean,var,sem,robot,mission,baseline=None,previous=None,native_walkable=None,return_candidates=False,candidate_limit=8):
     robot=tuple(map(int,robot));H,W=obs.shape
     assert obs[robot]==0 and obs.shape==mean.shape==var.shape==sem.shape
     room=accepted_component(obs,sem,robot)
@@ -100,7 +100,10 @@ def find_predicted(obs,mean,var,sem,robot,mission,baseline=None,previous=None,na
     qualified=[]
     for rough,target,wp,nu in bestcand:
         val=benefit(target)
-        if val<base+25 or val<base*1.15:continue
+        # In R11 multi-candidate mode this total-IG rule is a shortlist
+        # feature only. A small but unique structural-region witness must
+        # be judged by G2-R3 structural coverage, not dropped here.
+        if not return_candidates and (val<base+25 or val<base*1.15):continue
         score=val-.5*nu-.018*d[target[0]*W+target[1]]
         qualified.append((score,target,wp,nu,val))
         if top is None or score>top[0]:top=(score,target,wp,nu,val)
