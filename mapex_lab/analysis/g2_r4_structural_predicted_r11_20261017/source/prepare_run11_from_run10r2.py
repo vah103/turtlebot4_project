@@ -41,7 +41,7 @@ def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def stage(base: Path, patch: Path, target: Path):
+def stage(base: Path, patch: Path, target: Path, runtime_root: Path):
     if target.exists():
         raise FileExistsError("Refusing overwrite of output or any existing directory: "+str(target))
     if target == base or base in target.parents or target in base.parents:
@@ -72,11 +72,15 @@ def stage(base: Path, patch: Path, target: Path):
         shutil.copy2(patch/name,target/name)
     (target/"evidence").mkdir()
     (target/"reports").mkdir()
-    original_root=str(base.resolve())
-    new_root=str(target.resolve())
-    if original_root == new_root:raise ValueError("identical run roots")
+    original_root_from_guard=re.search(r"ROOT=Path\('([^']+)'\)",guardtext)
+    if not original_root_from_guard:
+        raise ValueError("cannot resolve frozen Run10-R2 ROOT")
+    old_runtime_root=original_root_from_guard.group(1)
+    new_runtime_root=str(runtime_root)
+    if old_runtime_root == new_runtime_root:
+        raise ValueError("new runtime root collides with Run10-R2")
     substitutions={
-        original_root:new_root, OLD_RUN:NEW_RUN, OLD_LABEL:NEW_LABEL,
+        old_runtime_root:new_runtime_root, OLD_RUN:NEW_RUN, OLD_LABEL:NEW_LABEL,
         OLD_GUARD:NEW_GUARD,"worker_run10r2.py":"worker_run11.py",
     }
     for original,renamed in (
@@ -87,7 +91,7 @@ def stage(base: Path, patch: Path, target: Path):
         s=p.read_text()
         for old,new in substitutions.items():
             s=s.replace(old,new)
-        if original_root in s or OLD_RUN in s or OLD_LABEL in s:
+        if old_runtime_root in s or OLD_RUN in s or OLD_LABEL in s:
             raise ValueError("old root/run label survived in "+original)
         new_path=target/renamed
         new_path.write_text(s)
@@ -140,5 +144,10 @@ if __name__ == "__main__":
                         help="Checked-out R11 source/ directory from GitHub branch")
     parser.add_argument("--target",type=Path,required=True,
                         help="New, initially nonexistent isolated R11 workspace")
+    parser.add_argument("--runtime-root",type=Path,
+                        help="Absolute execution root. Set to COM1 destination when staging on DELL.")
     args=parser.parse_args()
-    stage(args.base.resolve(),args.patch_dir.resolve(),args.target.resolve())
+    target=args.target.resolve()
+    root=args.runtime_root if args.runtime_root is not None else target
+    if not root.is_absolute():parser.error("--runtime-root must be absolute")
+    stage(args.base.resolve(),args.patch_dir.resolve(),target,root)
