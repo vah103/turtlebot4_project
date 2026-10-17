@@ -1,0 +1,5925 @@
+{
+  "MapEx_plain_run05": {
+    "source": "/home/dell/mx072_native2d_pair_20261015/OPTIMIZED_FULL_PAIR_20261015/COM1_VERIFIED/native_plain_lama3small_run05/MAPEX_PLAIN_LAMA3SMALL_RUN05_visvarprob",
+    "start_tick": 12,
+    "ending_tick": 1297,
+    "initial_unknown": 3889,
+    "room_mask_total": 6564,
+    "last_remaining_unknown": 260,
+    "milestones": {
+      "3889": {
+        "tick": 12,
+        "missing": 3889,
+        "travel_from_d02_m": 0.0,
+        "travel_from_run_start_m": 3.371,
+        "steps_from_d02": 0
+      },
+      "2000": {
+        "tick": 281,
+        "missing": 1978,
+        "travel_from_d02_m": 76.651,
+        "travel_from_run_start_m": 80.022,
+        "steps_from_d02": 269
+      },
+      "1000": {
+        "tick": 310,
+        "missing": 918,
+        "travel_from_d02_m": 84.282,
+        "travel_from_run_start_m": 87.652,
+        "steps_from_d02": 298
+      },
+      "600": {
+        "tick": 335,
+        "missing": 569,
+        "travel_from_d02_m": 91.323,
+        "travel_from_run_start_m": 94.694,
+        "steps_from_d02": 323
+      },
+      "400": {
+        "tick": 337,
+        "missing": 301,
+        "travel_from_d02_m": 91.923,
+        "travel_from_run_start_m": 95.294,
+        "steps_from_d02": 325
+      },
+      "339": {
+        "tick": 337,
+        "missing": 301,
+        "travel_from_d02_m": 91.923,
+        "travel_from_run_start_m": 95.294,
+        "steps_from_d02": 325
+      },
+      "270": {
+        "tick": 767,
+        "missing": 268,
+        "travel_from_d02_m": 213.513,
+        "travel_from_run_start_m": 216.884,
+        "steps_from_d02": 755
+      }
+    },
+    "total_distance_from_d02_m": 366.325,
+    "total_distance_from_start_m": 369.696,
+    "trace": [
+      {
+        "tick": 40,
+        "missing": 3773,
+        "distance_from_d02_m": 8.3236
+      },
+      {
+        "tick": 80,
+        "missing": 3773,
+        "distance_from_d02_m": 19.7889
+      },
+      {
+        "tick": 120,
+        "missing": 3077,
+        "distance_from_d02_m": 30.9485
+      },
+      {
+        "tick": 160,
+        "missing": 3001,
+        "distance_from_d02_m": 42.4902
+      },
+      {
+        "tick": 200,
+        "missing": 3001,
+        "distance_from_d02_m": 53.7262
+      },
+      {
+        "tick": 240,
+        "missing": 2975,
+        "distance_from_d02_m": 65.1151
+      },
+      {
+        "tick": 280,
+        "missing": 2043,
+        "distance_from_d02_m": 76.3512
+      },
+      {
+        "tick": 320,
+        "missing": 888,
+        "distance_from_d02_m": 87.2053
+      },
+      {
+        "tick": 360,
+        "missing": 277,
+        "distance_from_d02_m": 98.3649
+      },
+      {
+        "tick": 400,
+        "missing": 277,
+        "distance_from_d02_m": 109.5246
+      },
+      {
+        "tick": 440,
+        "missing": 277,
+        "distance_from_d02_m": 120.9899
+      },
+      {
+        "tick": 480,
+        "missing": 277,
+        "distance_from_d02_m": 132.4551
+      },
+      {
+        "tick": 520,
+        "missing": 277,
+        "distance_from_d02_m": 143.5384
+      },
+      {
+        "tick": 560,
+        "missing": 277,
+        "distance_from_d02_m": 154.5453
+      },
+      {
+        "tick": 600,
+        "missing": 277,
+        "distance_from_d02_m": 166.1633
+      },
+      {
+        "tick": 640,
+        "missing": 277,
+        "distance_from_d02_m": 177.4758
+      },
+      {
+        "tick": 680,
+        "missing": 277,
+        "distance_from_d02_m": 188.7118
+      },
+      {
+        "tick": 720,
+        "missing": 277,
+        "distance_from_d02_m": 200.1771
+      },
+      {
+        "tick": 760,
+        "missing": 272,
+        "distance_from_d02_m": 211.4132
+      },
+      {
+        "tick": 767,
+        "missing": 268,
+        "distance_from_d02_m": 213.5132
+      },
+      {
+        "tick": 768,
+        "missing": 260,
+        "distance_from_d02_m": 213.8132
+      },
+      {
+        "tick": 769,
+        "missing": 260,
+        "distance_from_d02_m": 214.0368
+      },
+      {
+        "tick": 770,
+        "missing": 260,
+        "distance_from_d02_m": 214.3368
+      },
+      {
+        "tick": 771,
+        "missing": 260,
+        "distance_from_d02_m": 214.5604
+      },
+      {
+        "tick": 772,
+        "missing": 260,
+        "distance_from_d02_m": 214.784
+      },
+      {
+        "tick": 773,
+        "missing": 260,
+        "distance_from_d02_m": 215.084
+      },
+      {
+        "tick": 774,
+        "missing": 260,
+        "distance_from_d02_m": 215.384
+      },
+      {
+        "tick": 775,
+        "missing": 260,
+        "distance_from_d02_m": 215.684
+      },
+      {
+        "tick": 776,
+        "missing": 260,
+        "distance_from_d02_m": 215.984
+      },
+      {
+        "tick": 777,
+        "missing": 260,
+        "distance_from_d02_m": 216.284
+      },
+      {
+        "tick": 778,
+        "missing": 260,
+        "distance_from_d02_m": 216.584
+      },
+      {
+        "tick": 779,
+        "missing": 260,
+        "distance_from_d02_m": 216.8076
+      },
+      {
+        "tick": 780,
+        "missing": 260,
+        "distance_from_d02_m": 217.0312
+      },
+      {
+        "tick": 781,
+        "missing": 260,
+        "distance_from_d02_m": 217.3312
+      },
+      {
+        "tick": 782,
+        "missing": 260,
+        "distance_from_d02_m": 217.6312
+      },
+      {
+        "tick": 783,
+        "missing": 260,
+        "distance_from_d02_m": 217.9312
+      },
+      {
+        "tick": 784,
+        "missing": 260,
+        "distance_from_d02_m": 218.2312
+      },
+      {
+        "tick": 785,
+        "missing": 260,
+        "distance_from_d02_m": 218.5312
+      },
+      {
+        "tick": 786,
+        "missing": 260,
+        "distance_from_d02_m": 218.8312
+      },
+      {
+        "tick": 787,
+        "missing": 260,
+        "distance_from_d02_m": 219.1312
+      },
+      {
+        "tick": 788,
+        "missing": 260,
+        "distance_from_d02_m": 219.4312
+      },
+      {
+        "tick": 789,
+        "missing": 260,
+        "distance_from_d02_m": 219.7312
+      },
+      {
+        "tick": 790,
+        "missing": 260,
+        "distance_from_d02_m": 219.9548
+      },
+      {
+        "tick": 791,
+        "missing": 260,
+        "distance_from_d02_m": 220.1784
+      },
+      {
+        "tick": 792,
+        "missing": 260,
+        "distance_from_d02_m": 220.402
+      },
+      {
+        "tick": 793,
+        "missing": 260,
+        "distance_from_d02_m": 220.702
+      },
+      {
+        "tick": 794,
+        "missing": 260,
+        "distance_from_d02_m": 221.002
+      },
+      {
+        "tick": 795,
+        "missing": 260,
+        "distance_from_d02_m": 221.2256
+      },
+      {
+        "tick": 796,
+        "missing": 260,
+        "distance_from_d02_m": 221.5256
+      },
+      {
+        "tick": 797,
+        "missing": 260,
+        "distance_from_d02_m": 221.8256
+      },
+      {
+        "tick": 798,
+        "missing": 260,
+        "distance_from_d02_m": 222.1256
+      },
+      {
+        "tick": 799,
+        "missing": 260,
+        "distance_from_d02_m": 222.4256
+      },
+      {
+        "tick": 800,
+        "missing": 260,
+        "distance_from_d02_m": 222.7256
+      },
+      {
+        "tick": 801,
+        "missing": 260,
+        "distance_from_d02_m": 223.0256
+      },
+      {
+        "tick": 802,
+        "missing": 260,
+        "distance_from_d02_m": 223.3256
+      },
+      {
+        "tick": 803,
+        "missing": 260,
+        "distance_from_d02_m": 223.6256
+      },
+      {
+        "tick": 804,
+        "missing": 260,
+        "distance_from_d02_m": 223.9256
+      },
+      {
+        "tick": 805,
+        "missing": 260,
+        "distance_from_d02_m": 224.1492
+      },
+      {
+        "tick": 806,
+        "missing": 260,
+        "distance_from_d02_m": 224.4492
+      },
+      {
+        "tick": 807,
+        "missing": 260,
+        "distance_from_d02_m": 224.7492
+      },
+      {
+        "tick": 808,
+        "missing": 260,
+        "distance_from_d02_m": 225.0492
+      },
+      {
+        "tick": 809,
+        "missing": 260,
+        "distance_from_d02_m": 225.3492
+      },
+      {
+        "tick": 810,
+        "missing": 260,
+        "distance_from_d02_m": 225.6492
+      },
+      {
+        "tick": 811,
+        "missing": 260,
+        "distance_from_d02_m": 225.9492
+      },
+      {
+        "tick": 812,
+        "missing": 260,
+        "distance_from_d02_m": 226.1728
+      },
+      {
+        "tick": 813,
+        "missing": 260,
+        "distance_from_d02_m": 226.4728
+      },
+      {
+        "tick": 814,
+        "missing": 260,
+        "distance_from_d02_m": 226.7728
+      },
+      {
+        "tick": 815,
+        "missing": 260,
+        "distance_from_d02_m": 227.0728
+      },
+      {
+        "tick": 816,
+        "missing": 260,
+        "distance_from_d02_m": 227.3728
+      },
+      {
+        "tick": 817,
+        "missing": 260,
+        "distance_from_d02_m": 227.6728
+      },
+      {
+        "tick": 818,
+        "missing": 260,
+        "distance_from_d02_m": 227.9728
+      },
+      {
+        "tick": 819,
+        "missing": 260,
+        "distance_from_d02_m": 228.2728
+      },
+      {
+        "tick": 820,
+        "missing": 260,
+        "distance_from_d02_m": 228.5728
+      },
+      {
+        "tick": 821,
+        "missing": 260,
+        "distance_from_d02_m": 228.8728
+      },
+      {
+        "tick": 822,
+        "missing": 260,
+        "distance_from_d02_m": 229.1728
+      },
+      {
+        "tick": 823,
+        "missing": 260,
+        "distance_from_d02_m": 229.4728
+      },
+      {
+        "tick": 824,
+        "missing": 260,
+        "distance_from_d02_m": 229.7728
+      },
+      {
+        "tick": 825,
+        "missing": 260,
+        "distance_from_d02_m": 230.0728
+      },
+      {
+        "tick": 826,
+        "missing": 260,
+        "distance_from_d02_m": 230.3728
+      },
+      {
+        "tick": 827,
+        "missing": 260,
+        "distance_from_d02_m": 230.6728
+      },
+      {
+        "tick": 828,
+        "missing": 260,
+        "distance_from_d02_m": 230.9728
+      },
+      {
+        "tick": 829,
+        "missing": 260,
+        "distance_from_d02_m": 231.2728
+      },
+      {
+        "tick": 830,
+        "missing": 260,
+        "distance_from_d02_m": 231.4964
+      },
+      {
+        "tick": 831,
+        "missing": 260,
+        "distance_from_d02_m": 231.72
+      },
+      {
+        "tick": 832,
+        "missing": 260,
+        "distance_from_d02_m": 231.9437
+      },
+      {
+        "tick": 833,
+        "missing": 260,
+        "distance_from_d02_m": 232.2437
+      },
+      {
+        "tick": 834,
+        "missing": 260,
+        "distance_from_d02_m": 232.5437
+      },
+      {
+        "tick": 835,
+        "missing": 260,
+        "distance_from_d02_m": 232.8437
+      },
+      {
+        "tick": 836,
+        "missing": 260,
+        "distance_from_d02_m": 233.1437
+      },
+      {
+        "tick": 837,
+        "missing": 260,
+        "distance_from_d02_m": 233.4437
+      },
+      {
+        "tick": 838,
+        "missing": 260,
+        "distance_from_d02_m": 233.7437
+      },
+      {
+        "tick": 839,
+        "missing": 260,
+        "distance_from_d02_m": 234.0437
+      },
+      {
+        "tick": 840,
+        "missing": 260,
+        "distance_from_d02_m": 234.2673
+      },
+      {
+        "tick": 841,
+        "missing": 260,
+        "distance_from_d02_m": 234.5673
+      },
+      {
+        "tick": 842,
+        "missing": 260,
+        "distance_from_d02_m": 234.8673
+      },
+      {
+        "tick": 843,
+        "missing": 260,
+        "distance_from_d02_m": 235.1673
+      },
+      {
+        "tick": 844,
+        "missing": 260,
+        "distance_from_d02_m": 235.4673
+      },
+      {
+        "tick": 845,
+        "missing": 260,
+        "distance_from_d02_m": 235.7673
+      },
+      {
+        "tick": 846,
+        "missing": 260,
+        "distance_from_d02_m": 236.0673
+      },
+      {
+        "tick": 847,
+        "missing": 260,
+        "distance_from_d02_m": 236.3673
+      },
+      {
+        "tick": 848,
+        "missing": 260,
+        "distance_from_d02_m": 236.6673
+      },
+      {
+        "tick": 849,
+        "missing": 260,
+        "distance_from_d02_m": 236.9673
+      },
+      {
+        "tick": 850,
+        "missing": 260,
+        "distance_from_d02_m": 237.2673
+      },
+      {
+        "tick": 851,
+        "missing": 260,
+        "distance_from_d02_m": 237.5673
+      },
+      {
+        "tick": 852,
+        "missing": 260,
+        "distance_from_d02_m": 237.7909
+      },
+      {
+        "tick": 853,
+        "missing": 260,
+        "distance_from_d02_m": 238.0909
+      },
+      {
+        "tick": 854,
+        "missing": 260,
+        "distance_from_d02_m": 238.3909
+      },
+      {
+        "tick": 855,
+        "missing": 260,
+        "distance_from_d02_m": 238.6909
+      },
+      {
+        "tick": 856,
+        "missing": 260,
+        "distance_from_d02_m": 238.9909
+      },
+      {
+        "tick": 857,
+        "missing": 260,
+        "distance_from_d02_m": 239.2909
+      },
+      {
+        "tick": 858,
+        "missing": 260,
+        "distance_from_d02_m": 239.5909
+      },
+      {
+        "tick": 859,
+        "missing": 260,
+        "distance_from_d02_m": 239.8909
+      },
+      {
+        "tick": 860,
+        "missing": 260,
+        "distance_from_d02_m": 240.1909
+      },
+      {
+        "tick": 861,
+        "missing": 260,
+        "distance_from_d02_m": 240.4909
+      },
+      {
+        "tick": 862,
+        "missing": 260,
+        "distance_from_d02_m": 240.7145
+      },
+      {
+        "tick": 863,
+        "missing": 260,
+        "distance_from_d02_m": 241.0145
+      },
+      {
+        "tick": 864,
+        "missing": 260,
+        "distance_from_d02_m": 241.3145
+      },
+      {
+        "tick": 865,
+        "missing": 260,
+        "distance_from_d02_m": 241.6145
+      },
+      {
+        "tick": 866,
+        "missing": 260,
+        "distance_from_d02_m": 241.9145
+      },
+      {
+        "tick": 867,
+        "missing": 260,
+        "distance_from_d02_m": 242.2145
+      },
+      {
+        "tick": 868,
+        "missing": 260,
+        "distance_from_d02_m": 242.5145
+      },
+      {
+        "tick": 869,
+        "missing": 260,
+        "distance_from_d02_m": 242.7381
+      },
+      {
+        "tick": 870,
+        "missing": 260,
+        "distance_from_d02_m": 243.0381
+      },
+      {
+        "tick": 871,
+        "missing": 260,
+        "distance_from_d02_m": 243.3381
+      },
+      {
+        "tick": 872,
+        "missing": 260,
+        "distance_from_d02_m": 243.6381
+      },
+      {
+        "tick": 873,
+        "missing": 260,
+        "distance_from_d02_m": 243.9381
+      },
+      {
+        "tick": 874,
+        "missing": 260,
+        "distance_from_d02_m": 244.2381
+      },
+      {
+        "tick": 875,
+        "missing": 260,
+        "distance_from_d02_m": 244.5381
+      },
+      {
+        "tick": 876,
+        "missing": 260,
+        "distance_from_d02_m": 244.8381
+      },
+      {
+        "tick": 877,
+        "missing": 260,
+        "distance_from_d02_m": 245.0617
+      },
+      {
+        "tick": 878,
+        "missing": 260,
+        "distance_from_d02_m": 245.2853
+      },
+      {
+        "tick": 879,
+        "missing": 260,
+        "distance_from_d02_m": 245.5089
+      },
+      {
+        "tick": 880,
+        "missing": 260,
+        "distance_from_d02_m": 245.7325
+      },
+      {
+        "tick": 881,
+        "missing": 260,
+        "distance_from_d02_m": 246.0325
+      },
+      {
+        "tick": 882,
+        "missing": 260,
+        "distance_from_d02_m": 246.3325
+      },
+      {
+        "tick": 883,
+        "missing": 260,
+        "distance_from_d02_m": 246.6325
+      },
+      {
+        "tick": 884,
+        "missing": 260,
+        "distance_from_d02_m": 246.9325
+      },
+      {
+        "tick": 885,
+        "missing": 260,
+        "distance_from_d02_m": 247.2325
+      },
+      {
+        "tick": 886,
+        "missing": 260,
+        "distance_from_d02_m": 247.5325
+      },
+      {
+        "tick": 887,
+        "missing": 260,
+        "distance_from_d02_m": 247.8325
+      },
+      {
+        "tick": 888,
+        "missing": 260,
+        "distance_from_d02_m": 248.1325
+      },
+      {
+        "tick": 889,
+        "missing": 260,
+        "distance_from_d02_m": 248.4325
+      },
+      {
+        "tick": 890,
+        "missing": 260,
+        "distance_from_d02_m": 248.7325
+      },
+      {
+        "tick": 891,
+        "missing": 260,
+        "distance_from_d02_m": 248.9561
+      },
+      {
+        "tick": 892,
+        "missing": 260,
+        "distance_from_d02_m": 249.2561
+      },
+      {
+        "tick": 893,
+        "missing": 260,
+        "distance_from_d02_m": 249.5561
+      },
+      {
+        "tick": 894,
+        "missing": 260,
+        "distance_from_d02_m": 249.8561
+      },
+      {
+        "tick": 895,
+        "missing": 260,
+        "distance_from_d02_m": 250.1561
+      },
+      {
+        "tick": 896,
+        "missing": 260,
+        "distance_from_d02_m": 250.4561
+      },
+      {
+        "tick": 897,
+        "missing": 260,
+        "distance_from_d02_m": 250.7561
+      },
+      {
+        "tick": 898,
+        "missing": 260,
+        "distance_from_d02_m": 251.0561
+      },
+      {
+        "tick": 899,
+        "missing": 260,
+        "distance_from_d02_m": 251.3561
+      },
+      {
+        "tick": 900,
+        "missing": 260,
+        "distance_from_d02_m": 251.6561
+      },
+      {
+        "tick": 901,
+        "missing": 260,
+        "distance_from_d02_m": 251.9561
+      },
+      {
+        "tick": 902,
+        "missing": 260,
+        "distance_from_d02_m": 252.2561
+      },
+      {
+        "tick": 903,
+        "missing": 260,
+        "distance_from_d02_m": 252.5561
+      },
+      {
+        "tick": 904,
+        "missing": 260,
+        "distance_from_d02_m": 252.8561
+      },
+      {
+        "tick": 905,
+        "missing": 260,
+        "distance_from_d02_m": 253.1561
+      },
+      {
+        "tick": 906,
+        "missing": 260,
+        "distance_from_d02_m": 253.4561
+      },
+      {
+        "tick": 907,
+        "missing": 260,
+        "distance_from_d02_m": 253.7561
+      },
+      {
+        "tick": 908,
+        "missing": 260,
+        "distance_from_d02_m": 253.9797
+      },
+      {
+        "tick": 909,
+        "missing": 260,
+        "distance_from_d02_m": 254.2797
+      },
+      {
+        "tick": 910,
+        "missing": 260,
+        "distance_from_d02_m": 254.5797
+      },
+      {
+        "tick": 911,
+        "missing": 260,
+        "distance_from_d02_m": 254.8797
+      },
+      {
+        "tick": 912,
+        "missing": 260,
+        "distance_from_d02_m": 255.1797
+      },
+      {
+        "tick": 913,
+        "missing": 260,
+        "distance_from_d02_m": 255.4797
+      },
+      {
+        "tick": 914,
+        "missing": 260,
+        "distance_from_d02_m": 255.7797
+      },
+      {
+        "tick": 915,
+        "missing": 260,
+        "distance_from_d02_m": 256.0033
+      },
+      {
+        "tick": 916,
+        "missing": 260,
+        "distance_from_d02_m": 256.2269
+      },
+      {
+        "tick": 917,
+        "missing": 260,
+        "distance_from_d02_m": 256.4505
+      },
+      {
+        "tick": 918,
+        "missing": 260,
+        "distance_from_d02_m": 256.6741
+      },
+      {
+        "tick": 919,
+        "missing": 260,
+        "distance_from_d02_m": 256.9741
+      },
+      {
+        "tick": 920,
+        "missing": 260,
+        "distance_from_d02_m": 257.2741
+      },
+      {
+        "tick": 921,
+        "missing": 260,
+        "distance_from_d02_m": 257.5741
+      },
+      {
+        "tick": 922,
+        "missing": 260,
+        "distance_from_d02_m": 257.8741
+      },
+      {
+        "tick": 923,
+        "missing": 260,
+        "distance_from_d02_m": 258.1741
+      },
+      {
+        "tick": 924,
+        "missing": 260,
+        "distance_from_d02_m": 258.3978
+      },
+      {
+        "tick": 925,
+        "missing": 260,
+        "distance_from_d02_m": 258.6214
+      },
+      {
+        "tick": 926,
+        "missing": 260,
+        "distance_from_d02_m": 258.845
+      },
+      {
+        "tick": 927,
+        "missing": 260,
+        "distance_from_d02_m": 259.145
+      },
+      {
+        "tick": 928,
+        "missing": 260,
+        "distance_from_d02_m": 259.445
+      },
+      {
+        "tick": 929,
+        "missing": 260,
+        "distance_from_d02_m": 259.745
+      },
+      {
+        "tick": 930,
+        "missing": 260,
+        "distance_from_d02_m": 260.045
+      },
+      {
+        "tick": 931,
+        "missing": 260,
+        "distance_from_d02_m": 260.345
+      },
+      {
+        "tick": 932,
+        "missing": 260,
+        "distance_from_d02_m": 260.645
+      },
+      {
+        "tick": 933,
+        "missing": 260,
+        "distance_from_d02_m": 260.945
+      },
+      {
+        "tick": 934,
+        "missing": 260,
+        "distance_from_d02_m": 261.245
+      },
+      {
+        "tick": 935,
+        "missing": 260,
+        "distance_from_d02_m": 261.4686
+      },
+      {
+        "tick": 936,
+        "missing": 260,
+        "distance_from_d02_m": 261.6922
+      },
+      {
+        "tick": 937,
+        "missing": 260,
+        "distance_from_d02_m": 261.9158
+      },
+      {
+        "tick": 938,
+        "missing": 260,
+        "distance_from_d02_m": 262.2158
+      },
+      {
+        "tick": 939,
+        "missing": 260,
+        "distance_from_d02_m": 262.5158
+      },
+      {
+        "tick": 940,
+        "missing": 260,
+        "distance_from_d02_m": 262.7394
+      },
+      {
+        "tick": 941,
+        "missing": 260,
+        "distance_from_d02_m": 262.963
+      },
+      {
+        "tick": 942,
+        "missing": 260,
+        "distance_from_d02_m": 263.263
+      },
+      {
+        "tick": 943,
+        "missing": 260,
+        "distance_from_d02_m": 263.563
+      },
+      {
+        "tick": 944,
+        "missing": 260,
+        "distance_from_d02_m": 263.863
+      },
+      {
+        "tick": 945,
+        "missing": 260,
+        "distance_from_d02_m": 264.163
+      },
+      {
+        "tick": 946,
+        "missing": 260,
+        "distance_from_d02_m": 264.463
+      },
+      {
+        "tick": 947,
+        "missing": 260,
+        "distance_from_d02_m": 264.6866
+      },
+      {
+        "tick": 948,
+        "missing": 260,
+        "distance_from_d02_m": 264.9866
+      },
+      {
+        "tick": 949,
+        "missing": 260,
+        "distance_from_d02_m": 265.2866
+      },
+      {
+        "tick": 950,
+        "missing": 260,
+        "distance_from_d02_m": 265.5866
+      },
+      {
+        "tick": 951,
+        "missing": 260,
+        "distance_from_d02_m": 265.8102
+      },
+      {
+        "tick": 952,
+        "missing": 260,
+        "distance_from_d02_m": 266.0338
+      },
+      {
+        "tick": 953,
+        "missing": 260,
+        "distance_from_d02_m": 266.2574
+      },
+      {
+        "tick": 954,
+        "missing": 260,
+        "distance_from_d02_m": 266.5574
+      },
+      {
+        "tick": 955,
+        "missing": 260,
+        "distance_from_d02_m": 266.8574
+      },
+      {
+        "tick": 956,
+        "missing": 260,
+        "distance_from_d02_m": 267.1574
+      },
+      {
+        "tick": 957,
+        "missing": 260,
+        "distance_from_d02_m": 267.4574
+      },
+      {
+        "tick": 958,
+        "missing": 260,
+        "distance_from_d02_m": 267.7574
+      },
+      {
+        "tick": 959,
+        "missing": 260,
+        "distance_from_d02_m": 267.981
+      },
+      {
+        "tick": 960,
+        "missing": 260,
+        "distance_from_d02_m": 268.2046
+      },
+      {
+        "tick": 961,
+        "missing": 260,
+        "distance_from_d02_m": 268.4282
+      },
+      {
+        "tick": 962,
+        "missing": 260,
+        "distance_from_d02_m": 268.6519
+      },
+      {
+        "tick": 963,
+        "missing": 260,
+        "distance_from_d02_m": 268.9519
+      },
+      {
+        "tick": 964,
+        "missing": 260,
+        "distance_from_d02_m": 269.2519
+      },
+      {
+        "tick": 965,
+        "missing": 260,
+        "distance_from_d02_m": 269.5519
+      },
+      {
+        "tick": 966,
+        "missing": 260,
+        "distance_from_d02_m": 269.8519
+      },
+      {
+        "tick": 967,
+        "missing": 260,
+        "distance_from_d02_m": 270.1519
+      },
+      {
+        "tick": 968,
+        "missing": 260,
+        "distance_from_d02_m": 270.3755
+      },
+      {
+        "tick": 969,
+        "missing": 260,
+        "distance_from_d02_m": 270.6755
+      },
+      {
+        "tick": 970,
+        "missing": 260,
+        "distance_from_d02_m": 270.9755
+      },
+      {
+        "tick": 971,
+        "missing": 260,
+        "distance_from_d02_m": 271.1991
+      },
+      {
+        "tick": 972,
+        "missing": 260,
+        "distance_from_d02_m": 271.4991
+      },
+      {
+        "tick": 973,
+        "missing": 260,
+        "distance_from_d02_m": 271.7991
+      },
+      {
+        "tick": 974,
+        "missing": 260,
+        "distance_from_d02_m": 272.0991
+      },
+      {
+        "tick": 975,
+        "missing": 260,
+        "distance_from_d02_m": 272.3991
+      },
+      {
+        "tick": 976,
+        "missing": 260,
+        "distance_from_d02_m": 272.6991
+      },
+      {
+        "tick": 977,
+        "missing": 260,
+        "distance_from_d02_m": 272.9991
+      },
+      {
+        "tick": 978,
+        "missing": 260,
+        "distance_from_d02_m": 273.2991
+      },
+      {
+        "tick": 979,
+        "missing": 260,
+        "distance_from_d02_m": 273.5991
+      },
+      {
+        "tick": 980,
+        "missing": 260,
+        "distance_from_d02_m": 273.8227
+      },
+      {
+        "tick": 981,
+        "missing": 260,
+        "distance_from_d02_m": 274.1227
+      },
+      {
+        "tick": 982,
+        "missing": 260,
+        "distance_from_d02_m": 274.4227
+      },
+      {
+        "tick": 983,
+        "missing": 260,
+        "distance_from_d02_m": 274.7227
+      },
+      {
+        "tick": 984,
+        "missing": 260,
+        "distance_from_d02_m": 275.0227
+      },
+      {
+        "tick": 985,
+        "missing": 260,
+        "distance_from_d02_m": 275.3227
+      },
+      {
+        "tick": 986,
+        "missing": 260,
+        "distance_from_d02_m": 275.6227
+      },
+      {
+        "tick": 987,
+        "missing": 260,
+        "distance_from_d02_m": 275.8463
+      },
+      {
+        "tick": 988,
+        "missing": 260,
+        "distance_from_d02_m": 276.1463
+      },
+      {
+        "tick": 989,
+        "missing": 260,
+        "distance_from_d02_m": 276.4463
+      },
+      {
+        "tick": 990,
+        "missing": 260,
+        "distance_from_d02_m": 276.6699
+      },
+      {
+        "tick": 991,
+        "missing": 260,
+        "distance_from_d02_m": 276.9699
+      },
+      {
+        "tick": 992,
+        "missing": 260,
+        "distance_from_d02_m": 277.2699
+      },
+      {
+        "tick": 993,
+        "missing": 260,
+        "distance_from_d02_m": 277.5699
+      },
+      {
+        "tick": 994,
+        "missing": 260,
+        "distance_from_d02_m": 277.8699
+      },
+      {
+        "tick": 995,
+        "missing": 260,
+        "distance_from_d02_m": 278.1699
+      },
+      {
+        "tick": 996,
+        "missing": 260,
+        "distance_from_d02_m": 278.4699
+      },
+      {
+        "tick": 997,
+        "missing": 260,
+        "distance_from_d02_m": 278.7699
+      },
+      {
+        "tick": 998,
+        "missing": 260,
+        "distance_from_d02_m": 279.0699
+      },
+      {
+        "tick": 999,
+        "missing": 260,
+        "distance_from_d02_m": 279.3699
+      },
+      {
+        "tick": 1000,
+        "missing": 260,
+        "distance_from_d02_m": 279.6699
+      },
+      {
+        "tick": 1001,
+        "missing": 260,
+        "distance_from_d02_m": 279.9699
+      },
+      {
+        "tick": 1002,
+        "missing": 260,
+        "distance_from_d02_m": 280.2699
+      },
+      {
+        "tick": 1003,
+        "missing": 260,
+        "distance_from_d02_m": 280.5699
+      },
+      {
+        "tick": 1004,
+        "missing": 260,
+        "distance_from_d02_m": 280.8699
+      },
+      {
+        "tick": 1005,
+        "missing": 260,
+        "distance_from_d02_m": 281.1699
+      },
+      {
+        "tick": 1006,
+        "missing": 260,
+        "distance_from_d02_m": 281.4699
+      },
+      {
+        "tick": 1007,
+        "missing": 260,
+        "distance_from_d02_m": 281.7699
+      },
+      {
+        "tick": 1008,
+        "missing": 260,
+        "distance_from_d02_m": 282.0699
+      },
+      {
+        "tick": 1009,
+        "missing": 260,
+        "distance_from_d02_m": 282.3699
+      },
+      {
+        "tick": 1010,
+        "missing": 260,
+        "distance_from_d02_m": 282.5935
+      },
+      {
+        "tick": 1011,
+        "missing": 260,
+        "distance_from_d02_m": 282.8935
+      },
+      {
+        "tick": 1012,
+        "missing": 260,
+        "distance_from_d02_m": 283.1935
+      },
+      {
+        "tick": 1013,
+        "missing": 260,
+        "distance_from_d02_m": 283.4935
+      },
+      {
+        "tick": 1014,
+        "missing": 260,
+        "distance_from_d02_m": 283.7935
+      },
+      {
+        "tick": 1015,
+        "missing": 260,
+        "distance_from_d02_m": 284.0935
+      },
+      {
+        "tick": 1016,
+        "missing": 260,
+        "distance_from_d02_m": 284.3935
+      },
+      {
+        "tick": 1017,
+        "missing": 260,
+        "distance_from_d02_m": 284.6935
+      },
+      {
+        "tick": 1018,
+        "missing": 260,
+        "distance_from_d02_m": 284.9935
+      },
+      {
+        "tick": 1019,
+        "missing": 260,
+        "distance_from_d02_m": 285.2935
+      },
+      {
+        "tick": 1020,
+        "missing": 260,
+        "distance_from_d02_m": 285.5935
+      },
+      {
+        "tick": 1021,
+        "missing": 260,
+        "distance_from_d02_m": 285.8935
+      },
+      {
+        "tick": 1022,
+        "missing": 260,
+        "distance_from_d02_m": 286.1935
+      },
+      {
+        "tick": 1023,
+        "missing": 260,
+        "distance_from_d02_m": 286.4935
+      },
+      {
+        "tick": 1024,
+        "missing": 260,
+        "distance_from_d02_m": 286.7935
+      },
+      {
+        "tick": 1025,
+        "missing": 260,
+        "distance_from_d02_m": 287.0935
+      },
+      {
+        "tick": 1026,
+        "missing": 260,
+        "distance_from_d02_m": 287.3935
+      },
+      {
+        "tick": 1027,
+        "missing": 260,
+        "distance_from_d02_m": 287.6935
+      },
+      {
+        "tick": 1028,
+        "missing": 260,
+        "distance_from_d02_m": 287.9935
+      },
+      {
+        "tick": 1029,
+        "missing": 260,
+        "distance_from_d02_m": 288.2935
+      },
+      {
+        "tick": 1030,
+        "missing": 260,
+        "distance_from_d02_m": 288.5935
+      },
+      {
+        "tick": 1031,
+        "missing": 260,
+        "distance_from_d02_m": 288.8935
+      },
+      {
+        "tick": 1032,
+        "missing": 260,
+        "distance_from_d02_m": 289.1935
+      },
+      {
+        "tick": 1033,
+        "missing": 260,
+        "distance_from_d02_m": 289.4935
+      },
+      {
+        "tick": 1034,
+        "missing": 260,
+        "distance_from_d02_m": 289.7935
+      },
+      {
+        "tick": 1035,
+        "missing": 260,
+        "distance_from_d02_m": 290.0171
+      },
+      {
+        "tick": 1036,
+        "missing": 260,
+        "distance_from_d02_m": 290.3171
+      },
+      {
+        "tick": 1037,
+        "missing": 260,
+        "distance_from_d02_m": 290.6171
+      },
+      {
+        "tick": 1038,
+        "missing": 260,
+        "distance_from_d02_m": 290.9171
+      },
+      {
+        "tick": 1039,
+        "missing": 260,
+        "distance_from_d02_m": 291.2171
+      },
+      {
+        "tick": 1040,
+        "missing": 260,
+        "distance_from_d02_m": 291.5171
+      },
+      {
+        "tick": 1041,
+        "missing": 260,
+        "distance_from_d02_m": 291.8171
+      },
+      {
+        "tick": 1042,
+        "missing": 260,
+        "distance_from_d02_m": 292.1171
+      },
+      {
+        "tick": 1043,
+        "missing": 260,
+        "distance_from_d02_m": 292.4171
+      },
+      {
+        "tick": 1044,
+        "missing": 260,
+        "distance_from_d02_m": 292.7171
+      },
+      {
+        "tick": 1045,
+        "missing": 260,
+        "distance_from_d02_m": 293.0171
+      },
+      {
+        "tick": 1046,
+        "missing": 260,
+        "distance_from_d02_m": 293.3171
+      },
+      {
+        "tick": 1047,
+        "missing": 260,
+        "distance_from_d02_m": 293.6171
+      },
+      {
+        "tick": 1048,
+        "missing": 260,
+        "distance_from_d02_m": 293.9171
+      },
+      {
+        "tick": 1049,
+        "missing": 260,
+        "distance_from_d02_m": 294.2171
+      },
+      {
+        "tick": 1050,
+        "missing": 260,
+        "distance_from_d02_m": 294.5171
+      },
+      {
+        "tick": 1051,
+        "missing": 260,
+        "distance_from_d02_m": 294.8171
+      },
+      {
+        "tick": 1052,
+        "missing": 260,
+        "distance_from_d02_m": 295.1171
+      },
+      {
+        "tick": 1053,
+        "missing": 260,
+        "distance_from_d02_m": 295.4171
+      },
+      {
+        "tick": 1054,
+        "missing": 260,
+        "distance_from_d02_m": 295.7171
+      },
+      {
+        "tick": 1055,
+        "missing": 260,
+        "distance_from_d02_m": 295.9407
+      },
+      {
+        "tick": 1056,
+        "missing": 260,
+        "distance_from_d02_m": 296.2407
+      },
+      {
+        "tick": 1057,
+        "missing": 260,
+        "distance_from_d02_m": 296.5407
+      },
+      {
+        "tick": 1058,
+        "missing": 260,
+        "distance_from_d02_m": 296.8407
+      },
+      {
+        "tick": 1059,
+        "missing": 260,
+        "distance_from_d02_m": 297.1407
+      },
+      {
+        "tick": 1060,
+        "missing": 260,
+        "distance_from_d02_m": 297.4407
+      },
+      {
+        "tick": 1061,
+        "missing": 260,
+        "distance_from_d02_m": 297.7407
+      },
+      {
+        "tick": 1062,
+        "missing": 260,
+        "distance_from_d02_m": 298.0407
+      },
+      {
+        "tick": 1063,
+        "missing": 260,
+        "distance_from_d02_m": 298.3407
+      },
+      {
+        "tick": 1064,
+        "missing": 260,
+        "distance_from_d02_m": 298.6407
+      },
+      {
+        "tick": 1065,
+        "missing": 260,
+        "distance_from_d02_m": 298.9407
+      },
+      {
+        "tick": 1066,
+        "missing": 260,
+        "distance_from_d02_m": 299.2407
+      },
+      {
+        "tick": 1067,
+        "missing": 260,
+        "distance_from_d02_m": 299.5407
+      },
+      {
+        "tick": 1068,
+        "missing": 260,
+        "distance_from_d02_m": 299.8407
+      },
+      {
+        "tick": 1069,
+        "missing": 260,
+        "distance_from_d02_m": 300.1407
+      },
+      {
+        "tick": 1070,
+        "missing": 260,
+        "distance_from_d02_m": 300.4407
+      },
+      {
+        "tick": 1071,
+        "missing": 260,
+        "distance_from_d02_m": 300.7407
+      },
+      {
+        "tick": 1072,
+        "missing": 260,
+        "distance_from_d02_m": 301.0407
+      },
+      {
+        "tick": 1073,
+        "missing": 260,
+        "distance_from_d02_m": 301.3407
+      },
+      {
+        "tick": 1074,
+        "missing": 260,
+        "distance_from_d02_m": 301.6407
+      },
+      {
+        "tick": 1075,
+        "missing": 260,
+        "distance_from_d02_m": 301.9407
+      },
+      {
+        "tick": 1076,
+        "missing": 260,
+        "distance_from_d02_m": 302.2407
+      },
+      {
+        "tick": 1077,
+        "missing": 260,
+        "distance_from_d02_m": 302.5407
+      },
+      {
+        "tick": 1078,
+        "missing": 260,
+        "distance_from_d02_m": 302.8407
+      },
+      {
+        "tick": 1079,
+        "missing": 260,
+        "distance_from_d02_m": 303.1407
+      },
+      {
+        "tick": 1080,
+        "missing": 260,
+        "distance_from_d02_m": 303.4407
+      },
+      {
+        "tick": 1081,
+        "missing": 260,
+        "distance_from_d02_m": 303.7407
+      },
+      {
+        "tick": 1082,
+        "missing": 260,
+        "distance_from_d02_m": 304.0407
+      },
+      {
+        "tick": 1083,
+        "missing": 260,
+        "distance_from_d02_m": 304.3407
+      },
+      {
+        "tick": 1084,
+        "missing": 260,
+        "distance_from_d02_m": 304.6407
+      },
+      {
+        "tick": 1085,
+        "missing": 260,
+        "distance_from_d02_m": 304.9407
+      },
+      {
+        "tick": 1086,
+        "missing": 260,
+        "distance_from_d02_m": 305.2407
+      },
+      {
+        "tick": 1087,
+        "missing": 260,
+        "distance_from_d02_m": 305.5407
+      },
+      {
+        "tick": 1088,
+        "missing": 260,
+        "distance_from_d02_m": 305.8407
+      },
+      {
+        "tick": 1089,
+        "missing": 260,
+        "distance_from_d02_m": 306.1407
+      },
+      {
+        "tick": 1090,
+        "missing": 260,
+        "distance_from_d02_m": 306.3643
+      },
+      {
+        "tick": 1091,
+        "missing": 260,
+        "distance_from_d02_m": 306.6643
+      },
+      {
+        "tick": 1092,
+        "missing": 260,
+        "distance_from_d02_m": 306.9643
+      },
+      {
+        "tick": 1093,
+        "missing": 260,
+        "distance_from_d02_m": 307.2643
+      },
+      {
+        "tick": 1094,
+        "missing": 260,
+        "distance_from_d02_m": 307.5643
+      },
+      {
+        "tick": 1095,
+        "missing": 260,
+        "distance_from_d02_m": 307.8643
+      },
+      {
+        "tick": 1096,
+        "missing": 260,
+        "distance_from_d02_m": 308.0879
+      },
+      {
+        "tick": 1097,
+        "missing": 260,
+        "distance_from_d02_m": 308.3879
+      },
+      {
+        "tick": 1098,
+        "missing": 260,
+        "distance_from_d02_m": 308.6879
+      },
+      {
+        "tick": 1099,
+        "missing": 260,
+        "distance_from_d02_m": 308.9879
+      },
+      {
+        "tick": 1100,
+        "missing": 260,
+        "distance_from_d02_m": 309.2879
+      },
+      {
+        "tick": 1101,
+        "missing": 260,
+        "distance_from_d02_m": 309.5879
+      },
+      {
+        "tick": 1102,
+        "missing": 260,
+        "distance_from_d02_m": 309.8879
+      },
+      {
+        "tick": 1103,
+        "missing": 260,
+        "distance_from_d02_m": 310.1879
+      },
+      {
+        "tick": 1104,
+        "missing": 260,
+        "distance_from_d02_m": 310.4115
+      },
+      {
+        "tick": 1105,
+        "missing": 260,
+        "distance_from_d02_m": 310.7115
+      },
+      {
+        "tick": 1106,
+        "missing": 260,
+        "distance_from_d02_m": 310.9351
+      },
+      {
+        "tick": 1107,
+        "missing": 260,
+        "distance_from_d02_m": 311.2351
+      },
+      {
+        "tick": 1108,
+        "missing": 260,
+        "distance_from_d02_m": 311.5351
+      },
+      {
+        "tick": 1109,
+        "missing": 260,
+        "distance_from_d02_m": 311.7587
+      },
+      {
+        "tick": 1110,
+        "missing": 260,
+        "distance_from_d02_m": 312.0587
+      },
+      {
+        "tick": 1111,
+        "missing": 260,
+        "distance_from_d02_m": 312.3587
+      },
+      {
+        "tick": 1112,
+        "missing": 260,
+        "distance_from_d02_m": 312.6587
+      },
+      {
+        "tick": 1113,
+        "missing": 260,
+        "distance_from_d02_m": 312.9587
+      },
+      {
+        "tick": 1114,
+        "missing": 260,
+        "distance_from_d02_m": 313.2587
+      },
+      {
+        "tick": 1115,
+        "missing": 260,
+        "distance_from_d02_m": 313.5587
+      },
+      {
+        "tick": 1116,
+        "missing": 260,
+        "distance_from_d02_m": 313.8587
+      },
+      {
+        "tick": 1117,
+        "missing": 260,
+        "distance_from_d02_m": 314.1587
+      },
+      {
+        "tick": 1118,
+        "missing": 260,
+        "distance_from_d02_m": 314.3823
+      },
+      {
+        "tick": 1119,
+        "missing": 260,
+        "distance_from_d02_m": 314.606
+      },
+      {
+        "tick": 1120,
+        "missing": 260,
+        "distance_from_d02_m": 314.906
+      },
+      {
+        "tick": 1121,
+        "missing": 260,
+        "distance_from_d02_m": 315.206
+      },
+      {
+        "tick": 1122,
+        "missing": 260,
+        "distance_from_d02_m": 315.506
+      },
+      {
+        "tick": 1123,
+        "missing": 260,
+        "distance_from_d02_m": 315.806
+      },
+      {
+        "tick": 1124,
+        "missing": 260,
+        "distance_from_d02_m": 316.106
+      },
+      {
+        "tick": 1125,
+        "missing": 260,
+        "distance_from_d02_m": 316.406
+      },
+      {
+        "tick": 1126,
+        "missing": 260,
+        "distance_from_d02_m": 316.706
+      },
+      {
+        "tick": 1127,
+        "missing": 260,
+        "distance_from_d02_m": 316.9296
+      },
+      {
+        "tick": 1128,
+        "missing": 260,
+        "distance_from_d02_m": 317.1532
+      },
+      {
+        "tick": 1129,
+        "missing": 260,
+        "distance_from_d02_m": 317.4532
+      },
+      {
+        "tick": 1130,
+        "missing": 260,
+        "distance_from_d02_m": 317.7532
+      },
+      {
+        "tick": 1131,
+        "missing": 260,
+        "distance_from_d02_m": 318.0532
+      },
+      {
+        "tick": 1132,
+        "missing": 260,
+        "distance_from_d02_m": 318.3532
+      },
+      {
+        "tick": 1133,
+        "missing": 260,
+        "distance_from_d02_m": 318.5768
+      },
+      {
+        "tick": 1134,
+        "missing": 260,
+        "distance_from_d02_m": 318.8768
+      },
+      {
+        "tick": 1135,
+        "missing": 260,
+        "distance_from_d02_m": 319.1768
+      },
+      {
+        "tick": 1136,
+        "missing": 260,
+        "distance_from_d02_m": 319.4768
+      },
+      {
+        "tick": 1137,
+        "missing": 260,
+        "distance_from_d02_m": 319.7768
+      },
+      {
+        "tick": 1138,
+        "missing": 260,
+        "distance_from_d02_m": 320.0768
+      },
+      {
+        "tick": 1139,
+        "missing": 260,
+        "distance_from_d02_m": 320.3768
+      },
+      {
+        "tick": 1140,
+        "missing": 260,
+        "distance_from_d02_m": 320.6768
+      },
+      {
+        "tick": 1141,
+        "missing": 260,
+        "distance_from_d02_m": 320.9768
+      },
+      {
+        "tick": 1142,
+        "missing": 260,
+        "distance_from_d02_m": 321.2768
+      },
+      {
+        "tick": 1143,
+        "missing": 260,
+        "distance_from_d02_m": 321.5768
+      },
+      {
+        "tick": 1144,
+        "missing": 260,
+        "distance_from_d02_m": 321.8768
+      },
+      {
+        "tick": 1145,
+        "missing": 260,
+        "distance_from_d02_m": 322.1768
+      },
+      {
+        "tick": 1146,
+        "missing": 260,
+        "distance_from_d02_m": 322.4768
+      },
+      {
+        "tick": 1147,
+        "missing": 260,
+        "distance_from_d02_m": 322.7768
+      },
+      {
+        "tick": 1148,
+        "missing": 260,
+        "distance_from_d02_m": 323.0768
+      },
+      {
+        "tick": 1149,
+        "missing": 260,
+        "distance_from_d02_m": 323.3768
+      },
+      {
+        "tick": 1150,
+        "missing": 260,
+        "distance_from_d02_m": 323.6768
+      },
+      {
+        "tick": 1151,
+        "missing": 260,
+        "distance_from_d02_m": 323.9768
+      },
+      {
+        "tick": 1152,
+        "missing": 260,
+        "distance_from_d02_m": 324.2768
+      },
+      {
+        "tick": 1153,
+        "missing": 260,
+        "distance_from_d02_m": 324.5768
+      },
+      {
+        "tick": 1154,
+        "missing": 260,
+        "distance_from_d02_m": 324.8768
+      },
+      {
+        "tick": 1155,
+        "missing": 260,
+        "distance_from_d02_m": 325.1768
+      },
+      {
+        "tick": 1156,
+        "missing": 260,
+        "distance_from_d02_m": 325.4004
+      },
+      {
+        "tick": 1157,
+        "missing": 260,
+        "distance_from_d02_m": 325.7004
+      },
+      {
+        "tick": 1158,
+        "missing": 260,
+        "distance_from_d02_m": 326.0004
+      },
+      {
+        "tick": 1159,
+        "missing": 260,
+        "distance_from_d02_m": 326.3004
+      },
+      {
+        "tick": 1160,
+        "missing": 260,
+        "distance_from_d02_m": 326.6004
+      },
+      {
+        "tick": 1161,
+        "missing": 260,
+        "distance_from_d02_m": 326.9004
+      },
+      {
+        "tick": 1162,
+        "missing": 260,
+        "distance_from_d02_m": 327.2004
+      },
+      {
+        "tick": 1163,
+        "missing": 260,
+        "distance_from_d02_m": 327.5004
+      },
+      {
+        "tick": 1164,
+        "missing": 260,
+        "distance_from_d02_m": 327.8004
+      },
+      {
+        "tick": 1165,
+        "missing": 260,
+        "distance_from_d02_m": 328.1004
+      },
+      {
+        "tick": 1166,
+        "missing": 260,
+        "distance_from_d02_m": 328.4004
+      },
+      {
+        "tick": 1167,
+        "missing": 260,
+        "distance_from_d02_m": 328.7004
+      },
+      {
+        "tick": 1168,
+        "missing": 260,
+        "distance_from_d02_m": 329.0004
+      },
+      {
+        "tick": 1169,
+        "missing": 260,
+        "distance_from_d02_m": 329.3004
+      },
+      {
+        "tick": 1170,
+        "missing": 260,
+        "distance_from_d02_m": 329.6004
+      },
+      {
+        "tick": 1171,
+        "missing": 260,
+        "distance_from_d02_m": 329.9004
+      },
+      {
+        "tick": 1172,
+        "missing": 260,
+        "distance_from_d02_m": 330.2004
+      },
+      {
+        "tick": 1173,
+        "missing": 260,
+        "distance_from_d02_m": 330.5004
+      },
+      {
+        "tick": 1174,
+        "missing": 260,
+        "distance_from_d02_m": 330.724
+      },
+      {
+        "tick": 1175,
+        "missing": 260,
+        "distance_from_d02_m": 331.024
+      },
+      {
+        "tick": 1176,
+        "missing": 260,
+        "distance_from_d02_m": 331.324
+      },
+      {
+        "tick": 1177,
+        "missing": 260,
+        "distance_from_d02_m": 331.5476
+      },
+      {
+        "tick": 1178,
+        "missing": 260,
+        "distance_from_d02_m": 331.8476
+      },
+      {
+        "tick": 1179,
+        "missing": 260,
+        "distance_from_d02_m": 332.0712
+      },
+      {
+        "tick": 1180,
+        "missing": 260,
+        "distance_from_d02_m": 332.3712
+      },
+      {
+        "tick": 1181,
+        "missing": 260,
+        "distance_from_d02_m": 332.6712
+      },
+      {
+        "tick": 1182,
+        "missing": 260,
+        "distance_from_d02_m": 332.9712
+      },
+      {
+        "tick": 1183,
+        "missing": 260,
+        "distance_from_d02_m": 333.2712
+      },
+      {
+        "tick": 1184,
+        "missing": 260,
+        "distance_from_d02_m": 333.5712
+      },
+      {
+        "tick": 1185,
+        "missing": 260,
+        "distance_from_d02_m": 333.8712
+      },
+      {
+        "tick": 1186,
+        "missing": 260,
+        "distance_from_d02_m": 334.1712
+      },
+      {
+        "tick": 1187,
+        "missing": 260,
+        "distance_from_d02_m": 334.4712
+      },
+      {
+        "tick": 1188,
+        "missing": 260,
+        "distance_from_d02_m": 334.7712
+      },
+      {
+        "tick": 1189,
+        "missing": 260,
+        "distance_from_d02_m": 335.0712
+      },
+      {
+        "tick": 1190,
+        "missing": 260,
+        "distance_from_d02_m": 335.3712
+      },
+      {
+        "tick": 1191,
+        "missing": 260,
+        "distance_from_d02_m": 335.6712
+      },
+      {
+        "tick": 1192,
+        "missing": 260,
+        "distance_from_d02_m": 335.9712
+      },
+      {
+        "tick": 1193,
+        "missing": 260,
+        "distance_from_d02_m": 336.2712
+      },
+      {
+        "tick": 1194,
+        "missing": 260,
+        "distance_from_d02_m": 336.5712
+      },
+      {
+        "tick": 1195,
+        "missing": 260,
+        "distance_from_d02_m": 336.8712
+      },
+      {
+        "tick": 1196,
+        "missing": 260,
+        "distance_from_d02_m": 337.0948
+      },
+      {
+        "tick": 1197,
+        "missing": 260,
+        "distance_from_d02_m": 337.3184
+      },
+      {
+        "tick": 1198,
+        "missing": 260,
+        "distance_from_d02_m": 337.6184
+      },
+      {
+        "tick": 1199,
+        "missing": 260,
+        "distance_from_d02_m": 337.9184
+      },
+      {
+        "tick": 1200,
+        "missing": 260,
+        "distance_from_d02_m": 338.2184
+      },
+      {
+        "tick": 1201,
+        "missing": 260,
+        "distance_from_d02_m": 338.5184
+      },
+      {
+        "tick": 1202,
+        "missing": 260,
+        "distance_from_d02_m": 338.8184
+      },
+      {
+        "tick": 1203,
+        "missing": 260,
+        "distance_from_d02_m": 339.042
+      },
+      {
+        "tick": 1204,
+        "missing": 260,
+        "distance_from_d02_m": 339.2656
+      },
+      {
+        "tick": 1205,
+        "missing": 260,
+        "distance_from_d02_m": 339.5656
+      },
+      {
+        "tick": 1206,
+        "missing": 260,
+        "distance_from_d02_m": 339.8656
+      },
+      {
+        "tick": 1207,
+        "missing": 260,
+        "distance_from_d02_m": 340.1656
+      },
+      {
+        "tick": 1208,
+        "missing": 260,
+        "distance_from_d02_m": 340.4656
+      },
+      {
+        "tick": 1209,
+        "missing": 260,
+        "distance_from_d02_m": 340.7656
+      },
+      {
+        "tick": 1210,
+        "missing": 260,
+        "distance_from_d02_m": 341.0656
+      },
+      {
+        "tick": 1211,
+        "missing": 260,
+        "distance_from_d02_m": 341.3656
+      },
+      {
+        "tick": 1212,
+        "missing": 260,
+        "distance_from_d02_m": 341.6656
+      },
+      {
+        "tick": 1213,
+        "missing": 260,
+        "distance_from_d02_m": 341.9656
+      },
+      {
+        "tick": 1214,
+        "missing": 260,
+        "distance_from_d02_m": 342.2656
+      },
+      {
+        "tick": 1215,
+        "missing": 260,
+        "distance_from_d02_m": 342.4892
+      },
+      {
+        "tick": 1216,
+        "missing": 260,
+        "distance_from_d02_m": 342.7128
+      },
+      {
+        "tick": 1217,
+        "missing": 260,
+        "distance_from_d02_m": 343.0128
+      },
+      {
+        "tick": 1218,
+        "missing": 260,
+        "distance_from_d02_m": 343.3128
+      },
+      {
+        "tick": 1219,
+        "missing": 260,
+        "distance_from_d02_m": 343.6128
+      },
+      {
+        "tick": 1220,
+        "missing": 260,
+        "distance_from_d02_m": 343.9128
+      },
+      {
+        "tick": 1221,
+        "missing": 260,
+        "distance_from_d02_m": 344.2128
+      },
+      {
+        "tick": 1222,
+        "missing": 260,
+        "distance_from_d02_m": 344.4365
+      },
+      {
+        "tick": 1223,
+        "missing": 260,
+        "distance_from_d02_m": 344.6601
+      },
+      {
+        "tick": 1224,
+        "missing": 260,
+        "distance_from_d02_m": 344.9601
+      },
+      {
+        "tick": 1225,
+        "missing": 260,
+        "distance_from_d02_m": 345.2601
+      },
+      {
+        "tick": 1226,
+        "missing": 260,
+        "distance_from_d02_m": 345.5601
+      },
+      {
+        "tick": 1227,
+        "missing": 260,
+        "distance_from_d02_m": 345.8601
+      },
+      {
+        "tick": 1228,
+        "missing": 260,
+        "distance_from_d02_m": 346.1601
+      },
+      {
+        "tick": 1229,
+        "missing": 260,
+        "distance_from_d02_m": 346.3837
+      },
+      {
+        "tick": 1230,
+        "missing": 260,
+        "distance_from_d02_m": 346.6073
+      },
+      {
+        "tick": 1231,
+        "missing": 260,
+        "distance_from_d02_m": 346.9073
+      },
+      {
+        "tick": 1232,
+        "missing": 260,
+        "distance_from_d02_m": 347.2073
+      },
+      {
+        "tick": 1233,
+        "missing": 260,
+        "distance_from_d02_m": 347.4309
+      },
+      {
+        "tick": 1234,
+        "missing": 260,
+        "distance_from_d02_m": 347.7309
+      },
+      {
+        "tick": 1235,
+        "missing": 260,
+        "distance_from_d02_m": 348.0309
+      },
+      {
+        "tick": 1236,
+        "missing": 260,
+        "distance_from_d02_m": 348.3309
+      },
+      {
+        "tick": 1237,
+        "missing": 260,
+        "distance_from_d02_m": 348.6309
+      },
+      {
+        "tick": 1238,
+        "missing": 260,
+        "distance_from_d02_m": 348.9309
+      },
+      {
+        "tick": 1239,
+        "missing": 260,
+        "distance_from_d02_m": 349.2309
+      },
+      {
+        "tick": 1240,
+        "missing": 260,
+        "distance_from_d02_m": 349.4545
+      },
+      {
+        "tick": 1241,
+        "missing": 260,
+        "distance_from_d02_m": 349.7545
+      },
+      {
+        "tick": 1242,
+        "missing": 260,
+        "distance_from_d02_m": 350.0545
+      },
+      {
+        "tick": 1243,
+        "missing": 260,
+        "distance_from_d02_m": 350.3545
+      },
+      {
+        "tick": 1244,
+        "missing": 260,
+        "distance_from_d02_m": 350.6545
+      },
+      {
+        "tick": 1245,
+        "missing": 260,
+        "distance_from_d02_m": 350.9545
+      },
+      {
+        "tick": 1246,
+        "missing": 260,
+        "distance_from_d02_m": 351.2545
+      },
+      {
+        "tick": 1247,
+        "missing": 260,
+        "distance_from_d02_m": 351.5545
+      },
+      {
+        "tick": 1248,
+        "missing": 260,
+        "distance_from_d02_m": 351.8545
+      },
+      {
+        "tick": 1249,
+        "missing": 260,
+        "distance_from_d02_m": 352.1545
+      },
+      {
+        "tick": 1250,
+        "missing": 260,
+        "distance_from_d02_m": 352.4545
+      },
+      {
+        "tick": 1251,
+        "missing": 260,
+        "distance_from_d02_m": 352.7545
+      },
+      {
+        "tick": 1252,
+        "missing": 260,
+        "distance_from_d02_m": 353.0545
+      },
+      {
+        "tick": 1253,
+        "missing": 260,
+        "distance_from_d02_m": 353.3545
+      },
+      {
+        "tick": 1254,
+        "missing": 260,
+        "distance_from_d02_m": 353.6545
+      },
+      {
+        "tick": 1255,
+        "missing": 260,
+        "distance_from_d02_m": 353.9545
+      },
+      {
+        "tick": 1256,
+        "missing": 260,
+        "distance_from_d02_m": 354.2545
+      },
+      {
+        "tick": 1257,
+        "missing": 260,
+        "distance_from_d02_m": 354.5545
+      },
+      {
+        "tick": 1258,
+        "missing": 260,
+        "distance_from_d02_m": 354.8545
+      },
+      {
+        "tick": 1259,
+        "missing": 260,
+        "distance_from_d02_m": 355.1545
+      },
+      {
+        "tick": 1260,
+        "missing": 260,
+        "distance_from_d02_m": 355.4545
+      },
+      {
+        "tick": 1261,
+        "missing": 260,
+        "distance_from_d02_m": 355.7545
+      },
+      {
+        "tick": 1262,
+        "missing": 260,
+        "distance_from_d02_m": 356.0545
+      },
+      {
+        "tick": 1263,
+        "missing": 260,
+        "distance_from_d02_m": 356.3545
+      },
+      {
+        "tick": 1264,
+        "missing": 260,
+        "distance_from_d02_m": 356.6545
+      },
+      {
+        "tick": 1265,
+        "missing": 260,
+        "distance_from_d02_m": 356.9545
+      },
+      {
+        "tick": 1266,
+        "missing": 260,
+        "distance_from_d02_m": 357.2545
+      },
+      {
+        "tick": 1267,
+        "missing": 260,
+        "distance_from_d02_m": 357.5545
+      },
+      {
+        "tick": 1268,
+        "missing": 260,
+        "distance_from_d02_m": 357.8545
+      },
+      {
+        "tick": 1269,
+        "missing": 260,
+        "distance_from_d02_m": 358.1545
+      },
+      {
+        "tick": 1270,
+        "missing": 260,
+        "distance_from_d02_m": 358.4545
+      },
+      {
+        "tick": 1271,
+        "missing": 260,
+        "distance_from_d02_m": 358.7545
+      },
+      {
+        "tick": 1272,
+        "missing": 260,
+        "distance_from_d02_m": 359.0545
+      },
+      {
+        "tick": 1273,
+        "missing": 260,
+        "distance_from_d02_m": 359.3545
+      },
+      {
+        "tick": 1274,
+        "missing": 260,
+        "distance_from_d02_m": 359.6545
+      },
+      {
+        "tick": 1275,
+        "missing": 260,
+        "distance_from_d02_m": 359.9545
+      },
+      {
+        "tick": 1276,
+        "missing": 260,
+        "distance_from_d02_m": 360.2545
+      },
+      {
+        "tick": 1277,
+        "missing": 260,
+        "distance_from_d02_m": 360.5545
+      },
+      {
+        "tick": 1278,
+        "missing": 260,
+        "distance_from_d02_m": 360.8545
+      },
+      {
+        "tick": 1279,
+        "missing": 260,
+        "distance_from_d02_m": 361.1545
+      },
+      {
+        "tick": 1280,
+        "missing": 260,
+        "distance_from_d02_m": 361.4545
+      },
+      {
+        "tick": 1281,
+        "missing": 260,
+        "distance_from_d02_m": 361.7545
+      },
+      {
+        "tick": 1282,
+        "missing": 260,
+        "distance_from_d02_m": 362.0545
+      },
+      {
+        "tick": 1283,
+        "missing": 260,
+        "distance_from_d02_m": 362.3545
+      },
+      {
+        "tick": 1284,
+        "missing": 260,
+        "distance_from_d02_m": 362.5781
+      },
+      {
+        "tick": 1285,
+        "missing": 260,
+        "distance_from_d02_m": 362.8781
+      },
+      {
+        "tick": 1286,
+        "missing": 260,
+        "distance_from_d02_m": 363.1781
+      },
+      {
+        "tick": 1287,
+        "missing": 260,
+        "distance_from_d02_m": 363.4781
+      },
+      {
+        "tick": 1288,
+        "missing": 260,
+        "distance_from_d02_m": 363.7781
+      },
+      {
+        "tick": 1289,
+        "missing": 260,
+        "distance_from_d02_m": 364.0781
+      },
+      {
+        "tick": 1290,
+        "missing": 260,
+        "distance_from_d02_m": 364.3781
+      },
+      {
+        "tick": 1291,
+        "missing": 260,
+        "distance_from_d02_m": 364.6781
+      },
+      {
+        "tick": 1292,
+        "missing": 260,
+        "distance_from_d02_m": 364.9781
+      },
+      {
+        "tick": 1293,
+        "missing": 260,
+        "distance_from_d02_m": 365.2781
+      },
+      {
+        "tick": 1294,
+        "missing": 260,
+        "distance_from_d02_m": 365.5781
+      },
+      {
+        "tick": 1295,
+        "missing": 260,
+        "distance_from_d02_m": 365.8017
+      },
+      {
+        "tick": 1296,
+        "missing": 260,
+        "distance_from_d02_m": 366.0253
+      },
+      {
+        "tick": 1297,
+        "missing": 260,
+        "distance_from_d02_m": 366.3253
+      }
+    ],
+    "runtime_scanning_s": 25.753
+  },
+  "RoomNode_MapEx_run04": {
+    "source": "/home/dell/mx072_native2d_pair_20261015/OPTIMIZED_FULL_PAIR_20261015/COM1_VERIFIED/native_opt_r41_lama3small_run04/R41_OPT_LAMA3_SMALLROI_RUN04_visvarprob",
+    "start_tick": 12,
+    "ending_tick": 708,
+    "initial_unknown": 3889,
+    "room_mask_total": 6564,
+    "last_remaining_unknown": 260,
+    "milestones": {
+      "3889": {
+        "tick": 12,
+        "missing": 3889,
+        "travel_from_d02_m": 0.0,
+        "travel_from_run_start_m": 3.371,
+        "steps_from_d02": 0
+      },
+      "2000": {
+        "tick": 23,
+        "missing": 1448,
+        "travel_from_d02_m": 2.689,
+        "travel_from_run_start_m": 6.06,
+        "steps_from_d02": 11
+      },
+      "1000": {
+        "tick": 25,
+        "missing": 877,
+        "travel_from_d02_m": 3.289,
+        "travel_from_run_start_m": 6.66,
+        "steps_from_d02": 13
+      },
+      "600": {
+        "tick": 34,
+        "missing": 595,
+        "travel_from_d02_m": 5.76,
+        "travel_from_run_start_m": 9.13,
+        "steps_from_d02": 22
+      },
+      "400": {
+        "tick": 78,
+        "missing": 400,
+        "travel_from_d02_m": 17.967,
+        "travel_from_run_start_m": 21.337,
+        "steps_from_d02": 66
+      },
+      "339": {
+        "tick": 89,
+        "missing": 334,
+        "travel_from_d02_m": 21.19,
+        "travel_from_run_start_m": 24.561,
+        "steps_from_d02": 77
+      },
+      "270": {
+        "tick": 102,
+        "missing": 269,
+        "travel_from_d02_m": 24.861,
+        "travel_from_run_start_m": 28.232,
+        "steps_from_d02": 90
+      }
+    },
+    "total_distance_from_d02_m": 195.737,
+    "total_distance_from_start_m": 199.108,
+    "trace": [
+      {
+        "tick": 40,
+        "missing": 431,
+        "distance_from_d02_m": 7.5597
+      },
+      {
+        "tick": 80,
+        "missing": 388,
+        "distance_from_d02_m": 18.4902
+      },
+      {
+        "tick": 102,
+        "missing": 269,
+        "distance_from_d02_m": 24.861
+      },
+      {
+        "tick": 103,
+        "missing": 269,
+        "distance_from_d02_m": 25.161
+      },
+      {
+        "tick": 104,
+        "missing": 269,
+        "distance_from_d02_m": 25.461
+      },
+      {
+        "tick": 105,
+        "missing": 269,
+        "distance_from_d02_m": 25.6846
+      },
+      {
+        "tick": 106,
+        "missing": 269,
+        "distance_from_d02_m": 25.9082
+      },
+      {
+        "tick": 107,
+        "missing": 269,
+        "distance_from_d02_m": 26.2082
+      },
+      {
+        "tick": 108,
+        "missing": 269,
+        "distance_from_d02_m": 26.5082
+      },
+      {
+        "tick": 109,
+        "missing": 269,
+        "distance_from_d02_m": 26.8082
+      },
+      {
+        "tick": 110,
+        "missing": 269,
+        "distance_from_d02_m": 27.1082
+      },
+      {
+        "tick": 111,
+        "missing": 269,
+        "distance_from_d02_m": 27.4082
+      },
+      {
+        "tick": 112,
+        "missing": 269,
+        "distance_from_d02_m": 27.7082
+      },
+      {
+        "tick": 113,
+        "missing": 269,
+        "distance_from_d02_m": 28.0082
+      },
+      {
+        "tick": 114,
+        "missing": 269,
+        "distance_from_d02_m": 28.3082
+      },
+      {
+        "tick": 115,
+        "missing": 269,
+        "distance_from_d02_m": 28.6082
+      },
+      {
+        "tick": 116,
+        "missing": 269,
+        "distance_from_d02_m": 28.8318
+      },
+      {
+        "tick": 117,
+        "missing": 269,
+        "distance_from_d02_m": 29.1318
+      },
+      {
+        "tick": 118,
+        "missing": 269,
+        "distance_from_d02_m": 29.4318
+      },
+      {
+        "tick": 119,
+        "missing": 269,
+        "distance_from_d02_m": 29.7318
+      },
+      {
+        "tick": 120,
+        "missing": 269,
+        "distance_from_d02_m": 30.0318
+      },
+      {
+        "tick": 121,
+        "missing": 269,
+        "distance_from_d02_m": 30.2554
+      },
+      {
+        "tick": 122,
+        "missing": 269,
+        "distance_from_d02_m": 30.5554
+      },
+      {
+        "tick": 123,
+        "missing": 269,
+        "distance_from_d02_m": 30.8554
+      },
+      {
+        "tick": 124,
+        "missing": 269,
+        "distance_from_d02_m": 31.079
+      },
+      {
+        "tick": 125,
+        "missing": 269,
+        "distance_from_d02_m": 31.3026
+      },
+      {
+        "tick": 126,
+        "missing": 269,
+        "distance_from_d02_m": 31.5262
+      },
+      {
+        "tick": 127,
+        "missing": 269,
+        "distance_from_d02_m": 31.7498
+      },
+      {
+        "tick": 128,
+        "missing": 269,
+        "distance_from_d02_m": 32.0498
+      },
+      {
+        "tick": 129,
+        "missing": 269,
+        "distance_from_d02_m": 32.3498
+      },
+      {
+        "tick": 130,
+        "missing": 269,
+        "distance_from_d02_m": 32.6498
+      },
+      {
+        "tick": 131,
+        "missing": 269,
+        "distance_from_d02_m": 32.9498
+      },
+      {
+        "tick": 132,
+        "missing": 269,
+        "distance_from_d02_m": 33.2498
+      },
+      {
+        "tick": 133,
+        "missing": 269,
+        "distance_from_d02_m": 33.5498
+      },
+      {
+        "tick": 134,
+        "missing": 269,
+        "distance_from_d02_m": 33.8498
+      },
+      {
+        "tick": 135,
+        "missing": 269,
+        "distance_from_d02_m": 34.1498
+      },
+      {
+        "tick": 136,
+        "missing": 269,
+        "distance_from_d02_m": 34.4498
+      },
+      {
+        "tick": 137,
+        "missing": 269,
+        "distance_from_d02_m": 34.7498
+      },
+      {
+        "tick": 138,
+        "missing": 269,
+        "distance_from_d02_m": 35.0498
+      },
+      {
+        "tick": 139,
+        "missing": 269,
+        "distance_from_d02_m": 35.3498
+      },
+      {
+        "tick": 140,
+        "missing": 269,
+        "distance_from_d02_m": 35.6498
+      },
+      {
+        "tick": 141,
+        "missing": 269,
+        "distance_from_d02_m": 35.9498
+      },
+      {
+        "tick": 142,
+        "missing": 269,
+        "distance_from_d02_m": 36.2498
+      },
+      {
+        "tick": 143,
+        "missing": 269,
+        "distance_from_d02_m": 36.5498
+      },
+      {
+        "tick": 144,
+        "missing": 269,
+        "distance_from_d02_m": 36.8498
+      },
+      {
+        "tick": 145,
+        "missing": 269,
+        "distance_from_d02_m": 37.1498
+      },
+      {
+        "tick": 146,
+        "missing": 269,
+        "distance_from_d02_m": 37.4498
+      },
+      {
+        "tick": 147,
+        "missing": 269,
+        "distance_from_d02_m": 37.7498
+      },
+      {
+        "tick": 148,
+        "missing": 269,
+        "distance_from_d02_m": 38.0498
+      },
+      {
+        "tick": 149,
+        "missing": 269,
+        "distance_from_d02_m": 38.2735
+      },
+      {
+        "tick": 150,
+        "missing": 269,
+        "distance_from_d02_m": 38.4971
+      },
+      {
+        "tick": 151,
+        "missing": 269,
+        "distance_from_d02_m": 38.7971
+      },
+      {
+        "tick": 152,
+        "missing": 269,
+        "distance_from_d02_m": 39.0971
+      },
+      {
+        "tick": 153,
+        "missing": 269,
+        "distance_from_d02_m": 39.3971
+      },
+      {
+        "tick": 154,
+        "missing": 269,
+        "distance_from_d02_m": 39.6971
+      },
+      {
+        "tick": 155,
+        "missing": 269,
+        "distance_from_d02_m": 39.9971
+      },
+      {
+        "tick": 156,
+        "missing": 269,
+        "distance_from_d02_m": 40.2971
+      },
+      {
+        "tick": 157,
+        "missing": 269,
+        "distance_from_d02_m": 40.5971
+      },
+      {
+        "tick": 158,
+        "missing": 269,
+        "distance_from_d02_m": 40.8971
+      },
+      {
+        "tick": 159,
+        "missing": 269,
+        "distance_from_d02_m": 41.1971
+      },
+      {
+        "tick": 160,
+        "missing": 269,
+        "distance_from_d02_m": 41.4207
+      },
+      {
+        "tick": 161,
+        "missing": 269,
+        "distance_from_d02_m": 41.6443
+      },
+      {
+        "tick": 162,
+        "missing": 269,
+        "distance_from_d02_m": 41.9443
+      },
+      {
+        "tick": 163,
+        "missing": 269,
+        "distance_from_d02_m": 42.2443
+      },
+      {
+        "tick": 164,
+        "missing": 269,
+        "distance_from_d02_m": 42.5443
+      },
+      {
+        "tick": 165,
+        "missing": 269,
+        "distance_from_d02_m": 42.8443
+      },
+      {
+        "tick": 166,
+        "missing": 269,
+        "distance_from_d02_m": 43.1443
+      },
+      {
+        "tick": 167,
+        "missing": 269,
+        "distance_from_d02_m": 43.4443
+      },
+      {
+        "tick": 168,
+        "missing": 269,
+        "distance_from_d02_m": 43.7443
+      },
+      {
+        "tick": 169,
+        "missing": 269,
+        "distance_from_d02_m": 44.0443
+      },
+      {
+        "tick": 170,
+        "missing": 269,
+        "distance_from_d02_m": 44.2679
+      },
+      {
+        "tick": 171,
+        "missing": 269,
+        "distance_from_d02_m": 44.5679
+      },
+      {
+        "tick": 172,
+        "missing": 269,
+        "distance_from_d02_m": 44.7915
+      },
+      {
+        "tick": 173,
+        "missing": 269,
+        "distance_from_d02_m": 45.0151
+      },
+      {
+        "tick": 174,
+        "missing": 269,
+        "distance_from_d02_m": 45.2387
+      },
+      {
+        "tick": 175,
+        "missing": 269,
+        "distance_from_d02_m": 45.5387
+      },
+      {
+        "tick": 176,
+        "missing": 269,
+        "distance_from_d02_m": 45.7623
+      },
+      {
+        "tick": 177,
+        "missing": 269,
+        "distance_from_d02_m": 46.0623
+      },
+      {
+        "tick": 178,
+        "missing": 269,
+        "distance_from_d02_m": 46.2859
+      },
+      {
+        "tick": 179,
+        "missing": 269,
+        "distance_from_d02_m": 46.5095
+      },
+      {
+        "tick": 180,
+        "missing": 269,
+        "distance_from_d02_m": 46.7331
+      },
+      {
+        "tick": 181,
+        "missing": 269,
+        "distance_from_d02_m": 46.9567
+      },
+      {
+        "tick": 182,
+        "missing": 269,
+        "distance_from_d02_m": 47.1803
+      },
+      {
+        "tick": 183,
+        "missing": 269,
+        "distance_from_d02_m": 47.4039
+      },
+      {
+        "tick": 184,
+        "missing": 269,
+        "distance_from_d02_m": 47.6276
+      },
+      {
+        "tick": 185,
+        "missing": 269,
+        "distance_from_d02_m": 47.8512
+      },
+      {
+        "tick": 186,
+        "missing": 269,
+        "distance_from_d02_m": 48.0748
+      },
+      {
+        "tick": 187,
+        "missing": 269,
+        "distance_from_d02_m": 48.2984
+      },
+      {
+        "tick": 188,
+        "missing": 269,
+        "distance_from_d02_m": 48.522
+      },
+      {
+        "tick": 189,
+        "missing": 269,
+        "distance_from_d02_m": 48.7456
+      },
+      {
+        "tick": 190,
+        "missing": 269,
+        "distance_from_d02_m": 48.9692
+      },
+      {
+        "tick": 191,
+        "missing": 269,
+        "distance_from_d02_m": 49.2692
+      },
+      {
+        "tick": 192,
+        "missing": 269,
+        "distance_from_d02_m": 49.5692
+      },
+      {
+        "tick": 193,
+        "missing": 269,
+        "distance_from_d02_m": 49.7928
+      },
+      {
+        "tick": 194,
+        "missing": 269,
+        "distance_from_d02_m": 50.0164
+      },
+      {
+        "tick": 195,
+        "missing": 269,
+        "distance_from_d02_m": 50.24
+      },
+      {
+        "tick": 196,
+        "missing": 269,
+        "distance_from_d02_m": 50.4636
+      },
+      {
+        "tick": 197,
+        "missing": 269,
+        "distance_from_d02_m": 50.6872
+      },
+      {
+        "tick": 198,
+        "missing": 269,
+        "distance_from_d02_m": 50.9108
+      },
+      {
+        "tick": 199,
+        "missing": 269,
+        "distance_from_d02_m": 51.2108
+      },
+      {
+        "tick": 200,
+        "missing": 269,
+        "distance_from_d02_m": 51.5108
+      },
+      {
+        "tick": 201,
+        "missing": 269,
+        "distance_from_d02_m": 51.8108
+      },
+      {
+        "tick": 202,
+        "missing": 269,
+        "distance_from_d02_m": 52.1108
+      },
+      {
+        "tick": 203,
+        "missing": 269,
+        "distance_from_d02_m": 52.4108
+      },
+      {
+        "tick": 204,
+        "missing": 269,
+        "distance_from_d02_m": 52.7108
+      },
+      {
+        "tick": 205,
+        "missing": 269,
+        "distance_from_d02_m": 53.0108
+      },
+      {
+        "tick": 206,
+        "missing": 269,
+        "distance_from_d02_m": 53.3108
+      },
+      {
+        "tick": 207,
+        "missing": 269,
+        "distance_from_d02_m": 53.6108
+      },
+      {
+        "tick": 208,
+        "missing": 269,
+        "distance_from_d02_m": 53.9108
+      },
+      {
+        "tick": 209,
+        "missing": 269,
+        "distance_from_d02_m": 54.2108
+      },
+      {
+        "tick": 210,
+        "missing": 269,
+        "distance_from_d02_m": 54.5108
+      },
+      {
+        "tick": 211,
+        "missing": 269,
+        "distance_from_d02_m": 54.8108
+      },
+      {
+        "tick": 212,
+        "missing": 269,
+        "distance_from_d02_m": 55.1108
+      },
+      {
+        "tick": 213,
+        "missing": 269,
+        "distance_from_d02_m": 55.4108
+      },
+      {
+        "tick": 214,
+        "missing": 269,
+        "distance_from_d02_m": 55.7108
+      },
+      {
+        "tick": 215,
+        "missing": 269,
+        "distance_from_d02_m": 56.0108
+      },
+      {
+        "tick": 216,
+        "missing": 269,
+        "distance_from_d02_m": 56.3108
+      },
+      {
+        "tick": 217,
+        "missing": 269,
+        "distance_from_d02_m": 56.5344
+      },
+      {
+        "tick": 218,
+        "missing": 269,
+        "distance_from_d02_m": 56.8344
+      },
+      {
+        "tick": 219,
+        "missing": 269,
+        "distance_from_d02_m": 57.1344
+      },
+      {
+        "tick": 220,
+        "missing": 269,
+        "distance_from_d02_m": 57.4344
+      },
+      {
+        "tick": 221,
+        "missing": 269,
+        "distance_from_d02_m": 57.7344
+      },
+      {
+        "tick": 222,
+        "missing": 269,
+        "distance_from_d02_m": 57.958
+      },
+      {
+        "tick": 223,
+        "missing": 269,
+        "distance_from_d02_m": 58.258
+      },
+      {
+        "tick": 224,
+        "missing": 269,
+        "distance_from_d02_m": 58.558
+      },
+      {
+        "tick": 225,
+        "missing": 269,
+        "distance_from_d02_m": 58.858
+      },
+      {
+        "tick": 226,
+        "missing": 269,
+        "distance_from_d02_m": 59.158
+      },
+      {
+        "tick": 227,
+        "missing": 269,
+        "distance_from_d02_m": 59.458
+      },
+      {
+        "tick": 228,
+        "missing": 269,
+        "distance_from_d02_m": 59.758
+      },
+      {
+        "tick": 229,
+        "missing": 269,
+        "distance_from_d02_m": 60.058
+      },
+      {
+        "tick": 230,
+        "missing": 269,
+        "distance_from_d02_m": 60.358
+      },
+      {
+        "tick": 231,
+        "missing": 269,
+        "distance_from_d02_m": 60.658
+      },
+      {
+        "tick": 232,
+        "missing": 269,
+        "distance_from_d02_m": 60.958
+      },
+      {
+        "tick": 233,
+        "missing": 269,
+        "distance_from_d02_m": 61.258
+      },
+      {
+        "tick": 234,
+        "missing": 269,
+        "distance_from_d02_m": 61.558
+      },
+      {
+        "tick": 235,
+        "missing": 269,
+        "distance_from_d02_m": 61.858
+      },
+      {
+        "tick": 236,
+        "missing": 269,
+        "distance_from_d02_m": 62.158
+      },
+      {
+        "tick": 237,
+        "missing": 269,
+        "distance_from_d02_m": 62.458
+      },
+      {
+        "tick": 238,
+        "missing": 269,
+        "distance_from_d02_m": 62.758
+      },
+      {
+        "tick": 239,
+        "missing": 269,
+        "distance_from_d02_m": 63.058
+      },
+      {
+        "tick": 240,
+        "missing": 269,
+        "distance_from_d02_m": 63.358
+      },
+      {
+        "tick": 241,
+        "missing": 269,
+        "distance_from_d02_m": 63.5817
+      },
+      {
+        "tick": 242,
+        "missing": 269,
+        "distance_from_d02_m": 63.8053
+      },
+      {
+        "tick": 243,
+        "missing": 269,
+        "distance_from_d02_m": 64.1053
+      },
+      {
+        "tick": 244,
+        "missing": 269,
+        "distance_from_d02_m": 64.4053
+      },
+      {
+        "tick": 245,
+        "missing": 269,
+        "distance_from_d02_m": 64.7053
+      },
+      {
+        "tick": 246,
+        "missing": 269,
+        "distance_from_d02_m": 65.0053
+      },
+      {
+        "tick": 247,
+        "missing": 269,
+        "distance_from_d02_m": 65.3053
+      },
+      {
+        "tick": 248,
+        "missing": 269,
+        "distance_from_d02_m": 65.5289
+      },
+      {
+        "tick": 249,
+        "missing": 269,
+        "distance_from_d02_m": 65.8289
+      },
+      {
+        "tick": 250,
+        "missing": 269,
+        "distance_from_d02_m": 66.1289
+      },
+      {
+        "tick": 251,
+        "missing": 269,
+        "distance_from_d02_m": 66.3525
+      },
+      {
+        "tick": 252,
+        "missing": 269,
+        "distance_from_d02_m": 66.6525
+      },
+      {
+        "tick": 253,
+        "missing": 269,
+        "distance_from_d02_m": 66.9525
+      },
+      {
+        "tick": 254,
+        "missing": 269,
+        "distance_from_d02_m": 67.2525
+      },
+      {
+        "tick": 255,
+        "missing": 269,
+        "distance_from_d02_m": 67.5525
+      },
+      {
+        "tick": 256,
+        "missing": 269,
+        "distance_from_d02_m": 67.8525
+      },
+      {
+        "tick": 257,
+        "missing": 269,
+        "distance_from_d02_m": 68.1525
+      },
+      {
+        "tick": 258,
+        "missing": 269,
+        "distance_from_d02_m": 68.4525
+      },
+      {
+        "tick": 259,
+        "missing": 269,
+        "distance_from_d02_m": 68.6761
+      },
+      {
+        "tick": 260,
+        "missing": 269,
+        "distance_from_d02_m": 68.8997
+      },
+      {
+        "tick": 261,
+        "missing": 269,
+        "distance_from_d02_m": 69.1997
+      },
+      {
+        "tick": 262,
+        "missing": 269,
+        "distance_from_d02_m": 69.4233
+      },
+      {
+        "tick": 263,
+        "missing": 269,
+        "distance_from_d02_m": 69.6469
+      },
+      {
+        "tick": 264,
+        "missing": 269,
+        "distance_from_d02_m": 69.8705
+      },
+      {
+        "tick": 265,
+        "missing": 269,
+        "distance_from_d02_m": 70.0941
+      },
+      {
+        "tick": 266,
+        "missing": 269,
+        "distance_from_d02_m": 70.3941
+      },
+      {
+        "tick": 267,
+        "missing": 269,
+        "distance_from_d02_m": 70.6941
+      },
+      {
+        "tick": 268,
+        "missing": 269,
+        "distance_from_d02_m": 70.9941
+      },
+      {
+        "tick": 269,
+        "missing": 269,
+        "distance_from_d02_m": 71.2941
+      },
+      {
+        "tick": 270,
+        "missing": 269,
+        "distance_from_d02_m": 71.5941
+      },
+      {
+        "tick": 271,
+        "missing": 269,
+        "distance_from_d02_m": 71.8941
+      },
+      {
+        "tick": 272,
+        "missing": 269,
+        "distance_from_d02_m": 72.1177
+      },
+      {
+        "tick": 273,
+        "missing": 269,
+        "distance_from_d02_m": 72.3413
+      },
+      {
+        "tick": 274,
+        "missing": 269,
+        "distance_from_d02_m": 72.5649
+      },
+      {
+        "tick": 275,
+        "missing": 269,
+        "distance_from_d02_m": 72.7885
+      },
+      {
+        "tick": 276,
+        "missing": 269,
+        "distance_from_d02_m": 73.0885
+      },
+      {
+        "tick": 277,
+        "missing": 269,
+        "distance_from_d02_m": 73.3885
+      },
+      {
+        "tick": 278,
+        "missing": 269,
+        "distance_from_d02_m": 73.6885
+      },
+      {
+        "tick": 279,
+        "missing": 269,
+        "distance_from_d02_m": 73.9885
+      },
+      {
+        "tick": 280,
+        "missing": 269,
+        "distance_from_d02_m": 74.2885
+      },
+      {
+        "tick": 281,
+        "missing": 269,
+        "distance_from_d02_m": 74.5885
+      },
+      {
+        "tick": 282,
+        "missing": 269,
+        "distance_from_d02_m": 74.8885
+      },
+      {
+        "tick": 283,
+        "missing": 269,
+        "distance_from_d02_m": 75.1885
+      },
+      {
+        "tick": 284,
+        "missing": 269,
+        "distance_from_d02_m": 75.4885
+      },
+      {
+        "tick": 285,
+        "missing": 269,
+        "distance_from_d02_m": 75.7885
+      },
+      {
+        "tick": 286,
+        "missing": 269,
+        "distance_from_d02_m": 76.0885
+      },
+      {
+        "tick": 287,
+        "missing": 269,
+        "distance_from_d02_m": 76.3885
+      },
+      {
+        "tick": 288,
+        "missing": 269,
+        "distance_from_d02_m": 76.6885
+      },
+      {
+        "tick": 289,
+        "missing": 269,
+        "distance_from_d02_m": 76.9885
+      },
+      {
+        "tick": 290,
+        "missing": 269,
+        "distance_from_d02_m": 77.2885
+      },
+      {
+        "tick": 291,
+        "missing": 269,
+        "distance_from_d02_m": 77.5122
+      },
+      {
+        "tick": 292,
+        "missing": 269,
+        "distance_from_d02_m": 77.8122
+      },
+      {
+        "tick": 293,
+        "missing": 269,
+        "distance_from_d02_m": 78.1122
+      },
+      {
+        "tick": 294,
+        "missing": 269,
+        "distance_from_d02_m": 78.3358
+      },
+      {
+        "tick": 295,
+        "missing": 269,
+        "distance_from_d02_m": 78.6358
+      },
+      {
+        "tick": 296,
+        "missing": 269,
+        "distance_from_d02_m": 78.9358
+      },
+      {
+        "tick": 297,
+        "missing": 269,
+        "distance_from_d02_m": 79.2358
+      },
+      {
+        "tick": 298,
+        "missing": 269,
+        "distance_from_d02_m": 79.5358
+      },
+      {
+        "tick": 299,
+        "missing": 269,
+        "distance_from_d02_m": 79.8358
+      },
+      {
+        "tick": 300,
+        "missing": 269,
+        "distance_from_d02_m": 80.1358
+      },
+      {
+        "tick": 301,
+        "missing": 269,
+        "distance_from_d02_m": 80.3594
+      },
+      {
+        "tick": 302,
+        "missing": 269,
+        "distance_from_d02_m": 80.6594
+      },
+      {
+        "tick": 303,
+        "missing": 269,
+        "distance_from_d02_m": 80.9594
+      },
+      {
+        "tick": 304,
+        "missing": 269,
+        "distance_from_d02_m": 81.2594
+      },
+      {
+        "tick": 305,
+        "missing": 269,
+        "distance_from_d02_m": 81.5594
+      },
+      {
+        "tick": 306,
+        "missing": 269,
+        "distance_from_d02_m": 81.8594
+      },
+      {
+        "tick": 307,
+        "missing": 269,
+        "distance_from_d02_m": 82.1594
+      },
+      {
+        "tick": 308,
+        "missing": 269,
+        "distance_from_d02_m": 82.4594
+      },
+      {
+        "tick": 309,
+        "missing": 269,
+        "distance_from_d02_m": 82.7594
+      },
+      {
+        "tick": 310,
+        "missing": 269,
+        "distance_from_d02_m": 83.0594
+      },
+      {
+        "tick": 311,
+        "missing": 269,
+        "distance_from_d02_m": 83.283
+      },
+      {
+        "tick": 312,
+        "missing": 269,
+        "distance_from_d02_m": 83.583
+      },
+      {
+        "tick": 313,
+        "missing": 269,
+        "distance_from_d02_m": 83.883
+      },
+      {
+        "tick": 314,
+        "missing": 269,
+        "distance_from_d02_m": 84.183
+      },
+      {
+        "tick": 315,
+        "missing": 269,
+        "distance_from_d02_m": 84.483
+      },
+      {
+        "tick": 316,
+        "missing": 269,
+        "distance_from_d02_m": 84.783
+      },
+      {
+        "tick": 317,
+        "missing": 269,
+        "distance_from_d02_m": 85.083
+      },
+      {
+        "tick": 318,
+        "missing": 269,
+        "distance_from_d02_m": 85.3066
+      },
+      {
+        "tick": 319,
+        "missing": 269,
+        "distance_from_d02_m": 85.6066
+      },
+      {
+        "tick": 320,
+        "missing": 269,
+        "distance_from_d02_m": 85.9066
+      },
+      {
+        "tick": 321,
+        "missing": 269,
+        "distance_from_d02_m": 86.2066
+      },
+      {
+        "tick": 322,
+        "missing": 269,
+        "distance_from_d02_m": 86.5066
+      },
+      {
+        "tick": 323,
+        "missing": 269,
+        "distance_from_d02_m": 86.8066
+      },
+      {
+        "tick": 324,
+        "missing": 269,
+        "distance_from_d02_m": 87.1066
+      },
+      {
+        "tick": 325,
+        "missing": 269,
+        "distance_from_d02_m": 87.4066
+      },
+      {
+        "tick": 326,
+        "missing": 269,
+        "distance_from_d02_m": 87.7066
+      },
+      {
+        "tick": 327,
+        "missing": 269,
+        "distance_from_d02_m": 88.0066
+      },
+      {
+        "tick": 328,
+        "missing": 269,
+        "distance_from_d02_m": 88.3066
+      },
+      {
+        "tick": 329,
+        "missing": 269,
+        "distance_from_d02_m": 88.6066
+      },
+      {
+        "tick": 330,
+        "missing": 269,
+        "distance_from_d02_m": 88.9066
+      },
+      {
+        "tick": 331,
+        "missing": 269,
+        "distance_from_d02_m": 89.2066
+      },
+      {
+        "tick": 332,
+        "missing": 269,
+        "distance_from_d02_m": 89.5066
+      },
+      {
+        "tick": 333,
+        "missing": 269,
+        "distance_from_d02_m": 89.8066
+      },
+      {
+        "tick": 334,
+        "missing": 269,
+        "distance_from_d02_m": 90.1066
+      },
+      {
+        "tick": 335,
+        "missing": 269,
+        "distance_from_d02_m": 90.4066
+      },
+      {
+        "tick": 336,
+        "missing": 269,
+        "distance_from_d02_m": 90.7066
+      },
+      {
+        "tick": 337,
+        "missing": 269,
+        "distance_from_d02_m": 90.9302
+      },
+      {
+        "tick": 338,
+        "missing": 269,
+        "distance_from_d02_m": 91.2302
+      },
+      {
+        "tick": 339,
+        "missing": 269,
+        "distance_from_d02_m": 91.5302
+      },
+      {
+        "tick": 340,
+        "missing": 269,
+        "distance_from_d02_m": 91.8302
+      },
+      {
+        "tick": 341,
+        "missing": 269,
+        "distance_from_d02_m": 92.1302
+      },
+      {
+        "tick": 342,
+        "missing": 269,
+        "distance_from_d02_m": 92.4302
+      },
+      {
+        "tick": 343,
+        "missing": 269,
+        "distance_from_d02_m": 92.7302
+      },
+      {
+        "tick": 344,
+        "missing": 269,
+        "distance_from_d02_m": 93.0302
+      },
+      {
+        "tick": 345,
+        "missing": 269,
+        "distance_from_d02_m": 93.3302
+      },
+      {
+        "tick": 346,
+        "missing": 269,
+        "distance_from_d02_m": 93.6302
+      },
+      {
+        "tick": 347,
+        "missing": 269,
+        "distance_from_d02_m": 93.9302
+      },
+      {
+        "tick": 348,
+        "missing": 269,
+        "distance_from_d02_m": 94.2302
+      },
+      {
+        "tick": 349,
+        "missing": 269,
+        "distance_from_d02_m": 94.5302
+      },
+      {
+        "tick": 350,
+        "missing": 269,
+        "distance_from_d02_m": 94.8302
+      },
+      {
+        "tick": 351,
+        "missing": 269,
+        "distance_from_d02_m": 95.1302
+      },
+      {
+        "tick": 352,
+        "missing": 269,
+        "distance_from_d02_m": 95.4302
+      },
+      {
+        "tick": 353,
+        "missing": 269,
+        "distance_from_d02_m": 95.6538
+      },
+      {
+        "tick": 354,
+        "missing": 269,
+        "distance_from_d02_m": 95.9538
+      },
+      {
+        "tick": 355,
+        "missing": 269,
+        "distance_from_d02_m": 96.2538
+      },
+      {
+        "tick": 356,
+        "missing": 269,
+        "distance_from_d02_m": 96.5538
+      },
+      {
+        "tick": 357,
+        "missing": 269,
+        "distance_from_d02_m": 96.8538
+      },
+      {
+        "tick": 358,
+        "missing": 269,
+        "distance_from_d02_m": 97.1538
+      },
+      {
+        "tick": 359,
+        "missing": 269,
+        "distance_from_d02_m": 97.4538
+      },
+      {
+        "tick": 360,
+        "missing": 269,
+        "distance_from_d02_m": 97.6774
+      },
+      {
+        "tick": 361,
+        "missing": 269,
+        "distance_from_d02_m": 97.901
+      },
+      {
+        "tick": 362,
+        "missing": 269,
+        "distance_from_d02_m": 98.201
+      },
+      {
+        "tick": 363,
+        "missing": 269,
+        "distance_from_d02_m": 98.501
+      },
+      {
+        "tick": 364,
+        "missing": 269,
+        "distance_from_d02_m": 98.801
+      },
+      {
+        "tick": 365,
+        "missing": 269,
+        "distance_from_d02_m": 99.101
+      },
+      {
+        "tick": 366,
+        "missing": 269,
+        "distance_from_d02_m": 99.401
+      },
+      {
+        "tick": 367,
+        "missing": 269,
+        "distance_from_d02_m": 99.701
+      },
+      {
+        "tick": 368,
+        "missing": 269,
+        "distance_from_d02_m": 99.9246
+      },
+      {
+        "tick": 369,
+        "missing": 269,
+        "distance_from_d02_m": 100.2246
+      },
+      {
+        "tick": 370,
+        "missing": 269,
+        "distance_from_d02_m": 100.5246
+      },
+      {
+        "tick": 371,
+        "missing": 269,
+        "distance_from_d02_m": 100.8246
+      },
+      {
+        "tick": 372,
+        "missing": 269,
+        "distance_from_d02_m": 101.1246
+      },
+      {
+        "tick": 373,
+        "missing": 269,
+        "distance_from_d02_m": 101.4246
+      },
+      {
+        "tick": 374,
+        "missing": 269,
+        "distance_from_d02_m": 101.7246
+      },
+      {
+        "tick": 375,
+        "missing": 269,
+        "distance_from_d02_m": 101.9482
+      },
+      {
+        "tick": 376,
+        "missing": 269,
+        "distance_from_d02_m": 102.1718
+      },
+      {
+        "tick": 377,
+        "missing": 269,
+        "distance_from_d02_m": 102.4718
+      },
+      {
+        "tick": 378,
+        "missing": 269,
+        "distance_from_d02_m": 102.7718
+      },
+      {
+        "tick": 379,
+        "missing": 269,
+        "distance_from_d02_m": 103.0718
+      },
+      {
+        "tick": 380,
+        "missing": 269,
+        "distance_from_d02_m": 103.3718
+      },
+      {
+        "tick": 381,
+        "missing": 269,
+        "distance_from_d02_m": 103.6718
+      },
+      {
+        "tick": 382,
+        "missing": 269,
+        "distance_from_d02_m": 103.9718
+      },
+      {
+        "tick": 383,
+        "missing": 269,
+        "distance_from_d02_m": 104.2718
+      },
+      {
+        "tick": 384,
+        "missing": 269,
+        "distance_from_d02_m": 104.5718
+      },
+      {
+        "tick": 385,
+        "missing": 269,
+        "distance_from_d02_m": 104.8718
+      },
+      {
+        "tick": 386,
+        "missing": 269,
+        "distance_from_d02_m": 105.0954
+      },
+      {
+        "tick": 387,
+        "missing": 269,
+        "distance_from_d02_m": 105.3954
+      },
+      {
+        "tick": 388,
+        "missing": 269,
+        "distance_from_d02_m": 105.619
+      },
+      {
+        "tick": 389,
+        "missing": 269,
+        "distance_from_d02_m": 105.919
+      },
+      {
+        "tick": 390,
+        "missing": 269,
+        "distance_from_d02_m": 106.219
+      },
+      {
+        "tick": 391,
+        "missing": 269,
+        "distance_from_d02_m": 106.519
+      },
+      {
+        "tick": 392,
+        "missing": 269,
+        "distance_from_d02_m": 106.819
+      },
+      {
+        "tick": 393,
+        "missing": 269,
+        "distance_from_d02_m": 107.119
+      },
+      {
+        "tick": 394,
+        "missing": 269,
+        "distance_from_d02_m": 107.419
+      },
+      {
+        "tick": 395,
+        "missing": 269,
+        "distance_from_d02_m": 107.719
+      },
+      {
+        "tick": 396,
+        "missing": 269,
+        "distance_from_d02_m": 107.9426
+      },
+      {
+        "tick": 397,
+        "missing": 269,
+        "distance_from_d02_m": 108.1663
+      },
+      {
+        "tick": 398,
+        "missing": 269,
+        "distance_from_d02_m": 108.3899
+      },
+      {
+        "tick": 399,
+        "missing": 269,
+        "distance_from_d02_m": 108.6899
+      },
+      {
+        "tick": 400,
+        "missing": 269,
+        "distance_from_d02_m": 108.9135
+      },
+      {
+        "tick": 401,
+        "missing": 269,
+        "distance_from_d02_m": 109.2135
+      },
+      {
+        "tick": 402,
+        "missing": 269,
+        "distance_from_d02_m": 109.5135
+      },
+      {
+        "tick": 403,
+        "missing": 269,
+        "distance_from_d02_m": 109.8135
+      },
+      {
+        "tick": 404,
+        "missing": 269,
+        "distance_from_d02_m": 110.1135
+      },
+      {
+        "tick": 405,
+        "missing": 269,
+        "distance_from_d02_m": 110.4135
+      },
+      {
+        "tick": 406,
+        "missing": 269,
+        "distance_from_d02_m": 110.7135
+      },
+      {
+        "tick": 407,
+        "missing": 269,
+        "distance_from_d02_m": 111.0135
+      },
+      {
+        "tick": 408,
+        "missing": 269,
+        "distance_from_d02_m": 111.2371
+      },
+      {
+        "tick": 409,
+        "missing": 269,
+        "distance_from_d02_m": 111.4607
+      },
+      {
+        "tick": 410,
+        "missing": 269,
+        "distance_from_d02_m": 111.7607
+      },
+      {
+        "tick": 411,
+        "missing": 269,
+        "distance_from_d02_m": 112.0607
+      },
+      {
+        "tick": 412,
+        "missing": 269,
+        "distance_from_d02_m": 112.3607
+      },
+      {
+        "tick": 413,
+        "missing": 269,
+        "distance_from_d02_m": 112.5843
+      },
+      {
+        "tick": 414,
+        "missing": 269,
+        "distance_from_d02_m": 112.8843
+      },
+      {
+        "tick": 415,
+        "missing": 269,
+        "distance_from_d02_m": 113.1843
+      },
+      {
+        "tick": 416,
+        "missing": 269,
+        "distance_from_d02_m": 113.4843
+      },
+      {
+        "tick": 417,
+        "missing": 269,
+        "distance_from_d02_m": 113.7843
+      },
+      {
+        "tick": 418,
+        "missing": 269,
+        "distance_from_d02_m": 114.0843
+      },
+      {
+        "tick": 419,
+        "missing": 269,
+        "distance_from_d02_m": 114.3843
+      },
+      {
+        "tick": 420,
+        "missing": 269,
+        "distance_from_d02_m": 114.6843
+      },
+      {
+        "tick": 421,
+        "missing": 269,
+        "distance_from_d02_m": 114.9843
+      },
+      {
+        "tick": 422,
+        "missing": 269,
+        "distance_from_d02_m": 115.2843
+      },
+      {
+        "tick": 423,
+        "missing": 269,
+        "distance_from_d02_m": 115.5843
+      },
+      {
+        "tick": 424,
+        "missing": 269,
+        "distance_from_d02_m": 115.8079
+      },
+      {
+        "tick": 425,
+        "missing": 269,
+        "distance_from_d02_m": 116.0315
+      },
+      {
+        "tick": 426,
+        "missing": 269,
+        "distance_from_d02_m": 116.3315
+      },
+      {
+        "tick": 427,
+        "missing": 269,
+        "distance_from_d02_m": 116.6315
+      },
+      {
+        "tick": 428,
+        "missing": 269,
+        "distance_from_d02_m": 116.9315
+      },
+      {
+        "tick": 429,
+        "missing": 269,
+        "distance_from_d02_m": 117.2315
+      },
+      {
+        "tick": 430,
+        "missing": 269,
+        "distance_from_d02_m": 117.5315
+      },
+      {
+        "tick": 431,
+        "missing": 269,
+        "distance_from_d02_m": 117.8315
+      },
+      {
+        "tick": 432,
+        "missing": 269,
+        "distance_from_d02_m": 118.1315
+      },
+      {
+        "tick": 433,
+        "missing": 269,
+        "distance_from_d02_m": 118.3551
+      },
+      {
+        "tick": 434,
+        "missing": 269,
+        "distance_from_d02_m": 118.5787
+      },
+      {
+        "tick": 435,
+        "missing": 269,
+        "distance_from_d02_m": 118.8023
+      },
+      {
+        "tick": 436,
+        "missing": 269,
+        "distance_from_d02_m": 119.0259
+      },
+      {
+        "tick": 437,
+        "missing": 269,
+        "distance_from_d02_m": 119.3259
+      },
+      {
+        "tick": 438,
+        "missing": 269,
+        "distance_from_d02_m": 119.6259
+      },
+      {
+        "tick": 439,
+        "missing": 269,
+        "distance_from_d02_m": 119.8495
+      },
+      {
+        "tick": 440,
+        "missing": 269,
+        "distance_from_d02_m": 120.1495
+      },
+      {
+        "tick": 441,
+        "missing": 269,
+        "distance_from_d02_m": 120.4495
+      },
+      {
+        "tick": 442,
+        "missing": 269,
+        "distance_from_d02_m": 120.7495
+      },
+      {
+        "tick": 443,
+        "missing": 269,
+        "distance_from_d02_m": 120.9731
+      },
+      {
+        "tick": 444,
+        "missing": 269,
+        "distance_from_d02_m": 121.1967
+      },
+      {
+        "tick": 445,
+        "missing": 269,
+        "distance_from_d02_m": 121.4204
+      },
+      {
+        "tick": 446,
+        "missing": 269,
+        "distance_from_d02_m": 121.644
+      },
+      {
+        "tick": 447,
+        "missing": 269,
+        "distance_from_d02_m": 121.944
+      },
+      {
+        "tick": 448,
+        "missing": 269,
+        "distance_from_d02_m": 122.244
+      },
+      {
+        "tick": 449,
+        "missing": 269,
+        "distance_from_d02_m": 122.544
+      },
+      {
+        "tick": 450,
+        "missing": 269,
+        "distance_from_d02_m": 122.844
+      },
+      {
+        "tick": 451,
+        "missing": 269,
+        "distance_from_d02_m": 123.0676
+      },
+      {
+        "tick": 452,
+        "missing": 269,
+        "distance_from_d02_m": 123.2912
+      },
+      {
+        "tick": 453,
+        "missing": 269,
+        "distance_from_d02_m": 123.5148
+      },
+      {
+        "tick": 454,
+        "missing": 269,
+        "distance_from_d02_m": 123.7384
+      },
+      {
+        "tick": 455,
+        "missing": 269,
+        "distance_from_d02_m": 124.0384
+      },
+      {
+        "tick": 456,
+        "missing": 269,
+        "distance_from_d02_m": 124.3384
+      },
+      {
+        "tick": 457,
+        "missing": 269,
+        "distance_from_d02_m": 124.6384
+      },
+      {
+        "tick": 458,
+        "missing": 269,
+        "distance_from_d02_m": 124.9384
+      },
+      {
+        "tick": 459,
+        "missing": 269,
+        "distance_from_d02_m": 125.2384
+      },
+      {
+        "tick": 460,
+        "missing": 269,
+        "distance_from_d02_m": 125.5384
+      },
+      {
+        "tick": 461,
+        "missing": 269,
+        "distance_from_d02_m": 125.8384
+      },
+      {
+        "tick": 462,
+        "missing": 269,
+        "distance_from_d02_m": 126.1384
+      },
+      {
+        "tick": 463,
+        "missing": 269,
+        "distance_from_d02_m": 126.4384
+      },
+      {
+        "tick": 464,
+        "missing": 269,
+        "distance_from_d02_m": 126.662
+      },
+      {
+        "tick": 465,
+        "missing": 269,
+        "distance_from_d02_m": 126.8856
+      },
+      {
+        "tick": 466,
+        "missing": 269,
+        "distance_from_d02_m": 127.1856
+      },
+      {
+        "tick": 467,
+        "missing": 269,
+        "distance_from_d02_m": 127.4856
+      },
+      {
+        "tick": 468,
+        "missing": 269,
+        "distance_from_d02_m": 127.7856
+      },
+      {
+        "tick": 469,
+        "missing": 269,
+        "distance_from_d02_m": 128.0856
+      },
+      {
+        "tick": 470,
+        "missing": 269,
+        "distance_from_d02_m": 128.3092
+      },
+      {
+        "tick": 471,
+        "missing": 269,
+        "distance_from_d02_m": 128.5328
+      },
+      {
+        "tick": 472,
+        "missing": 269,
+        "distance_from_d02_m": 128.7564
+      },
+      {
+        "tick": 473,
+        "missing": 269,
+        "distance_from_d02_m": 128.98
+      },
+      {
+        "tick": 474,
+        "missing": 269,
+        "distance_from_d02_m": 129.28
+      },
+      {
+        "tick": 475,
+        "missing": 269,
+        "distance_from_d02_m": 129.5036
+      },
+      {
+        "tick": 476,
+        "missing": 269,
+        "distance_from_d02_m": 129.7272
+      },
+      {
+        "tick": 477,
+        "missing": 269,
+        "distance_from_d02_m": 130.0272
+      },
+      {
+        "tick": 478,
+        "missing": 269,
+        "distance_from_d02_m": 130.3272
+      },
+      {
+        "tick": 479,
+        "missing": 269,
+        "distance_from_d02_m": 130.5508
+      },
+      {
+        "tick": 480,
+        "missing": 269,
+        "distance_from_d02_m": 130.7745
+      },
+      {
+        "tick": 481,
+        "missing": 269,
+        "distance_from_d02_m": 130.9981
+      },
+      {
+        "tick": 482,
+        "missing": 269,
+        "distance_from_d02_m": 131.2217
+      },
+      {
+        "tick": 483,
+        "missing": 269,
+        "distance_from_d02_m": 131.4453
+      },
+      {
+        "tick": 484,
+        "missing": 269,
+        "distance_from_d02_m": 131.7453
+      },
+      {
+        "tick": 485,
+        "missing": 269,
+        "distance_from_d02_m": 132.0453
+      },
+      {
+        "tick": 486,
+        "missing": 269,
+        "distance_from_d02_m": 132.3453
+      },
+      {
+        "tick": 487,
+        "missing": 269,
+        "distance_from_d02_m": 132.6453
+      },
+      {
+        "tick": 488,
+        "missing": 269,
+        "distance_from_d02_m": 132.8689
+      },
+      {
+        "tick": 489,
+        "missing": 269,
+        "distance_from_d02_m": 133.1689
+      },
+      {
+        "tick": 490,
+        "missing": 269,
+        "distance_from_d02_m": 133.4689
+      },
+      {
+        "tick": 491,
+        "missing": 269,
+        "distance_from_d02_m": 133.6925
+      },
+      {
+        "tick": 492,
+        "missing": 269,
+        "distance_from_d02_m": 133.9161
+      },
+      {
+        "tick": 493,
+        "missing": 269,
+        "distance_from_d02_m": 134.1397
+      },
+      {
+        "tick": 494,
+        "missing": 269,
+        "distance_from_d02_m": 134.3633
+      },
+      {
+        "tick": 495,
+        "missing": 269,
+        "distance_from_d02_m": 134.6633
+      },
+      {
+        "tick": 496,
+        "missing": 269,
+        "distance_from_d02_m": 134.9633
+      },
+      {
+        "tick": 497,
+        "missing": 269,
+        "distance_from_d02_m": 135.2633
+      },
+      {
+        "tick": 498,
+        "missing": 269,
+        "distance_from_d02_m": 135.4869
+      },
+      {
+        "tick": 499,
+        "missing": 269,
+        "distance_from_d02_m": 135.7105
+      },
+      {
+        "tick": 500,
+        "missing": 269,
+        "distance_from_d02_m": 136.0105
+      },
+      {
+        "tick": 501,
+        "missing": 269,
+        "distance_from_d02_m": 136.3105
+      },
+      {
+        "tick": 502,
+        "missing": 269,
+        "distance_from_d02_m": 136.6105
+      },
+      {
+        "tick": 503,
+        "missing": 269,
+        "distance_from_d02_m": 136.9105
+      },
+      {
+        "tick": 504,
+        "missing": 269,
+        "distance_from_d02_m": 137.2105
+      },
+      {
+        "tick": 505,
+        "missing": 269,
+        "distance_from_d02_m": 137.4341
+      },
+      {
+        "tick": 506,
+        "missing": 269,
+        "distance_from_d02_m": 137.7341
+      },
+      {
+        "tick": 507,
+        "missing": 269,
+        "distance_from_d02_m": 138.0341
+      },
+      {
+        "tick": 508,
+        "missing": 269,
+        "distance_from_d02_m": 138.3341
+      },
+      {
+        "tick": 509,
+        "missing": 269,
+        "distance_from_d02_m": 138.5577
+      },
+      {
+        "tick": 510,
+        "missing": 269,
+        "distance_from_d02_m": 138.8577
+      },
+      {
+        "tick": 511,
+        "missing": 269,
+        "distance_from_d02_m": 139.1577
+      },
+      {
+        "tick": 512,
+        "missing": 269,
+        "distance_from_d02_m": 139.4577
+      },
+      {
+        "tick": 513,
+        "missing": 269,
+        "distance_from_d02_m": 139.7577
+      },
+      {
+        "tick": 514,
+        "missing": 269,
+        "distance_from_d02_m": 140.0577
+      },
+      {
+        "tick": 515,
+        "missing": 269,
+        "distance_from_d02_m": 140.3577
+      },
+      {
+        "tick": 516,
+        "missing": 269,
+        "distance_from_d02_m": 140.6577
+      },
+      {
+        "tick": 517,
+        "missing": 269,
+        "distance_from_d02_m": 140.9577
+      },
+      {
+        "tick": 518,
+        "missing": 269,
+        "distance_from_d02_m": 141.1813
+      },
+      {
+        "tick": 519,
+        "missing": 269,
+        "distance_from_d02_m": 141.4813
+      },
+      {
+        "tick": 520,
+        "missing": 269,
+        "distance_from_d02_m": 141.7813
+      },
+      {
+        "tick": 521,
+        "missing": 269,
+        "distance_from_d02_m": 142.0813
+      },
+      {
+        "tick": 522,
+        "missing": 269,
+        "distance_from_d02_m": 142.3813
+      },
+      {
+        "tick": 523,
+        "missing": 269,
+        "distance_from_d02_m": 142.6813
+      },
+      {
+        "tick": 524,
+        "missing": 269,
+        "distance_from_d02_m": 142.905
+      },
+      {
+        "tick": 525,
+        "missing": 269,
+        "distance_from_d02_m": 143.205
+      },
+      {
+        "tick": 526,
+        "missing": 269,
+        "distance_from_d02_m": 143.505
+      },
+      {
+        "tick": 527,
+        "missing": 269,
+        "distance_from_d02_m": 143.7286
+      },
+      {
+        "tick": 528,
+        "missing": 269,
+        "distance_from_d02_m": 144.0286
+      },
+      {
+        "tick": 529,
+        "missing": 269,
+        "distance_from_d02_m": 144.3286
+      },
+      {
+        "tick": 530,
+        "missing": 269,
+        "distance_from_d02_m": 144.6286
+      },
+      {
+        "tick": 531,
+        "missing": 269,
+        "distance_from_d02_m": 144.9286
+      },
+      {
+        "tick": 532,
+        "missing": 269,
+        "distance_from_d02_m": 145.2286
+      },
+      {
+        "tick": 533,
+        "missing": 269,
+        "distance_from_d02_m": 145.5286
+      },
+      {
+        "tick": 534,
+        "missing": 269,
+        "distance_from_d02_m": 145.7522
+      },
+      {
+        "tick": 535,
+        "missing": 269,
+        "distance_from_d02_m": 146.0522
+      },
+      {
+        "tick": 536,
+        "missing": 269,
+        "distance_from_d02_m": 146.3522
+      },
+      {
+        "tick": 537,
+        "missing": 269,
+        "distance_from_d02_m": 146.6522
+      },
+      {
+        "tick": 538,
+        "missing": 269,
+        "distance_from_d02_m": 146.9522
+      },
+      {
+        "tick": 539,
+        "missing": 269,
+        "distance_from_d02_m": 147.2522
+      },
+      {
+        "tick": 540,
+        "missing": 269,
+        "distance_from_d02_m": 147.5522
+      },
+      {
+        "tick": 541,
+        "missing": 269,
+        "distance_from_d02_m": 147.8522
+      },
+      {
+        "tick": 542,
+        "missing": 269,
+        "distance_from_d02_m": 148.0758
+      },
+      {
+        "tick": 543,
+        "missing": 269,
+        "distance_from_d02_m": 148.3758
+      },
+      {
+        "tick": 544,
+        "missing": 269,
+        "distance_from_d02_m": 148.5994
+      },
+      {
+        "tick": 545,
+        "missing": 269,
+        "distance_from_d02_m": 148.8994
+      },
+      {
+        "tick": 546,
+        "missing": 269,
+        "distance_from_d02_m": 149.1994
+      },
+      {
+        "tick": 547,
+        "missing": 269,
+        "distance_from_d02_m": 149.4994
+      },
+      {
+        "tick": 548,
+        "missing": 269,
+        "distance_from_d02_m": 149.723
+      },
+      {
+        "tick": 549,
+        "missing": 269,
+        "distance_from_d02_m": 150.023
+      },
+      {
+        "tick": 550,
+        "missing": 269,
+        "distance_from_d02_m": 150.323
+      },
+      {
+        "tick": 551,
+        "missing": 269,
+        "distance_from_d02_m": 150.623
+      },
+      {
+        "tick": 552,
+        "missing": 269,
+        "distance_from_d02_m": 150.923
+      },
+      {
+        "tick": 553,
+        "missing": 269,
+        "distance_from_d02_m": 151.1466
+      },
+      {
+        "tick": 554,
+        "missing": 269,
+        "distance_from_d02_m": 151.4466
+      },
+      {
+        "tick": 555,
+        "missing": 269,
+        "distance_from_d02_m": 151.6702
+      },
+      {
+        "tick": 556,
+        "missing": 269,
+        "distance_from_d02_m": 151.9702
+      },
+      {
+        "tick": 557,
+        "missing": 269,
+        "distance_from_d02_m": 152.2702
+      },
+      {
+        "tick": 558,
+        "missing": 269,
+        "distance_from_d02_m": 152.5702
+      },
+      {
+        "tick": 559,
+        "missing": 269,
+        "distance_from_d02_m": 152.8702
+      },
+      {
+        "tick": 560,
+        "missing": 269,
+        "distance_from_d02_m": 153.1702
+      },
+      {
+        "tick": 561,
+        "missing": 269,
+        "distance_from_d02_m": 153.4702
+      },
+      {
+        "tick": 562,
+        "missing": 269,
+        "distance_from_d02_m": 153.7702
+      },
+      {
+        "tick": 563,
+        "missing": 269,
+        "distance_from_d02_m": 154.0702
+      },
+      {
+        "tick": 564,
+        "missing": 269,
+        "distance_from_d02_m": 154.3702
+      },
+      {
+        "tick": 565,
+        "missing": 269,
+        "distance_from_d02_m": 154.6702
+      },
+      {
+        "tick": 566,
+        "missing": 269,
+        "distance_from_d02_m": 154.9702
+      },
+      {
+        "tick": 567,
+        "missing": 269,
+        "distance_from_d02_m": 155.1938
+      },
+      {
+        "tick": 568,
+        "missing": 269,
+        "distance_from_d02_m": 155.4938
+      },
+      {
+        "tick": 569,
+        "missing": 269,
+        "distance_from_d02_m": 155.7174
+      },
+      {
+        "tick": 570,
+        "missing": 269,
+        "distance_from_d02_m": 156.0174
+      },
+      {
+        "tick": 571,
+        "missing": 269,
+        "distance_from_d02_m": 156.3174
+      },
+      {
+        "tick": 572,
+        "missing": 269,
+        "distance_from_d02_m": 156.6174
+      },
+      {
+        "tick": 573,
+        "missing": 269,
+        "distance_from_d02_m": 156.9174
+      },
+      {
+        "tick": 574,
+        "missing": 269,
+        "distance_from_d02_m": 157.2174
+      },
+      {
+        "tick": 575,
+        "missing": 269,
+        "distance_from_d02_m": 157.5174
+      },
+      {
+        "tick": 576,
+        "missing": 269,
+        "distance_from_d02_m": 157.8174
+      },
+      {
+        "tick": 577,
+        "missing": 269,
+        "distance_from_d02_m": 158.1174
+      },
+      {
+        "tick": 578,
+        "missing": 269,
+        "distance_from_d02_m": 158.341
+      },
+      {
+        "tick": 579,
+        "missing": 269,
+        "distance_from_d02_m": 158.5646
+      },
+      {
+        "tick": 580,
+        "missing": 269,
+        "distance_from_d02_m": 158.7882
+      },
+      {
+        "tick": 581,
+        "missing": 269,
+        "distance_from_d02_m": 159.0882
+      },
+      {
+        "tick": 582,
+        "missing": 269,
+        "distance_from_d02_m": 159.3118
+      },
+      {
+        "tick": 583,
+        "missing": 269,
+        "distance_from_d02_m": 159.6118
+      },
+      {
+        "tick": 584,
+        "missing": 269,
+        "distance_from_d02_m": 159.9118
+      },
+      {
+        "tick": 585,
+        "missing": 269,
+        "distance_from_d02_m": 160.2118
+      },
+      {
+        "tick": 586,
+        "missing": 269,
+        "distance_from_d02_m": 160.5118
+      },
+      {
+        "tick": 587,
+        "missing": 269,
+        "distance_from_d02_m": 160.8118
+      },
+      {
+        "tick": 588,
+        "missing": 269,
+        "distance_from_d02_m": 161.0354
+      },
+      {
+        "tick": 589,
+        "missing": 269,
+        "distance_from_d02_m": 161.3354
+      },
+      {
+        "tick": 590,
+        "missing": 269,
+        "distance_from_d02_m": 161.6354
+      },
+      {
+        "tick": 591,
+        "missing": 269,
+        "distance_from_d02_m": 161.9354
+      },
+      {
+        "tick": 592,
+        "missing": 269,
+        "distance_from_d02_m": 162.1591
+      },
+      {
+        "tick": 593,
+        "missing": 269,
+        "distance_from_d02_m": 162.3827
+      },
+      {
+        "tick": 594,
+        "missing": 269,
+        "distance_from_d02_m": 162.6827
+      },
+      {
+        "tick": 595,
+        "missing": 269,
+        "distance_from_d02_m": 162.9827
+      },
+      {
+        "tick": 596,
+        "missing": 269,
+        "distance_from_d02_m": 163.2827
+      },
+      {
+        "tick": 597,
+        "missing": 269,
+        "distance_from_d02_m": 163.5827
+      },
+      {
+        "tick": 598,
+        "missing": 269,
+        "distance_from_d02_m": 163.8827
+      },
+      {
+        "tick": 599,
+        "missing": 269,
+        "distance_from_d02_m": 164.1063
+      },
+      {
+        "tick": 600,
+        "missing": 269,
+        "distance_from_d02_m": 164.3299
+      },
+      {
+        "tick": 601,
+        "missing": 269,
+        "distance_from_d02_m": 164.6299
+      },
+      {
+        "tick": 602,
+        "missing": 269,
+        "distance_from_d02_m": 164.9299
+      },
+      {
+        "tick": 603,
+        "missing": 269,
+        "distance_from_d02_m": 165.2299
+      },
+      {
+        "tick": 604,
+        "missing": 269,
+        "distance_from_d02_m": 165.5299
+      },
+      {
+        "tick": 605,
+        "missing": 269,
+        "distance_from_d02_m": 165.8299
+      },
+      {
+        "tick": 606,
+        "missing": 269,
+        "distance_from_d02_m": 166.1299
+      },
+      {
+        "tick": 607,
+        "missing": 269,
+        "distance_from_d02_m": 166.4299
+      },
+      {
+        "tick": 608,
+        "missing": 269,
+        "distance_from_d02_m": 166.7299
+      },
+      {
+        "tick": 609,
+        "missing": 269,
+        "distance_from_d02_m": 166.9535
+      },
+      {
+        "tick": 610,
+        "missing": 269,
+        "distance_from_d02_m": 167.2535
+      },
+      {
+        "tick": 611,
+        "missing": 269,
+        "distance_from_d02_m": 167.5535
+      },
+      {
+        "tick": 612,
+        "missing": 269,
+        "distance_from_d02_m": 167.8535
+      },
+      {
+        "tick": 613,
+        "missing": 269,
+        "distance_from_d02_m": 168.1535
+      },
+      {
+        "tick": 614,
+        "missing": 269,
+        "distance_from_d02_m": 168.4535
+      },
+      {
+        "tick": 615,
+        "missing": 269,
+        "distance_from_d02_m": 168.7535
+      },
+      {
+        "tick": 616,
+        "missing": 269,
+        "distance_from_d02_m": 169.0535
+      },
+      {
+        "tick": 617,
+        "missing": 269,
+        "distance_from_d02_m": 169.3535
+      },
+      {
+        "tick": 618,
+        "missing": 269,
+        "distance_from_d02_m": 169.6535
+      },
+      {
+        "tick": 619,
+        "missing": 269,
+        "distance_from_d02_m": 169.9535
+      },
+      {
+        "tick": 620,
+        "missing": 269,
+        "distance_from_d02_m": 170.1771
+      },
+      {
+        "tick": 621,
+        "missing": 269,
+        "distance_from_d02_m": 170.4771
+      },
+      {
+        "tick": 622,
+        "missing": 269,
+        "distance_from_d02_m": 170.7771
+      },
+      {
+        "tick": 623,
+        "missing": 269,
+        "distance_from_d02_m": 171.0771
+      },
+      {
+        "tick": 624,
+        "missing": 269,
+        "distance_from_d02_m": 171.3771
+      },
+      {
+        "tick": 625,
+        "missing": 269,
+        "distance_from_d02_m": 171.6771
+      },
+      {
+        "tick": 626,
+        "missing": 269,
+        "distance_from_d02_m": 171.9771
+      },
+      {
+        "tick": 627,
+        "missing": 269,
+        "distance_from_d02_m": 172.2771
+      },
+      {
+        "tick": 628,
+        "missing": 269,
+        "distance_from_d02_m": 172.5771
+      },
+      {
+        "tick": 629,
+        "missing": 269,
+        "distance_from_d02_m": 172.8771
+      },
+      {
+        "tick": 630,
+        "missing": 269,
+        "distance_from_d02_m": 173.1771
+      },
+      {
+        "tick": 631,
+        "missing": 260,
+        "distance_from_d02_m": 173.4771
+      },
+      {
+        "tick": 632,
+        "missing": 260,
+        "distance_from_d02_m": 173.7771
+      },
+      {
+        "tick": 633,
+        "missing": 260,
+        "distance_from_d02_m": 174.0771
+      },
+      {
+        "tick": 634,
+        "missing": 260,
+        "distance_from_d02_m": 174.3771
+      },
+      {
+        "tick": 635,
+        "missing": 260,
+        "distance_from_d02_m": 174.6771
+      },
+      {
+        "tick": 636,
+        "missing": 260,
+        "distance_from_d02_m": 174.9771
+      },
+      {
+        "tick": 637,
+        "missing": 260,
+        "distance_from_d02_m": 175.2771
+      },
+      {
+        "tick": 638,
+        "missing": 260,
+        "distance_from_d02_m": 175.5771
+      },
+      {
+        "tick": 639,
+        "missing": 260,
+        "distance_from_d02_m": 175.8771
+      },
+      {
+        "tick": 640,
+        "missing": 260,
+        "distance_from_d02_m": 176.1771
+      },
+      {
+        "tick": 641,
+        "missing": 260,
+        "distance_from_d02_m": 176.4771
+      },
+      {
+        "tick": 642,
+        "missing": 260,
+        "distance_from_d02_m": 176.7771
+      },
+      {
+        "tick": 643,
+        "missing": 260,
+        "distance_from_d02_m": 177.0771
+      },
+      {
+        "tick": 644,
+        "missing": 260,
+        "distance_from_d02_m": 177.3771
+      },
+      {
+        "tick": 645,
+        "missing": 260,
+        "distance_from_d02_m": 177.6771
+      },
+      {
+        "tick": 646,
+        "missing": 260,
+        "distance_from_d02_m": 177.9771
+      },
+      {
+        "tick": 647,
+        "missing": 260,
+        "distance_from_d02_m": 178.2771
+      },
+      {
+        "tick": 648,
+        "missing": 260,
+        "distance_from_d02_m": 178.5771
+      },
+      {
+        "tick": 649,
+        "missing": 260,
+        "distance_from_d02_m": 178.8771
+      },
+      {
+        "tick": 650,
+        "missing": 260,
+        "distance_from_d02_m": 179.1771
+      },
+      {
+        "tick": 651,
+        "missing": 260,
+        "distance_from_d02_m": 179.4771
+      },
+      {
+        "tick": 652,
+        "missing": 260,
+        "distance_from_d02_m": 179.7771
+      },
+      {
+        "tick": 653,
+        "missing": 260,
+        "distance_from_d02_m": 180.0771
+      },
+      {
+        "tick": 654,
+        "missing": 260,
+        "distance_from_d02_m": 180.3771
+      },
+      {
+        "tick": 655,
+        "missing": 260,
+        "distance_from_d02_m": 180.6007
+      },
+      {
+        "tick": 656,
+        "missing": 260,
+        "distance_from_d02_m": 180.9007
+      },
+      {
+        "tick": 657,
+        "missing": 260,
+        "distance_from_d02_m": 181.2007
+      },
+      {
+        "tick": 658,
+        "missing": 260,
+        "distance_from_d02_m": 181.5007
+      },
+      {
+        "tick": 659,
+        "missing": 260,
+        "distance_from_d02_m": 181.8007
+      },
+      {
+        "tick": 660,
+        "missing": 260,
+        "distance_from_d02_m": 182.1007
+      },
+      {
+        "tick": 661,
+        "missing": 260,
+        "distance_from_d02_m": 182.4007
+      },
+      {
+        "tick": 662,
+        "missing": 260,
+        "distance_from_d02_m": 182.7007
+      },
+      {
+        "tick": 663,
+        "missing": 260,
+        "distance_from_d02_m": 183.0007
+      },
+      {
+        "tick": 664,
+        "missing": 260,
+        "distance_from_d02_m": 183.3007
+      },
+      {
+        "tick": 665,
+        "missing": 260,
+        "distance_from_d02_m": 183.6007
+      },
+      {
+        "tick": 666,
+        "missing": 260,
+        "distance_from_d02_m": 183.9007
+      },
+      {
+        "tick": 667,
+        "missing": 260,
+        "distance_from_d02_m": 184.2007
+      },
+      {
+        "tick": 668,
+        "missing": 260,
+        "distance_from_d02_m": 184.5007
+      },
+      {
+        "tick": 669,
+        "missing": 260,
+        "distance_from_d02_m": 184.7243
+      },
+      {
+        "tick": 670,
+        "missing": 260,
+        "distance_from_d02_m": 185.0243
+      },
+      {
+        "tick": 671,
+        "missing": 260,
+        "distance_from_d02_m": 185.2479
+      },
+      {
+        "tick": 672,
+        "missing": 260,
+        "distance_from_d02_m": 185.5479
+      },
+      {
+        "tick": 673,
+        "missing": 260,
+        "distance_from_d02_m": 185.8479
+      },
+      {
+        "tick": 674,
+        "missing": 260,
+        "distance_from_d02_m": 186.1479
+      },
+      {
+        "tick": 675,
+        "missing": 260,
+        "distance_from_d02_m": 186.4479
+      },
+      {
+        "tick": 676,
+        "missing": 260,
+        "distance_from_d02_m": 186.7479
+      },
+      {
+        "tick": 677,
+        "missing": 260,
+        "distance_from_d02_m": 187.0479
+      },
+      {
+        "tick": 678,
+        "missing": 260,
+        "distance_from_d02_m": 187.3479
+      },
+      {
+        "tick": 679,
+        "missing": 260,
+        "distance_from_d02_m": 187.6479
+      },
+      {
+        "tick": 680,
+        "missing": 260,
+        "distance_from_d02_m": 187.9479
+      },
+      {
+        "tick": 681,
+        "missing": 260,
+        "distance_from_d02_m": 188.1715
+      },
+      {
+        "tick": 682,
+        "missing": 260,
+        "distance_from_d02_m": 188.4715
+      },
+      {
+        "tick": 683,
+        "missing": 260,
+        "distance_from_d02_m": 188.6951
+      },
+      {
+        "tick": 684,
+        "missing": 260,
+        "distance_from_d02_m": 188.9187
+      },
+      {
+        "tick": 685,
+        "missing": 260,
+        "distance_from_d02_m": 189.2187
+      },
+      {
+        "tick": 686,
+        "missing": 260,
+        "distance_from_d02_m": 189.5187
+      },
+      {
+        "tick": 687,
+        "missing": 260,
+        "distance_from_d02_m": 189.8187
+      },
+      {
+        "tick": 688,
+        "missing": 260,
+        "distance_from_d02_m": 190.1187
+      },
+      {
+        "tick": 689,
+        "missing": 260,
+        "distance_from_d02_m": 190.4187
+      },
+      {
+        "tick": 690,
+        "missing": 260,
+        "distance_from_d02_m": 190.7187
+      },
+      {
+        "tick": 691,
+        "missing": 260,
+        "distance_from_d02_m": 190.9423
+      },
+      {
+        "tick": 692,
+        "missing": 260,
+        "distance_from_d02_m": 191.1659
+      },
+      {
+        "tick": 693,
+        "missing": 260,
+        "distance_from_d02_m": 191.4659
+      },
+      {
+        "tick": 694,
+        "missing": 260,
+        "distance_from_d02_m": 191.7659
+      },
+      {
+        "tick": 695,
+        "missing": 260,
+        "distance_from_d02_m": 191.9895
+      },
+      {
+        "tick": 696,
+        "missing": 260,
+        "distance_from_d02_m": 192.2132
+      },
+      {
+        "tick": 697,
+        "missing": 260,
+        "distance_from_d02_m": 192.5132
+      },
+      {
+        "tick": 698,
+        "missing": 260,
+        "distance_from_d02_m": 192.7368
+      },
+      {
+        "tick": 699,
+        "missing": 260,
+        "distance_from_d02_m": 193.0368
+      },
+      {
+        "tick": 700,
+        "missing": 260,
+        "distance_from_d02_m": 193.3368
+      },
+      {
+        "tick": 701,
+        "missing": 260,
+        "distance_from_d02_m": 193.6368
+      },
+      {
+        "tick": 702,
+        "missing": 260,
+        "distance_from_d02_m": 193.9368
+      },
+      {
+        "tick": 703,
+        "missing": 260,
+        "distance_from_d02_m": 194.2368
+      },
+      {
+        "tick": 704,
+        "missing": 260,
+        "distance_from_d02_m": 194.5368
+      },
+      {
+        "tick": 705,
+        "missing": 260,
+        "distance_from_d02_m": 194.8368
+      },
+      {
+        "tick": 706,
+        "missing": 260,
+        "distance_from_d02_m": 195.1368
+      },
+      {
+        "tick": 707,
+        "missing": 260,
+        "distance_from_d02_m": 195.4368
+      },
+      {
+        "tick": 708,
+        "missing": 260,
+        "distance_from_d02_m": 195.7368
+      }
+    ],
+    "runtime_scanning_s": 14.043
+  }
+}
