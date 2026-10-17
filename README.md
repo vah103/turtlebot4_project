@@ -43,8 +43,9 @@ Khi làm việc với MapEx, bắt đầu từ:
 
 1. `mapex_lab/README.md`
 2. `mapex_lab/STATUS.md`
-3. `mapex_lab/EXPERIMENT_PROTOCOL.md`
-4. exact experiment ref được task/method/result hiện tại chỉ định
+3. `mapex_lab/RUN_REGISTRY.md` — tên chuẩn + ánh xạ tất cả native 2D run gần đây (không thay dữ liệu nguồn)
+4. `mapex_lab/EXPERIMENT_PROTOCOL.md`
+5. exact experiment ref được task/method/result hiện tại chỉ định
 
 ## Safety
 
