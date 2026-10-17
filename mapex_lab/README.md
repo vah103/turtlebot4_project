@@ -2,6 +2,14 @@
 
 Workspace riêng cho lộ trình làm lại từ đầu để tìm bài toán nghiên cứu từ điểm yếu của MapEx trên môi trường Hospital.
 
+## Tên chuẩn các native 2D run (cập nhật 2026-10-17)
+
+- **[RUN_REGISTRY.md](RUN_REGISTRY.md)**: bảng tên mới ↔ tên run cũ, trạng thái hoàn thành, nguồn Git exact-ref và giới hạn so sánh.
+- **[RUN_REGISTRY.csv](RUN_REGISTRY.csv)**: bản tra cứu có thể đọc bằng script; `run_id` mới là tên hiển thị chính thức cho báo cáo mới.
+- Ví dụ: New Room Run 04 → **`NR-RN-01`**, Run 05 → **`NR-MX-01`**, Hospital Run 10 → **`HP-RN-01`**, Run 11 → **`HP-MX-01`**.
+- Hai “Run 09” không trùng: G2-R4 → **`NR-G2R4-PRED-01`**; G2-R5 → **`NR-G2R5-MCTS-01`**.
+- **Không đổi tên dữ liệu/thư mục gốc** hoặc ID của các thí nghiệm đóng băng; muốn truy dữ liệu, tra `source_ref`/`source_path` trong registry.
+
 ## Chạy thí nghiệm nhanh
 
 Từ root repo, chạy:
@@ -35,13 +43,14 @@ Hospital ổn định → Nearest baseline → MapEx closed-loop → nhiều run
 
 Đọc theo thứ tự:
 1. `STATUS.md` — đang làm đến đâu, việc tiếp theo là gì.
-2. `ROADMAP.md` — toàn bộ lộ trình nghiên cứu.
-3. `references/README.md` — index tài liệu tham chiếu.
-4. `references/MAPEX_PAPER.md` — paper MapEx gốc và pipeline cần bám theo.
-5. `EXPERIMENT_PROTOCOL.md` — các điều kiện phải giữ cố định giữa các run.
-6. `docs/DATA_SCHEMA.md` — dữ liệu mỗi run phải lưu như thế nào.
-7. `docs/TEACHER_REPORT.md` — cách chuyển kết quả đã xác minh thành báo cáo cho giảng viên.
-8. Sau đó mới đọc code liên quan trong `src/`, `scripts/`, `analysis/`.
+2. `RUN_REGISTRY.md` — tên chuẩn các run native 2D và cách truy lại tên cũ.
+3. `ROADMAP.md` — toàn bộ lộ trình nghiên cứu.
+4. `references/README.md` — index tài liệu tham chiếu.
+5. `references/MAPEX_PAPER.md` — paper MapEx gốc và pipeline cần bám theo.
+6. `EXPERIMENT_PROTOCOL.md` — các điều kiện phải giữ cố định giữa các run.
+7. `docs/DATA_SCHEMA.md` — dữ liệu mỗi run phải lưu như thế nào.
+8. `docs/TEACHER_REPORT.md` — cách chuyển kết quả đã xác minh thành báo cáo cho giảng viên.
+9. Sau đó mới đọc code liên quan trong `src/`, `scripts/`, `analysis/`.
 
 Không cần dựa vào báo cáo cũ để giả định rằng ranking, uncertainty hay visibility là bottleneck.
 
