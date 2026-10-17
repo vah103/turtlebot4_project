@@ -13,6 +13,7 @@ from mapex_g2_r3.sequence import StructuralRoutePlanner, SequenceConfig
 @dataclass(frozen=True)
 class ArbitrationConfig:
     max_quality_fraction_loss: float = .08
+    max_endpoint_quality_fraction_loss: float = .10
     max_structural_bin_loss: int = 1
     max_objective_loss: float = .4
     min_future_structural_gain: float = .08
@@ -102,6 +103,19 @@ def arbitrate(obs, mean, variance, semantic, robot, memory, report,
         return decision
     if prefix['objective'] < base['objective'] - cfg.max_objective_loss:
         decision['reason'] = 'SAFE_PREFIX_PATH_COST_TOO_HIGH'
+        return decision
+    # G2 originally evaluated scans along the whole path, which can hide a
+    # poor final camera pose. Protect the arrival viewpoint in addition to
+    # pathwise region coverage (the user is choosing where the robot stands).
+    end_base = planner.coarse.sight(baseline)
+    end_safe = planner.coarse.sight(safe)
+    end_base_quality = planner.quality(end_base, 0, 1)[0]
+    end_safe_quality = planner.quality(end_safe, 0, 1)[0]
+    decision['R4_endpoint_structural_quality'] = round(float(end_base_quality), 5)
+    decision['executed_endpoint_structural_quality'] = round(float(end_safe_quality), 5)
+    if end_safe_quality + 1e-10 < end_base_quality * (
+            1 - cfg.max_endpoint_quality_fraction_loss):
+        decision['reason'] = 'SAFE_WAYPOINT_ARRIVAL_VIEW_QUALITY_TOO_LOW'
         return decision
     if obs[target] == 0 and target == safe:
         decision['decision'] = 'USE_PREDICTED_GOAL'
