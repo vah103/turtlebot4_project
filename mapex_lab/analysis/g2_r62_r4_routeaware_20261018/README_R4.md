@@ -53,3 +53,7 @@ Exact R3 D10 replay through the real Python3.6 RoomRun.r4_recheck_due method was
 - Additional deterministic, event-triggering closed-loop evidence is required before accepting R4 as superior to R6.2 R2.
 
 See ../../figures/g2_r62_r4_routeaware_20261018/ for the two real path scroll galleries.
+
+## Final results and actual-path galleries
+
+See FINAL_R4_RESEARCH_VERDICT.md for four terminal run distances, mask details, guard activation verdict and next stages. Two original native actual-path HTML galleries are embedded under evidence/ for R4-on-R2 and R4-on-R3. Source code and replay receipts are preserved.

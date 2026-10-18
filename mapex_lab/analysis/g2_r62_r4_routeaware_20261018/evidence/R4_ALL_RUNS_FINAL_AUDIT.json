@@ -1,0 +1,818 @@
+{
+  "coordinate_system": "native P1 map 203 x 263, 0.1m/cell; GT never used for online decisions",
+  "runs": {
+    "R62_R2": {
+      "run_id": "NR-G2R62-03",
+      "outcome": "SOURCE_TERMINAL",
+      "native_steps": 846,
+      "real_path_m": 236.903326,
+      "local_m": 104.249534,
+      "global_m": 132.653791,
+      "observed_cells": 51308,
+      "total_cells": 53389,
+      "observed_pct": 96.102193,
+      "room_node_decisions": 19,
+      "parity_summary": "D01_D02_NUMERIC_PARITY_PASS",
+      "r3_frontier_residual_goal_choices": [],
+      "r4_clearance_recheck_count": 0,
+      "r4_clearance_recheck_events": [],
+      "decisions": [
+        {
+          "d": 1,
+          "tick": 0,
+          "mode": "GLOBAL",
+          "room_id": null,
+          "g1_reason": "ROBOT_NOT_IN_CONFIRMED_ROOM",
+          "r4_guard": null,
+          "cumulative_m": 0.0
+        },
+        {
+          "d": 2,
+          "tick": 12,
+          "mode": "LOCAL",
+          "room_id": 1,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 3.3708203932499368
+        },
+        {
+          "d": 3,
+          "tick": 23,
+          "mode": "LOCAL",
+          "room_id": 1,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 6.0596747752497695
+        },
+        {
+          "d": 4,
+          "tick": 57,
+          "mode": "LOCAL",
+          "room_id": 1,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 15.295742752749563
+        },
+        {
+          "d": 5,
+          "tick": 97,
+          "mode": "LOCAL",
+          "room_id": 1,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 25.902631123499322
+        },
+        {
+          "d": 6,
+          "tick": 100,
+          "mode": "GLOBAL",
+          "room_id": 1,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": null,
+          "cumulative_m": 26.802631123499324
+        },
+        {
+          "d": 7,
+          "tick": 162,
+          "mode": "GLOBAL",
+          "room_id": null,
+          "g1_reason": "ROBOT_NOT_IN_CONFIRMED_ROOM",
+          "r4_guard": null,
+          "cumulative_m": 44.33312629199895
+        },
+        {
+          "d": 8,
+          "tick": 184,
+          "mode": "LOCAL",
+          "room_id": 2,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 50.85673308974887
+        },
+        {
+          "d": 9,
+          "tick": 196,
+          "mode": "LOCAL",
+          "room_id": 2,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 54.15116028074877
+        },
+        {
+          "d": 10,
+          "tick": 331,
+          "mode": "GLOBAL",
+          "room_id": 2,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": null,
+          "cumulative_m": 91.37182539299774
+        },
+        {
+          "d": 11,
+          "tick": 463,
+          "mode": "LOCAL",
+          "room_id": 3,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 129.52035455024702
+        },
+        {
+          "d": 12,
+          "tick": 508,
+          "mode": "LOCAL",
+          "room_id": 3,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 142.080029325497
+        },
+        {
+          "d": 13,
+          "tick": 519,
+          "mode": "GLOBAL",
+          "room_id": 3,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": null,
+          "cumulative_m": 145.10363612324707
+        },
+        {
+          "d": 14,
+          "tick": 589,
+          "mode": "LOCAL",
+          "room_id": 4,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 165.18691769624732
+        },
+        {
+          "d": 15,
+          "tick": 655,
+          "mode": "GLOBAL",
+          "room_id": 4,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": null,
+          "cumulative_m": 183.36462646024728
+        },
+        {
+          "d": 16,
+          "tick": 695,
+          "mode": "LOCAL",
+          "room_id": 5,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 194.75348084224737
+        },
+        {
+          "d": 17,
+          "tick": 708,
+          "mode": "GLOBAL",
+          "room_id": 5,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": null,
+          "cumulative_m": 198.2479080332473
+        },
+        {
+          "d": 18,
+          "tick": 728,
+          "mode": "GLOBAL",
+          "room_id": 5,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": null,
+          "cumulative_m": 203.94233522424736
+        },
+        {
+          "d": 19,
+          "tick": 837,
+          "mode": "LOCAL",
+          "room_id": 6,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 234.57971876349737
+        }
+      ],
+      "observed_mask_difference_cells_vs_R2": 0,
+      "observed_mask_overlap_cells_vs_R2": 51308
+    },
+    "R62_R3": {
+      "run_id": "NR-G2R62R3-02",
+      "outcome": "SOURCE_TERMINAL",
+      "native_steps": 992,
+      "real_path_m": 279.21131,
+      "local_m": 120.339485,
+      "global_m": 158.871825,
+      "observed_cells": 51308,
+      "total_cells": 53389,
+      "observed_pct": 96.102193,
+      "room_node_decisions": 20,
+      "parity_summary": "D01_D02_NUMERIC_PARITY_PASS",
+      "r3_frontier_residual_goal_choices": [
+        {
+          "tick": 23,
+          "goal_rc": [
+            180,
+            133
+          ]
+        },
+        {
+          "tick": 61,
+          "goal_rc": [
+            186,
+            203
+          ]
+        }
+      ],
+      "r4_clearance_recheck_count": 0,
+      "r4_clearance_recheck_events": [],
+      "decisions": [
+        {
+          "d": 1,
+          "tick": 0,
+          "mode": "GLOBAL",
+          "room_id": null,
+          "g1_reason": "ROBOT_NOT_IN_CONFIRMED_ROOM",
+          "r4_guard": null,
+          "cumulative_m": 0.0
+        },
+        {
+          "d": 2,
+          "tick": 12,
+          "mode": "LOCAL",
+          "room_id": 1,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 3.3708203932499368
+        },
+        {
+          "d": 3,
+          "tick": 23,
+          "mode": "LOCAL",
+          "room_id": 1,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 6.0596747752497695
+        },
+        {
+          "d": 4,
+          "tick": 29,
+          "mode": "LOCAL",
+          "room_id": 1,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 7.706888370749727
+        },
+        {
+          "d": 5,
+          "tick": 61,
+          "mode": "LOCAL",
+          "room_id": 1,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 16.495742752749567
+        },
+        {
+          "d": 6,
+          "tick": 64,
+          "mode": "LOCAL",
+          "room_id": 1,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 17.24295634824953
+        },
+        {
+          "d": 7,
+          "tick": 103,
+          "mode": "GLOBAL",
+          "room_id": 1,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": null,
+          "cumulative_m": 28.33181073024939
+        },
+        {
+          "d": 8,
+          "tick": 169,
+          "mode": "GLOBAL",
+          "room_id": null,
+          "g1_reason": "ROBOT_NOT_IN_CONFIRMED_ROOM",
+          "r4_guard": null,
+          "cumulative_m": 47.29148550549905
+        },
+        {
+          "d": 9,
+          "tick": 198,
+          "mode": "LOCAL",
+          "room_id": 2,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 55.76230589874891
+        },
+        {
+          "d": 10,
+          "tick": 264,
+          "mode": "GLOBAL",
+          "room_id": 2,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": null,
+          "cumulative_m": 74.21640786499847
+        },
+        {
+          "d": 11,
+          "tick": 358,
+          "mode": "LOCAL",
+          "room_id": 3,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 101.72886904474805
+        },
+        {
+          "d": 12,
+          "tick": 405,
+          "mode": "LOCAL",
+          "room_id": 3,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 114.13018460649762
+        },
+        {
+          "d": 13,
+          "tick": 420,
+          "mode": "GLOBAL",
+          "room_id": 3,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": null,
+          "cumulative_m": 118.47739820199754
+        },
+        {
+          "d": 14,
+          "tick": 476,
+          "mode": "LOCAL",
+          "room_id": 4,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 134.28428657274728
+        },
+        {
+          "d": 15,
+          "tick": 539,
+          "mode": "GLOBAL",
+          "room_id": 4,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": null,
+          "cumulative_m": 151.15084971874688
+        },
+        {
+          "d": 16,
+          "tick": 579,
+          "mode": "LOCAL",
+          "room_id": 5,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 162.53970410074697
+        },
+        {
+          "d": 17,
+          "tick": 652,
+          "mode": "GLOBAL",
+          "room_id": 5,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": null,
+          "cumulative_m": 182.01850899623383
+        },
+        {
+          "d": 18,
+          "tick": 772,
+          "mode": "LOCAL",
+          "room_id": 6,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 216.41425174898424
+        },
+        {
+          "d": 19,
+          "tick": 781,
+          "mode": "GLOBAL",
+          "room_id": 6,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": null,
+          "cumulative_m": 219.11425174898434
+        },
+        {
+          "d": 20,
+          "tick": 919,
+          "mode": "LOCAL",
+          "room_id": 7,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": null,
+          "cumulative_m": 258.68081489498485
+        }
+      ],
+      "observed_mask_difference_cells_vs_R2": 0,
+      "observed_mask_overlap_cells_vs_R2": 51308
+    },
+    "R4A_ON_R2": {
+      "run_id": "NR-G2R62R4-02",
+      "outcome": "SOURCE_TERMINAL",
+      "native_steps": 801,
+      "real_path_m": 222.468573,
+      "local_m": 109.998063,
+      "global_m": 112.47051,
+      "observed_cells": 51308,
+      "total_cells": 53389,
+      "observed_pct": 96.102193,
+      "room_node_decisions": 20,
+      "parity_summary": "D01_D02_NUMERIC_PARITY_PASS",
+      "r3_frontier_residual_goal_choices": [],
+      "r4_clearance_recheck_count": 0,
+      "r4_clearance_recheck_events": [],
+      "decisions": [
+        {
+          "d": 1,
+          "tick": 0,
+          "mode": "GLOBAL",
+          "room_id": null,
+          "g1_reason": "ROBOT_NOT_IN_CONFIRMED_ROOM",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 0.0
+        },
+        {
+          "d": 2,
+          "tick": 12,
+          "mode": "LOCAL",
+          "room_id": 1,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 3.3708203932499368
+        },
+        {
+          "d": 3,
+          "tick": 23,
+          "mode": "LOCAL",
+          "room_id": 1,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 6.0596747752497695
+        },
+        {
+          "d": 4,
+          "tick": 57,
+          "mode": "LOCAL",
+          "room_id": 1,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 15.295742752749563
+        },
+        {
+          "d": 5,
+          "tick": 97,
+          "mode": "LOCAL",
+          "room_id": 1,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 25.902631123499322
+        },
+        {
+          "d": 6,
+          "tick": 100,
+          "mode": "GLOBAL",
+          "room_id": 1,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": "OFFICIAL_WFD_EMPTY",
+          "cumulative_m": 26.802631123499324
+        },
+        {
+          "d": 7,
+          "tick": 162,
+          "mode": "GLOBAL",
+          "room_id": null,
+          "g1_reason": "ROBOT_NOT_IN_CONFIRMED_ROOM",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 44.33312629199895
+        },
+        {
+          "d": 8,
+          "tick": 184,
+          "mode": "LOCAL",
+          "room_id": 2,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 50.85673308974887
+        },
+        {
+          "d": 9,
+          "tick": 200,
+          "mode": "LOCAL",
+          "room_id": 2,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 55.27476707849874
+        },
+        {
+          "d": 10,
+          "tick": 309,
+          "mode": "GLOBAL",
+          "room_id": 2,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": "OFFICIAL_WFD_EMPTY",
+          "cumulative_m": 85.68854381999799
+        },
+        {
+          "d": 11,
+          "tick": 358,
+          "mode": "LOCAL",
+          "room_id": 3,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 100.00657780874776
+        },
+        {
+          "d": 12,
+          "tick": 370,
+          "mode": "LOCAL",
+          "room_id": 3,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 103.53018460649771
+        },
+        {
+          "d": 13,
+          "tick": 419,
+          "mode": "GLOBAL",
+          "room_id": 3,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": "OFFICIAL_WFD_EMPTY",
+          "cumulative_m": 116.53150016824729
+        },
+        {
+          "d": 14,
+          "tick": 481,
+          "mode": "LOCAL",
+          "room_id": 4,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 134.061995336747
+        },
+        {
+          "d": 15,
+          "tick": 503,
+          "mode": "LOCAL",
+          "room_id": 4,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 139.64527690974668
+        },
+        {
+          "d": 16,
+          "tick": 525,
+          "mode": "GLOBAL",
+          "room_id": 4,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": "OFFICIAL_WFD_EMPTY",
+          "cumulative_m": 145.55773808949652
+        },
+        {
+          "d": 17,
+          "tick": 605,
+          "mode": "LOCAL",
+          "room_id": 5,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 167.72430123549634
+        },
+        {
+          "d": 18,
+          "tick": 665,
+          "mode": "GLOBAL",
+          "room_id": 5,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": "OFFICIAL_WFD_EMPTY",
+          "cumulative_m": 183.46725758374592
+        },
+        {
+          "d": 19,
+          "tick": 775,
+          "mode": "LOCAL",
+          "room_id": 6,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 215.39775275224653
+        },
+        {
+          "d": 20,
+          "tick": 783,
+          "mode": "LOCAL",
+          "room_id": 6,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 217.52135954999656
+        }
+      ],
+      "observed_mask_difference_cells_vs_R2": 0,
+      "observed_mask_overlap_cells_vs_R2": 51308
+    },
+    "R4A_ON_R3": {
+      "run_id": "NR-G2R62R4A-02",
+      "outcome": "SOURCE_TERMINAL",
+      "native_steps": 1000,
+      "real_path_m": 280.347597,
+      "local_m": 95.384287,
+      "global_m": 184.963311,
+      "observed_cells": 51308,
+      "total_cells": 53389,
+      "observed_pct": 96.102193,
+      "room_node_decisions": 19,
+      "parity_summary": "D01_D02_NUMERIC_PARITY_PASS",
+      "r3_frontier_residual_goal_choices": [
+        {
+          "tick": 467,
+          "goal_rc": [
+            35,
+            94
+          ]
+        }
+      ],
+      "r4_clearance_recheck_count": 0,
+      "r4_clearance_recheck_events": [],
+      "decisions": [
+        {
+          "d": 1,
+          "tick": 0,
+          "mode": "GLOBAL",
+          "room_id": null,
+          "g1_reason": "ROBOT_NOT_IN_CONFIRMED_ROOM",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 0.0
+        },
+        {
+          "d": 2,
+          "tick": 12,
+          "mode": "LOCAL",
+          "room_id": 1,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 3.3708203932499368
+        },
+        {
+          "d": 3,
+          "tick": 26,
+          "mode": "LOCAL",
+          "room_id": 1,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 6.959674775249769
+        },
+        {
+          "d": 4,
+          "tick": 150,
+          "mode": "GLOBAL",
+          "room_id": 1,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": "OFFICIAL_WFD_EMPTY",
+          "cumulative_m": 40.58033988749897
+        },
+        {
+          "d": 5,
+          "tick": 151,
+          "mode": "GLOBAL",
+          "room_id": 1,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": "OFFICIAL_WFD_EMPTY",
+          "cumulative_m": 40.88033988749897
+        },
+        {
+          "d": 6,
+          "tick": 204,
+          "mode": "GLOBAL",
+          "room_id": null,
+          "g1_reason": "ROBOT_NOT_IN_CONFIRMED_ROOM",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 55.558048651498545
+        },
+        {
+          "d": 7,
+          "tick": 278,
+          "mode": "LOCAL",
+          "room_id": 2,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 77.22329623574822
+        },
+        {
+          "d": 8,
+          "tick": 340,
+          "mode": "GLOBAL",
+          "room_id": 2,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": "OFFICIAL_WFD_EMPTY",
+          "cumulative_m": 94.09543219074772
+        },
+        {
+          "d": 9,
+          "tick": 423,
+          "mode": "GLOBAL",
+          "room_id": 3,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": "OFFICIAL_WFD_EMPTY",
+          "cumulative_m": 117.39117494349712
+        },
+        {
+          "d": 10,
+          "tick": 467,
+          "mode": "LOCAL",
+          "room_id": 4,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 129.29249050524678
+        },
+        {
+          "d": 11,
+          "tick": 486,
+          "mode": "LOCAL",
+          "room_id": 4,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 134.53413129174672
+        },
+        {
+          "d": 12,
+          "tick": 509,
+          "mode": "GLOBAL",
+          "room_id": 4,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": "OFFICIAL_WFD_EMPTY",
+          "cumulative_m": 140.7757720782467
+        },
+        {
+          "d": 13,
+          "tick": 592,
+          "mode": "LOCAL",
+          "room_id": 5,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 165.1410196624973
+        },
+        {
+          "d": 14,
+          "tick": 628,
+          "mode": "LOCAL",
+          "room_id": 5,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 175.02430123549718
+        },
+        {
+          "d": 15,
+          "tick": 643,
+          "mode": "LOCAL",
+          "room_id": 5,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 179.4479080332473
+        },
+        {
+          "d": 16,
+          "tick": 658,
+          "mode": "GLOBAL",
+          "room_id": 5,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": "OFFICIAL_WFD_EMPTY",
+          "cumulative_m": 183.28954881974718
+        },
+        {
+          "d": 17,
+          "tick": 785,
+          "mode": "LOCAL",
+          "room_id": 6,
+          "g1_reason": "ROOM_WFD_REACHABLE_FRONTIER",
+          "r4_guard": "NOT_APPLICABLE",
+          "cumulative_m": 218.86857314549712
+        },
+        {
+          "d": 18,
+          "tick": 823,
+          "mode": "GLOBAL",
+          "room_id": 6,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": "OFFICIAL_WFD_EMPTY",
+          "cumulative_m": 229.91578674099745
+        },
+        {
+          "d": 19,
+          "tick": 916,
+          "mode": "GLOBAL",
+          "room_id": 7,
+          "g1_reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+          "r4_guard": "OFFICIAL_WFD_EMPTY",
+          "cumulative_m": 256.51710230274773
+        }
+      ],
+      "observed_mask_difference_cells_vs_R2": 14,
+      "observed_mask_overlap_cells_vs_R2": 51301
+    }
+  },
+  "comparisons": {
+    "R4A_R2_vs_R2_distance_m": -14.434753,
+    "R4A_R3_vs_R3_distance_m": 1.136287,
+    "r4_guard_fired_in_closed_loop": false,
+    "causal_attribution_to_guard": "NOT_ESTABLISHED",
+    "all_terminal_observed_counts_equal": true,
+    "all_terminal_observed_masks_equal": false
+  }
+}
