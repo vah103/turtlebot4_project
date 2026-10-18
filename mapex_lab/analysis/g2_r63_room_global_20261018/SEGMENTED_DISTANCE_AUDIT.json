@@ -1,0 +1,264 @@
+{
+  "RN04": {
+    "name": "RN04",
+    "total_m": 199.10758280849728,
+    "local_mode_travel_m": 104.178714,
+    "global_mode_travel_m": 94.928869,
+    "rooms": [
+      {
+        "room_id": 1,
+        "entry_tick": 12,
+        "exit_tick": 105,
+        "entry_pose": [
+          647,
+          611
+        ],
+        "exit_pose": [
+          673,
+          702
+        ],
+        "inside_m": 25.684597,
+        "exit_status": "GLOBAL",
+        "exit_reference_decision": 7
+      },
+      {
+        "room_id": 2,
+        "entry_tick": 157,
+        "exit_tick": 292,
+        "entry_pose": [
+          546,
+          673
+        ],
+        "exit_pose": [
+          532,
+          640
+        ],
+        "inside_m": 37.215092,
+        "exit_status": "GLOBAL",
+        "exit_reference_decision": 13
+      },
+      {
+        "room_id": 3,
+        "entry_tick": 340,
+        "exit_tick": 399,
+        "entry_pose": [
+          559,
+          611
+        ],
+        "exit_pose": [
+          520,
+          557
+        ],
+        "inside_m": 16.859675,
+        "exit_status": "GLOBAL",
+        "exit_reference_decision": 17
+      },
+      {
+        "room_id": 4,
+        "entry_tick": 437,
+        "exit_tick": 471,
+        "entry_pose": [
+          553,
+          540
+        ],
+        "exit_pose": [
+          534,
+          509
+        ],
+        "inside_m": 9.206888,
+        "exit_status": "GLOBAL",
+        "exit_reference_decision": 20
+      },
+      {
+        "room_id": 5,
+        "entry_tick": 544,
+        "exit_tick": 587,
+        "entry_pose": [
+          655,
+          541
+        ],
+        "exit_pose": [
+          687,
+          528
+        ],
+        "inside_m": 12.212461,
+        "exit_status": "GLOBAL",
+        "exit_reference_decision": 24
+      },
+      {
+        "room_id": 6,
+        "entry_tick": 698,
+        "exit_tick": null,
+        "unfinished": true
+      }
+    ],
+    "global_connections": [
+      {
+        "after_room_id": 1,
+        "from_tick": 105,
+        "to_tick": 157,
+        "meters": 14.912461,
+        "next_room_id": 2
+      },
+      {
+        "after_room_id": 2,
+        "from_tick": 292,
+        "to_tick": 340,
+        "meters": 14.018034,
+        "next_room_id": 3
+      },
+      {
+        "after_room_id": 3,
+        "from_tick": 399,
+        "to_tick": 437,
+        "meters": 10.636068,
+        "next_room_id": 4
+      },
+      {
+        "after_room_id": 4,
+        "from_tick": 471,
+        "to_tick": 544,
+        "meters": 20.066563,
+        "next_room_id": 5
+      },
+      {
+        "after_room_id": 5,
+        "from_tick": 587,
+        "to_tick": 698,
+        "meters": 31.924922,
+        "next_room_id": 6
+      }
+    ]
+  },
+  "R62": {
+    "name": "R62",
+    "total_m": 236.9033255612474,
+    "local_mode_travel_m": 103.525927,
+    "global_mode_travel_m": 133.377398,
+    "rooms": [
+      {
+        "room_id": 1,
+        "entry_tick": 12,
+        "exit_tick": 100,
+        "entry_pose": [
+          647,
+          611
+        ],
+        "exit_pose": [
+          692,
+          704
+        ],
+        "inside_m": 23.431811,
+        "exit_status": "GLOBAL",
+        "exit_reference_decision": 6
+      },
+      {
+        "room_id": 2,
+        "entry_tick": 184,
+        "exit_tick": 331,
+        "entry_pose": [
+          525,
+          701
+        ],
+        "exit_pose": [
+          536,
+          734
+        ],
+        "inside_m": 40.515092,
+        "exit_status": "GLOBAL",
+        "exit_reference_decision": 10
+      },
+      {
+        "room_id": 3,
+        "entry_tick": 463,
+        "exit_tick": 519,
+        "entry_pose": [
+          655,
+          563
+        ],
+        "exit_pose": [
+          680,
+          517
+        ],
+        "inside_m": 15.583282,
+        "exit_status": "GLOBAL",
+        "exit_reference_decision": 13
+      },
+      {
+        "room_id": 4,
+        "entry_tick": 589,
+        "exit_tick": 655,
+        "entry_pose": [
+          582,
+          539
+        ],
+        "exit_pose": [
+          572,
+          503
+        ],
+        "inside_m": 18.177709,
+        "exit_status": "GLOBAL",
+        "exit_reference_decision": 15
+      },
+      {
+        "room_id": 5,
+        "entry_tick": 695,
+        "exit_tick": 708,
+        "entry_pose": [
+          546,
+          565
+        ],
+        "exit_pose": [
+          520,
+          565
+        ],
+        "inside_m": 3.494427,
+        "exit_status": "GLOBAL",
+        "exit_reference_decision": 17
+      },
+      {
+        "room_id": 6,
+        "entry_tick": 837,
+        "exit_tick": null,
+        "unfinished": true
+      }
+    ],
+    "global_connections": [
+      {
+        "after_room_id": 1,
+        "from_tick": 100,
+        "to_tick": 184,
+        "meters": 24.054102,
+        "next_room_id": 2
+      },
+      {
+        "after_room_id": 2,
+        "from_tick": 331,
+        "to_tick": 463,
+        "meters": 38.148529,
+        "next_room_id": 3
+      },
+      {
+        "after_room_id": 3,
+        "from_tick": 519,
+        "to_tick": 589,
+        "meters": 20.083282,
+        "next_room_id": 4
+      },
+      {
+        "after_room_id": 4,
+        "from_tick": 655,
+        "to_tick": 695,
+        "meters": 11.388854,
+        "next_room_id": 5
+      },
+      {
+        "after_room_id": 5,
+        "from_tick": 708,
+        "to_tick": 837,
+        "meters": 36.331811,
+        "next_room_id": 6
+      }
+    ]
+  }
+}
