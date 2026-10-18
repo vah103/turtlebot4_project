@@ -1,0 +1,113 @@
+{
+  "run_id": "NR-G2R7-05",
+  "source": "Native2D actual closed-loop; no future/GT in policy",
+  "structural_prediction_id": "8425e0cb7289a8e1f990eb2496cb5a17e9e88cb576aa500c6fdb12a9e94e2753",
+  "plan1_selected_tick12": [
+    [
+      169,
+      132
+    ],
+    [
+      196,
+      96
+    ]
+  ],
+  "goal1_ack": {
+    "tick": 27,
+    "goal": [
+      169,
+      132
+    ]
+  },
+  "plan2_prepared_after_goal1_tick27": {
+    "confirmed_obstacles": 43,
+    "detected_native_tick": 27,
+    "obligations": [
+      {
+        "confirmed_observed_objects": 2,
+        "corner": "bottom_right",
+        "goal_rc": [
+          196,
+          206
+        ],
+        "native_motion_authorized": false,
+        "object_centers": [
+          [
+            168.56756756756758,
+            160.56756756756758
+          ],
+          [
+            187.5,
+            193.0
+          ]
+        ],
+        "opposite_to_entry": true,
+        "task_id": "STABLE_ZONE_2_bottom_right",
+        "unseen_half_cells": 562,
+        "zone": 2
+      },
+      {
+        "confirmed_observed_objects": 2,
+        "corner": "top_right",
+        "goal_rc": [
+          148,
+          206
+        ],
+        "native_motion_authorized": false,
+        "object_centers": [
+          [
+            168.56756756756758,
+            160.56756756756758
+          ],
+          [
+            187.5,
+            193.0
+          ]
+        ],
+        "opposite_to_entry": true,
+        "task_id": "STABLE_ZONE_2_top_right",
+        "unseen_half_cells": 276,
+        "zone": 2
+      }
+    ],
+    "version": 6
+  },
+  "goal2_ack": {
+    "tick": 55,
+    "goal": [
+      196,
+      96
+    ]
+  },
+  "plan2_selected_tick55": [
+    [
+      196,
+      206
+    ],
+    [
+      148,
+      206
+    ]
+  ],
+  "goal3_ack": {
+    "tick": 110,
+    "goal": [
+      196,
+      206
+    ]
+  },
+  "goal4_ack": {
+    "tick": 130,
+    "goal": [
+      148,
+      206
+    ]
+  },
+  "exact_native_knownfree_astar": [
+    "decision_000002",
+    "decision_000003",
+    "decision_000004"
+  ],
+  "premature_plan2_commit": false,
+  "GT_used": false
+}
