@@ -1,0 +1,266 @@
+{
+  "A": {
+    "name": "R3_D10_EXIT",
+    "decision": 10,
+    "tick": 264,
+    "observed_room_unknown": 553,
+    "official_local_WFD_reported": 0,
+    "native_WFD_reconstructed": [
+      {
+        "size": 42,
+        "representative": [
+          74,
+          243
+        ],
+        "accepted_size": true,
+        "inside_room": true,
+        "observed_free": true,
+        "inflated_free": true,
+        "reachable_in_native_room_scope": false,
+        "passed_all": false
+      },
+      {
+        "size": 28,
+        "representative": [
+          70,
+          219
+        ],
+        "accepted_size": true,
+        "inside_room": true,
+        "observed_free": true,
+        "inflated_free": true,
+        "reachable_in_native_room_scope": false,
+        "passed_all": false
+      },
+      {
+        "size": 15,
+        "representative": [
+          39,
+          140
+        ],
+        "accepted_size": true,
+        "inside_room": true,
+        "observed_free": true,
+        "inflated_free": true,
+        "reachable_in_native_room_scope": false,
+        "passed_all": false
+      },
+      {
+        "size": 9,
+        "representative": [
+          13,
+          145
+        ],
+        "accepted_size": false,
+        "inside_room": true,
+        "observed_free": true,
+        "inflated_free": true,
+        "reachable_in_native_room_scope": false,
+        "passed_all": false
+      }
+    ],
+    "native_WFD_reconstructed_count": 0,
+    "raw_frontier_unknown": 0,
+    "reachable_native_FREE_count": 0,
+    "recovery_frontier_components": [],
+    "recoverable_components": 0,
+    "assumption": "same-epoch P1 observed map, 3x3 wall dilation, 8-neighbor WFD size>10; no GT",
+    "policy": "SUSPEND_LOCAL_EXIT only if G1 official LOCAL WFD is empty and independently certified accessible observed FREE viewpoint can see remaining real frontier; else GLOBAL + unresolved marker"
+  },
+  "C_D03": {
+    "epoch": 3,
+    "native_tick": 23,
+    "original": [
+      189,
+      115
+    ],
+    "alternative": [
+      180,
+      133
+    ],
+    "original_path_m": 3.1,
+    "alternative_path_m": 2.2,
+    "original_nominal_cells": 278,
+    "alt_nominal_cells": 319,
+    "original_stress_cells": 259,
+    "alt_stress_cells": 284,
+    "lost_nominal_cells": 165,
+    "lost_stress_cells": 154,
+    "gained_nominal_cells": 206,
+    "gained_stress_cells": 179,
+    "R4_safe_nonregression_pass": false,
+    "decision": "KEEP_R62"
+  },
+  "C_D05": {
+    "epoch": 5,
+    "native_tick": 61,
+    "original": [
+      179,
+      197
+    ],
+    "alternative": [
+      186,
+      203
+    ],
+    "original_path_m": 3.1,
+    "alternative_path_m": 1.8,
+    "original_nominal_cells": 5,
+    "alt_nominal_cells": 5,
+    "original_stress_cells": 4,
+    "alt_stress_cells": 5,
+    "lost_nominal_cells": 2,
+    "lost_stress_cells": 2,
+    "gained_nominal_cells": 2,
+    "gained_stress_cells": 3,
+    "R4_safe_nonregression_pass": false,
+    "decision": "KEEP_R62"
+  },
+  "B": {
+    "name": "R3_D16_GLOBAL_TRANSIT",
+    "decision": 16,
+    "tick": 579,
+    "original_local_first_goal_core": [
+      18,
+      126
+    ],
+    "local_first_leg_native_path_m": 8.9,
+    "local_first_leg_pred_room_nominal": 730,
+    "local_first_leg_pred_room_stress": 527,
+    "certified_global_candidate_count": 13,
+    "global_candidate_trajectories": [
+      {
+        "goal_core": [
+          11,
+          66
+        ],
+        "native_global_path_m": 3.8,
+        "room_unknown_nominal_observable": 210,
+        "room_unknown_stress_observable": 80,
+        "new_viewing_value_per_m": 55.26
+      },
+      {
+        "goal_core": [
+          11,
+          74
+        ],
+        "native_global_path_m": 4.8,
+        "room_unknown_nominal_observable": 281,
+        "room_unknown_stress_observable": 153,
+        "new_viewing_value_per_m": 58.54
+      },
+      {
+        "goal_core": [
+          11,
+          97
+        ],
+        "native_global_path_m": 6.7,
+        "room_unknown_nominal_observable": 569,
+        "room_unknown_stress_observable": 416,
+        "new_viewing_value_per_m": 84.93
+      },
+      {
+        "goal_core": [
+          11,
+          107
+        ],
+        "native_global_path_m": 7.7,
+        "room_unknown_nominal_observable": 626,
+        "room_unknown_stress_observable": 475,
+        "new_viewing_value_per_m": 81.3
+      },
+      {
+        "goal_core": [
+          42,
+          111
+        ],
+        "native_global_path_m": 8.0,
+        "room_unknown_nominal_observable": 414,
+        "room_unknown_stress_observable": 301,
+        "new_viewing_value_per_m": 51.75
+      },
+      {
+        "goal_core": [
+          14,
+          122
+        ],
+        "native_global_path_m": 8.9,
+        "room_unknown_nominal_observable": 735,
+        "room_unknown_stress_observable": 524,
+        "new_viewing_value_per_m": 82.58
+      },
+      {
+        "goal_core": [
+          39,
+          140
+        ],
+        "native_global_path_m": 15.8,
+        "room_unknown_nominal_observable": 342,
+        "room_unknown_stress_observable": 272,
+        "new_viewing_value_per_m": 21.65
+      },
+      {
+        "goal_core": [
+          13,
+          145
+        ],
+        "native_global_path_m": 17.5,
+        "room_unknown_nominal_observable": 350,
+        "room_unknown_stress_observable": 281,
+        "new_viewing_value_per_m": 20.0
+      },
+      {
+        "goal_core": [
+          119,
+          224
+        ],
+        "native_global_path_m": 24.4,
+        "room_unknown_nominal_observable": 209,
+        "room_unknown_stress_observable": 162,
+        "new_viewing_value_per_m": 8.57
+      },
+      {
+        "goal_core": [
+          71,
+          219
+        ],
+        "native_global_path_m": 27.1,
+        "room_unknown_nominal_observable": 292,
+        "room_unknown_stress_observable": 227,
+        "new_viewing_value_per_m": 10.77
+      },
+      {
+        "goal_core": [
+          74,
+          243
+        ],
+        "native_global_path_m": 28.2,
+        "room_unknown_nominal_observable": 292,
+        "room_unknown_stress_observable": 227,
+        "new_viewing_value_per_m": 10.35
+      },
+      {
+        "goal_core": [
+          149,
+          250
+        ],
+        "native_global_path_m": 28.8,
+        "room_unknown_nominal_observable": 217,
+        "room_unknown_stress_observable": 166,
+        "new_viewing_value_per_m": 7.53
+      },
+      {
+        "goal_core": [
+          167,
+          243
+        ],
+        "native_global_path_m": 29.9,
+        "room_unknown_nominal_observable": 212,
+        "room_unknown_stress_observable": 161,
+        "new_viewing_value_per_m": 7.09
+      }
+    ],
+    "scope": "Only immediate single-leg candidate A* on currently observed FREE with wall inflation. Prediction is NOT realized visibility, and candidates are NOT necessarily selected by MapEx.",
+    "policy": "DO NOT early-exit solely because a hypothetical GLOBAL transit can see predicted room UNKNOWN; require safe LOCAL frontier settlement + actual next GLOBAL goal and native path."
+  },
+  "elapsed_s": 2.051
+}

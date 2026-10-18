@@ -1,0 +1,38 @@
+{
+  "R2": {
+    "run_id": "NR-G2R62-03",
+    "mission_complete": true,
+    "outcome": "SOURCE_TERMINAL",
+    "native_steps": 846,
+    "distance_m": 236.90332556124588,
+    "local_m": 104.24953415699773,
+    "global_m": 132.65379140424815,
+    "observed_cells": 51308,
+    "pct": 96.10219333570585,
+    "r4_clearance_recheck_count": 0
+  },
+  "R3": {
+    "run_id": "NR-G2R62R3-02",
+    "mission_complete": true,
+    "outcome": "SOURCE_TERMINAL",
+    "native_steps": 992,
+    "distance_m": 279.2113100634827,
+    "local_m": 120.33948467048464,
+    "global_m": 158.87182539299806,
+    "observed_cells": 51308,
+    "pct": 96.10219333570585,
+    "r4_clearance_recheck_count": 0
+  },
+  "R4_R2_BASE": {
+    "run_id": "NR-G2R62R4-02",
+    "mission_complete": true,
+    "outcome": "SOURCE_TERMINAL",
+    "native_steps": 801,
+    "distance_m": 222.46857314549572,
+    "local_m": 109.99806331424733,
+    "global_m": 112.47050983124842,
+    "observed_cells": 51308,
+    "pct": 96.10219333570585,
+    "r4_clearance_recheck_count": 0
+  }
+}

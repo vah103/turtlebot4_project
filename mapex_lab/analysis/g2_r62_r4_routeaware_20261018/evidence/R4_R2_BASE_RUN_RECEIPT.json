@@ -1,0 +1,28 @@
+{
+  "com1_decision_parity": "NOT_TESTED",
+  "cpu_threads": 2,
+  "duration_s": 330.314,
+  "final_swap_used_MiB": 1581.9,
+  "finished_at": "2026-10-18T22:42:25.595368",
+  "host": "DELL",
+  "log": "/home/dell/DELL_NATIVE2D/runs/NR-G2R62R4-02/worker.stdout.log",
+  "min_available_MiB": 2434.2,
+  "mission_status": {
+    "cur_step": 801,
+    "fail_reason": "MAPEX_NO_SELECTABLE_FRONTIER_NOT_GT",
+    "last_exp_time_s": 314.1936798095703,
+    "mission_complete": true,
+    "start_time": 1792337829.5017455
+  },
+  "mode": "full",
+  "original_reference_worker": "/home/dell/DELL_NATIVE2D/build/g2_r62_r4_exit_recheck_20261018/native_g2_r62_worker_template.py",
+  "original_reference_worker_sha256": "22572af8b99b9ffdc94e0ccf905fd07bb8c42e28b7a57fbeb110e182ec28e89f",
+  "outcome": "SOURCE_TERMINAL",
+  "peak_pss_MiB": 2251.8,
+  "profile": "NR-G2R62R4",
+  "returncode": 0,
+  "root": "/home/dell/DELL_NATIVE2D/runs/NR-G2R62R4-02",
+  "run_id": "NR-G2R62R4-02",
+  "started_at": "2026-10-18T22:36:55.278334",
+  "started_by_user_action": true
+}
