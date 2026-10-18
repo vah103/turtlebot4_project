@@ -1,0 +1,13 @@
+test_d02_chambers_and_portal_derived_not_hardcoded (test_r7_standalone.R7R2Tests.test_d02_chambers_and_portal_derived_not_hardcoded) ... ok
+test_d02_inferred_opposing_viewpoints_and_determinism (test_r7_standalone.R7R2Tests.test_d02_inferred_opposing_viewpoints_and_determinism) ... ok
+test_direction_is_not_merely_unknown_gain (test_r7_standalone.R7R2Tests.test_direction_is_not_merely_unknown_gain) ... ok
+test_manager_maintains_active_plan_and_vetoes_unsafe (test_r7_standalone.R7R2Tests.test_manager_maintains_active_plan_and_vetoes_unsafe) ... ok
+test_no_d02_hardcoded_coordinate_in_source (test_r7_standalone.R7R2Tests.test_no_d02_hardcoded_coordinate_in_source) ... ok
+test_opposing_viewpoints_not_forced_for_obstacle_free_room (test_r7_standalone.R7R2Tests.test_opposing_viewpoints_not_forced_for_obstacle_free_room) ... ok
+test_surface_view_in_synthetic (test_r7_standalone.R7R2Tests.test_surface_view_in_synthetic) ... ok
+test_virtual_goal_never_becomes_executable_without_lidar (test_r7_standalone.R7R2Tests.test_virtual_goal_never_becomes_executable_without_lidar) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 22.606s
+
+OK
