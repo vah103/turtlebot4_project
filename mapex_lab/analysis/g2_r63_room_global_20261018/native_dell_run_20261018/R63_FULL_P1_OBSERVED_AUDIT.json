@@ -1,0 +1,140 @@
+{
+  "date_local": "2026-10-18",
+  "run_id": "NR-G2R63-02",
+  "comparison": "NR-RN-04",
+  "metric_is_observed_LiDAR_not_GT": true,
+  "baseline_full_DELL_COM1_parity_report": "/home/dell/DELL_NATIVE2D/runs/NR-RN-04/DELL_VS_COM1_FULL_PARITY.json",
+  "new_run_D01D02_pre_goal_parity": "D01_D02_NUMERIC_PARITY_PASS",
+  "P1_native_map_cells": 53389,
+  "frozen_D02_room_cells": 6564,
+  "frozen_D02_initial_unknown": 3889,
+  "baseline": {
+    "status": "SOURCE_TERMINAL",
+    "n_steps": 709,
+    "total_distance_m": 199.107583,
+    "observed_P1": 51304,
+    "unknown_P1": 2085,
+    "coverage_fraction_P1": 0.960947012,
+    "last_D02_room_unknown": 260,
+    "milestones": {
+      "90pct": {
+        "threshold_cells": 48051,
+        "native_tick": 547,
+        "observed_P1": 48194,
+        "initial_D02_room_unknown": 269,
+        "distance_m": 152.870199
+      },
+      "95pct": {
+        "threshold_cells": 50720,
+        "native_tick": 684,
+        "observed_P1": 50772,
+        "initial_D02_room_unknown": 260,
+        "distance_m": 192.289549
+      },
+      "96pct": {
+        "threshold_cells": 51254,
+        "native_tick": 699,
+        "observed_P1": 51263,
+        "initial_D02_room_unknown": 260,
+        "distance_m": 196.407583
+      },
+      "reference_final_P1_observed": {
+        "threshold_cells": 51304,
+        "native_tick": 705,
+        "observed_P1": 51304,
+        "initial_D02_room_unknown": 260,
+        "distance_m": 198.207583
+      },
+      "D02_ROOM_270": {
+        "native_tick": 102,
+        "P1_observed": 21247,
+        "initial_D02_room_unknown": 269,
+        "distance_after_D02_m": 24.86099,
+        "total_distance_m": 28.231811
+      }
+    },
+    "guard_wall_s": 370.85,
+    "peak_pss_MiB": 2119.7,
+    "min_available_MiB": 2166.6,
+    "terminal_mission_state": {
+      "cur_step": 709,
+      "fail_reason": "MAPEX_NO_SELECTABLE_FRONTIER_NOT_GT",
+      "last_exp_time_s": 355.4789009094238,
+      "mission_complete": true,
+      "start_time": 1792257239.449295
+    }
+  },
+  "r63": {
+    "status": "SOURCE_TERMINAL",
+    "n_steps": 913,
+    "total_distance_m": 255.316883,
+    "observed_P1": 51304,
+    "unknown_P1": 2085,
+    "coverage_fraction_P1": 0.960947012,
+    "last_D02_room_unknown": 260,
+    "milestones": {
+      "90pct": {
+        "threshold_cells": 48051,
+        "native_tick": 772,
+        "observed_P1": 48058,
+        "initial_D02_room_unknown": 260,
+        "distance_m": 215.426713
+      },
+      "95pct": {
+        "threshold_cells": 50720,
+        "native_tick": 794,
+        "observed_P1": 50986,
+        "initial_D02_room_unknown": 260,
+        "distance_m": 221.544747
+      },
+      "96pct": {
+        "threshold_cells": 51254,
+        "native_tick": 901,
+        "observed_P1": 51300,
+        "initial_D02_room_unknown": 260,
+        "distance_m": 252.169669
+      },
+      "reference_final_P1_observed": {
+        "threshold_cells": 51304,
+        "native_tick": 902,
+        "observed_P1": 51304,
+        "initial_D02_room_unknown": 260,
+        "distance_m": 252.469669
+      },
+      "D02_ROOM_270": {
+        "native_tick": 151,
+        "P1_observed": 19463,
+        "initial_D02_room_unknown": 269,
+        "distance_after_D02_m": 37.967879,
+        "total_distance_m": 41.338699
+      }
+    },
+    "S0_S1_S2_S3_S4_count": {
+      "S2_LIGHT_REPLAN": 34,
+      "S3_STRUCTURAL_REBUILD": 4,
+      "S1_KEEP": 98
+    },
+    "heavy_LaMa_RoomNode_decisions": 22,
+    "G2_R63_watchman_goal_decisions": 10,
+    "native_local_room_WFD_fallback_count": 0,
+    "zero_progress_viewpoint_triggers": 3,
+    "guard_wall_s": 385.578,
+    "peak_pss_MiB": 2243.0,
+    "min_available_MiB": 1921.1,
+    "terminal_mission_state": {
+      "cur_step": 913,
+      "fail_reason": "MAPEX_NO_SELECTABLE_FRONTIER_NOT_GT",
+      "last_exp_time_s": 372.26881670951843,
+      "mission_complete": true,
+      "start_time": 1792295564.4298737
+    }
+  },
+  "delta_total_distance_m": 56.2093,
+  "distance_ratio": 1.282306,
+  "paired_final_observed_cells_difference": 0,
+  "paired_final_core_occupancy_state_mismatch_cells": 25,
+  "r63_outcome_is_gt_complete": false,
+  "any_gt_as_planner_input": false,
+  "individual_models_and_thresholds_cross_Hospital_validated": false,
+  "wall_delta_s": 14.728
+}

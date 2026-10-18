@@ -1,0 +1,329 @@
+{
+  "source_run": "NR-G2R62-03",
+  "snapshots": [
+    {
+      "decision": 2,
+      "native_tick": 12,
+      "room_id": 1,
+      "room_free_area": 2407,
+      "room_unknown": 3889,
+      "baseline_goals": [
+        [
+          189,
+          120
+        ],
+        [
+          171,
+          143
+        ],
+        [
+          186,
+          162
+        ],
+        [
+          181,
+          156
+        ],
+        [
+          173,
+          146
+        ]
+      ],
+      "R63_goals": [
+        [
+          189,
+          120
+        ],
+        [
+          181,
+          156
+        ],
+        [
+          186,
+          162
+        ],
+        [
+          173,
+          146
+        ],
+        [
+          171,
+          143
+        ]
+      ],
+      "baseline_room_m": 15.5,
+      "R63_room_m": 15.4,
+      "baseline_gain": 3391.556,
+      "R63_gain": 3375.129,
+      "baseline_exit_lowerbound_m": 9.4,
+      "R63_exit_lowerbound_m": 8.9,
+      "baseline_total_m": 24.9,
+      "R63_total_m": 24.3,
+      "policy": "REORDERED_WITH_SAME_GOALS",
+      "extra_planning_s": 0.5224,
+      "goals_safety_knownFREE": true,
+      "no_GT_used": true,
+      "time_s": 0.882
+    },
+    {
+      "decision": 8,
+      "native_tick": 184,
+      "room_id": 2,
+      "room_free_area": 4542,
+      "room_unknown": 3124,
+      "baseline_goals": [
+        [
+          17,
+          259
+        ],
+        [
+          17,
+          233
+        ],
+        [
+          3,
+          162
+        ],
+        [
+          5,
+          142
+        ],
+        [
+          41,
+          140
+        ]
+      ],
+      "R63_goals": [
+        [
+          17,
+          233
+        ],
+        [
+          17,
+          259
+        ],
+        [
+          3,
+          162
+        ],
+        [
+          5,
+          142
+        ],
+        [
+          41,
+          140
+        ]
+      ],
+      "baseline_room_m": 29.9,
+      "R63_room_m": 29.9,
+      "baseline_gain": 296.601,
+      "R63_gain": 297.039,
+      "baseline_exit_lowerbound_m": 8.3,
+      "R63_exit_lowerbound_m": 8.3,
+      "baseline_total_m": 38.2,
+      "R63_total_m": 38.2,
+      "policy": "REORDERED_WITH_SAME_GOALS",
+      "extra_planning_s": 0.8888,
+      "goals_safety_knownFREE": true,
+      "no_GT_used": true,
+      "time_s": 1.3779
+    },
+    {
+      "decision": 11,
+      "native_tick": 463,
+      "room_id": 3,
+      "room_free_area": 3933,
+      "room_unknown": 1788,
+      "baseline_goals": [
+        [
+          133,
+          14
+        ],
+        [
+          138,
+          26
+        ],
+        [
+          153,
+          4
+        ],
+        [
+          187,
+          18
+        ],
+        [
+          188,
+          16
+        ]
+      ],
+      "R63_goals": [
+        [
+          187,
+          18
+        ],
+        [
+          188,
+          16
+        ],
+        [
+          153,
+          4
+        ],
+        [
+          133,
+          14
+        ],
+        [
+          138,
+          26
+        ]
+      ],
+      "baseline_room_m": 22.2,
+      "R63_room_m": 24.8,
+      "baseline_gain": 1553.47,
+      "R63_gain": 1561.215,
+      "baseline_exit_lowerbound_m": 13.9,
+      "R63_exit_lowerbound_m": 9.1,
+      "baseline_total_m": 36.1,
+      "R63_total_m": 33.9,
+      "policy": "REORDERED_WITH_SAME_GOALS",
+      "extra_planning_s": 0.9332,
+      "goals_safety_knownFREE": true,
+      "no_GT_used": true,
+      "time_s": 1.3336
+    },
+    {
+      "decision": 14,
+      "native_tick": 589,
+      "room_id": 4,
+      "room_free_area": 2742,
+      "room_unknown": 2334,
+      "baseline_goals": [
+        [
+          64,
+          36
+        ],
+        [
+          14,
+          17
+        ],
+        [
+          16,
+          18
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          13,
+          45
+        ]
+      ],
+      "R63_goals": [
+        [
+          64,
+          36
+        ],
+        [
+          14,
+          17
+        ],
+        [
+          16,
+          18
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          13,
+          45
+        ]
+      ],
+      "baseline_room_m": 16.5,
+      "R63_room_m": 16.5,
+      "baseline_gain": 1025.648,
+      "R63_gain": 1025.648,
+      "baseline_exit_lowerbound_m": 19.7,
+      "R63_exit_lowerbound_m": 19.7,
+      "baseline_total_m": 36.2,
+      "R63_total_m": 36.2,
+      "policy": "BASELINE_ALREADY_BEST_OR_MORE_CAUSAL_COVERAGE",
+      "extra_planning_s": 0.8153,
+      "goals_safety_knownFREE": true,
+      "no_GT_used": true,
+      "time_s": 1.1189
+    },
+    {
+      "decision": 16,
+      "native_tick": 695,
+      "room_id": 5,
+      "room_free_area": 3077,
+      "room_unknown": 860,
+      "baseline_goals": [
+        [
+          20,
+          65
+        ],
+        [
+          3,
+          53
+        ],
+        [
+          7,
+          105
+        ],
+        [
+          18,
+          126
+        ],
+        [
+          42,
+          111
+        ]
+      ],
+      "R63_goals": [
+        [
+          3,
+          53
+        ],
+        [
+          20,
+          65
+        ],
+        [
+          7,
+          105
+        ],
+        [
+          18,
+          126
+        ],
+        [
+          42,
+          111
+        ]
+      ],
+      "baseline_room_m": 28.0,
+      "R63_room_m": 28.0,
+      "baseline_gain": 751.908,
+      "R63_gain": 756.092,
+      "baseline_exit_lowerbound_m": 10.2,
+      "R63_exit_lowerbound_m": 10.2,
+      "baseline_total_m": 38.2,
+      "R63_total_m": 38.2,
+      "policy": "REORDERED_WITH_SAME_GOALS",
+      "extra_planning_s": 0.9455,
+      "goals_safety_knownFREE": true,
+      "no_GT_used": true,
+      "time_s": 1.3334
+    }
+  ],
+  "no_future_ground_truth": true,
+  "all_same_model_and_roomnode_inputs": true,
+  "metric": "predicted view plus observed FREE uninflated 4connected frontier exit lower bound, NOT observed executed movement",
+  "science_status": "OFFLINE_PROPOSAL_ONLY"
+}
