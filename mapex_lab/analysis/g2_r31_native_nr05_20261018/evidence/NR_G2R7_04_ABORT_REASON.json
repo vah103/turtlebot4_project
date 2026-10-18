@@ -1,0 +1,7 @@
+{
+  "run_id": "NR-G2R7-04",
+  "timestamp": "2026-10-18T18:08:09.546652",
+  "termination_intent": "ABORTED_POLICY_REVISION",
+  "reason": "Plan2 order committed before verified arrival Goal1, to premature 4-cell obstacle fragment at tick14; cannot satisfy user-intended lower-right first",
+  "earlier_runs_untouched": true
+}
