@@ -1,0 +1,82 @@
+{
+  "cannot_imply_G2R62_full_parity": true,
+  "different_future_policy_allowed": true,
+  "numeric_only_pre_goal": true,
+  "numerical_pass": true,
+  "reference": "NR-RN-04, D01/D02 before G2-R62 new goal selection",
+  "result": "D01_D02_NUMERIC_PARITY_PASS",
+  "rows": [
+    {
+      "arrays": {
+        "mean": {
+          "abs_tolerance": 1e-06,
+          "different_cells": 0,
+          "max_abs": 0.0,
+          "same": true,
+          "sha256_ref": "0284f98dd80d78f5bf603ddf01ade250a8a1ea924e1d1d5670f172fbe3cb4916",
+          "sha256_test": "0284f98dd80d78f5bf603ddf01ade250a8a1ea924e1d1d5670f172fbe3cb4916",
+          "within_absolute_tolerance": true
+        },
+        "normalized_observed": {
+          "abs_tolerance": 0.0,
+          "different_cells": 0,
+          "max_abs": 0.0,
+          "same": true,
+          "sha256_ref": "13916f788d4e786b87e0dfdfd5fa71a5817b21dcf496e36c48515dda0c5d807f",
+          "sha256_test": "13916f788d4e786b87e0dfdfd5fa71a5817b21dcf496e36c48515dda0c5d807f",
+          "within_absolute_tolerance": true
+        },
+        "variance": {
+          "abs_tolerance": 1e-06,
+          "different_cells": 0,
+          "max_abs": 0.0,
+          "same": true,
+          "sha256_ref": "361b68295a31749d7fb3d61c3853dd66d20fed132bdc83d5d3c07fc304f87d66",
+          "sha256_test": "361b68295a31749d7fb3d61c3853dd66d20fed132bdc83d5d3c07fc304f87d66",
+          "within_absolute_tolerance": true
+        }
+      },
+      "decision": 1,
+      "numerical_pass": true,
+      "room_mode_and_pose_equal": true,
+      "strict_pass": true
+    },
+    {
+      "arrays": {
+        "mean": {
+          "abs_tolerance": 1e-06,
+          "different_cells": 0,
+          "max_abs": 0.0,
+          "same": true,
+          "sha256_ref": "b7169220d937c4ceec3faacba4431161972072b99d5e9831a1a58aa3764ad6c4",
+          "sha256_test": "b7169220d937c4ceec3faacba4431161972072b99d5e9831a1a58aa3764ad6c4",
+          "within_absolute_tolerance": true
+        },
+        "normalized_observed": {
+          "abs_tolerance": 0.0,
+          "different_cells": 0,
+          "max_abs": 0.0,
+          "same": true,
+          "sha256_ref": "0e015244b3b4eac5c465866490dac121042fe1a7f16d73c815beaf267f5b24f5",
+          "sha256_test": "0e015244b3b4eac5c465866490dac121042fe1a7f16d73c815beaf267f5b24f5",
+          "within_absolute_tolerance": true
+        },
+        "variance": {
+          "abs_tolerance": 1e-06,
+          "different_cells": 0,
+          "max_abs": 0.0,
+          "same": true,
+          "sha256_ref": "9ba20d1851deb97528db712a587c4781ef24d326bbd200bbee41ce8550843d43",
+          "sha256_test": "9ba20d1851deb97528db712a587c4781ef24d326bbd200bbee41ce8550843d43",
+          "within_absolute_tolerance": true
+        }
+      },
+      "decision": 2,
+      "numerical_pass": true,
+      "room_mode_and_pose_equal": true,
+      "strict_pass": true
+    }
+  ],
+  "run_id": "NR-G2R62R4A-02",
+  "strict_pass": false
+}

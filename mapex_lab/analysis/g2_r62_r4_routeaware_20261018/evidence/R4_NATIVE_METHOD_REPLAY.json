@@ -1,0 +1,28 @@
+{
+  "test": "R4_NATIVE_RECHECK_REPLAY_PASS",
+  "source_run": "NR-G2R62R3-02",
+  "source_decision": 10,
+  "start": {
+    "tick": 264,
+    "pose_core": [
+      10,
+      156
+    ],
+    "native_valid": false,
+    "fires": false
+  },
+  "after_native_movement": {
+    "tick": 266,
+    "pose_core": [
+      9,
+      161
+    ],
+    "native_valid": true,
+    "fires": true,
+    "event": "RECHECK_OFFICIAL_WFD"
+  },
+  "real_class_used": "room_native_integration.RoomRun.r4_recheck_due",
+  "native_python": "3.6 conda lama",
+  "uses_GT": false,
+  "uses_future_scan_in_initial_decision": false
+}
