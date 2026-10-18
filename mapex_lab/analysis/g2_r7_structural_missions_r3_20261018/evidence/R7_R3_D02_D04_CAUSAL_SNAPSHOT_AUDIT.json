@@ -1,0 +1,2088 @@
+{
+  "version": "G2_R7_R3_STRUCTURAL_OBLIGATIONS",
+  "initial_D02_is_real_frozen_input": true,
+  "D03_D04_are_original_RN04_history_not_R7": true,
+  "no_hindsight_gt_in_planner": true,
+  "code_selects_viewpoints_without_manual_coordinates": true,
+  "stages": [
+    {
+      "snapshot": "D02",
+      "scope": "FROZEN_NATIVE_REACHABLE_D02",
+      "not_a_closed_loop_R7_run": true,
+      "no_gt_or_future_inputs_to_planner": true,
+      "plan": {
+        "version": "G2_R7_R3_STRUCTURAL_OBLIGATIONS",
+        "status": "ADVISORY_ONLY_NOT_NATIVE_ROBOT_COMMAND",
+        "phase": "INITIAL",
+        "robot_rc": [
+          147,
+          111
+        ],
+        "zones": 2,
+        "zone_bounds": {
+          "1": [
+            144,
+            200,
+            92,
+            132
+          ],
+          "2": [
+            144,
+            200,
+            132,
+            210
+          ]
+        },
+        "portal": [
+          [
+            169,
+            132
+          ]
+        ],
+        "objects": [
+          {
+            "id": 1,
+            "center": [
+              169.0,
+              113.0
+            ],
+            "zone": 1,
+            "height_cells": 1,
+            "width_cells": 11,
+            "area": 11
+          }
+        ],
+        "goals": [
+          [
+            169,
+            132
+          ],
+          [
+            196,
+            96
+          ]
+        ],
+        "tasks": [
+          {
+            "id": "PORTAL_SURVEY",
+            "purpose": "SURVEY_PREDICTED_CHAMBER",
+            "target": [
+              169,
+              132
+            ],
+            "zone": 2,
+            "reason": "Chamber boundary/doorway gives a first survey line of sight",
+            "goal_rc": [
+              169,
+              132
+            ],
+            "predicted_path_m": 4.3,
+            "goal_observed_free": true,
+            "native_known_free_path_exists": true,
+            "native_known_free_path_m": 4.3,
+            "native_inflated_astar_required": true,
+            "movement_authorized": false,
+            "virtual_predicted_path_rc": [
+              [
+                147,
+                111
+              ],
+              [
+                148,
+                111
+              ],
+              [
+                149,
+                111
+              ],
+              [
+                150,
+                111
+              ],
+              [
+                151,
+                111
+              ],
+              [
+                152,
+                111
+              ],
+              [
+                153,
+                111
+              ],
+              [
+                154,
+                111
+              ],
+              [
+                155,
+                111
+              ],
+              [
+                156,
+                111
+              ],
+              [
+                157,
+                111
+              ],
+              [
+                158,
+                111
+              ],
+              [
+                159,
+                111
+              ],
+              [
+                160,
+                111
+              ],
+              [
+                161,
+                111
+              ],
+              [
+                162,
+                111
+              ],
+              [
+                163,
+                111
+              ],
+              [
+                164,
+                111
+              ],
+              [
+                165,
+                111
+              ],
+              [
+                166,
+                111
+              ],
+              [
+                167,
+                111
+              ],
+              [
+                168,
+                111
+              ],
+              [
+                168,
+                112
+              ],
+              [
+                168,
+                113
+              ],
+              [
+                168,
+                114
+              ],
+              [
+                168,
+                115
+              ],
+              [
+                168,
+                116
+              ],
+              [
+                168,
+                117
+              ],
+              [
+                168,
+                118
+              ],
+              [
+                168,
+                119
+              ],
+              [
+                169,
+                119
+              ],
+              [
+                169,
+                120
+              ],
+              [
+                169,
+                121
+              ],
+              [
+                169,
+                122
+              ],
+              [
+                169,
+                123
+              ],
+              [
+                169,
+                124
+              ],
+              [
+                169,
+                125
+              ],
+              [
+                169,
+                126
+              ],
+              [
+                169,
+                127
+              ],
+              [
+                169,
+                128
+              ],
+              [
+                169,
+                129
+              ],
+              [
+                169,
+                130
+              ],
+              [
+                169,
+                131
+              ],
+              [
+                169,
+                132
+              ]
+            ]
+          },
+          {
+            "id": "ENTRY_REAR",
+            "purpose": "VIEW_ENTRY_OBJECT_REAR",
+            "target": [
+              196,
+              96
+            ],
+            "zone": 1,
+            "corner": "bottom_left",
+            "object_ids": [
+              1
+            ],
+            "reason": "Beyond occluder relative to incoming LiDAR side",
+            "goal_rc": [
+              196,
+              96
+            ],
+            "predicted_path_m": 6.3,
+            "goal_observed_free": true,
+            "native_known_free_path_exists": true,
+            "native_known_free_path_m": 6.7,
+            "native_inflated_astar_required": true,
+            "movement_authorized": false,
+            "virtual_predicted_path_rc": [
+              [
+                169,
+                132
+              ],
+              [
+                170,
+                132
+              ],
+              [
+                171,
+                132
+              ],
+              [
+                172,
+                132
+              ],
+              [
+                173,
+                132
+              ],
+              [
+                174,
+                132
+              ],
+              [
+                175,
+                132
+              ],
+              [
+                175,
+                131
+              ],
+              [
+                175,
+                130
+              ],
+              [
+                176,
+                130
+              ],
+              [
+                177,
+                130
+              ],
+              [
+                178,
+                130
+              ],
+              [
+                179,
+                130
+              ],
+              [
+                180,
+                130
+              ],
+              [
+                181,
+                130
+              ],
+              [
+                182,
+                130
+              ],
+              [
+                183,
+                130
+              ],
+              [
+                184,
+                130
+              ],
+              [
+                185,
+                130
+              ],
+              [
+                186,
+                130
+              ],
+              [
+                187,
+                130
+              ],
+              [
+                188,
+                130
+              ],
+              [
+                189,
+                130
+              ],
+              [
+                190,
+                130
+              ],
+              [
+                191,
+                130
+              ],
+              [
+                192,
+                130
+              ],
+              [
+                193,
+                130
+              ],
+              [
+                194,
+                130
+              ],
+              [
+                195,
+                130
+              ],
+              [
+                196,
+                130
+              ],
+              [
+                196,
+                129
+              ],
+              [
+                196,
+                128
+              ],
+              [
+                196,
+                127
+              ],
+              [
+                196,
+                126
+              ],
+              [
+                196,
+                125
+              ],
+              [
+                196,
+                124
+              ],
+              [
+                196,
+                123
+              ],
+              [
+                196,
+                122
+              ],
+              [
+                196,
+                121
+              ],
+              [
+                196,
+                120
+              ],
+              [
+                196,
+                119
+              ],
+              [
+                196,
+                118
+              ],
+              [
+                196,
+                117
+              ],
+              [
+                196,
+                116
+              ],
+              [
+                196,
+                115
+              ],
+              [
+                196,
+                114
+              ],
+              [
+                196,
+                113
+              ],
+              [
+                196,
+                112
+              ],
+              [
+                196,
+                111
+              ],
+              [
+                196,
+                110
+              ],
+              [
+                196,
+                109
+              ],
+              [
+                196,
+                108
+              ],
+              [
+                196,
+                107
+              ],
+              [
+                196,
+                106
+              ],
+              [
+                196,
+                105
+              ],
+              [
+                196,
+                104
+              ],
+              [
+                196,
+                103
+              ],
+              [
+                196,
+                102
+              ],
+              [
+                196,
+                101
+              ],
+              [
+                196,
+                100
+              ],
+              [
+                196,
+                99
+              ],
+              [
+                196,
+                98
+              ],
+              [
+                196,
+                97
+              ],
+              [
+                196,
+                96
+              ]
+            ]
+          }
+        ],
+        "D02_coordinates_hardcoded": false,
+        "uses_gt": false,
+        "uses_future_lidar": false,
+        "native_control_unmodified": true,
+        "planning_s": 0.1461,
+        "input_obs_sha256": "de96490d2c94ca0b10ff7f359b2b8fe3b4bc9a8d5656194b9ceec8c13c539b23",
+        "input_mean_sha256": "13bcb244d448f09fc7a76b7eaaefd6a61add1447de1e77256cc37bbd944deb04"
+      }
+    },
+    {
+      "snapshot": "D03",
+      "scope": "HISTORICAL_RN04_OBSERVED_FREE_PROXY_ONLY",
+      "not_a_closed_loop_R7_run": true,
+      "no_gt_or_future_inputs_to_planner": true,
+      "plan": {
+        "version": "G2_R7_R3_STRUCTURAL_OBLIGATIONS",
+        "status": "ADVISORY_ONLY_NOT_NATIVE_ROBOT_COMMAND",
+        "phase": "SUCCESSOR",
+        "robot_rc": [
+          176,
+          124
+        ],
+        "zones": 2,
+        "zone_bounds": {
+          "1": [
+            144,
+            200,
+            92,
+            131
+          ],
+          "2": [
+            144,
+            200,
+            132,
+            210
+          ]
+        },
+        "portal": [
+          [
+            169,
+            131
+          ]
+        ],
+        "objects": [
+          {
+            "id": 1,
+            "center": [
+              171.61904761904762,
+              115.38095238095238
+            ],
+            "zone": 1,
+            "height_cells": 11,
+            "width_cells": 11,
+            "area": 21
+          },
+          {
+            "id": 2,
+            "center": [
+              168.56756756756758,
+              160.56756756756758
+            ],
+            "zone": 2,
+            "height_cells": 7,
+            "width_cells": 31,
+            "area": 37
+          },
+          {
+            "id": 3,
+            "center": [
+              171.0,
+              165.0
+            ],
+            "zone": 2,
+            "height_cells": 1,
+            "width_cells": 7,
+            "area": 7
+          },
+          {
+            "id": 4,
+            "center": [
+              171.0,
+              173.0
+            ],
+            "zone": 2,
+            "height_cells": 1,
+            "width_cells": 3,
+            "area": 3
+          },
+          {
+            "id": 6,
+            "center": [
+              186.0,
+              193.0
+            ],
+            "zone": 2,
+            "height_cells": 9,
+            "width_cells": 1,
+            "area": 9
+          },
+          {
+            "id": 7,
+            "center": [
+              188.0,
+              196.0
+            ],
+            "zone": 2,
+            "height_cells": 3,
+            "width_cells": 1,
+            "area": 3
+          }
+        ],
+        "goals": [
+          [
+            196,
+            206
+          ],
+          [
+            148,
+            206
+          ]
+        ],
+        "tasks": [
+          {
+            "id": "ZONE_2_bottom_right_REAR",
+            "purpose": "VIEW_NEW_OCCLUDER_OPPOSING_FLANK",
+            "target": [
+              196,
+              206
+            ],
+            "zone": 2,
+            "corner": "bottom_right",
+            "unknown_in_corner_half": 366,
+            "object_ids": [
+              2,
+              3,
+              4,
+              6,
+              7
+            ],
+            "reason": "View hidden surfaces from opposite deep chamber corners",
+            "goal_rc": [
+              196,
+              206
+            ],
+            "predicted_path_m": 10.4,
+            "goal_observed_free": true,
+            "native_known_free_path_exists": true,
+            "native_known_free_path_m": 10.4,
+            "native_inflated_astar_required": true,
+            "movement_authorized": false,
+            "virtual_predicted_path_rc": [
+              [
+                176,
+                124
+              ],
+              [
+                175,
+                124
+              ],
+              [
+                175,
+                125
+              ],
+              [
+                175,
+                126
+              ],
+              [
+                175,
+                127
+              ],
+              [
+                175,
+                128
+              ],
+              [
+                175,
+                129
+              ],
+              [
+                175,
+                130
+              ],
+              [
+                175,
+                131
+              ],
+              [
+                175,
+                132
+              ],
+              [
+                176,
+                132
+              ],
+              [
+                177,
+                132
+              ],
+              [
+                178,
+                132
+              ],
+              [
+                179,
+                132
+              ],
+              [
+                179,
+                133
+              ],
+              [
+                180,
+                133
+              ],
+              [
+                181,
+                133
+              ],
+              [
+                182,
+                133
+              ],
+              [
+                183,
+                133
+              ],
+              [
+                183,
+                134
+              ],
+              [
+                184,
+                134
+              ],
+              [
+                185,
+                134
+              ],
+              [
+                186,
+                134
+              ],
+              [
+                187,
+                134
+              ],
+              [
+                188,
+                134
+              ],
+              [
+                189,
+                134
+              ],
+              [
+                190,
+                134
+              ],
+              [
+                191,
+                134
+              ],
+              [
+                192,
+                134
+              ],
+              [
+                193,
+                134
+              ],
+              [
+                194,
+                134
+              ],
+              [
+                195,
+                134
+              ],
+              [
+                196,
+                134
+              ],
+              [
+                196,
+                135
+              ],
+              [
+                196,
+                136
+              ],
+              [
+                196,
+                137
+              ],
+              [
+                196,
+                138
+              ],
+              [
+                196,
+                139
+              ],
+              [
+                196,
+                140
+              ],
+              [
+                196,
+                141
+              ],
+              [
+                196,
+                142
+              ],
+              [
+                196,
+                143
+              ],
+              [
+                196,
+                144
+              ],
+              [
+                196,
+                145
+              ],
+              [
+                196,
+                146
+              ],
+              [
+                196,
+                147
+              ],
+              [
+                196,
+                148
+              ],
+              [
+                196,
+                149
+              ],
+              [
+                196,
+                150
+              ],
+              [
+                196,
+                151
+              ],
+              [
+                196,
+                152
+              ],
+              [
+                196,
+                153
+              ],
+              [
+                196,
+                154
+              ],
+              [
+                196,
+                155
+              ],
+              [
+                196,
+                156
+              ],
+              [
+                196,
+                157
+              ],
+              [
+                196,
+                158
+              ],
+              [
+                196,
+                159
+              ],
+              [
+                196,
+                160
+              ],
+              [
+                196,
+                161
+              ],
+              [
+                196,
+                162
+              ],
+              [
+                196,
+                163
+              ],
+              [
+                196,
+                164
+              ],
+              [
+                196,
+                165
+              ],
+              [
+                196,
+                166
+              ],
+              [
+                196,
+                167
+              ],
+              [
+                196,
+                168
+              ],
+              [
+                196,
+                169
+              ],
+              [
+                196,
+                170
+              ],
+              [
+                196,
+                171
+              ],
+              [
+                196,
+                172
+              ],
+              [
+                196,
+                173
+              ],
+              [
+                196,
+                174
+              ],
+              [
+                196,
+                175
+              ],
+              [
+                196,
+                176
+              ],
+              [
+                196,
+                177
+              ],
+              [
+                196,
+                178
+              ],
+              [
+                196,
+                179
+              ],
+              [
+                196,
+                180
+              ],
+              [
+                196,
+                181
+              ],
+              [
+                196,
+                182
+              ],
+              [
+                196,
+                183
+              ],
+              [
+                196,
+                184
+              ],
+              [
+                196,
+                185
+              ],
+              [
+                196,
+                186
+              ],
+              [
+                196,
+                187
+              ],
+              [
+                196,
+                188
+              ],
+              [
+                196,
+                189
+              ],
+              [
+                196,
+                190
+              ],
+              [
+                196,
+                191
+              ],
+              [
+                196,
+                192
+              ],
+              [
+                196,
+                193
+              ],
+              [
+                196,
+                194
+              ],
+              [
+                196,
+                195
+              ],
+              [
+                196,
+                196
+              ],
+              [
+                196,
+                197
+              ],
+              [
+                196,
+                198
+              ],
+              [
+                196,
+                199
+              ],
+              [
+                196,
+                200
+              ],
+              [
+                196,
+                201
+              ],
+              [
+                196,
+                202
+              ],
+              [
+                196,
+                203
+              ],
+              [
+                196,
+                204
+              ],
+              [
+                196,
+                205
+              ],
+              [
+                196,
+                206
+              ]
+            ]
+          },
+          {
+            "id": "ZONE_2_top_right_REAR",
+            "purpose": "VIEW_NEW_OCCLUDER_OPPOSING_FLANK",
+            "target": [
+              148,
+              206
+            ],
+            "zone": 2,
+            "corner": "top_right",
+            "unknown_in_corner_half": 126,
+            "object_ids": [
+              2,
+              3,
+              4,
+              6,
+              7
+            ],
+            "reason": "View hidden surfaces from opposite deep chamber corners",
+            "goal_rc": [
+              148,
+              206
+            ],
+            "predicted_path_m": 5.6,
+            "goal_observed_free": true,
+            "native_known_free_path_exists": true,
+            "native_known_free_path_m": 16.6,
+            "native_inflated_astar_required": true,
+            "movement_authorized": false,
+            "virtual_predicted_path_rc": [
+              [
+                196,
+                206
+              ],
+              [
+                195,
+                206
+              ],
+              [
+                194,
+                206
+              ],
+              [
+                193,
+                206
+              ],
+              [
+                192,
+                206
+              ],
+              [
+                191,
+                206
+              ],
+              [
+                190,
+                206
+              ],
+              [
+                189,
+                206
+              ],
+              [
+                189,
+                207
+              ],
+              [
+                189,
+                208
+              ],
+              [
+                188,
+                208
+              ],
+              [
+                188,
+                209
+              ],
+              [
+                187,
+                209
+              ],
+              [
+                186,
+                209
+              ],
+              [
+                185,
+                209
+              ],
+              [
+                184,
+                209
+              ],
+              [
+                183,
+                209
+              ],
+              [
+                182,
+                209
+              ],
+              [
+                181,
+                209
+              ],
+              [
+                180,
+                209
+              ],
+              [
+                179,
+                209
+              ],
+              [
+                178,
+                209
+              ],
+              [
+                177,
+                209
+              ],
+              [
+                176,
+                209
+              ],
+              [
+                175,
+                209
+              ],
+              [
+                174,
+                209
+              ],
+              [
+                174,
+                210
+              ],
+              [
+                173,
+                210
+              ],
+              [
+                172,
+                210
+              ],
+              [
+                171,
+                210
+              ],
+              [
+                170,
+                210
+              ],
+              [
+                169,
+                210
+              ],
+              [
+                168,
+                210
+              ],
+              [
+                167,
+                210
+              ],
+              [
+                166,
+                210
+              ],
+              [
+                165,
+                210
+              ],
+              [
+                164,
+                210
+              ],
+              [
+                163,
+                210
+              ],
+              [
+                162,
+                210
+              ],
+              [
+                161,
+                210
+              ],
+              [
+                160,
+                210
+              ],
+              [
+                159,
+                210
+              ],
+              [
+                158,
+                210
+              ],
+              [
+                157,
+                210
+              ],
+              [
+                156,
+                210
+              ],
+              [
+                155,
+                210
+              ],
+              [
+                154,
+                210
+              ],
+              [
+                153,
+                210
+              ],
+              [
+                152,
+                210
+              ],
+              [
+                151,
+                210
+              ],
+              [
+                150,
+                210
+              ],
+              [
+                149,
+                210
+              ],
+              [
+                148,
+                210
+              ],
+              [
+                148,
+                209
+              ],
+              [
+                148,
+                208
+              ],
+              [
+                148,
+                207
+              ],
+              [
+                148,
+                206
+              ]
+            ]
+          }
+        ],
+        "D02_coordinates_hardcoded": false,
+        "uses_gt": false,
+        "uses_future_lidar": false,
+        "native_control_unmodified": true,
+        "planning_s": 0.547,
+        "input_obs_sha256": "faf3bbb1540ce764e44bb982edb3936509e2cc0cfe8985f43398601aca4bcdb6",
+        "input_mean_sha256": "e23ffe5b81628cc37d26ffedb77c1822593b65b4c79b1ac002523236644fed17"
+      }
+    },
+    {
+      "snapshot": "D04",
+      "scope": "HISTORICAL_RN04_OBSERVED_FREE_PROXY_ONLY",
+      "not_a_closed_loop_R7_run": true,
+      "no_gt_or_future_inputs_to_planner": true,
+      "plan": {
+        "version": "G2_R7_R3_STRUCTURAL_OBLIGATIONS",
+        "status": "ADVISORY_ONLY_NOT_NATIVE_ROBOT_COMMAND",
+        "phase": "SUCCESSOR",
+        "robot_rc": [
+          183,
+          139
+        ],
+        "zones": 2,
+        "zone_bounds": {
+          "1": [
+            144,
+            200,
+            92,
+            131
+          ],
+          "2": [
+            144,
+            200,
+            132,
+            210
+          ]
+        },
+        "portal": [
+          [
+            169,
+            131
+          ]
+        ],
+        "objects": [
+          {
+            "id": 1,
+            "center": [
+              171.61904761904762,
+              115.38095238095238
+            ],
+            "zone": 1,
+            "height_cells": 11,
+            "width_cells": 11,
+            "area": 21
+          },
+          {
+            "id": 2,
+            "center": [
+              171.0,
+              163.0
+            ],
+            "zone": 2,
+            "height_cells": 7,
+            "width_cells": 31,
+            "area": 136
+          },
+          {
+            "id": 3,
+            "center": [
+              184.11764705882354,
+              195.11764705882354
+            ],
+            "zone": 2,
+            "height_cells": 9,
+            "width_cells": 9,
+            "area": 17
+          }
+        ],
+        "goals": [
+          [
+            196,
+            206
+          ],
+          [
+            148,
+            206
+          ]
+        ],
+        "tasks": [
+          {
+            "id": "ZONE_2_bottom_right_REAR",
+            "purpose": "VIEW_NEW_OCCLUDER_OPPOSING_FLANK",
+            "target": [
+              196,
+              206
+            ],
+            "zone": 2,
+            "corner": "bottom_right",
+            "unknown_in_corner_half": 87,
+            "object_ids": [
+              2,
+              3
+            ],
+            "reason": "View hidden surfaces from opposite deep chamber corners",
+            "goal_rc": [
+              196,
+              206
+            ],
+            "predicted_path_m": 8.0,
+            "goal_observed_free": true,
+            "native_known_free_path_exists": true,
+            "native_known_free_path_m": 8.0,
+            "native_inflated_astar_required": true,
+            "movement_authorized": false,
+            "virtual_predicted_path_rc": [
+              [
+                183,
+                139
+              ],
+              [
+                184,
+                139
+              ],
+              [
+                185,
+                139
+              ],
+              [
+                186,
+                139
+              ],
+              [
+                187,
+                139
+              ],
+              [
+                188,
+                139
+              ],
+              [
+                189,
+                139
+              ],
+              [
+                190,
+                139
+              ],
+              [
+                191,
+                139
+              ],
+              [
+                192,
+                139
+              ],
+              [
+                193,
+                139
+              ],
+              [
+                194,
+                139
+              ],
+              [
+                195,
+                139
+              ],
+              [
+                196,
+                139
+              ],
+              [
+                196,
+                140
+              ],
+              [
+                196,
+                141
+              ],
+              [
+                196,
+                142
+              ],
+              [
+                196,
+                143
+              ],
+              [
+                196,
+                144
+              ],
+              [
+                196,
+                145
+              ],
+              [
+                196,
+                146
+              ],
+              [
+                196,
+                147
+              ],
+              [
+                196,
+                148
+              ],
+              [
+                196,
+                149
+              ],
+              [
+                196,
+                150
+              ],
+              [
+                196,
+                151
+              ],
+              [
+                196,
+                152
+              ],
+              [
+                196,
+                153
+              ],
+              [
+                196,
+                154
+              ],
+              [
+                196,
+                155
+              ],
+              [
+                196,
+                156
+              ],
+              [
+                196,
+                157
+              ],
+              [
+                196,
+                158
+              ],
+              [
+                196,
+                159
+              ],
+              [
+                196,
+                160
+              ],
+              [
+                196,
+                161
+              ],
+              [
+                196,
+                162
+              ],
+              [
+                196,
+                163
+              ],
+              [
+                196,
+                164
+              ],
+              [
+                196,
+                165
+              ],
+              [
+                196,
+                166
+              ],
+              [
+                196,
+                167
+              ],
+              [
+                196,
+                168
+              ],
+              [
+                196,
+                169
+              ],
+              [
+                196,
+                170
+              ],
+              [
+                196,
+                171
+              ],
+              [
+                196,
+                172
+              ],
+              [
+                196,
+                173
+              ],
+              [
+                196,
+                174
+              ],
+              [
+                196,
+                175
+              ],
+              [
+                196,
+                176
+              ],
+              [
+                196,
+                177
+              ],
+              [
+                196,
+                178
+              ],
+              [
+                196,
+                179
+              ],
+              [
+                196,
+                180
+              ],
+              [
+                196,
+                181
+              ],
+              [
+                196,
+                182
+              ],
+              [
+                196,
+                183
+              ],
+              [
+                196,
+                184
+              ],
+              [
+                196,
+                185
+              ],
+              [
+                196,
+                186
+              ],
+              [
+                196,
+                187
+              ],
+              [
+                196,
+                188
+              ],
+              [
+                196,
+                189
+              ],
+              [
+                196,
+                190
+              ],
+              [
+                196,
+                191
+              ],
+              [
+                196,
+                192
+              ],
+              [
+                196,
+                193
+              ],
+              [
+                196,
+                194
+              ],
+              [
+                196,
+                195
+              ],
+              [
+                196,
+                196
+              ],
+              [
+                196,
+                197
+              ],
+              [
+                196,
+                198
+              ],
+              [
+                196,
+                199
+              ],
+              [
+                196,
+                200
+              ],
+              [
+                196,
+                201
+              ],
+              [
+                196,
+                202
+              ],
+              [
+                196,
+                203
+              ],
+              [
+                196,
+                204
+              ],
+              [
+                196,
+                205
+              ],
+              [
+                196,
+                206
+              ]
+            ]
+          },
+          {
+            "id": "ZONE_2_top_right_REAR",
+            "purpose": "VIEW_NEW_OCCLUDER_OPPOSING_FLANK",
+            "target": [
+              148,
+              206
+            ],
+            "zone": 2,
+            "corner": "top_right",
+            "unknown_in_corner_half": 38,
+            "object_ids": [
+              2,
+              3
+            ],
+            "reason": "View hidden surfaces from opposite deep chamber corners",
+            "goal_rc": [
+              148,
+              206
+            ],
+            "predicted_path_m": 5.6,
+            "goal_observed_free": true,
+            "native_known_free_path_exists": true,
+            "native_known_free_path_m": 7.6,
+            "native_inflated_astar_required": true,
+            "movement_authorized": false,
+            "virtual_predicted_path_rc": [
+              [
+                196,
+                206
+              ],
+              [
+                195,
+                206
+              ],
+              [
+                194,
+                206
+              ],
+              [
+                193,
+                206
+              ],
+              [
+                192,
+                206
+              ],
+              [
+                191,
+                206
+              ],
+              [
+                190,
+                206
+              ],
+              [
+                190,
+                207
+              ],
+              [
+                190,
+                208
+              ],
+              [
+                190,
+                209
+              ],
+              [
+                189,
+                209
+              ],
+              [
+                188,
+                209
+              ],
+              [
+                187,
+                209
+              ],
+              [
+                186,
+                209
+              ],
+              [
+                186,
+                210
+              ],
+              [
+                185,
+                210
+              ],
+              [
+                184,
+                210
+              ],
+              [
+                183,
+                210
+              ],
+              [
+                182,
+                210
+              ],
+              [
+                181,
+                210
+              ],
+              [
+                180,
+                210
+              ],
+              [
+                179,
+                210
+              ],
+              [
+                178,
+                210
+              ],
+              [
+                177,
+                210
+              ],
+              [
+                176,
+                210
+              ],
+              [
+                175,
+                210
+              ],
+              [
+                174,
+                210
+              ],
+              [
+                173,
+                210
+              ],
+              [
+                172,
+                210
+              ],
+              [
+                171,
+                210
+              ],
+              [
+                170,
+                210
+              ],
+              [
+                169,
+                210
+              ],
+              [
+                168,
+                210
+              ],
+              [
+                167,
+                210
+              ],
+              [
+                166,
+                210
+              ],
+              [
+                165,
+                210
+              ],
+              [
+                164,
+                210
+              ],
+              [
+                163,
+                210
+              ],
+              [
+                162,
+                210
+              ],
+              [
+                161,
+                210
+              ],
+              [
+                160,
+                210
+              ],
+              [
+                159,
+                210
+              ],
+              [
+                158,
+                210
+              ],
+              [
+                157,
+                210
+              ],
+              [
+                156,
+                210
+              ],
+              [
+                155,
+                210
+              ],
+              [
+                154,
+                210
+              ],
+              [
+                153,
+                210
+              ],
+              [
+                152,
+                210
+              ],
+              [
+                151,
+                210
+              ],
+              [
+                150,
+                210
+              ],
+              [
+                149,
+                210
+              ],
+              [
+                148,
+                210
+              ],
+              [
+                148,
+                209
+              ],
+              [
+                148,
+                208
+              ],
+              [
+                148,
+                207
+              ],
+              [
+                148,
+                206
+              ]
+            ]
+          }
+        ],
+        "D02_coordinates_hardcoded": false,
+        "uses_gt": false,
+        "uses_future_lidar": false,
+        "native_control_unmodified": true,
+        "planning_s": 0.5464,
+        "input_obs_sha256": "8f8cf97210c338445f68a734c32c3aedbf81fa5a25e4a992fab892af204855fe",
+        "input_mean_sha256": "007054b172ee0d683c353d8a92b3deb578868a8f680405a0d49f005eff0a383d"
+      }
+    }
+  ]
+}
