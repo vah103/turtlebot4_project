@@ -1,0 +1,201 @@
+{
+  "run_id": "NR-G2R7-05",
+  "is_real_native_run": true,
+  "no_future_gt_in_planner": true,
+  "arrivals": {
+    "27": [
+      169,
+      132
+    ],
+    "754": [
+      196,
+      216
+    ],
+    "923": [
+      55,
+      126
+    ],
+    "903": [
+      30,
+      91
+    ],
+    "570": [
+      196,
+      6
+    ],
+    "55": [
+      196,
+      96
+    ],
+    "110": [
+      196,
+      206
+    ],
+    "130": [
+      148,
+      206
+    ],
+    "549": [
+      148,
+      18
+    ]
+  },
+  "snapshots": [
+    {
+      "tick": 12,
+      "distance_m": 3.6708203932499366,
+      "observed_known_cells": 12964,
+      "image_room": "NR_G2R7_03_REAL_T0012_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0012_FULL.png",
+      "current_scope": {
+        "decision": 2,
+        "mode": "LOCAL",
+        "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+        "room_id": 1
+      }
+    },
+    {
+      "tick": 27,
+      "distance_m": 7.283281572999748,
+      "observed_known_cells": 16545,
+      "image_room": "NR_G2R7_03_REAL_T0027_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0027_FULL.png",
+      "current_scope": {
+        "decision": 3,
+        "mode": "LOCAL",
+        "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+        "room_id": 1
+      }
+    },
+    {
+      "tick": 55,
+      "distance_m": 14.989950513486919,
+      "observed_known_cells": 16929,
+      "image_room": "NR_G2R7_03_REAL_T0055_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0055_FULL.png",
+      "current_scope": {
+        "decision": 4,
+        "mode": "LOCAL",
+        "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+        "room_id": 1
+      }
+    },
+    {
+      "tick": 85,
+      "distance_m": 23.22601849098673,
+      "observed_known_cells": 17508,
+      "image_room": "NR_G2R7_03_REAL_T0085_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0085_FULL.png",
+      "current_scope": {
+        "decision": 4,
+        "mode": "LOCAL",
+        "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+        "room_id": 1
+      }
+    },
+    {
+      "tick": 110,
+      "distance_m": 29.785693266236517,
+      "observed_known_cells": 19527,
+      "image_room": "NR_G2R7_03_REAL_T0110_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0110_FULL.png",
+      "current_scope": {
+        "decision": 4,
+        "mode": "LOCAL",
+        "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+        "room_id": 1
+      }
+    },
+    {
+      "tick": 130,
+      "distance_m": 35.12733405273639,
+      "observed_known_cells": 20287,
+      "image_room": "NR_G2R7_03_REAL_T0130_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0130_FULL.png",
+      "current_scope": {
+        "decision": 5,
+        "mode": "GLOBAL",
+        "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+        "room_id": 1
+      }
+    },
+    {
+      "tick": 145,
+      "distance_m": 39.01618843473621,
+      "observed_known_cells": 22235,
+      "image_room": "NR_G2R7_03_REAL_T0145_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0145_FULL.png",
+      "current_scope": {
+        "decision": 5,
+        "mode": "GLOBAL",
+        "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+        "room_id": 1
+      }
+    },
+    {
+      "tick": 200,
+      "distance_m": 54.8286496144859,
+      "observed_known_cells": 31626,
+      "image_room": "NR_G2R7_03_REAL_T0200_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0200_FULL.png",
+      "current_scope": {
+        "decision": 7,
+        "mode": "LOCAL",
+        "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+        "room_id": 2
+      }
+    },
+    {
+      "tick": 350,
+      "distance_m": 97.76603315373501,
+      "observed_known_cells": 35756,
+      "image_room": "NR_G2R7_03_REAL_T0350_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0350_FULL.png",
+      "current_scope": {
+        "decision": 12,
+        "mode": "GLOBAL",
+        "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+        "room_id": 2
+      }
+    },
+    {
+      "tick": 500,
+      "distance_m": 140.01587787273414,
+      "observed_known_cells": 44960,
+      "image_room": "NR_G2R7_03_REAL_T0500_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0500_FULL.png",
+      "current_scope": {
+        "decision": 17,
+        "mode": "GLOBAL",
+        "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+        "room_id": 3
+      }
+    },
+    {
+      "tick": 650,
+      "distance_m": 182.23632355472162,
+      "observed_known_cells": 48959,
+      "image_room": "NR_G2R7_03_REAL_T0650_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0650_FULL.png",
+      "current_scope": {
+        "decision": 21,
+        "mode": "GLOBAL",
+        "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+        "room_id": 4
+      }
+    },
+    {
+      "tick": 1020,
+      "distance_m": 288.07076540847385,
+      "observed_known_cells": 51308,
+      "image_room": "NR_G2R7_03_REAL_T1020_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T1020_FULL.png",
+      "current_scope": {
+        "decision": 27,
+        "mode": "GLOBAL",
+        "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+        "room_id": 6
+      }
+    }
+  ]
+}
