@@ -1,0 +1,185 @@
+{
+  "G1_RN04": {
+    "id": "NR-RN-04",
+    "steps": 709,
+    "distance": 199.1076,
+    "local": 104.4787,
+    "global": 94.6289,
+    "observed_cells": 51304,
+    "observed_percent": 96.0947,
+    "decisions": 25,
+    "last_mode": "LOCAL",
+    "D02_same_ROI_remaining_le270_tick": 102,
+    "D02_m_from_tick12": 24.861,
+    "D02_remaining_unknown": 269
+  },
+  "R62_R2": {
+    "id": "NR-G2R62-03",
+    "steps": 846,
+    "distance": 236.9033,
+    "local": 104.2495,
+    "global": 132.6538,
+    "observed_cells": 51308,
+    "observed_percent": 96.1022,
+    "decisions": 19,
+    "last_mode": "LOCAL",
+    "D02_same_ROI_remaining_le270_tick": 98,
+    "D02_m_from_tick12": 22.832,
+    "D02_remaining_unknown": 268
+  },
+  "R62_R3": {
+    "id": "NR-G2R62R3-02",
+    "steps": 992,
+    "distance": 279.2113,
+    "local": 120.3395,
+    "global": 158.8718,
+    "observed_cells": 51308,
+    "observed_percent": 96.1022,
+    "decisions": 20,
+    "last_mode": "LOCAL",
+    "D02_same_ROI_remaining_le270_tick": 103,
+    "D02_m_from_tick12": 24.961,
+    "D02_remaining_unknown": 267
+  },
+  "R3_r3_goal_choices": [
+    {
+      "tick": 12,
+      "decision": "decision_000002",
+      "source": "R62_ORIGINAL",
+      "goal": [
+        189,
+        120
+      ]
+    },
+    {
+      "tick": 23,
+      "decision": "decision_000003",
+      "source": "FRONTIER_RESIDUAL",
+      "goal": [
+        180,
+        133
+      ]
+    },
+    {
+      "tick": 29,
+      "decision": "decision_000004",
+      "source": "R62_ORIGINAL",
+      "goal": [
+        180,
+        179
+      ]
+    },
+    {
+      "tick": 61,
+      "decision": "decision_000005",
+      "source": "FRONTIER_RESIDUAL",
+      "goal": [
+        186,
+        203
+      ]
+    },
+    {
+      "tick": 64,
+      "decision": "decision_000006",
+      "source": "R62_ORIGINAL",
+      "goal": [
+        179,
+        116
+      ]
+    },
+    {
+      "tick": 198,
+      "decision": "decision_000009",
+      "source": "R62_ORIGINAL",
+      "goal": [
+        17,
+        246
+      ]
+    },
+    {
+      "tick": 358,
+      "decision": "decision_000011",
+      "source": "R62_ORIGINAL",
+      "goal": [
+        179,
+        36
+      ]
+    },
+    {
+      "tick": 405,
+      "decision": "decision_000012",
+      "source": "R62_ORIGINAL",
+      "goal": [
+        141,
+        37
+      ]
+    },
+    {
+      "tick": 476,
+      "decision": "decision_000014",
+      "source": "R62_ORIGINAL",
+      "goal": [
+        18,
+        19
+      ]
+    },
+    {
+      "tick": 579,
+      "decision": "decision_000016",
+      "source": "R62_ORIGINAL",
+      "goal": [
+        18,
+        126
+      ]
+    },
+    {
+      "tick": 772,
+      "decision": "decision_000018",
+      "source": "R62_ORIGINAL",
+      "goal": [
+        181,
+        241
+      ]
+    },
+    {
+      "tick": 919,
+      "decision": "decision_000020",
+      "source": "R62_ORIGINAL",
+      "goal": [
+        34,
+        143
+      ]
+    }
+  ],
+  "R3_frontier_residual_count": 2,
+  "R3_progress_recheck_events": 2,
+  "receipt": {
+    "com1_decision_parity": "NOT_TESTED",
+    "cpu_threads": 2,
+    "duration_s": 388.615,
+    "final_swap_used_MiB": 1243.2,
+    "finished_at": "2026-10-18T21:52:41.582895",
+    "host": "DELL",
+    "log": "/home/dell/DELL_NATIVE2D/runs/NR-G2R62R3-02/worker.stdout.log",
+    "min_available_MiB": 2142.4,
+    "mission_status": {
+      "cur_step": 992,
+      "fail_reason": "MAPEX_NO_SELECTABLE_FRONTIER_NOT_GT",
+      "last_exp_time_s": 369.70673084259033,
+      "mission_complete": true,
+      "start_time": 1792334788.7317097
+    },
+    "mode": "full",
+    "original_reference_worker": "/home/dell/DELL_NATIVE2D/build/g2_r62_r3_frontier_20261018/native_g2_r62_worker_template.py",
+    "original_reference_worker_sha256": "664912a7a7124c9c333ed4c2dc649e2ac080c0bd498a57b1c52282604ac4cdfe",
+    "outcome": "SOURCE_TERMINAL",
+    "peak_pss_MiB": 2242.8,
+    "profile": "NR-G2R62R3",
+    "returncode": 0,
+    "root": "/home/dell/DELL_NATIVE2D/runs/NR-G2R62R3-02",
+    "run_id": "NR-G2R62R3-02",
+    "started_at": "2026-10-18T21:46:12.966017",
+    "started_by_user_action": true
+  },
+  "parity": "D01_D02_NUMERIC_PARITY_PASS"
+}

@@ -1,0 +1,135 @@
+{
+  "D02_t12": {
+    "goal": [
+      189,
+      120
+    ],
+    "source": "R62_ORIGINAL",
+    "first_route_m": 5.1,
+    "frontier_covered": 53,
+    "frontier_total": 120,
+    "witness_rc": [],
+    "base_projected_nominal": 1512,
+    "selected_projected_nominal": 1512,
+    "frontier_candidate_evaluations": 121
+  },
+  "D08_t184": {
+    "goal": [
+      17,
+      259
+    ],
+    "source": "R62_ORIGINAL",
+    "first_route_m": 6.6,
+    "frontier_covered": 47,
+    "frontier_total": 87,
+    "witness_rc": [],
+    "base_projected_nominal": 152,
+    "selected_projected_nominal": 152,
+    "frontier_candidate_evaluations": 90
+  },
+  "D09_t282": {
+    "goal": [
+      29,
+      237
+    ],
+    "source": "FRONTIER_RESIDUAL",
+    "first_route_m": 11.8,
+    "frontier_covered": 2,
+    "frontier_total": 2,
+    "witness_rc": [
+      [
+        29,
+        236
+      ],
+      [
+        30,
+        236
+      ]
+    ],
+    "base_projected_nominal": 8,
+    "selected_projected_nominal": 10,
+    "frontier_candidate_evaluations": 2
+  },
+  "D11_t463": {
+    "goal": [
+      133,
+      14
+    ],
+    "source": "R62_ORIGINAL",
+    "first_route_m": 7.1,
+    "frontier_covered": 47,
+    "frontier_total": 109,
+    "witness_rc": [],
+    "base_projected_nominal": 968,
+    "selected_projected_nominal": 968,
+    "frontier_candidate_evaluations": 109
+  },
+  "D14_t626": {
+    "goal": [
+      44,
+      9
+    ],
+    "source": "FRONTIER_RESIDUAL",
+    "first_route_m": 4.4,
+    "frontier_covered": 3,
+    "frontier_total": 5,
+    "witness_rc": [
+      [
+        44,
+        10
+      ],
+      [
+        45,
+        10
+      ],
+      [
+        46,
+        9
+      ]
+    ],
+    "base_projected_nominal": 4,
+    "selected_projected_nominal": 8,
+    "frontier_candidate_evaluations": 5
+  },
+  "D14_midroute_witness_resolved_tick": 650,
+  "D14_update_result": {
+    "r3_progress": {
+      "action": "CHECK_G1_FRONTIER_NOW",
+      "witness_count": 3,
+      "unresolved_witness_count": 0
+    },
+    "r3_requires_official_G1_gate": true
+  },
+  "tests_passed": 29,
+  "passed": [
+    "D2 nav observed-FREE",
+    "D2 path core valid",
+    "D2 path ends goal",
+    "D8 nav observed-FREE",
+    "D8 path core valid",
+    "D8 path ends goal",
+    "D9 nav observed-FREE",
+    "D9 path core valid",
+    "D9 path ends goal",
+    "D11 nav observed-FREE",
+    "D11 path core valid",
+    "D11 path ends goal",
+    "D14 nav observed-FREE",
+    "D14 path core valid",
+    "D14 path ends goal",
+    "D02 unchanged",
+    "D08 unchanged",
+    "D11 unchanged",
+    "D09 targets frontier",
+    "D14 targets frontier",
+    "D14 shorter estimated path",
+    "service R3 policy",
+    "service R3 choice",
+    "service manager goal consistent",
+    "service goal includes real witnesses",
+    "witness present initially",
+    "witness progress mid-route",
+    "service requires G1 on witnesses observed",
+    "service no direct GLOBAL"
+  ]
+}

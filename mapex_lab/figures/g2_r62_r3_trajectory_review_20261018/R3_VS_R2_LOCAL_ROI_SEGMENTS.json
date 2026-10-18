@@ -1,0 +1,257 @@
+{
+  "Room1": {
+    "R2": {
+      "begin_tick": 12,
+      "end_tick": 100,
+      "begin_total_m": 3.3708203932499368,
+      "end_total_m": 26.802631123499324,
+      "local_segment_m": 23.432,
+      "start_unk": 3736,
+      "end_unk": 266,
+      "area_cells": 6564,
+      "gain_cells": 3470
+    },
+    "R3": {
+      "begin_tick": 12,
+      "end_tick": 103,
+      "begin_total_m": 3.3708203932499368,
+      "end_total_m": 28.33181073024939,
+      "local_segment_m": 24.961,
+      "start_unk": 3736,
+      "end_unk": 267,
+      "area_cells": 6564,
+      "gain_cells": 3469
+    }
+  },
+  "Room2-first": {
+    "R2": {
+      "begin_tick": 184,
+      "end_tick": 331,
+      "begin_total_m": 50.85673308974887,
+      "end_total_m": 91.37182539299774,
+      "local_segment_m": 40.515,
+      "start_unk": 3035,
+      "end_unk": 36,
+      "area_cells": 8088,
+      "gain_cells": 2999
+    },
+    "R3": {
+      "begin_tick": 198,
+      "end_tick": 264,
+      "begin_total_m": 55.76230589874891,
+      "end_total_m": 74.21640786499847,
+      "local_segment_m": 18.454,
+      "start_unk": 2245,
+      "end_unk": 628,
+      "area_cells": 8088,
+      "gain_cells": 1617
+    }
+  },
+  "Room3": {
+    "R2": {
+      "begin_tick": 463,
+      "end_tick": 519,
+      "begin_total_m": 129.52035455024702,
+      "end_total_m": 145.10363612324707,
+      "local_segment_m": 15.583,
+      "start_unk": 1756,
+      "end_unk": 48,
+      "area_cells": 6045,
+      "gain_cells": 1708
+    },
+    "R3": {
+      "begin_tick": 358,
+      "end_tick": 420,
+      "begin_total_m": 101.72886904474805,
+      "end_total_m": 118.47739820199754,
+      "local_segment_m": 16.749,
+      "start_unk": 1680,
+      "end_unk": 48,
+      "area_cells": 6045,
+      "gain_cells": 1632
+    }
+  },
+  "Room4": {
+    "R2": {
+      "begin_tick": 589,
+      "end_tick": 655,
+      "begin_total_m": 165.18691769624732,
+      "end_total_m": 183.36462646024728,
+      "local_segment_m": 18.178,
+      "start_unk": 2334,
+      "end_unk": 1362,
+      "area_cells": 8306,
+      "gain_cells": 972
+    },
+    "R3": {
+      "begin_tick": 476,
+      "end_tick": 539,
+      "begin_total_m": 134.28428657274728,
+      "end_total_m": 151.15084971874688,
+      "local_segment_m": 16.867,
+      "start_unk": 2257,
+      "end_unk": 1347,
+      "area_cells": 8306,
+      "gain_cells": 910
+    }
+  },
+  "Room5": {
+    "R2": {
+      "begin_tick": 695,
+      "end_tick": 708,
+      "begin_total_m": 194.75348084224737,
+      "end_total_m": 198.2479080332473,
+      "local_segment_m": 3.494,
+      "start_unk": 844,
+      "end_unk": 623,
+      "area_cells": 4297,
+      "gain_cells": 221
+    },
+    "R3": {
+      "begin_tick": 579,
+      "end_tick": 652,
+      "begin_total_m": 162.53970410074697,
+      "end_total_m": 182.01850899623383,
+      "local_segment_m": 19.479,
+      "start_unk": 866,
+      "end_unk": 54,
+      "area_cells": 4297,
+      "gain_cells": 812
+    }
+  },
+  "Room6": {
+    "R2": {
+      "begin_tick": 837,
+      "end_tick": 845,
+      "begin_total_m": 234.57971876349737,
+      "end_total_m": 236.90332556124596,
+      "local_segment_m": 2.324,
+      "start_unk": 38,
+      "end_unk": 0,
+      "area_cells": 4085,
+      "gain_cells": 38
+    },
+    "R3": {
+      "begin_tick": 772,
+      "end_tick": 781,
+      "begin_total_m": 216.41425174898424,
+      "end_total_m": 219.11425174898434,
+      "local_segment_m": 2.7,
+      "start_unk": 35,
+      "end_unk": 0,
+      "area_cells": 4085,
+      "gain_cells": 35
+    }
+  },
+  "R2_milestones": {
+    "50": [
+      150,
+      40.886,
+      27028
+    ],
+    "60": [
+      190,
+      52.58,
+      32866
+    ],
+    "70": [
+      450,
+      126.002,
+      40516
+    ],
+    "80": [
+      480,
+      134.468,
+      43433
+    ],
+    "85": [
+      580,
+      162.792,
+      45967
+    ],
+    "90": [
+      700,
+      196.024,
+      48534
+    ],
+    "92": [
+      730,
+      204.39,
+      49289
+    ],
+    "94": [
+      820,
+      230.014,
+      50488
+    ],
+    "95": [
+      830,
+      232.785,
+      51029
+    ],
+    "96": [
+      840,
+      235.48,
+      51289
+    ]
+  },
+  "R3_milestones": {
+    "50": [
+      160,
+      44.744,
+      27634
+    ],
+    "60": [
+      190,
+      53.439,
+      32091
+    ],
+    "70": [
+      340,
+      96.634,
+      37606
+    ],
+    "80": [
+      400,
+      112.907,
+      43146
+    ],
+    "85": [
+      470,
+      132.79,
+      45644
+    ],
+    "90": [
+      600,
+      168.305,
+      48405
+    ],
+    "92": [
+      760,
+      213.12,
+      50354
+    ],
+    "94": [
+      760,
+      213.12,
+      50354
+    ],
+    "95": [
+      910,
+      256.134,
+      50771
+    ],
+    "96": [
+      920,
+      258.904,
+      51289
+    ]
+  },
+  "R3_late_revisit": {
+    "global_in_m": 39.567,
+    "local_revisit_m": 20.53,
+    "room2_unknown_before_first_exit": 628,
+    "room2_unknown_late_entry": 53,
+    "room2_unknown_after": 36
+  }
+}
