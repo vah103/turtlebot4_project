@@ -1,0 +1,777 @@
+{
+  "run_id": "NR-G2R7-05",
+  "type": "complete_full_map_scroll",
+  "all_27_native_g1_decisions_included": true,
+  "all_four_native_r7_goal_arrivals_included": true,
+  "no_room_crops": true,
+  "all_images_visible_without_expansion": true,
+  "final_native_tick": 1020,
+  "n_frames": 51,
+  "snapshots": [
+    {
+      "tick": 0,
+      "scope": "GLOBAL",
+      "distance_m": 0.224,
+      "known_p1": 7723,
+      "coverage_pct": 14.4655,
+      "decision_epoch": 1,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0000_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 12,
+      "scope": "LOCAL",
+      "distance_m": 3.671,
+      "known_p1": 12964,
+      "coverage_pct": 24.2822,
+      "decision_epoch": 2,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0012_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 27,
+      "scope": "LOCAL",
+      "distance_m": 7.283,
+      "known_p1": 16545,
+      "coverage_pct": 30.9895,
+      "decision_epoch": 3,
+      "native_arrival": "Goal 1",
+      "source_full_image": "NR_G2R7_05_REAL_T0027_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 50,
+      "scope": "LOCAL",
+      "distance_m": 13.878,
+      "known_p1": 16797,
+      "coverage_pct": 31.4615,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0050_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 55,
+      "scope": "LOCAL",
+      "distance_m": 14.99,
+      "known_p1": 16929,
+      "coverage_pct": 31.7088,
+      "decision_epoch": 4,
+      "native_arrival": "Goal 2",
+      "source_full_image": "NR_G2R7_05_REAL_T0055_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 85,
+      "scope": "LOCAL",
+      "distance_m": 23.226,
+      "known_p1": 17508,
+      "coverage_pct": 32.7933,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0085_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 100,
+      "scope": "LOCAL",
+      "distance_m": 27.115,
+      "known_p1": 18175,
+      "coverage_pct": 34.0426,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0100_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 110,
+      "scope": "LOCAL",
+      "distance_m": 29.786,
+      "known_p1": 19527,
+      "coverage_pct": 36.5749,
+      "decision_epoch": null,
+      "native_arrival": "Goal 3",
+      "source_full_image": "NR_G2R7_05_REAL_T0110_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 130,
+      "scope": "GLOBAL",
+      "distance_m": 35.127,
+      "known_p1": 20287,
+      "coverage_pct": 37.9985,
+      "decision_epoch": 5,
+      "native_arrival": "Goal 4",
+      "source_full_image": "NR_G2R7_05_REAL_T0130_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 145,
+      "scope": "GLOBAL",
+      "distance_m": 39.016,
+      "known_p1": 22235,
+      "coverage_pct": 41.6472,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0145_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 150,
+      "scope": "GLOBAL",
+      "distance_m": 40.363,
+      "known_p1": 23357,
+      "coverage_pct": 43.7487,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0150_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 151,
+      "scope": "GLOBAL",
+      "distance_m": 40.663,
+      "known_p1": 23357,
+      "coverage_pct": 43.7487,
+      "decision_epoch": 6,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0151_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 192,
+      "scope": "LOCAL",
+      "distance_m": 52.429,
+      "known_p1": 30750,
+      "coverage_pct": 57.5961,
+      "decision_epoch": 7,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0192_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 200,
+      "scope": "LOCAL",
+      "distance_m": 54.829,
+      "known_p1": 31626,
+      "coverage_pct": 59.2369,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0200_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 216,
+      "scope": "LOCAL",
+      "distance_m": 59.476,
+      "known_p1": 33826,
+      "coverage_pct": 63.3576,
+      "decision_epoch": 8,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0216_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 233,
+      "scope": "LOCAL",
+      "distance_m": 64.347,
+      "known_p1": 35073,
+      "coverage_pct": 65.6933,
+      "decision_epoch": 9,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0233_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 246,
+      "scope": "LOCAL",
+      "distance_m": 67.941,
+      "known_p1": 35703,
+      "coverage_pct": 66.8733,
+      "decision_epoch": 10,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0246_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 250,
+      "scope": "LOCAL",
+      "distance_m": 69.141,
+      "known_p1": 35703,
+      "coverage_pct": 66.8733,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0250_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 300,
+      "scope": "LOCAL",
+      "distance_m": 83.454,
+      "known_p1": 35729,
+      "coverage_pct": 66.922,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0300_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 307,
+      "scope": "LOCAL",
+      "distance_m": 85.324,
+      "known_p1": 35730,
+      "coverage_pct": 66.9239,
+      "decision_epoch": 11,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0307_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 331,
+      "scope": "GLOBAL",
+      "distance_m": 92.142,
+      "known_p1": 35756,
+      "coverage_pct": 66.9726,
+      "decision_epoch": 12,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0331_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 350,
+      "scope": "GLOBAL",
+      "distance_m": 97.766,
+      "known_p1": 35756,
+      "coverage_pct": 66.9726,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0350_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 379,
+      "scope": "GLOBAL",
+      "distance_m": 106.39,
+      "known_p1": 38359,
+      "coverage_pct": 71.8481,
+      "decision_epoch": 13,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0379_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 398,
+      "scope": "GLOBAL",
+      "distance_m": 111.784,
+      "known_p1": 40802,
+      "coverage_pct": 76.424,
+      "decision_epoch": 14,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0398_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 400,
+      "scope": "GLOBAL",
+      "distance_m": 112.384,
+      "known_p1": 40802,
+      "coverage_pct": 76.424,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0400_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 429,
+      "scope": "LOCAL",
+      "distance_m": 120.473,
+      "known_p1": 44334,
+      "coverage_pct": 83.0396,
+      "decision_epoch": 15,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0429_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 448,
+      "scope": "LOCAL",
+      "distance_m": 125.715,
+      "known_p1": 44726,
+      "coverage_pct": 83.7738,
+      "decision_epoch": 16,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0448_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 450,
+      "scope": "LOCAL",
+      "distance_m": 126.238,
+      "known_p1": 44831,
+      "coverage_pct": 83.9705,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0450_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 459,
+      "scope": "GLOBAL",
+      "distance_m": 128.862,
+      "known_p1": 44919,
+      "coverage_pct": 84.1353,
+      "decision_epoch": 17,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0459_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 500,
+      "scope": "GLOBAL",
+      "distance_m": 140.016,
+      "known_p1": 44960,
+      "coverage_pct": 84.2121,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0500_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 538,
+      "scope": "LOCAL",
+      "distance_m": 150.958,
+      "known_p1": 47601,
+      "coverage_pct": 89.1588,
+      "decision_epoch": 18,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0538_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 549,
+      "scope": "LOCAL",
+      "distance_m": 153.776,
+      "known_p1": 48884,
+      "coverage_pct": 91.5619,
+      "decision_epoch": 19,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0549_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 550,
+      "scope": "LOCAL",
+      "distance_m": 153.999,
+      "known_p1": 48884,
+      "coverage_pct": 91.5619,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0550_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 570,
+      "scope": "LOCAL",
+      "distance_m": 159.306,
+      "known_p1": 48921,
+      "coverage_pct": 91.6312,
+      "decision_epoch": 20,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0570_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 600,
+      "scope": "LOCAL",
+      "distance_m": 167.771,
+      "known_p1": 48921,
+      "coverage_pct": 91.6312,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0600_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 616,
+      "scope": "GLOBAL",
+      "distance_m": 172.266,
+      "known_p1": 48959,
+      "coverage_pct": 91.7024,
+      "decision_epoch": 21,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0616_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 650,
+      "scope": "GLOBAL",
+      "distance_m": 182.236,
+      "known_p1": 48959,
+      "coverage_pct": 91.7024,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0650_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 700,
+      "scope": "GLOBAL",
+      "distance_m": 197.16,
+      "known_p1": 48959,
+      "coverage_pct": 91.7024,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0700_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 729,
+      "scope": "LOCAL",
+      "distance_m": 205.402,
+      "known_p1": 50915,
+      "coverage_pct": 95.3661,
+      "decision_epoch": 22,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0729_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 750,
+      "scope": "LOCAL",
+      "distance_m": 211.702,
+      "known_p1": 50966,
+      "coverage_pct": 95.4616,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0750_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 754,
+      "scope": "GLOBAL",
+      "distance_m": 212.472,
+      "known_p1": 50966,
+      "coverage_pct": 95.4616,
+      "decision_epoch": 23,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0754_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 800,
+      "scope": "GLOBAL",
+      "distance_m": 225.89,
+      "known_p1": 50966,
+      "coverage_pct": 95.4616,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0800_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 850,
+      "scope": "GLOBAL",
+      "distance_m": 240.432,
+      "known_p1": 50966,
+      "coverage_pct": 95.4616,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0850_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 880,
+      "scope": "LOCAL",
+      "distance_m": 249.126,
+      "known_p1": 51231,
+      "coverage_pct": 95.958,
+      "decision_epoch": 24,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0880_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 900,
+      "scope": "LOCAL",
+      "distance_m": 254.821,
+      "known_p1": 51231,
+      "coverage_pct": 95.958,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0900_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 903,
+      "scope": "LOCAL",
+      "distance_m": 255.721,
+      "known_p1": 51260,
+      "coverage_pct": 96.0123,
+      "decision_epoch": 25,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0903_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 923,
+      "scope": "LOCAL",
+      "distance_m": 260.804,
+      "known_p1": 51260,
+      "coverage_pct": 96.0123,
+      "decision_epoch": 26,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0923_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 950,
+      "scope": "LOCAL",
+      "distance_m": 268.293,
+      "known_p1": 51285,
+      "coverage_pct": 96.0591,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0950_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 958,
+      "scope": "GLOBAL",
+      "distance_m": 270.617,
+      "known_p1": 51298,
+      "coverage_pct": 96.0835,
+      "decision_epoch": 27,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T0958_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 1000,
+      "scope": "GLOBAL",
+      "distance_m": 282.453,
+      "known_p1": 51298,
+      "coverage_pct": 96.0835,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T1000_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    },
+    {
+      "tick": 1020,
+      "scope": "GLOBAL",
+      "distance_m": 288.071,
+      "known_p1": 51308,
+      "coverage_pct": 96.1022,
+      "decision_epoch": null,
+      "native_arrival": null,
+      "source_full_image": "NR_G2R7_05_REAL_T1020_FULL.png",
+      "full_map_resolution_px": [
+        1315,
+        1015
+      ],
+      "is_full_map": true
+    }
+  ]
+}
