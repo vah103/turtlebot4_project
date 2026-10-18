@@ -1,0 +1,3879 @@
+{
+  "run_id": "NR-G2R7-05",
+  "gallery": "full_map_actual_causal_goals",
+  "previous_gallery_issue": "goal1-goal4 manually drawn at every tick even before any room was confirmed",
+  "no_hardcoded_goal_positions": true,
+  "first_r7_decision_tick": 12,
+  "first_r7_goal_count_at_tick0": 0,
+  "g1_decisions": 27,
+  "snapshots": [
+    {
+      "tick": 0,
+      "scope": "GLOBAL",
+      "distance_m": 0.223606797749979,
+      "observed_cells": 7723,
+      "r7_goals_displayed": [],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0000_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0000_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 12,
+      "scope": "LOCAL",
+      "distance_m": 3.6708203932499366,
+      "observed_cells": 12964,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "SELECTED",
+          "source_tick": 12,
+          "evidence": "G2_DECISION_NATIVE_ASTAR"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "PLANNED",
+          "source_tick": 12,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0012_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0012_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 27,
+      "scope": "LOCAL",
+      "distance_m": 7.283281572999748,
+      "observed_cells": 16545,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "SELECTED",
+          "source_tick": 27,
+          "evidence": "G2_DECISION_NATIVE_ASTAR"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "PLAN2_PREPARED",
+          "source_tick": 27,
+          "evidence": "OBSERVED_CONTRADICTION_NOT_DISPATCHED"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "PLAN2_PREPARED",
+          "source_tick": 27,
+          "evidence": "OBSERVED_CONTRADICTION_NOT_DISPATCHED"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0027_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0027_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 50,
+      "scope": "LOCAL",
+      "distance_m": 13.877708763999674,
+      "observed_cells": 16797,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "SELECTED",
+          "source_tick": 27,
+          "evidence": "G2_DECISION_NATIVE_ASTAR"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "PLAN2_PREPARED",
+          "source_tick": 27,
+          "evidence": "OBSERVED_CONTRADICTION_NOT_DISPATCHED"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "PLAN2_PREPARED",
+          "source_tick": 27,
+          "evidence": "OBSERVED_CONTRADICTION_NOT_DISPATCHED"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0050_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0050_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 55,
+      "scope": "LOCAL",
+      "distance_m": 14.989950513486919,
+      "observed_cells": 16929,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "SELECTED",
+          "source_tick": 55,
+          "evidence": "G2_DECISION_NATIVE_ASTAR"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "PLANNED",
+          "source_tick": 55,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0055_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0055_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 85,
+      "scope": "LOCAL",
+      "distance_m": 23.22601849098673,
+      "observed_cells": 17508,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "SELECTED",
+          "source_tick": 55,
+          "evidence": "G2_DECISION_NATIVE_ASTAR"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "PLANNED",
+          "source_tick": 55,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0085_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0085_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 100,
+      "scope": "LOCAL",
+      "distance_m": 27.114872872986574,
+      "observed_cells": 18175,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "SELECTED",
+          "source_tick": 55,
+          "evidence": "G2_DECISION_NATIVE_ASTAR"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "PLANNED",
+          "source_tick": 55,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0100_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0100_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 110,
+      "scope": "LOCAL",
+      "distance_m": 29.785693266236517,
+      "observed_cells": 19527,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "SELECTED",
+          "source_tick": 55,
+          "evidence": "CACHED_NATIVE_ASTAR_AFTER_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0110_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0110_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 130,
+      "scope": "GLOBAL",
+      "distance_m": 35.12733405273639,
+      "observed_cells": 20287,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0130_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0130_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 145,
+      "scope": "GLOBAL",
+      "distance_m": 39.01618843473621,
+      "observed_cells": 22235,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0145_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0145_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 150,
+      "scope": "GLOBAL",
+      "distance_m": 40.36340203023616,
+      "observed_cells": 23357,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0150_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0150_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 151,
+      "scope": "GLOBAL",
+      "distance_m": 40.663402030236156,
+      "observed_cells": 23357,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0151_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0151_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 192,
+      "scope": "LOCAL",
+      "distance_m": 52.42864961448592,
+      "observed_cells": 30750,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            9,
+            190
+          ],
+          "label": "R7-5",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            136
+          ],
+          "label": "R7-6",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0192_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0192_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 200,
+      "scope": "LOCAL",
+      "distance_m": 54.8286496144859,
+      "observed_cells": 31626,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            9,
+            190
+          ],
+          "label": "R7-5",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            136
+          ],
+          "label": "R7-6",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0200_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0200_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 216,
+      "scope": "LOCAL",
+      "distance_m": 59.47586320998582,
+      "observed_cells": 33826,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            9,
+            190
+          ],
+          "label": "R7-5",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            136
+          ],
+          "label": "R7-6",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0216_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0216_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 233,
+      "scope": "LOCAL",
+      "distance_m": 64.34668360323572,
+      "observed_cells": 35073,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            9,
+            190
+          ],
+          "label": "R7-5",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            136
+          ],
+          "label": "R7-6",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0233_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0233_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 246,
+      "scope": "LOCAL",
+      "distance_m": 67.94111079423561,
+      "observed_cells": 35703,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            9,
+            190
+          ],
+          "label": "R7-5",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            136
+          ],
+          "label": "R7-6",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0246_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0246_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 250,
+      "scope": "LOCAL",
+      "distance_m": 69.1411107942356,
+      "observed_cells": 35703,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            9,
+            190
+          ],
+          "label": "R7-5",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            136
+          ],
+          "label": "R7-6",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0250_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0250_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 300,
+      "scope": "LOCAL",
+      "distance_m": 83.4535719739853,
+      "observed_cells": 35729,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            9,
+            190
+          ],
+          "label": "R7-5",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            136
+          ],
+          "label": "R7-6",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0300_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0300_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 307,
+      "scope": "LOCAL",
+      "distance_m": 85.32439236723523,
+      "observed_cells": 35730,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            9,
+            190
+          ],
+          "label": "R7-5",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            136
+          ],
+          "label": "R7-6",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0307_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0307_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 331,
+      "scope": "GLOBAL",
+      "distance_m": 92.14242635598508,
+      "observed_cells": 35756,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            9,
+            190
+          ],
+          "label": "R7-5",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            136
+          ],
+          "label": "R7-6",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0331_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0331_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 350,
+      "scope": "GLOBAL",
+      "distance_m": 97.76603315373501,
+      "observed_cells": 35756,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            9,
+            190
+          ],
+          "label": "R7-5",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            136
+          ],
+          "label": "R7-6",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0350_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0350_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 379,
+      "scope": "GLOBAL",
+      "distance_m": 106.38963995148491,
+      "observed_cells": 38359,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            9,
+            190
+          ],
+          "label": "R7-5",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            136
+          ],
+          "label": "R7-6",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0379_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0379_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 398,
+      "scope": "GLOBAL",
+      "distance_m": 111.78406714248479,
+      "observed_cells": 40802,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            9,
+            190
+          ],
+          "label": "R7-5",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            136
+          ],
+          "label": "R7-6",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0398_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0398_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 400,
+      "scope": "GLOBAL",
+      "distance_m": 112.38406714248478,
+      "observed_cells": 40802,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            9,
+            190
+          ],
+          "label": "R7-5",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            136
+          ],
+          "label": "R7-6",
+          "state": "PLANNED",
+          "source_tick": 192,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0400_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0400_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 429,
+      "scope": "LOCAL",
+      "distance_m": 120.47292152448456,
+      "observed_cells": 44334,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            57,
+            52
+          ],
+          "label": "R7-7",
+          "state": "PLANNED",
+          "source_tick": 429,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            6
+          ],
+          "label": "R7-8",
+          "state": "PLANNED",
+          "source_tick": 429,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0429_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0429_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 448,
+      "scope": "LOCAL",
+      "distance_m": 125.7145623109844,
+      "observed_cells": 44726,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            57,
+            52
+          ],
+          "label": "R7-7",
+          "state": "PLANNED",
+          "source_tick": 429,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            6
+          ],
+          "label": "R7-8",
+          "state": "PLANNED",
+          "source_tick": 429,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0448_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0448_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 450,
+      "scope": "LOCAL",
+      "distance_m": 126.23816910873438,
+      "observed_cells": 44831,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            57,
+            52
+          ],
+          "label": "R7-7",
+          "state": "PLANNED",
+          "source_tick": 429,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            6
+          ],
+          "label": "R7-8",
+          "state": "PLANNED",
+          "source_tick": 429,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0450_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0450_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 459,
+      "scope": "GLOBAL",
+      "distance_m": 128.86177590648435,
+      "observed_cells": 44919,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            57,
+            52
+          ],
+          "label": "R7-7",
+          "state": "PLANNED",
+          "source_tick": 429,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            6
+          ],
+          "label": "R7-8",
+          "state": "PLANNED",
+          "source_tick": 429,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0459_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0459_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 500,
+      "scope": "GLOBAL",
+      "distance_m": 140.01587787273414,
+      "observed_cells": 44960,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            57,
+            52
+          ],
+          "label": "R7-7",
+          "state": "PLANNED",
+          "source_tick": 429,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        },
+        {
+          "goal_rc": [
+            6,
+            6
+          ],
+          "label": "R7-8",
+          "state": "PLANNED",
+          "source_tick": 429,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0500_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0500_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 538,
+      "scope": "LOCAL",
+      "distance_m": 150.9575186592343,
+      "observed_cells": 47601,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "SELECTED",
+          "source_tick": 538,
+          "evidence": "G2_DECISION_NATIVE_ASTAR"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "PLANNED",
+          "source_tick": 538,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0538_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0538_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 549,
+      "scope": "LOCAL",
+      "distance_m": 153.77555264798417,
+      "observed_cells": 48884,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "SELECTED",
+          "source_tick": 549,
+          "evidence": "G2_DECISION_NATIVE_ASTAR"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0549_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0549_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 550,
+      "scope": "LOCAL",
+      "distance_m": 153.99915944573414,
+      "observed_cells": 48884,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "SELECTED",
+          "source_tick": 549,
+          "evidence": "G2_DECISION_NATIVE_ASTAR"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0550_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0550_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 570,
+      "scope": "LOCAL",
+      "distance_m": 159.30582838622135,
+      "observed_cells": 48921,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0570_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0570_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 600,
+      "scope": "LOCAL",
+      "distance_m": 167.77107597047137,
+      "observed_cells": 48921,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0600_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0600_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 616,
+      "scope": "GLOBAL",
+      "distance_m": 172.26550316147137,
+      "observed_cells": 48959,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0616_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0616_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 650,
+      "scope": "GLOBAL",
+      "distance_m": 182.23632355472162,
+      "observed_cells": 48959,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0650_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0650_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 700,
+      "scope": "GLOBAL",
+      "distance_m": 197.15993035247214,
+      "observed_cells": 48959,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0700_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0700_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 729,
+      "scope": "LOCAL",
+      "distance_m": 205.4015711389722,
+      "observed_cells": 50915,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            216
+          ],
+          "label": "R7-11",
+          "state": "SELECTED",
+          "source_tick": 729,
+          "evidence": "G2_DECISION_NATIVE_ASTAR"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0729_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0729_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 750,
+      "scope": "LOCAL",
+      "distance_m": 211.70157113897244,
+      "observed_cells": 50966,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            216
+          ],
+          "label": "R7-11",
+          "state": "SELECTED",
+          "source_tick": 729,
+          "evidence": "G2_DECISION_NATIVE_ASTAR"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0750_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0750_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 754,
+      "scope": "GLOBAL",
+      "distance_m": 212.47239153222233,
+      "observed_cells": 50966,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            216
+          ],
+          "label": "R7-11",
+          "state": "ARRIVED",
+          "source_tick": 754,
+          "evidence": "NATIVE_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0754_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0754_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 800,
+      "scope": "GLOBAL",
+      "distance_m": 225.89042552097263,
+      "observed_cells": 50966,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            216
+          ],
+          "label": "R7-11",
+          "state": "ARRIVED",
+          "source_tick": 754,
+          "evidence": "NATIVE_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0800_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0800_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 850,
+      "scope": "GLOBAL",
+      "distance_m": 240.43206630747292,
+      "observed_cells": 50966,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            216
+          ],
+          "label": "R7-11",
+          "state": "ARRIVED",
+          "source_tick": 754,
+          "evidence": "NATIVE_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0850_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0850_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 880,
+      "scope": "LOCAL",
+      "distance_m": 249.12649349847308,
+      "observed_cells": 51231,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            216
+          ],
+          "label": "R7-11",
+          "state": "ARRIVED",
+          "source_tick": 754,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            30,
+            91
+          ],
+          "label": "R7-12",
+          "state": "SELECTED",
+          "source_tick": 880,
+          "evidence": "G2_DECISION_NATIVE_ASTAR"
+        },
+        {
+          "goal_rc": [
+            55,
+            126
+          ],
+          "label": "R7-13",
+          "state": "PLANNED",
+          "source_tick": 880,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0880_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0880_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 900,
+      "scope": "LOCAL",
+      "distance_m": 254.82092068947313,
+      "observed_cells": 51231,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            216
+          ],
+          "label": "R7-11",
+          "state": "ARRIVED",
+          "source_tick": 754,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            30,
+            91
+          ],
+          "label": "R7-12",
+          "state": "SELECTED",
+          "source_tick": 880,
+          "evidence": "G2_DECISION_NATIVE_ASTAR"
+        },
+        {
+          "goal_rc": [
+            55,
+            126
+          ],
+          "label": "R7-13",
+          "state": "PLANNED",
+          "source_tick": 880,
+          "evidence": "G2_DECISION_PLAN_ONLY"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0900_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0900_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 903,
+      "scope": "LOCAL",
+      "distance_m": 255.72092068947316,
+      "observed_cells": 51260,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            216
+          ],
+          "label": "R7-11",
+          "state": "ARRIVED",
+          "source_tick": 754,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            30,
+            91
+          ],
+          "label": "R7-12",
+          "state": "ARRIVED",
+          "source_tick": 903,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            55,
+            126
+          ],
+          "label": "R7-13",
+          "state": "SELECTED",
+          "source_tick": 903,
+          "evidence": "G2_DECISION_NATIVE_ASTAR"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0903_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0903_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 923,
+      "scope": "LOCAL",
+      "distance_m": 260.80420226247315,
+      "observed_cells": 51260,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            216
+          ],
+          "label": "R7-11",
+          "state": "ARRIVED",
+          "source_tick": 754,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            30,
+            91
+          ],
+          "label": "R7-12",
+          "state": "ARRIVED",
+          "source_tick": 903,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            55,
+            126
+          ],
+          "label": "R7-13",
+          "state": "ARRIVED",
+          "source_tick": 923,
+          "evidence": "NATIVE_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0923_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0923_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 950,
+      "scope": "LOCAL",
+      "distance_m": 268.2930566444733,
+      "observed_cells": 51285,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            216
+          ],
+          "label": "R7-11",
+          "state": "ARRIVED",
+          "source_tick": 754,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            30,
+            91
+          ],
+          "label": "R7-12",
+          "state": "ARRIVED",
+          "source_tick": 903,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            55,
+            126
+          ],
+          "label": "R7-13",
+          "state": "ARRIVED",
+          "source_tick": 923,
+          "evidence": "NATIVE_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0950_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0950_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 958,
+      "scope": "GLOBAL",
+      "distance_m": 270.6166634422234,
+      "observed_cells": 51298,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            216
+          ],
+          "label": "R7-11",
+          "state": "ARRIVED",
+          "source_tick": 754,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            30,
+            91
+          ],
+          "label": "R7-12",
+          "state": "ARRIVED",
+          "source_tick": 903,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            55,
+            126
+          ],
+          "label": "R7-13",
+          "state": "ARRIVED",
+          "source_tick": 923,
+          "evidence": "NATIVE_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T0958_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T0958_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 1000,
+      "scope": "GLOBAL",
+      "distance_m": 282.4527314197237,
+      "observed_cells": 51298,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            216
+          ],
+          "label": "R7-11",
+          "state": "ARRIVED",
+          "source_tick": 754,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            30,
+            91
+          ],
+          "label": "R7-12",
+          "state": "ARRIVED",
+          "source_tick": 903,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            55,
+            126
+          ],
+          "label": "R7-13",
+          "state": "ARRIVED",
+          "source_tick": 923,
+          "evidence": "NATIVE_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T1000_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T1000_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    },
+    {
+      "tick": 1020,
+      "scope": "GLOBAL",
+      "distance_m": 288.07076540847385,
+      "observed_cells": 51308,
+      "r7_goals_displayed": [
+        {
+          "goal_rc": [
+            169,
+            132
+          ],
+          "label": "R7-1",
+          "state": "ARRIVED",
+          "source_tick": 27,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            96
+          ],
+          "label": "R7-2",
+          "state": "ARRIVED",
+          "source_tick": 55,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            206
+          ],
+          "label": "R7-3",
+          "state": "ARRIVED",
+          "source_tick": 110,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            206
+          ],
+          "label": "R7-4",
+          "state": "ARRIVED",
+          "source_tick": 130,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            148,
+            18
+          ],
+          "label": "R7-9",
+          "state": "ARRIVED",
+          "source_tick": 549,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            6
+          ],
+          "label": "R7-10",
+          "state": "ARRIVED",
+          "source_tick": 570,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            196,
+            216
+          ],
+          "label": "R7-11",
+          "state": "ARRIVED",
+          "source_tick": 754,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            30,
+            91
+          ],
+          "label": "R7-12",
+          "state": "ARRIVED",
+          "source_tick": 903,
+          "evidence": "NATIVE_ACK"
+        },
+        {
+          "goal_rc": [
+            55,
+            126
+          ],
+          "label": "R7-13",
+          "state": "ARRIVED",
+          "source_tick": 923,
+          "evidence": "NATIVE_ACK"
+        }
+      ],
+      "is_full_map": true,
+      "image_size": [
+        1315,
+        1015
+      ],
+      "image_observed": "R7_R31_CAUSAL_T1020_OBSERVED_FULL.png",
+      "image_prediction": "R7_R31_CAUSAL_T1020_PREDICTED_G1_FULL.png",
+      "provenance": "G1 native scope; R7 current-time decisions and ACK"
+    }
+  ],
+  "frames": 51,
+  "full_map_every_frame": true,
+  "GT_not_used_for_policy": true
+}
