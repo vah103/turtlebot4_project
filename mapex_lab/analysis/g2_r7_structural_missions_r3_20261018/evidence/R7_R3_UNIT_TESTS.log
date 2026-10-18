@@ -1,0 +1,15 @@
+test_contradiction_requires_previous_semantic_label (test_r7_r3.Tests.test_contradiction_requires_previous_semantic_label) ... ok
+test_d02_two_distinct_structural_missions (test_r7_r3.Tests.test_d02_two_distinct_structural_missions) ... ok
+test_d03_right_lower_then_upper_by_unseen_distribution (test_r7_r3.Tests.test_d03_right_lower_then_upper_by_unseen_distribution) ... ok
+test_d04_uses_persisted_entry_zone_not_current_zone (test_r7_r3.Tests.test_d04_uses_persisted_entry_zone_not_current_zone) ... ok
+test_dual_plan_concurrent_preparation_preserves_goal2 (test_r7_r3.Tests.test_dual_plan_concurrent_preparation_preserves_goal2) ... ok
+test_empty_room_does_not_force_four_goals (test_r7_r3.Tests.test_empty_room_does_not_force_four_goals) ... ok
+test_goal2_is_on_backside_and_far_from_divider (test_r7_r3.Tests.test_goal2_is_on_backside_and_far_from_divider) ... ok
+test_native_routes_are_advisory_not_authorized (test_r7_r3.Tests.test_native_routes_are_advisory_not_authorized) ... ok
+test_no_hardcoded_d02_goals_in_planner_source (test_r7_r3.Tests.test_no_hardcoded_d02_goals_in_planner_source) ... ok
+test_reflection_is_not_tuned_to_left_side_coordinates (test_r7_r3.Tests.test_reflection_is_not_tuned_to_left_side_coordinates) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 3.619s
+
+OK
