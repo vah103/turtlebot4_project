@@ -1,0 +1,17 @@
+{
+  "elapsed_s": 453.4,
+  "log": "/home/dell/DELL_NATIVE2D/runs/NR-G2R7-05/worker.stdout.log",
+  "min_available_MiB": 2907.41,
+  "mission_status": {
+    "cur_step": 1021,
+    "fail_reason": "MAPEX_NO_SELECTABLE_FRONTIER_NOT_GT",
+    "last_exp_time_s": 437.39449167251587,
+    "mission_complete": true,
+    "start_time": 1792321825.250338
+  },
+  "mode": "run",
+  "outcome": "SOURCE_TERMINAL",
+  "peak_pss_MiB": 2169.91,
+  "reason": null,
+  "returncode": 0
+}
