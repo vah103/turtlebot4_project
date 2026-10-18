@@ -1,0 +1,577 @@
+{
+  "method": "G2-R7 R1",
+  "evaluated_past_trajectory": "RN04",
+  "closed_loop_R7": false,
+  "ground_truth_not_used_for_planning": true,
+  "future_observations_not_used_for_planning": true,
+  "D02_native_scope_exact": true,
+  "D03_D05_navigation_scope_is_offline_proxy_not_safety_certified": true,
+  "stages": [
+    {
+      "decision": 2,
+      "robot": [
+        147,
+        111
+      ],
+      "navigation_scope": "NATIVE_SAME_EPOCH_D02",
+      "version": "G2_R7_STRUCTURAL_OCCLUSION_R1",
+      "action": "LOCAL_VIEWPOINT_PROPOSAL",
+      "goal_sequence_core_rc": [
+        [
+          173,
+          146
+        ],
+        [
+          177,
+          151
+        ],
+        [
+          181,
+          156
+        ],
+        [
+          182,
+          157
+        ],
+        [
+          186,
+          162
+        ]
+      ],
+      "legs": [
+        {
+          "goal_rc": [
+            173,
+            146
+          ],
+          "path_m": 6.1,
+          "new_unknown_value": 2168.35,
+          "new_surfaces": 48,
+          "combined_gain": 2479.47
+        },
+        {
+          "goal_rc": [
+            177,
+            151
+          ],
+          "path_m": 0.9,
+          "new_unknown_value": 453.29,
+          "new_surfaces": 3,
+          "combined_gain": 472.73
+        },
+        {
+          "goal_rc": [
+            181,
+            156
+          ],
+          "path_m": 0.9,
+          "new_unknown_value": 278.01,
+          "new_surfaces": 0,
+          "combined_gain": 278.01
+        },
+        {
+          "goal_rc": [
+            182,
+            157
+          ],
+          "path_m": 0.2,
+          "new_unknown_value": 99.96,
+          "new_surfaces": 0,
+          "combined_gain": 99.96
+        },
+        {
+          "goal_rc": [
+            186,
+            162
+          ],
+          "path_m": 0.9,
+          "new_unknown_value": 137.3,
+          "new_surfaces": 0,
+          "combined_gain": 137.3
+        }
+      ],
+      "new_structural_surface_samples": 51,
+      "surface_samples_total": 119,
+      "unknown_nominal_new": 3415,
+      "unknown_stress_new": 2865,
+      "predicted_distance_m": 9.0,
+      "candidate_count": 24,
+      "compute_s": 0.9431,
+      "input_observed_sha256": "de96490d2c94ca0b10ff7f359b2b8fe3b4bc9a8d5656194b9ceec8c13c539b23",
+      "prediction_sha256": "13bcb244d448f09fc7a76b7eaaefd6a61add1447de1e77256cc37bbd944deb04",
+      "all_goals_observed_free": true,
+      "planner_used_gt": false,
+      "planner_used_future_observations": false,
+      "native_astar_required_at_dispatch": true,
+      "no_actual_coverage_claim": true,
+      "virtual_goals_not_executable": [
+        {
+          "goal_rc": [
+            171,
+            186
+          ],
+          "reason": "PREDICTED_FREE_UNCONFIRMED",
+          "projected_gain": 1250.37,
+          "surfaces_new": 38,
+          "executable": false,
+          "requires_lidar_confirmation": true
+        },
+        {
+          "goal_rc": [
+            166,
+            175
+          ],
+          "reason": "PREDICTED_FREE_UNCONFIRMED",
+          "projected_gain": 1248.2,
+          "surfaces_new": 38,
+          "executable": false,
+          "requires_lidar_confirmation": true
+        },
+        {
+          "goal_rc": [
+            170,
+            168
+          ],
+          "reason": "PREDICTED_FREE_UNCONFIRMED",
+          "projected_gain": 1218.9,
+          "surfaces_new": 39,
+          "executable": false,
+          "requires_lidar_confirmation": true
+        },
+        {
+          "goal_rc": [
+            176,
+            176
+          ],
+          "reason": "PREDICTED_FREE_UNCONFIRMED",
+          "projected_gain": 1215.95,
+          "surfaces_new": 38,
+          "executable": false,
+          "requires_lidar_confirmation": true
+        }
+      ],
+      "image": "R7_RN04_D02_SNAPSHOT.png"
+    },
+    {
+      "decision": 3,
+      "robot": [
+        176,
+        124
+      ],
+      "navigation_scope": "OFFLINE_OBSERVED_FREE_PROXY_NOT_NATIVE_CERTIFIED",
+      "version": "G2_R7_STRUCTURAL_OCCLUSION_R1",
+      "action": "LOCAL_VIEWPOINT_PROPOSAL",
+      "goal_sequence_core_rc": [
+        [
+          194,
+          140
+        ],
+        [
+          200,
+          164
+        ],
+        [
+          200,
+          173
+        ],
+        [
+          180,
+          179
+        ],
+        [
+          179,
+          199
+        ]
+      ],
+      "legs": [
+        {
+          "goal_rc": [
+            194,
+            140
+          ],
+          "path_m": 3.6,
+          "new_unknown_value": 203.05,
+          "new_surfaces": 30,
+          "combined_gain": 236.35
+        },
+        {
+          "goal_rc": [
+            200,
+            164
+          ],
+          "path_m": 3.0,
+          "new_unknown_value": 88.59,
+          "new_surfaces": 10,
+          "combined_gain": 99.69
+        },
+        {
+          "goal_rc": [
+            200,
+            173
+          ],
+          "path_m": 0.9,
+          "new_unknown_value": 27.25,
+          "new_surfaces": 0,
+          "combined_gain": 27.25
+        },
+        {
+          "goal_rc": [
+            180,
+            179
+          ],
+          "path_m": 2.6,
+          "new_unknown_value": 36.77,
+          "new_surfaces": 6,
+          "combined_gain": 43.43
+        },
+        {
+          "goal_rc": [
+            179,
+            199
+          ],
+          "path_m": 2.1,
+          "new_unknown_value": 13.58,
+          "new_surfaces": 5,
+          "combined_gain": 19.13
+        }
+      ],
+      "new_structural_surface_samples": 51,
+      "surface_samples_total": 120,
+      "unknown_nominal_new": 457,
+      "unknown_stress_new": 414,
+      "predicted_distance_m": 12.2,
+      "candidate_count": 24,
+      "compute_s": 0.9284,
+      "input_observed_sha256": "faf3bbb1540ce764e44bb982edb3936509e2cc0cfe8985f43398601aca4bcdb6",
+      "prediction_sha256": "e23ffe5b81628cc37d26ffedb77c1822593b65b4c79b1ac002523236644fed17",
+      "all_goals_observed_free": true,
+      "planner_used_gt": false,
+      "planner_used_future_observations": false,
+      "native_astar_required_at_dispatch": true,
+      "no_actual_coverage_claim": true,
+      "virtual_goals_not_executable": [
+        {
+          "goal_rc": [
+            176,
+            185
+          ],
+          "reason": "PREDICTED_FREE_UNCONFIRMED",
+          "projected_gain": 132.06,
+          "surfaces_new": 25,
+          "executable": false,
+          "requires_lidar_confirmation": true
+        },
+        {
+          "goal_rc": [
+            177,
+            194
+          ],
+          "reason": "PREDICTED_FREE_UNCONFIRMED",
+          "projected_gain": 120.77,
+          "surfaces_new": 17,
+          "executable": false,
+          "requires_lidar_confirmation": true
+        },
+        {
+          "goal_rc": [
+            195,
+            138
+          ],
+          "reason": "PREDICTED_FREE_UNCONFIRMED",
+          "projected_gain": 110.66,
+          "surfaces_new": 17,
+          "executable": false,
+          "requires_lidar_confirmation": true
+        },
+        {
+          "goal_rc": [
+            175,
+            171
+          ],
+          "reason": "PREDICTED_FREE_UNCONFIRMED",
+          "projected_gain": 104.94,
+          "surfaces_new": 23,
+          "executable": false,
+          "requires_lidar_confirmation": true
+        }
+      ],
+      "image": "R7_RN04_D03_SNAPSHOT.png"
+    },
+    {
+      "decision": 4,
+      "robot": [
+        183,
+        139
+      ],
+      "navigation_scope": "OFFLINE_OBSERVED_FREE_PROXY_NOT_NATIVE_CERTIFIED",
+      "version": "G2_R7_STRUCTURAL_OCCLUSION_R1",
+      "action": "LOCAL_VIEWPOINT_PROPOSAL",
+      "goal_sequence_core_rc": [
+        [
+          198,
+          197
+        ],
+        [
+          180,
+          190
+        ],
+        [
+          179,
+          106
+        ],
+        [
+          179,
+          117
+        ],
+        [
+          144,
+          146
+        ]
+      ],
+      "legs": [
+        {
+          "goal_rc": [
+            198,
+            197
+          ],
+          "path_m": 7.3,
+          "new_unknown_value": 92.76,
+          "new_surfaces": 28,
+          "combined_gain": 103.35
+        },
+        {
+          "goal_rc": [
+            180,
+            190
+          ],
+          "path_m": 2.5,
+          "new_unknown_value": 15.31,
+          "new_surfaces": 2,
+          "combined_gain": 16.06
+        },
+        {
+          "goal_rc": [
+            179,
+            106
+          ],
+          "path_m": 10.5,
+          "new_unknown_value": 38.27,
+          "new_surfaces": 22,
+          "combined_gain": 46.6
+        },
+        {
+          "goal_rc": [
+            179,
+            117
+          ],
+          "path_m": 2.3,
+          "new_unknown_value": 6.48,
+          "new_surfaces": 0,
+          "combined_gain": 6.48
+        },
+        {
+          "goal_rc": [
+            144,
+            146
+          ],
+          "path_m": 6.6,
+          "new_unknown_value": 0.52,
+          "new_surfaces": 6,
+          "combined_gain": 2.79
+        }
+      ],
+      "new_structural_surface_samples": 58,
+      "surface_samples_total": 120,
+      "unknown_nominal_new": 211,
+      "unknown_stress_new": 146,
+      "predicted_distance_m": 29.2,
+      "candidate_count": 24,
+      "compute_s": 1.0735,
+      "input_observed_sha256": "8f8cf97210c338445f68a734c32c3aedbf81fa5a25e4a992fab892af204855fe",
+      "prediction_sha256": "007054b172ee0d683c353d8a92b3deb578868a8f680405a0d49f005eff0a383d",
+      "all_goals_observed_free": true,
+      "planner_used_gt": false,
+      "planner_used_future_observations": false,
+      "native_astar_required_at_dispatch": true,
+      "no_actual_coverage_claim": true,
+      "virtual_goals_not_executable": [
+        {
+          "goal_rc": [
+            189,
+            200
+          ],
+          "reason": "PREDICTED_FREE_UNCONFIRMED",
+          "projected_gain": 33.44,
+          "surfaces_new": 7,
+          "executable": false,
+          "requires_lidar_confirmation": true
+        },
+        {
+          "goal_rc": [
+            178,
+            108
+          ],
+          "reason": "PREDICTED_FREE_UNCONFIRMED",
+          "projected_gain": 33.3,
+          "surfaces_new": 21,
+          "executable": false,
+          "requires_lidar_confirmation": true
+        },
+        {
+          "goal_rc": [
+            192,
+            209
+          ],
+          "reason": "PREDICTED_FREE_UNCONFIRMED",
+          "projected_gain": 31.26,
+          "surfaces_new": 7,
+          "executable": false,
+          "requires_lidar_confirmation": true
+        },
+        {
+          "goal_rc": [
+            172,
+            114
+          ],
+          "reason": "PREDICTED_FREE_UNCONFIRMED",
+          "projected_gain": 29.74,
+          "surfaces_new": 7,
+          "executable": false,
+          "requires_lidar_confirmation": true
+        }
+      ],
+      "image": "R7_RN04_D04_SNAPSHOT.png"
+    },
+    {
+      "decision": 5,
+      "robot": [
+        191,
+        112
+      ],
+      "navigation_scope": "OFFLINE_OBSERVED_FREE_PROXY_NOT_NATIVE_CERTIFIED",
+      "version": "G2_R7_STRUCTURAL_OCCLUSION_R1",
+      "action": "LOCAL_VIEWPOINT_PROPOSAL",
+      "goal_sequence_core_rc": [
+        [
+          198,
+          197
+        ],
+        [
+          179,
+          199
+        ],
+        [
+          198,
+          199
+        ],
+        [
+          179,
+          107
+        ]
+      ],
+      "legs": [
+        {
+          "goal_rc": [
+            198,
+            197
+          ],
+          "path_m": 12.4,
+          "new_unknown_value": 72.4,
+          "new_surfaces": 45,
+          "combined_gain": 86.87
+        },
+        {
+          "goal_rc": [
+            179,
+            199
+          ],
+          "path_m": 3.1,
+          "new_unknown_value": 11.98,
+          "new_surfaces": 3,
+          "combined_gain": 12.94
+        },
+        {
+          "goal_rc": [
+            198,
+            199
+          ],
+          "path_m": 3.3,
+          "new_unknown_value": 9.31,
+          "new_surfaces": 0,
+          "combined_gain": 9.31
+        },
+        {
+          "goal_rc": [
+            179,
+            107
+          ],
+          "path_m": 12.1,
+          "new_unknown_value": 6.92,
+          "new_surfaces": 2,
+          "combined_gain": 7.56
+        }
+      ],
+      "new_structural_surface_samples": 50,
+      "surface_samples_total": 120,
+      "unknown_nominal_new": 136,
+      "unknown_stress_new": 98,
+      "predicted_distance_m": 30.9,
+      "candidate_count": 24,
+      "compute_s": 1.0272,
+      "input_observed_sha256": "b710b1e623943d0a8f8dce79ba04d65955488f37adb0bb6ba9907cc103115326",
+      "prediction_sha256": "a605954c77661fc02e1557078a82f2b5f1961f6cc3b72c6685adb87997e9438b",
+      "all_goals_observed_free": true,
+      "planner_used_gt": false,
+      "planner_used_future_observations": false,
+      "native_astar_required_at_dispatch": true,
+      "no_actual_coverage_claim": true,
+      "virtual_goals_not_executable": [
+        {
+          "goal_rc": [
+            191,
+            204
+          ],
+          "reason": "PREDICTED_FREE_UNCONFIRMED",
+          "projected_gain": 31.47,
+          "surfaces_new": 9,
+          "executable": false,
+          "requires_lidar_confirmation": true
+        },
+        {
+          "goal_rc": [
+            172,
+            183
+          ],
+          "reason": "PREDICTED_FREE_UNCONFIRMED",
+          "projected_gain": 31.24,
+          "surfaces_new": 24,
+          "executable": false,
+          "requires_lidar_confirmation": true
+        },
+        {
+          "goal_rc": [
+            170,
+            193
+          ],
+          "reason": "PREDICTED_FREE_UNCONFIRMED",
+          "projected_gain": 28.71,
+          "surfaces_new": 24,
+          "executable": false,
+          "requires_lidar_confirmation": true
+        },
+        {
+          "goal_rc": [
+            189,
+            195
+          ],
+          "reason": "PREDICTED_FREE_UNCONFIRMED",
+          "projected_gain": 19.79,
+          "surfaces_new": 8,
+          "executable": false,
+          "requires_lidar_confirmation": true
+        }
+      ],
+      "image": "R7_RN04_D05_SNAPSHOT.png"
+    }
+  ]
+}
