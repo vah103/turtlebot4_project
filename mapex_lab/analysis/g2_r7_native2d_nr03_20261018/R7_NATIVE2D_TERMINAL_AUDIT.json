@@ -1,0 +1,472 @@
+{
+  "kind": "R7 native 2D run causal terminal audit",
+  "run_id": "NR-G2R7-03",
+  "reference_run": "NR-RN-04",
+  "G2_intended": [
+    "G1 portal (169,132)",
+    "G2 behind left object (196,96)",
+    "after fresh structure, G3 bottom-right, G4 top-right"
+  ],
+  "G2_native_decisions": [
+    {
+      "epoch": "decision_000002",
+      "native_tick": 12,
+      "phase": "INITIAL",
+      "goals": [
+        [
+          169,
+          132
+        ],
+        [
+          196,
+          96
+        ]
+      ],
+      "decision": "GOAL"
+    },
+    {
+      "epoch": "decision_000003",
+      "native_tick": 27,
+      "phase": "INITIAL",
+      "goals": [
+        [
+          196,
+          96
+        ]
+      ],
+      "decision": "GOAL"
+    },
+    {
+      "epoch": "decision_000004",
+      "native_tick": 55,
+      "phase": "SUCCESSOR",
+      "goals": [],
+      "decision": "DEFER"
+    },
+    {
+      "epoch": "decision_000009",
+      "native_tick": 199,
+      "phase": "INITIAL",
+      "goals": [
+        [
+          18,
+          211
+        ]
+      ],
+      "decision": "GOAL"
+    },
+    {
+      "epoch": "decision_000010",
+      "native_tick": 200,
+      "phase": "SUCCESSOR",
+      "goals": [
+        [
+          6,
+          136
+        ],
+        [
+          55,
+          136
+        ],
+        [
+          33,
+          256
+        ],
+        [
+          54,
+          256
+        ]
+      ],
+      "decision": "GOAL"
+    },
+    {
+      "epoch": "decision_000011",
+      "native_tick": 241,
+      "phase": "SUCCESSOR",
+      "goals": [
+        [
+          55,
+          136
+        ]
+      ],
+      "decision": "GOAL"
+    },
+    {
+      "epoch": "decision_000012",
+      "native_tick": 260,
+      "phase": "SUCCESSOR",
+      "goals": [],
+      "decision": "DEFER"
+    },
+    {
+      "epoch": "decision_000015",
+      "native_tick": 481,
+      "phase": "INITIAL",
+      "goals": [
+        [
+          148,
+          18
+        ],
+        [
+          196,
+          6
+        ]
+      ],
+      "decision": "GOAL"
+    },
+    {
+      "epoch": "decision_000016",
+      "native_tick": 499,
+      "phase": "SUCCESSOR",
+      "goals": [
+        [
+          118,
+          6
+        ],
+        [
+          118,
+          45
+        ]
+      ],
+      "decision": "GOAL"
+    },
+    {
+      "epoch": "decision_000017",
+      "native_tick": 539,
+      "phase": "SUCCESSOR",
+      "goals": [],
+      "decision": "DEFER"
+    },
+    {
+      "epoch": "decision_000019",
+      "native_tick": 644,
+      "phase": "INITIAL",
+      "goals": [
+        [
+          57,
+          52
+        ],
+        [
+          6,
+          6
+        ]
+      ],
+      "decision": "DEFER"
+    },
+    {
+      "epoch": "decision_000022",
+      "native_tick": 729,
+      "phase": "INITIAL",
+      "goals": [
+        [
+          30,
+          91
+        ],
+        [
+          6,
+          56
+        ]
+      ],
+      "decision": "GOAL"
+    },
+    {
+      "epoch": "decision_000023",
+      "native_tick": 743,
+      "phase": "SUCCESSOR",
+      "goals": [
+        [
+          6,
+          96
+        ],
+        [
+          6,
+          126
+        ]
+      ],
+      "decision": "GOAL"
+    },
+    {
+      "epoch": "decision_000024",
+      "native_tick": 763,
+      "phase": "SUCCESSOR",
+      "goals": [
+        [
+          55,
+          126
+        ]
+      ],
+      "decision": "GOAL"
+    },
+    {
+      "epoch": "decision_000025",
+      "native_tick": 783,
+      "phase": "SUCCESSOR",
+      "goals": [],
+      "decision": "DEFER"
+    },
+    {
+      "epoch": "decision_000027",
+      "native_tick": 929,
+      "phase": "INITIAL",
+      "goals": [
+        [
+          196,
+          216
+        ]
+      ],
+      "decision": "GOAL"
+    }
+  ],
+  "G2_native_verified_goal_arrivals": [
+    {
+      "tick": 27,
+      "goal": [
+        169,
+        132
+      ],
+      "next_goals": [
+        [
+          196,
+          96
+        ]
+      ]
+    },
+    {
+      "tick": 55,
+      "goal": [
+        196,
+        96
+      ],
+      "next_goals": []
+    },
+    {
+      "tick": 200,
+      "goal": [
+        18,
+        211
+      ],
+      "next_goals": []
+    },
+    {
+      "tick": 241,
+      "goal": [
+        6,
+        136
+      ],
+      "next_goals": [
+        [
+          55,
+          136
+        ],
+        [
+          33,
+          256
+        ],
+        [
+          54,
+          256
+        ]
+      ]
+    },
+    {
+      "tick": 260,
+      "goal": [
+        55,
+        136
+      ],
+      "next_goals": []
+    },
+    {
+      "tick": 499,
+      "goal": [
+        148,
+        18
+      ],
+      "next_goals": [
+        [
+          196,
+          6
+        ]
+      ]
+    },
+    {
+      "tick": 522,
+      "goal": [
+        118,
+        6
+      ],
+      "next_goals": [
+        [
+          118,
+          45
+        ]
+      ]
+    },
+    {
+      "tick": 539,
+      "goal": [
+        118,
+        45
+      ],
+      "next_goals": []
+    },
+    {
+      "tick": 743,
+      "goal": [
+        30,
+        91
+      ],
+      "next_goals": [
+        [
+          6,
+          56
+        ]
+      ]
+    },
+    {
+      "tick": 753,
+      "goal": [
+        6,
+        96
+      ],
+      "next_goals": [
+        [
+          6,
+          126
+        ]
+      ]
+    },
+    {
+      "tick": 763,
+      "goal": [
+        6,
+        126
+      ],
+      "next_goals": []
+    },
+    {
+      "tick": 783,
+      "goal": [
+        55,
+        126
+      ],
+      "next_goals": []
+    },
+    {
+      "tick": 954,
+      "goal": [
+        196,
+        216
+      ],
+      "next_goals": []
+    }
+  ],
+  "terminal_R7": {
+    "ticks": 954,
+    "native_odom_m": 264.96760429270654,
+    "known_cells": 51308,
+    "known_fraction": 0.96102193,
+    "terminal_state": {
+      "start_time": 1792319794.2178476,
+      "cur_step": 954,
+      "mission_complete": true,
+      "fail_reason": "MAPEX_NO_SELECTABLE_FRONTIER_NOT_GT",
+      "last_exp_time_s": 427.578528881073
+    }
+  },
+  "terminal_RN04": {
+    "ticks": 709,
+    "native_odom_m": 199.10758280849635,
+    "known_cells": 51304,
+    "known_fraction": 0.96094701,
+    "terminal_state": {
+      "start_time": 1792257239.449295,
+      "cur_step": 709,
+      "mission_complete": true,
+      "fail_reason": "MAPEX_NO_SELECTABLE_FRONTIER_NOT_GT",
+      "last_exp_time_s": 355.4789009094238
+    }
+  },
+  "native_odom_extra_m": 65.8600214842102,
+  "native_odom_extra_pct": 33.07760586273352,
+  "same_observed_cell_threshold": {
+    "RN04": {
+      "threshold_known_cells": 51304,
+      "first_tick": 704,
+      "observed_cells": 51304,
+      "odometry_to_threshold_m": 197.90758280849636
+    },
+    "R7": {
+      "threshold_known_cells": 51304,
+      "first_tick": 945,
+      "observed_cells": 51308,
+      "odometry_to_threshold_m": 262.87317710170663
+    }
+  },
+  "frozen_D02_room_mask_comparison": {
+    "RN04": {
+      "native_step": 101,
+      "remaining_unknown_fixed_D02_mask": 269,
+      "distance_m_from_D02_tick12": 24.637383539249434
+    },
+    "R7": {
+      "native_step": 106,
+      "remaining_unknown_fixed_D02_mask": 260,
+      "distance_m_from_D02_tick12": 25.167659277486578
+    }
+  },
+  "D02_input_equality_vs_RN04": {
+    "observed": {
+      "exact_equal": true,
+      "mismatched_elements": 0
+    },
+    "mean": {
+      "exact_equal": true,
+      "mismatched_elements": 0
+    },
+    "variance": {
+      "exact_equal": true,
+      "mismatched_elements": 0
+    },
+    "semantic": {
+      "exact_equal": true,
+      "mismatched_elements": 0
+    }
+  },
+  "R7_local_global_distance_estimate": {
+    "local_m_approx": 131.48889052895828,
+    "global_m_approx": 133.35510696599724,
+    "scope_source": "postscan_current_scope"
+  },
+  "RN04_local_global_distance_estimate": {
+    "local_m_approx": 104.47871376374736,
+    "global_m_approx": 94.70526224699819,
+    "scope_source": "postscan_current_scope"
+  },
+  "guarded_run_receipt": {
+    "elapsed_s": 444.556,
+    "log": "/home/dell/DELL_NATIVE2D/runs/NR-G2R7-03/worker.stdout.log",
+    "min_available_MiB": 2629.12,
+    "mission_status": {
+      "cur_step": 954,
+      "fail_reason": "MAPEX_NO_SELECTABLE_FRONTIER_NOT_GT",
+      "last_exp_time_s": 427.578528881073,
+      "mission_complete": true,
+      "start_time": 1792319794.2178476
+    },
+    "mode": "run",
+    "outcome": "SOURCE_TERMINAL",
+    "peak_pss_MiB": 2172.05,
+    "reason": null,
+    "returncode": 0
+  },
+  "failed_preceding_trial_NR_G2R7_02": {
+    "outcome": "FAILED",
+    "cause": "Python3.6 NumPy int64 JSON serialization; never reached G2 goal"
+  },
+  "Plan2_completed_as_originally_intended": false,
+  "Plan2_reason": "new G1/LaMa inference shifted inferred chamber portal into right room; newly observed right occluders were attributed to wrong structural zone, so no successor was chosen immediately after Goal2",
+  "new_run_used_GT_for_policy": false,
+  "all_numbers_measured_not_predictive": true,
+  "QA_status": "SOURCE_TERMINAL_ONLY; no independent IR1 review"
+}
