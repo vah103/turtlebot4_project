@@ -1,0 +1,204 @@
+{
+  "run_id": "NR-G2R7-03",
+  "is_real_native_run": true,
+  "no_future_gt_in_planner": true,
+  "arrivals": {
+    "27": [
+      169,
+      132
+    ],
+    "954": [
+      196,
+      216
+    ],
+    "200": [
+      18,
+      211
+    ],
+    "763": [
+      6,
+      126
+    ],
+    "260": [
+      55,
+      136
+    ],
+    "743": [
+      30,
+      91
+    ],
+    "55": [
+      196,
+      96
+    ],
+    "241": [
+      6,
+      136
+    ],
+    "539": [
+      118,
+      45
+    ],
+    "783": [
+      55,
+      126
+    ],
+    "499": [
+      148,
+      18
+    ],
+    "753": [
+      6,
+      96
+    ],
+    "522": [
+      118,
+      6
+    ]
+  },
+  "snapshots": [
+    {
+      "tick": 12,
+      "distance_m": 3.6708203932499366,
+      "observed_known_cells": 12964,
+      "image_room": "NR_G2R7_03_REAL_T0012_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0012_FULL.png",
+      "current_scope": {
+        "decision": 2,
+        "mode": "LOCAL",
+        "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+        "room_id": 1
+      }
+    },
+    {
+      "tick": 27,
+      "distance_m": 7.283281572999748,
+      "observed_known_cells": 16545,
+      "image_room": "NR_G2R7_03_REAL_T0027_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0027_FULL.png",
+      "current_scope": {
+        "decision": 3,
+        "mode": "LOCAL",
+        "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+        "room_id": 1
+      }
+    },
+    {
+      "tick": 35,
+      "distance_m": 9.454101966249686,
+      "observed_known_cells": 16561,
+      "image_room": "NR_G2R7_03_REAL_T0035_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0035_FULL.png",
+      "current_scope": {
+        "decision": 3,
+        "mode": "LOCAL",
+        "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+        "room_id": 1
+      }
+    },
+    {
+      "tick": 55,
+      "distance_m": 14.989950513486919,
+      "observed_known_cells": 16929,
+      "image_room": "NR_G2R7_03_REAL_T0055_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0055_FULL.png",
+      "current_scope": {
+        "decision": 4,
+        "mode": "LOCAL",
+        "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+        "room_id": 1
+      }
+    },
+    {
+      "tick": 80,
+      "distance_m": 21.878804895486766,
+      "observed_known_cells": 17426,
+      "image_room": "NR_G2R7_03_REAL_T0080_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0080_FULL.png",
+      "current_scope": {
+        "decision": 4,
+        "mode": "LOCAL",
+        "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+        "room_id": 1
+      }
+    },
+    {
+      "tick": 105,
+      "distance_m": 28.538479670736557,
+      "observed_known_cells": 19184,
+      "image_room": "NR_G2R7_03_REAL_T0105_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0105_FULL.png",
+      "current_scope": {
+        "decision": 5,
+        "mode": "LOCAL",
+        "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+        "room_id": 1
+      }
+    },
+    {
+      "tick": 200,
+      "distance_m": 55.51061562573597,
+      "observed_known_cells": 33068,
+      "image_room": "NR_G2R7_03_REAL_T0200_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0200_FULL.png",
+      "current_scope": {
+        "decision": 10,
+        "mode": "LOCAL",
+        "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+        "room_id": 2
+      }
+    },
+    {
+      "tick": 350,
+      "distance_m": 97.63685354698495,
+      "observed_known_cells": 35761,
+      "image_room": "NR_G2R7_03_REAL_T0350_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0350_FULL.png",
+      "current_scope": {
+        "decision": 14,
+        "mode": "GLOBAL",
+        "reason": "LOCAL_WFD_EXHAUSTED_RETURN_GLOBAL",
+        "room_id": 2
+      }
+    },
+    {
+      "tick": 500,
+      "distance_m": 140.52702349073442,
+      "observed_known_cells": 43866,
+      "image_room": "NR_G2R7_03_REAL_T0500_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0500_FULL.png",
+      "current_scope": {
+        "decision": 16,
+        "mode": "LOCAL",
+        "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+        "room_id": 3
+      }
+    },
+    {
+      "tick": 650,
+      "distance_m": 181.50157113897123,
+      "observed_known_cells": 46920,
+      "image_room": "NR_G2R7_03_REAL_T0650_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0650_FULL.png",
+      "current_scope": {
+        "decision": 19,
+        "mode": "LOCAL",
+        "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+        "room_id": 4
+      }
+    },
+    {
+      "tick": 953,
+      "distance_m": 265.06760429270815,
+      "observed_known_cells": 51308,
+      "image_room": "NR_G2R7_03_REAL_T0953_ROOM.png",
+      "image_full": "NR_G2R7_03_REAL_T0953_FULL.png",
+      "current_scope": {
+        "decision": 27,
+        "mode": "LOCAL",
+        "reason": "ROOM_WFD_REACHABLE_FRONTIER",
+        "room_id": 6
+      }
+    }
+  ]
+}
