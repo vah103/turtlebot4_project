@@ -1,0 +1,50 @@
+{
+  "dataset": "New Room D02 frozen Run11 observed, same initial epoch as NR-RN-01",
+  "warning": "all later observations here are synthetic counterfactuals, not G2-R6.1 actual robot LiDAR",
+  "source_observed_sha256": "de96490d2c94ca0b10ff7f359b2b8fe3b4bc9a8d5656194b9ceec8c13c539b23",
+  "initial_viewpoints": [
+    [
+      189,
+      120
+    ],
+    [
+      171,
+      143
+    ],
+    [
+      186,
+      162
+    ],
+    [
+      181,
+      156
+    ],
+    [
+      173,
+      146
+    ]
+  ],
+  "initial_route_nominal_m": 15.5,
+  "actual_d02_newroom_scan_after_first_goal_available": false,
+  "nochange_scan": {
+    "event": "S1_KEEP",
+    "wall_seconds": 0.00567
+  },
+  "synthetic_arrival_with_same_observed_grid": {
+    "action": "NEXT_GOAL",
+    "source": "NEW_LIGHT_ROUTE",
+    "new_lookahead": [
+      171,
+      143
+    ],
+    "old_goals_not_blindly_acked": true
+  },
+  "synthetic_40_new_walls_predicted_free": {
+    "event": "S3_STRUCTURAL_REBUILD",
+    "reason": "CONCENTRATED_PREDICTED_FREE_CONTRADICTED_BY_WALL",
+    "first_goal_checkpoint_action": "WAIT_STRUCTURAL_REFRESH",
+    "future_goal_ack_count": 0
+  },
+  "used_gt": false,
+  "full_closed_loop_native_run": false
+}
