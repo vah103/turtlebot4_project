@@ -1,0 +1,1479 @@
+{
+  "method": "Frozen 2D source-terminal run, original observed P1. Bit-equal parent LOCAL before first release; no GT. Run-relative global/local distances are not fixed-task comparisons.",
+  "runs": {
+    "MapExG1": {
+      "id": "NR-RN-04",
+      "ticks": 709,
+      "decisions": 25,
+      "distance_m": 199.10758280849635,
+      "global_m": 94.92886904474855,
+      "local_m": 104.17871376374778,
+      "known_p1": 51304,
+      "globals": [
+        {
+          "decision": 1,
+          "tick": 0,
+          "pose_core": [
+            131,
+            131
+          ],
+          "goal_core": [
+            153,
+            104
+          ],
+          "distance_m": 3.3708,
+          "reason": null
+        },
+        {
+          "decision": 7,
+          "tick": 105,
+          "pose_core": [
+            173,
+            202
+          ],
+          "goal_core": [
+            40,
+            179
+          ],
+          "distance_m": 14.9125,
+          "reason": null
+        },
+        {
+          "decision": 13,
+          "tick": 292,
+          "pose_core": [
+            32,
+            140
+          ],
+          "goal_core": [
+            53,
+            104
+          ],
+          "distance_m": 14.018,
+          "reason": null
+        },
+        {
+          "decision": 17,
+          "tick": 399,
+          "pose_core": [
+            20,
+            57
+          ],
+          "goal_core": [
+            46,
+            39
+          ],
+          "distance_m": 10.6361,
+          "reason": null
+        },
+        {
+          "decision": 20,
+          "tick": 471,
+          "pose_core": [
+            34,
+            9
+          ],
+          "goal_core": [
+            158,
+            32
+          ],
+          "distance_m": 20.0666,
+          "reason": null
+        },
+        {
+          "decision": 24,
+          "tick": 587,
+          "pose_core": [
+            187,
+            28
+          ],
+          "goal_core": [
+            167,
+            242
+          ],
+          "distance_m": 31.9249,
+          "reason": null
+        }
+      ],
+      "locals": [
+        {
+          "decision": 2,
+          "tick": 12,
+          "room": 1,
+          "goal_core": [
+            185,
+            120
+          ],
+          "distance_m": 3.5889
+        },
+        {
+          "decision": 3,
+          "tick": 26,
+          "room": 1,
+          "goal_core": [
+            190,
+            138
+          ],
+          "distance_m": 3.3708
+        },
+        {
+          "decision": 4,
+          "tick": 38,
+          "room": 1,
+          "goal_core": [
+            182,
+            110
+          ],
+          "distance_m": 5.7652
+        },
+        {
+          "decision": 5,
+          "tick": 59,
+          "room": 1,
+          "goal_core": [
+            169,
+            187
+          ],
+          "distance_m": 10.5652
+        },
+        {
+          "decision": 6,
+          "tick": 96,
+          "room": 1,
+          "goal_core": [
+            191,
+            202
+          ],
+          "distance_m": 2.3944
+        },
+        {
+          "decision": 8,
+          "tick": 157,
+          "room": 2,
+          "goal_core": [
+            13,
+            222
+          ],
+          "distance_m": 7.0305
+        },
+        {
+          "decision": 9,
+          "tick": 184,
+          "room": 2,
+          "goal_core": [
+            47,
+            234
+          ],
+          "distance_m": 2.8361
+        },
+        {
+          "decision": 10,
+          "tick": 196,
+          "room": 2,
+          "goal_core": [
+            74,
+            222
+          ],
+          "distance_m": 3.1472
+        },
+        {
+          "decision": 11,
+          "tick": 207,
+          "room": 2,
+          "goal_core": [
+            9,
+            149
+          ],
+          "distance_m": 17.3833
+        },
+        {
+          "decision": 12,
+          "tick": 268,
+          "room": 2,
+          "goal_core": [
+            39,
+            140
+          ],
+          "distance_m": 6.818
+        },
+        {
+          "decision": 14,
+          "tick": 340,
+          "room": 3,
+          "goal_core": [
+            11,
+            110
+          ],
+          "distance_m": 5.8472
+        },
+        {
+          "decision": 15,
+          "tick": 360,
+          "room": 3,
+          "goal_core": [
+            11,
+            84
+          ],
+          "distance_m": 7.1944
+        },
+        {
+          "decision": 16,
+          "tick": 385,
+          "room": 3,
+          "goal_core": [
+            29,
+            57
+          ],
+          "distance_m": 3.818
+        },
+        {
+          "decision": 18,
+          "tick": 437,
+          "room": 4,
+          "goal_core": [
+            13,
+            44
+          ],
+          "distance_m": 3.518
+        },
+        {
+          "decision": 19,
+          "tick": 450,
+          "room": 4,
+          "goal_core": [
+            43,
+            6
+          ],
+          "distance_m": 5.6889
+        },
+        {
+          "decision": 21,
+          "tick": 544,
+          "room": 5,
+          "goal_core": [
+            128,
+            30
+          ],
+          "distance_m": 2.8472
+        },
+        {
+          "decision": 22,
+          "tick": 554,
+          "room": 5,
+          "goal_core": [
+            162,
+            9
+          ],
+          "distance_m": 4.0472
+        },
+        {
+          "decision": 23,
+          "tick": 568,
+          "room": 5,
+          "goal_core": [
+            180,
+            28
+          ],
+          "distance_m": 5.318
+        },
+        {
+          "decision": 25,
+          "tick": 698,
+          "room": 6,
+          "goal_core": [
+            186,
+            233
+          ],
+          "distance_m": 3.0
+        }
+      ],
+      "first_room": {
+        "end_decision": 7,
+        "exit_tick": 105,
+        "local_m": 25.684597,
+        "exit_pose": [
+          173,
+          202
+        ],
+        "known_p1": 21302
+      },
+      "updates": [],
+      "releases": [],
+      "vs_early": {
+        "early_missing_p1": 1,
+        "early_extra_p1": 0,
+        "early_delta_total_m": 14.094427190999909,
+        "early_delta_global_m": 26.966563145999515,
+        "early_delta_local_m": -12.872135954999521
+      }
+    },
+    "G2SweepR1": {
+      "id": "NR-G2SWEEP-02",
+      "ticks": 757,
+      "decisions": 27,
+      "distance_m": 213.50758280849635,
+      "global_m": 125.34821859524811,
+      "local_m": 88.1593642132483,
+      "known_p1": 51303,
+      "globals": [
+        {
+          "decision": 1,
+          "tick": 0,
+          "pose_core": [
+            131,
+            131
+          ],
+          "goal_core": [
+            153,
+            104
+          ],
+          "distance_m": 3.3708,
+          "reason": null
+        },
+        {
+          "decision": 7,
+          "tick": 84,
+          "pose_core": [
+            185,
+            203
+          ],
+          "goal_core": [
+            39,
+            179
+          ],
+          "distance_m": 16.2597,
+          "reason": null
+        },
+        {
+          "decision": 14,
+          "tick": 245,
+          "pose_core": [
+            67,
+            232
+          ],
+          "goal_core": [
+            155,
+            54
+          ],
+          "distance_m": 40.3957,
+          "reason": null
+        },
+        {
+          "decision": 18,
+          "tick": 449,
+          "pose_core": [
+            131,
+            34
+          ],
+          "goal_core": [
+            85,
+            30
+          ],
+          "distance_m": 17.3833,
+          "reason": null
+        },
+        {
+          "decision": 23,
+          "tick": 551,
+          "pose_core": [
+            14,
+            29
+          ],
+          "goal_core": [
+            18,
+            64
+          ],
+          "distance_m": 17.3777,
+          "reason": null
+        },
+        {
+          "decision": 26,
+          "tick": 636,
+          "pose_core": [
+            19,
+            93
+          ],
+          "goal_core": [
+            167,
+            243
+          ],
+          "distance_m": 30.561,
+          "reason": null
+        }
+      ],
+      "locals": [
+        {
+          "decision": 2,
+          "tick": 12,
+          "room": 1,
+          "goal_core": [
+            186,
+            105
+          ],
+          "distance_m": 4.1944
+        },
+        {
+          "decision": 3,
+          "tick": 27,
+          "room": 1,
+          "goal_core": [
+            175,
+            119
+          ],
+          "distance_m": 2.7708
+        },
+        {
+          "decision": 4,
+          "tick": 37,
+          "room": 1,
+          "goal_core": [
+            151,
+            136
+          ],
+          "distance_m": 4.5708
+        },
+        {
+          "decision": 5,
+          "tick": 53,
+          "room": 1,
+          "goal_core": [
+            174,
+            191
+          ],
+          "distance_m": 5.9944
+        },
+        {
+          "decision": 6,
+          "tick": 74,
+          "room": 1,
+          "goal_core": [
+            192,
+            202
+          ],
+          "distance_m": 2.5416
+        },
+        {
+          "decision": 8,
+          "tick": 141,
+          "room": 2,
+          "goal_core": [
+            9,
+            143
+          ],
+          "distance_m": 5.3944
+        },
+        {
+          "decision": 9,
+          "tick": 160,
+          "room": 2,
+          "goal_core": [
+            6,
+            149
+          ],
+          "distance_m": 0.6
+        },
+        {
+          "decision": 10,
+          "tick": 162,
+          "room": 2,
+          "goal_core": [
+            9,
+            155
+          ],
+          "distance_m": 0.5236
+        },
+        {
+          "decision": 11,
+          "tick": 164,
+          "room": 2,
+          "goal_core": [
+            26,
+            203
+          ],
+          "distance_m": 12.5889
+        },
+        {
+          "decision": 12,
+          "tick": 208,
+          "room": 2,
+          "goal_core": [
+            18,
+            233
+          ],
+          "distance_m": 4.118
+        },
+        {
+          "decision": 13,
+          "tick": 223,
+          "room": 2,
+          "goal_core": [
+            74,
+            226
+          ],
+          "distance_m": 5.9125
+        },
+        {
+          "decision": 15,
+          "tick": 385,
+          "room": 3,
+          "goal_core": [
+            189,
+            43
+          ],
+          "distance_m": 4.0416
+        },
+        {
+          "decision": 16,
+          "tick": 400,
+          "room": 3,
+          "goal_core": [
+            174,
+            12
+          ],
+          "distance_m": 3.5944
+        },
+        {
+          "decision": 17,
+          "tick": 413,
+          "room": 3,
+          "goal_core": [
+            131,
+            42
+          ],
+          "distance_m": 10.3416
+        },
+        {
+          "decision": 19,
+          "tick": 510,
+          "room": 4,
+          "goal_core": [
+            59,
+            27
+          ],
+          "distance_m": 2.6236
+        },
+        {
+          "decision": 20,
+          "tick": 519,
+          "room": 4,
+          "goal_core": [
+            42,
+            6
+          ],
+          "distance_m": 3.1416
+        },
+        {
+          "decision": 21,
+          "tick": 531,
+          "room": 4,
+          "goal_core": [
+            38,
+            15
+          ],
+          "distance_m": 0.9
+        },
+        {
+          "decision": 22,
+          "tick": 534,
+          "room": 4,
+          "goal_core": [
+            14,
+            36
+          ],
+          "distance_m": 4.5652
+        },
+        {
+          "decision": 24,
+          "tick": 613,
+          "room": 5,
+          "goal_core": [
+            19,
+            74
+          ],
+          "distance_m": 1.1236
+        },
+        {
+          "decision": 25,
+          "tick": 617,
+          "room": 5,
+          "goal_core": [
+            10,
+            97
+          ],
+          "distance_m": 5.3944
+        },
+        {
+          "decision": 27,
+          "tick": 745,
+          "room": 6,
+          "goal_core": [
+            187,
+            233
+          ],
+          "distance_m": 3.2236
+        }
+      ],
+      "first_room": {
+        "end_decision": 7,
+        "exit_tick": 84,
+        "local_m": 20.072136,
+        "exit_pose": [
+          185,
+          203
+        ],
+        "known_p1": 21291
+      },
+      "updates": [],
+      "releases": [],
+      "vs_early": {
+        "early_missing_p1": 0,
+        "early_extra_p1": 0,
+        "early_delta_total_m": -0.30557280900009687,
+        "early_delta_global_m": -3.4527864045000456,
+        "early_delta_local_m": 3.147213595499963
+      }
+    },
+    "EarlyDoorR1": {
+      "id": "NR-G2EARLYD-02",
+      "ticks": 757,
+      "decisions": 28,
+      "distance_m": 213.20200999949625,
+      "global_m": 121.89543219074807,
+      "local_m": 91.30657780874826,
+      "known_p1": 51303,
+      "globals": [
+        {
+          "decision": 1,
+          "tick": 0,
+          "pose_core": [
+            131,
+            131
+          ],
+          "goal_core": [
+            153,
+            104
+          ],
+          "distance_m": 3.3708,
+          "reason": {
+            "reason": "NO_ACTIVE_LOCAL"
+          }
+        },
+        {
+          "decision": 7,
+          "tick": 84,
+          "pose_core": [
+            185,
+            203
+          ],
+          "goal_core": [
+            39,
+            179
+          ],
+          "distance_m": 16.2597,
+          "reason": {
+            "entry_tick": 12,
+            "global_decision_uses_fresh_observed_WFD": true,
+            "n_current_WFD": 22,
+            "original_index": 1,
+            "portal_rc": [
+              643,
+              691
+            ],
+            "reason": "GOAL_NO_LONGER_CURRENT_WFD",
+            "reserved_goal_rc": [
+              628,
+              692
+            ],
+            "room_id": 1,
+            "selected_index": 1
+          }
+        },
+        {
+          "decision": 14,
+          "tick": 245,
+          "pose_core": [
+            67,
+            232
+          ],
+          "goal_core": [
+            155,
+            54
+          ],
+          "distance_m": 40.3957,
+          "reason": {
+            "current_map_astar_m": 42.800000000000004,
+            "entry_tick": 141,
+            "global_decision_uses_fresh_observed_WFD": true,
+            "matched_distance_m": 0.0,
+            "n_current_WFD": 15,
+            "original_index": 10,
+            "portal_rc": [
+              560,
+              671
+            ],
+            "reason": "VALID_EARLY_GLOBAL_GOAL",
+            "reserved_goal_rc": [
+              655,
+              554
+            ],
+            "room_id": 2,
+            "selected_index": 10
+          }
+        },
+        {
+          "decision": 18,
+          "tick": 449,
+          "pose_core": [
+            131,
+            34
+          ],
+          "goal_core": [
+            85,
+            30
+          ],
+          "distance_m": 17.3833,
+          "reason": {
+            "current_map_astar_m": 19.400000000000002,
+            "entry_tick": 385,
+            "global_decision_uses_fresh_observed_WFD": true,
+            "matched_distance_m": 0.0,
+            "n_current_WFD": 17,
+            "original_index": 11,
+            "portal_rc": [
+              643,
+              571
+            ],
+            "reason": "VALID_EARLY_GLOBAL_GOAL",
+            "reserved_goal_rc": [
+              585,
+              530
+            ],
+            "room_id": 3,
+            "selected_index": 11
+          }
+        },
+        {
+          "decision": 23,
+          "tick": 551,
+          "pose_core": [
+            14,
+            29
+          ],
+          "goal_core": [
+            48,
+            59
+          ],
+          "distance_m": 13.9249,
+          "reason": {
+            "current_map_astar_m": 16.2,
+            "entry_tick": 510,
+            "global_decision_uses_fresh_observed_WFD": true,
+            "matched_distance_m": 0.0,
+            "n_current_WFD": 12,
+            "original_index": 0,
+            "portal_rc": [
+              575,
+              551
+            ],
+            "reason": "VALID_EARLY_GLOBAL_GOAL",
+            "reserved_goal_rc": [
+              548,
+              559
+            ],
+            "room_id": 4,
+            "selected_index": 6
+          }
+        },
+        {
+          "decision": 27,
+          "tick": 636,
+          "pose_core": [
+            19,
+            93
+          ],
+          "goal_core": [
+            167,
+            243
+          ],
+          "distance_m": 30.561,
+          "reason": {
+            "current_map_astar_m": 33.2,
+            "entry_tick": 602,
+            "global_decision_uses_fresh_observed_WFD": true,
+            "matched_distance_m": 0.0,
+            "n_current_WFD": 3,
+            "original_index": 1,
+            "portal_rc": [
+              560,
+              611
+            ],
+            "reason": "VALID_EARLY_GLOBAL_GOAL",
+            "reserved_goal_rc": [
+              667,
+              743
+            ],
+            "room_id": 5,
+            "selected_index": 1
+          }
+        }
+      ],
+      "locals": [
+        {
+          "decision": 2,
+          "tick": 12,
+          "room": 1,
+          "goal_core": [
+            186,
+            105
+          ],
+          "distance_m": 4.1944
+        },
+        {
+          "decision": 3,
+          "tick": 27,
+          "room": 1,
+          "goal_core": [
+            175,
+            119
+          ],
+          "distance_m": 2.7708
+        },
+        {
+          "decision": 4,
+          "tick": 37,
+          "room": 1,
+          "goal_core": [
+            151,
+            136
+          ],
+          "distance_m": 4.5708
+        },
+        {
+          "decision": 5,
+          "tick": 53,
+          "room": 1,
+          "goal_core": [
+            174,
+            191
+          ],
+          "distance_m": 5.9944
+        },
+        {
+          "decision": 6,
+          "tick": 74,
+          "room": 1,
+          "goal_core": [
+            192,
+            202
+          ],
+          "distance_m": 2.5416
+        },
+        {
+          "decision": 8,
+          "tick": 141,
+          "room": 2,
+          "goal_core": [
+            9,
+            143
+          ],
+          "distance_m": 5.3944
+        },
+        {
+          "decision": 9,
+          "tick": 160,
+          "room": 2,
+          "goal_core": [
+            6,
+            149
+          ],
+          "distance_m": 0.6
+        },
+        {
+          "decision": 10,
+          "tick": 162,
+          "room": 2,
+          "goal_core": [
+            9,
+            155
+          ],
+          "distance_m": 0.5236
+        },
+        {
+          "decision": 11,
+          "tick": 164,
+          "room": 2,
+          "goal_core": [
+            26,
+            203
+          ],
+          "distance_m": 12.5889
+        },
+        {
+          "decision": 12,
+          "tick": 208,
+          "room": 2,
+          "goal_core": [
+            18,
+            233
+          ],
+          "distance_m": 4.118
+        },
+        {
+          "decision": 13,
+          "tick": 223,
+          "room": 2,
+          "goal_core": [
+            74,
+            226
+          ],
+          "distance_m": 5.9125
+        },
+        {
+          "decision": 15,
+          "tick": 385,
+          "room": 3,
+          "goal_core": [
+            189,
+            43
+          ],
+          "distance_m": 4.0416
+        },
+        {
+          "decision": 16,
+          "tick": 400,
+          "room": 3,
+          "goal_core": [
+            174,
+            12
+          ],
+          "distance_m": 3.5944
+        },
+        {
+          "decision": 17,
+          "tick": 413,
+          "room": 3,
+          "goal_core": [
+            131,
+            42
+          ],
+          "distance_m": 10.3416
+        },
+        {
+          "decision": 19,
+          "tick": 510,
+          "room": 4,
+          "goal_core": [
+            59,
+            27
+          ],
+          "distance_m": 2.6236
+        },
+        {
+          "decision": 20,
+          "tick": 519,
+          "room": 4,
+          "goal_core": [
+            42,
+            6
+          ],
+          "distance_m": 3.1416
+        },
+        {
+          "decision": 21,
+          "tick": 531,
+          "room": 4,
+          "goal_core": [
+            38,
+            15
+          ],
+          "distance_m": 0.9
+        },
+        {
+          "decision": 22,
+          "tick": 534,
+          "room": 4,
+          "goal_core": [
+            14,
+            36
+          ],
+          "distance_m": 4.5652
+        },
+        {
+          "decision": 24,
+          "tick": 602,
+          "room": 5,
+          "goal_core": [
+            18,
+            64
+          ],
+          "distance_m": 3.1472
+        },
+        {
+          "decision": 25,
+          "tick": 613,
+          "room": 5,
+          "goal_core": [
+            19,
+            74
+          ],
+          "distance_m": 1.1236
+        },
+        {
+          "decision": 26,
+          "tick": 617,
+          "room": 5,
+          "goal_core": [
+            10,
+            97
+          ],
+          "distance_m": 5.3944
+        },
+        {
+          "decision": 28,
+          "tick": 745,
+          "room": 6,
+          "goal_core": [
+            187,
+            233
+          ],
+          "distance_m": 3.2236
+        }
+      ],
+      "first_room": {
+        "end_decision": 7,
+        "exit_tick": 84,
+        "local_m": 20.072136,
+        "exit_pose": [
+          185,
+          203
+        ],
+        "known_p1": 21291
+      },
+      "updates": [
+        {
+          "decision": 2,
+          "tick": 12,
+          "room": 1,
+          "reserved": [
+            88,
+            80
+          ],
+          "exit": [
+            143,
+            111
+          ],
+          "n_portals": 2,
+          "new_or_changed": true,
+          "changed_global": true
+        },
+        {
+          "decision": 3,
+          "tick": 27,
+          "room": 1,
+          "reserved": [
+            124,
+            199
+          ],
+          "exit": [
+            143,
+            191
+          ],
+          "n_portals": 2,
+          "new_or_changed": false,
+          "changed_global": true
+        },
+        {
+          "decision": 4,
+          "tick": 37,
+          "room": 1,
+          "reserved": [
+            124,
+            199
+          ],
+          "exit": [
+            143,
+            191
+          ],
+          "n_portals": 2,
+          "new_or_changed": false,
+          "changed_global": false
+        },
+        {
+          "decision": 5,
+          "tick": 53,
+          "room": 1,
+          "reserved": [
+            124,
+            199
+          ],
+          "exit": [
+            143,
+            191
+          ],
+          "n_portals": 2,
+          "new_or_changed": false,
+          "changed_global": false
+        },
+        {
+          "decision": 6,
+          "tick": 74,
+          "room": 1,
+          "reserved": [
+            128,
+            192
+          ],
+          "exit": [
+            143,
+            191
+          ],
+          "n_portals": 2,
+          "new_or_changed": false,
+          "changed_global": true
+        },
+        {
+          "decision": 8,
+          "tick": 141,
+          "room": 2,
+          "reserved": [
+            155,
+            54
+          ],
+          "exit": [
+            60,
+            171
+          ],
+          "n_portals": 1,
+          "new_or_changed": true,
+          "changed_global": true
+        },
+        {
+          "decision": 9,
+          "tick": 160,
+          "room": 2,
+          "reserved": [
+            155,
+            54
+          ],
+          "exit": [
+            60,
+            171
+          ],
+          "n_portals": 1,
+          "new_or_changed": false,
+          "changed_global": false
+        },
+        {
+          "decision": 10,
+          "tick": 162,
+          "room": 2,
+          "reserved": [
+            155,
+            54
+          ],
+          "exit": [
+            60,
+            171
+          ],
+          "n_portals": 1,
+          "new_or_changed": false,
+          "changed_global": false
+        },
+        {
+          "decision": 11,
+          "tick": 164,
+          "room": 2,
+          "reserved": [
+            155,
+            54
+          ],
+          "exit": [
+            60,
+            171
+          ],
+          "n_portals": 1,
+          "new_or_changed": false,
+          "changed_global": false
+        },
+        {
+          "decision": 12,
+          "tick": 208,
+          "room": 2,
+          "reserved": [
+            100,
+            88
+          ],
+          "exit": [
+            60,
+            171
+          ],
+          "n_portals": 1,
+          "new_or_changed": false,
+          "changed_global": true
+        },
+        {
+          "decision": 13,
+          "tick": 223,
+          "room": 2,
+          "reserved": [
+            155,
+            54
+          ],
+          "exit": [
+            60,
+            171
+          ],
+          "n_portals": 1,
+          "new_or_changed": false,
+          "changed_global": true
+        },
+        {
+          "decision": 15,
+          "tick": 385,
+          "room": 3,
+          "reserved": [
+            85,
+            30
+          ],
+          "exit": [
+            143,
+            71
+          ],
+          "n_portals": 1,
+          "new_or_changed": true,
+          "changed_global": true
+        },
+        {
+          "decision": 16,
+          "tick": 400,
+          "room": 3,
+          "reserved": [
+            85,
+            30
+          ],
+          "exit": [
+            143,
+            71
+          ],
+          "n_portals": 1,
+          "new_or_changed": false,
+          "changed_global": false
+        },
+        {
+          "decision": 17,
+          "tick": 413,
+          "room": 3,
+          "reserved": [
+            85,
+            30
+          ],
+          "exit": [
+            143,
+            71
+          ],
+          "n_portals": 1,
+          "new_or_changed": false,
+          "changed_global": false
+        },
+        {
+          "decision": 19,
+          "tick": 510,
+          "room": 4,
+          "reserved": [
+            48,
+            59
+          ],
+          "exit": [
+            75,
+            51
+          ],
+          "n_portals": 1,
+          "new_or_changed": true,
+          "changed_global": true
+        },
+        {
+          "decision": 20,
+          "tick": 519,
+          "room": 4,
+          "reserved": [
+            48,
+            59
+          ],
+          "exit": [
+            75,
+            51
+          ],
+          "n_portals": 1,
+          "new_or_changed": false,
+          "changed_global": false
+        },
+        {
+          "decision": 21,
+          "tick": 531,
+          "room": 4,
+          "reserved": [
+            48,
+            59
+          ],
+          "exit": [
+            75,
+            51
+          ],
+          "n_portals": 1,
+          "new_or_changed": false,
+          "changed_global": false
+        },
+        {
+          "decision": 22,
+          "tick": 534,
+          "room": 4,
+          "reserved": [
+            48,
+            59
+          ],
+          "exit": [
+            75,
+            51
+          ],
+          "n_portals": 1,
+          "new_or_changed": false,
+          "changed_global": false
+        },
+        {
+          "decision": 24,
+          "tick": 602,
+          "room": 5,
+          "reserved": [
+            167,
+            243
+          ],
+          "exit": [
+            60,
+            111
+          ],
+          "n_portals": 2,
+          "new_or_changed": true,
+          "changed_global": true
+        },
+        {
+          "decision": 25,
+          "tick": 613,
+          "room": 5,
+          "reserved": [
+            167,
+            243
+          ],
+          "exit": [
+            60,
+            111
+          ],
+          "n_portals": 2,
+          "new_or_changed": false,
+          "changed_global": false
+        },
+        {
+          "decision": 26,
+          "tick": 617,
+          "room": 5,
+          "reserved": [
+            167,
+            243
+          ],
+          "exit": [
+            60,
+            111
+          ],
+          "n_portals": 2,
+          "new_or_changed": false,
+          "changed_global": false
+        },
+        {
+          "decision": 28,
+          "tick": 745,
+          "room": 6,
+          "reserved": null,
+          "exit": null,
+          "n_portals": 1,
+          "new_or_changed": true,
+          "changed_global": true
+        }
+      ],
+      "releases": [
+        {
+          "decision": 7,
+          "tick": 84,
+          "reason": "GOAL_NO_LONGER_CURRENT_WFD",
+          "original_index": 1,
+          "selected_index": 1,
+          "swapped": false,
+          "reserved": [
+            128,
+            192
+          ]
+        },
+        {
+          "decision": 14,
+          "tick": 245,
+          "reason": "VALID_EARLY_GLOBAL_GOAL",
+          "original_index": 10,
+          "selected_index": 10,
+          "swapped": false,
+          "reserved": [
+            155,
+            54
+          ]
+        },
+        {
+          "decision": 18,
+          "tick": 449,
+          "reason": "VALID_EARLY_GLOBAL_GOAL",
+          "original_index": 11,
+          "selected_index": 11,
+          "swapped": false,
+          "reserved": [
+            85,
+            30
+          ]
+        },
+        {
+          "decision": 23,
+          "tick": 551,
+          "reason": "VALID_EARLY_GLOBAL_GOAL",
+          "original_index": 0,
+          "selected_index": 6,
+          "swapped": true,
+          "reserved": [
+            48,
+            59
+          ]
+        },
+        {
+          "decision": 27,
+          "tick": 636,
+          "reason": "VALID_EARLY_GLOBAL_GOAL",
+          "original_index": 1,
+          "selected_index": 1,
+          "swapped": false,
+          "reserved": [
+            167,
+            243
+          ]
+        }
+      ]
+    }
+  },
+  "door_log": {
+    "n_LOCAL_epochs": 22,
+    "n_new_openings_after_room_entry": 0,
+    "n_goal_or_door_updates": 10,
+    "n_release": 5,
+    "n_honored_early_goal": 4,
+    "n_reassigned_first_global": 1,
+    "reason_counts": {
+      "GOAL_NO_LONGER_CURRENT_WFD": 1,
+      "VALID_EARLY_GLOBAL_GOAL": 4
+    }
+  },
+  "initial_parent_parity": {
+    "initial_85_odometry_equal": true
+  }
+}
