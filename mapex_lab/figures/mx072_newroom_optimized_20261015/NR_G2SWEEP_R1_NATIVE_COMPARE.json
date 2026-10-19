@@ -1,0 +1,337 @@
+{
+  "method": "Completed native runs, identical P1 support and run config; compare end observed masks and numeric odometry. No GT used. Different final maps imply non-parity; do not claim equivalent-coverage gain.",
+  "runs": {
+    "Run04_MapEx_G1": {
+      "id": "NR-RN-04",
+      "ticks": 709,
+      "total_m": 199.10758280849635,
+      "global_m": 94.92886904474855,
+      "local_m": 104.17871376374778,
+      "n_decisions": 25,
+      "n_global": 6,
+      "n_local": 19,
+      "observed_P1": 51304,
+      "first_room": {
+        "end_decision": 7,
+        "exit_tick": 105,
+        "exit_robot_P1": [
+          173,
+          202
+        ],
+        "local_m": 25.684597,
+        "local_decisions": 5,
+        "observed_P1_at_exit": 21302
+      },
+      "n_sweep_goal_changed": 0,
+      "n_sweep_reversal": 0,
+      "n_sweep_residual_fallback": 0,
+      "g2_trace": [],
+      "sweep_missed_vs_Run04_MapEx_G1": 1,
+      "sweep_extra_vs_Run04_MapEx_G1": 0
+    },
+    "PVU_R2": {
+      "id": "NR-G2PVU-03",
+      "ticks": 936,
+      "total_m": 265.7561119657459,
+      "global_m": 168.30232056149777,
+      "local_m": 97.4537914042482,
+      "n_decisions": 27,
+      "n_global": 9,
+      "n_local": 18,
+      "observed_P1": 51304,
+      "first_room": {
+        "end_decision": 6,
+        "exit_tick": 107,
+        "exit_robot_P1": [
+          191,
+          112
+        ],
+        "local_m": 25.979024,
+        "local_decisions": 4,
+        "observed_P1_at_exit": 21536
+      },
+      "n_sweep_goal_changed": 0,
+      "n_sweep_reversal": 0,
+      "n_sweep_residual_fallback": 0,
+      "g2_trace": [],
+      "sweep_missed_vs_PVU_R2": 1,
+      "sweep_extra_vs_PVU_R2": 0
+    },
+    "Sweep_R1": {
+      "id": "NR-G2SWEEP-02",
+      "ticks": 757,
+      "total_m": 213.50758280849635,
+      "global_m": 125.34821859524811,
+      "local_m": 88.1593642132483,
+      "n_decisions": 27,
+      "n_global": 6,
+      "n_local": 21,
+      "observed_P1": 51303,
+      "first_room": {
+        "end_decision": 7,
+        "exit_tick": 84,
+        "exit_robot_P1": [
+          185,
+          203
+        ],
+        "local_m": 20.072136,
+        "local_decisions": 5,
+        "observed_P1_at_exit": 21291
+      },
+      "n_sweep_goal_changed": 11,
+      "n_sweep_reversal": 0,
+      "n_sweep_residual_fallback": 0,
+      "g2_trace": [
+        {
+          "decision": 2,
+          "tick": 12,
+          "room": 1,
+          "selected": 3,
+          "original": 2,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": 1,
+          "changed": true
+        },
+        {
+          "decision": 3,
+          "tick": 27,
+          "room": 1,
+          "selected": 2,
+          "original": 4,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": 1,
+          "changed": true
+        },
+        {
+          "decision": 4,
+          "tick": 37,
+          "room": 1,
+          "selected": 0,
+          "original": 4,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": 1,
+          "changed": true
+        },
+        {
+          "decision": 5,
+          "tick": 53,
+          "room": 1,
+          "selected": 0,
+          "original": 0,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": 1,
+          "changed": false
+        },
+        {
+          "decision": 6,
+          "tick": 74,
+          "room": 1,
+          "selected": 0,
+          "original": 0,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": 1,
+          "changed": false
+        },
+        {
+          "decision": 8,
+          "tick": 141,
+          "room": 2,
+          "selected": 1,
+          "original": 4,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": 1,
+          "changed": true
+        },
+        {
+          "decision": 9,
+          "tick": 160,
+          "room": 2,
+          "selected": 1,
+          "original": 0,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": 1,
+          "changed": true
+        },
+        {
+          "decision": 10,
+          "tick": 162,
+          "room": 2,
+          "selected": 2,
+          "original": 1,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": 1,
+          "changed": true
+        },
+        {
+          "decision": 11,
+          "tick": 164,
+          "room": 2,
+          "selected": 2,
+          "original": 0,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": 1,
+          "changed": true
+        },
+        {
+          "decision": 12,
+          "tick": 208,
+          "room": 2,
+          "selected": 2,
+          "original": 2,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": 1,
+          "changed": false
+        },
+        {
+          "decision": 13,
+          "tick": 223,
+          "room": 2,
+          "selected": 2,
+          "original": 2,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": 1,
+          "changed": false
+        },
+        {
+          "decision": 15,
+          "tick": 385,
+          "room": 3,
+          "selected": 4,
+          "original": 4,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": -1,
+          "changed": false
+        },
+        {
+          "decision": 16,
+          "tick": 400,
+          "room": 3,
+          "selected": 3,
+          "original": 3,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": -1,
+          "changed": false
+        },
+        {
+          "decision": 17,
+          "tick": 413,
+          "room": 3,
+          "selected": 1,
+          "original": 2,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": -1,
+          "changed": true
+        },
+        {
+          "decision": 19,
+          "tick": 510,
+          "room": 4,
+          "selected": 4,
+          "original": 0,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": -1,
+          "changed": true
+        },
+        {
+          "decision": 20,
+          "tick": 519,
+          "room": 4,
+          "selected": 3,
+          "original": 3,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": -1,
+          "changed": false
+        },
+        {
+          "decision": 21,
+          "tick": 531,
+          "room": 4,
+          "selected": 2,
+          "original": 0,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": -1,
+          "changed": true
+        },
+        {
+          "decision": 22,
+          "tick": 534,
+          "room": 4,
+          "selected": 0,
+          "original": 0,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": -1,
+          "changed": false
+        },
+        {
+          "decision": 24,
+          "tick": 613,
+          "room": 5,
+          "selected": 3,
+          "original": 3,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": 1,
+          "changed": false
+        },
+        {
+          "decision": 25,
+          "tick": 617,
+          "room": 5,
+          "selected": 0,
+          "original": 2,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": 1,
+          "changed": true
+        },
+        {
+          "decision": 27,
+          "tick": 745,
+          "room": 6,
+          "selected": 0,
+          "original": 0,
+          "reason": "FORWARD_SWEEP",
+          "phase": 0,
+          "sign": 1,
+          "changed": false
+        }
+      ],
+      "differential": {
+        "Run04_MapEx_G1": {
+          "distance_delta_m": 14.4,
+          "global_delta_m": 30.41935,
+          "local_delta_m": -16.01935,
+          "observed_delta_cells": -1,
+          "missing_core_cells": 1,
+          "extra_core_cells": 0
+        },
+        "PVU_R2": {
+          "distance_delta_m": -52.248529,
+          "global_delta_m": -42.954102,
+          "local_delta_m": -9.294427,
+          "observed_delta_cells": -1,
+          "missing_core_cells": 1,
+          "extra_core_cells": 0
+        }
+      }
+    }
+  }
+}
