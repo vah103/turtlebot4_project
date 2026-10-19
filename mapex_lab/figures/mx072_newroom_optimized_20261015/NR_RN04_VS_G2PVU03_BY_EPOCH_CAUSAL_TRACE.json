@@ -1,0 +1,1262 @@
+{
+  "NR-RN-04": {
+    "name": "NR-RN-04",
+    "epochs": [
+      {
+        "epoch": 1,
+        "ticks": [
+          0,
+          12
+        ],
+        "mode": "GLOBAL",
+        "room_id": null,
+        "source_rc": [
+          131,
+          131
+        ],
+        "end_rc": [
+          147,
+          111
+        ],
+        "distance_m": 3.371,
+        "known_at_start": 7723,
+        "known_at_end": 12601,
+        "new_cells": 4878,
+        "cells_per_m": 1447.1,
+        "candidate_count": 13
+      },
+      {
+        "epoch": 2,
+        "ticks": [
+          12,
+          26
+        ],
+        "mode": "LOCAL",
+        "room_id": 1,
+        "source_rc": [
+          147,
+          111
+        ],
+        "end_rc": [
+          176,
+          124
+        ],
+        "distance_m": 3.589,
+        "known_at_start": 12601,
+        "known_at_end": 16664,
+        "new_cells": 4063,
+        "cells_per_m": 1132.1,
+        "candidate_count": 5
+      },
+      {
+        "epoch": 3,
+        "ticks": [
+          26,
+          38
+        ],
+        "mode": "LOCAL",
+        "room_id": 1,
+        "source_rc": [
+          176,
+          124
+        ],
+        "end_rc": [
+          183,
+          139
+        ],
+        "distance_m": 3.371,
+        "known_at_start": 16664,
+        "known_at_end": 17267,
+        "new_cells": 603,
+        "cells_per_m": 178.9,
+        "candidate_count": 6
+      },
+      {
+        "epoch": 4,
+        "ticks": [
+          38,
+          59
+        ],
+        "mode": "LOCAL",
+        "room_id": 1,
+        "source_rc": [
+          183,
+          139
+        ],
+        "end_rc": [
+          191,
+          112
+        ],
+        "distance_m": 5.765,
+        "known_at_start": 17267,
+        "known_at_end": 17295,
+        "new_cells": 28,
+        "cells_per_m": 4.9,
+        "candidate_count": 3
+      },
+      {
+        "epoch": 5,
+        "ticks": [
+          59,
+          96
+        ],
+        "mode": "LOCAL",
+        "room_id": 1,
+        "source_rc": [
+          191,
+          112
+        ],
+        "end_rc": [
+          161,
+          187
+        ],
+        "distance_m": 10.565,
+        "known_at_start": 17295,
+        "known_at_end": 18666,
+        "new_cells": 1371,
+        "cells_per_m": 129.8,
+        "candidate_count": 2
+      },
+      {
+        "epoch": 6,
+        "ticks": [
+          96,
+          105
+        ],
+        "mode": "LOCAL",
+        "room_id": 1,
+        "source_rc": [
+          161,
+          187
+        ],
+        "end_rc": [
+          173,
+          202
+        ],
+        "distance_m": 2.394,
+        "known_at_start": 18666,
+        "known_at_end": 21302,
+        "new_cells": 2636,
+        "cells_per_m": 1100.9,
+        "candidate_count": 1
+      },
+      {
+        "epoch": 7,
+        "ticks": [
+          105,
+          157
+        ],
+        "mode": "GLOBAL",
+        "room_id": 1,
+        "source_rc": [
+          173,
+          202
+        ],
+        "end_rc": [
+          46,
+          173
+        ],
+        "distance_m": 14.912,
+        "known_at_start": 21302,
+        "known_at_end": 30540,
+        "new_cells": 9238,
+        "cells_per_m": 619.5,
+        "candidate_count": 24
+      },
+      {
+        "epoch": 8,
+        "ticks": [
+          157,
+          184
+        ],
+        "mode": "LOCAL",
+        "room_id": 2,
+        "source_rc": [
+          46,
+          173
+        ],
+        "end_rc": [
+          17,
+          215
+        ],
+        "distance_m": 7.03,
+        "known_at_start": 30540,
+        "known_at_end": 32970,
+        "new_cells": 2430,
+        "cells_per_m": 345.6,
+        "candidate_count": 7
+      },
+      {
+        "epoch": 9,
+        "ticks": [
+          184,
+          196
+        ],
+        "mode": "LOCAL",
+        "room_id": 2,
+        "source_rc": [
+          17,
+          215
+        ],
+        "end_rc": [
+          39,
+          229
+        ],
+        "distance_m": 2.836,
+        "known_at_start": 32970,
+        "known_at_end": 34677,
+        "new_cells": 1707,
+        "cells_per_m": 601.9,
+        "candidate_count": 5
+      },
+      {
+        "epoch": 10,
+        "ticks": [
+          196,
+          207
+        ],
+        "mode": "LOCAL",
+        "room_id": 2,
+        "source_rc": [
+          39,
+          229
+        ],
+        "end_rc": [
+          70,
+          231
+        ],
+        "distance_m": 3.147,
+        "known_at_start": 34677,
+        "known_at_end": 35471,
+        "new_cells": 794,
+        "cells_per_m": 252.3,
+        "candidate_count": 6
+      },
+      {
+        "epoch": 11,
+        "ticks": [
+          207,
+          268
+        ],
+        "mode": "LOCAL",
+        "room_id": 2,
+        "source_rc": [
+          70,
+          231
+        ],
+        "end_rc": [
+          6,
+          156
+        ],
+        "distance_m": 17.383,
+        "known_at_start": 35471,
+        "known_at_end": 35599,
+        "new_cells": 128,
+        "cells_per_m": 7.4,
+        "candidate_count": 3
+      },
+      {
+        "epoch": 12,
+        "ticks": [
+          268,
+          292
+        ],
+        "mode": "LOCAL",
+        "room_id": 2,
+        "source_rc": [
+          6,
+          156
+        ],
+        "end_rc": [
+          32,
+          140
+        ],
+        "distance_m": 6.818,
+        "known_at_start": 35599,
+        "known_at_end": 35624,
+        "new_cells": 25,
+        "cells_per_m": 3.7,
+        "candidate_count": 1
+      },
+      {
+        "epoch": 13,
+        "ticks": [
+          292,
+          340
+        ],
+        "mode": "GLOBAL",
+        "room_id": 2,
+        "source_rc": [
+          32,
+          140
+        ],
+        "end_rc": [
+          59,
+          111
+        ],
+        "distance_m": 14.018,
+        "known_at_start": 35624,
+        "known_at_end": 38200,
+        "new_cells": 2576,
+        "cells_per_m": 183.8,
+        "candidate_count": 16
+      },
+      {
+        "epoch": 14,
+        "ticks": [
+          340,
+          360
+        ],
+        "mode": "LOCAL",
+        "room_id": 3,
+        "source_rc": [
+          59,
+          111
+        ],
+        "end_rc": [
+          11,
+          119
+        ],
+        "distance_m": 5.847,
+        "known_at_start": 38200,
+        "known_at_end": 39714,
+        "new_cells": 1514,
+        "cells_per_m": 258.9,
+        "candidate_count": 5
+      },
+      {
+        "epoch": 15,
+        "ticks": [
+          360,
+          385
+        ],
+        "mode": "LOCAL",
+        "room_id": 3,
+        "source_rc": [
+          11,
+          119
+        ],
+        "end_rc": [
+          18,
+          83
+        ],
+        "distance_m": 7.194,
+        "known_at_start": 39714,
+        "known_at_end": 40278,
+        "new_cells": 564,
+        "cells_per_m": 78.4,
+        "candidate_count": 4
+      },
+      {
+        "epoch": 16,
+        "ticks": [
+          385,
+          399
+        ],
+        "mode": "LOCAL",
+        "room_id": 3,
+        "source_rc": [
+          18,
+          83
+        ],
+        "end_rc": [
+          20,
+          57
+        ],
+        "distance_m": 3.818,
+        "known_at_start": 40278,
+        "known_at_end": 40672,
+        "new_cells": 394,
+        "cells_per_m": 103.2,
+        "candidate_count": 1
+      },
+      {
+        "epoch": 17,
+        "ticks": [
+          399,
+          437
+        ],
+        "mode": "GLOBAL",
+        "room_id": 3,
+        "source_rc": [
+          20,
+          57
+        ],
+        "end_rc": [
+          53,
+          40
+        ],
+        "distance_m": 10.636,
+        "known_at_start": 40672,
+        "known_at_end": 44257,
+        "new_cells": 3585,
+        "cells_per_m": 337.1,
+        "candidate_count": 12
+      },
+      {
+        "epoch": 18,
+        "ticks": [
+          437,
+          450
+        ],
+        "mode": "LOCAL",
+        "room_id": 4,
+        "source_rc": [
+          53,
+          40
+        ],
+        "end_rc": [
+          21,
+          47
+        ],
+        "distance_m": 3.518,
+        "known_at_start": 44257,
+        "known_at_end": 45064,
+        "new_cells": 807,
+        "cells_per_m": 229.4,
+        "candidate_count": 5
+      },
+      {
+        "epoch": 19,
+        "ticks": [
+          450,
+          471
+        ],
+        "mode": "LOCAL",
+        "room_id": 4,
+        "source_rc": [
+          21,
+          47
+        ],
+        "end_rc": [
+          34,
+          9
+        ],
+        "distance_m": 5.689,
+        "known_at_start": 45064,
+        "known_at_end": 45126,
+        "new_cells": 62,
+        "cells_per_m": 10.9,
+        "candidate_count": 3
+      },
+      {
+        "epoch": 20,
+        "ticks": [
+          471,
+          544
+        ],
+        "mode": "GLOBAL",
+        "room_id": 4,
+        "source_rc": [
+          34,
+          9
+        ],
+        "end_rc": [
+          155,
+          41
+        ],
+        "distance_m": 20.067,
+        "known_at_start": 45126,
+        "known_at_end": 47808,
+        "new_cells": 2682,
+        "cells_per_m": 133.7,
+        "candidate_count": 9
+      },
+      {
+        "epoch": 21,
+        "ticks": [
+          544,
+          554
+        ],
+        "mode": "LOCAL",
+        "room_id": 5,
+        "source_rc": [
+          155,
+          41
+        ],
+        "end_rc": [
+          136,
+          30
+        ],
+        "distance_m": 2.847,
+        "known_at_start": 47808,
+        "known_at_end": 48734,
+        "new_cells": 926,
+        "cells_per_m": 325.2,
+        "candidate_count": 4
+      },
+      {
+        "epoch": 22,
+        "ticks": [
+          554,
+          568
+        ],
+        "mode": "LOCAL",
+        "room_id": 5,
+        "source_rc": [
+          136,
+          30
+        ],
+        "end_rc": [
+          155,
+          9
+        ],
+        "distance_m": 4.047,
+        "known_at_start": 48734,
+        "known_at_end": 49195,
+        "new_cells": 461,
+        "cells_per_m": 113.9,
+        "candidate_count": 3
+      },
+      {
+        "epoch": 23,
+        "ticks": [
+          568,
+          587
+        ],
+        "mode": "LOCAL",
+        "room_id": 5,
+        "source_rc": [
+          155,
+          9
+        ],
+        "end_rc": [
+          187,
+          28
+        ],
+        "distance_m": 5.318,
+        "known_at_start": 49195,
+        "known_at_end": 49231,
+        "new_cells": 36,
+        "cells_per_m": 6.8,
+        "candidate_count": 1
+      },
+      {
+        "epoch": 24,
+        "ticks": [
+          587,
+          698
+        ],
+        "mode": "GLOBAL",
+        "room_id": 5,
+        "source_rc": [
+          187,
+          28
+        ],
+        "end_rc": [
+          159,
+          247
+        ],
+        "distance_m": 31.925,
+        "known_at_start": 49231,
+        "known_at_end": 51253,
+        "new_cells": 2022,
+        "cells_per_m": 63.3,
+        "candidate_count": 4
+      },
+      {
+        "epoch": 25,
+        "ticks": [
+          698,
+          709
+        ],
+        "mode": "LOCAL",
+        "room_id": 6,
+        "source_rc": [
+          159,
+          247
+        ],
+        "end_rc": [
+          186,
+          241
+        ],
+        "distance_m": 3.0,
+        "known_at_start": 51253,
+        "known_at_end": 51304,
+        "new_cells": 51,
+        "cells_per_m": 17.0,
+        "candidate_count": 1
+      }
+    ]
+  },
+  "NR-G2PVU-03": {
+    "name": "NR-G2PVU-03",
+    "epochs": [
+      {
+        "epoch": 1,
+        "ticks": [
+          0,
+          12
+        ],
+        "mode": "GLOBAL",
+        "room_id": null,
+        "source_rc": [
+          131,
+          131
+        ],
+        "end_rc": [
+          147,
+          111
+        ],
+        "distance_m": 3.371,
+        "known_at_start": 7723,
+        "known_at_end": 12601,
+        "new_cells": 4878,
+        "cells_per_m": 1447.1,
+        "candidate_count": 13,
+        "g2_first": null,
+        "g2_second": null
+      },
+      {
+        "epoch": 2,
+        "ticks": [
+          12,
+          33
+        ],
+        "mode": "LOCAL",
+        "room_id": 1,
+        "source_rc": [
+          147,
+          111
+        ],
+        "end_rc": [
+          183,
+          138
+        ],
+        "distance_m": 5.307,
+        "known_at_start": 12601,
+        "known_at_end": 17263,
+        "new_cells": 4662,
+        "cells_per_m": 878.5,
+        "candidate_count": 5,
+        "g2_first": 4,
+        "g2_second": 1
+      },
+      {
+        "epoch": 3,
+        "ticks": [
+          33,
+          52
+        ],
+        "mode": "LOCAL",
+        "room_id": 1,
+        "source_rc": [
+          183,
+          138
+        ],
+        "end_rc": [
+          177,
+          187
+        ],
+        "distance_m": 5.318,
+        "known_at_start": 17263,
+        "known_at_end": 18236,
+        "new_cells": 973,
+        "cells_per_m": 183.0,
+        "candidate_count": 3,
+        "g2_first": 0,
+        "g2_second": 2
+      },
+      {
+        "epoch": 4,
+        "ticks": [
+          52,
+          60
+        ],
+        "mode": "LOCAL",
+        "room_id": 1,
+        "source_rc": [
+          177,
+          187
+        ],
+        "end_rc": [
+          175,
+          203
+        ],
+        "distance_m": 2.171,
+        "known_at_start": 18236,
+        "known_at_end": 21159,
+        "new_cells": 2923,
+        "cells_per_m": 1346.5,
+        "candidate_count": 3,
+        "g2_first": 1,
+        "g2_second": 2
+      },
+      {
+        "epoch": 5,
+        "ticks": [
+          60,
+          107
+        ],
+        "mode": "LOCAL",
+        "room_id": 1,
+        "source_rc": [
+          175,
+          203
+        ],
+        "end_rc": [
+          191,
+          112
+        ],
+        "distance_m": 13.183,
+        "known_at_start": 21159,
+        "known_at_end": 21536,
+        "new_cells": 377,
+        "cells_per_m": 28.6,
+        "candidate_count": 1,
+        "g2_first": null,
+        "g2_second": null
+      },
+      {
+        "epoch": 6,
+        "ticks": [
+          107,
+          161
+        ],
+        "mode": "GLOBAL",
+        "room_id": 1,
+        "source_rc": [
+          191,
+          112
+        ],
+        "end_rc": [
+          102,
+          61
+        ],
+        "distance_m": 15.589,
+        "known_at_start": 21536,
+        "known_at_end": 30952,
+        "new_cells": 9416,
+        "cells_per_m": 604.0,
+        "candidate_count": 23,
+        "g2_first": null,
+        "g2_second": null
+      },
+      {
+        "epoch": 7,
+        "ticks": [
+          161,
+          195
+        ],
+        "mode": "GLOBAL",
+        "room_id": null,
+        "source_rc": [
+          102,
+          61
+        ],
+        "end_rc": [
+          153,
+          30
+        ],
+        "distance_m": 9.894,
+        "known_at_start": 30952,
+        "known_at_end": 33172,
+        "new_cells": 2220,
+        "cells_per_m": 224.4,
+        "candidate_count": 29,
+        "g2_first": null,
+        "g2_second": null
+      },
+      {
+        "epoch": 8,
+        "ticks": [
+          195,
+          200
+        ],
+        "mode": "LOCAL",
+        "room_id": 2,
+        "source_rc": [
+          153,
+          30
+        ],
+        "end_rc": [
+          150,
+          18
+        ],
+        "distance_m": 1.271,
+        "known_at_start": 33172,
+        "known_at_end": 33975,
+        "new_cells": 803,
+        "cells_per_m": 631.9,
+        "candidate_count": 4,
+        "g2_first": 2,
+        "g2_second": 0
+      },
+      {
+        "epoch": 9,
+        "ticks": [
+          200,
+          210
+        ],
+        "mode": "LOCAL",
+        "room_id": 2,
+        "source_rc": [
+          150,
+          18
+        ],
+        "end_rc": [
+          139,
+          37
+        ],
+        "distance_m": 2.924,
+        "known_at_start": 33975,
+        "known_at_end": 34033,
+        "new_cells": 58,
+        "cells_per_m": 19.8,
+        "candidate_count": 3,
+        "g2_first": 0,
+        "g2_second": 1
+      },
+      {
+        "epoch": 10,
+        "ticks": [
+          210,
+          241
+        ],
+        "mode": "LOCAL",
+        "room_id": 2,
+        "source_rc": [
+          139,
+          37
+        ],
+        "end_rc": [
+          187,
+          28
+        ],
+        "distance_m": 8.536,
+        "known_at_start": 34033,
+        "known_at_end": 34072,
+        "new_cells": 39,
+        "cells_per_m": 4.6,
+        "candidate_count": 1,
+        "g2_first": null,
+        "g2_second": null
+      },
+      {
+        "epoch": 11,
+        "ticks": [
+          241,
+          318
+        ],
+        "mode": "GLOBAL",
+        "room_id": 2,
+        "source_rc": [
+          187,
+          28
+        ],
+        "end_rc": [
+          104,
+          176
+        ],
+        "distance_m": 21.801,
+        "known_at_start": 34072,
+        "known_at_end": 35773,
+        "new_cells": 1701,
+        "cells_per_m": 78.0,
+        "candidate_count": 25,
+        "g2_first": null,
+        "g2_second": null
+      },
+      {
+        "epoch": 12,
+        "ticks": [
+          318,
+          338
+        ],
+        "mode": "GLOBAL",
+        "room_id": null,
+        "source_rc": [
+          104,
+          176
+        ],
+        "end_rc": [
+          51,
+          177
+        ],
+        "distance_m": 5.771,
+        "known_at_start": 35773,
+        "known_at_end": 39862,
+        "new_cells": 4089,
+        "cells_per_m": 708.6,
+        "candidate_count": 23,
+        "g2_first": null,
+        "g2_second": null
+      },
+      {
+        "epoch": 13,
+        "ticks": [
+          338,
+          354
+        ],
+        "mode": "LOCAL",
+        "room_id": 3,
+        "source_rc": [
+          51,
+          177
+        ],
+        "end_rc": [
+          31,
+          205
+        ],
+        "distance_m": 4.494,
+        "known_at_start": 39862,
+        "known_at_end": 40549,
+        "new_cells": 687,
+        "cells_per_m": 152.9,
+        "candidate_count": 7,
+        "g2_first": 0,
+        "g2_second": 4
+      },
+      {
+        "epoch": 14,
+        "ticks": [
+          354,
+          362
+        ],
+        "mode": "LOCAL",
+        "room_id": 3,
+        "source_rc": [
+          31,
+          205
+        ],
+        "end_rc": [
+          14,
+          198
+        ],
+        "distance_m": 2.324,
+        "known_at_start": 40549,
+        "known_at_end": 41785,
+        "new_cells": 1236,
+        "cells_per_m": 531.9,
+        "candidate_count": 6,
+        "g2_first": 3,
+        "g2_second": 2
+      },
+      {
+        "epoch": 15,
+        "ticks": [
+          362,
+          371
+        ],
+        "mode": "LOCAL",
+        "room_id": 3,
+        "source_rc": [
+          14,
+          198
+        ],
+        "end_rc": [
+          22,
+          217
+        ],
+        "distance_m": 2.624,
+        "known_at_start": 41785,
+        "known_at_end": 42396,
+        "new_cells": 611,
+        "cells_per_m": 232.9,
+        "candidate_count": 5,
+        "g2_first": 2,
+        "g2_second": 1
+      },
+      {
+        "epoch": 16,
+        "ticks": [
+          371,
+          380
+        ],
+        "mode": "LOCAL",
+        "room_id": 3,
+        "source_rc": [
+          22,
+          217
+        ],
+        "end_rc": [
+          38,
+          228
+        ],
+        "distance_m": 2.165,
+        "known_at_start": 42396,
+        "known_at_end": 43967,
+        "new_cells": 1571,
+        "cells_per_m": 725.6,
+        "candidate_count": 7,
+        "g2_first": 3,
+        "g2_second": 4
+      },
+      {
+        "epoch": 17,
+        "ticks": [
+          380,
+          392
+        ],
+        "mode": "LOCAL",
+        "room_id": 3,
+        "source_rc": [
+          38,
+          228
+        ],
+        "end_rc": [
+          71,
+          231
+        ],
+        "distance_m": 3.371,
+        "known_at_start": 43967,
+        "known_at_end": 44778,
+        "new_cells": 811,
+        "cells_per_m": 240.6,
+        "candidate_count": 6,
+        "g2_first": 4,
+        "g2_second": 5
+      },
+      {
+        "epoch": 18,
+        "ticks": [
+          392,
+          453
+        ],
+        "mode": "LOCAL",
+        "room_id": 3,
+        "source_rc": [
+          71,
+          231
+        ],
+        "end_rc": [
+          6,
+          157
+        ],
+        "distance_m": 17.383,
+        "known_at_start": 44778,
+        "known_at_end": 44906,
+        "new_cells": 128,
+        "cells_per_m": 7.4,
+        "candidate_count": 3,
+        "g2_first": 0,
+        "g2_second": 2
+      },
+      {
+        "epoch": 19,
+        "ticks": [
+          453,
+          477
+        ],
+        "mode": "LOCAL",
+        "room_id": 3,
+        "source_rc": [
+          6,
+          157
+        ],
+        "end_rc": [
+          32,
+          139
+        ],
+        "distance_m": 6.742,
+        "known_at_start": 44906,
+        "known_at_end": 44933,
+        "new_cells": 27,
+        "cells_per_m": 4.0,
+        "candidate_count": 1,
+        "g2_first": null,
+        "g2_second": null
+      },
+      {
+        "epoch": 20,
+        "ticks": [
+          477,
+          571
+        ],
+        "mode": "GLOBAL",
+        "room_id": 3,
+        "source_rc": [
+          32,
+          139
+        ],
+        "end_rc": [
+          22,
+          15
+        ],
+        "distance_m": 26.596,
+        "known_at_start": 44933,
+        "known_at_end": 48918,
+        "new_cells": 3985,
+        "cells_per_m": 149.8,
+        "candidate_count": 14,
+        "g2_first": null,
+        "g2_second": null
+      },
+      {
+        "epoch": 21,
+        "ticks": [
+          571,
+          694
+        ],
+        "mode": "GLOBAL",
+        "room_id": 4,
+        "source_rc": [
+          22,
+          15
+        ],
+        "end_rc": [
+          159,
+          247
+        ],
+        "distance_m": 34.608,
+        "known_at_start": 48918,
+        "known_at_end": 50912,
+        "new_cells": 1994,
+        "cells_per_m": 57.6,
+        "candidate_count": 8,
+        "g2_first": null,
+        "g2_second": null
+      },
+      {
+        "epoch": 22,
+        "ticks": [
+          694,
+          705
+        ],
+        "mode": "LOCAL",
+        "room_id": 5,
+        "source_rc": [
+          159,
+          247
+        ],
+        "end_rc": [
+          186,
+          241
+        ],
+        "distance_m": 3.3,
+        "known_at_start": 50912,
+        "known_at_end": 50963,
+        "new_cells": 51,
+        "cells_per_m": 15.5,
+        "candidate_count": 1,
+        "g2_first": null,
+        "g2_second": null
+      },
+      {
+        "epoch": 23,
+        "ticks": [
+          705,
+          819
+        ],
+        "mode": "GLOBAL",
+        "room_id": 5,
+        "source_rc": [
+          186,
+          241
+        ],
+        "end_rc": [
+          11,
+          112
+        ],
+        "distance_m": 33.665,
+        "known_at_start": 50963,
+        "known_at_end": 51234,
+        "new_cells": 271,
+        "cells_per_m": 8.0,
+        "candidate_count": 5,
+        "g2_first": null,
+        "g2_second": null
+      },
+      {
+        "epoch": 24,
+        "ticks": [
+          819,
+          847
+        ],
+        "mode": "LOCAL",
+        "room_id": 6,
+        "source_rc": [
+          11,
+          112
+        ],
+        "end_rc": [
+          46,
+          83
+        ],
+        "distance_m": 8.171,
+        "known_at_start": 51234,
+        "known_at_end": 51264,
+        "new_cells": 30,
+        "cells_per_m": 3.7,
+        "candidate_count": 2,
+        "g2_first": 1,
+        "g2_second": 0
+      },
+      {
+        "epoch": 25,
+        "ticks": [
+          847,
+          854
+        ],
+        "mode": "LOCAL",
+        "room_id": 6,
+        "source_rc": [
+          46,
+          83
+        ],
+        "end_rc": [
+          45,
+          63
+        ],
+        "distance_m": 2.024,
+        "known_at_start": 51264,
+        "known_at_end": 51280,
+        "new_cells": 16,
+        "cells_per_m": 7.9,
+        "candidate_count": 1,
+        "g2_first": null,
+        "g2_second": null
+      },
+      {
+        "epoch": 26,
+        "ticks": [
+          854,
+          875
+        ],
+        "mode": "LOCAL",
+        "room_id": 6,
+        "source_rc": [
+          45,
+          63
+        ],
+        "end_rc": [
+          11,
+          72
+        ],
+        "distance_m": 6.147,
+        "known_at_start": 51280,
+        "known_at_end": 51293,
+        "new_cells": 13,
+        "cells_per_m": 2.1,
+        "candidate_count": 1,
+        "g2_first": null,
+        "g2_second": null
+      },
+      {
+        "epoch": 27,
+        "ticks": [
+          875,
+          936
+        ],
+        "mode": "GLOBAL",
+        "room_id": 6,
+        "source_rc": [
+          11,
+          72
+        ],
+        "end_rc": [
+          53,
+          9
+        ],
+        "distance_m": 17.007,
+        "known_at_start": 51293,
+        "known_at_end": 51304,
+        "new_cells": 11,
+        "cells_per_m": 0.6,
+        "candidate_count": 1,
+        "g2_first": null,
+        "g2_second": null
+      }
+    ]
+  }
+}
