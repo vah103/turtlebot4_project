@@ -1,0 +1,995 @@
+{
+  "mode": "GLOBAL_VISVARPROB_250RAY_MEAN_HIT_THRESHOLD_0_8",
+  "resolution_m": 0.1,
+  "interpretation": "Exact saved score*distance recovers numerator IG; position-swap is a fixed-map/fixed-visibility score counterfactual, not a runnable state.",
+  "common_goals": 11,
+  "robot_run04": [
+    32,
+    140
+  ],
+  "robot_sweep": [
+    67,
+    232
+  ],
+  "exit_separation_m": 9.843271813782245,
+  "observed_run04": 35624,
+  "observed_sweep": 35506,
+  "known_run04_only": 172,
+  "known_sweep_only": 54,
+  "observed_xor": 226,
+  "common_unknown": 17711,
+  "mean_abs_change_common_unknown": 0.016037655994296074,
+  "variance_abs_change_common_unknown": 0.011346436105668545,
+  "factorial": [
+    {
+      "condition": "Run04 IG + Run04 position",
+      "best": {
+        "goal": [
+          53,
+          104
+        ],
+        "score": 1.4124590158462524,
+        "ig": 58.86752329511237,
+        "distance_m": 4.167733196834941
+      },
+      "top5": [
+        {
+          "goal": [
+            53,
+            104
+          ],
+          "score": 1.4124590158462524,
+          "ig": 58.86752329511237,
+          "distance_m": 4.167733196834941
+        },
+        {
+          "goal": [
+            155,
+            54
+          ],
+          "score": 0.9162904024124147,
+          "ig": 137.51989669674597,
+          "distance_m": 15.008331019803634
+        },
+        {
+          "goal": [
+            100,
+            88
+          ],
+          "score": 0.861392617225647,
+          "ig": 73.73842812351988,
+          "distance_m": 8.560373823613078
+        },
+        {
+          "goal": [
+            96,
+            67
+          ],
+          "score": 0.6437928080558777,
+          "ig": 62.50097614209438,
+          "distance_m": 9.708243919473801
+        },
+        {
+          "goal": [
+            41,
+            62
+          ],
+          "score": 0.6097344160079956,
+          "ig": 47.87483052678442,
+          "distance_m": 7.851751396981441
+        }
+      ]
+    },
+    {
+      "condition": "Run04 IG + SWEEP position (distance-only swap)",
+      "best": {
+        "goal": [
+          155,
+          54
+        ],
+        "score": 0.692569183800652,
+        "ig": 137.51989669674597,
+        "distance_m": 19.856485086741813
+      },
+      "top5": [
+        {
+          "goal": [
+            155,
+            54
+          ],
+          "score": 0.692569183800652,
+          "ig": 137.51989669674597,
+          "distance_m": 19.856485086741813
+        },
+        {
+          "goal": [
+            167,
+            242
+          ],
+          "score": 0.5118007288190415,
+          "ig": 51.43533667430389,
+          "distance_m": 10.04987562112089
+        },
+        {
+          "goal": [
+            100,
+            88
+          ],
+          "score": 0.49913353478797945,
+          "ig": 73.73842812351988,
+          "distance_m": 14.773286702694158
+        },
+        {
+          "goal": [
+            53,
+            104
+          ],
+          "score": 0.4571760818075193,
+          "ig": 58.86752329511237,
+          "distance_m": 12.876334882255899
+        },
+        {
+          "goal": [
+            96,
+            67
+          ],
+          "score": 0.3730753368506764,
+          "ig": 62.50097614209438,
+          "distance_m": 16.75291019494822
+        }
+      ]
+    },
+    {
+      "condition": "SWEEP IG + Run04 position (distance-only swap)",
+      "best": {
+        "goal": [
+          53,
+          104
+        ],
+        "score": 1.211441755839783,
+        "ig": 50.48966021845473,
+        "distance_m": 4.167733196834941
+      },
+      "top5": [
+        {
+          "goal": [
+            53,
+            104
+          ],
+          "score": 1.211441755839783,
+          "ig": 50.48966021845473,
+          "distance_m": 4.167733196834941
+        },
+        {
+          "goal": [
+            56,
+            36
+          ],
+          "score": 1.0764660765289085,
+          "ig": 114.89479015581445,
+          "distance_m": 10.673331251301068
+        },
+        {
+          "goal": [
+            100,
+            88
+          ],
+          "score": 0.8986801779328525,
+          "ig": 76.93038270976334,
+          "distance_m": 8.560373823613078
+        },
+        {
+          "goal": [
+            155,
+            54
+          ],
+          "score": 0.8938505208780902,
+          "ig": 134.1520449956228,
+          "distance_m": 15.008331019803634
+        },
+        {
+          "goal": [
+            74,
+            18
+          ],
+          "score": 0.8248791108194148,
+          "ig": 106.4317833836198,
+          "distance_m": 12.902712893031449
+        }
+      ]
+    },
+    {
+      "condition": "SWEEP IG + SWEEP position",
+      "best": {
+        "goal": [
+          155,
+          54
+        ],
+        "score": 0.675608217716217,
+        "ig": 134.1520449956228,
+        "distance_m": 19.856485086741813
+      },
+      "top5": [
+        {
+          "goal": [
+            155,
+            54
+          ],
+          "score": 0.675608217716217,
+          "ig": 134.1520449956228,
+          "distance_m": 19.856485086741813
+        },
+        {
+          "goal": [
+            56,
+            36
+          ],
+          "score": 0.5852769017219543,
+          "ig": 114.89479015581445,
+          "distance_m": 19.630843079195557
+        },
+        {
+          "goal": [
+            100,
+            88
+          ],
+          "score": 0.5207397937774658,
+          "ig": 76.93038270976334,
+          "distance_m": 14.773286702694158
+        },
+        {
+          "goal": [
+            167,
+            243
+          ],
+          "score": 0.5112948417663574,
+          "ig": 51.43788744116625,
+          "distance_m": 10.060318086422518
+        },
+        {
+          "goal": [
+            74,
+            18
+          ],
+          "score": 0.49707892537117004,
+          "ig": 106.4317833836198,
+          "distance_m": 21.411445537375567
+        }
+      ]
+    }
+  ],
+  "native_astar": {
+    "MapExG1": {
+      "best_original": {
+        "index": 3,
+        "goal": [
+          53,
+          104
+        ],
+        "ig": 58.86752329511237,
+        "score_original": 1.4124590158462524,
+        "euclidean_m": 4.167733196834941,
+        "astar_m": 15.700000000000001,
+        "actual_geodesic_score": 0.37495237767587497,
+        "ratio_astar_over_euclidean_m": 3.767035762251502
+      },
+      "best_with_astar_denominator": {
+        "index": 10,
+        "goal": [
+          155,
+          54
+        ],
+        "ig": 137.51989669674597,
+        "score_original": 0.9162904024124146,
+        "euclidean_m": 15.008331019803634,
+        "astar_m": 29.1,
+        "actual_geodesic_score": 0.4725769645936288,
+        "ratio_astar_over_euclidean_m": 1.9389231195395595
+      },
+      "top5_with_astar_denominator": [
+        {
+          "index": 10,
+          "goal": [
+            155,
+            54
+          ],
+          "ig": 137.51989669674597,
+          "score_original": 0.9162904024124146,
+          "euclidean_m": 15.008331019803634,
+          "astar_m": 29.1,
+          "actual_geodesic_score": 0.4725769645936288,
+          "ratio_astar_over_euclidean_m": 1.9389231195395595
+        },
+        {
+          "index": 3,
+          "goal": [
+            53,
+            104
+          ],
+          "ig": 58.86752329511237,
+          "score_original": 1.4124590158462524,
+          "euclidean_m": 4.167733196834941,
+          "astar_m": 15.700000000000001,
+          "actual_geodesic_score": 0.37495237767587497,
+          "ratio_astar_over_euclidean_m": 3.767035762251502
+        },
+        {
+          "index": 6,
+          "goal": [
+            100,
+            88
+          ],
+          "ig": 73.73842812351988,
+          "score_original": 0.861392617225647,
+          "euclidean_m": 8.560373823613078,
+          "astar_m": 21.200000000000003,
+          "actual_geodesic_score": 0.3478227741675466,
+          "ratio_astar_over_euclidean_m": 2.4765273616347883
+        },
+        {
+          "index": 7,
+          "goal": [
+            96,
+            67
+          ],
+          "ig": 62.50097614209438,
+          "score_original": 0.6437928080558777,
+          "euclidean_m": 9.708243919473801,
+          "astar_m": 20.5,
+          "actual_geodesic_score": 0.30488281044924087,
+          "ratio_astar_over_euclidean_m": 2.111607430760879
+        },
+        {
+          "index": 1,
+          "goal": [
+            46,
+            39
+          ],
+          "ig": 61.77306129551008,
+          "score_original": 0.6058220863342285,
+          "euclidean_m": 10.196568050084302,
+          "astar_m": 23.3,
+          "actual_geodesic_score": 0.26512043474467845,
+          "ratio_astar_over_euclidean_m": 2.285082577348892
+        }
+      ],
+      "rows": [
+        {
+          "index": 0,
+          "goal": [
+            41,
+            62
+          ],
+          "ig": 47.87483052678442,
+          "score_original": 0.6097344160079956,
+          "euclidean_m": 7.851751396981441,
+          "astar_m": 21.1,
+          "actual_geodesic_score": 0.22689493140656125,
+          "ratio_astar_over_euclidean_m": 2.6872985316513933
+        },
+        {
+          "index": 1,
+          "goal": [
+            46,
+            39
+          ],
+          "ig": 61.77306129551008,
+          "score_original": 0.6058220863342285,
+          "euclidean_m": 10.196568050084302,
+          "astar_m": 23.3,
+          "actual_geodesic_score": 0.26512043474467845,
+          "ratio_astar_over_euclidean_m": 2.285082577348892
+        },
+        {
+          "index": 2,
+          "goal": [
+            46,
+            58
+          ],
+          "ig": 47.83370086390263,
+          "score_original": 0.5750173330307007,
+          "euclidean_m": 8.31865373723417,
+          "astar_m": 21.0,
+          "actual_geodesic_score": 0.22777952792334585,
+          "ratio_astar_over_euclidean_m": 2.524446943380311
+        },
+        {
+          "index": 3,
+          "goal": [
+            53,
+            104
+          ],
+          "ig": 58.86752329511237,
+          "score_original": 1.4124590158462524,
+          "euclidean_m": 4.167733196834941,
+          "astar_m": 15.700000000000001,
+          "actual_geodesic_score": 0.37495237767587497,
+          "ratio_astar_over_euclidean_m": 3.767035762251502
+        },
+        {
+          "index": 4,
+          "goal": [
+            74,
+            18
+          ],
+          "ig": 59.84836362570607,
+          "score_original": 0.4638432562351227,
+          "euclidean_m": 12.902712893031449,
+          "astar_m": 24.400000000000002,
+          "actual_geodesic_score": 0.24528017879387734,
+          "ratio_astar_over_euclidean_m": 1.8910751717321446
+        },
+        {
+          "index": 5,
+          "goal": [
+            85,
+            30
+          ],
+          "ig": 44.17256578374005,
+          "score_original": 0.361766517162323,
+          "euclidean_m": 12.210241602851273,
+          "astar_m": 23.1,
+          "actual_geodesic_score": 0.19122322850103918,
+          "ratio_astar_over_euclidean_m": 1.891854457212854
+        },
+        {
+          "index": 6,
+          "goal": [
+            100,
+            88
+          ],
+          "ig": 73.73842812351988,
+          "score_original": 0.861392617225647,
+          "euclidean_m": 8.560373823613078,
+          "astar_m": 21.200000000000003,
+          "actual_geodesic_score": 0.3478227741675466,
+          "ratio_astar_over_euclidean_m": 2.4765273616347883
+        },
+        {
+          "index": 7,
+          "goal": [
+            96,
+            67
+          ],
+          "ig": 62.50097614209438,
+          "score_original": 0.6437928080558777,
+          "euclidean_m": 9.708243919473801,
+          "astar_m": 20.5,
+          "actual_geodesic_score": 0.30488281044924087,
+          "ratio_astar_over_euclidean_m": 2.111607430760879
+        },
+        {
+          "index": 8,
+          "goal": [
+            109,
+            38
+          ],
+          "ig": 8.035721784439875,
+          "score_original": 0.06287701427936554,
+          "euclidean_m": 12.780062597655773,
+          "astar_m": 24.700000000000003,
+          "actual_geodesic_score": 0.03253328657667966,
+          "ratio_astar_over_euclidean_m": 1.9326978887044486
+        },
+        {
+          "index": 9,
+          "goal": [
+            117,
+            217
+          ],
+          "ig": 0.28186270964931437,
+          "score_original": 0.002457585884258151,
+          "euclidean_m": 11.469088891450795,
+          "astar_m": 19.6,
+          "actual_geodesic_score": 0.0014380750492311958,
+          "ratio_astar_over_euclidean_m": 1.7089413279035697
+        },
+        {
+          "index": 10,
+          "goal": [
+            155,
+            54
+          ],
+          "ig": 137.51989669674597,
+          "score_original": 0.9162904024124146,
+          "euclidean_m": 15.008331019803634,
+          "astar_m": 29.1,
+          "actual_geodesic_score": 0.4725769645936288,
+          "ratio_astar_over_euclidean_m": 1.9389231195395595
+        },
+        {
+          "index": 11,
+          "goal": [
+            148,
+            20
+          ],
+          "ig": -0.0,
+          "score_original": -0.0,
+          "euclidean_m": 16.690116836020053,
+          "astar_m": 32.0,
+          "actual_geodesic_score": -0.0,
+          "ratio_astar_over_euclidean_m": 1.9173023361309651
+        },
+        {
+          "index": 12,
+          "goal": [
+            167,
+            242
+          ],
+          "ig": 51.43533667430389,
+          "score_original": 0.303989440202713,
+          "euclidean_m": 16.92010638264429,
+          "astar_m": 24.700000000000003,
+          "actual_geodesic_score": 0.20824022945062304,
+          "ratio_astar_over_euclidean_m": 1.4598016963614306
+        },
+        {
+          "index": 13,
+          "goal": [
+            149,
+            250
+          ],
+          "ig": -0.0,
+          "score_original": -0.0,
+          "euclidean_m": 16.058953888718904,
+          "astar_m": 23.700000000000003,
+          "actual_geodesic_score": -0.0,
+          "ratio_astar_over_euclidean_m": 1.4758121957526003
+        },
+        {
+          "index": 14,
+          "goal": [
+            158,
+            32
+          ],
+          "ig": 81.26838025567093,
+          "score_original": 0.4897107481956482,
+          "euclidean_m": 16.595180023127195,
+          "astar_m": 31.6,
+          "actual_geodesic_score": 0.25717841853060425,
+          "ratio_astar_over_euclidean_m": 1.90416735196376
+        },
+        {
+          "index": 15,
+          "goal": [
+            174,
+            106
+          ],
+          "ig": 1.0141994909415115,
+          "score_original": 0.006945920176804066,
+          "euclidean_m": 14.601369798755185,
+          "astar_m": 27.0,
+          "actual_geodesic_score": 0.003756294410894487,
+          "ratio_astar_over_euclidean_m": 1.849141578641604
+        }
+      ]
+    },
+    "SweepR1": {
+      "best_original": {
+        "index": 10,
+        "goal": [
+          155,
+          54
+        ],
+        "ig": 134.1520449956228,
+        "score_original": 0.675608217716217,
+        "euclidean_m": 19.856485086741813,
+        "astar_m": 42.800000000000004,
+        "actual_geodesic_score": 0.3134393574664084,
+        "ratio_astar_over_euclidean_m": 2.1554670835765184
+      },
+      "best_with_astar_denominator": {
+        "index": 10,
+        "goal": [
+          155,
+          54
+        ],
+        "ig": 134.1520449956228,
+        "score_original": 0.675608217716217,
+        "euclidean_m": 19.856485086741813,
+        "astar_m": 42.800000000000004,
+        "actual_geodesic_score": 0.3134393574664084,
+        "ratio_astar_over_euclidean_m": 2.1554670835765184
+      },
+      "top5_with_astar_denominator": [
+        {
+          "index": 10,
+          "goal": [
+            155,
+            54
+          ],
+          "ig": 134.1520449956228,
+          "score_original": 0.675608217716217,
+          "euclidean_m": 19.856485086741813,
+          "astar_m": 42.800000000000004,
+          "actual_geodesic_score": 0.3134393574664084,
+          "ratio_astar_over_euclidean_m": 2.1554670835765184
+        },
+        {
+          "index": 1,
+          "goal": [
+            56,
+            36
+          ],
+          "ig": 114.89479015581445,
+          "score_original": 0.5852769017219543,
+          "euclidean_m": 19.630843079195557,
+          "astar_m": 37.1,
+          "actual_geodesic_score": 0.3096894613364271,
+          "ratio_astar_over_euclidean_m": 1.889883172634494
+        },
+        {
+          "index": 4,
+          "goal": [
+            74,
+            18
+          ],
+          "ig": 106.4317833836198,
+          "score_original": 0.49707892537117004,
+          "euclidean_m": 21.411445537375567,
+          "astar_m": 38.900000000000006,
+          "actual_geodesic_score": 0.27360355625609206,
+          "ratio_astar_over_euclidean_m": 1.8167853231626339
+        },
+        {
+          "index": 5,
+          "goal": [
+            85,
+            30
+          ],
+          "ig": 98.39665170276854,
+          "score_original": 0.48518964648246765,
+          "euclidean_m": 20.28003944769339,
+          "astar_m": 37.6,
+          "actual_geodesic_score": 0.2616932226137461,
+          "ratio_astar_over_euclidean_m": 1.8540397861147428
+        },
+        {
+          "index": 6,
+          "goal": [
+            100,
+            88
+          ],
+          "ig": 76.93038270976334,
+          "score_original": 0.5207397937774658,
+          "euclidean_m": 14.773286702694158,
+          "astar_m": 35.7,
+          "actual_geodesic_score": 0.21549126809457517,
+          "ratio_astar_over_euclidean_m": 2.4165238730180136
+        }
+      ],
+      "rows": [
+        {
+          "index": 0,
+          "goal": [
+            41,
+            62
+          ],
+          "ig": 46.28181339658167,
+          "score_original": 0.26911669969558716,
+          "euclidean_m": 17.19767426136453,
+          "astar_m": 35.6,
+          "actual_geodesic_score": 0.13000509381062267,
+          "ratio_astar_over_euclidean_m": 2.070047348203196
+        },
+        {
+          "index": 1,
+          "goal": [
+            56,
+            36
+          ],
+          "ig": 114.89479015581445,
+          "score_original": 0.5852769017219543,
+          "euclidean_m": 19.630843079195557,
+          "astar_m": 37.1,
+          "actual_geodesic_score": 0.3096894613364271,
+          "ratio_astar_over_euclidean_m": 1.889883172634494
+        },
+        {
+          "index": 2,
+          "goal": [
+            46,
+            58
+          ],
+          "ig": 46.28176807100052,
+          "score_original": 0.26407089829444885,
+          "euclidean_m": 17.526266002774236,
+          "astar_m": 35.5,
+          "actual_geodesic_score": 0.1303711776647902,
+          "ratio_astar_over_euclidean_m": 2.025531279416888
+        },
+        {
+          "index": 3,
+          "goal": [
+            53,
+            104
+          ],
+          "ig": 50.48966021845473,
+          "score_original": 0.39211204648017883,
+          "euclidean_m": 12.876334882255899,
+          "astar_m": 30.200000000000003,
+          "actual_geodesic_score": 0.16718430535912163,
+          "ratio_astar_over_euclidean_m": 2.34538789773298
+        },
+        {
+          "index": 4,
+          "goal": [
+            74,
+            18
+          ],
+          "ig": 106.4317833836198,
+          "score_original": 0.49707892537117004,
+          "euclidean_m": 21.411445537375567,
+          "astar_m": 38.900000000000006,
+          "actual_geodesic_score": 0.27360355625609206,
+          "ratio_astar_over_euclidean_m": 1.8167853231626339
+        },
+        {
+          "index": 5,
+          "goal": [
+            85,
+            30
+          ],
+          "ig": 98.39665170276854,
+          "score_original": 0.48518964648246765,
+          "euclidean_m": 20.28003944769339,
+          "astar_m": 37.6,
+          "actual_geodesic_score": 0.2616932226137461,
+          "ratio_astar_over_euclidean_m": 1.8540397861147428
+        },
+        {
+          "index": 6,
+          "goal": [
+            100,
+            88
+          ],
+          "ig": 76.93038270976334,
+          "score_original": 0.5207397937774658,
+          "euclidean_m": 14.773286702694158,
+          "astar_m": 35.7,
+          "actual_geodesic_score": 0.21549126809457517,
+          "ratio_astar_over_euclidean_m": 2.4165238730180136
+        },
+        {
+          "index": 7,
+          "goal": [
+            96,
+            67
+          ],
+          "ig": 62.335301403593235,
+          "score_original": 0.37208640575408936,
+          "euclidean_m": 16.75291019494822,
+          "astar_m": 35.0,
+          "actual_geodesic_score": 0.17810086115312354,
+          "ratio_astar_over_euclidean_m": 2.08918925683456
+        },
+        {
+          "index": 8,
+          "goal": [
+            109,
+            37
+          ],
+          "ig": 6.690015113420135,
+          "score_original": 0.03353865072131157,
+          "euclidean_m": 19.947180251855148,
+          "astar_m": 39.300000000000004,
+          "actual_geodesic_score": 0.017022939219898562,
+          "ratio_astar_over_euclidean_m": 1.9702032820576225
+        },
+        {
+          "index": 9,
+          "goal": [
+            117,
+            217
+          ],
+          "ig": 0.28193828508746166,
+          "score_original": 0.005400958005338907,
+          "euclidean_m": 5.220153254455275,
+          "astar_m": 33.300000000000004,
+          "actual_geodesic_score": 0.0008466615167791641,
+          "ratio_astar_over_euclidean_m": 6.379123059572869
+        },
+        {
+          "index": 10,
+          "goal": [
+            155,
+            54
+          ],
+          "ig": 134.1520449956228,
+          "score_original": 0.675608217716217,
+          "euclidean_m": 19.856485086741813,
+          "astar_m": 42.800000000000004,
+          "actual_geodesic_score": 0.3134393574664084,
+          "ratio_astar_over_euclidean_m": 2.1554670835765184
+        },
+        {
+          "index": 11,
+          "goal": [
+            148,
+            20
+          ],
+          "ig": -0.0,
+          "score_original": -0.0,
+          "euclidean_m": 22.6947130407062,
+          "astar_m": 45.7,
+          "actual_geodesic_score": -0.0,
+          "ratio_astar_over_euclidean_m": 2.0136848577036663
+        },
+        {
+          "index": 12,
+          "goal": [
+            167,
+            243
+          ],
+          "ig": 51.43788744116625,
+          "score_original": 0.5112948417663574,
+          "euclidean_m": 10.060318086422518,
+          "astar_m": 38.5,
+          "actual_geodesic_score": 0.13360490244458764,
+          "ratio_astar_over_euclidean_m": 3.826916770351416
+        },
+        {
+          "index": 13,
+          "goal": [
+            149,
+            250
+          ],
+          "ig": -0.0,
+          "score_original": -0.0,
+          "euclidean_m": 8.395236744726143,
+          "astar_m": 37.4,
+          "actual_geodesic_score": -0.0,
+          "ratio_astar_over_euclidean_m": 4.454907126174201
+        },
+        {
+          "index": 14,
+          "goal": [
+            158,
+            34
+          ],
+          "ig": 73.16852962101228,
+          "score_original": 0.3357732594013214,
+          "euclidean_m": 21.79105320997588,
+          "astar_m": 45.1,
+          "actual_geodesic_score": 0.1622362075853931,
+          "ratio_astar_over_euclidean_m": 2.069656733220832
+        }
+      ]
+    }
+  },
+  "shared_wfd_goals": {
+    "(41, 62)": {
+      "goal": [
+        41,
+        62
+      ],
+      "run04_ig": 47.87483052678442,
+      "sweep_ig": 46.28181339658167,
+      "run04_score": 0.6097344160079956,
+      "sweep_score": 0.26911669969558716,
+      "run04_euclid_m": 7.851751396981441,
+      "sweep_euclid_m": 17.19767426136453
+    },
+    "(46, 58)": {
+      "goal": [
+        46,
+        58
+      ],
+      "run04_ig": 47.83370086390263,
+      "sweep_ig": 46.28176807100052,
+      "run04_score": 0.5750173330307007,
+      "sweep_score": 0.26407089829444885,
+      "run04_euclid_m": 8.31865373723417,
+      "sweep_euclid_m": 17.526266002774236
+    },
+    "(53, 104)": {
+      "goal": [
+        53,
+        104
+      ],
+      "run04_ig": 58.86752329511237,
+      "sweep_ig": 50.48966021845473,
+      "run04_score": 1.4124590158462524,
+      "sweep_score": 0.39211204648017883,
+      "run04_euclid_m": 4.167733196834941,
+      "sweep_euclid_m": 12.876334882255899
+    },
+    "(74, 18)": {
+      "goal": [
+        74,
+        18
+      ],
+      "run04_ig": 59.84836362570607,
+      "sweep_ig": 106.4317833836198,
+      "run04_score": 0.4638432562351227,
+      "sweep_score": 0.49707892537117004,
+      "run04_euclid_m": 12.902712893031449,
+      "sweep_euclid_m": 21.411445537375567
+    },
+    "(85, 30)": {
+      "goal": [
+        85,
+        30
+      ],
+      "run04_ig": 44.17256578374005,
+      "sweep_ig": 98.39665170276854,
+      "run04_score": 0.361766517162323,
+      "sweep_score": 0.48518964648246765,
+      "run04_euclid_m": 12.210241602851273,
+      "sweep_euclid_m": 20.28003944769339
+    },
+    "(96, 67)": {
+      "goal": [
+        96,
+        67
+      ],
+      "run04_ig": 62.50097614209438,
+      "sweep_ig": 62.335301403593235,
+      "run04_score": 0.6437928080558777,
+      "sweep_score": 0.37208640575408936,
+      "run04_euclid_m": 9.708243919473801,
+      "sweep_euclid_m": 16.75291019494822
+    },
+    "(100, 88)": {
+      "goal": [
+        100,
+        88
+      ],
+      "run04_ig": 73.73842812351988,
+      "sweep_ig": 76.93038270976334,
+      "run04_score": 0.861392617225647,
+      "sweep_score": 0.5207397937774658,
+      "run04_euclid_m": 8.560373823613078,
+      "sweep_euclid_m": 14.773286702694158
+    },
+    "(117, 217)": {
+      "goal": [
+        117,
+        217
+      ],
+      "run04_ig": 0.28186270964931437,
+      "sweep_ig": 0.28193828508746166,
+      "run04_score": 0.002457585884258151,
+      "sweep_score": 0.005400958005338907,
+      "run04_euclid_m": 11.469088891450795,
+      "sweep_euclid_m": 5.220153254455275
+    },
+    "(148, 20)": {
+      "goal": [
+        148,
+        20
+      ],
+      "run04_ig": -0.0,
+      "sweep_ig": -0.0,
+      "run04_score": -0.0,
+      "sweep_score": -0.0,
+      "run04_euclid_m": 16.690116836020053,
+      "sweep_euclid_m": 22.6947130407062
+    },
+    "(149, 250)": {
+      "goal": [
+        149,
+        250
+      ],
+      "run04_ig": -0.0,
+      "sweep_ig": -0.0,
+      "run04_score": -0.0,
+      "sweep_score": -0.0,
+      "run04_euclid_m": 16.058953888718904,
+      "sweep_euclid_m": 8.395236744726143
+    },
+    "(155, 54)": {
+      "goal": [
+        155,
+        54
+      ],
+      "run04_ig": 137.51989669674597,
+      "sweep_ig": 134.1520449956228,
+      "run04_score": 0.9162904024124146,
+      "sweep_score": 0.675608217716217,
+      "run04_euclid_m": 15.008331019803634,
+      "sweep_euclid_m": 19.856485086741813
+    }
+  },
+  "notes": "Causal proximal driver isolated at fixed per-goal predicted IG: swapping only robot pose changes global winning frontier in BOTH score maps. Future physical scan trajectory would also change; this is arithmetic ablation only."
+}
