@@ -109,11 +109,9 @@ Chỉ ưu tiên ghé gần nếu có **lợi ích so với hoãn theo cùng nhi�
 ## Hồ sơ tái lập
 
 - [Galerie R2 27 decision](NR_G2PVU_R2_REAL_27_DECISIONS_SCROLL.html) — chú ý D02, D20, D21, D23, D27.
-- [Bằng chứng theo mỗi epoch](NR_RN04_VS_G2PVU03_BY_EPOCH_CAUSAL_TRACE.json).
-- [Khớp mask phòng giữa hai run](NR_RN04_G2PVU03_PHYSICAL_ROOM_CROSSWALK.json).
-- [Quan sát mới trong các vùng G1 tham khảo](NR_RN04_G2PVU03_REFERENCE_ROOM_SPATIAL_DISCOVERIES.json).
-- [Probe native LiDAR theo frontier tại D21](NR_G2PVU03_D21_SAME_EPOCH_FRONTIER_LIDAR_PROBES.json).
-- [Thứ tự đi các frontier và coverage](NR_G2PVU03_D21_NATIVE_LIDAR_ORDER_ABLATION.json).
-- [Chứng nhận phát lại 6/6 bit-exact](NR_G2PVU03_D21_LIDAR_REPLAY_BITEXACT.json).
+- [Bằng chứng theo từng epoch](NR_RN04_VS_G2PVU03_BY_EPOCH_CAUSAL_TRACE.json) — đã đăng trên nhánh nghiên cứu.
+- [Khớp mask phòng giữa hai run](NR_RN04_G2PVU03_PHYSICAL_ROOM_CROSSWALK.json) — đã đăng trên nhánh nghiên cứu.
 
-Mã và các file JSON gốc cũng có trong thư mục phân tích trên DELL: /home/dell/DELL_NATIVE2D/analysis/g2_autonomous_research_20261018/. Hai run gốc không bị thay đổi.
+**Các bằng chứng còn lại được lưu và kiểm tra trực tiếp trên DELL, chưa đăng công khai:** NR_RN04_G2PVU03_REFERENCE_ROOM_SPATIAL_DISCOVERIES.json; NR_G2PVU03_D21_SAME_EPOCH_FRONTIER_LIDAR_PROBES.json; NR_G2PVU03_D21_NATIVE_LIDAR_ORDER_ABLATION.json; NR_G2PVU03_D21_LIDAR_REPLAY_BITEXACT.json.
+
+Đường dẫn trên DELL: /home/dell/DELL_NATIVE2D/analysis/g2_autonomous_research_20261018/. Hai run gốc không bị thay đổi.
