@@ -1,0 +1,1281 @@
+{
+  "procedure": "Native observed-same-epoch GLOBAL state comparison, ordinal match, no GT, no fixed-task causal attribution.",
+  "run_ids": [
+    "NR-RN-04",
+    "NR-G2EARLYD-02"
+  ],
+  "notes": [
+    "MapEx GLOBAL mode visvarprob originally selects min cost=-predicted UNKNOWN variance / Euclid robot-goal pixels.",
+    "EarlyDoor makes early updates during LOCAL; at the first GLOBAL after each room, goal is overridden only if still matches current WFD and is reachable. Else standard MapEx.",
+    "D23 first changed target; logged selected cost is overwritten, so original native MapEx original cost restored from independent SWEEP-R1 D23 with bit-identical observed and pose.",
+    "GLOBAL rows are matched by chronological order only; physical tasks/maps are not equivalent."
+  ],
+  "summaries": {
+    "original_global_m": 94.928868,
+    "early_global_m": 121.895432,
+    "differential_global_m": 26.966564
+  },
+  "global_decisions": [
+    {
+      "index": 1,
+      "original": {
+        "global_ordinal": 1,
+        "decision": 1,
+        "tick": 0,
+        "end_tick": 12,
+        "robot_core": [
+          131,
+          131
+        ],
+        "selected_goal_core": [
+          153,
+          104
+        ],
+        "traveled_m": 3.37082,
+        "astar_m": 4.9,
+        "n_frontiers": 13,
+        "observed": 7404,
+        "early_reason": null,
+        "early_selected_index": null,
+        "early_original_index": null,
+        "early_reserved_goal_p1": null,
+        "top_original_5": [
+          {
+            "index": 10,
+            "core": [
+              153,
+              104
+            ],
+            "saved_cost": -11.321293830871582,
+            "distance_euclid_m": 3.482815,
+            "raw_ig": 394.29971
+          },
+          {
+            "index": 1,
+            "core": [
+              104,
+              60
+            ],
+            "saved_cost": -4.314995765686035,
+            "distance_euclid_m": 7.596052,
+            "raw_ig": 327.76931
+          },
+          {
+            "index": 12,
+            "core": [
+              147,
+              97
+            ],
+            "saved_cost": -3.4254374504089355,
+            "distance_euclid_m": 3.757659,
+            "raw_ig": 128.71625
+          },
+          {
+            "index": 0,
+            "core": [
+              101,
+              113
+            ],
+            "saved_cost": -3.2829692363739014,
+            "distance_euclid_m": 3.498571,
+            "raw_ig": 114.85701
+          },
+          {
+            "index": 11,
+            "core": [
+              145,
+              200
+            ],
+            "saved_cost": -3.1279489994049072,
+            "distance_euclid_m": 7.040597,
+            "raw_ig": 220.22627
+          }
+        ],
+        "chosen_candidate": {
+          "index": 10,
+          "core": [
+            153,
+            104
+          ],
+          "saved_cost": -11.321293830871582,
+          "distance_euclid_m": 3.482815,
+          "raw_ig": 394.29971
+        }
+      },
+      "early": {
+        "global_ordinal": 1,
+        "decision": 1,
+        "tick": 0,
+        "end_tick": 12,
+        "robot_core": [
+          131,
+          131
+        ],
+        "selected_goal_core": [
+          153,
+          104
+        ],
+        "traveled_m": 3.37082,
+        "astar_m": 4.9,
+        "n_frontiers": 13,
+        "observed": 7404,
+        "early_reason": "NO_ACTIVE_LOCAL",
+        "early_selected_index": null,
+        "early_original_index": null,
+        "early_reserved_goal_p1": null,
+        "top_original_5": [
+          {
+            "index": 10,
+            "core": [
+              153,
+              104
+            ],
+            "saved_cost": -11.321293830871582,
+            "distance_euclid_m": 3.482815,
+            "raw_ig": 394.29971
+          },
+          {
+            "index": 1,
+            "core": [
+              104,
+              60
+            ],
+            "saved_cost": -4.314995765686035,
+            "distance_euclid_m": 7.596052,
+            "raw_ig": 327.76931
+          },
+          {
+            "index": 12,
+            "core": [
+              147,
+              97
+            ],
+            "saved_cost": -3.4254374504089355,
+            "distance_euclid_m": 3.757659,
+            "raw_ig": 128.71625
+          },
+          {
+            "index": 0,
+            "core": [
+              101,
+              113
+            ],
+            "saved_cost": -3.2829692363739014,
+            "distance_euclid_m": 3.498571,
+            "raw_ig": 114.85701
+          },
+          {
+            "index": 11,
+            "core": [
+              145,
+              200
+            ],
+            "saved_cost": -3.1279489994049072,
+            "distance_euclid_m": 7.040597,
+            "raw_ig": 220.22627
+          }
+        ],
+        "chosen_candidate": {
+          "index": 10,
+          "core": [
+            153,
+            104
+          ],
+          "saved_cost": -11.321293830871582,
+          "distance_euclid_m": 3.482815,
+          "raw_ig": 394.29971
+        }
+      },
+      "differences": {
+        "traveled_m": 0.0,
+        "exit_pose_separation_m": 0.0,
+        "observed_count_delta": 0,
+        "observed_known_XOR": 0,
+        "known_run04_only": 0,
+        "known_early_only": 0,
+        "common_WFD_exact": 13,
+        "common_unknown": 45985,
+        "mean_mae_common_unknown": 0.0,
+        "variance_mae_common_unknown": 0.0,
+        "common_WFD_top3": [
+          {
+            "goal": [
+              101,
+              113
+            ],
+            "run04_cost": -3.282969,
+            "early_logged_cost": -3.282969,
+            "euclid_run04_m": 3.498571,
+            "euclid_early_m": 3.498571
+          },
+          {
+            "goal": [
+              103,
+              201
+            ],
+            "run04_cost": -2.490955,
+            "early_logged_cost": -2.490955,
+            "euclid_run04_m": 7.539231,
+            "euclid_early_m": 7.539231
+          },
+          {
+            "goal": [
+              104,
+              60
+            ],
+            "run04_cost": -4.314996,
+            "early_logged_cost": -4.314996,
+            "euclid_run04_m": 7.596052,
+            "euclid_early_m": 7.596052
+          }
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "original": {
+        "global_ordinal": 2,
+        "decision": 7,
+        "tick": 105,
+        "end_tick": 157,
+        "robot_core": [
+          173,
+          202
+        ],
+        "selected_goal_core": [
+          40,
+          179
+        ],
+        "traveled_m": 14.912461,
+        "astar_m": 17.8,
+        "n_frontiers": 24,
+        "observed": 21302,
+        "early_reason": null,
+        "early_selected_index": null,
+        "early_original_index": null,
+        "early_reserved_goal_p1": null,
+        "top_original_5": [
+          {
+            "index": 2,
+            "core": [
+              40,
+              179
+            ],
+            "saved_cost": -2.6546378135681152,
+            "distance_euclid_m": 13.497407,
+            "raw_ig": 358.30727
+          },
+          {
+            "index": 20,
+            "core": [
+              136,
+              237
+            ],
+            "saved_cost": -2.583944082260132,
+            "distance_euclid_m": 5.093133,
+            "raw_ig": 131.6037
+          },
+          {
+            "index": 1,
+            "core": [
+              36,
+              173
+            ],
+            "saved_cost": -2.502702474594116,
+            "distance_euclid_m": 14.003571,
+            "raw_ig": 350.46772
+          },
+          {
+            "index": 3,
+            "core": [
+              35,
+              151
+            ],
+            "saved_cost": -2.4501709938049316,
+            "distance_euclid_m": 14.71224,
+            "raw_ig": 360.47503
+          },
+          {
+            "index": 19,
+            "core": [
+              123,
+              250
+            ],
+            "saved_cost": -1.897767424583435,
+            "distance_euclid_m": 6.931089,
+            "raw_ig": 131.53596
+          }
+        ],
+        "chosen_candidate": {
+          "index": 2,
+          "core": [
+            40,
+            179
+          ],
+          "saved_cost": -2.6546378135681152,
+          "distance_euclid_m": 13.497407,
+          "raw_ig": 358.30727
+        }
+      },
+      "early": {
+        "global_ordinal": 2,
+        "decision": 7,
+        "tick": 84,
+        "end_tick": 141,
+        "robot_core": [
+          185,
+          203
+        ],
+        "selected_goal_core": [
+          39,
+          179
+        ],
+        "traveled_m": 16.259675,
+        "astar_m": 21.0,
+        "n_frontiers": 22,
+        "observed": 21291,
+        "early_reason": "GOAL_NO_LONGER_CURRENT_WFD",
+        "early_selected_index": 1,
+        "early_original_index": 1,
+        "early_reserved_goal_p1": [
+          128,
+          192
+        ],
+        "top_original_5": [
+          {
+            "index": 1,
+            "core": [
+              39,
+              179
+            ],
+            "saved_cost": -2.31451416015625,
+            "distance_euclid_m": 14.795945,
+            "raw_ig": 342.45425
+          },
+          {
+            "index": 19,
+            "core": [
+              136,
+              237
+            ],
+            "saved_cost": -2.203815221786499,
+            "distance_euclid_m": 5.964059,
+            "raw_ig": 131.43684
+          },
+          {
+            "index": 0,
+            "core": [
+              26,
+              148
+            ],
+            "saved_cost": -2.008984088897705,
+            "distance_euclid_m": 16.824387,
+            "raw_ig": 337.99926
+          },
+          {
+            "index": 18,
+            "core": [
+              123,
+              248
+            ],
+            "saved_cost": -1.6804821491241455,
+            "distance_euclid_m": 7.66094,
+            "raw_ig": 128.74073
+          },
+          {
+            "index": 4,
+            "core": [
+              44,
+              58
+            ],
+            "saved_cost": -1.6412805318832397,
+            "distance_euclid_m": 20.225232,
+            "raw_ig": 331.95279
+          }
+        ],
+        "chosen_candidate": {
+          "index": 1,
+          "core": [
+            39,
+            179
+          ],
+          "saved_cost": -2.31451416015625,
+          "distance_euclid_m": 14.795945,
+          "raw_ig": 342.45425
+        }
+      },
+      "differences": {
+        "traveled_m": 1.347214,
+        "exit_pose_separation_m": 1.2042,
+        "observed_count_delta": -11,
+        "observed_known_XOR": 513,
+        "known_run04_only": 262,
+        "known_early_only": 251,
+        "common_WFD_exact": 12,
+        "common_unknown": 31836,
+        "mean_mae_common_unknown": 0.012698,
+        "variance_mae_common_unknown": 0.009411,
+        "common_WFD_top3": [
+          {
+            "goal": [
+              68,
+              73
+            ],
+            "run04_cost": -1.859806,
+            "early_logged_cost": -1.418988,
+            "euclid_run04_m": 16.6331,
+            "euclid_early_m": 17.489711
+          },
+          {
+            "goal": [
+              83,
+              63
+            ],
+            "run04_cost": -1.663682,
+            "early_logged_cost": -1.31752,
+            "euclid_run04_m": 16.559287,
+            "euclid_early_m": 17.321663
+          },
+          {
+            "goal": [
+              92,
+              133
+            ],
+            "run04_cost": -0.454989,
+            "early_logged_cost": -0.52461,
+            "euclid_run04_m": 10.640489,
+            "euclid_early_m": 11.640017
+          }
+        ]
+      }
+    },
+    {
+      "index": 3,
+      "original": {
+        "global_ordinal": 3,
+        "decision": 13,
+        "tick": 292,
+        "end_tick": 340,
+        "robot_core": [
+          32,
+          140
+        ],
+        "selected_goal_core": [
+          53,
+          104
+        ],
+        "traveled_m": 14.018034,
+        "astar_m": 15.7,
+        "n_frontiers": 16,
+        "observed": 35624,
+        "early_reason": null,
+        "early_selected_index": null,
+        "early_original_index": null,
+        "early_reserved_goal_p1": null,
+        "top_original_5": [
+          {
+            "index": 3,
+            "core": [
+              53,
+              104
+            ],
+            "saved_cost": -1.4124590158462524,
+            "distance_euclid_m": 4.167733,
+            "raw_ig": 58.86752
+          },
+          {
+            "index": 10,
+            "core": [
+              155,
+              54
+            ],
+            "saved_cost": -0.9162904024124146,
+            "distance_euclid_m": 15.008331,
+            "raw_ig": 137.5199
+          },
+          {
+            "index": 6,
+            "core": [
+              100,
+              88
+            ],
+            "saved_cost": -0.861392617225647,
+            "distance_euclid_m": 8.560374,
+            "raw_ig": 73.73843
+          },
+          {
+            "index": 7,
+            "core": [
+              96,
+              67
+            ],
+            "saved_cost": -0.6437928080558777,
+            "distance_euclid_m": 9.708244,
+            "raw_ig": 62.50098
+          },
+          {
+            "index": 0,
+            "core": [
+              41,
+              62
+            ],
+            "saved_cost": -0.6097344160079956,
+            "distance_euclid_m": 7.851751,
+            "raw_ig": 47.87483
+          }
+        ],
+        "chosen_candidate": {
+          "index": 3,
+          "core": [
+            53,
+            104
+          ],
+          "saved_cost": -1.4124590158462524,
+          "distance_euclid_m": 4.167733,
+          "raw_ig": 58.86752
+        }
+      },
+      "early": {
+        "global_ordinal": 3,
+        "decision": 14,
+        "tick": 245,
+        "end_tick": 385,
+        "robot_core": [
+          67,
+          232
+        ],
+        "selected_goal_core": [
+          155,
+          54
+        ],
+        "traveled_m": 40.395743,
+        "astar_m": 42.8,
+        "n_frontiers": 15,
+        "observed": 35506,
+        "early_reason": "VALID_EARLY_GLOBAL_GOAL",
+        "early_selected_index": 10,
+        "early_original_index": 10,
+        "early_reserved_goal_p1": [
+          155,
+          54
+        ],
+        "top_original_5": [
+          {
+            "index": 10,
+            "core": [
+              155,
+              54
+            ],
+            "saved_cost": -0.675608217716217,
+            "distance_euclid_m": 19.856485,
+            "raw_ig": 134.15204
+          },
+          {
+            "index": 1,
+            "core": [
+              56,
+              36
+            ],
+            "saved_cost": -0.5852769017219543,
+            "distance_euclid_m": 19.630843,
+            "raw_ig": 114.89479
+          },
+          {
+            "index": 6,
+            "core": [
+              100,
+              88
+            ],
+            "saved_cost": -0.5207397937774658,
+            "distance_euclid_m": 14.773287,
+            "raw_ig": 76.93038
+          },
+          {
+            "index": 12,
+            "core": [
+              167,
+              243
+            ],
+            "saved_cost": -0.5112948417663574,
+            "distance_euclid_m": 10.060318,
+            "raw_ig": 51.43789
+          },
+          {
+            "index": 4,
+            "core": [
+              74,
+              18
+            ],
+            "saved_cost": -0.49707892537117004,
+            "distance_euclid_m": 21.411446,
+            "raw_ig": 106.43178
+          }
+        ],
+        "chosen_candidate": {
+          "index": 10,
+          "core": [
+            155,
+            54
+          ],
+          "saved_cost": -0.675608217716217,
+          "distance_euclid_m": 19.856485,
+          "raw_ig": 134.15204
+        }
+      },
+      "differences": {
+        "traveled_m": 26.377709,
+        "exit_pose_separation_m": 9.8433,
+        "observed_count_delta": -118,
+        "observed_known_XOR": 226,
+        "known_run04_only": 172,
+        "known_early_only": 54,
+        "common_WFD_exact": 11,
+        "common_unknown": 17711,
+        "mean_mae_common_unknown": 0.016038,
+        "variance_mae_common_unknown": 0.011346,
+        "common_WFD_top3": [
+          {
+            "goal": [
+              41,
+              62
+            ],
+            "run04_cost": -0.609734,
+            "early_logged_cost": -0.269117,
+            "euclid_run04_m": 7.851751,
+            "euclid_early_m": 17.197674
+          },
+          {
+            "goal": [
+              46,
+              58
+            ],
+            "run04_cost": -0.575017,
+            "early_logged_cost": -0.264071,
+            "euclid_run04_m": 8.318654,
+            "euclid_early_m": 17.526266
+          },
+          {
+            "goal": [
+              53,
+              104
+            ],
+            "run04_cost": -1.412459,
+            "early_logged_cost": -0.392112,
+            "euclid_run04_m": 4.167733,
+            "euclid_early_m": 12.876335
+          }
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "original": {
+        "global_ordinal": 4,
+        "decision": 17,
+        "tick": 399,
+        "end_tick": 437,
+        "robot_core": [
+          20,
+          57
+        ],
+        "selected_goal_core": [
+          46,
+          39
+        ],
+        "traveled_m": 10.636068,
+        "astar_m": 12.2,
+        "n_frontiers": 12,
+        "observed": 40672,
+        "early_reason": null,
+        "early_selected_index": null,
+        "early_original_index": null,
+        "early_reserved_goal_p1": null,
+        "top_original_5": [
+          {
+            "index": 0,
+            "core": [
+              46,
+              39
+            ],
+            "saved_cost": -2.293342351913452,
+            "distance_euclid_m": 3.162278,
+            "raw_ig": 72.52185
+          },
+          {
+            "index": 1,
+            "core": [
+              74,
+              18
+            ],
+            "saved_cost": -0.939699649810791,
+            "distance_euclid_m": 6.661081,
+            "raw_ig": 62.59415
+          },
+          {
+            "index": 9,
+            "core": [
+              158,
+              32
+            ],
+            "saved_cost": -0.4689229726791382,
+            "distance_euclid_m": 14.024621,
+            "raw_ig": 65.76467
+          },
+          {
+            "index": 5,
+            "core": [
+              172,
+              71
+            ],
+            "saved_cost": -0.46341046690940857,
+            "distance_euclid_m": 15.264338,
+            "raw_ig": 70.73654
+          },
+          {
+            "index": 2,
+            "core": [
+              85,
+              46
+            ],
+            "saved_cost": -0.4298122227191925,
+            "distance_euclid_m": 6.59242,
+            "raw_ig": 28.33503
+          }
+        ],
+        "chosen_candidate": {
+          "index": 0,
+          "core": [
+            46,
+            39
+          ],
+          "saved_cost": -2.293342351913452,
+          "distance_euclid_m": 3.162278,
+          "raw_ig": 72.52185
+        }
+      },
+      "early": {
+        "global_ordinal": 4,
+        "decision": 18,
+        "tick": 449,
+        "end_tick": 510,
+        "robot_core": [
+          131,
+          34
+        ],
+        "selected_goal_core": [
+          85,
+          30
+        ],
+        "traveled_m": 17.383282,
+        "astar_m": 19.4,
+        "n_frontiers": 17,
+        "observed": 43750,
+        "early_reason": "VALID_EARLY_GLOBAL_GOAL",
+        "early_selected_index": 11,
+        "early_original_index": 11,
+        "early_reserved_goal_p1": [
+          85,
+          30
+        ],
+        "top_original_5": [
+          {
+            "index": 11,
+            "core": [
+              85,
+              30
+            ],
+            "saved_cost": -1.5931953191757202,
+            "distance_euclid_m": 4.617359,
+            "raw_ig": 73.56354
+          },
+          {
+            "index": 10,
+            "core": [
+              74,
+              18
+            ],
+            "saved_cost": -1.5169800519943237,
+            "distance_euclid_m": 5.920304,
+            "raw_ig": 89.80983
+          },
+          {
+            "index": 0,
+            "core": [
+              15,
+              17
+            ],
+            "saved_cost": -0.7680652141571045,
+            "distance_euclid_m": 11.723907,
+            "raw_ig": 90.04725
+          },
+          {
+            "index": 8,
+            "core": [
+              44,
+              45
+            ],
+            "saved_cost": -0.7640659213066101,
+            "distance_euclid_m": 8.769265,
+            "raw_ig": 67.00296
+          },
+          {
+            "index": 5,
+            "core": [
+              42,
+              23
+            ],
+            "saved_cost": -0.7387655377388,
+            "distance_euclid_m": 8.96772,
+            "raw_ig": 66.25042
+          }
+        ],
+        "chosen_candidate": {
+          "index": 11,
+          "core": [
+            85,
+            30
+          ],
+          "saved_cost": -1.5931953191757202,
+          "distance_euclid_m": 4.617359,
+          "raw_ig": 73.56354
+        }
+      },
+      "differences": {
+        "traveled_m": 6.747214,
+        "exit_pose_separation_m": 11.3358,
+        "observed_count_delta": 3078,
+        "observed_known_XOR": 9524,
+        "known_run04_only": 3223,
+        "known_early_only": 6301,
+        "common_WFD_exact": 3,
+        "common_unknown": 6416,
+        "mean_mae_common_unknown": 0.080085,
+        "variance_mae_common_unknown": 0.038557,
+        "common_WFD_top3": [
+          {
+            "goal": [
+              74,
+              18
+            ],
+            "run04_cost": -0.9397,
+            "early_logged_cost": -1.51698,
+            "euclid_run04_m": 6.661081,
+            "euclid_early_m": 5.920304
+          },
+          {
+            "goal": [
+              117,
+              217
+            ],
+            "run04_cost": -0.001483,
+            "early_logged_cost": -0.001601,
+            "euclid_run04_m": 18.710692,
+            "euclid_early_m": 18.353474
+          },
+          {
+            "goal": [
+              149,
+              250
+            ],
+            "run04_cost": 0.0,
+            "early_logged_cost": 0.0,
+            "euclid_run04_m": 23.21422,
+            "euclid_early_m": 21.67487
+          }
+        ]
+      }
+    },
+    {
+      "index": 5,
+      "original": {
+        "global_ordinal": 5,
+        "decision": 20,
+        "tick": 471,
+        "end_tick": 544,
+        "robot_core": [
+          34,
+          9
+        ],
+        "selected_goal_core": [
+          158,
+          32
+        ],
+        "traveled_m": 20.066563,
+        "astar_m": 23.1,
+        "n_frontiers": 9,
+        "observed": 45126,
+        "early_reason": null,
+        "early_selected_index": null,
+        "early_original_index": null,
+        "early_reserved_goal_p1": null,
+        "top_original_5": [
+          {
+            "index": 5,
+            "core": [
+              158,
+              32
+            ],
+            "saved_cost": -0.6588878631591797,
+            "distance_euclid_m": 12.611503,
+            "raw_ig": 83.09566
+          },
+          {
+            "index": 7,
+            "core": [
+              180,
+              57
+            ],
+            "saved_cost": -0.5569645166397095,
+            "distance_euclid_m": 15.3688,
+            "raw_ig": 85.59876
+          },
+          {
+            "index": 2,
+            "core": [
+              160,
+              83
+            ],
+            "saved_cost": -0.4377770721912384,
+            "distance_euclid_m": 14.612324,
+            "raw_ig": 63.9694
+          },
+          {
+            "index": 6,
+            "core": [
+              176,
+              48
+            ],
+            "saved_cost": -0.271363228559494,
+            "distance_euclid_m": 14.725828,
+            "raw_ig": 39.96048
+          },
+          {
+            "index": 3,
+            "core": [
+              167,
+              242
+            ],
+            "saved_cost": -0.10408999025821686,
+            "distance_euclid_m": 26.828716,
+            "raw_ig": 27.92601
+          }
+        ],
+        "chosen_candidate": {
+          "index": 5,
+          "core": [
+            158,
+            32
+          ],
+          "saved_cost": -0.6588878631591797,
+          "distance_euclid_m": 12.611503,
+          "raw_ig": 83.09566
+        }
+      },
+      "early": {
+        "global_ordinal": 5,
+        "decision": 23,
+        "tick": 551,
+        "end_tick": 602,
+        "robot_core": [
+          14,
+          29
+        ],
+        "selected_goal_core": [
+          48,
+          59
+        ],
+        "traveled_m": 13.924922,
+        "astar_m": 16.2,
+        "n_frontiers": 12,
+        "observed": 47801,
+        "early_reason": "VALID_EARLY_GLOBAL_GOAL",
+        "early_selected_index": 6,
+        "early_original_index": 0,
+        "early_reserved_goal_p1": [
+          48,
+          59
+        ],
+        "top_original_5": [
+          {
+            "index": 0,
+            "core": [
+              18,
+              64
+            ],
+            "saved_cost": -0.3883368670940399,
+            "distance_euclid_m": 3.522783,
+            "raw_ig": 13.68027,
+            "original_mapex_cost_before_override": -0.3883368670940399
+          },
+          {
+            "index": 6,
+            "core": [
+              48,
+              59
+            ],
+            "saved_cost": -1.38833686709404,
+            "distance_euclid_m": 4.534314,
+            "raw_ig": 62.95155,
+            "original_mapex_cost_before_override": -0.36627277731895447
+          },
+          {
+            "index": 1,
+            "core": [
+              16,
+              77
+            ],
+            "saved_cost": -0.21531231701374054,
+            "distance_euclid_m": 4.804165,
+            "raw_ig": 10.34396,
+            "original_mapex_cost_before_override": -0.21531231701374054
+          },
+          {
+            "index": 2,
+            "core": [
+              11,
+              97
+            ],
+            "saved_cost": -0.1968429833650589,
+            "distance_euclid_m": 6.806614,
+            "raw_ig": 13.39834,
+            "original_mapex_cost_before_override": -0.1968429833650589
+          },
+          {
+            "index": 4,
+            "core": [
+              33,
+              115
+            ],
+            "saved_cost": -0.19228602945804596,
+            "distance_euclid_m": 8.807383,
+            "raw_ig": 16.93537,
+            "original_mapex_cost_before_override": -0.19228602945804596
+          }
+        ],
+        "chosen_candidate": {
+          "index": 6,
+          "core": [
+            48,
+            59
+          ],
+          "saved_cost": -1.38833686709404,
+          "distance_euclid_m": 4.534314,
+          "raw_ig": 62.95155,
+          "original_mapex_cost_before_override": -0.36627277731895447
+        }
+      },
+      "differences": {
+        "traveled_m": -6.141641,
+        "exit_pose_separation_m": 2.8284,
+        "observed_count_delta": 2675,
+        "observed_known_XOR": 5607,
+        "known_run04_only": 1466,
+        "known_early_only": 4141,
+        "common_WFD_exact": 2,
+        "common_unknown": 4122,
+        "mean_mae_common_unknown": 0.041819,
+        "variance_mae_common_unknown": 0.01779,
+        "common_WFD_top3": [
+          {
+            "goal": [
+              117,
+              217
+            ],
+            "run04_cost": -0.001246,
+            "early_logged_cost": -0.001363,
+            "euclid_run04_m": 22.394865,
+            "euclid_early_m": 21.436651
+          },
+          {
+            "goal": [
+              149,
+              250
+            ],
+            "run04_cost": 0.0,
+            "early_logged_cost": 0.0,
+            "euclid_run04_m": 26.703183,
+            "euclid_early_m": 25.897104
+          }
+        ]
+      }
+    },
+    {
+      "index": 6,
+      "original": {
+        "global_ordinal": 6,
+        "decision": 24,
+        "tick": 587,
+        "end_tick": 698,
+        "robot_core": [
+          187,
+          28
+        ],
+        "selected_goal_core": [
+          167,
+          242
+        ],
+        "traveled_m": 31.924922,
+        "astar_m": 33.6,
+        "n_frontiers": 4,
+        "observed": 49231,
+        "early_reason": null,
+        "early_selected_index": null,
+        "early_original_index": null,
+        "early_reserved_goal_p1": null,
+        "top_original_5": [
+          {
+            "index": 1,
+            "core": [
+              167,
+              242
+            ],
+            "saved_cost": -0.2285207360982895,
+            "distance_euclid_m": 21.493255,
+            "raw_ig": 49.11654
+          },
+          {
+            "index": 3,
+            "core": [
+              174,
+              106
+            ],
+            "saved_cost": -0.008288473822176456,
+            "distance_euclid_m": 7.907591,
+            "raw_ig": 0.65542
+          },
+          {
+            "index": 0,
+            "core": [
+              117,
+              217
+            ],
+            "saved_cost": -0.0013901871861889958,
+            "distance_euclid_m": 20.154652,
+            "raw_ig": 0.28019
+          },
+          {
+            "index": 2,
+            "core": [
+              149,
+              250
+            ],
+            "saved_cost": 0.0,
+            "distance_euclid_m": 22.522877,
+            "raw_ig": -0.0
+          }
+        ],
+        "chosen_candidate": {
+          "index": 1,
+          "core": [
+            167,
+            242
+          ],
+          "saved_cost": -0.2285207360982895,
+          "distance_euclid_m": 21.493255,
+          "raw_ig": 49.11654
+        }
+      },
+      "early": {
+        "global_ordinal": 6,
+        "decision": 27,
+        "tick": 636,
+        "end_tick": 745,
+        "robot_core": [
+          19,
+          93
+        ],
+        "selected_goal_core": [
+          167,
+          243
+        ],
+        "traveled_m": 30.56099,
+        "astar_m": 33.2,
+        "n_frontiers": 3,
+        "observed": 49261,
+        "early_reason": "VALID_EARLY_GLOBAL_GOAL",
+        "early_selected_index": 1,
+        "early_original_index": 1,
+        "early_reserved_goal_p1": [
+          167,
+          243
+        ],
+        "top_original_5": [
+          {
+            "index": 1,
+            "core": [
+              167,
+              243
+            ],
+            "saved_cost": -0.2191213071346283,
+            "distance_euclid_m": 21.072257,
+            "raw_ig": 46.1738
+          },
+          {
+            "index": 0,
+            "core": [
+              117,
+              217
+            ],
+            "saved_cost": -0.0018946350319311023,
+            "distance_euclid_m": 15.805062,
+            "raw_ig": 0.29945
+          },
+          {
+            "index": 2,
+            "core": [
+              149,
+              250
+            ],
+            "saved_cost": 0.0,
+            "distance_euclid_m": 20.383572,
+            "raw_ig": -0.0
+          }
+        ],
+        "chosen_candidate": {
+          "index": 1,
+          "core": [
+            167,
+            243
+          ],
+          "saved_cost": -0.2191213071346283,
+          "distance_euclid_m": 21.072257,
+          "raw_ig": 46.1738
+        }
+      },
+      "differences": {
+        "traveled_m": -1.363932,
+        "exit_pose_separation_m": 18.0136,
+        "observed_count_delta": 30,
+        "observed_known_XOR": 42,
+        "known_run04_only": 6,
+        "known_early_only": 36,
+        "common_WFD_exact": 2,
+        "common_unknown": 4122,
+        "mean_mae_common_unknown": 0.00283,
+        "variance_mae_common_unknown": 0.001679,
+        "common_WFD_top3": [
+          {
+            "goal": [
+              117,
+              217
+            ],
+            "run04_cost": -0.00139,
+            "early_logged_cost": -0.001895,
+            "euclid_run04_m": 20.154652,
+            "euclid_early_m": 15.805062
+          },
+          {
+            "goal": [
+              149,
+              250
+            ],
+            "run04_cost": 0.0,
+            "early_logged_cost": 0.0,
+            "euclid_run04_m": 22.522877,
+            "euclid_early_m": 20.383572
+          }
+        ]
+      }
+    }
+  ]
+}
