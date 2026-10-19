@@ -38,3 +38,9 @@ Not confirmed: any physically new door discovered mid-room on this particular Ne
 Next logical separate hypothesis: use the dynamic early (GLOBAL goal, exit portal) to choose LOCAL sweep direction / exit-side, while preserving native G1 WFD and no GT. Register under new version and evaluate on New Room + Hospital; do not retroactively modify this frozen result.
 
 ## Files
+
+- Frozen run /home/dell/DELL_NATIVE2D/runs/NR-G2EARLYD-02/
+- Algorithm /home/dell/DELL_NATIVE2D/build/g2_early_global_door_r1.py
+- Runner /home/dell/DELL_NATIVE2D/build/g2_early_global_door_r1_deploy.py
+- Audit /home/dell/DELL_NATIVE2D/analysis/g2_autonomous_research_20261018/NR_G2EARLYD_NATIVE_COMPARE.json
+- Full observed decision gallery /home/dell/DELL_NATIVE2D/analysis/g2_autonomous_research_20261018/NR_G2EARLYD_R1_FULL_DECISIONS_SCROLL.html
