@@ -1,0 +1,2132 @@
+{
+  "science": "Single delta original probabilistic raycast accumulator scope; 3 New Room runs",
+  "methodology": "Native terminal observed grids+odometry, no GT coverage claims; COMPARE end masks not just counts",
+  "runs": [
+    {
+      "name": "MapEx code-reset original",
+      "id": "COM1_FROZEN_RUN05",
+      "root": "/home/dell/mx072_native2d_pair_20261015/OPTIMIZED_FULL_PAIR_20261015/COM1_VERIFIED/native_plain_lama3small_run05/MAPEX_PLAIN_LAMA3SMALL_RUN05_visvarprob",
+      "native_ticks": 1298,
+      "total_m": 369.69612662849465,
+      "global_m": 369.6961266284946,
+      "local_m": 0,
+      "decision_count": 25,
+      "global_decisions": 25,
+      "local_decisions": 0,
+      "phase_changes": 1,
+      "final_known_cells": 51308,
+      "mission_complete": true,
+      "stop_reason": "MAPEX_NO_SELECTABLE_FRONTIER_NOT_GT",
+      "decision_trace": [
+        {
+          "decision": 1,
+          "tick": 0,
+          "mode": "GLOBAL",
+          "robot": [
+            131,
+            131
+          ],
+          "goal": [
+            153,
+            104
+          ]
+        },
+        {
+          "decision": 2,
+          "tick": 12,
+          "mode": "GLOBAL",
+          "robot": [
+            147,
+            111
+          ],
+          "goal": [
+            88,
+            80
+          ]
+        },
+        {
+          "decision": 3,
+          "tick": 38,
+          "mode": "GLOBAL",
+          "robot": [
+            94,
+            86
+          ],
+          "goal": [
+            72,
+            109
+          ]
+        },
+        {
+          "decision": 4,
+          "tick": 50,
+          "mode": "GLOBAL",
+          "robot": [
+            72,
+            100
+          ],
+          "goal": [
+            55,
+            125
+          ]
+        },
+        {
+          "decision": 5,
+          "tick": 64,
+          "mode": "GLOBAL",
+          "robot": [
+            49,
+            119
+          ],
+          "goal": [
+            108,
+            183
+          ]
+        },
+        {
+          "decision": 6,
+          "tick": 108,
+          "mode": "GLOBAL",
+          "robot": [
+            101,
+            183
+          ],
+          "goal": [
+            13,
+            221
+          ]
+        },
+        {
+          "decision": 7,
+          "tick": 153,
+          "mode": "GLOBAL",
+          "robot": [
+            18,
+            215
+          ],
+          "goal": [
+            45,
+            233
+          ]
+        },
+        {
+          "decision": 8,
+          "tick": 164,
+          "mode": "GLOBAL",
+          "robot": [
+            38,
+            228
+          ],
+          "goal": [
+            74,
+            223
+          ]
+        },
+        {
+          "decision": 9,
+          "tick": 176,
+          "mode": "GLOBAL",
+          "robot": [
+            69,
+            229
+          ],
+          "goal": [
+            121,
+            236
+          ]
+        },
+        {
+          "decision": 10,
+          "tick": 290,
+          "mode": "GLOBAL",
+          "robot": [
+            123,
+            229
+          ],
+          "goal": [
+            189,
+            138
+          ]
+        },
+        {
+          "decision": 11,
+          "tick": 339,
+          "mode": "GLOBAL",
+          "robot": [
+            181,
+            140
+          ],
+          "goal": [
+            189,
+            44
+          ]
+        },
+        {
+          "decision": 12,
+          "tick": 403,
+          "mode": "GLOBAL",
+          "robot": [
+            180,
+            43
+          ],
+          "goal": [
+            152,
+            10
+          ]
+        },
+        {
+          "decision": 13,
+          "tick": 423,
+          "mode": "GLOBAL",
+          "robot": [
+            150,
+            17
+          ],
+          "goal": [
+            71,
+            20
+          ]
+        },
+        {
+          "decision": 14,
+          "tick": 487,
+          "mode": "GLOBAL",
+          "robot": [
+            79,
+            24
+          ],
+          "goal": [
+            33,
+            9
+          ]
+        },
+        {
+          "decision": 15,
+          "tick": 508,
+          "mode": "GLOBAL",
+          "robot": [
+            34,
+            18
+          ],
+          "goal": [
+            13,
+            33
+          ]
+        },
+        {
+          "decision": 16,
+          "tick": 519,
+          "mode": "GLOBAL",
+          "robot": [
+            13,
+            24
+          ],
+          "goal": [
+            22,
+            65
+          ]
+        },
+        {
+          "decision": 17,
+          "tick": 571,
+          "mode": "GLOBAL",
+          "robot": [
+            45,
+            64
+          ],
+          "goal": [
+            184,
+            240
+          ]
+        },
+        {
+          "decision": 18,
+          "tick": 676,
+          "mode": "GLOBAL",
+          "robot": [
+            177,
+            247
+          ],
+          "goal": [
+            191,
+            200
+          ]
+        },
+        {
+          "decision": 19,
+          "tick": 729,
+          "mode": "GLOBAL",
+          "robot": [
+            174,
+            203
+          ],
+          "goal": [
+            181,
+            112
+          ]
+        },
+        {
+          "decision": 20,
+          "tick": 774,
+          "mode": "GLOBAL",
+          "robot": [
+            189,
+            115
+          ],
+          "goal": [
+            15,
+            103
+          ]
+        },
+        {
+          "decision": 21,
+          "tick": 865,
+          "mode": "GLOBAL",
+          "robot": [
+            12,
+            111
+          ],
+          "goal": [
+            46,
+            9
+          ]
+        },
+        {
+          "decision": 22,
+          "tick": 938,
+          "mode": "GLOBAL",
+          "robot": [
+            55,
+            9
+          ],
+          "goal": [
+            140,
+            6
+          ]
+        },
+        {
+          "decision": 23,
+          "tick": 1022,
+          "mode": "GLOBAL",
+          "robot": [
+            133,
+            13
+          ],
+          "goal": [
+            180,
+            232
+          ]
+        },
+        {
+          "decision": 24,
+          "tick": 1141,
+          "mode": "GLOBAL",
+          "robot": [
+            182,
+            247
+          ],
+          "goal": [
+            41,
+            140
+          ]
+        },
+        {
+          "decision": 25,
+          "tick": 1222,
+          "mode": "GLOBAL",
+          "robot": [
+            50,
+            140
+          ],
+          "goal": [
+            19,
+            69
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MapEx paper cumulative",
+      "id": "NR-RAYMX-02",
+      "root": "/home/dell/DELL_NATIVE2D/runs/NR-RAYMX-02/native_plain_lama3small_run05/MAPEX_PLAIN_LAMA3SMALL_RUN05_visvarprob",
+      "native_ticks": 1135,
+      "total_m": 322.3239906734951,
+      "global_m": 322.32399067349513,
+      "local_m": 0,
+      "decision_count": 22,
+      "global_decisions": 22,
+      "local_decisions": 0,
+      "phase_changes": 1,
+      "final_known_cells": 51304,
+      "mission_complete": true,
+      "stop_reason": "MAPEX_NO_SELECTABLE_FRONTIER_NOT_GT",
+      "decision_trace": [
+        {
+          "decision": 1,
+          "tick": 0,
+          "mode": "GLOBAL",
+          "robot": [
+            131,
+            131
+          ],
+          "goal": [
+            153,
+            104
+          ]
+        },
+        {
+          "decision": 2,
+          "tick": 12,
+          "mode": "GLOBAL",
+          "robot": [
+            147,
+            111
+          ],
+          "goal": [
+            181,
+            155
+          ]
+        },
+        {
+          "decision": 3,
+          "tick": 36,
+          "mode": "GLOBAL",
+          "robot": [
+            184,
+            146
+          ],
+          "goal": [
+            94,
+            60
+          ]
+        },
+        {
+          "decision": 4,
+          "tick": 92,
+          "mode": "GLOBAL",
+          "robot": [
+            101,
+            61
+          ],
+          "goal": [
+            46,
+            46
+          ]
+        },
+        {
+          "decision": 5,
+          "tick": 116,
+          "mode": "GLOBAL",
+          "robot": [
+            52,
+            40
+          ],
+          "goal": [
+            45,
+            58
+          ]
+        },
+        {
+          "decision": 6,
+          "tick": 142,
+          "mode": "GLOBAL",
+          "robot": [
+            49,
+            65
+          ],
+          "goal": [
+            91,
+            218
+          ]
+        },
+        {
+          "decision": 7,
+          "tick": 201,
+          "mode": "GLOBAL",
+          "robot": [
+            91,
+            200
+          ],
+          "goal": [
+            13,
+            222
+          ]
+        },
+        {
+          "decision": 8,
+          "tick": 248,
+          "mode": "GLOBAL",
+          "robot": [
+            18,
+            214
+          ],
+          "goal": [
+            46,
+            236
+          ]
+        },
+        {
+          "decision": 9,
+          "tick": 261,
+          "mode": "GLOBAL",
+          "robot": [
+            41,
+            230
+          ],
+          "goal": [
+            74,
+            221
+          ]
+        },
+        {
+          "decision": 10,
+          "tick": 272,
+          "mode": "GLOBAL",
+          "robot": [
+            70,
+            228
+          ],
+          "goal": [
+            150,
+            243
+          ]
+        },
+        {
+          "decision": 11,
+          "tick": 395,
+          "mode": "GLOBAL",
+          "robot": [
+            153,
+            236
+          ],
+          "goal": [
+            184,
+            239
+          ]
+        },
+        {
+          "decision": 12,
+          "tick": 408,
+          "mode": "GLOBAL",
+          "robot": [
+            181,
+            247
+          ],
+          "goal": [
+            189,
+            44
+          ]
+        },
+        {
+          "decision": 13,
+          "tick": 519,
+          "mode": "GLOBAL",
+          "robot": [
+            180,
+            43
+          ],
+          "goal": [
+            152,
+            10
+          ]
+        },
+        {
+          "decision": 14,
+          "tick": 539,
+          "mode": "GLOBAL",
+          "robot": [
+            150,
+            17
+          ],
+          "goal": [
+            16,
+            17
+          ]
+        },
+        {
+          "decision": 15,
+          "tick": 620,
+          "mode": "GLOBAL",
+          "robot": [
+            25,
+            15
+          ],
+          "goal": [
+            23,
+            35
+          ]
+        },
+        {
+          "decision": 16,
+          "tick": 629,
+          "mode": "GLOBAL",
+          "robot": [
+            15,
+            32
+          ],
+          "goal": [
+            11,
+            97
+          ]
+        },
+        {
+          "decision": 17,
+          "tick": 714,
+          "mode": "GLOBAL",
+          "robot": [
+            11,
+            105
+          ],
+          "goal": [
+            181,
+            112
+          ]
+        },
+        {
+          "decision": 18,
+          "tick": 805,
+          "mode": "GLOBAL",
+          "robot": [
+            189,
+            108
+          ],
+          "goal": [
+            191,
+            200
+          ]
+        },
+        {
+          "decision": 19,
+          "tick": 844,
+          "mode": "GLOBAL",
+          "robot": [
+            191,
+            183
+          ],
+          "goal": [
+            140,
+            45
+          ]
+        },
+        {
+          "decision": 20,
+          "tick": 924,
+          "mode": "GLOBAL",
+          "robot": [
+            140,
+            36
+          ],
+          "goal": [
+            46,
+            9
+          ]
+        },
+        {
+          "decision": 21,
+          "tick": 999,
+          "mode": "GLOBAL",
+          "robot": [
+            54,
+            9
+          ],
+          "goal": [
+            19,
+            69
+          ]
+        },
+        {
+          "decision": 22,
+          "tick": 1059,
+          "mode": "GLOBAL",
+          "robot": [
+            11,
+            74
+          ],
+          "goal": [
+            41,
+            140
+          ]
+        }
+      ],
+      "runtime_wall_s": 410.662,
+      "patch_D01D02_variant_gate": "D01_D02_VARIANT_INTEGRITY_PASS",
+      "vs_original_code": {
+        "delta_total_m": -47.37213595499958,
+        "delta_global_m": -47.372135954999465,
+        "delta_local_m": 0,
+        "terminal_mask_missing": -4,
+        "only_original_cells": 8,
+        "only_paper_cells": 4
+      }
+    },
+    {
+      "name": "MapEx+G1 code-reset original",
+      "id": "NR-RN-04",
+      "root": "/home/dell/DELL_NATIVE2D/runs/NR-RN-04/native_opt_r41_lama3small_run04/R41_OPT_LAMA3_SMALLROI_RUN04_visvarprob",
+      "native_ticks": 709,
+      "total_m": 199.10758280849635,
+      "global_m": 94.92886904474855,
+      "local_m": 104.17871376374778,
+      "decision_count": 25,
+      "global_decisions": 6,
+      "local_decisions": 19,
+      "phase_changes": 12,
+      "final_known_cells": 51304,
+      "mission_complete": true,
+      "stop_reason": "MAPEX_NO_SELECTABLE_FRONTIER_NOT_GT",
+      "decision_trace": [
+        {
+          "decision": 1,
+          "tick": 0,
+          "mode": "GLOBAL",
+          "robot": [
+            131,
+            131
+          ],
+          "goal": [
+            153,
+            104
+          ]
+        },
+        {
+          "decision": 2,
+          "tick": 12,
+          "mode": "LOCAL",
+          "robot": [
+            147,
+            111
+          ],
+          "goal": [
+            185,
+            120
+          ]
+        },
+        {
+          "decision": 3,
+          "tick": 26,
+          "mode": "LOCAL",
+          "robot": [
+            176,
+            124
+          ],
+          "goal": [
+            190,
+            138
+          ]
+        },
+        {
+          "decision": 4,
+          "tick": 38,
+          "mode": "LOCAL",
+          "robot": [
+            183,
+            139
+          ],
+          "goal": [
+            182,
+            110
+          ]
+        },
+        {
+          "decision": 5,
+          "tick": 59,
+          "mode": "LOCAL",
+          "robot": [
+            191,
+            112
+          ],
+          "goal": [
+            169,
+            187
+          ]
+        },
+        {
+          "decision": 6,
+          "tick": 96,
+          "mode": "LOCAL",
+          "robot": [
+            161,
+            187
+          ],
+          "goal": [
+            191,
+            202
+          ]
+        },
+        {
+          "decision": 7,
+          "tick": 105,
+          "mode": "GLOBAL",
+          "robot": [
+            173,
+            202
+          ],
+          "goal": [
+            40,
+            179
+          ]
+        },
+        {
+          "decision": 8,
+          "tick": 157,
+          "mode": "LOCAL",
+          "robot": [
+            46,
+            173
+          ],
+          "goal": [
+            13,
+            222
+          ]
+        },
+        {
+          "decision": 9,
+          "tick": 184,
+          "mode": "LOCAL",
+          "robot": [
+            17,
+            215
+          ],
+          "goal": [
+            47,
+            234
+          ]
+        },
+        {
+          "decision": 10,
+          "tick": 196,
+          "mode": "LOCAL",
+          "robot": [
+            39,
+            229
+          ],
+          "goal": [
+            74,
+            222
+          ]
+        },
+        {
+          "decision": 11,
+          "tick": 207,
+          "mode": "LOCAL",
+          "robot": [
+            70,
+            231
+          ],
+          "goal": [
+            9,
+            149
+          ]
+        },
+        {
+          "decision": 12,
+          "tick": 268,
+          "mode": "LOCAL",
+          "robot": [
+            6,
+            156
+          ],
+          "goal": [
+            39,
+            140
+          ]
+        },
+        {
+          "decision": 13,
+          "tick": 292,
+          "mode": "GLOBAL",
+          "robot": [
+            32,
+            140
+          ],
+          "goal": [
+            53,
+            104
+          ]
+        },
+        {
+          "decision": 14,
+          "tick": 340,
+          "mode": "LOCAL",
+          "robot": [
+            59,
+            111
+          ],
+          "goal": [
+            11,
+            110
+          ]
+        },
+        {
+          "decision": 15,
+          "tick": 360,
+          "mode": "LOCAL",
+          "robot": [
+            11,
+            119
+          ],
+          "goal": [
+            11,
+            84
+          ]
+        },
+        {
+          "decision": 16,
+          "tick": 385,
+          "mode": "LOCAL",
+          "robot": [
+            18,
+            83
+          ],
+          "goal": [
+            29,
+            57
+          ]
+        },
+        {
+          "decision": 17,
+          "tick": 399,
+          "mode": "GLOBAL",
+          "robot": [
+            20,
+            57
+          ],
+          "goal": [
+            46,
+            39
+          ]
+        },
+        {
+          "decision": 18,
+          "tick": 437,
+          "mode": "LOCAL",
+          "robot": [
+            53,
+            40
+          ],
+          "goal": [
+            13,
+            44
+          ]
+        },
+        {
+          "decision": 19,
+          "tick": 450,
+          "mode": "LOCAL",
+          "robot": [
+            21,
+            47
+          ],
+          "goal": [
+            43,
+            6
+          ]
+        },
+        {
+          "decision": 20,
+          "tick": 471,
+          "mode": "GLOBAL",
+          "robot": [
+            34,
+            9
+          ],
+          "goal": [
+            158,
+            32
+          ]
+        },
+        {
+          "decision": 21,
+          "tick": 544,
+          "mode": "LOCAL",
+          "robot": [
+            155,
+            41
+          ],
+          "goal": [
+            128,
+            30
+          ]
+        },
+        {
+          "decision": 22,
+          "tick": 554,
+          "mode": "LOCAL",
+          "robot": [
+            136,
+            30
+          ],
+          "goal": [
+            162,
+            9
+          ]
+        },
+        {
+          "decision": 23,
+          "tick": 568,
+          "mode": "LOCAL",
+          "robot": [
+            155,
+            9
+          ],
+          "goal": [
+            180,
+            28
+          ]
+        },
+        {
+          "decision": 24,
+          "tick": 587,
+          "mode": "GLOBAL",
+          "robot": [
+            187,
+            28
+          ],
+          "goal": [
+            167,
+            242
+          ]
+        },
+        {
+          "decision": 25,
+          "tick": 698,
+          "mode": "LOCAL",
+          "robot": [
+            159,
+            247
+          ],
+          "goal": [
+            186,
+            233
+          ]
+        }
+      ],
+      "runtime_wall_s": 370.85
+    },
+    {
+      "name": "MapEx+G1 paper cumulative",
+      "id": "NR-RAYRN-02",
+      "root": "/home/dell/DELL_NATIVE2D/runs/NR-RAYRN-02/native_opt_r41_lama3small_run04/R41_OPT_LAMA3_SMALLROI_RUN04_visvarprob",
+      "native_ticks": 875,
+      "total_m": 246.2338207297456,
+      "global_m": 167.84953415699772,
+      "local_m": 78.38428657274788,
+      "decision_count": 23,
+      "global_decisions": 8,
+      "local_decisions": 15,
+      "phase_changes": 13,
+      "final_known_cells": 51304,
+      "mission_complete": true,
+      "stop_reason": "MAPEX_NO_SELECTABLE_FRONTIER_NOT_GT",
+      "decision_trace": [
+        {
+          "decision": 1,
+          "tick": 0,
+          "mode": "GLOBAL",
+          "robot": [
+            131,
+            131
+          ],
+          "goal": [
+            153,
+            104
+          ]
+        },
+        {
+          "decision": 2,
+          "tick": 12,
+          "mode": "LOCAL",
+          "robot": [
+            147,
+            111
+          ],
+          "goal": [
+            182,
+            156
+          ]
+        },
+        {
+          "decision": 3,
+          "tick": 36,
+          "mode": "LOCAL",
+          "robot": [
+            182,
+            148
+          ],
+          "goal": [
+            182,
+            109
+          ]
+        },
+        {
+          "decision": 4,
+          "tick": 61,
+          "mode": "LOCAL",
+          "robot": [
+            191,
+            112
+          ],
+          "goal": [
+            172,
+            184
+          ]
+        },
+        {
+          "decision": 5,
+          "tick": 99,
+          "mode": "LOCAL",
+          "robot": [
+            179,
+            184
+          ],
+          "goal": [
+            191,
+            202
+          ]
+        },
+        {
+          "decision": 6,
+          "tick": 104,
+          "mode": "GLOBAL",
+          "robot": [
+            192,
+            184
+          ],
+          "goal": [
+            136,
+            237
+          ]
+        },
+        {
+          "decision": 7,
+          "tick": 142,
+          "mode": "LOCAL",
+          "robot": [
+            130,
+            232
+          ],
+          "goal": [
+            155,
+            219
+          ]
+        },
+        {
+          "decision": 8,
+          "tick": 152,
+          "mode": "LOCAL",
+          "robot": [
+            155,
+            227
+          ],
+          "goal": [
+            184,
+            240
+          ]
+        },
+        {
+          "decision": 9,
+          "tick": 167,
+          "mode": "GLOBAL",
+          "robot": [
+            179,
+            248
+          ],
+          "goal": [
+            94,
+            60
+          ]
+        },
+        {
+          "decision": 10,
+          "tick": 262,
+          "mode": "LOCAL",
+          "robot": [
+            103,
+            61
+          ],
+          "goal": [
+            16,
+            17
+          ]
+        },
+        {
+          "decision": 11,
+          "tick": 303,
+          "mode": "LOCAL",
+          "robot": [
+            25,
+            18
+          ],
+          "goal": [
+            23,
+            37
+          ]
+        },
+        {
+          "decision": 12,
+          "tick": 313,
+          "mode": "GLOBAL",
+          "robot": [
+            15,
+            32
+          ],
+          "goal": [
+            15,
+            63
+          ]
+        },
+        {
+          "decision": 13,
+          "tick": 376,
+          "mode": "LOCAL",
+          "robot": [
+            23,
+            59
+          ],
+          "goal": [
+            18,
+            72
+          ]
+        },
+        {
+          "decision": 14,
+          "tick": 382,
+          "mode": "LOCAL",
+          "robot": [
+            11,
+            65
+          ],
+          "goal": [
+            10,
+            97
+          ]
+        },
+        {
+          "decision": 15,
+          "tick": 399,
+          "mode": "GLOBAL",
+          "robot": [
+            19,
+            94
+          ],
+          "goal": [
+            10,
+            143
+          ]
+        },
+        {
+          "decision": 16,
+          "tick": 479,
+          "mode": "LOCAL",
+          "robot": [
+            18,
+            139
+          ],
+          "goal": [
+            14,
+            221
+          ]
+        },
+        {
+          "decision": 17,
+          "tick": 515,
+          "mode": "LOCAL",
+          "robot": [
+            16,
+            213
+          ],
+          "goal": [
+            47,
+            234
+          ]
+        },
+        {
+          "decision": 18,
+          "tick": 528,
+          "mode": "LOCAL",
+          "robot": [
+            38,
+            230
+          ],
+          "goal": [
+            74,
+            222
+          ]
+        },
+        {
+          "decision": 19,
+          "tick": 539,
+          "mode": "GLOBAL",
+          "robot": [
+            70,
+            231
+          ],
+          "goal": [
+            189,
+            44
+          ]
+        },
+        {
+          "decision": 20,
+          "tick": 693,
+          "mode": "LOCAL",
+          "robot": [
+            182,
+            43
+          ],
+          "goal": [
+            128,
+            33
+          ]
+        },
+        {
+          "decision": 21,
+          "tick": 714,
+          "mode": "LOCAL",
+          "robot": [
+            135,
+            31
+          ],
+          "goal": [
+            164,
+            8
+          ]
+        },
+        {
+          "decision": 22,
+          "tick": 729,
+          "mode": "GLOBAL",
+          "robot": [
+            157,
+            8
+          ],
+          "goal": [
+            94,
+            141
+          ]
+        },
+        {
+          "decision": 23,
+          "tick": 794,
+          "mode": "GLOBAL",
+          "robot": [
+            92,
+            132
+          ],
+          "goal": [
+            46,
+            9
+          ]
+        }
+      ],
+      "runtime_wall_s": 424.055,
+      "patch_D01D02_variant_gate": "D01_D02_VARIANT_INTEGRITY_PASS",
+      "vs_original_code": {
+        "delta_total_m": 47.12623792124924,
+        "delta_global_m": 72.92066511224917,
+        "delta_local_m": -25.794427190999897,
+        "terminal_mask_missing": 0,
+        "only_original_cells": 4,
+        "only_paper_cells": 4
+      },
+      "vs_paper_MapEx_plain": {
+        "delta_total_m": -76.09016994374949,
+        "only_plain_cells": 8,
+        "only_new_cells": 8
+      }
+    },
+    {
+      "name": "SWEEP code-reset original",
+      "id": "NR-G2SWEEP-02",
+      "root": "/home/dell/DELL_NATIVE2D/runs/NR-G2SWEEP-02/native_opt_r41_lama3small_run04/R41_OPT_LAMA3_SMALLROI_RUN04_visvarprob",
+      "native_ticks": 757,
+      "total_m": 213.50758280849635,
+      "global_m": 125.34821859524811,
+      "local_m": 88.1593642132483,
+      "decision_count": 27,
+      "global_decisions": 6,
+      "local_decisions": 21,
+      "phase_changes": 12,
+      "final_known_cells": 51303,
+      "mission_complete": true,
+      "stop_reason": "MAPEX_NO_SELECTABLE_FRONTIER_NOT_GT",
+      "decision_trace": [
+        {
+          "decision": 1,
+          "tick": 0,
+          "mode": "GLOBAL",
+          "robot": [
+            131,
+            131
+          ],
+          "goal": [
+            153,
+            104
+          ]
+        },
+        {
+          "decision": 2,
+          "tick": 12,
+          "mode": "LOCAL",
+          "robot": [
+            147,
+            111
+          ],
+          "goal": [
+            186,
+            105
+          ]
+        },
+        {
+          "decision": 3,
+          "tick": 27,
+          "mode": "LOCAL",
+          "robot": [
+            180,
+            99
+          ],
+          "goal": [
+            175,
+            119
+          ]
+        },
+        {
+          "decision": 4,
+          "tick": 37,
+          "mode": "LOCAL",
+          "robot": [
+            188,
+            119
+          ],
+          "goal": [
+            151,
+            136
+          ]
+        },
+        {
+          "decision": 5,
+          "tick": 53,
+          "mode": "LOCAL",
+          "robot": [
+            160,
+            139
+          ],
+          "goal": [
+            174,
+            191
+          ]
+        },
+        {
+          "decision": 6,
+          "tick": 74,
+          "mode": "LOCAL",
+          "robot": [
+            167,
+            191
+          ],
+          "goal": [
+            192,
+            202
+          ]
+        },
+        {
+          "decision": 7,
+          "tick": 84,
+          "mode": "GLOBAL",
+          "robot": [
+            185,
+            203
+          ],
+          "goal": [
+            39,
+            179
+          ]
+        },
+        {
+          "decision": 8,
+          "tick": 141,
+          "mode": "LOCAL",
+          "robot": [
+            44,
+            173
+          ],
+          "goal": [
+            9,
+            143
+          ]
+        },
+        {
+          "decision": 9,
+          "tick": 160,
+          "mode": "LOCAL",
+          "robot": [
+            17,
+            143
+          ],
+          "goal": [
+            6,
+            149
+          ]
+        },
+        {
+          "decision": 10,
+          "tick": 162,
+          "mode": "LOCAL",
+          "robot": [
+            11,
+            143
+          ],
+          "goal": [
+            9,
+            155
+          ]
+        },
+        {
+          "decision": 11,
+          "tick": 164,
+          "mode": "LOCAL",
+          "robot": [
+            9,
+            147
+          ],
+          "goal": [
+            26,
+            203
+          ]
+        },
+        {
+          "decision": 12,
+          "tick": 208,
+          "mode": "LOCAL",
+          "robot": [
+            33,
+            203
+          ],
+          "goal": [
+            18,
+            233
+          ]
+        },
+        {
+          "decision": 13,
+          "tick": 223,
+          "mode": "LOCAL",
+          "robot": [
+            13,
+            226
+          ],
+          "goal": [
+            74,
+            226
+          ]
+        },
+        {
+          "decision": 14,
+          "tick": 245,
+          "mode": "GLOBAL",
+          "robot": [
+            67,
+            232
+          ],
+          "goal": [
+            155,
+            54
+          ]
+        },
+        {
+          "decision": 15,
+          "tick": 385,
+          "mode": "LOCAL",
+          "robot": [
+            155,
+            62
+          ],
+          "goal": [
+            189,
+            43
+          ]
+        },
+        {
+          "decision": 16,
+          "tick": 400,
+          "mode": "LOCAL",
+          "robot": [
+            181,
+            43
+          ],
+          "goal": [
+            174,
+            12
+          ]
+        },
+        {
+          "decision": 17,
+          "tick": 413,
+          "mode": "LOCAL",
+          "robot": [
+            183,
+            12
+          ],
+          "goal": [
+            131,
+            42
+          ]
+        },
+        {
+          "decision": 18,
+          "tick": 449,
+          "mode": "GLOBAL",
+          "robot": [
+            131,
+            34
+          ],
+          "goal": [
+            85,
+            30
+          ]
+        },
+        {
+          "decision": 19,
+          "tick": 510,
+          "mode": "LOCAL",
+          "robot": [
+            82,
+            38
+          ],
+          "goal": [
+            59,
+            27
+          ]
+        },
+        {
+          "decision": 20,
+          "tick": 519,
+          "mode": "LOCAL",
+          "robot": [
+            66,
+            27
+          ],
+          "goal": [
+            42,
+            6
+          ]
+        },
+        {
+          "decision": 21,
+          "tick": 531,
+          "mode": "LOCAL",
+          "robot": [
+            51,
+            6
+          ],
+          "goal": [
+            38,
+            15
+          ]
+        },
+        {
+          "decision": 22,
+          "tick": 534,
+          "mode": "LOCAL",
+          "robot": [
+            42,
+            6
+          ],
+          "goal": [
+            14,
+            36
+          ]
+        },
+        {
+          "decision": 23,
+          "tick": 551,
+          "mode": "GLOBAL",
+          "robot": [
+            14,
+            29
+          ],
+          "goal": [
+            18,
+            64
+          ]
+        },
+        {
+          "decision": 24,
+          "tick": 613,
+          "mode": "LOCAL",
+          "robot": [
+            24,
+            59
+          ],
+          "goal": [
+            19,
+            74
+          ]
+        },
+        {
+          "decision": 25,
+          "tick": 617,
+          "mode": "LOCAL",
+          "robot": [
+            19,
+            66
+          ],
+          "goal": [
+            10,
+            97
+          ]
+        },
+        {
+          "decision": 26,
+          "tick": 636,
+          "mode": "GLOBAL",
+          "robot": [
+            19,
+            93
+          ],
+          "goal": [
+            167,
+            243
+          ]
+        },
+        {
+          "decision": 27,
+          "tick": 745,
+          "mode": "LOCAL",
+          "robot": [
+            158,
+            247
+          ],
+          "goal": [
+            187,
+            233
+          ]
+        }
+      ],
+      "runtime_wall_s": 372.545
+    },
+    {
+      "name": "SWEEP paper cumulative",
+      "id": "NR-RAYSW-02",
+      "root": "/home/dell/DELL_NATIVE2D/runs/NR-RAYSW-02/native_opt_r41_lama3small_run04/R41_OPT_LAMA3_SMALLROI_RUN04_visvarprob",
+      "native_ticks": 827,
+      "total_m": 233.13250516799596,
+      "global_m": 145.27871376374782,
+      "local_m": 87.85379140424817,
+      "decision_count": 30,
+      "global_decisions": 8,
+      "local_decisions": 22,
+      "phase_changes": 15,
+      "final_known_cells": 51303,
+      "mission_complete": true,
+      "stop_reason": "MAPEX_NO_SELECTABLE_FRONTIER_NOT_GT",
+      "decision_trace": [
+        {
+          "decision": 1,
+          "tick": 0,
+          "mode": "GLOBAL",
+          "robot": [
+            131,
+            131
+          ],
+          "goal": [
+            153,
+            104
+          ]
+        },
+        {
+          "decision": 2,
+          "tick": 12,
+          "mode": "LOCAL",
+          "robot": [
+            147,
+            111
+          ],
+          "goal": [
+            186,
+            105
+          ]
+        },
+        {
+          "decision": 3,
+          "tick": 27,
+          "mode": "LOCAL",
+          "robot": [
+            180,
+            99
+          ],
+          "goal": [
+            175,
+            119
+          ]
+        },
+        {
+          "decision": 4,
+          "tick": 37,
+          "mode": "LOCAL",
+          "robot": [
+            188,
+            119
+          ],
+          "goal": [
+            151,
+            136
+          ]
+        },
+        {
+          "decision": 5,
+          "tick": 53,
+          "mode": "LOCAL",
+          "robot": [
+            160,
+            139
+          ],
+          "goal": [
+            174,
+            191
+          ]
+        },
+        {
+          "decision": 6,
+          "tick": 74,
+          "mode": "LOCAL",
+          "robot": [
+            167,
+            191
+          ],
+          "goal": [
+            192,
+            202
+          ]
+        },
+        {
+          "decision": 7,
+          "tick": 84,
+          "mode": "GLOBAL",
+          "robot": [
+            185,
+            203
+          ],
+          "goal": [
+            136,
+            237
+          ]
+        },
+        {
+          "decision": 8,
+          "tick": 120,
+          "mode": "LOCAL",
+          "robot": [
+            130,
+            232
+          ],
+          "goal": [
+            149,
+            251
+          ]
+        },
+        {
+          "decision": 9,
+          "tick": 135,
+          "mode": "LOCAL",
+          "robot": [
+            157,
+            248
+          ],
+          "goal": [
+            186,
+            233
+          ]
+        },
+        {
+          "decision": 10,
+          "tick": 147,
+          "mode": "GLOBAL",
+          "robot": [
+            186,
+            241
+          ],
+          "goal": [
+            94,
+            60
+          ]
+        },
+        {
+          "decision": 11,
+          "tick": 248,
+          "mode": "LOCAL",
+          "robot": [
+            103,
+            61
+          ],
+          "goal": [
+            77,
+            46
+          ]
+        },
+        {
+          "decision": 12,
+          "tick": 260,
+          "mode": "GLOBAL",
+          "robot": [
+            77,
+            53
+          ],
+          "goal": [
+            45,
+            46
+          ]
+        },
+        {
+          "decision": 13,
+          "tick": 273,
+          "mode": "LOCAL",
+          "robot": [
+            51,
+            40
+          ],
+          "goal": [
+            13,
+            44
+          ]
+        },
+        {
+          "decision": 14,
+          "tick": 285,
+          "mode": "LOCAL",
+          "robot": [
+            22,
+            47
+          ],
+          "goal": [
+            47,
+            6
+          ]
+        },
+        {
+          "decision": 15,
+          "tick": 309,
+          "mode": "GLOBAL",
+          "robot": [
+            39,
+            6
+          ],
+          "goal": [
+            46,
+            58
+          ]
+        },
+        {
+          "decision": 16,
+          "tick": 356,
+          "mode": "LOCAL",
+          "robot": [
+            46,
+            66
+          ],
+          "goal": [
+            18,
+            64
+          ]
+        },
+        {
+          "decision": 17,
+          "tick": 365,
+          "mode": "LOCAL",
+          "robot": [
+            26,
+            59
+          ],
+          "goal": [
+            16,
+            72
+          ]
+        },
+        {
+          "decision": 18,
+          "tick": 370,
+          "mode": "LOCAL",
+          "robot": [
+            16,
+            64
+          ],
+          "goal": [
+            10,
+            97
+          ]
+        },
+        {
+          "decision": 19,
+          "tick": 389,
+          "mode": "GLOBAL",
+          "robot": [
+            19,
+            94
+          ],
+          "goal": [
+            10,
+            143
+          ]
+        },
+        {
+          "decision": 20,
+          "tick": 469,
+          "mode": "LOCAL",
+          "robot": [
+            18,
+            139
+          ],
+          "goal": [
+            6,
+            151
+          ]
+        },
+        {
+          "decision": 21,
+          "tick": 474,
+          "mode": "LOCAL",
+          "robot": [
+            6,
+            142
+          ],
+          "goal": [
+            27,
+            206
+          ]
+        },
+        {
+          "decision": 22,
+          "tick": 517,
+          "mode": "LOCAL",
+          "robot": [
+            36,
+            205
+          ],
+          "goal": [
+            22,
+            217
+          ]
+        },
+        {
+          "decision": 23,
+          "tick": 525,
+          "mode": "LOCAL",
+          "robot": [
+            22,
+            209
+          ],
+          "goal": [
+            31,
+            217
+          ]
+        },
+        {
+          "decision": 24,
+          "tick": 527,
+          "mode": "LOCAL",
+          "robot": [
+            22,
+            215
+          ],
+          "goal": [
+            54,
+            222
+          ]
+        },
+        {
+          "decision": 25,
+          "tick": 536,
+          "mode": "LOCAL",
+          "robot": [
+            48,
+            216
+          ],
+          "goal": [
+            46,
+            237
+          ]
+        },
+        {
+          "decision": 26,
+          "tick": 542,
+          "mode": "LOCAL",
+          "robot": [
+            51,
+            231
+          ],
+          "goal": [
+            65,
+            251
+          ]
+        },
+        {
+          "decision": 27,
+          "tick": 555,
+          "mode": "GLOBAL",
+          "robot": [
+            74,
+            247
+          ],
+          "goal": [
+            189,
+            44
+          ]
+        },
+        {
+          "decision": 28,
+          "tick": 715,
+          "mode": "LOCAL",
+          "robot": [
+            180,
+            43
+          ],
+          "goal": [
+            175,
+            12
+          ]
+        },
+        {
+          "decision": 29,
+          "tick": 728,
+          "mode": "LOCAL",
+          "robot": [
+            184,
+            12
+          ],
+          "goal": [
+            130,
+            42
+          ]
+        },
+        {
+          "decision": 30,
+          "tick": 764,
+          "mode": "GLOBAL",
+          "robot": [
+            130,
+            34
+          ],
+          "goal": [
+            94,
+            141
+          ]
+        }
+      ],
+      "runtime_wall_s": 441.473,
+      "patch_D01D02_variant_gate": "D01_D02_VARIANT_INTEGRITY_PASS",
+      "vs_original_code": {
+        "delta_total_m": 19.624922359499607,
+        "delta_global_m": 19.930495168499704,
+        "delta_local_m": -0.3055728090001253,
+        "terminal_mask_missing": 0,
+        "only_original_cells": 0,
+        "only_paper_cells": 0
+      },
+      "vs_paper_MapEx_plain": {
+        "delta_total_m": -89.19148550549912,
+        "only_plain_cells": 12,
+        "only_new_cells": 11
+      }
+    }
+  ]
+}
