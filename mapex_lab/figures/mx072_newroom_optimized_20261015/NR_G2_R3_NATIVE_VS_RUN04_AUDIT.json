@@ -1,0 +1,41 @@
+{
+  "procedure": "Independent frozen Run04 vs R3 exhaustive comparison after terminal receipt. No GT and no file changes to either run.",
+  "run_receipt_outcome": "SOURCE_TERMINAL",
+  "runs": {
+    "MapEx+G1": {
+      "total_m": 199.107583,
+      "ticks": 709,
+      "postscans": 709,
+      "known_p1": 51304,
+      "n_decisions": 25,
+      "n_global": 6,
+      "n_local": 19,
+      "n_r3_global_policy_evaluations": 0,
+      "n_r3_global_change": 0,
+      "r3_reason_counts": {}
+    },
+    "G2-R3": {
+      "total_m": 199.107583,
+      "ticks": 709,
+      "postscans": 709,
+      "known_p1": 51304,
+      "n_decisions": 25,
+      "n_global": 6,
+      "n_local": 19,
+      "n_r3_global_policy_evaluations": 6,
+      "n_r3_global_change": 0,
+      "r3_reason_counts": {
+        "NO_CERTIFIED_GAIN": 5,
+        "NO_CLOSER_WFD": 1
+      }
+    }
+  },
+  "match": {
+    "odom_equal": true,
+    "per_tick_obs_mismatch": [],
+    "route_mismatches": [],
+    "decision_mismatches": []
+  },
+  "all_epochs_bit_equal": true,
+  "warning": "ZERO interventions means no scientific improvement, not proof that MapEx+G1 globally optimal."
+}
