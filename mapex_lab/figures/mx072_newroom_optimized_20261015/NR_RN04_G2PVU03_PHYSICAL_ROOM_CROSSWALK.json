@@ -1,0 +1,147 @@
+{
+  "reference": {
+    "1": {
+      "decision": 2,
+      "tick": 12,
+      "centroid": [
+        172.3,
+        151.5
+      ],
+      "area": 6564
+    },
+    "2": {
+      "decision": 8,
+      "tick": 157,
+      "centroid": [
+        37.5,
+        204.6
+      ],
+      "area": 8479
+    },
+    "3": {
+      "decision": 14,
+      "tick": 340,
+      "centroid": [
+        40.8,
+        66.2
+      ],
+      "area": 6930
+    },
+    "4": {
+      "decision": 18,
+      "tick": 437,
+      "centroid": [
+        44.9,
+        25.8
+      ],
+      "area": 4039
+    },
+    "5": {
+      "decision": 21,
+      "tick": 544,
+      "centroid": [
+        162.4,
+        42.3
+      ],
+      "area": 6215
+    },
+    "6": {
+      "decision": 25,
+      "tick": 698,
+      "centroid": [
+        156.9,
+        236.2
+      ],
+      "area": 4085
+    }
+  },
+  "r2": {
+    "1": {
+      "decision": 2,
+      "tick": 12,
+      "centroid": [
+        172.3,
+        151.5
+      ],
+      "area": 6564
+    },
+    "2": {
+      "decision": 8,
+      "tick": 195,
+      "centroid": [
+        162.4,
+        42.4
+      ],
+      "area": 6203
+    },
+    "3": {
+      "decision": 13,
+      "tick": 338,
+      "centroid": [
+        37.5,
+        205.0
+      ],
+      "area": 8493
+    },
+    "5": {
+      "decision": 22,
+      "tick": 694,
+      "centroid": [
+        156.9,
+        236.2
+      ],
+      "area": 4085
+    },
+    "6": {
+      "decision": 24,
+      "tick": 819,
+      "centroid": [
+        30.1,
+        91.2
+      ],
+      "area": 4396
+    }
+  },
+  "overlap": [
+    {
+      "reference_room": 1,
+      "r2_room": 1,
+      "intersection": 6564,
+      "iou": 1.0,
+      "r2_overlap_frac": 1.0,
+      "reference_overlap_frac": 1.0
+    },
+    {
+      "reference_room": 2,
+      "r2_room": 3,
+      "intersection": 8444,
+      "iou": 0.9902,
+      "r2_overlap_frac": 0.9942,
+      "reference_overlap_frac": 0.9959
+    },
+    {
+      "reference_room": 3,
+      "r2_room": 6,
+      "intersection": 4275,
+      "iou": 0.6063,
+      "r2_overlap_frac": 0.9725,
+      "reference_overlap_frac": 0.6169
+    },
+    {
+      "reference_room": 5,
+      "r2_room": 2,
+      "intersection": 6126,
+      "iou": 0.9736,
+      "r2_overlap_frac": 0.9876,
+      "reference_overlap_frac": 0.9857
+    },
+    {
+      "reference_room": 6,
+      "r2_room": 5,
+      "intersection": 4085,
+      "iou": 1.0,
+      "r2_overlap_frac": 1.0,
+      "reference_overlap_frac": 1.0
+    }
+  ]
+}
